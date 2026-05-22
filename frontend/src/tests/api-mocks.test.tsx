@@ -11,58 +11,49 @@
  * (BASE_URL = '/api' is prepended in shared/lib/api.ts)
  */
 
-import { describe, it, expect, beforeAll, afterEach, afterAll } from "vitest";
-import { renderHook, waitFor } from "@testing-library/react";
-import {
-  QueryClient,
-  QueryClientProvider,
-  useQuery,
-} from "@tanstack/react-query";
-import { http, HttpResponse } from "msw";
-import { setupServer } from "msw/node";
-import React from "react";
+import { describe, it, expect, beforeAll, afterEach, afterAll } from 'vitest';
+import { renderHook, waitFor } from '@testing-library/react';
+import { QueryClient, QueryClientProvider, useQuery } from '@tanstack/react-query';
+import { http, HttpResponse } from 'msw';
+import { setupServer } from 'msw/node';
+import React from 'react';
 
-import { projectsApi, type Project } from "@/features/projects/api";
-import {
-  boqApi,
-  type BOQ,
-  type BOQWithPositions,
-  type Position,
-} from "@/features/boq/api";
-import { ApiError } from "@/shared/lib/api";
+import { projectsApi, type Project } from '@/features/projects/api';
+import { boqApi, type BOQ, type BOQWithPositions, type Position } from '@/features/boq/api';
+import { ApiError } from '@/shared/lib/api';
 
 /* ── Fixture data ──────────────────────────────────────────────────────── */
 
 const MOCK_PROJECTS: Project[] = [
   {
-    id: "proj-001",
-    name: "Office Tower Berlin",
-    description: "High-rise office building",
-    region: "DE",
-    classification_standard: "DIN276",
-    currency: "EUR",
-    locale: "de-DE",
-    validation_rule_sets: ["din276", "gaeb"],
-    status: "active",
-    owner_id: "user-001",
+    id: 'proj-001',
+    name: 'Office Tower Berlin',
+    description: 'High-rise office building',
+    region: 'DE',
+    classification_standard: 'DIN276',
+    currency: 'EUR',
+    locale: 'de-DE',
+    validation_rule_sets: ['din276', 'gaeb'],
+    status: 'active',
+    owner_id: 'user-001',
     metadata: {},
-    created_at: "2024-01-15T10:00:00Z",
-    updated_at: "2024-01-15T10:00:00Z",
+    created_at: '2024-01-15T10:00:00Z',
+    updated_at: '2024-01-15T10:00:00Z',
   },
   {
-    id: "proj-002",
-    name: "Residential Complex Hamburg",
-    description: "Multi-family residential",
-    region: "DE",
-    classification_standard: "DIN276",
-    currency: "EUR",
-    locale: "de-DE",
-    validation_rule_sets: ["din276"],
-    status: "active",
-    owner_id: "user-001",
+    id: 'proj-002',
+    name: 'Residential Complex Hamburg',
+    description: 'Multi-family residential',
+    region: 'DE',
+    classification_standard: 'DIN276',
+    currency: 'EUR',
+    locale: 'de-DE',
+    validation_rule_sets: ['din276'],
+    status: 'active',
+    owner_id: 'user-001',
     metadata: {},
-    created_at: "2024-02-20T09:00:00Z",
-    updated_at: "2024-02-20T09:00:00Z",
+    created_at: '2024-02-20T09:00:00Z',
+    updated_at: '2024-02-20T09:00:00Z',
   },
 ];
 
@@ -70,41 +61,41 @@ const MOCK_PROJECT_SINGLE: Project = MOCK_PROJECTS[0];
 
 const MOCK_BOQS: BOQ[] = [
   {
-    id: "boq-001",
-    project_id: "proj-001",
-    name: "Main Estimate",
-    description: "Primary BOQ for office tower",
-    status: "draft",
-    created_at: "2024-01-16T10:00:00Z",
-    updated_at: "2024-01-16T10:00:00Z",
+    id: 'boq-001',
+    project_id: 'proj-001',
+    name: 'Main Estimate',
+    description: 'Primary BOQ for office tower',
+    status: 'draft',
+    created_at: '2024-01-16T10:00:00Z',
+    updated_at: '2024-01-16T10:00:00Z',
   },
   {
-    id: "boq-002",
-    project_id: "proj-001",
-    name: "Provisional Estimate",
-    description: "Early-stage cost plan",
-    status: "draft",
-    created_at: "2024-01-17T10:00:00Z",
-    updated_at: "2024-01-17T10:00:00Z",
+    id: 'boq-002',
+    project_id: 'proj-001',
+    name: 'Provisional Estimate',
+    description: 'Early-stage cost plan',
+    status: 'draft',
+    created_at: '2024-01-17T10:00:00Z',
+    updated_at: '2024-01-17T10:00:00Z',
   },
 ];
 
 const MOCK_POSITION: Position = {
-  id: "pos-001",
-  boq_id: "boq-001",
+  id: 'pos-001',
+  boq_id: 'boq-001',
   parent_id: null,
-  ordinal: "01.001",
-  description: "Reinforced concrete wall C30/37",
-  unit: "m3",
+  ordinal: '01.001',
+  description: 'Reinforced concrete wall C30/37',
+  unit: 'm3',
   quantity: 120.5,
   unit_rate: 450.0,
   total: 54225.0,
-  classification: { din276: "330" },
-  source: "manual",
+  classification: { din276: '330' },
+  source: 'manual',
   confidence: null,
-  validation_status: "passed",
+  validation_status: 'passed',
   sort_order: 1,
-  metadata: { notes: "External walls only" },
+  metadata: { notes: 'External walls only' },
 };
 
 const MOCK_BOQ_WITH_POSITIONS: BOQWithPositions = {
@@ -117,23 +108,23 @@ const MOCK_BOQ_WITH_POSITIONS: BOQWithPositions = {
 
 const handlers = [
   // GET /api/v1/projects/  →  returns project list
-  http.get("/api/v1/projects/", () => {
+  http.get('/api/v1/projects/', () => {
     return HttpResponse.json(MOCK_PROJECTS);
   }),
 
   // GET /api/v1/projects/:id  →  returns single project
-  http.get("/api/v1/projects/:id", ({ params }) => {
+  http.get('/api/v1/projects/:id', ({ params }) => {
     const found = MOCK_PROJECTS.find((p) => p.id === params.id);
     if (!found) {
-      return HttpResponse.json({ detail: "Not found" }, { status: 404 });
+      return HttpResponse.json({ detail: 'Not found' }, { status: 404 });
     }
     return HttpResponse.json(found);
   }),
 
   // GET /api/v1/boq/boqs/?project_id=...  →  returns BOQ list
-  http.get("/api/v1/boq/boqs/", ({ request }) => {
+  http.get('/api/v1/boq/boqs/', ({ request }) => {
     const url = new URL(request.url);
-    const projectId = url.searchParams.get("project_id");
+    const projectId = url.searchParams.get('project_id');
     const results = projectId
       ? MOCK_BOQS.filter((b) => b.project_id === projectId)
       : MOCK_BOQS;
@@ -141,17 +132,17 @@ const handlers = [
   }),
 
   // GET /api/v1/boq/boqs/:id  →  returns single BOQ with positions
-  http.get("/api/v1/boq/boqs/:id", ({ params }) => {
+  http.get('/api/v1/boq/boqs/:id', ({ params }) => {
     if (params.id === MOCK_BOQ_WITH_POSITIONS.id) {
       return HttpResponse.json(MOCK_BOQ_WITH_POSITIONS);
     }
-    return HttpResponse.json({ detail: "Not found" }, { status: 404 });
+    return HttpResponse.json({ detail: 'Not found' }, { status: 404 });
   }),
 ];
 
 const server = setupServer(...handlers);
 
-beforeAll(() => server.listen({ onUnhandledRequest: "bypass" }));
+beforeAll(() => server.listen({ onUnhandledRequest: 'bypass' }));
 afterEach(() => server.resetHandlers());
 afterAll(() => server.close());
 
@@ -175,11 +166,7 @@ function makeQueryClient() {
 
 function createWrapper(queryClient: QueryClient) {
   return function Wrapper({ children }: { children: React.ReactNode }) {
-    return React.createElement(
-      QueryClientProvider,
-      { client: queryClient },
-      children,
-    );
+    return React.createElement(QueryClientProvider, { client: queryClient }, children);
   };
 }
 
@@ -202,14 +189,14 @@ function createWrapper(queryClient: QueryClient) {
 // Production code is unaffected (real browsers all use one realm). The
 // ApiError unit tests below + the e2e Playwright tests cover the same
 // behaviour end-to-end. Re-enable when the jsdom/undici story improves.
-describe.skip("Projects API — MSW integration", () => {
-  it("useQuery: fetches project list and returns correct data", async () => {
+// SKIP: jsdom + undici fetch reject MSW's AbortSignal as a cross-realm instance, so MSW intercepts never resolve. Re-enable when: MSW v3 + jsdom land single-realm AbortSignal compat (or we migrate to happy-dom + native fetch). Tracked in v4.3 backlog.
+describe.skip('Projects API — MSW integration', () => {
+  it('useQuery: fetches project list and returns correct data', async () => {
     const queryClient = makeQueryClient();
     const wrapper = createWrapper(queryClient);
 
     const { result } = renderHook(
-      () =>
-        useQuery({ queryKey: ["projects"], queryFn: () => projectsApi.list() }),
+      () => useQuery({ queryKey: ['projects'], queryFn: () => projectsApi.list() }),
       { wrapper },
     );
 
@@ -221,21 +208,21 @@ describe.skip("Projects API — MSW integration", () => {
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
     expect(result.current.data).toHaveLength(2);
-    expect(result.current.data![0].id).toBe("proj-001");
-    expect(result.current.data![0].name).toBe("Office Tower Berlin");
-    expect(result.current.data![1].id).toBe("proj-002");
-    expect(result.current.data![1].region).toBe("DE");
+    expect(result.current.data![0].id).toBe('proj-001');
+    expect(result.current.data![0].name).toBe('Office Tower Berlin');
+    expect(result.current.data![1].id).toBe('proj-002');
+    expect(result.current.data![1].region).toBe('DE');
   });
 
-  it("useQuery: fetches a single project by id", async () => {
+  it('useQuery: fetches a single project by id', async () => {
     const queryClient = makeQueryClient();
     const wrapper = createWrapper(queryClient);
 
     const { result } = renderHook(
       () =>
         useQuery({
-          queryKey: ["projects", "proj-001"],
-          queryFn: () => projectsApi.get("proj-001"),
+          queryKey: ['projects', 'proj-001'],
+          queryFn: () => projectsApi.get('proj-001'),
         }),
       { wrapper },
     );
@@ -243,18 +230,18 @@ describe.skip("Projects API — MSW integration", () => {
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
     const project = result.current.data!;
-    expect(project.id).toBe("proj-001");
-    expect(project.classification_standard).toBe("DIN276");
-    expect(project.currency).toBe("EUR");
-    expect(project.validation_rule_sets).toContain("din276");
+    expect(project.id).toBe('proj-001');
+    expect(project.classification_standard).toBe('DIN276');
+    expect(project.currency).toBe('EUR');
+    expect(project.validation_rule_sets).toContain('din276');
   });
 
-  it("useQuery: returns error state on 500 response from projects list", async () => {
+  it('useQuery: returns error state on 500 response from projects list', async () => {
     // Override the projects handler to return a 500 for this test only
     server.use(
-      http.get("/api/v1/projects/", () => {
+      http.get('/api/v1/projects/', () => {
         return HttpResponse.json(
-          { detail: "Internal server error" },
+          { detail: 'Internal server error' },
           { status: 500 },
         );
       }),
@@ -264,8 +251,7 @@ describe.skip("Projects API — MSW integration", () => {
     const wrapper = createWrapper(queryClient);
 
     const { result } = renderHook(
-      () =>
-        useQuery({ queryKey: ["projects"], queryFn: () => projectsApi.list() }),
+      () => useQuery({ queryKey: ['projects'], queryFn: () => projectsApi.list() }),
       { wrapper },
     );
 
@@ -277,15 +263,15 @@ describe.skip("Projects API — MSW integration", () => {
     expect(result.current.data).toBeUndefined();
   });
 
-  it("useQuery: returns error state on 404 for unknown project id", async () => {
+  it('useQuery: returns error state on 404 for unknown project id', async () => {
     const queryClient = makeQueryClient();
     const wrapper = createWrapper(queryClient);
 
     const { result } = renderHook(
       () =>
         useQuery({
-          queryKey: ["projects", "nonexistent"],
-          queryFn: () => projectsApi.get("nonexistent"),
+          queryKey: ['projects', 'nonexistent'],
+          queryFn: () => projectsApi.get('nonexistent'),
         }),
       { wrapper },
     );
@@ -296,13 +282,12 @@ describe.skip("Projects API — MSW integration", () => {
     expect(apiErr.status).toBe(404);
   });
 
-  it("useQuery: passes through project fields accurately (shape validation)", async () => {
+  it('useQuery: passes through project fields accurately (shape validation)', async () => {
     const queryClient = makeQueryClient();
     const wrapper = createWrapper(queryClient);
 
     const { result } = renderHook(
-      () =>
-        useQuery({ queryKey: ["projects"], queryFn: () => projectsApi.list() }),
+      () => useQuery({ queryKey: ['projects'], queryFn: () => projectsApi.list() }),
       { wrapper },
     );
 
@@ -327,9 +312,9 @@ describe.skip("Projects API — MSW integration", () => {
     });
   });
 
-  it("useQuery: handles network failure (fetch throws)", async () => {
+  it('useQuery: handles network failure (fetch throws)', async () => {
     server.use(
-      http.get("/api/v1/projects/", () => {
+      http.get('/api/v1/projects/', () => {
         return HttpResponse.error();
       }),
     );
@@ -338,8 +323,7 @@ describe.skip("Projects API — MSW integration", () => {
     const wrapper = createWrapper(queryClient);
 
     const { result } = renderHook(
-      () =>
-        useQuery({ queryKey: ["projects"], queryFn: () => projectsApi.list() }),
+      () => useQuery({ queryKey: ['projects'], queryFn: () => projectsApi.list() }),
       { wrapper },
     );
 
@@ -355,16 +339,17 @@ describe.skip("Projects API — MSW integration", () => {
 // SKIPPED — same root cause as Projects API tests above (jsdom/undici/MSW
 // AbortSignal realm mismatch). Production behaviour is covered by Playwright
 // e2e tests + ApiError unit tests.
-describe.skip("BOQ API — MSW integration", () => {
-  it("useQuery: fetches BOQ list for a project and returns correct data", async () => {
+// SKIP: jsdom + undici fetch reject MSW's AbortSignal as a cross-realm instance, so MSW intercepts never resolve. Re-enable when: MSW v3 + jsdom land single-realm AbortSignal compat (or we migrate to happy-dom + native fetch). Tracked in v4.3 backlog.
+describe.skip('BOQ API — MSW integration', () => {
+  it('useQuery: fetches BOQ list for a project and returns correct data', async () => {
     const queryClient = makeQueryClient();
     const wrapper = createWrapper(queryClient);
 
     const { result } = renderHook(
       () =>
         useQuery({
-          queryKey: ["boqs", "proj-001"],
-          queryFn: () => boqApi.list("proj-001"),
+          queryKey: ['boqs', 'proj-001'],
+          queryFn: () => boqApi.list('proj-001'),
         }),
       { wrapper },
     );
@@ -375,21 +360,21 @@ describe.skip("BOQ API — MSW integration", () => {
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
     expect(result.current.data).toHaveLength(2);
-    expect(result.current.data![0].id).toBe("boq-001");
-    expect(result.current.data![0].project_id).toBe("proj-001");
-    expect(result.current.data![0].name).toBe("Main Estimate");
-    expect(result.current.data![1].id).toBe("boq-002");
+    expect(result.current.data![0].id).toBe('boq-001');
+    expect(result.current.data![0].project_id).toBe('proj-001');
+    expect(result.current.data![0].name).toBe('Main Estimate');
+    expect(result.current.data![1].id).toBe('boq-002');
   });
 
-  it("useQuery: fetches a single BOQ with positions", async () => {
+  it('useQuery: fetches a single BOQ with positions', async () => {
     const queryClient = makeQueryClient();
     const wrapper = createWrapper(queryClient);
 
     const { result } = renderHook(
       () =>
         useQuery({
-          queryKey: ["boq", "boq-001"],
-          queryFn: () => boqApi.get("boq-001"),
+          queryKey: ['boq', 'boq-001'],
+          queryFn: () => boqApi.get('boq-001'),
         }),
       { wrapper },
     );
@@ -397,23 +382,23 @@ describe.skip("BOQ API — MSW integration", () => {
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
     const boq = result.current.data!;
-    expect(boq.id).toBe("boq-001");
+    expect(boq.id).toBe('boq-001');
     expect(boq.grand_total).toBe(54225.0);
     expect(boq.positions).toHaveLength(1);
 
     const pos = boq.positions[0];
-    expect(pos.ordinal).toBe("01.001");
-    expect(pos.unit).toBe("m3");
+    expect(pos.ordinal).toBe('01.001');
+    expect(pos.unit).toBe('m3');
     expect(pos.quantity).toBe(120.5);
     expect(pos.unit_rate).toBe(450.0);
     expect(pos.total).toBe(54225.0);
   });
 
-  it("useQuery: returns error state on 500 response from BOQ list", async () => {
+  it('useQuery: returns error state on 500 response from BOQ list', async () => {
     server.use(
-      http.get("/api/v1/boq/boqs/", () => {
+      http.get('/api/v1/boq/boqs/', () => {
         return HttpResponse.json(
-          { detail: "Database connection failed" },
+          { detail: 'Database connection failed' },
           { status: 500 },
         );
       }),
@@ -425,8 +410,8 @@ describe.skip("BOQ API — MSW integration", () => {
     const { result } = renderHook(
       () =>
         useQuery({
-          queryKey: ["boqs", "proj-001"],
-          queryFn: () => boqApi.list("proj-001"),
+          queryKey: ['boqs', 'proj-001'],
+          queryFn: () => boqApi.list('proj-001'),
         }),
       { wrapper },
     );
@@ -439,15 +424,15 @@ describe.skip("BOQ API — MSW integration", () => {
     expect(result.current.data).toBeUndefined();
   });
 
-  it("useQuery: returns error state on 404 for unknown BOQ id", async () => {
+  it('useQuery: returns error state on 404 for unknown BOQ id', async () => {
     const queryClient = makeQueryClient();
     const wrapper = createWrapper(queryClient);
 
     const { result } = renderHook(
       () =>
         useQuery({
-          queryKey: ["boq", "boq-nonexistent"],
-          queryFn: () => boqApi.get("boq-nonexistent"),
+          queryKey: ['boq', 'boq-nonexistent'],
+          queryFn: () => boqApi.get('boq-nonexistent'),
         }),
       { wrapper },
     );
@@ -458,13 +443,13 @@ describe.skip("BOQ API — MSW integration", () => {
     expect(apiErr.status).toBe(404);
   });
 
-  it("useQuery: BOQ list is empty when project has no BOQs", async () => {
+  it('useQuery: BOQ list is empty when project has no BOQs', async () => {
     // Project with no BOQs — handler returns empty array for unknown project id
     server.use(
-      http.get("/api/v1/boq/boqs/", ({ request }) => {
+      http.get('/api/v1/boq/boqs/', ({ request }) => {
         const url = new URL(request.url);
-        const projectId = url.searchParams.get("project_id");
-        if (projectId === "proj-empty") {
+        const projectId = url.searchParams.get('project_id');
+        if (projectId === 'proj-empty') {
           return HttpResponse.json([]);
         }
         return HttpResponse.json(MOCK_BOQS);
@@ -477,8 +462,8 @@ describe.skip("BOQ API — MSW integration", () => {
     const { result } = renderHook(
       () =>
         useQuery({
-          queryKey: ["boqs", "proj-empty"],
-          queryFn: () => boqApi.list("proj-empty"),
+          queryKey: ['boqs', 'proj-empty'],
+          queryFn: () => boqApi.list('proj-empty'),
         }),
       { wrapper },
     );
@@ -489,15 +474,15 @@ describe.skip("BOQ API — MSW integration", () => {
     expect(Array.isArray(result.current.data)).toBe(true);
   });
 
-  it("useQuery: passes through BOQ position fields accurately", async () => {
+  it('useQuery: passes through BOQ position fields accurately', async () => {
     const queryClient = makeQueryClient();
     const wrapper = createWrapper(queryClient);
 
     const { result } = renderHook(
       () =>
         useQuery({
-          queryKey: ["boq", "boq-001"],
-          queryFn: () => boqApi.get("boq-001"),
+          queryKey: ['boq', 'boq-001'],
+          queryFn: () => boqApi.get('boq-001'),
         }),
       { wrapper },
     );
@@ -522,11 +507,11 @@ describe.skip("BOQ API — MSW integration", () => {
     });
   });
 
-  it("useQuery: handles 503 Service Unavailable gracefully", async () => {
+  it('useQuery: handles 503 Service Unavailable gracefully', async () => {
     server.use(
-      http.get("/api/v1/boq/boqs/:id", () => {
+      http.get('/api/v1/boq/boqs/:id', () => {
         return HttpResponse.json(
-          { detail: "Service temporarily unavailable" },
+          { detail: 'Service temporarily unavailable' },
           { status: 503 },
         );
       }),
@@ -538,8 +523,8 @@ describe.skip("BOQ API — MSW integration", () => {
     const { result } = renderHook(
       () =>
         useQuery({
-          queryKey: ["boq", "boq-001"],
-          queryFn: () => boqApi.get("boq-001"),
+          queryKey: ['boq', 'boq-001'],
+          queryFn: () => boqApi.get('boq-001'),
         }),
       { wrapper },
     );
@@ -548,7 +533,7 @@ describe.skip("BOQ API — MSW integration", () => {
 
     const apiErr = result.current.error as ApiError;
     expect(apiErr.status).toBe(503);
-    expect(apiErr.message).toContain("503");
+    expect(apiErr.message).toContain('503');
   });
 });
 
@@ -557,14 +542,14 @@ describe.skip("BOQ API — MSW integration", () => {
 ═══════════════════════════════════════════════════════════════════════ */
 
 // SKIPPED — same root cause as the API integration tests above.
-describe.skip("React Query loading state transitions", () => {
-  it("transitions from loading → success for project list", async () => {
+// SKIP: same jsdom + undici + MSW AbortSignal realm-mismatch as the two suites above — loading-state transitions never see the mocked response. Re-enable when: MSW v3 + jsdom land single-realm AbortSignal compat. Tracked in v4.3 backlog.
+describe.skip('React Query loading state transitions', () => {
+  it('transitions from loading → success for project list', async () => {
     const queryClient = makeQueryClient();
     const wrapper = createWrapper(queryClient);
 
     const { result } = renderHook(
-      () =>
-        useQuery({ queryKey: ["projects"], queryFn: () => projectsApi.list() }),
+      () => useQuery({ queryKey: ['projects'], queryFn: () => projectsApi.list() }),
       { wrapper },
     );
 
@@ -582,10 +567,10 @@ describe.skip("React Query loading state transitions", () => {
     expect(result.current.data).toBeDefined();
   });
 
-  it("transitions from loading → error for 500 response", async () => {
+  it('transitions from loading → error for 500 response', async () => {
     server.use(
-      http.get("/api/v1/projects/", () => {
-        return HttpResponse.json({ detail: "Server error" }, { status: 500 });
+      http.get('/api/v1/projects/', () => {
+        return HttpResponse.json({ detail: 'Server error' }, { status: 500 });
       }),
     );
 
@@ -593,8 +578,7 @@ describe.skip("React Query loading state transitions", () => {
     const wrapper = createWrapper(queryClient);
 
     const { result } = renderHook(
-      () =>
-        useQuery({ queryKey: ["projects"], queryFn: () => projectsApi.list() }),
+      () => useQuery({ queryKey: ['projects'], queryFn: () => projectsApi.list() }),
       { wrapper },
     );
 
@@ -615,28 +599,26 @@ describe.skip("React Query loading state transitions", () => {
    ApiError class unit tests (no network required)
 ═══════════════════════════════════════════════════════════════════════ */
 
-describe("ApiError class", () => {
-  it("constructs with correct status, statusText and body", () => {
+describe('ApiError class', () => {
+  it('constructs with correct status, statusText and body', () => {
     // v0.8.0 changed ApiError to extract a friendly message from the body
     // (FastAPI's `detail` string) instead of the generic "API <status>".
-    const err = new ApiError(422, "Unprocessable Entity", {
-      detail: "Validation failed",
-    });
+    const err = new ApiError(422, 'Unprocessable Entity', { detail: 'Validation failed' });
     expect(err.status).toBe(422);
-    expect(err.statusText).toBe("Unprocessable Entity");
-    expect(err.body).toEqual({ detail: "Validation failed" });
-    expect(err.message).toBe("Validation failed");
-    expect(err.name).toBe("ApiError");
+    expect(err.statusText).toBe('Unprocessable Entity');
+    expect(err.body).toEqual({ detail: 'Validation failed' });
+    expect(err.message).toBe('Validation failed');
+    expect(err.name).toBe('ApiError');
   });
 
-  it("is an instance of Error", () => {
-    const err = new ApiError(500, "Internal Server Error", null);
+  it('is an instance of Error', () => {
+    const err = new ApiError(500, 'Internal Server Error', null);
     expect(err).toBeInstanceOf(Error);
     expect(err).toBeInstanceOf(ApiError);
   });
 
-  it("accepts undefined body", () => {
-    const err = new ApiError(401, "Unauthorized", undefined);
+  it('accepts undefined body', () => {
+    const err = new ApiError(401, 'Unauthorized', undefined);
     expect(err.body).toBeUndefined();
     expect(err.status).toBe(401);
   });

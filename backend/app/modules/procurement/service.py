@@ -49,7 +49,6 @@ async def _safe_publish(name: str, data: dict, source_module: str = "oe_procurem
     except Exception:
         _logger_ev.debug("Event publish skipped: %s", name)
 
-
 # ── Allowed PO status transitions ───────────────────────────────────────────
 
 _PO_STATUS_TRANSITIONS: dict[str, set[str]] = {
@@ -99,10 +98,23 @@ def _validate_3way_match(
 
     Returns a list of violation dicts (empty list = clean match). Lines without
     a ``po_item_id`` are skipped (free-text additions are out of scope).
+
+    Each violation carries a ``reason`` field. The router maps:
+        * ``reason == "no_confirmed_grs"`` → 400 (caller must explicitly force)
+        * any other ``reason`` → 422 (quantity-mismatch / over-invoicing)
+
+    The ``no_confirmed_grs`` reason fires only when goods receipts exist
+    but none are confirmed (i.e. only draft GRs). When NO GR exists at all
+    we still report it so over-invoicing is blocked.
     """
     received_by_po_item: dict[uuid.UUID, Decimal] = {}
+    has_draft_grs = False
+    has_any_grs = False
     for gr in po.goods_receipts or []:
+        has_any_grs = True
         if gr.status != "confirmed":
+            if gr.status == "draft":
+                has_draft_grs = True
             continue
         for gr_item in gr.items or []:
             if gr_item.po_item_id is None:
@@ -111,28 +123,42 @@ def _validate_3way_match(
                 qty = Decimal(str(gr_item.quantity_received or "0"))
             except (InvalidOperation, ValueError, TypeError):
                 qty = Decimal("0")
-            received_by_po_item[gr_item.po_item_id] = received_by_po_item.get(gr_item.po_item_id, Decimal("0")) + qty
+            received_by_po_item[gr_item.po_item_id] = (
+                received_by_po_item.get(gr_item.po_item_id, Decimal("0")) + qty
+            )
 
     po_items_by_id = {item.id: item for item in (po.items or [])}
 
     has_invoice_qty = any(
-        (line.get("po_item_id") is not None and _to_decimal(line.get("quantity")) > Decimal("0"))
+        (line.get("po_item_id") is not None
+         and _to_decimal(line.get("quantity")) > Decimal("0"))
         for line in invoice_lines
     )
+
+    # "No confirmed GRs" gate: fired when PO has line items, the invoice
+    # carries positive quantities, and no confirmed GR exists yet. The
+    # explicit ``no_confirmed_grs`` reason lets the router emit a 400 so
+    # the user knows the workflow problem is the missing GR, not an
+    # arithmetic mismatch (which would be 422).
     if not received_by_po_item and (po.items or []) and has_invoice_qty:
-        return [
-            {
-                "ordinal": None,
-                "po_item_id": None,
-                "description": None,
-                "requested_qty": None,
-                "received_qty": "0",
-                "reason": "no_confirmed_grs",
-                "message": (
-                    "No confirmed goods receipts exist for this PO; pass force=true to invoice without GR match."
-                ),
-            }
-        ]
+        message = (
+            "Only draft goods receipts exist for this PO; confirm them "
+            "or pass force=true to invoice without GR match."
+            if has_draft_grs
+            else "No goods receipts exist for this PO; "
+            "pass force=true to invoice without GR match."
+        )
+        return [{
+            "ordinal": None,
+            "po_item_id": None,
+            "description": None,
+            "requested_qty": None,
+            "received_qty": "0",
+            "reason": "no_confirmed_grs",
+            "has_draft_grs": has_draft_grs,
+            "has_any_grs": has_any_grs,
+            "message": message,
+        }]
 
     violations: list[dict] = []
     for line in invoice_lines:
@@ -145,15 +171,14 @@ def _validate_3way_match(
         requested = _to_decimal(line.get("quantity"))
         received = received_by_po_item.get(po_item_id, Decimal("0"))
         if requested > received:
-            violations.append(
-                {
-                    "ordinal": line.get("ordinal"),
-                    "po_item_id": str(po_item_id),
-                    "description": po_item.description,
-                    "requested_qty": str(requested),
-                    "received_qty": str(received),
-                }
-            )
+            violations.append({
+                "ordinal": line.get("ordinal"),
+                "po_item_id": str(po_item_id),
+                "description": po_item.description,
+                "requested_qty": str(requested),
+                "received_qty": str(received),
+                "reason": "qty_exceeds_received",
+            })
 
     return violations
 
@@ -193,7 +218,10 @@ class ProcurementService:
         if data.status not in _VALID_PO_STATUSES:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
-                detail=(f"Invalid PO status: '{data.status}'. Allowed: {', '.join(sorted(_VALID_PO_STATUSES))}"),
+                detail=(
+                    f"Invalid PO status: '{data.status}'. "
+                    f"Allowed: {', '.join(sorted(_VALID_PO_STATUSES))}"
+                ),
             )
 
         # Re-aggregate subtotal from items when items are supplied. Each item's
@@ -230,7 +258,9 @@ class ProcurementService:
             # task #217).
             try:
                 proj_currency = (
-                    await self.session.execute(select(Project.currency).where(Project.id == data.project_id))
+                    await self.session.execute(
+                        select(Project.currency).where(Project.id == data.project_id)
+                    )
                 ).scalar_one_or_none()
             except Exception:  # noqa: BLE001 — lookup is non-critical
                 proj_currency = None
@@ -238,54 +268,17 @@ class ProcurementService:
 
         explicit_po_number = data.po_number
         # Mirrors changeorders BUG-354: MAX(po_number)+1 is not atomic, so two
-        # concurrent creates can compute the same suffix and one would 500 on the
-        # uq_procurement_po_project_number constraint. Retry by re-reading MAX.
-        _MAX_RETRIES = 5
-        last_exc: Exception | None = None
-        po: PurchaseOrder | None = None
-        for _attempt in range(_MAX_RETRIES):
-            po_number = explicit_po_number or await self.po_repo.next_po_number(
-                data.project_id,
-            )
-            po = PurchaseOrder(
-                project_id=data.project_id,
-                vendor_contact_id=data.vendor_contact_id,
-                po_number=po_number,
-                po_type=data.po_type,
-                issue_date=data.issue_date,
-                delivery_date=data.delivery_date,
-                currency_code=currency_code,
-                amount_subtotal=data.amount_subtotal,
-                tax_amount=data.tax_amount,
-                amount_total=computed_total,
-                status=data.status,
-                payment_terms=data.payment_terms,
-                notes=data.notes,
-                created_by=uuid.UUID(user_id) if user_id else None,
-                metadata_=data.metadata,
-            )
-            try:
-                po = await self.po_repo.create(po)
-                break
-            except IntegrityError as exc:
-                last_exc = exc
-                await self.session.rollback()
-                if explicit_po_number:
-                    raise HTTPException(
-                        status_code=status.HTTP_409_CONFLICT,
-                        detail=(f"Purchase order number '{explicit_po_number}' already exists for this project."),
-                    ) from exc
-                continue
-        else:
-            raise HTTPException(
-                status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-                detail=(
-                    "Could not generate a unique PO number after "
-                    f"{_MAX_RETRIES} attempts (concurrent contention). Please retry."
-                ),
-            ) from last_exc
-
-        assert po is not None  # loop guarantees assignment on the break path
+        # concurrent creates can compute the same suffix and one would 500 on
+        # the uq_procurement_po_project_number constraint. Retry by re-reading
+        # MAX for auto-numbered POs. Explicit numbers do not retry — a
+        # collision there is a 409 client error.
+        po = await self._create_po_with_retry(
+            data=data,
+            explicit_po_number=explicit_po_number,
+            currency_code=currency_code,
+            computed_total=computed_total,
+            user_id=user_id,
+        )
 
         # Create line items
         for idx, item_data in enumerate(data.items):
@@ -328,6 +321,70 @@ class ProcurementService:
 
         logger.info("PO created: %s (type=%s)", po.po_number, po.po_type)
         return po
+
+    async def _create_po_with_retry(
+        self,
+        *,
+        data: POCreate,
+        explicit_po_number: str | None,
+        currency_code: str,
+        computed_total: str,
+        user_id: str | None,
+    ) -> PurchaseOrder:
+        """Insert a PurchaseOrder row, retrying on auto-number collisions.
+
+        Single break-on-success control flow:
+          * explicit po_number collision → 409 immediately (no retry — caller
+            asked for a specific number and a unique row already owns it).
+          * auto-number collision → re-read MAX(po_number) and retry up to
+            ``_MAX_RETRIES`` times.
+          * retries exhausted → 503 with the last IntegrityError as cause.
+        """
+        _MAX_RETRIES = 5
+        last_exc: IntegrityError | None = None
+        for _attempt in range(_MAX_RETRIES):
+            po_number = explicit_po_number or await self.po_repo.next_po_number(
+                data.project_id,
+            )
+            po = PurchaseOrder(
+                project_id=data.project_id,
+                vendor_contact_id=data.vendor_contact_id,
+                po_number=po_number,
+                po_type=data.po_type,
+                issue_date=data.issue_date,
+                delivery_date=data.delivery_date,
+                currency_code=currency_code,
+                amount_subtotal=data.amount_subtotal,
+                tax_amount=data.tax_amount,
+                amount_total=computed_total,
+                status=data.status,
+                payment_terms=data.payment_terms,
+                notes=data.notes,
+                created_by=uuid.UUID(user_id) if user_id else None,
+                metadata_=data.metadata,
+            )
+            try:
+                return await self.po_repo.create(po)
+            except IntegrityError as exc:
+                last_exc = exc
+                await self.session.rollback()
+                if explicit_po_number:
+                    raise HTTPException(
+                        status_code=status.HTTP_409_CONFLICT,
+                        detail=(
+                            f"Purchase order number '{explicit_po_number}' already "
+                            f"exists for this project."
+                        ),
+                    ) from exc
+                # else: auto-number collision — try again with a fresh MAX read.
+
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail=(
+                "Could not generate a unique PO number after "
+                f"{_MAX_RETRIES} attempts (concurrent contention). Please retry."
+            ),
+        ) from last_exc
 
     async def get_po(self, po_id: uuid.UUID) -> PurchaseOrder:
         """Get PO by ID. Raises 404 if not found."""
@@ -379,7 +436,10 @@ class ProcurementService:
             if new_status not in _VALID_PO_STATUSES:
                 raise HTTPException(
                     status_code=status.HTTP_400_BAD_REQUEST,
-                    detail=(f"Invalid PO status: '{new_status}'. Allowed: {', '.join(sorted(_VALID_PO_STATUSES))}"),
+                    detail=(
+                        f"Invalid PO status: '{new_status}'. "
+                        f"Allowed: {', '.join(sorted(_VALID_PO_STATUSES))}"
+                    ),
                 )
             allowed = _PO_STATUS_TRANSITIONS.get(po.status, set())
             if new_status != po.status and new_status not in allowed:
@@ -525,7 +585,10 @@ class ProcurementService:
                 if po_item is None:
                     raise HTTPException(
                         status_code=status.HTTP_400_BAD_REQUEST,
-                        detail=(f"PO item {item_data.po_item_id} not found in purchase order {data.po_id}"),
+                        detail=(
+                            f"PO item {item_data.po_item_id} not found "
+                            f"in purchase order {data.po_id}"
+                        ),
                     )
                 # Validate received quantity does not exceed ordered quantity
                 try:
@@ -606,7 +669,9 @@ class ProcurementService:
         offset: int = 0,
     ) -> tuple[list[GoodsReceipt], int]:
         """List goods receipts with optional filters."""
-        return await self.gr_repo.list(po_id=po_id, status=gr_status, limit=limit, offset=offset)
+        return await self.gr_repo.list(
+            po_id=po_id, status=gr_status, limit=limit, offset=offset
+        )
 
     async def confirm_goods_receipt(self, gr_id: uuid.UUID) -> GoodsReceipt:
         """Confirm a goods receipt and update the PO status accordingly.
@@ -727,7 +792,9 @@ class ProcurementService:
         gr_rows = (await self.session.execute(gr_stmt)).all()
         # SUM of String columns returns the raw string of the first row on
         # SQLite — convert to Decimal defensively.
-        received_by_item: dict[uuid.UUID, Decimal] = {row[0]: _to_decimal(row[1]) for row in gr_rows}
+        received_by_item: dict[uuid.UUID, Decimal] = {
+            row[0]: _to_decimal(row[1]) for row in gr_rows
+        }
 
         # ── Invoiced quantities — best-effort, optional finance module ──
         invoiced_by_sort: dict[int, Decimal] = {}
@@ -764,7 +831,10 @@ class ProcurementService:
                 for inv_id, sort_order, qty in line_rows:
                     if inv_id not in linked_invoice_ids:
                         continue
-                    invoiced_by_sort[sort_order] = invoiced_by_sort.get(sort_order, Decimal("0")) + _to_decimal(qty)
+                    invoiced_by_sort[sort_order] = (
+                        invoiced_by_sort.get(sort_order, Decimal("0"))
+                        + _to_decimal(qty)
+                    )
         except Exception:  # noqa: BLE001 — finance is optional
             logger.debug("Finance lookup skipped for PO %s match-status", po_id)
 
@@ -778,16 +848,14 @@ class ProcurementService:
 
             status_tag = self._classify_line_match(ordered, received, invoiced)
             overall_kinds.add(status_tag)
-            lines.append(
-                {
-                    "line_id": po_item.id,
-                    "description": po_item.description,
-                    "ordered_qty": str(ordered),
-                    "received_qty": str(received),
-                    "invoiced_qty": str(invoiced),
-                    "match_status": status_tag,
-                }
-            )
+            lines.append({
+                "line_id": po_item.id,
+                "description": po_item.description,
+                "ordered_qty": str(ordered),
+                "received_qty": str(received),
+                "invoiced_qty": str(invoiced),
+                "match_status": status_tag,
+            })
 
         # Overall: worst case wins (over_invoiced > over_received >
         # unmatched > partial > ok).
@@ -805,9 +873,7 @@ class ProcurementService:
 
     @staticmethod
     def _classify_line_match(
-        ordered: Decimal,
-        received: Decimal,
-        invoiced: Decimal,
+        ordered: Decimal, received: Decimal, invoiced: Decimal,
     ) -> str:
         """Collapse three quantities into a single PO-line match tag."""
         zero = Decimal("0")
@@ -854,11 +920,17 @@ class ProcurementService:
         # free-form string and may be NULL).
         po_filters.append(PurchaseOrder.created_at >= datetime.fromisoformat(cutoff))
 
-        po_count_stmt = _select(_func.count()).select_from(PurchaseOrder).where(_and(*po_filters))
+        po_count_stmt = (
+            _select(_func.count())
+            .select_from(PurchaseOrder)
+            .where(_and(*po_filters))
+        )
         total_po_count = (await self.session.execute(po_count_stmt)).scalar_one() or 0
 
         # SUM amount_total as Python Decimal (string column).
-        po_value_stmt = _select(PurchaseOrder.amount_total, PurchaseOrder.currency_code).where(_and(*po_filters))
+        po_value_stmt = _select(PurchaseOrder.amount_total, PurchaseOrder.currency_code).where(
+            _and(*po_filters)
+        )
         po_value_rows = (await self.session.execute(po_value_stmt)).all()
         total_po_value = Decimal("0")
         currency = ""
@@ -872,34 +944,47 @@ class ProcurementService:
         po_ids = [row[0] for row in (await self.session.execute(po_ids_stmt)).all()]
 
         # ── GR aggregates (on-time + rejection) ─────────────────────────
+        # ``on_time_count`` covers GRs whose parent PO had a delivery_date AND
+        # the receipt was on/before it. GRs against POs with NO delivery_date
+        # (unscheduled) cannot be evaluated, so they are tracked in a separate
+        # ``unscheduled_count`` and excluded from the on-time denominator —
+        # otherwise scoring inflates with every unscheduled PO (P0-2).
         total_gr_count = 0
         on_time_count = 0
+        unscheduled_count = 0
         rejected_count = 0
         if po_ids:
-            gr_stmt = _select(
-                GoodsReceipt.id,
-                GoodsReceipt.po_id,
-                GoodsReceipt.receipt_date,
-                GoodsReceipt.status,
-            ).where(GoodsReceipt.po_id.in_(po_ids))
+            gr_stmt = (
+                _select(
+                    GoodsReceipt.id,
+                    GoodsReceipt.po_id,
+                    GoodsReceipt.receipt_date,
+                    GoodsReceipt.status,
+                )
+                .where(GoodsReceipt.po_id.in_(po_ids))
+            )
             gr_rows = (await self.session.execute(gr_stmt)).all()
 
             # Build PO delivery-date lookup once (string ISO dates compare
             # lexicographically when both are YYYY-MM-DD).
-            po_deliveries_stmt = _select(PurchaseOrder.id, PurchaseOrder.delivery_date).where(
-                PurchaseOrder.id.in_(po_ids)
-            )
-            po_delivery_map = {row[0]: row[1] for row in (await self.session.execute(po_deliveries_stmt)).all()}
+            po_deliveries_stmt = _select(
+                PurchaseOrder.id, PurchaseOrder.delivery_date
+            ).where(PurchaseOrder.id.in_(po_ids))
+            po_delivery_map = {
+                row[0]: row[1]
+                for row in (await self.session.execute(po_deliveries_stmt)).all()
+            }
 
             for _gr_id, gr_po_id, receipt_date, gr_status in gr_rows:
                 total_gr_count += 1
                 if gr_status == "rejected":
                     rejected_count += 1
                 expected = po_delivery_map.get(gr_po_id)
-                if expected and receipt_date and receipt_date <= expected:
-                    on_time_count += 1
-                elif not expected:
-                    # No expected date → cannot be late.
+                if not expected:
+                    # PO has no delivery_date → cannot evaluate on-time.
+                    unscheduled_count += 1
+                    continue
+                if receipt_date and receipt_date <= expected:
                     on_time_count += 1
 
         # ── Quantity-variance across PO line items ───────────────────────
@@ -923,7 +1008,10 @@ class ProcurementService:
                 .where(GoodsReceiptItem.po_item_id.is_not(None))
                 .group_by(GoodsReceiptItem.po_item_id)
             )
-            recv_map = {row[0]: _to_decimal(row[1]) for row in (await self.session.execute(recv_stmt)).all()}
+            recv_map = {
+                row[0]: _to_decimal(row[1])
+                for row in (await self.session.execute(recv_stmt)).all()
+            }
 
             line_variances: list[Decimal] = []
             for line_id, ordered_raw in line_rows:
@@ -931,11 +1019,21 @@ class ProcurementService:
                 if ordered <= Decimal("0"):
                     continue
                 received = recv_map.get(line_id, Decimal("0"))
-                line_variances.append(abs((received - ordered) / ordered))
+                line_variances.append(
+                    abs((received - ordered) / ordered)
+                )
             if line_variances:
-                qty_variance_pct = float(sum(line_variances) / Decimal(len(line_variances)))
+                qty_variance_pct = float(
+                    sum(line_variances) / Decimal(len(line_variances))
+                )
 
-        on_time_pct = (on_time_count / total_gr_count) if total_gr_count else 0.0
+        # On-time denominator excludes unscheduled GRs (P0-2). Rejection
+        # rate keeps the full GR count as the denominator — a rejected
+        # delivery is still a delivery, scheduled or not.
+        scheduled_gr_count = total_gr_count - unscheduled_count
+        on_time_pct = (
+            (on_time_count / scheduled_gr_count) if scheduled_gr_count else 0.0
+        )
         rejection_rate = (rejected_count / total_gr_count) if total_gr_count else 0.0
 
         return {
@@ -950,6 +1048,8 @@ class ProcurementService:
             "qty_variance_pct": qty_variance_pct,
             "gr_rejection_rate": rejection_rate,
             "total_gr_count": total_gr_count,
+            "on_time_count": on_time_count,
+            "unscheduled_count": unscheduled_count,
         }
 
     @staticmethod
@@ -969,7 +1069,9 @@ class ProcurementService:
                         qty = Decimal(gr_item.quantity_received)
                     except (InvalidOperation, ValueError, TypeError):
                         qty = Decimal("0")
-                    received_by_item[gr_item.po_item_id] = received_by_item.get(gr_item.po_item_id, Decimal("0")) + qty
+                    received_by_item[gr_item.po_item_id] = (
+                        received_by_item.get(gr_item.po_item_id, Decimal("0")) + qty
+                    )
 
         # Check each PO item
         for po_item in po.items:

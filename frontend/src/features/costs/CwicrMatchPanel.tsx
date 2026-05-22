@@ -416,31 +416,24 @@ export function CwicrMatchPanel(props: CwicrMatchPanelProps) {
       )}
 
       {/* Variant picker — anchored at the row's Apply button. */}
-      {activeVariantPick &&
-        activeVariantPick.detail.metadata?.variants &&
-        activeVariantPick.detail.metadata?.variant_stats && (
-          <VariantPicker
-            variants={activeVariantPick.detail.metadata.variants}
-            stats={activeVariantPick.detail.metadata.variant_stats}
-            anchorEl={activeVariantPick.anchorEl}
-            unitLabel={activeVariantPick.detail.unit || ""}
-            currency={
-              activeVariantPick.detail.currency ||
-              activeVariantPick.match.currency ||
-              "USD"
-            }
-            onApply={(chosen) => {
-              const pending = activeVariantPick;
-              setActiveVariantPick(null);
-              pending.resolve(chosen);
-            }}
-            onClose={() => {
-              const pending = activeVariantPick;
-              setActiveVariantPick(null);
-              pending.resolve(null);
-            }}
-          />
-        )}
-    </div>
-  );
-}
+      {activeVariantPick
+        && activeVariantPick.detail.metadata?.variants
+        && activeVariantPick.detail.metadata?.variant_stats && (
+        <VariantPicker
+          variants={activeVariantPick.detail.metadata.variants}
+          stats={activeVariantPick.detail.metadata.variant_stats}
+          anchorEl={activeVariantPick.anchorEl}
+          unitLabel={activeVariantPick.detail.unit || ''}
+          currency={activeVariantPick.detail.currency || activeVariantPick.match.currency || ''}
+          onApply={(chosen) => {
+            const pending = activeVariantPick;
+            setActiveVariantPick(null);
+            pending.resolve(chosen);
+          }}
+          onClose={() => {
+            const pending = activeVariantPick;
+            setActiveVariantPick(null);
+            pending.resolve(null);
+          }}
+        />
+      )}

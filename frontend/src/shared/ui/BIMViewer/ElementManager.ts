@@ -278,9 +278,11 @@ const DISCIPLINE_COLORS: Record<string, number> = {
 
 const DEFAULT_COLOR = 0x90a4ae; // blue-grey
 
-function getDisciplineColor(discipline: string): number {
+function getDisciplineColor(discipline: string | null | undefined): number {
+  // #153 guard — RVT elements without a mapped IFC discipline arrive with
+  // `discipline === undefined`; previous code crashed in toLowerCase().
+  if (!discipline) return DEFAULT_COLOR;
   const key = discipline.toLowerCase().replace(/[\s-]/g, "_");
-  return DISCIPLINE_COLORS[key] ?? DEFAULT_COLOR;
 }
 
 /* ── Category Colors (for placeholder boxes) ─────────────────────────── */
@@ -820,7 +822,56 @@ export class ElementManager {
         }
         const resp = await fetch(geometryUrl);
         if (!resp.ok) {
-          throw new Error(`Failed to fetch geometry: ${resp.status}`);
+          // Pull the structured FastAPI detail payload when present (the
+          // backend ships a JSON diagnostic block with head_hex, format,
+          // expected_signature, first_tag, size_bytes and a human
+          // `message` field). Falls back to plain text / status when the
+          // server is unreachable or returns HTML (e.g. a proxy error).
+          let detail: unknown = null;
+          let messageHint = '';
+          try {
+            const ct = resp.headers.get('content-type') ?? '';
+            if (ct.includes('application/json')) {
+              const body = (await resp.json()) as { detail?: unknown };
+              detail = body?.detail ?? body;
+            } else {
+              const text = await resp.text();
+              if (text) messageHint = text.slice(0, 500);
+            }
+          } catch {
+            // Body could not be read — keep going with the bare status.
+          }
+          // Detail may be a string (legacy) or an object (new diagnostic).
+          let diagnosticMessage = '';
+          if (typeof detail === 'string') {
+            diagnosticMessage = detail;
+          } else if (detail && typeof detail === 'object') {
+            const d = detail as { message?: string };
+            diagnosticMessage = d.message ?? '';
+          } else if (messageHint) {
+            diagnosticMessage = messageHint;
+          }
+          // Correlation ID — every backend response (success or error)
+          // carries an X-Request-Id header. Surface it on the Error so
+          // the UI can quote it in the user-visible diagnostic and the
+          // "Send to support" template; users don't have to dig through
+          // DevTools to find it.
+          const requestId =
+            resp.headers.get('x-request-id') ??
+            resp.headers.get('X-Request-Id') ??
+            null;
+          const headline = diagnosticMessage
+            ? `Failed to fetch geometry (${resp.status}): ${diagnosticMessage}`
+            : `Failed to fetch geometry: ${resp.status}`;
+          const err = new Error(headline) as Error & {
+            status?: number;
+            diagnostic?: unknown;
+            requestId?: string | null;
+          };
+          err.status = resp.status;
+          err.diagnostic = detail;
+          err.requestId = requestId;
+          throw err;
         }
         const total = Number(resp.headers.get("content-length")) || 0;
         const reader = resp.body?.getReader();
@@ -2014,12 +2065,15 @@ export class ElementManager {
 
   /** Set visibility of elements by discipline. */
   setDisciplineVisible(discipline: string, visible: boolean): void {
+    // #153 guard — RVT elements without an IFC discipline arrive with
+    // `data.elementData.discipline === undefined`. Previous code crashed
+    // on the first such element when the user toggled a filter.
+    const target = (discipline ?? '').toLowerCase();
     for (const [, mesh] of this.meshMap) {
       const data = mesh.userData as { elementData?: BIMElementData };
-      if (
-        data.elementData?.discipline.toLowerCase() === discipline.toLowerCase()
-      ) {
-        mesh.visible = visible;
+      const elDiscipline = (data.elementData?.discipline ?? "").toLowerCase();
+      const target_lower = (discipline ?? "").toLowerCase();
+      if (elDiscipline && elDiscipline === target_lower) {
       }
     }
   }

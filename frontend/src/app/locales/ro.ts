@@ -2,47 +2,35 @@
 // Regenerate with: node --experimental-strip-types scripts/split-i18n-fallbacks.mjs
 
 const resource = {
-  translation: {
-    "about.ai_desc":
-      "OpenConstructionERP include instrumente opționale bazate pe AI — estimare rapidă din descrieri text, sugestii inteligente de costuri și asistent de chat pentru Antemăsurătoare. Aceste funcții necesită o cheie API de la un furnizor la alegerea dumneavoastră (Anthropic, OpenAI, Google). AI este întotdeauna opțional: se activează doar când îl configurați, iar dumneavoastră decideți ce date să trimiteți. Fără o cheie API, toate celelalte funcții funcționează complet offline.",
+  "translation": {
+    "about.ai_desc": "OpenConstructionERP include instrumente opționale bazate pe AI — estimare rapidă din descrieri text, sugestii inteligente de costuri și asistent de chat pentru Antemăsurătoare. Aceste funcții necesită o cheie API de la un furnizor la alegerea dumneavoastră (Anthropic, OpenAI, Google). AI este întotdeauna opțional: se activează doar când îl configurați, iar dumneavoastră decideți ce date să trimiteți. Fără o cheie API, toate celelalte funcții funcționează complet offline.",
     "about.ai_title": "Despre funcțiile AI",
     "about.cap.boq": "Listă de cantități",
-    "about.cap.boq_desc":
-      "Creați Antemăsurători detaliate cu secțiuni ierarhice, articole, asamblări, adaosuri (cheltuieli generale, profit, TVA) și totaluri automate. Acceptă DIN 276, NRM 1/2, MasterFormat și sisteme de clasificare personalizate.",
+    "about.cap.boq_desc": "Creați Antemăsurători detaliate cu secțiuni ierarhice, articole, asamblări, adaosuri (cheltuieli generale, profit, TVA) și totaluri automate. Acceptă DIN 276, NRM 1/2, MasterFormat și sisteme de clasificare personalizate.",
     "about.cap.catalog": "Catalog de resurse",
-    "about.cap.catalog_desc":
-      "Peste 7.000 de resurse — materiale, utilaje, manoperă, operatori și utilități. Construiți asamblări reutilizabile (tarife compuse) din elementele catalogului și aplicați-le direct în articolele Antemăsurătorii.",
+    "about.cap.catalog_desc": "Peste 7.000 de resurse — materiale, utilaje, manoperă, operatori și utilități. Construiți asamblări reutilizabile (tarife compuse) din elementele catalogului și aplicați-le direct în articolele Antemăsurătorii.",
     "about.cap.costmodel": "Model de cost 5D",
-    "about.cap.costmodel_desc":
-      "Urmăriți bugetele în timp cu Managementul Valorii Câștigate (SPI, CPI), vizualizare curbă S, proiecții ale fluxului de numerar, instantanee de cost și modelare de scenarii what-if pentru decizii informate.",
+    "about.cap.costmodel_desc": "Urmăriți bugetele în timp cu Managementul Valorii Câștigate (SPI, CPI), vizualizare curbă S, proiecții ale fluxului de numerar, instantanee de cost și modelare de scenarii what-if pentru decizii informate.",
     "about.cap.costs": "Baze de date de costuri",
-    "about.cap.costs_desc":
-      "Peste 55.000 de articole de cost în 11 baze de date regionale acoperind DACH, Marea Britanie, America de Nord, Orientul Mijlociu și altele. Adăugați propriile tarife, importați din Excel sau construiți o bază de date personalizată de la zero.",
+    "about.cap.costs_desc": "Peste 55.000 de articole de cost în 11 baze de date regionale acoperind DACH, Marea Britanie, America de Nord, Orientul Mijlociu și altele. Adăugați propriile tarife, importați din Excel sau construiți o bază de date personalizată de la zero.",
     "about.cap.import": "Import și export",
-    "about.cap.import_desc":
-      "Suport complet pentru import/export GAEB XML (X83), Excel și CSV. Generați rapoarte PDF profesionale. Integrați-vă fără probleme cu instrumentele și fluxurile de lucru existente.",
+    "about.cap.import_desc": "Suport complet pentru import/export GAEB XML (X83), Excel și CSV. Generați rapoarte PDF profesionale. Integrați-vă fără probleme cu instrumentele și fluxurile de lucru existente.",
     "about.cap.schedule": "Programare 4D",
-    "about.cap.schedule_desc":
-      "Creați grafice de proiect cu calculul căii critice CPM, diagrame Gantt interactive, analiza de risc Monte Carlo, alocarea resurselor și generarea automată a activităților din Antemăsurătoarea dumneavoastră.",
+    "about.cap.schedule_desc": "Creați grafice de proiect cu calculul căii critice CPM, diagrame Gantt interactive, analiza de risc Monte Carlo, alocarea resurselor și generarea automată a activităților din Antemăsurătoarea dumneavoastră.",
     "about.cap.tendering": "Licitații și oferte",
-    "about.cap.tendering_desc":
-      "Creați pachete de licitație cu domeniu de aplicare și articole, distribuiți subcontractanților, colectați și comparați ofertele una lângă alta într-o oglindă de prețuri și luați decizii de atribuire pe baza datelor.",
+    "about.cap.tendering_desc": "Creați pachete de licitație cu domeniu de aplicare și articole, distribuiți subcontractanților, colectați și comparați ofertele una lângă alta într-o oglindă de prețuri și luați decizii de atribuire pe baza datelor.",
     "about.cap.validation": "Validarea calității",
-    "about.cap.validation_desc":
-      "Motorul de calitate integrat verifică automat cantitățile lipsă, prețurile zero, articolele duplicate, conformitatea clasificărilor și anomaliile de tarif — cu un tablou de bord cu semafor.",
+    "about.cap.validation_desc": "Motorul de calitate integrat verifică automat cantitățile lipsă, prețurile zero, articolele duplicate, conformitatea clasificărilor și anomaliile de tarif — cu un tablou de bord cu semafor.",
     "about.capabilities_title": "Ce puteți face",
     "about.close": "Am înțeles",
-    "about.intro":
-      "OpenConstructionERP este o platformă modernă pentru managementul costurilor în construcții. Acoperă întregul flux de estimare — de la crearea unui deviz până la licitație și compararea ofertelor. Conceput pentru profesioniști din întreaga lume, acceptă standarde internaționale și funcționează în 20 de limbi.",
-    "about.intro2":
-      "Spre deosebire de soluțiile comerciale tradiționale, OpenConstructionERP rulează complet pe calculatorul dumneavoastră. Datele proiectului nu părăsesc niciodată echipamentul — aveți proprietate și control deplin. Codul sursă este deschis și auditabil, astfel încât știți întotdeauna exact ce face software-ul.",
+    "about.intro": "OpenConstructionERP este o platformă modernă pentru managementul costurilor în construcții. Acoperă întregul flux de estimare — de la crearea unui deviz până la licitație și compararea ofertelor. Conceput pentru profesioniști din întreaga lume, acceptă standarde internaționale și funcționează în 20 de limbi.",
+    "about.intro2": "Spre deosebire de soluțiile comerciale tradiționale, OpenConstructionERP rulează complet pe calculatorul dumneavoastră. Datele proiectului nu părăsesc niciodată echipamentul — aveți proprietate și control deplin. Codul sursă este deschis și auditabil, astfel încât știți întotdeauna exact ce face software-ul.",
     "about.numbers_title": "Platforma în cifre",
     "about.stat.costs": "Poziții de cost",
     "about.stat.free": "Gratuit și sursă deschisă",
     "about.stat.languages": "Limbi",
     "about.stat.regions": "Baze de date regionale",
-    "about.title":
-      "Estimare profesională a costurilor de construcție — gratuită și cu sursă deschisă",
+    "about.title": "Estimare profesională a costurilor de construcție — gratuită și cu sursă deschisă",
     "about.who.architects": "Arhitecți și ingineri",
     "about.who.contractors": "Antreprenori generali",
     "about.who.developers": "Dezvoltatori imobiliari",
@@ -53,15 +41,11 @@ const resource = {
     "about.who.qsurveyor": "Quantity surveyor",
     "about.who.students": "Studenți și profesori",
     "about.who.subs": "Subcontractanți",
-    "about.who_desc":
-      "OpenConstructionERP este conceput pentru oricine este implicat în managementul costurilor în construcții — indiferent dacă lucrați la proiecte rezidențiale sau infrastructură la scară largă, intern sau ca consultant.",
+    "about.who_desc": "OpenConstructionERP este conceput pentru oricine este implicat în managementul costurilor în construcții — indiferent dacă lucrați la proiecte rezidențiale sau infrastructură la scară largă, intern sau ca consultant.",
     "about.who_title": "Pentru cine este",
-    "about.why_1":
-      "Datele privind costurile în construcții sunt unul dintre cele mai valoroase active pe care le deține o companie. Cu software proprietar, datele dumneavoastră sunt adesea blocate în formate pe care nu le puteți controla. Dacă furnizorul mărește prețurile, schimbă termenii sau întrerupe produsul — este posibil să pierdeți accesul la ani de muncă.",
-    "about.why_2":
-      "OpenConstructionERP adoptă o abordare diferită. Datele dumneavoastră sunt stocate în formate deschise (SQLite, JSON, CSV) pe propriul hardware. Puteți exporta orice, oricând. Codul sursă este auditabil public sub AGPL-3.0, deci nu există transferuri de date ascunse, telemetrie sau surprize.",
-    "about.why_3":
-      "Platforma este modulară — instalați doar ce aveți nevoie. Modulele comunitare extind funcționalitatea fără a supraîncărca nucleul. Și pentru că rulează local, funcționează offline și se execută rapid chiar și cu proiecte mari.",
+    "about.why_1": "Datele privind costurile în construcții sunt unul dintre cele mai valoroase active pe care le deține o companie. Cu software proprietar, datele dumneavoastră sunt adesea blocate în formate pe care nu le puteți controla. Dacă furnizorul mărește prețurile, schimbă termenii sau întrerupe produsul — este posibil să pierdeți accesul la ani de muncă.",
+    "about.why_2": "OpenConstructionERP adoptă o abordare diferită. Datele dumneavoastră sunt stocate în formate deschise (SQLite, JSON, CSV) pe propriul hardware. Puteți exporta orice, oricând. Codul sursă este auditabil public sub AGPL-3.0, deci nu există transferuri de date ascunse, telemetrie sau surprize.",
+    "about.why_3": "Platforma este modulară — instalați doar ce aveți nevoie. Modulele comunitare extind funcționalitatea fără a supraîncărca nucleul. Și pentru că rulează local, funcționează offline și se execută rapid chiar și cu proiecte mari.",
     "about.why_title": "De ce contează open source",
     "ai.analyze_photo": "Analizează Fotografia",
     "ai.area": "Area (m²)",
@@ -69,8 +53,7 @@ const resource = {
     "ai.boq_name_placeholder": "Denumire pentru această Antemăsurătoare...",
     "ai.boq_saved": "Antemăsurătoarea a fost salvată cu succes",
     "ai.building_type": "Tipul Clădirii",
-    "ai.cad_info":
-      "Fișierele CAD/BIM (.rvt, .ifc, .dwg, .dgn) necesită instalarea convertorului DDC. Elementele vor fi extrase și folosite pentru a genera un deviz. Descărcați convertoarele de pe GitHub și plasați-le în ~/.openestimator/converters/.",
+    "ai.cad_info": "Fișierele CAD/BIM (.rvt, .ifc, .dwg, .dgn) necesită instalarea convertorului DDC. Elementele vor fi extrase și folosite pentru a genera un deviz. Descărcați convertoarele de pe GitHub și plasați-le în ~/.openestimator/converters/.",
     "ai.choose_project": "-- Alegeți un proiect --",
     "ai.col_description": "Description",
     "ai.col_pos": "Pos",
@@ -83,8 +66,7 @@ const resource = {
     "ai.connected": "AI Conectat",
     "ai.convert_estimate": "Convertire și Deviz",
     "ai.currency_label": "Currency",
-    "ai.describe_placeholder":
-      "Descrieți proiectul dumneavoastră...  Exemplu: ",
+    "ai.describe_placeholder": "Descrieți proiectul dumneavoastră...  Exemplu: ",
     "ai.dismiss": "Dismiss",
     "ai.drop_file": "Trageți fișierul aici sau faceți clic pentru a naviga",
     "ai.estimate_complete": "Deviz generat",
@@ -92,8 +74,7 @@ const resource = {
     "ai.estimate_failed": "Estimarea a eșuat",
     "ai.estimate_subtitle": "Creați un deviz din orice sursă",
     "ai.estimate_title": "Deviz AI",
-    "ai.excel_hint":
-      "Funcționează cel mai bine cu coloane: Descriere, Unitate, Cantitate, Tarif/Preț.",
+    "ai.excel_hint": "Funcționează cel mai bine cu coloane: Descriere, Unitate, Cantitate, Tarif/Preț.",
     "ai.export_coming_soon": "Export disponibil în curând",
     "ai.export_pdf": "Export PDF",
     "ai.extract_estimate": "Extrage și Deviz",
@@ -108,12 +89,9 @@ const resource = {
     "ai.location_placeholder": "e.g. Berlin",
     "ai.new_estimate": "Deviz Nou",
     "ai.parse_import": "Analiză și Import",
-    "ai.paste_info":
-      "Detectează automat date separate prin tab, punct și virgulă sau virgulă. AI va analiza și structura datele dumneavoastră în articole de deviz.",
-    "ai.paste_placeholder":
-      "Lipiți datele Antemăsurătorii aici (din Excel, Word sau orice tabel)...  Exemplu: Pos\\tDescriere\\tUnitate\\tCant\\tTarif 01.01\\tSăpătură\\tm3\\t250\\t18.50 01.02\\tBeton C30/37\\tm3\\t120\\t145.00 01.03\\tArmătură BSt 500\\tkg\\t12000\\t1.85",
-    "ai.pdf_hint":
-      "Încărcați documente Antemăsurătoare, specificații sau desene în format PDF.",
+    "ai.paste_info": "Detectează automat date separate prin tab, punct și virgulă sau virgulă. AI va analiza și structura datele dumneavoastră în articole de deviz.",
+    "ai.paste_placeholder": "Lipiți datele Antemăsurătorii aici (din Excel, Word sau orice tabel)...  Exemplu: Pos\\tDescriere\\tUnitate\\tCant\\tTarif 01.01\\tSăpătură\\tm3\\t250\\t18.50 01.02\\tBeton C30/37\\tm3\\t120\\t145.00 01.03\\tArmătură BSt 500\\tkg\\t12000\\t1.85",
+    "ai.pdf_hint": "Încărcați documente Antemăsurătoare, specificații sau desene în format PDF.",
     "ai.powered_by": "Alimentat de {{model}}",
     "ai.results": "Rezultatele Devizului",
     "ai.save": "Save",
@@ -121,15 +99,13 @@ const resource = {
     "ai.save_failed": "Salvarea Antemăsurătorii a eșuat",
     "ai.save_to_boq": "Salvați ca Antemăsurătoare",
     "ai.select_project": "Selectați Proiectul",
-    "ai.setup_required_desc":
-      "Adăugați cheia API pentru Anthropic Claude, OpenAI sau Google Gemini pentru a genera devize din text, fotografii, PDF-uri și fișiere CAD.",
+    "ai.setup_required_desc": "Adăugați cheia API pentru Anthropic Claude, OpenAI sau Google Gemini pentru a genera devize din text, fotografii, PDF-uri și fișiere CAD.",
     "ai.setup_required_title": "Conectați AI-ul pentru a începe",
     "ai.standard_label": "Standard",
     "ai.supported_formats": "Supports: {{formats}}",
     "ai.tab_text_desc": "Descrieți proiectul în text simplu",
     "ai.tab_photo_desc": "Fotografie a clădirii sau document scanat",
-    "ai.tab_pdf_desc":
-      "Fișe Antemăsurătoare, specificații, documente de licitație",
+    "ai.tab_pdf_desc": "Fișe Antemăsurătoare, specificații, documente de licitație",
     "ai.tab_excel_desc": "Foaie de calcul cu date Antemăsurătoare",
     "ai.tab_cad_desc": "Fișiere Revit, IFC, DWG, DGN",
     "ai.tab_paste_desc": "Copiați-lipiți din orice aplicație",
@@ -145,29 +121,23 @@ const resource = {
     "ai.building_mixed": "Utilizare Mixtă",
     "ai.standard_auto": "Detectare automată",
     "ai.currency_auto": "Auto",
-    "ai.try_again":
-      "Vă rugăm să încercați din nou sau să verificați setările AI.",
+    "ai.try_again": "Vă rugăm să încercați din nou sau să verificați setările AI.",
     "ai.advisor_title": "Consilier AI de Costuri",
-    "ai.advisor_desc":
-      "Adresați întrebări despre costuri, materiale și prețuri — din baza dumneavoastră de date și cunoștințele AI",
+    "ai.advisor_desc": "Adresați întrebări despre costuri, materiale și prețuri — din baza dumneavoastră de date și cunoștințele AI",
     "ai.advisor_empty": "Întrebați-mă orice despre costurile în construcții",
     "ai.advisor_placeholder": "Întrebați despre costuri, materiale, prețuri...",
     "ai.advisor_sources": "Sources:",
     "ai.advisor_error": "Eroare Consilier AI",
-    "ai.advisor_unavailable":
-      "Imposibil de obținut un răspuns. Vă rugăm să verificați setările AI.",
+    "ai.advisor_unavailable": "Imposibil de obținut un răspuns. Vă rugăm să verificați setările AI.",
     "ai.advisor_q1": "Care este costul mediu pe m² pentru tencuială?",
     "ai.advisor_q2": "Comparați prețurile betonului pe regiuni",
     "ai.advisor_q3": "Sugerați alternative mai ieftine pentru oțel",
-    "ai.advisor_q4":
-      "Care sunt tarifele tipice de manoperă pentru electricieni?",
+    "ai.advisor_q4": "Care sunt tarifele tipice de manoperă pentru electricieni?",
     "app.name": "OpenConstructionERP",
     "app.tagline": "Spațiu de lucru profesional pentru estimare în construcții",
     "assemblies.assemblies_found": "assemblies",
-    "assemblies.description":
-      "Rețete de cost reutilizabile pentru elemente comune de construcție",
-    "assemblies.what_are_assemblies":
-      'Asamblările sunt rețete de cost reutilizabile care combină mai multe resurse (materiale, manoperă, utilaje) într-un tarif compus unic. De exemplu, o asamblare "Perete din beton armat" include beton, armătură, cofraj și manoperă. Aplicați asamblările în articolele Antemăsurătorii pentru a completa automat costurile componentelor.',
+    "assemblies.description": "Rețete de cost reutilizabile pentru elemente comune de construcție",
+    "assemblies.what_are_assemblies": "Asamblările sunt rețete de cost reutilizabile care combină mai multe resurse (materiale, manoperă, utilaje) într-un tarif compus unic. De exemplu, o asamblare \"Perete din beton armat\" include beton, armătură, cofraj și manoperă. Aplicați asamblările în articolele Antemăsurătorii pentru a completa automat costurile componentelor.",
     "assemblies.new_assembly": "Asamblare Nouă",
     "assemblies.no_results": "Nu s-au găsit asamblări",
     "assemblies.no_results_hint": "Încercați să ajustați căutarea sau filtrele",
@@ -176,20 +146,17 @@ const resource = {
     "auth.check_email": "Verificați e-mailul",
     "auth.confirm_password": "Confirmați parola",
     "auth.confirm_password_placeholder": "Repetați parola",
-    "auth.connection_error":
-      "Conexiunea la server a eșuat. Vă rugăm să încercați din nou.",
+    "auth.connection_error": "Conexiunea la server a eșuat. Vă rugăm să încercați din nou.",
     "auth.create_account": "Creează cont",
     "auth.email": "E-mail",
     "auth.forgot_password": "Ați uitat parola?",
-    "auth.forgot_subtitle":
-      "Introduceți e-mailul și vă vom trimite un link de resetare.",
+    "auth.forgot_subtitle": "Introduceți e-mailul și vă vom trimite un link de resetare.",
     "auth.full_name": "Nume complet",
     "auth.full_name_placeholder": "Ion Popescu",
     "auth.has_account": "Aveți deja un cont?",
     "auth.invalid_credentials": "E-mail sau parolă invalidă",
     "auth.login": "Autentificare",
-    "auth.login_subtitle":
-      "Introduceți datele pentru a accesa spațiul de lucru",
+    "auth.login_subtitle": "Introduceți datele pentru a accesa spațiul de lucru",
     "auth.logout": "Deconectare",
     "auth.no_account": "Nu aveți cont?",
     "auth.password": "Parolă",
@@ -203,13 +170,10 @@ const resource = {
     "auth.register_subtitle": "Începeți cu OpenEstimate",
     "auth.register_title": "Creează cont",
     "auth.remember_me": "Ține-mă minte 30 de zile",
-    "auth.reset_error":
-      "Cererea de resetare nu a putut fi procesată. Vă rugăm să încercați din nou.",
-    "auth.reset_sent":
-      "Dacă există un cont pentru acest e-mail, veți primi în scurt timp un link de resetare a parolei.",
+    "auth.reset_error": "Cererea de resetare nu a putut fi procesată. Vă rugăm să încercați din nou.",
+    "auth.reset_sent": "Dacă există un cont pentru acest e-mail, veți primi în scurt timp un link de resetare a parolei.",
     "auth.send_reset_link": "Trimite linkul de resetare",
-    "auth.server_error":
-      "Conexiunea la server a eșuat. Vă rugăm să încercați din nou.",
+    "auth.server_error": "Conexiunea la server a eșuat. Vă rugăm să încercați din nou.",
     "auth.sign_in": "Autentificare",
     "boq.aace_accuracy": "Accuracy",
     "boq.aace_accuracy_range": "Interval de Precizie",
@@ -219,8 +183,7 @@ const resource = {
     "boq.aace_methodology": "Methodology",
     "boq.aace_metrics": "Metrici de Clasificare",
     "boq.aace_positions": "Positions",
-    "boq.aace_reference":
-      "Pe baza Practicii Recomandate AACE International 18R-97. Clasificarea este detectată automat din metricile de completitudine ale Antemăsurătorii.",
+    "boq.aace_reference": "Pe baza Practicii Recomandate AACE International 18R-97. Clasificarea este detectată automat din metricile de completitudine ale Antemăsurătorii.",
     "boq.aace_to": "to",
     "boq.aace_with_classification": "Cu clasificare",
     "boq.aace_with_rates": "Cu tarife unitare",
@@ -233,25 +196,20 @@ const resource = {
     "boq.add_n_positions": "Adăugați {{count}} în Antemăsurătoare",
     "boq.add_position": "Adăugați Articol",
     "boq.add_resource": "Add",
-    "boq.add_resource_hint":
-      "Apăsați Enter pentru a adăuga, Escape pentru a anula",
+    "boq.add_resource_hint": "Apăsați Enter pentru a adăuga, Escape pentru a anula",
     "boq.add_section": "Adăugați Secțiune",
     "boq.add_selected": "Adăugați selecția în Antemăsurătoare",
     "boq.adding": "Adding...",
     "boq.ai_assistant": "Asistent AI",
-    "boq.ai_chat_error":
-      "Solicitarea AI a eșuat. Vă rugăm să încercați din nou.",
-    "boq.ai_hint":
-      'Rugați-mă să generez articole Antemăsurătoare. De exemplu: "Adăugați articole MEP pentru un imobil de birouri cu 5 etaje"',
+    "boq.ai_chat_error": "Solicitarea AI a eșuat. Vă rugăm să încercați din nou.",
+    "boq.ai_hint": "Rugați-mă să generez articole Antemăsurătoare. De exemplu: \"Adăugați articole MEP pentru un imobil de birouri cu 5 etaje\"",
     "boq.ai_placeholder": "Descrieți articolele de generat...",
-    "boq.ai_welcome":
-      "Rugați-mă să generez articole Antemăsurătoare. De exemplu: ",
+    "boq.ai_welcome": "Rugați-mă să generez articole Antemăsurătoare. De exemplu: ",
     "boq.all_projects": "Toate proiectele",
     "boq.all_statuses": "Toate statusurile",
     "boq.area_m2": "Area (m²)",
     "boq.back_to_project": "Înapoi la proiect",
-    "boq.toolbar_hint":
-      "Utilizați bara de instrumente pentru a adăuga secțiuni și articole, a importa din baza de date de costuri sau asamblări, a exporta în GAEB/PDF/Excel sau a rula estimarea AI. Net = suma totalurilor articolelor. Adaosurile se aplică ca procente. Total General = Net + Adaosuri + TVA.",
+    "boq.toolbar_hint": "Utilizați bara de instrumente pentru a adăuga secțiuni și articole, a importa din baza de date de costuri sau asamblări, a exporta în GAEB/PDF/Excel sau a rula estimarea AI. Net = suma totalurilor articolelor. Adaosurile se aplică ca procente. Total General = Net + Adaosuri + TVA.",
     "boq.boq_created": "Antemăsurătoarea a fost creată",
     "boq.boq_name": "Denumire Antemăsurătoare",
     "boq.cancel_compare": "Anulați Compararea",
@@ -263,8 +221,7 @@ const resource = {
     "boq.cost_tree_no_categories": "Nu există categorii disponibile",
     "boq.cost_tree_search_placeholder": "Filtrați categoriile...",
     "boq.cost_tree_title": "Categories",
-    "boq.cursor_error_title":
-      "Încărcarea rezultatelor anterioare a eșuat — se reîmprospătează",
+    "boq.cursor_error_title": "Încărcarea rezultatelor anterioare a eșuat — se reîmprospătează",
     "boq.load_more": "Încărcați mai mult",
     "boq.loaded_n_of_m": "{{loaded}} din {{total}} articole",
     "boq.tree_loading": "Loading...",
@@ -275,15 +232,12 @@ const resource = {
     "boq.compare_by_section": "Pe Secțiune",
     "boq.compare_diff": "Diff",
     "boq.compare_difference": "Diferență (B față de A)",
-    "boq.compare_load_error":
-      "Încărcarea datelor Antemăsurătorii pentru comparare a eșuat",
-    "boq.compare_select_second":
-      "Selectați o a doua Antemăsurătoare pentru comparare",
+    "boq.compare_load_error": "Încărcarea datelor Antemăsurătorii pentru comparare a eșuat",
+    "boq.compare_select_second": "Selectați o a doua Antemăsurătoare pentru comparare",
     "boq.compare_selected": "Selectat pentru comparare",
     "boq.compare_title": "Comparare Antemăsurători",
     "boq.confirm_delete": "Ștergeți acest articol?",
-    "boq.confirm_delete_section":
-      "Ștergeți această secțiune și toate articolele sale?",
+    "boq.confirm_delete_section": "Ștergeți această secțiune și toate articolele sale?",
     "boq.cost_breakdown": "Defalcare Costuri",
     "boq.cost_breakdown_by_category": "Pe Categorie",
     "boq.cost_breakdown_items": "items",
@@ -300,8 +254,7 @@ const resource = {
     "boq.cost_risk_contingency": "Contingency (P80 - P50)",
     "boq.cost_risk_distribution": "Distribuția Costurilor",
     "boq.cost_risk_drivers": "Principalii Factori de Risc",
-    "boq.cost_risk_empty":
-      "Adăugați articole cu costuri pentru a rula simularea Monte Carlo.",
+    "boq.cost_risk_empty": "Adăugați articole cu costuri pentru a rula simularea Monte Carlo.",
     "boq.cost_risk_iterations": "Iterations",
     "boq.cost_risk_iterations_label": "iter.",
     "boq.cost_risk_loading": "Se rulează simularea Monte Carlo...",
@@ -327,10 +280,8 @@ const resource = {
     "boq.markup_bond": "Bond",
     "boq.markup_other": "Other",
     "boq.template_applied": "Șablonul regional a fost aplicat",
-    "boq.confirm_replace_markups":
-      "Aceasta va înlocui adaosurile existente. Continuați?",
-    "boq.no_markups":
-      "Niciun adaos. Adăugați unul sau aplicați un șablon regional.",
+    "boq.confirm_replace_markups": "Aceasta va înlocui adaosurile existente. Continuați?",
+    "boq.no_markups": "Niciun adaos. Adăugați unul sau aplicați un șablon regional.",
     "boq.new_markup": "Adaos Nou",
     "boq.markup_added": "Adaos adăugat",
     "boq.markup_deleted": "Adaos șters",
@@ -343,8 +294,7 @@ const resource = {
     "boq.duplicate_failed": "Duplicarea a eșuat",
     "boq.duplicated": "Antemăsurătoarea a fost duplicată",
     "boq.editor": "Editor Antemăsurătoare",
-    "boq.empty_section":
-      'Niciun articol în această secțiune. Faceți clic pe "Adăugați Articol" pentru a adăuga unul.',
+    "boq.empty_section": "Niciun articol în această secțiune. Faceți clic pe \"Adăugați Articol\" pentru a adăuga unul.",
     "boq.enter_description": "Introduceți descrierea...",
     "boq.estimated_total": "Total estimat",
     "boq.estimates": "estimates",
@@ -376,12 +326,10 @@ const resource = {
     "boq.new_estimate": "Deviz Nou",
     "boq.no_activity": "Nicio activitate. Modificările vor apărea aici.",
     "boq.no_boqs": "Niciun deviz",
-    "boq.no_boqs_hint":
-      "Creați mai întâi un proiect, apoi adăugați o Antemăsurătoare",
+    "boq.no_boqs_hint": "Creați mai întâi un proiect, apoi adăugați o Antemăsurătoare",
     "boq.no_items_found": "Nu s-au găsit articole corespunzătoare",
     "boq.no_positions": "Niciun articol. Adăugați o secțiune pentru a începe.",
-    "boq.no_resources":
-      "Nicio resursă alocată. Selectați un articol de cost cu pictograma ⚡ din sugestiile de completare automată pentru a completa automat.",
+    "boq.no_resources": "Nicio resursă alocată. Selectați un articol de cost cu pictograma ⚡ din sugestiile de completare automată pentru a completa automat.",
     "boq.no_results": "Niciun deviz corespunzător",
     "boq.no_results_hint": "Încercați să ajustați căutarea sau filtrele",
     "boq.no_section": "Fără secțiune (nivel superior)",
@@ -402,8 +350,7 @@ const resource = {
     "boq.quality_descriptions": "Descrieri completate",
     "boq.quality_fair": "Fair",
     "boq.quality_great": "Great",
-    "boq.quality_hint":
-      "Completați toate câmpurile pentru a atinge 100% și a asigura acuratețea devizului.",
+    "boq.quality_hint": "Completați toate câmpurile pentru a atinge 100% și a asigura acuratețea devizului.",
     "boq.quality_markups": "Adaosuri adăugate",
     "boq.quality_missing": "Missing",
     "boq.quality_needs_work": "Necesită îmbunătățiri",
@@ -412,22 +359,17 @@ const resource = {
     "boq.quantity": "Quantity",
     "boq.quick_add": "Adăugare Rapidă",
     "boq.quick_add_position": "Adăugați Articol",
-    "boq.quick_add_position_desc":
-      "Adăugați un articol gol în secțiunea curentă",
+    "boq.quick_add_position_desc": "Adăugați un articol gol în secțiunea curentă",
     "boq.quick_add_section": "Adăugați Secțiune",
-    "boq.quick_add_section_desc":
-      "Creați o nouă secțiune pentru a organiza articolele",
+    "boq.quick_add_section_desc": "Creați o nouă secțiune pentru a organiza articolele",
     "boq.quick_import_costs": "Import din Baza de Date de Costuri",
-    "boq.quick_import_costs_desc":
-      "Navigați și selectați articole din baza de date de costuri",
+    "boq.quick_import_costs_desc": "Navigați și selectați articole din baza de date de costuri",
     "boq.quick_use_template": "Utilizați Șablon",
-    "boq.quick_use_template_desc":
-      "Porniți de la un șablon de deviz preconfigurat",
+    "boq.quick_use_template_desc": "Porniți de la un șablon de deviz preconfigurat",
     "boq.recalculate": "Recalculate",
     "boq.recalculate_complete": "Recalculare finalizată",
     "boq.recalculate_failed": "Recalcularea a eșuat",
-    "boq.recalculate_summary":
-      "Recalculat: {{sections}} secțiuni, {{positions}} articole",
+    "boq.recalculate_summary": "Recalculat: {{sections}} secțiuni, {{positions}} articole",
     "boq.recent_activity": "Activitate Recentă",
     "boq.redo": "Refacere (Ctrl+Y)",
     "boq.redone": "Redone",
@@ -487,8 +429,7 @@ const resource = {
     "boq.sections": "sections",
     "boq.select_project": "Selectați un proiect...",
     "boq.sensitivity_base_total": "Total de Bază",
-    "boq.sensitivity_empty":
-      "Adăugați articole cu costuri pentru a vedea analiza de sensibilitate.",
+    "boq.sensitivity_empty": "Adăugați articole cu costuri pentru a vedea analiza de sensibilitate.",
     "boq.sensitivity_impact_high": "Impact (+)",
     "boq.sensitivity_impact_low": "Impact (-)",
     "boq.sensitivity_overrun": "Creștere cost",
@@ -499,21 +440,16 @@ const resource = {
     "boq.show_all_activity": "Afișați toată activitatea...",
     "boq.showing_estimates": "{{shown}} din {{total}} devize",
     "boq.start_building": "Începeți construirea devizului",
-    "boq.start_building_desc":
-      "Urmați acești pași pentru a crea o Antemăsurătoare profesională",
+    "boq.start_building_desc": "Urmați acești pași pentru a crea o Antemăsurătoare profesională",
     "boq.status": "Status",
     "boq.step_add_positions": "Adăugați articole",
-    "boq.step_add_positions_desc":
-      "Adăugați poziții cu descrieri și unități în fiecare secțiune",
+    "boq.step_add_positions_desc": "Adăugați poziții cu descrieri și unități în fiecare secțiune",
     "boq.step_add_sections": "Adăugați secțiuni",
-    "boq.step_add_sections_desc":
-      "Organizați devizul în secțiuni (ex.: Fundații, Pereți, Acoperiș)",
+    "boq.step_add_sections_desc": "Organizați devizul în secțiuni (ex.: Fundații, Pereți, Acoperiș)",
     "boq.step_review": "Revizuiți totalurile",
-    "boq.step_review_desc":
-      "Adăugați adaosuri pentru cheltuieli generale și profit, apoi revizuiți totalul general",
+    "boq.step_review_desc": "Adăugați adaosuri pentru cheltuieli generale și profit, apoi revizuiți totalul general",
     "boq.step_set_quantities": "Stabiliți cantitățile",
-    "boq.step_set_quantities_desc":
-      "Introduceți cantitățile și tarifele unitare pentru fiecare articol pentru a calcula totalurile",
+    "boq.step_set_quantities_desc": "Introduceți cantitățile și tarifele unitare pentru fiecare articol pentru a calcula totalurile",
     "boq.subtotal": "Subtotal",
     "boq.sync_rate": "Sincronizați tariful",
     "boq.table_label": "Articole Antemăsurătoare",
@@ -521,20 +457,13 @@ const resource = {
     "boq.template_error": "Crearea Antemăsurătorii din șablon a eșuat",
     "boq.templates": "Șabloane Antemăsurătoare",
     "boq.templates_coming_soon": "Șabloane disponibile în curând",
-    "boq.templates_coming_soon_desc":
-      "Selectorul de șabloane va fi disponibil într-o actualizare viitoare.",
-    "boq.templates_subtitle":
-      "Porniți cu un șablon profesional pentru tipul dumneavoastră de clădire. Selectați un șablon, stabiliți suprafața și generați instantaneu o Antemăsurătoare completă.",
-    "boq.tip_autocomplete":
-      "Completați descrierile pentru toate articolele — începeți să tastați pentru a vedea sugestii din baza de date de costuri",
-    "boq.tip_markups":
-      "Adăugați adaosuri pentru cheltuieli generale și profit folosind secțiunea Adaosuri de sub tabel",
-    "boq.tip_menu":
-      "Faceți clic pe meniul (...) al unei secțiuni pentru a adăuga articole sau a o șterge",
-    "boq.tip_sections":
-      "Adăugați secțiuni pentru a organiza devizul (ex.: Fundații, Pereți, Acoperiș)",
-    "boq.tip_tab":
-      "Utilizați Tab pentru a naviga între câmpuri, Enter pentru a salva modificările",
+    "boq.templates_coming_soon_desc": "Selectorul de șabloane va fi disponibil într-o actualizare viitoare.",
+    "boq.templates_subtitle": "Porniți cu un șablon profesional pentru tipul dumneavoastră de clădire. Selectați un șablon, stabiliți suprafața și generați instantaneu o Antemăsurătoare completă.",
+    "boq.tip_autocomplete": "Completați descrierile pentru toate articolele — începeți să tastați pentru a vedea sugestii din baza de date de costuri",
+    "boq.tip_markups": "Adăugați adaosuri pentru cheltuieli generale și profit folosind secțiunea Adaosuri de sub tabel",
+    "boq.tip_menu": "Faceți clic pe meniul (...) al unei secțiuni pentru a adăuga articole sau a o șterge",
+    "boq.tip_sections": "Adăugați secțiuni pentru a organiza devizul (ex.: Fundații, Pereți, Acoperiș)",
+    "boq.tip_tab": "Utilizați Tab pentru a naviga între câmpuri, Enter pentru a salva modificările",
     "boq.tips_title": "Sfaturi și Indicii",
     "boq.mvp.title": "Choose materials",
     "boq.mvp.subtitle_one": "{{count}} resource needs a choice",
@@ -598,20 +527,16 @@ const resource = {
     "catalog.copy": "Copy",
     "catalog.create_assembly": "Creați Asamblarea",
     "catalog.create_resource": "Adăugați Resursă Personalizată",
-    "catalog.create_resource_desc":
-      "Creați o nouă resursă pentru catalogul dumneavoastră",
+    "catalog.create_resource_desc": "Creați o nouă resursă pentru catalogul dumneavoastră",
     "catalog.creating": "Creating...",
     "catalog.delete_failed": "Ștergerea a eșuat",
     "catalog.delete_region": "Ștergeți Regiunea",
-    "catalog.empty_hint":
-      "Importați un catalog regional pentru a popula resursele sau extrageți din articolele de cost.",
-    "catalog.empty_with_regions":
-      "Nicio resursă nu corespunde filtrelor curente. Încercați să schimbați tipul sau regiunea.",
+    "catalog.empty_hint": "Importați un catalog regional pentru a popula resursele sau extrageți din articolele de cost.",
+    "catalog.empty_with_regions": "Nicio resursă nu corespunde filtrelor curente. Încercați să schimbați tipul sau regiunea.",
     "catalog.import": "Import",
     "catalog.import_failed": "Importul a eșuat",
     "catalog.import_region": "Importați regiunea",
-    "catalog.import_regions_desc":
-      "Descărcați cataloage de resurse preconstruite din bazele de date regionale CWICR",
+    "catalog.import_regions_desc": "Descărcați cataloage de resurse preconstruite din bazele de date regionale CWICR",
     "catalog.import_regions_title": "Import Catalog de Resurse",
     "catalog.import_success": "Import finalizat",
     "catalog.importing": "Importing...",
@@ -620,8 +545,7 @@ const resource = {
     "catalog.loaded": "Loaded",
     "catalog.my_catalog": "Catalogul Meu",
     "catalog.my_catalog_empty": "Catalogul dumneavoastră este gol",
-    "catalog.my_catalog_empty_desc":
-      "Adăugați propriile materiale, utilaje și tarife de manoperă. Resursele personalizate pot fi utilizate în asamblări și aplicate articolelor Antemăsurătorii.",
+    "catalog.my_catalog_empty_desc": "Adăugați propriile materiale, utilaje și tarife de manoperă. Resursele personalizate pot fi utilizate în asamblări și aplicate articolelor Antemăsurătorii.",
     "catalog.name": "Name",
     "catalog.no_results": "Nu s-au găsit resurse",
     "catalog.no_results_hint": "Încercați să ajustați căutarea sau filtrele",
@@ -637,10 +561,8 @@ const resource = {
     "catalog.resources_found": "resurse găsite",
     "catalog.resources_imported": "resurse importate",
     "catalog.resources_removed": "resurse eliminate",
-    "catalog.search_hint":
-      "Navigați prin materiale, utilaje, manoperă și operatori",
-    "catalog.what_is_catalog":
-      "Tarife pentru materiale, manoperă, utilaje și operatori organizate pe regiuni. Instalați cataloage regionale din Module, apoi utilizați-le pentru a construi asamblări sau a adăuga articole direct în pozițiile Antemăsurătorii.",
+    "catalog.search_hint": "Navigați prin materiale, utilaje, manoperă și operatori",
+    "catalog.what_is_catalog": "Tarife pentru materiale, manoperă, utilaje și operatori organizate pe regiuni. Instalați cataloage regionale din Module, apoi utilizați-le pentru a construi asamblări sau a adăuga articole direct în pozițiile Antemăsurătorii.",
     "catalog.search_in": "Căutați în",
     "catalog.search_placeholder": "Căutați după nume sau cod...",
     "catalog.selected": "selected",
@@ -665,14 +587,12 @@ const resource = {
     "command_palette.action_run_validation": "Rulați Validarea",
     "command_palette.action_import_database": "Importați Baza de Date",
     "error.something_wrong": "Ceva nu a funcționat",
-    "error.unexpected_error":
-      "A apărut o eroare neașteptată în timpul afișării acestei pagini. Puteți încerca să reîncărcați sau să reveniți la tabloul de bord.",
+    "error.unexpected_error": "A apărut o eroare neașteptată în timpul afișării acestei pagini. Puteți încerca să reîncărcați sau să reveniți la tabloul de bord.",
     "error.details": "Detalii eroare",
     "error.try_again": "Încearcă din nou",
     "error.go_dashboard": "La tabloul de bord",
     "error.not_found": "Pagina nu a fost găsită",
-    "error.not_found_desc":
-      "Pagina pe care o căutați nu există sau a fost mutată. Verificați URL-ul sau reveniți la tabloul de bord.",
+    "error.not_found_desc": "Pagina pe care o căutați nu există sau a fost mutată. Verificați URL-ul sau reveniți la tabloul de bord.",
     "error.go_back": "Înapoi",
     "common.archive": "Arhivează",
     "common.back": "Înapoi",
@@ -710,8 +630,7 @@ const resource = {
     "costmodel.benchmark_area_value": "{{area}} m²",
     "costmodel.benchmark_cost_per_m2": "Cost / m²",
     "costmodel.benchmark_current_cost": "Current: {{value}}/m²",
-    "costmodel.benchmark_enter_area":
-      "Introduceți suprafața proiectului pentru a vedea compararea benchmark-ului de cost pe m²",
+    "costmodel.benchmark_enter_area": "Introduceți suprafața proiectului pentru a vedea compararea benchmark-ului de cost pe m²",
     "costmodel.benchmark_per_m2": "per m²",
     "costmodel.benchmark_project_area": "Suprafața Proiectului (m²)",
     "costmodel.benchmark_project_type": "Tipul Proiectului",
@@ -755,8 +674,7 @@ const resource = {
     "costmodel.evm_spi": "SPI",
     "costmodel.evm_status": "Status",
     "costmodel.evm_sv_label": "SV",
-    "costmodel.evm_tcpi_hint":
-      "Pentru a finaliza în buget, aveți nevoie de un CPI de {{tcpi}} în continuare",
+    "costmodel.evm_tcpi_hint": "Pentru a finaliza în buget, aveți nevoie de un CPI de {{tcpi}} în continuare",
     "costmodel.evm_time_elapsed": "Timp Scurs",
     "costmodel.evm_title": "Analiza Valorii Câștigate",
     "costmodel.evm_unknown": "Unknown",
@@ -776,8 +694,7 @@ const resource = {
     "costmodel.s_curve": "Curbă S (EVM)",
     "costmodel.s_curve_chart": "Grafic Curbă S",
     "costmodel.title": "Model de Cost 5D",
-    "costmodel.what_is_5d":
-      "Managementul costurilor 5D adaugă urmărirea costurilor în timp la proiectul dumneavoastră. Monitorizați bugetul față de cheltuielile reale cu grafice curbă S, urmăriți Valoarea Câștigată (SPI = eficiența graficului, CPI = eficiența costului — ambele >= 1.0 înseamnă sănătos) și rulați scenarii what-if pentru a prognoza rezultatele.",
+    "costmodel.what_is_5d": "Managementul costurilor 5D adaugă urmărirea costurilor în timp la proiectul dumneavoastră. Monitorizați bugetul față de cheltuielile reale cu grafice curbă S, urmăriți Valoarea Câștigată (SPI = eficiența graficului, CPI = eficiența costului — ambele >= 1.0 înseamnă sănătos) și rulați scenarii what-if pentru a prognoza rezultatele.",
     "costmodel.total": "Total",
     "costmodel.total_budget": "Buget Total",
     "costmodel.variance": "Variance",
@@ -786,15 +703,13 @@ const resource = {
     "costmodel.whatif_adjusted_eac": "EAC Ajustat",
     "costmodel.whatif_calculate": "Calculați Impactul",
     "costmodel.whatif_duration": "Duration",
-    "costmodel.whatif_error":
-      "Calculul scenariului a eșuat. Vă rugăm să încercați din nou.",
+    "costmodel.whatif_error": "Calculul scenariului a eșuat. Vă rugăm să încercați din nou.",
     "costmodel.whatif_impact": "Impact",
     "costmodel.whatif_labor": "Cost Manoperă",
     "costmodel.whatif_material": "Cost Material",
     "costmodel.whatif_original_bac": "BAC Original",
     "costmodel.whatif_reset": "Reset",
-    "costmodel.whatif_scenario_name":
-      "What-If: M{{material}}% L{{labor}}% D{{duration}}%",
+    "costmodel.whatif_scenario_name": "What-If: M{{material}}% L{{labor}}% D{{duration}}%",
     "costmodel.whatif_title": "Scenarii What-If",
     "costs.add_database": "Import",
     "costs.add_item": "Adăugați Articol",
@@ -817,13 +732,11 @@ const resource = {
     "costs.copy_rate": "Copiați tariful",
     "costs.create": "Creați Articol",
     "costs.create_item": "Adăugați Articol de Cost Personalizat",
-    "costs.create_item_desc":
-      "Creați propriul articol de cost pentru acest proiect",
+    "costs.create_item_desc": "Creați propriul articol de cost pentru acest proiect",
     "costs.creating": "Creating...",
     "costs.currency": "Currency",
     "costs.delete_failed": "Ștergerea a eșuat",
-    "costs.empty_hint":
-      "Începeți să tastați pentru a căuta în baza de date de costuri",
+    "costs.empty_hint": "Începeți să tastați pentru a căuta în baza de date de costuri",
     "costs.export": "Export",
     "costs.export_excel": "Export Excel",
     "costs.export_failed": "Exportul a eșuat",
@@ -835,22 +748,18 @@ const resource = {
     "costs.import_and_more": "și {{count}} erori suplimentare",
     "costs.import_another": "Importați Altul",
     "costs.import_click_to_change": "Faceți clic pentru a alege un alt fișier",
-    "costs.import_columns_hint":
-      "Coloanele sunt detectate automat. Antete acceptate: Cod, Descriere, Unitate, Tarif/Preț/Cost, Monedă, DIN 276/Clasificare.",
+    "costs.import_columns_hint": "Coloanele sunt detectate automat. Antete acceptate: Cod, Descriere, Unitate, Tarif/Preț/Cost, Monedă, DIN 276/Clasificare.",
     "costs.import_complete": "Import Finalizat",
     "costs.import_database": "Importați Baza de Date",
     "costs.import_drop_here": "Trageți fișierul aici",
-    "costs.import_drop_or_click":
-      "Trageți fișierul aici sau faceți clic pentru a naviga",
+    "costs.import_drop_or_click": "Trageți fișierul aici sau faceți clic pentru a naviga",
     "costs.import_error_details": "Detalii eroare",
     "costs.import_errors": "Errors",
     "costs.import_failed": "Importul a eșuat",
     "costs.import_file_too_large": "Fișier prea mare",
-    "costs.import_first_hint":
-      "Importați o bază de date de costuri regională pentru a începe căutarea în peste 55.000 de articole.",
+    "costs.import_first_hint": "Importați o bază de date de costuri regională pentru a începe căutarea în peste 55.000 de articole.",
     "costs.import_format_csv": "CSV (.csv) cu aceleași coloane",
-    "costs.import_format_excel":
-      "Excel (.xlsx) cu coloane: Cod, Descriere, Unitate, Tarif",
+    "costs.import_format_excel": "Excel (.xlsx) cu coloane: Cod, Descriere, Unitate, Tarif",
     "costs.import_formats_title": "Formate acceptate",
     "costs.import_go_to_database": "Mergeți la Baza de Date de Costuri",
     "costs.import_imported": "Imported",
@@ -859,11 +768,9 @@ const resource = {
     "costs.import_row": "Row",
     "costs.import_rows_processed": "rânduri procesate",
     "costs.import_skipped": "Skipped",
-    "costs.import_subtitle":
-      "Încărcați o bază de date de prețuri sau încărcați propriul fișier.",
+    "costs.import_subtitle": "Încărcați o bază de date de prețuri sau încărcați propriul fișier.",
     "costs.import_success": "Import finalizat",
-    "costs.import_supported_hint":
-      "Vă rugăm să încărcați un fișier Excel (.xlsx) sau CSV (.csv).",
+    "costs.import_supported_hint": "Vă rugăm să încărcați un fișier Excel (.xlsx) sau CSV (.csv).",
     "costs.import_title": "Importați Baza de Date de Costuri",
     "costs.import_unsupported_format": "Format de fișier neacceptat",
     "costs.indexing_failed": "Indexarea a eșuat",
@@ -872,8 +779,7 @@ const resource = {
     "costs.items_copied": "{{count}} articole copiate în clipboard",
     "costs.load_more": "Încărcați mai mult",
     "costs.loaded_databases": "Baze de Date Încărcate",
-    "costs.no_boqs_helper":
-      "Nicio Antemăsurătoare în acest proiect. Creați mai întâi una în editorul Antemăsurătorii.",
+    "costs.no_boqs_helper": "Nicio Antemăsurătoare în acest proiect. Creați mai întâi una în editorul Antemăsurătorii.",
     "costs.no_database_loaded": "Nicio bază de date încărcată",
     "costs.no_results": "Nu s-au găsit articole de cost",
     "costs.no_results_hint": "Încercați să ajustați căutarea sau filtrele",
@@ -885,11 +791,9 @@ const resource = {
     "costs.region_cleared": "Regiune ștearsă",
     "costs.results_found": "rezultate găsite",
     "costs.search_hint": "Căutați articole de cost după descriere sau cod",
-    "costs.what_is_cost_db":
-      "Tarife unitare și prețuri compuse pentru materiale, manoperă și utilaje. Importați baze de date regionale (CWICR, BKI, RSMeans) din Module sau adăugați tarife personalizate. Activați Căutarea Semantică AI pentru interogări în limbaj natural.",
+    "costs.what_is_cost_db": "Tarife unitare și prețuri compuse pentru materiale, manoperă și utilaje. Importați baze de date regionale (CWICR, BKI, RSMeans) din Module sau adăugați tarife personalizate. Activați Căutarea Semantică AI pentru interogări în limbaj natural.",
     "costs.search_placeholder": "Căutați după descriere sau cod...",
-    "costs.semantic_placeholder":
-      "Descrieți ce aveți nevoie (AI găsește similar)...",
+    "costs.semantic_placeholder": "Descrieți ce aveți nevoie (AI găsește similar)...",
     "costs.showing": "Showing",
     "costs.title": "Baza de Date de Costuri",
     "costs.no_variants_hint": "Preț unic",
@@ -909,8 +813,7 @@ const resource = {
     "dashboard.add_api_keys": "Adăugați Chei API",
     "dashboard.ai_providers": "Furnizori AI",
     "dashboard.analytics": "Analiză",
-    "dashboard.kpi_hint":
-      "Sumar pentru toate proiectele. Valorile se actualizează pe măsură ce adăugați devize și activități de planificare.",
+    "dashboard.kpi_hint": "Sumar pentru toate proiectele. Valorile se actualizează pe măsură ce adăugați devize și activități de planificare.",
     "dashboard.api_server": "Server API",
     "dashboard.boq_status": "Status Antemăsurătoare",
     "dashboard.completed": "Finalizat",
@@ -941,23 +844,17 @@ const resource = {
     "dashboard.recent_projects": "Proiecte Recente",
     "dashboard.show_shortcuts": "Afișați comenzile rapide de tastatură",
     "dashboard.step_ai_search": "Activați Căutarea AI",
-    "dashboard.step_ai_search_desc":
-      "Generați vectori pentru potrivirea semantică a costurilor",
+    "dashboard.step_ai_search_desc": "Generați vectori pentru potrivirea semantică a costurilor",
     "dashboard.step_build_boq": "Construiți Antemăsurătoarea",
     "dashboard.step_build_boq_desc": "Creați o Antemăsurătoare cu asistență AI",
     "dashboard.step_connect_ai": "Conectați AI",
-    "dashboard.step_connect_ai_desc":
-      "Adăugați cheile API pentru estimare asistată de AI",
+    "dashboard.step_connect_ai_desc": "Adăugați cheile API pentru estimare asistată de AI",
     "dashboard.step_create_project": "Creați Proiect",
-    "dashboard.step_create_project_desc":
-      "Porniți primul proiect de estimare în construcții",
+    "dashboard.step_create_project_desc": "Porniți primul proiect de estimare în construcții",
     "dashboard.step_load_db": "Încărcați Baza de Date de Costuri",
-    "dashboard.step_load_db_desc":
-      "Importați date de prețuri regionale cu peste 55.000 de articole",
-    "dashboard.subtitle":
-      "Prezentare generală a proiectelor, indicatorilor cheie și activității recente",
-    "dashboard.subtitle_2":
-      "Planificare inteligentă a resurselor pentru proiectele dumneavoastră de construcții",
+    "dashboard.step_load_db_desc": "Importați date de prețuri regionale cu peste 55.000 de articole",
+    "dashboard.subtitle": "Prezentare generală a proiectelor, indicatorilor cheie și activității recente",
+    "dashboard.subtitle_2": "Planificare inteligentă a resurselor pentru proiectele dumneavoastră de construcții",
     "dashboard.activity": "Activitate Recentă",
     "dashboard.system_status": "Status Sistem",
     "dashboard.total_boqs": "Total Antemăsurători",
@@ -969,22 +866,18 @@ const resource = {
     "dashboard.welcome": "Bun venit în OpenConstructionERP",
     "demo.import_demo": "Importați Demo",
     "demo.install": "Install",
-    "demo.install_error":
-      "Instalarea proiectului demo a eșuat. Vă rugăm să încercați din nou.",
+    "demo.install_error": "Instalarea proiectului demo a eșuat. Vă rugăm să încercați din nou.",
     "demo.installing": "Installing...",
-    "demo.modal_subtitle":
-      "Instalați un proiect complet cu Antemăsurătoare, grafic de timp, buget și licitație",
+    "demo.modal_subtitle": "Instalați un proiect complet cu Antemăsurătoare, grafic de timp, buget și licitație",
     "demo.modal_title": "Importați Proiect Demo",
     "documents.title": "Documents",
-    "documents.subtitle":
-      "Încărcați și gestionați fișierele proiectului — desene, contracte, specificații",
+    "documents.subtitle": "Încărcați și gestionați fișierele proiectului — desene, contracte, specificații",
     "documents.upload": "Încărcați Fișiere",
     "documents.uploaded": "Uploaded",
     "documents.upload_failed": "Încărcarea a eșuat",
     "documents.upload_skipped": "Fișier omis",
     "documents.file_too_large": "{{name}} depășește limita de 100 MB",
-    "documents.upload_summary":
-      "Încărcare finalizată: {{success}} încărcate, {{failed}} eșuate",
+    "documents.upload_summary": "Încărcare finalizată: {{success}} încărcate, {{failed}} eșuate",
     "documents.delete_failed": "Ștergerea a eșuat",
     "documents.deleted": "Document șters",
     "documents.download": "Download",
@@ -995,16 +888,12 @@ const resource = {
     "documents.no_results": "Nu s-au găsit rezultate",
     "documents.no_results_hint": "Încercați un alt termen de căutare",
     "documents.clear_search": "Ștergeți căutarea",
-    "documents.drop_hint":
-      "Trageți și plasați fișiere aici sau faceți clic pe Încărcare",
-    "documents.drop_hint_types":
-      "PDF, imagini, Excel, DWG, IFC — orice tip de fișier",
+    "documents.drop_hint": "Trageți și plasați fișiere aici sau faceți clic pe Încărcare",
+    "documents.drop_hint_types": "PDF, imagini, Excel, DWG, IFC — orice tip de fișier",
     "documents.empty": "Niciun document",
-    "documents.empty_hint":
-      "Încărcați primul fișier — desene, contracte, fotografii sau orice document de proiect.",
+    "documents.empty_hint": "Încărcați primul fișier — desene, contracte, fotografii sau orice document de proiect.",
     "documents.select_project": "Selectați un proiect",
-    "documents.select_project_hint":
-      "Utilizați selectorul de proiect din antet pentru a selecta mai întâi un proiect.",
+    "documents.select_project_hint": "Utilizați selectorul de proiect din antet pentru a selecta mai întâi un proiect.",
     "documents.sort_date": "După dată",
     "documents.sort_name": "După nume",
     "documents.sort_size": "După dimensiune",
@@ -1018,46 +907,33 @@ const resource = {
     "documents.cat_correspondence": "Correspondence",
     "documents.cat_other": "Other",
     "login.benefit.ai": "Estimare asistată de AI",
-    "login.benefit.ai_desc":
-      "Sugestii inteligente cu scoruri de încredere. Dvs. decideți, AI-ul ajută.",
+    "login.benefit.ai_desc": "Sugestii inteligente cu scoruri de încredere. Dvs. decideți, AI-ul ajută.",
     "login.benefit.allinone": "BOQ + 4D + 5D + Licitații",
-    "login.benefit.allinone_desc":
-      "Flux de lucru complet de la estimarea costurilor la compararea ofertelor într-un singur instrument.",
+    "login.benefit.allinone_desc": "Flux de lucru complet de la estimarea costurilor la compararea ofertelor într-un singur instrument.",
     "login.benefit.free": "Gratuit pentru toți",
-    "login.benefit.free_desc":
-      "Fără taxe de licență. Fără limite. Construit de estimatori, pentru estimatori.",
+    "login.benefit.free_desc": "Fără taxe de licență. Fără limite. Construit de estimatori, pentru estimatori.",
     "login.benefit.local": "Datele rămân pe computerul dvs.",
-    "login.benefit.local_desc":
-      "Fără cloud. Fără servere terțe. Control deplin asupra datelor proiectului.",
+    "login.benefit.local_desc": "Fără cloud. Fără servere terțe. Control deplin asupra datelor proiectului.",
     "login.benefit.open_source": "100% sursă deschisă",
-    "login.benefit.open_source_desc":
-      "Cod transparent. Fără blocare la furnizor. Exportați totul, oricând.",
+    "login.benefit.open_source_desc": "Cod transparent. Fără blocare la furnizor. Exportați totul, oricând.",
     "login.benefit.standards": "Standarde internaționale",
-    "login.benefit.standards_desc":
-      "55.000+ poziții de cost în 11 baze de date regionale din întreaga lume.",
-    "login.hero_desc":
-      "BOQ profesional, programare 4D, model de cost 5D și licitații — totul într-o singură platformă cu sursă deschisă.",
+    "login.benefit.standards_desc": "55.000+ poziții de cost în 11 baze de date regionale din întreaga lume.",
+    "login.hero_desc": "BOQ profesional, programare 4D, model de cost 5D și licitații — totul într-o singură platformă cu sursă deschisă.",
     "login.hero_highlight": "reimaginată",
     "login.hero_title": "Estimarea costurilor în construcții,",
-    "login.open_source_badge":
-      "Cel mai bun ERP cu sursă deschisă pentru construcții",
+    "login.open_source_badge": "Cel mai bun ERP cu sursă deschisă pentru construcții",
     "dashboard.open_source_badge": "Nr. 1 ERP open-source pentru construcții",
     "login.learn_more": "Aflați mai multe despre platformă",
-    "login.privacy":
-      "Toate datele sunt procesate și stocate local pe mașina dvs. Nimic nu este trimis către servere externe. Dvs. dețineți datele — întotdeauna.",
-    "login.privacy_ai":
-      "Dacă utilizați instrumentele AI integrate, anumite date pot fi trimise către furnizorul AI configurat (OpenAI, Anthropic etc.). Dvs. controlați ce furnizor să utilizați și ce date să partajați.",
+    "login.privacy": "Toate datele sunt procesate și stocate local pe mașina dvs. Nimic nu este trimis către servere externe. Dvs. dețineți datele — întotdeauna.",
+    "login.privacy_ai": "Dacă utilizați instrumentele AI integrate, anumite date pot fi trimise către furnizorul AI configurat (OpenAI, Anthropic etc.). Dvs. controlați ce furnizor să utilizați și ce date să partajați.",
     "marketplace.active": "Active",
     "marketplace.available": "Module Disponibile",
     "marketplace.builtin": "Integrat",
-    "marketplace.builtin_message":
-      "Acest modul este integrat în instalarea dumneavoastră și gata de utilizare.",
+    "marketplace.builtin_message": "Acest modul este integrat în instalarea dumneavoastră și gata de utilizare.",
     "marketplace.catalog_imported": "Catalog importat",
-    "marketplace.catalog_imported_message":
-      "{{imported}} resurse importate, {{skipped}} omise pentru {{region}}.",
+    "marketplace.catalog_imported_message": "{{imported}} resurse importate, {{skipped}} omise pentru {{region}}.",
     "marketplace.demo_installed": "Demo instalat",
-    "marketplace.demo_installed_message":
-      "{{name}} creat cu Antemăsurătoare completă, grafic de timp, buget și licitație.",
+    "marketplace.demo_installed_message": "{{name}} creat cu Antemăsurătoare completă, grafic de timp, buget și licitație.",
     "marketplace.free": "Free",
     "marketplace.import_failed": "Importul a eșuat",
     "marketplace.imported": "Imported",
@@ -1066,8 +942,7 @@ const resource = {
     "marketplace.install_failed": "Instalarea a eșuat",
     "marketplace.installed_modules": "Module Core Instalate",
     "marketplace.installing": "Installing...",
-    "marketplace.language_activated":
-      "Pachet de limbă activat. Schimbați limba în Setări.",
+    "marketplace.language_activated": "Pachet de limbă activat. Schimbați limba în Setări.",
     "marketplace.language_already_included": "Această limbă este deja inclusă.",
     "marketplace.manage": "Manage",
     "marketplace.module_disabled": "{{name}} disabled",
@@ -1075,40 +950,30 @@ const resource = {
     "marketplace.my_modules": "Module Instalate",
     "marketplace.no_region_mapping": "Nicio mapare de regiune pentru {{id}}",
     "marketplace.no_results": "Nu s-au găsit module",
-    "marketplace.no_results_hint":
-      "Încercați să ajustați căutarea sau filtrul de categorie.",
+    "marketplace.no_results_hint": "Încercați să ajustați căutarea sau filtrul de categorie.",
     "marketplace.rules": "rules",
     "marketplace.search_placeholder": "Căutați module...",
-    "marketplace.subtitle":
-      "Navigați și instalați suplimente pentru baze de date de costuri, instrumente AI, convertoare CAD și altele.",
-    "marketplace.description":
-      "Extindeți OpenEstimate cu baze de date de costuri regionale, cataloage de resurse (CWICR), indici vectoriali pentru AI, pachete de limbă, proiecte demo și integrări. Instalați un modul pentru a-l activa — dezinstalați oricând.",
+    "marketplace.subtitle": "Navigați și instalați suplimente pentru baze de date de costuri, instrumente AI, convertoare CAD și altele.",
+    "marketplace.description": "Extindeți OpenEstimate cu baze de date de costuri regionale, cataloage de resurse (CWICR), indici vectoriali pentru AI, pachete de limbă, proiecte demo și integrări. Instalați un modul pentru a-l activa — dezinstalați oricând.",
     "marketplace.title": "Piața de Module",
     "marketplace.uninstall": "Uninstall",
     "marketplace.unknown_region": "Regiune necunoscută",
     "marketplace.validation_rule_sets": "Seturi de Reguli de Validare",
     "marketplace.validation_rules_active": "reguli de validare active",
     "marketplace.vector_index": "Index Vectorial",
-    "marketplace.vector_index_hint":
-      "Importați mai întâi baza de date de costuri, apoi generați vectorii.",
+    "marketplace.vector_index_hint": "Importați mai întâi baza de date de costuri, apoi generați vectorii.",
     "modules.title": "Module",
     "modules.cat_regional": "Standarde Regionale",
-    "modules.cat_regional_desc":
-      "Formate de import/export Antemăsurătoare și standarde de clasificare specifice fiecărei țări",
+    "modules.cat_regional_desc": "Formate de import/export Antemăsurătoare și standarde de clasificare specifice fiecărei țări",
     "modules.community_title": "Construiți Propriul Modul",
-    "modules.community_desc":
-      "OpenConstructionERP are o arhitectură modulară de plugin-uri. Oricine poate crea module personalizate — baze de date de costuri, standarde regionale, convertoare CAD, tablouri de bord de analiză, integrări cu sisteme externe sau orice altă funcționalitate. Modulul dumneavoastră va apărea în această secțiune Module și poate fi instalat de orice utilizator.",
+    "modules.community_desc": "OpenConstructionERP are o arhitectură modulară de plugin-uri. Oricine poate crea module personalizate — baze de date de costuri, standarde regionale, convertoare CAD, tablouri de bord de analiză, integrări cu sisteme externe sau orice altă funcționalitate. Modulul dumneavoastră va apărea în această secțiune Module și poate fi instalat de orice utilizator.",
     "modules.community_type_data": "Module de Date",
-    "modules.community_type_data_desc":
-      "Baze de date de costuri regionale, cataloage de resurse, biblioteci de materiale, standarde de clasificare (DIN, NRM, SNIP, etc.)",
+    "modules.community_type_data_desc": "Baze de date de costuri regionale, cataloage de resurse, biblioteci de materiale, standarde de clasificare (DIN, NRM, SNIP, etc.)",
     "modules.community_type_integration": "Integrări",
-    "modules.community_type_integration_desc":
-      "Conectați-vă cu SAP, Procore, MS Project, BIM 360, PlanRadar, Primavera sau orice sistem extern prin API",
+    "modules.community_type_integration_desc": "Conectați-vă cu SAP, Procore, MS Project, BIM 360, PlanRadar, Primavera sau orice sistem extern prin API",
     "modules.community_type_tools": "Instrumente și Analize",
-    "modules.community_type_tools_desc":
-      "Rapoarte personalizate, tablouri de bord, calculatoare, convertoare de format, modele AI sau orice instrument specializat de construcții",
-    "modules.community_how":
-      "Fiecare modul este un pachet Python cu un fișier manifest.py. Creați modulul, testați-l local și distribuiți-l comunității. Chiar dacă aveți doar o idee — trimiteți-ne o descriere text și vă vom ajuta să îl construiți.",
+    "modules.community_type_tools_desc": "Rapoarte personalizate, tablouri de bord, calculatoare, convertoare de format, modele AI sau orice instrument specializat de construcții",
+    "modules.community_how": "Fiecare modul este un pachet Python cu un fișier manifest.py. Creați modulul, testați-l local și distribuiți-l comunității. Chiar dacă aveți doar o idee — trimiteți-ne o descriere text și vă vom ajuta să îl construiți.",
     "modules.community_submit_email": "Trimiteți Modul prin Email",
     "modules.community_submit_github": "Propuneți pe GitHub",
     "modules.community_telegram": "Discutați pe Telegram",
@@ -1159,27 +1024,20 @@ const resource = {
     "files.toast.copied": "Copiat",
     "files.toast.copy_failed": "Nu s-a putut copia",
     "files.no_project_title": "Niciun proiect activ",
-    "files.no_project_desc":
-      "Alegeți un proiect din panoul de control pentru a vedea toate documentele, fotografiile, fișierele BIM și DWG într-un singur loc.",
+    "files.no_project_desc": "Alegeți un proiect din panoul de control pentru a vedea toate documentele, fotografiile, fișierele BIM și DWG într-un singur loc.",
     "files.go_to_projects": "Mergi la proiecte",
     "files.export.title": "Exportă pachet de proiect",
-    "files.export.intro":
-      "Alegeți ce să includeți. Pachetele mai mici se transferă mai repede; cele mai mari păstrează mai mult.",
+    "files.export.intro": "Alegeți ce să includeți. Pachetele mai mici se transferă mai repede; cele mai mari păstrează mai mult.",
     "files.export.scope_metadata": "Doar metadate",
-    "files.export.scope_metadata_hint":
-      "Potrivit pentru email. Antemăsurători, tabele și linkuri — fără atașamente.",
+    "files.export.scope_metadata_hint": "Potrivit pentru email. Antemăsurători, tabele și linkuri — fără atașamente.",
     "files.export.scope_documents": "Documente",
-    "files.export.scope_documents_hint":
-      "Adaugă documentele și fotografiile încărcate cu miniaturi.",
+    "files.export.scope_documents_hint": "Adaugă documentele și fotografiile încărcate cu miniaturi.",
     "files.export.scope_bim": "Modele BIM",
-    "files.export.scope_bim_hint":
-      "Adaugă modele BIM, elemente și geometrie canonică.",
+    "files.export.scope_bim_hint": "Adaugă modele BIM, elemente și geometrie canonică.",
     "files.export.scope_dwg": "Desene DWG",
-    "files.export.scope_dwg_hint":
-      "Adaugă desene DWG, versiuni și planșe asociate.",
+    "files.export.scope_dwg_hint": "Adaugă desene DWG, versiuni și planșe asociate.",
     "files.export.scope_full": "Proiect complet",
-    "files.export.scope_full_hint":
-      "Tot — pachet complet de migrare, inclusiv toate atașamentele.",
+    "files.export.scope_full_hint": "Tot — pachet complet de migrare, inclusiv toate atașamentele.",
     "files.export.stat_scope": "Domeniu",
     "files.export.stat_attachments": "Atașamente",
     "files.export.stat_size": "Dimensiune estimată",
@@ -1187,12 +1045,10 @@ const resource = {
     "files.export.tables": "Tabele",
     "files.export.preview_btn": "Previzualizare",
     "files.export.download_btn": "Descarcă pachet",
-    "files.export.large_warn":
-      "Pachet mare — păstrați acest tab deschis în timpul exportului.",
+    "files.export.large_warn": "Pachet mare — păstrați acest tab deschis în timpul exportului.",
     "files.export.success_title": "Pachet descărcat",
     "files.import.title": "Importă pachet de proiect",
-    "files.import.intro":
-      "Selectați un pachet .ocep exportat din acest spațiu de lucru sau din altul.",
+    "files.import.intro": "Selectați un pachet .ocep exportat din acest spațiu de lucru sau din altul.",
     "files.import.select_file": "Alege fișierul .ocep",
     "files.import.drop_hint": "Faceți clic pentru a naviga",
     "files.import.validating": "Se validează pachetul…",
@@ -1204,19 +1060,15 @@ const resource = {
     "files.import.stat_format": "Format",
     "files.import.choose_mode": "Mod de import",
     "files.import.mode_new": "Creează un proiect nou",
-    "files.import.mode_new_hint":
-      "Cel mai sigur. ID-uri noi peste tot; nimic în spațiul de lucru nu se schimbă.",
+    "files.import.mode_new_hint": "Cel mai sigur. ID-uri noi peste tot; nimic în spațiul de lucru nu se schimbă.",
     "files.import.mode_merge": "Fuzionează cu un proiect existent",
-    "files.import.mode_merge_hint":
-      "Adaugă rânduri într-un proiect ales. ID-urile existente sunt sărite.",
+    "files.import.mode_merge_hint": "Adaugă rânduri într-un proiect ales. ID-urile existente sunt sărite.",
     "files.import.mode_replace": "Înlocuiește un proiect existent",
-    "files.import.mode_replace_hint":
-      "Șterge rândurile gestionate de pachet ale proiectului ales, apoi importă. Distructiv.",
+    "files.import.mode_replace_hint": "Șterge rândurile gestionate de pachet ale proiectului ales, apoi importă. Distructiv.",
     "files.import.rename": "Nume nou de proiect (opțional)",
     "files.import.target_project": "Proiect țintă",
     "files.import.pick_project": "— alegeți un proiect —",
-    "files.import.destructive_warn":
-      "Aceasta va șterge permanent rândurile gestionate de pachet din proiectul țintă înainte de import. Nu se poate anula.",
+    "files.import.destructive_warn": "Aceasta va șterge permanent rândurile gestionate de pachet din proiectul țintă înainte de import. Nu se poate anula.",
     "files.import.confirm": "Importă",
     "files.import.result_done": "Import finalizat",
     "files.import.imported": "Importat",
@@ -1236,8 +1088,7 @@ const resource = {
     "files.email.paste_into_email": "Exemplu de corp de email",
     "files.email.open_mail_client": "Deschide clientul de email",
     "files.email.sample_subject": "Fișier: {{name}}",
-    "files.email.sample_body":
-      "Salut,\n\niată fișierul cerut — {{name}} ({{size}}).\nLink de descărcare (expiră {{expires}}):\n{{url}}\n\n— trimis din OpenConstructionERP",
+    "files.email.sample_body": "Salut,\n\niată fișierul cerut — {{name}} ({{size}}).\nLink de descărcare (expiră {{expires}}):\n{{url}}\n\n— trimis din OpenConstructionERP",
     "files.title_all": "Toate fișierele",
     "files.empty_category": "Încă niciun(ă) {{category}}",
     "files.cta.add_first": "Adaugă primul/prima {{category}}",
@@ -1251,8 +1102,7 @@ const resource = {
     "files.upload_browse": "Răsfoiește fișierele",
     "files.upload_no_project": "Niciun proiect activ",
     "files.upload_too_large": "Fișiere prea mari",
-    "files.upload_too_large_msg":
-      "{{count}} fișier(e) depășesc limita de 100 MB și au fost sărite.",
+    "files.upload_too_large_msg": "{{count}} fișier(e) depășesc limita de 100 MB și au fost sărite.",
     "files.upload_queued": "{{count}} fișier(e) în așteptare",
     "files.uploading": "Se încarcă…",
     "files.uploaded": "Încărcat",
@@ -1263,8 +1113,7 @@ const resource = {
     "files.bulk.deleted": "{{count}} fișier(e) șterse",
     "files.bulk.delete_failed": "Ștergerea în masă a eșuat",
     "files.bulk.skip_unsupported": "{{count}} sărit(e) (neacceptat(e))",
-    "files.bulk.no_deletable":
-      "Fișierele selectate nu pot fi încă șterse de aici",
+    "files.bulk.no_deletable": "Fișierele selectate nu pot fi încă șterse de aici",
     "files.actions.open_in": "Deschide în {{module}}",
     "files.actions.open_in_short": "Deschide în {{module}}",
     "files.actions.share": "Distribuie",
@@ -1295,8 +1144,7 @@ const resource = {
     "files.share.revoking": "Se revocă…",
     "files.share.title": "Link de partajare protejat cu parolă",
     "files.share.url_label": "URL de partajare",
-    "files.tile.tooltip":
-      "{{name}} — dublu clic pentru a deschide în {{module}}",
+    "files.tile.tooltip": "{{name}} — dublu clic pentru a deschide în {{module}}",
     "nav.5d_cost_model": "Model de cost 5D",
     "nav.assemblies": "Ansambluri",
     "nav.boq": "Listă de cantități",
@@ -1306,10 +1154,10 @@ const resource = {
     "nav.equipment": "Echipamente și flotă",
     "nav.resources": "Resurse și echipe",
     "nav.service": "Service și mentenanță",
-    "nav.portal": "Portal subantreprenori",
+    "nav.portal": "Sub-portal",
     "nav.crm": "CRM",
     "nav.contracts": "Contracte",
-    "nav.subcontractors": "Subantreprenori",
+    "nav.subcontractors": "Director subantreprenori",
     "nav.bid_management": "Managementul ofertelor",
     "nav.variations": "Modificări contract",
     "nav.supplier_catalogs": "Cataloage furnizori",
@@ -1321,19 +1169,21 @@ const resource = {
     "nav.bi_dashboards": "Panouri BI",
     "nav.match_elements": "Potrivire elemente → Costuri",
     "nav.group_operations": "Operațiuni de șantier",
-    "nav.group_operations_desc":
-      "Operațiuni zilnice de șantier — tichete servicii, echipamente, jurnal, portal subantreprenori, resurse",
+    "nav.group_operations_desc": "Operațiuni zilnice de șantier — tichete servicii, echipamente, jurnal, portal subantreprenori, resurse",
     "nav.group_commercial": "Comercial",
-    "nav.group_commercial_desc":
-      "Pipeline comercial — CRM, contracte, oferte, modificări, furnizori, dezvoltare imobiliară",
+    "nav.group_commercial_desc": "Pipeline comercial — CRM, contracte, oferte, modificări, furnizori, dezvoltare imobiliară",
     "nav.group_bi": "Analiză",
-    "nav.group_bi_desc":
-      "Panouri BI construite pe proiecții de depozit de date",
+    "nav.group_bi_desc": "Panouri BI construite pe proiecții de depozit de date",
+    "nav.group_analytics": "Analitică și Rapoarte",
+    "nav.group_analytics_desc": "Rapoarte multi-modul, dashboard-uri BI și proiecții warehouse",
     "nav.group_estimation": "Estimare",
-    "nav.group_estimation_desc":
-      "Instrumente de bază: proiecte, BOQ, costuri și ansambluri",
+    "nav.group_estimation_desc": "Estimări de proiect — BOQ, BIM către costuri, estimare AI, analitică",
+    "nav.group_catalogues": "Cataloage și Referință",
+    "nav.group_catalogues_desc": "Baze de costuri, cataloage regionale, șabloane de ansambluri",
     "nav.group_databases": "Baze de date",
     "nav.group_takeoff": "Cuantificare",
+    "nav.group_cad_bim_analytics": "Coordonare modele",
+    "nav.group_cad_bim_analytics_desc": "Federații, detectare coliziuni, pachete de reguli și centru de coordonare",
     "nav.group_cad_bim": "CAD / BIM și BI",
     "nav.takeoff_overview": "Prezentare generală",
     "nav.pdf_takeoff": "Antemăsurătoare PDF",
@@ -1341,7 +1191,7 @@ const resource = {
     "nav.erp_chat": "Chat AI",
     "nav.cad_takeoff": "Antemăsurătoare CAD/BIM",
     "nav.cad_bim_explorer": "Explorator CAD-BIM BI",
-    "nav.bim_viewer": "Vizualizator BIM 3D",
+    "nav.bim_viewer": "Cuantificare BIM 3D",
     "nav.bim_rules": "Reguli BIM",
     "nav.quantity_rules": "Reguli pentru cantități",
     "nav.assets": "Registrul activelor",
@@ -1358,17 +1208,13 @@ const resource = {
     "bim.loading_geometry": "Se încarcă geometria 3D…",
     "bim.loading_finalising": "Se finalizează scena…",
     "bim.loading_streaming": "Se transmite geometria de pe server…",
-    "bim.loading_parsing":
-      "Se analizează geometria 3D — pentru modele mari (>50 MB) poate dura 20-60 s; nu reîmprospăta pagina",
-    "bim.loading_navigate_hint":
-      "Poți naviga la alte pagini — încărcarea va continua în fundal",
+    "bim.loading_parsing": "Se analizează geometria 3D — pentru modele mari (>50 MB) poate dura 20-60 s; nu reîmprospăta pagina",
+    "bim.loading_navigate_hint": "Poți naviga la alte pagini — încărcarea va continua în fundal",
     "bim.no_models": "Niciun model încărcat",
     "bim.no_project": "Niciun proiect selectat",
-    "bim.no_project_desc":
-      "Selectați un proiect pentru a vizualiza modelele BIM.",
+    "bim.no_project_desc": "Selectați un proiect pentru a vizualiza modelele BIM.",
     "bim.select_model": "Selectați un model",
-    "bim.select_model_desc":
-      "Alegeți un model BIM din listă pentru a-l vizualiza în 3D.",
+    "bim.select_model_desc": "Alegeți un model BIM din listă pentru a-l vizualiza în 3D.",
     "bim.search_elements": "Căutați elemente...",
     "bim.no_search_results": "Niciun element corespunzător",
     "bim.load_error": "Încărcarea elementelor modelului a eșuat",
@@ -1390,21 +1236,21 @@ const resource = {
     "bim.properties": "Properties",
     "bim.disciplines": "Disciplines",
     "nav.group_overview": "Prezentare generală",
-    "nav.group_ai_estimation": "AI și estimare",
+    "nav.group_ai_estimation": "AI și Instrumente",
+    "nav.group_ai_estimation_desc": "Agenți AI, consilier, chat ERP — Estimarea AI mutată în Estimare",
     "nav.group_finance": "Finanțe și achiziții",
     "nav.group_communication": "Comunicare",
     "nav.group_documentation": "Documente",
-    "nav.group_quality": "Calitate și siguranță",
+    "nav.group_quality": "Calitate",
+    "nav.group_safety": "Securitate și HSE",
     "nav.group_field": "Teren și rapoarte",
     "nav.group_quality_risk": "Calitate și risc",
     "nav.group_planning": "Planificare",
     "nav.group_planning_desc": "Programare, sarcini și controlul costurilor",
     "nav.group_procurement": "Achiziții",
-    "nav.group_procurement_desc":
-      "Gestionarea ofertelor, licitații și rapoarte",
+    "nav.group_procurement_desc": "Gestionarea ofertelor, licitații și rapoarte",
     "nav.group_tools": "Instrumente",
-    "nav.group_tools_desc":
-      "Validare, verificare conformitate și sustenabilitate",
+    "nav.group_tools_desc": "Validare, verificare conformitate și sustenabilitate",
     "nav.mode_advanced": "Avansat",
     "nav.mode_pro_badge": "PRO",
     "nav.mode_simple": "Simplu",
@@ -1489,10 +1335,8 @@ const resource = {
     "requirements.notes": "Notes",
     "requirements.notes_placeholder": "Note sau context suplimentar...",
     "requirements.import_text": "Importați din Text",
-    "requirements.import_text_desc":
-      "Lipiți specificații de cerințe. Fiecare linie trebuie să respecte formatul: entitate | atribut | tip_constrângere | valoare | unitate | categorie | prioritate",
-    "requirements.import_placeholder":
-      "perete | grosime | min | 200 | mm | structural | obligatoriu acoperiș | valoare_u | max | 0.20 | W/m²K | termic | obligatoriu",
+    "requirements.import_text_desc": "Lipiți specificații de cerințe. Fiecare linie trebuie să respecte formatul: entitate | atribut | tip_constrângere | valoare | unitate | categorie | prioritate",
+    "requirements.import_placeholder": "perete | grosime | min | 200 | mm | structural | obligatoriu acoperiș | valoare_u | max | 0.20 | W/m²K | termic | obligatoriu",
     "requirements.set_created": "Set de cerințe creat",
     "requirements.new_set": "Set Nou de Cerințe",
     "requirements.set_name_placeholder": "ex.: Cerințe Structurale Faza 1",
@@ -1511,45 +1355,35 @@ const resource = {
     "requirements.all_priorities": "Toate Prioritățile",
     "requirements.all_statuses": "Toate Statusurile",
     "requirements.no_sets": "Niciun set de cerințe",
-    "requirements.no_sets_desc":
-      "Creați un set de cerințe pentru a începe definirea cerințelor de proiect și a porților de calitate.",
+    "requirements.no_sets_desc": "Creați un set de cerințe pentru a începe definirea cerințelor de proiect și a porților de calitate.",
     "requirements.empty": "Nicio cerință",
-    "requirements.empty_desc":
-      "Adăugați cerințe pentru a defini tripletele Entitate-Atribut-Constrângere pentru proiectul dumneavoastră.",
+    "requirements.empty_desc": "Adăugați cerințe pentru a defini tripletele Entitate-Atribut-Constrângere pentru proiectul dumneavoastră.",
     "requirements.no_match": "Nicio cerință nu corespunde filtrelor.",
     "requirements.constraint": "Constraint",
     "requirements.confidence": "Conf.",
     "requirements.source": "Source",
     "requirements.showing": "{{count}} requirements",
     "requirements.of_total": "of {{total}}",
-    "requirements.confirm_delete_set":
-      "Ștergeți acest set de cerințe și toate cerințele sale?",
+    "requirements.confirm_delete_set": "Ștergeți acest set de cerințe și toate cerințele sale?",
     "requirements.delete_set": "Ștergeți Setul",
     "requirements.and_more": "și {{count}} mai mult...",
-    "requirements.click_to_upload_csv":
-      "Faceți clic pentru a încărca fișierul CSV",
-    "requirements.click_to_upload_json":
-      "Faceți clic pentru a încărca fișierul JSON",
+    "requirements.click_to_upload_csv": "Faceți clic pentru a încărca fișierul CSV",
+    "requirements.click_to_upload_json": "Faceți clic pentru a încărca fișierul JSON",
     "requirements.csv_loaded": "{{count}} rânduri încărcate din CSV",
-    "requirements.csv_parse_error":
-      "CSV-ul trebuie să aibă antetele: entitate, atribut, valoare_constrângere",
+    "requirements.csv_parse_error": "CSV-ul trebuie să aibă antetele: entitate, atribut, valoare_constrângere",
     "requirements.export": "Export",
     "requirements.export_csv": "Export CSV",
     "requirements.export_excel": "Export Excel",
     "requirements.export_json": "Export JSON",
     "requirements.exported": "Cerințe exportate",
     "requirements.import_count": "Se importă {{count}} cerințe...",
-    "requirements.import_csv_desc":
-      "Încărcați un fișier CSV cu coloanele: entitate, atribut, valoare_constrângere",
-    "requirements.import_json_desc":
-      "Încărcați un array JSON de obiecte cerință",
+    "requirements.import_csv_desc": "Încărcați un fișier CSV cu coloanele: entitate, atribut, valoare_constrângere",
+    "requirements.import_json_desc": "Încărcați un array JSON de obiecte cerință",
     "requirements.import_requirements": "Importați Cerințe",
     "requirements.json_loaded": "{{count}} articole încărcate din JSON",
-    "requirements.json_parse_error":
-      "JSON-ul trebuie să fie un array de obiecte cu entitate, atribut, valoare_constrângere",
+    "requirements.json_parse_error": "JSON-ul trebuie să fie un array de obiecte cu entitate, atribut, valoare_constrângere",
     "requirements.preview": "Preview",
-    "requirements.regex_hint":
-      "Introduceți un șablon de expresie regulată, ex. ^F[0-9]+$",
+    "requirements.regex_hint": "Introduceți un șablon de expresie regulată, ex. ^F[0-9]+$",
     "requirements.regex_invalid": "Șablon invalid",
     "requirements.regex_placeholder": "^F[0-9]+$",
     "requirements.regex_valid": "Șablon valid",
@@ -1601,13 +1435,11 @@ const resource = {
     "markups.col_measurement": "Measurement",
     "markups.col_date": "Date",
     "markups.empty_title": "Nu s-au găsit marcaje",
-    "markups.empty_desc":
-      "Marcajele și adnotările din documentele proiectului vor apărea aici.",
+    "markups.empty_desc": "Marcajele și adnotările din documentele proiectului vor apărea aici.",
     "markups.action_resolve": "Resolve",
     "markups.action_archive": "Archive",
     "markups.add_markup": "Adăugați Marcaj",
-    "markups.add_first":
-      "Adăugați primul marcaj pentru a începe adnotarea documentelor",
+    "markups.add_first": "Adăugați primul marcaj pentru a începe adnotarea documentelor",
     "markups.active": "Active",
     "markups.all_documents": "Toate Documentele",
     "markups.clear_filters": "Ștergeți filtrele",
@@ -1625,8 +1457,7 @@ const resource = {
     "markups.measurement_unit": "Unit",
     "markups.measurement_value": "Value",
     "markups.no_document": "Fără document",
-    "markups.no_project_desc":
-      "Selectați un proiect pentru a vizualiza și gestiona marcajele",
+    "markups.no_project_desc": "Selectați un proiect pentru a vizualiza și gestiona marcajele",
     "markups.no_project_title": "Niciun proiect selectat",
     "markups.page": "Page",
     "markups.resolved": "Resolved",
@@ -1647,8 +1478,7 @@ const resource = {
     "punch.stat_overdue": "Overdue",
     "punch.add_item": "Adăugați Element",
     "punch.field_title": "Title",
-    "punch.title_placeholder":
-      "ex.: Etanșare la foc lipsă la penetrarea de pe Etajul 3",
+    "punch.title_placeholder": "ex.: Etanșare la foc lipsă la penetrarea de pe Etajul 3",
     "punch.field_description": "Description",
     "punch.description_placeholder": "Furnizați detalii despre problemă...",
     "punch.field_priority": "Priority",
@@ -1686,8 +1516,7 @@ const resource = {
     "punch.all_assignees": "Toți Alocații",
     "punch.kanban_empty": "Niciun element",
     "punch.empty_title": "Niciun element în lista de remedieri",
-    "punch.empty_desc":
-      "Creați elemente în lista de remedieri pentru a urmări deficiențele, neconformitățile și lucrările restante.",
+    "punch.empty_desc": "Creați elemente în lista de remedieri pentru a urmări deficiențele, neconformitățile și lucrările restante.",
     "punch.col_title": "Title",
     "punch.col_priority": "Priority",
     "punch.col_status": "Status",
@@ -1706,11 +1535,9 @@ const resource = {
     "punch.action_verify": "Verify",
     "punch.action_reopen": "Reopen",
     "punch.action_close": "Close",
-    "punch.no_project_desc":
-      "Selectați un proiect pentru a gestiona lista de remedieri",
+    "punch.no_project_desc": "Selectați un proiect pentru a gestiona lista de remedieri",
     "punch.no_project_title": "Niciun proiect selectat",
-    "punch.no_results_desc":
-      "Încercați să ajustați filtrele sau criteriile de căutare",
+    "punch.no_results_desc": "Încercați să ajustați filtrele sau criteriile de căutare",
     "punch.no_results_title": "Niciun element corespunzător",
     "punch.select_project": "Selectați proiectul...",
     "punch.title_required": "Titlul este obligatoriu",
@@ -1755,12 +1582,10 @@ const resource = {
     "field_reports.total": "Total Rapoarte",
     "field_reports.workforce_hours": "Ore de Manoperă",
     "field_reports.empty": "Niciun raport",
-    "field_reports.empty_desc":
-      "Creați primul raport zilnic pentru a începe documentarea progresului lucrărilor",
+    "field_reports.empty_desc": "Creați primul raport zilnic pentru a începe documentarea progresului lucrărilor",
     "photos.title": "Fotografii Proiect",
     "photos.upload": "Încărcați Fotografii",
-    "photos.upload_hint":
-      "Trageți și plasați fotografii sau faceți clic pentru a naviga",
+    "photos.upload_hint": "Trageți și plasați fotografii sau faceți clic pentru a naviga",
     "photos.caption": "Caption",
     "photos.category": "Category",
     "photos.cat_site": "Site",
@@ -1775,26 +1600,22 @@ const resource = {
     "photos.grid": "Grid",
     "photos.timeline": "Timeline",
     "photos.empty": "Nicio fotografie",
-    "photos.empty_desc":
-      "Încărcați fotografii de pe șantier pentru a documenta progresul",
+    "photos.empty_desc": "Încărcați fotografii de pe șantier pentru a documenta progresul",
     "photos.delete_confirm": "Ștergeți această fotografie?",
     "photos.edit": "Editați Fotografia",
     "onboarding.ai_feature_1": "Generați devize din descrieri text",
     "onboarding.ai_feature_2": "Analizați fotografii ale clădirilor",
     "onboarding.ai_feature_3": "Analizați automat documente PDF",
     "onboarding.ai_saved": "Setările AI au fost salvate",
-    "onboarding.ai_subtitle":
-      "Conectați un furnizor AI pentru funcții inteligente:",
+    "onboarding.ai_subtitle": "Conectați un furnizor AI pentru funcții inteligente:",
     "onboarding.ai_test_error": "Testul a eșuat",
     "onboarding.ai_test_failed": "Conexiunea a eșuat",
     "onboarding.ai_test_success": "Conexiune reușită!",
     "onboarding.ai_title": "Furnizor AI (Opțional)",
     "onboarding.api_key": "Cheie API",
     "onboarding.api_key_placeholder": "Lipiți cheia API aici...",
-    "onboarding.cost_db_hint":
-      "Puteți adăuga mai multe baze de date ulterior în Baza de Date de Costuri → Import.",
-    "onboarding.cost_db_subtitle":
-      "Încărcați o bază de date de prețuri pentru devize precise. Alegeți regiunea dumneavoastră:",
+    "onboarding.cost_db_hint": "Puteți adăuga mai multe baze de date ulterior în Baza de Date de Costuri → Import.",
+    "onboarding.cost_db_subtitle": "Încărcați o bază de date de prețuri pentru devize precise. Alegeți regiunea dumneavoastră:",
     "onboarding.cost_db_title": "Baza de Date de Costuri",
     "onboarding.create_error": "Crearea proiectului a eșuat",
     "onboarding.create_project": "Creați și Începeți Estimarea",
@@ -1804,15 +1625,13 @@ const resource = {
     "onboarding.get_started": "Începeți",
     "onboarding.items_loaded": "articole încărcate",
     "onboarding.loading_database": "Se importă baza de date...",
-    "onboarding.loading_database_hint":
-      "Se încarcă ~55.000 de articole. Aceasta durează 1-3 minute.",
+    "onboarding.loading_database_hint": "Se încarcă ~55.000 de articole. Aceasta durează 1-3 minute.",
     "onboarding.project_created": "Proiect creat!",
     "onboarding.project_created_msg": "Spațiul de lucru este pregătit. Să",
     "onboarding.project_error": "Crearea proiectului a eșuat",
     "onboarding.project_name": "Denumire Proiect",
     "onboarding.project_name_placeholder": "ex.: Turn de Birouri în Centru",
-    "onboarding.project_subtitle":
-      "Configurați primul proiect pentru a începe.",
+    "onboarding.project_subtitle": "Configurați primul proiect pentru a începe.",
     "onboarding.project_title": "Primul Dumneavoastră Proiect",
     "onboarding.recommended": "Recommended",
     "onboarding.region": "Region",
@@ -1821,36 +1640,27 @@ const resource = {
     "onboarding.standard": "Standard",
     "onboarding.test_connection": "Testați Conexiunea",
     "onboarding.testing": "Testing...",
-    "onboarding.welcome_hint":
-      "Gratuit și open source. Nu este necesară un card de credit.",
-    "onboarding.welcome_subtitle":
-      "Spațiul de lucru profesional pentru estimare în construcții. Configurați mediul în câțiva pași simpli.",
+    "onboarding.welcome_hint": "Gratuit și open source. Nu este necesară un card de credit.",
+    "onboarding.welcome_subtitle": "Spațiul de lucru profesional pentru estimare în construcții. Configurați mediul în câțiva pași simpli.",
     "onboarding.welcome_title": "Bun venit în OpenConstructionERP",
     "onboarding.step_company": "Company",
     "onboarding.step_modules": "Modules",
     "onboarding.step_mode": "Mode",
     "onboarding.company_type_title": "Ce tip de companie sunteți?",
-    "onboarding.company_type_subtitle":
-      "Vom preconfigura cel mai bun set de module pentru fluxul dumneavoastră de lucru.",
+    "onboarding.company_type_subtitle": "Vom preconfigura cel mai bun set de module pentru fluxul dumneavoastră de lucru.",
     "onboarding.company_general_contractor": "Antreprenor General",
-    "onboarding.company_general_contractor_desc":
-      "Construim proiecte — estimare, achiziții, management de șantier",
+    "onboarding.company_general_contractor_desc": "Construim proiecte — estimare, achiziții, management de șantier",
     "onboarding.company_estimator": "Devizist / Consultant de Costuri",
-    "onboarding.company_estimator_desc":
-      "Ne concentrăm pe estimarea costurilor și antemăsurătoare",
+    "onboarding.company_estimator_desc": "Ne concentrăm pe estimarea costurilor și antemăsurătoare",
     "onboarding.company_project_management": "Firmă de Management de Proiect",
-    "onboarding.company_project_management_desc":
-      "Gestionăm proiecte mari — planificare, comunicare, documente",
+    "onboarding.company_project_management_desc": "Gestionăm proiecte mari — planificare, comunicare, documente",
     "onboarding.company_architecture": "Birou de Arhitectură / Inginerie",
-    "onboarding.company_architecture_desc":
-      "Proiectăm clădiri — BIM, documente, Mediu Comun de Date",
+    "onboarding.company_architecture_desc": "Proiectăm clădiri — BIM, documente, Mediu Comun de Date",
     "onboarding.company_full_enterprise": "Enterprise Complet",
-    "onboarding.company_full_enterprise_desc":
-      "Avem nevoie de tot — ciclul complet de construcție",
+    "onboarding.company_full_enterprise_desc": "Avem nevoie de tot — ciclul complet de construcție",
     "onboarding.modules_label": "modules",
     "onboarding.modules_title": "Revizuiți Modulele",
-    "onboarding.modules_subtitle":
-      "Preselectate pe baza tipului de companie. Activați sau dezactivați orice modul.",
+    "onboarding.modules_subtitle": "Preselectate pe baza tipului de companie. Activați sau dezactivați orice modul.",
     "onboarding.modules_active": "module active",
     "onboarding.mod_group_core": "Estimare de Bază",
     "onboarding.mod_group_takeoff": "Antemăsurătoare și AI",
@@ -1867,8 +1677,7 @@ const resource = {
     "onboarding.mod_assemblies_desc": "Rețete de tarife compuse și șabloane",
     "onboarding.mod_catalog_desc": "Catalog de materiale, manoperă, utilaje",
     "onboarding.mod_templates_desc": "Șabloane Antemăsurătoare reutilizabile",
-    "onboarding.mod_validation_desc":
-      "Reguli de calitate și verificare conformitate",
+    "onboarding.mod_validation_desc": "Reguli de calitate și verificare conformitate",
     "onboarding.mod_takeoff_desc": "Prezentare generală antemăsurătoare",
     "onboarding.mod_pdf_takeoff_desc": "Măsurători și adnotări pe bază de PDF",
     "onboarding.mod_ai_estimate_desc": "Estimare rapidă bazată pe AI",
@@ -1879,12 +1688,9 @@ const resource = {
     "onboarding.mod_5d_desc": "Model de cost 5D cu urmărire valoare câștigată",
     "onboarding.mod_tasks_desc": "Management sarcini și alocări",
     "onboarding.mod_finance_desc": "Urmărire buget și prezentare financiară",
-    "onboarding.mod_procurement_desc":
-      "Comenzi de achiziție și management furnizori",
-    "onboarding.mod_tendering_desc":
-      "Pachete de licitație și fluxuri de tender",
-    "onboarding.mod_changeorders_desc":
-      "Urmărire și aprobare ordine de modificare",
+    "onboarding.mod_procurement_desc": "Comenzi de achiziție și management furnizori",
+    "onboarding.mod_tendering_desc": "Pachete de licitație și fluxuri de tender",
+    "onboarding.mod_changeorders_desc": "Urmărire și aprobare ordine de modificare",
     "onboarding.mod_contacts_desc": "Director contacte și echipe",
     "onboarding.mod_meetings_desc": "Management ședințe și minute",
     "onboarding.mod_rfi_desc": "Solicitări de informații",
@@ -1895,8 +1701,7 @@ const resource = {
     "onboarding.mod_cde_desc": "Mediu Comun de Date",
     "onboarding.mod_photos_desc": "Galerie foto și adnotări",
     "onboarding.mod_markups_desc": "Marcaje desene și redline-uri",
-    "onboarding.mod_inspections_desc":
-      "Inspecții de șantier și liste de verificare",
+    "onboarding.mod_inspections_desc": "Inspecții de șantier și liste de verificare",
     "onboarding.mod_ncr_desc": "Rapoarte de neconformitate",
     "onboarding.mod_safety_desc": "Management siguranță și incidente",
     "onboarding.mod_punchlist_desc": "Urmărire listă de remedieri",
@@ -1908,32 +1713,24 @@ const resource = {
     "onboarding.mod_analytics_desc": "Analize de date și informații",
     "onboarding.mod_sustainability_desc": "Sustenabilitate și urmărire carbon",
     "onboarding.mod_cost_benchmark_desc": "Analiză benchmarking costuri",
-    "onboarding.mod_collaboration_desc":
-      "Instrumente de colaborare în timp real",
+    "onboarding.mod_collaboration_desc": "Instrumente de colaborare în timp real",
     "support.button_label": "Susține-ne",
-    "support.button_tooltip":
-      "Susține proiectul — oferă o stea, distribuie sau trimite un studiu de caz",
+    "support.button_tooltip": "Susține proiectul — oferă o stea, distribuie sau trimite un studiu de caz",
     "support.button_aria": "Susține-ne",
     "support.modal_title": "Ajută OpenConstructionERP să crească",
-    "support.modal_subtitle":
-      "Construim acest proiect în open source și livrăm fiecare funcție gratuit. Câteva acțiuni mici din partea ta mențin dezvoltarea în mișcare — nu costă nimic, dar fac o diferență enormă.",
+    "support.modal_subtitle": "Construim acest proiect în open source și livrăm fiecare funcție gratuit. Câteva acțiuni mici din partea ta mențin dezvoltarea în mișcare — nu costă nimic, dar fac o diferență enormă.",
     "support.action_star_title": "Oferă-ne o stea pe GitHub",
-    "support.action_star_body":
-      "30 de secunde. Stelele sunt modul în care echipele noi de construcții descoperă proiectul și cum ne asigurăm timp pentru următoarea versiune.",
+    "support.action_star_body": "30 de secunde. Stelele sunt modul în care echipele noi de construcții descoperă proiectul și cum ne asigurăm timp pentru următoarea versiune.",
     "support.action_share_title": "Distribuie echipei sau rețelei tale",
-    "support.action_share_body":
-      "O postare pe LinkedIn sau X / Twitter ajunge la zeci de devizieri, planificatori și manageri BIM. Ajută-ne să punem software-ul de construcții open source pe hartă.",
+    "support.action_share_body": "O postare pe LinkedIn sau X / Twitter ajunge la zeci de devizieri, planificatori și manageri BIM. Ajută-ne să punem software-ul de construcții open source pe hartă.",
     "support.share_twitter": "Publică pe X",
     "support.share_linkedin": "Publică pe LinkedIn",
     "support.share_copy": "Copiază textul + linkul",
     "support.share_copied": "Copiat!",
-    "support.action_case_study_title":
-      "Ai un studiu de caz, video sau articol?",
+    "support.action_case_study_title": "Ai un studiu de caz, video sau articol?",
     "support.action_case_study_tag": "Îl amplificăm",
-    "support.action_case_study_body":
-      "Arată-ne cum folosești OpenConstructionERP — un video, un studiu de caz, un articol pe LinkedIn. Poți trimite linkul direct sau pur și simplu să taghezi @DataDrivenConstruction în postarea ta — îl vom observa și-l vom redistribui prin newsletter și canalele sociale, unde zeci de mii de profesioniști din construcții și experți seniori din industrie urmăresc activitatea noastră. Email pentru linkuri: ",
-    "support.thanks":
-      "Mulțumim. Fiecare stea, distribuire și poveste menține cu adevărat acest proiect viu — construit cu ❤️ pentru comunitatea construcțiilor.",
+    "support.action_case_study_body": "Arată-ne cum folosești OpenConstructionERP — un video, un studiu de caz, un articol pe LinkedIn. Poți trimite linkul direct sau pur și simplu să taghezi @DataDrivenConstruction în postarea ta — îl vom observa și-l vom redistribui prin newsletter și canalele sociale, unde zeci de mii de profesioniști din construcții și experți seniori din industrie urmăresc activitatea noastră. Email pentru linkuri: ",
+    "support.thanks": "Mulțumim. Fiecare stea, distribuire și poveste menține cu adevărat acest proiect viu — construit cu ❤️ pentru comunitatea construcțiilor.",
     "onboarding.mod_group_estimation": "Devize",
     "onboarding.mod_group_ai": "AI",
     "onboarding.mod_group_bim_advanced": "BIM și 3D",
@@ -1946,170 +1743,117 @@ const resource = {
     "onboarding.mod_group_regional": "Pachete regionale",
     "onboarding.mod_group_platform": "Platformă",
     "onboarding.mod_cost_match": "Corespondență costuri",
-    "onboarding.mod_cost_match_desc":
-      "Corespondență automată a pozițiilor BOQ cu elementele bazei de costuri",
+    "onboarding.mod_cost_match_desc": "Corespondență automată a pozițiilor BOQ cu elementele bazei de costuri",
     "onboarding.mod_match": "Corespondență elemente",
-    "onboarding.mod_match_desc":
-      "Asociază elementele BIM/CAD cu pozițiile BOQ și prețurile",
+    "onboarding.mod_match_desc": "Asociază elementele BIM/CAD cu pozițiile BOQ și prețurile",
     "onboarding.mod_dwg_takeoff": "Antemăsurătoare DWG",
-    "onboarding.mod_dwg_takeoff_desc":
-      "Antemăsurătoare cantitativă direct din desenele DWG",
+    "onboarding.mod_dwg_takeoff_desc": "Antemăsurătoare cantitativă direct din desenele DWG",
     "onboarding.mod_cad": "Import CAD",
-    "onboarding.mod_cad_desc":
-      "Importă DWG/DGN/RVT/IFC prin pipeline-ul DDC cad2data",
+    "onboarding.mod_cad_desc": "Importă DWG/DGN/RVT/IFC prin pipeline-ul DDC cad2data",
     "onboarding.mod_bim_requirements": "Cerințe BIM",
-    "onboarding.mod_bim_requirements_desc":
-      "Definește și validează cerințele modelului (IDS / EIR)",
+    "onboarding.mod_bim_requirements_desc": "Definește și validează cerințele modelului (IDS / EIR)",
     "onboarding.mod_match_elements": "Asociază elemente",
-    "onboarding.mod_match_elements_desc":
-      "Asociere BIM-cost asistată de AI cu scoruri de încredere",
+    "onboarding.mod_match_elements_desc": "Asociere BIM-cost asistată de AI cu scoruri de încredere",
     "onboarding.mod_opencde_api": "API OpenCDE",
-    "onboarding.mod_opencde_api_desc":
-      "API conform OpenCDE pentru BCF + Documente + Foundation",
+    "onboarding.mod_opencde_api_desc": "API conform OpenCDE pentru BCF + Documente + Foundation",
     "onboarding.mod_erp_chat": "Chat ERP",
-    "onboarding.mod_erp_chat_desc":
-      "Asistent chat AI în aplicație cu context ERP complet",
+    "onboarding.mod_erp_chat_desc": "Asistent chat AI în aplicație cu context ERP complet",
     "onboarding.mod_compliance_ai": "AI conformitate",
-    "onboarding.mod_compliance_ai_desc":
-      "Verificări de conformitate reglementară bazate pe LLM",
+    "onboarding.mod_compliance_ai_desc": "Verificări de conformitate reglementară bazate pe LLM",
     "onboarding.mod_schedule_advanced": "Planificare avansată",
-    "onboarding.mod_schedule_advanced_desc":
-      "Last Planner System cu look-ahead săptămânale și PPC",
+    "onboarding.mod_schedule_advanced_desc": "Last Planner System cu look-ahead săptămânale și PPC",
     "onboarding.mod_eac": "Motor EAC",
     "onboarding.mod_eac_desc": "Estimate at Completion cu prognoze rulante",
     "onboarding.mod_bid_management": "Gestionare oferte",
-    "onboarding.mod_bid_management_desc":
-      "Gestionează ofertele trimise, strategiile de preț, urmărirea câștigurilor/pierderilor",
+    "onboarding.mod_bid_management_desc": "Gestionează ofertele trimise, strategiile de preț, urmărirea câștigurilor/pierderilor",
     "onboarding.mod_contracts": "Contracte",
-    "onboarding.mod_contracts_desc":
-      "Motor tipuri de contracte (FIDIC, NEC, JCT, sumă forfetară, T&M)",
+    "onboarding.mod_contracts_desc": "Motor tipuri de contracte (FIDIC, NEC, JCT, sumă forfetară, T&M)",
     "onboarding.mod_variations": "Variațiuni",
-    "onboarding.mod_variations_desc":
-      "Variațiuni de măsurare pe șantier cu flux de aprobare",
+    "onboarding.mod_variations_desc": "Variațiuni de măsurare pe șantier cu flux de aprobare",
     "onboarding.mod_crm": "CRM",
-    "onboarding.mod_crm_desc":
-      "Pipeline vânzări, lead-uri, oportunități, conturi",
+    "onboarding.mod_crm_desc": "Pipeline vânzări, lead-uri, oportunități, conturi",
     "onboarding.mod_supplier_catalogs": "Cataloage furnizori",
-    "onboarding.mod_supplier_catalogs_desc":
-      "Fluxuri live de prețuri furnizori și gestionare furnizori",
+    "onboarding.mod_supplier_catalogs_desc": "Fluxuri live de prețuri furnizori și gestionare furnizori",
     "onboarding.mod_property_dev": "Dezvoltare imobiliară",
-    "onboarding.mod_property_dev_desc":
-      "Teren, etape, mix vânzări, fezabilitate pentru dezvoltatori",
+    "onboarding.mod_property_dev_desc": "Teren, etape, mix vânzări, fezabilitate pentru dezvoltatori",
     "onboarding.mod_service": "Service și mentenanță",
-    "onboarding.mod_service_desc":
-      "Cereri service post-predare, garanții, mentenanță",
+    "onboarding.mod_service_desc": "Cereri service post-predare, garanții, mentenanță",
     "onboarding.mod_equipment": "Echipamente și flotă",
-    "onboarding.mod_equipment_desc":
-      "Utilaje, scule, vehicule — utilizare, mentenanță, tarife închiriere",
+    "onboarding.mod_equipment_desc": "Utilaje, scule, vehicule — utilizare, mentenanță, tarife închiriere",
     "onboarding.mod_resources": "Resurse",
-    "onboarding.mod_resources_desc":
-      "Planificare resurse: forță de muncă, materiale, echipamente",
+    "onboarding.mod_resources_desc": "Planificare resurse: forță de muncă, materiale, echipamente",
     "onboarding.mod_daily_diary": "Jurnal de șantier",
-    "onboarding.mod_daily_diary_desc":
-      "Jurnal zilnic de șantier cu vreme, echipe, echipamente, fotografii",
+    "onboarding.mod_daily_diary_desc": "Jurnal zilnic de șantier cu vreme, echipe, echipamente, fotografii",
     "onboarding.mod_subcontractors": "Subcontractori",
-    "onboarding.mod_subcontractors_desc":
-      "Onboarding subcontractori, contracte, plăți, performanță",
+    "onboarding.mod_subcontractors_desc": "Onboarding subcontractori, contracte, plăți, performanță",
     "onboarding.mod_portal": "Portal client",
-    "onboarding.mod_portal_desc":
-      "Portal extern pentru clienți și parteneri cu acces limitat",
+    "onboarding.mod_portal_desc": "Portal extern pentru clienți și parteneri cu acces limitat",
     "onboarding.mod_notifications": "Notificări",
-    "onboarding.mod_notifications_desc":
-      "Notificări în aplicație, email și webhook",
+    "onboarding.mod_notifications_desc": "Notificări în aplicație, email și webhook",
     "onboarding.mod_hse_advanced": "HSE avansat",
-    "onboarding.mod_hse_advanced_desc":
-      "Sănătate, siguranță, mediu avansat — toolbox talks, JHA, audituri",
+    "onboarding.mod_hse_advanced_desc": "Sănătate, siguranță, mediu avansat — toolbox talks, JHA, audituri",
     "onboarding.mod_qms": "Sistem de management al calității",
-    "onboarding.mod_qms_desc":
-      "QMS aliniat ISO 9001 — proceduri, audituri, KPI",
+    "onboarding.mod_qms_desc": "QMS aliniat ISO 9001 — proceduri, audituri, KPI",
     "onboarding.mod_compliance": "DSL de conformitate",
-    "onboarding.mod_compliance_desc":
-      "Limbaj specific domeniului code-as-rules pentru conformitate",
+    "onboarding.mod_compliance_desc": "Limbaj specific domeniului code-as-rules pentru conformitate",
     "onboarding.mod_compliance_docs": "Documente conformitate",
-    "onboarding.mod_compliance_docs_desc":
-      "Bibliotecă certificate, urmărire valabilitate, mementouri reînnoire",
+    "onboarding.mod_compliance_docs_desc": "Bibliotecă certificate, urmărire valabilitate, mementouri reînnoire",
     "onboarding.mod_carbon": "Carbon și sustenabilitate",
-    "onboarding.mod_carbon_desc":
-      "Carbon încorporat + operațional, raportare ESG, EN 15978",
+    "onboarding.mod_carbon_desc": "Carbon încorporat + operațional, raportare ESG, EN 15978",
     "onboarding.mod_bi_dashboards": "Dashboard-uri BI",
-    "onboarding.mod_bi_dashboards_desc":
-      "Analitică interactivă între module cu drill-down",
+    "onboarding.mod_bi_dashboards_desc": "Analitică interactivă între module cu drill-down",
     "onboarding.mod_enterprise_workflows": "Workflow-uri enterprise",
-    "onboarding.mod_enterprise_workflows_desc":
-      "Workflow-uri de aprobare personalizate bazate pe FSM pentru organizații mari",
+    "onboarding.mod_enterprise_workflows_desc": "Workflow-uri de aprobare personalizate bazate pe FSM pentru organizații mari",
     "onboarding.mod_full_evm": "EVM complet",
-    "onboarding.mod_full_evm_desc":
-      "Earned Value Management complet — PV/EV/AC, SPI/CPI, CV/SV, ETC/EAC",
+    "onboarding.mod_full_evm_desc": "Earned Value Management complet — PV/EV/AC, SPI/CPI, CV/SV, ETC/EAC",
     "onboarding.mod_rfq_bidding": "RFQ și licitații",
-    "onboarding.mod_rfq_bidding_desc":
-      "Workflow-uri RFQ multi-rundă, licitații închise, e-licitații",
+    "onboarding.mod_rfq_bidding_desc": "Workflow-uri RFQ multi-rundă, licitații închise, e-licitații",
     "onboarding.mod_integrations": "Integrări",
-    "onboarding.mod_integrations_desc":
-      "Webhooks, SAP, Procore, MS Project prin n8n",
+    "onboarding.mod_integrations_desc": "Webhooks, SAP, Procore, MS Project prin n8n",
     "onboarding.mod_dach_pack": "Pachet regional — DACH (DE/AT/CH)",
-    "onboarding.mod_dach_pack_desc":
-      "Standarde, clasificări, monede, formate pentru DACH (DE/AT/CH)",
+    "onboarding.mod_dach_pack_desc": "Standarde, clasificări, monede, formate pentru DACH (DE/AT/CH)",
     "onboarding.mod_uk_pack": "Pachet regional — Regatul Unit",
-    "onboarding.mod_uk_pack_desc":
-      "Standarde, clasificări, monede, formate pentru Regatul Unit",
+    "onboarding.mod_uk_pack_desc": "Standarde, clasificări, monede, formate pentru Regatul Unit",
     "onboarding.mod_us_pack": "Pachet regional — Statele Unite",
-    "onboarding.mod_us_pack_desc":
-      "Standarde, clasificări, monede, formate pentru Statele Unite",
+    "onboarding.mod_us_pack_desc": "Standarde, clasificări, monede, formate pentru Statele Unite",
     "onboarding.mod_india_pack": "Pachet regional — India",
-    "onboarding.mod_india_pack_desc":
-      "Standarde, clasificări, monede, formate pentru India",
-    "onboarding.mod_middle_east_pack":
-      "Pachet regional — Orientul Mijlociu și GCC",
-    "onboarding.mod_middle_east_pack_desc":
-      "Standarde, clasificări, monede, formate pentru Orientul Mijlociu și GCC",
+    "onboarding.mod_india_pack_desc": "Standarde, clasificări, monede, formate pentru India",
+    "onboarding.mod_middle_east_pack": "Pachet regional — Orientul Mijlociu și GCC",
+    "onboarding.mod_middle_east_pack_desc": "Standarde, clasificări, monede, formate pentru Orientul Mijlociu și GCC",
     "onboarding.mod_latam_pack": "Pachet regional — America Latină",
-    "onboarding.mod_latam_pack_desc":
-      "Standarde, clasificări, monede, formate pentru America Latină",
+    "onboarding.mod_latam_pack_desc": "Standarde, clasificări, monede, formate pentru America Latină",
     "onboarding.mod_asia_pac_pack": "Pachet regional — Asia-Pacific",
-    "onboarding.mod_asia_pac_pack_desc":
-      "Standarde, clasificări, monede, formate pentru Asia-Pacific",
+    "onboarding.mod_asia_pac_pack_desc": "Standarde, clasificări, monede, formate pentru Asia-Pacific",
     "onboarding.mod_russia_pack": "Pachet regional — Rusia și CSI",
-    "onboarding.mod_russia_pack_desc":
-      "Standarde, clasificări, monede, formate pentru Rusia și CSI",
+    "onboarding.mod_russia_pack_desc": "Standarde, clasificări, monede, formate pentru Rusia și CSI",
     "onboarding.mod_users": "Utilizatori și Auth",
     "onboarding.mod_users_desc": "Conturi utilizator, roluri, JWT, chei API",
     "onboarding.mod_teams": "Echipe",
-    "onboarding.mod_teams_desc":
-      "Grupare echipe, scope de vizibilitate, atribuire proiecte",
+    "onboarding.mod_teams_desc": "Grupare echipe, scope de vizibilitate, atribuire proiecte",
     "onboarding.mod_uploads": "Încărcări",
-    "onboarding.mod_uploads_desc":
-      "Încărcări directe de fișiere mari cu reluare",
+    "onboarding.mod_uploads_desc": "Încărcări directe de fișiere mari cu reluare",
     "onboarding.mod_jobs": "Sarcini de fundal",
-    "onboarding.mod_jobs_desc":
-      "Cozi worker pentru importuri, exporturi, pipeline-uri CV",
+    "onboarding.mod_jobs_desc": "Cozi worker pentru importuri, exporturi, pipeline-uri CV",
     "onboarding.mod_search": "Căutare semantică",
-    "onboarding.mod_search_desc":
-      "Căutare vectorială + lexicală pe BOQ, documente, desene",
+    "onboarding.mod_search_desc": "Căutare vectorială + lexicală pe BOQ, documente, desene",
     "onboarding.mod_backup": "Backup și restaurare",
-    "onboarding.mod_backup_desc":
-      "Backup-uri automate cu restaurare point-in-time",
+    "onboarding.mod_backup_desc": "Backup-uri automate cu restaurare point-in-time",
     "onboarding.mod_admin": "Consolă administrare",
-    "onboarding.mod_admin_desc":
-      "Endpoint-uri operator, pipeline-uri QA, mentenanță sistem",
+    "onboarding.mod_admin_desc": "Endpoint-uri operator, pipeline-uri QA, mentenanță sistem",
     "onboarding.mod_i18n_foundation": "Bază i18n",
-    "onboarding.mod_i18n_foundation_desc":
-      "Runtime i18n pentru 27 de limbi cu chunk-uri locale leneșe",
+    "onboarding.mod_i18n_foundation_desc": "Runtime i18n pentru 27 de limbi cu chunk-uri locale leneșe",
     "onboarding.mod_collaboration_locks": "Blocaje colaborare",
-    "onboarding.mod_collaboration_locks_desc":
-      "Blocare optimistă și pesimistă pentru editare multi-utilizator",
+    "onboarding.mod_collaboration_locks_desc": "Blocare optimistă și pesimistă pentru editare multi-utilizator",
     "onboarding.mod_architecture_map": "Hartă arhitectură",
-    "onboarding.mod_architecture_map_desc":
-      "Hartă vizuală interactivă a arhitecturii sistemului",
+    "onboarding.mod_architecture_map_desc": "Hartă vizuală interactivă a arhitecturii sistemului",
     "onboarding.mod_dashboards": "Dashboard-uri",
     "onboarding.mod_dashboards_desc": "Dashboard-uri per proiect și portofoliu",
     "onboarding.mode_title": "Alegeți Modul de Interfață",
     "onboarding.mode_subtitle": "Puteți comuta între moduri oricând în Setări.",
     "onboarding.mode_simple": "Simple",
-    "onboarding.mode_simple_desc":
-      "I'm getting started — show me the essentials. A clean interface with the most important features.",
+    "onboarding.mode_simple_desc": "I'm getting started — show me the essentials. A clean interface with the most important features.",
     "onboarding.mode_advanced": "Advanced",
-    "onboarding.mode_advanced_desc":
-      "I'm experienced — show me everything. Full professional toolset with all options visible.",
+    "onboarding.mode_advanced_desc": "I'm experienced — show me everything. Full professional toolset with all options visible.",
     "onboarding.summary_company": "Tipul Companiei",
     "onboarding.summary_modules": "Module Active",
     "onboarding.summary_mode": "Modul de Interfață",
@@ -2120,20 +1864,15 @@ const resource = {
     "onboarding.next": "Next",
     "onboarding.finish": "Finish",
     "onboarding.step1.title": "Bara Laterală de Navigare",
-    "onboarding.step1.description":
-      "Bara laterală vă oferă acces rapid la toate modulele: proiecte, devize, baze de date de costuri, grafice de timp și altele.",
+    "onboarding.step1.description": "Bara laterală vă oferă acces rapid la toate modulele: proiecte, devize, baze de date de costuri, grafice de timp și altele.",
     "onboarding.step2.title": "Projects",
-    "onboarding.step2.description":
-      "Porniți de aici creând primul proiect. Fiecare proiect conține Antemăsurători, grafice de timp și documente într-un singur loc.",
+    "onboarding.step2.description": "Porniți de aici creând primul proiect. Fiecare proiect conține Antemăsurători, grafice de timp și documente într-un singur loc.",
     "onboarding.step3.title": "Antemăsurătoare",
-    "onboarding.step3.description":
-      "Construiți devize detaliate cu editorul Antemăsurătorii — articole ierarhice, asamblări și calcul total în timp real.",
+    "onboarding.step3.description": "Construiți devize detaliate cu editorul Antemăsurătorii — articole ierarhice, asamblări și calcul total în timp real.",
     "onboarding.step4.title": "Baze de Date de Costuri",
-    "onboarding.step4.description":
-      "Navigați și gestionați baze de date de tarife de cost, inclusiv CWICR integrat cu peste 55.000 de poziții în 9 limbi.",
+    "onboarding.step4.description": "Navigați și gestionați baze de date de tarife de cost, inclusiv CWICR integrat cu peste 55.000 de poziții în 9 limbi.",
     "onboarding.step5.title": "Mod Simplu / Avansat",
-    "onboarding.step5.description":
-      "Comutați între modul Simplu (instrumente esențiale) și modul Avansat (toate funcțiile, inclusiv licitație și planificare).",
+    "onboarding.step5.description": "Comutați între modul Simplu (instrumente esențiale) și modul Avansat (toate funcțiile, inclusiv licitație și planificare).",
     "projects.4d_schedule": "Program 4D",
     "projects.5d_budget": "Buget 5D",
     "projects.active": "active",
@@ -2151,8 +1890,7 @@ const resource = {
     "projects.delete_failed": "Ștergerea proiectului a eșuat",
     "projects.deleted": "Proiect arhivat",
     "projects.description": "Descriere",
-    "projects.description_placeholder":
-      "Descrierea proiectului, sferă, note...",
+    "projects.description_placeholder": "Descrierea proiectului, sferă, note...",
     "projects.duplicate_failed": "Duplicarea a eșuat",
     "projects.duplicated": "Proiect duplicat",
     "projects.enter_custom_currency": "ex. XAF",
@@ -2166,28 +1904,21 @@ const resource = {
     "projects.name_placeholder": "ex. Turn de birouri centru",
     "projects.new_boq": "BOQ nou",
     "projects.new_project": "Proiect nou",
-    "projects.create_hint":
-      "Regiunea determină bazele de date de costuri disponibile și ratele de TVA. Standardul de clasificare definește structura costurilor: DIN 276 pentru țările DACH, NRM pentru Marea Britanie, MasterFormat pentru SUA/Canada, UniFormat pentru Oceania. Moneda stabilește toate prețurile din BOQ.",
+    "projects.create_hint": "Regiunea determină bazele de date de costuri disponibile și ratele de TVA. Standardul de clasificare definește structura costurilor: DIN 276 pentru țările DACH, NRM pentru Marea Britanie, MasterFormat pentru SUA/Canada, UniFormat pentru Oceania. Moneda stabilește toate prețurile din BOQ.",
     "projects.no_boqs": "Niciun BOQ încă",
-    "projects.no_boqs_desc":
-      "Creați o listă de cantități pentru a începe estimarea costurilor pentru acest proiect.",
+    "projects.no_boqs_desc": "Creați o listă de cantități pentru a începe estimarea costurilor pentru acest proiect.",
     "projects.no_budget": "Nu există date de buget",
-    "projects.no_budget_desc":
-      "Configurați un model de cost 5D pentru a urmări costurile planificate vs cele reale.",
+    "projects.no_budget_desc": "Configurați un model de cost 5D pentru a urmări costurile planificate vs cele reale.",
     "projects.no_projects": "Niciun proiect încă",
-    "projects.no_projects_description":
-      "Creați primul dvs. proiect de estimare a costurilor de construcție",
+    "projects.no_projects_description": "Creați primul dvs. proiect de estimare a costurilor de construcție",
     "projects.no_results": "Niciun proiect care să se potrivească",
     "projects.no_results_hint": "Încercați să ajustați căutarea sau filtrele",
     "projects.no_schedules": "Niciun program încă",
-    "projects.no_schedules_desc":
-      "Creați un program pentru a gestiona termenele proiectului.",
+    "projects.no_schedules_desc": "Creați un program pentru a gestiona termenele proiectului.",
     "projects.no_tenders": "Niciun pachet de licitație",
-    "projects.no_tenders_desc":
-      "Creați pachete de licitație pentru a gestiona ofertarea pentru acest proiect.",
+    "projects.no_tenders_desc": "Creați pachete de licitație pentru a gestiona ofertarea pentru acest proiect.",
     "projects.not_found": "Proiectul nu a fost găsit",
-    "projects.not_found_desc":
-      "Proiectul pe care îl căutați nu există sau a fost șters.",
+    "projects.not_found_desc": "Proiectul pe care îl căutați nu există sau a fost șters.",
     "projects.of": "din",
     "projects.open_tendering": "Deschide licitația",
     "projects.overview": "Prezentare generală",
@@ -2200,8 +1931,7 @@ const resource = {
     "projects.projects_label": "proiecte",
     "projects.region": "Regiune",
     "projects.regional_factor": "Factor regional",
-    "projects.regional_factor_hint":
-      "Înmulțiți toate prețurile cu acest factor (ex. München = 1,12, Berlin = 1,05)",
+    "projects.regional_factor_hint": "Înmulțiți toate prețurile cu acest factor (ex. München = 1,12, Berlin = 1,05)",
     "projects.remaining": "Rămas",
     "projects.schedule_subtitle": "Programe și cronologia proiectului",
     "projects.search_placeholder": "Caută proiecte...",
@@ -2220,8 +1950,7 @@ const resource = {
     "projects.status_archived": "Arhivat",
     "projects.subtitle_count": "{{count}} proiecte",
     "projects.tendering": "Licitații",
-    "projects.tendering_subtitle":
-      "Pachete de licitație și gestionarea ofertelor",
+    "projects.tendering_subtitle": "Pachete de licitație și gestionarea ofertelor",
     "projects.title": "Proiecte",
     "projects.total_budget": "Buget total",
     "projects.total_spent": "Total cheltuit",
@@ -2229,90 +1958,66 @@ const resource = {
     "quantities.badge_cad": "CAD",
     "quantities.badge_coming_soon": "Disponibil în Curând",
     "quantities.how_it_works": "Cum funcționează",
-    "quantities.manual_desc":
-      "Trebuie să adăugați cantități direct? Mergeți la Editorul Antemăsurătorii.",
+    "quantities.manual_desc": "Trebuie să adăugați cantități direct? Mergeți la Editorul Antemăsurătorii.",
     "quantities.manual_title": "Introducere Manuală Rapidă",
-    "quantities.method_ai_desc":
-      "Descrieți clădirea și AI va genera o Antemăsurătoare cu volume și costuri estimate.",
+    "quantities.method_ai_desc": "Descrieți clădirea și AI va genera o Antemăsurătoare cu volume și costuri estimate.",
     "quantities.method_ai_title": "Text AI",
-    "quantities.method_cad_desc":
-      "Importați fișiere DWG, RVT, IFC sau DGN și extrageți cantități direct din geometria 3D.",
+    "quantities.method_cad_desc": "Importați fișiere DWG, RVT, IFC sau DGN și extrageți cantități direct din geometria 3D.",
     "quantities.method_cad_title": "Modele CAD / BIM",
-    "quantities.method_pdf_desc":
-      "Încărcați desene de construcție (PDF) și extrageți cantități automat cu antemăsurătoare asistată de AI.",
+    "quantities.method_pdf_desc": "Încărcați desene de construcție (PDF) și extrageți cantități automat cu antemăsurătoare asistată de AI.",
     "quantities.method_pdf_title": "Desene PDF",
     "quantities.open": "Open",
     "quantities.open_boq": "Deschideți Editorul Antemăsurătorii",
-    "quantities.step1_desc":
-      "Alegeți metoda de intrare: text, PDF sau model CAD.",
+    "quantities.step1_desc": "Alegeți metoda de intrare: text, PDF sau model CAD.",
     "quantities.step1_title": "Încărcați sau descrieți",
-    "quantities.step2_desc":
-      "AI-ul nostru analizează intrarea și extrage cantități structurate.",
+    "quantities.step2_desc": "AI-ul nostru analizează intrarea și extrage cantități structurate.",
     "quantities.step2_title": "AI extrage cantitățile",
-    "quantities.step3_desc":
-      "Verificați rezultatele și adăugați-le în Antemăsurătoarea dumneavoastră.",
+    "quantities.step3_desc": "Verificați rezultatele și adăugați-le în Antemăsurătoarea dumneavoastră.",
     "quantities.step3_title": "Revizuiți și adăugați în Antemăsurătoare",
-    "quantities.subtitle":
-      "Colectați cantitățile proiectului — din text AI, desene PDF sau modele CAD/BIM",
+    "quantities.subtitle": "Colectați cantitățile proiectului — din text AI, desene PDF sau modele CAD/BIM",
     "quantities.converter_title": "Cum Funcționează Conversia CAD/BIM",
-    "quantities.converter_desc":
-      "Încărcați fișierele CAD/BIM (.rvt, .ifc, .dwg, .dgn) și convertorul DDC extrage toate elementele într-un tabel structurat — pereți, planșee, stâlpi, uși, ferestre — cu volume, suprafețe și cantități calculate. AI mapează apoi aceste elemente la articole de cost și generează automat o Antemăsurătoare completă.",
+    "quantities.converter_desc": "Încărcați fișierele CAD/BIM (.rvt, .ifc, .dwg, .dgn) și convertorul DDC extrage toate elementele într-un tabel structurat — pereți, planșee, stâlpi, uși, ferestre — cu volume, suprafețe și cantități calculate. AI mapează apoi aceste elemente la articole de cost și generează automat o Antemăsurătoare completă.",
     "quantities.download_converters": "Descărcați Convertoarele DDC",
     "quantities.converter_path": "Instalați în: ~/.openestimator/converters/",
     "quantities.title": "Antemăsurătoare",
     "reports.5d_report": "Raport Cost 5D",
-    "reports.5d_report_desc":
-      "Analiză buget față de realizat cu curbă S și prognoză cost.",
+    "reports.5d_report_desc": "Analiză buget față de realizat cu curbă S și prognoză cost.",
     "reports.cash_flow": "Prognoză Flux de Numerar",
-    "reports.cash_flow_desc":
-      "Proiecție lunară a fluxului de numerar din curba S planificat față de realizat.",
+    "reports.cash_flow_desc": "Proiecție lunară a fluxului de numerar din curba S planificat față de realizat.",
     "reports.change_order_register": "Registru Ordine de Modificare",
-    "reports.change_order_register_desc":
-      "Registru complet al modificărilor de domeniu cu impact cumulat asupra costului și graficului.",
+    "reports.change_order_register_desc": "Registru complet al modificărilor de domeniu cu impact cumulat asupra costului și graficului.",
     "reports.tender_comparison": "Comparare Licitații",
-    "reports.tender_comparison_desc":
-      "Comparare alăturată a ofertelor subcontractanților cu analiza abaterilor.",
+    "reports.tender_comparison_desc": "Comparare alăturată a ofertelor subcontractanților cu analiza abaterilor.",
     "reports.risk_register": "Registru de Riscuri",
-    "reports.risk_register_desc":
-      "Matrice de riscuri cu probabilitate, impact, scoruri și planuri de reducere.",
+    "reports.risk_register_desc": "Matrice de riscuri cu probabilitate, impact, scoruri și planuri de reducere.",
     "reports.progress_report": "Raport de Progres",
-    "reports.progress_report_desc":
-      "Performanță EVM, status grafic de timp și riscuri principale într-un singur raport.",
+    "reports.progress_report_desc": "Performanță EVM, status grafic de timp și riscuri principale într-un singur raport.",
     "reports.preset_monthly": "Progres Lunar",
     "reports.preset_client": "Prezentare pentru Client",
     "reports.preset_audit": "Raport de Audit",
     "reports.preset_full": "Raport Complet",
     "reports.presets": "Presetări rapide:",
     "reports.boq_report": "Raport Antemăsurătoare",
-    "reports.boq_report_desc":
-      "Antemăsurătoare completă cu secțiuni, articole, adaosuri și totaluri. Disponibil ca PDF sau Excel.",
+    "reports.boq_report_desc": "Antemăsurătoare completă cu secțiuni, articole, adaosuri și totaluri. Disponibil ca PDF sau Excel.",
     "reports.coming_soon": "Disponibil în curând",
     "reports.cost_report": "Raport de Costuri",
-    "reports.cost_report_desc":
-      "Defalcare costuri pe categorie cu grafice sumar și analiză detaliată a costurilor.",
+    "reports.cost_report_desc": "Defalcare costuri pe categorie cu grafice sumar și analiză detaliată a costurilor.",
     "reports.download_error": "Generarea raportului a eșuat",
     "reports.download_format": "Download {{format}}",
     "reports.download_success": "Raport descărcat cu succes",
     "reports.gaeb_xml": "GAEB XML",
-    "reports.gaeb_xml_desc":
-      "Export tender GAEB X83 — formatul standard de schimb pentru piața de construcții DACH.",
+    "reports.gaeb_xml_desc": "Export tender GAEB X83 — formatul standard de schimb pentru piața de construcții DACH.",
     "reports.no_boqs": "Nicio Antemăsurătoare în acest proiect",
     "reports.no_projects": "Niciun proiect disponibil",
     "reports.schedule_report": "Raport Grafic de Timp",
-    "reports.schedule_report_desc":
-      "Diagramă Gantt cu calendarul proiectului, jaloane și cale critică.",
-    "reports.select_boq_first":
-      "Vă rugăm să selectați mai întâi un proiect și o Antemăsurătoare",
-    "reports.select_project_first":
-      "Vă rugăm să selectați mai întâi un proiect",
-    "reports.subtitle":
-      "Generați rapoarte profesionale pentru proiectele dumneavoastră",
-    "reports.guide_desc":
-      "Raport Antemăsurătoare = deviz detaliat cu totaluri. Raport Costuri = defalcare costuri pe categorie. GAEB XML = format german de licitație (.x83) pentru schimb cu subcontractanți. Validare = rezultate verificare conformitate. Grafic = sumar activități Gantt. 5D = curbe cost buget față de realizat.",
+    "reports.schedule_report_desc": "Diagramă Gantt cu calendarul proiectului, jaloane și cale critică.",
+    "reports.select_boq_first": "Vă rugăm să selectați mai întâi un proiect și o Antemăsurătoare",
+    "reports.select_project_first": "Vă rugăm să selectați mai întâi un proiect",
+    "reports.subtitle": "Generați rapoarte profesionale pentru proiectele dumneavoastră",
+    "reports.guide_desc": "Raport Antemăsurătoare = deviz detaliat cu totaluri. Raport Costuri = defalcare costuri pe categorie. GAEB XML = format german de licitație (.x83) pentru schimb cu subcontractanți. Validare = rezultate verificare conformitate. Grafic = sumar activități Gantt. 5D = curbe cost buget față de realizat.",
     "reports.title": "Reports",
     "reports.validation_report": "Raport de Validare",
-    "reports.validation_report_desc":
-      "Raport de verificare conformitate față de standardele DIN 276, NRM sau MasterFormat.",
+    "reports.validation_report_desc": "Raport de verificare conformitate față de standardele DIN 276, NRM sau MasterFormat.",
     "schedule.activity": "Activity",
     "schedule.activity_name": "Denumire Activitate",
     "schedule.activity_name_placeholder": "ex.: Lucrări de Fundații",
@@ -2323,8 +2028,7 @@ const resource = {
     "schedule.buffer": "Buffer",
     "schedule.calculate_cpm": "Cale Critică",
     "schedule.completed": "Completed",
-    "schedule.cpm_result":
-      "Cale Critică: {{duration}} zile, {{count}} activități critice",
+    "schedule.cpm_result": "Cale Critică: {{duration}} zile, {{count}} activități critice",
     "schedule.create_activity": "Creați Activitatea",
     "schedule.create_schedule": "Creați Graficul de Timp",
     "schedule.critical_path": "Cale Critică",
@@ -2339,41 +2043,32 @@ const resource = {
     "schedule.fifty_pct_confidence": "50% confidence",
     "schedule.generate": "Generate",
     "schedule.generate_from_boq": "Generați din Antemăsurătoare",
-    "schedule.generate_from_boq_description":
-      "Selectați o Antemăsurătoare pentru a genera automat activitățile de planificare. Se va crea câte o activitate per secțiune Antemăsurătoare cu durate proporționale cu costul.",
+    "schedule.generate_from_boq_description": "Selectați o Antemăsurătoare pentru a genera automat activitățile de planificare. Se va crea câte o activitate per secțiune Antemăsurătoare cu durate proporționale cu costul.",
     "schedule.in_progress": "În desfășurare",
     "schedule.mean_label": "Medie (cale critică)",
     "schedule.ninetyfive_pct_confidence": "95% confidence",
     "schedule.no_activities": "Nicio activitate încă",
-    "schedule.no_activities_hint":
-      "Adăugați activități pentru a construi planificarea proiectului dumneavoastră",
-    "schedule.no_boqs_available":
-      "Nu există Antemăsurători disponibile pentru acest proiect.",
+    "schedule.no_activities_hint": "Adăugați activități pentru a construi planificarea proiectului dumneavoastră",
+    "schedule.no_boqs_available": "Nu există Antemăsurători disponibile pentru acest proiect.",
     "schedule.no_dates": "Nicio dată stabilită",
     "schedule.no_projects": "Niciun proiect disponibil",
-    "schedule.no_projects_hint":
-      "Creați mai întâi un proiect, apoi adăugați planificări",
+    "schedule.no_projects_hint": "Creați mai întâi un proiect, apoi adăugați planificări",
     "schedule.no_schedules": "Nicio planificare încă",
-    "schedule.no_schedules_hint":
-      "Creați o planificare pentru a începe elaborarea calendarului proiectului",
+    "schedule.no_schedules_hint": "Creați o planificare pentru a începe elaborarea calendarului proiectului",
     "schedule.planned_duration": "Durată planificată",
     "schedule.project_schedules": "Planificări pentru acest proiect",
     "schedule.risk_analysis": "Analiză de risc (PERT)",
     "schedule.risk_analysis_btn": "Analiză de risc",
     "schedule.schedule_name": "Denumirea planificării",
-    "schedule.schedule_name_placeholder":
-      "ex. Planificare principală de construcție",
-    "schedule.select_project":
-      "Selectați un proiect pentru a vizualiza și gestiona planificarea de construcție",
+    "schedule.schedule_name_placeholder": "ex. Planificare principală de construcție",
+    "schedule.select_project": "Selectați un proiect pentru a vizualiza și gestiona planificarea de construcție",
     "schedule.start": "Start",
     "schedule.start_date": "Data de început",
     "schedule.status_active": "active",
     "schedule.status_draft": "draft",
     "schedule.std_dev_label": "Abatere standard",
-    "schedule.subtitle":
-      "Selectați un proiect pentru a vizualiza și gestiona planificarea de construcție",
-    "schedule.what_is_4d":
-      "Planificarea 4D leagă articolele din Antemăsurătoare de un calendar de proiect. Creați activități, stabiliți dependențe și vizualizați progresul pe o diagramă Gantt. Analiza căii critice evidențiază activitățile care afectează direct data de finalizare a proiectului. Tipuri de activități: Sarcină = element de lucru, Jalon = punct de control cu durată zero, Sumar = antet de grupare.",
+    "schedule.subtitle": "Selectați un proiect pentru a vizualiza și gestiona planificarea de construcție",
+    "schedule.what_is_4d": "Planificarea 4D leagă articolele din Antemăsurătoare de un calendar de proiect. Creați activități, stabiliți dependențe și vizualizați progresul pe o diagramă Gantt. Analiza căii critice evidențiază activitățile care afectează direct data de finalizare a proiectului. Tipuri de activități: Sarcină = element de lucru, Jalon = punct de control cu durată zero, Sumar = antet de grupare.",
     "schedule.title": "4D Schedule",
     "schedule.total_activities": "Total",
     "schedule.type_milestone": "Milestone",
@@ -2384,23 +2079,19 @@ const resource = {
     "schedule.zoom_day": "Day",
     "schedule.zoom_month": "Month",
     "schedule.zoom_week": "Week",
-    "settings.account_subtitle":
-      "Deconectați-vă sau gestionați contul dumneavoastră",
+    "settings.account_subtitle": "Deconectați-vă sau gestionați contul dumneavoastră",
     "settings.account_title": "Account",
     "settings.active": "Active",
     "settings.ai_api_key": "Cheie API",
     "settings.ai_connected": "Connected",
-    "settings.ai_desc_anthropic":
-      "Claude 3.5 Sonnet / Opus — recomandat pentru estimare în construcții",
+    "settings.ai_desc_anthropic": "Claude 3.5 Sonnet / Opus — recomandat pentru estimare în construcții",
     "settings.ai_desc_gemini": "Gemini 1.5 Pro — capacități multimodale",
     "settings.ai_desc_openai": "GPT-4o / GPT-4 Turbo — suport larg",
     "settings.ai_error": "Eroare de conexiune",
     "settings.ai_get_key": "Obțineți o cheie API",
-    "settings.ai_key_hint":
-      "Cheia API este criptată și stocată în siguranță. Nu este niciodată partajată.",
+    "settings.ai_key_hint": "Cheia API este criptată și stocată în siguranță. Nu este niciodată partajată.",
     "settings.ai_key_placeholder": "Introduceți cheia API...",
-    "settings.ai_key_placeholder_existing":
-      "Introduceți o cheie nouă pentru a o înlocui pe cea existentă...",
+    "settings.ai_key_placeholder_existing": "Introduceți o cheie nouă pentru a o înlocui pe cea existentă...",
     "settings.ai_key_set": "Cheie configurată",
     "settings.ai_last_tested": "(ultimul test: {{time}})",
     "settings.ai_not_configured": "Neconfigurat",
@@ -2431,8 +2122,7 @@ const resource = {
     "settings.sign_out": "Deconectare",
     "settings.status": "Status",
     "settings.subtitle": "Gestionați contul și preferințele dumneavoastră",
-    "settings.ai_guidance":
-      "Funcțiile AI (estimare, analiză takeoff, căutare semantică) necesită o cheie API. Anthropic Claude este recomandat pentru cea mai bună precizie. Cheile sunt stocate criptat și nu părăsesc niciodată serverul dumneavoastră.",
+    "settings.ai_guidance": "Funcțiile AI (estimare, analiză takeoff, căutare semantică) necesită o cheie API. Anthropic Claude este recomandat pentru cea mai bună precizie. Cheile sunt stocate criptat și nu părăsesc niciodată serverul dumneavoastră.",
     "settings.theme_dark": "Dark",
     "settings.theme_light": "Light",
     "settings.theme_system": "System",
@@ -2441,8 +2131,7 @@ const resource = {
     "shortcuts.cancel_editing": "Anulați editarea",
     "shortcuts.command_palette": "Paletă de comenzi",
     "shortcuts.confirm_next_row": "Confirmați / Rândul următor",
-    "shortcuts.footer_hint":
-      "Comenzile rapide sunt dezactivate când focusul este pe câmpurile de introducere.",
+    "shortcuts.footer_hint": "Comenzile rapide sunt dezactivate când focusul este pe câmpurile de introducere.",
     "shortcuts.group.actions": "Actions",
     "shortcuts.group.boq_editor": "Editor Antemăsurătoare",
     "shortcuts.group.general": "General",
@@ -2475,56 +2164,43 @@ const resource = {
     "shortcuts.group.module_pages": "Pagini module",
     "shortcuts.create_new_item": "Creați un element nou (pe paginile cu liste)",
     "shortcuts.save_recalculate": "Salvați / Recalculați tarifele",
-    "errors.bad_request":
-      "Cererea nu a putut fi procesată. Vă rugăm să verificați datele.",
-    "errors.unauthorized":
-      "Sesiunea dvs. a expirat. Vă rugăm să vă autentificați din nou.",
+    "errors.bad_request": "Cererea nu a putut fi procesată. Vă rugăm să verificați datele.",
+    "errors.unauthorized": "Sesiunea dvs. a expirat. Vă rugăm să vă autentificați din nou.",
     "errors.forbidden": "Nu aveți permisiunea de a efectua această acțiune.",
     "errors.not_found": "Elementul solicitat nu a putut fi găsit.",
-    "errors.conflict":
-      "Aceasta intră în conflict cu datele existente — reîmprospătați și încercați din nou.",
-    "errors.payload_too_large":
-      "Fișierul este prea mare. Încercați unul mai mic.",
-    "errors.validation":
-      "Unele câmpuri sunt invalide. Vă rugăm să verificați datele introduse.",
-    "errors.rate_limit":
-      "Prea multe cereri. Așteptați un moment și încercați din nou.",
-    "errors.server":
-      "Eroare de server. Vă rugăm să încercați din nou într-un moment.",
-    "errors.unavailable":
-      "Serverul este temporar indisponibil. Încercați din nou în curând.",
+    "errors.conflict": "Aceasta intră în conflict cu datele existente — reîmprospătați și încercați din nou.",
+    "errors.payload_too_large": "Fișierul este prea mare. Încercați unul mai mic.",
+    "errors.validation": "Unele câmpuri sunt invalide. Vă rugăm să verificați datele introduse.",
+    "errors.rate_limit": "Prea multe cereri. Așteptați un moment și încercați din nou.",
+    "errors.server": "Eroare de server. Vă rugăm să încercați din nou într-un moment.",
+    "errors.unavailable": "Serverul este temporar indisponibil. Încercați din nou în curând.",
     "errors.client": "Cererea nu a putut fi finalizată.",
     "errors.unknown": "A apărut o eroare. Vă rugăm să încercați din nou.",
     "errors.network": "Nu s-a putut accesa serverul. Verificați conexiunea.",
-    "errors.timeout":
-      "Cererea a durat prea mult și a fost anulată. Vă rugăm să încercați din nou.",
+    "errors.timeout": "Cererea a durat prea mult și a fost anulată. Vă rugăm să încercați din nou.",
     "shortcuts.undo": "Undo",
     "sustainability.area": "Area (m2)",
     "sustainability.benchmark": "Benchmark",
     "sustainability.boq": "BOQ",
     "sustainability.breakdown_title": "Detaliere pe materiale",
     "sustainability.calculate": "Calculate",
-    "sustainability.empty_desc":
-      "Selectați un proiect și o Antemăsurătoare mai sus, apoi faceți clic pe Calculați pentru a analiza emisiile de CO2 pe baza tipurilor de materiale.",
+    "sustainability.empty_desc": "Selectați un proiect și o Antemăsurătoare mai sus, apoi faceți clic pe Calculați pentru a analiza emisiile de CO2 pe baza tipurilor de materiale.",
     "sustainability.empty_title": "Analiza amprentei de carbon CO2",
     "sustainability.export_pdf": "Exportați raportul CO2 în PDF",
     "sustainability.material": "Material",
-    "sustainability.no_area":
-      "Introduceți suprafața proiectului pentru a vedea valoarea de referință pe m2",
+    "sustainability.no_area": "Introduceți suprafața proiectului pentru a vedea valoarea de referință pe m2",
     "sustainability.positions_matched": "articole identificate",
     "sustainability.project": "Project",
     "sustainability.project_area": "project",
     "sustainability.rating": "Rating",
     "sustainability.select_boq": "-- Selectați Antemăsurătoarea --",
     "sustainability.select_project": "-- Selectați proiectul --",
-    "sustainability.subtitle":
-      "Selectați proiectul și Antemăsurătoarea pentru a analiza amprenta de carbon CO2",
+    "sustainability.subtitle": "Selectați proiectul și Antemăsurătoarea pentru a analiza amprenta de carbon CO2",
     "sustainability.title": "Sustenabilitate / CO2",
     "sustainability.total_co2": "CO2 total",
     "takeoff.add_selected_to_boq": "Adăugați {{count}} în Antemăsurătoare",
     "takeoff.add_to_boq": "Adăugați în Antemăsurătoare",
-    "takeoff.added_to_boq_success":
-      "Elementele au fost adăugate cu succes în Antemăsurătoare",
+    "takeoff.added_to_boq_success": "Elementele au fost adăugate cu succes în Antemăsurătoare",
     "takeoff.ai_analysis_results": "Rezultatele analizei AI",
     "takeoff.analyze_with_ai": "Analizați cu AI",
     "takeoff.analyzing": "Analyzing...",
@@ -2541,8 +2217,7 @@ const resource = {
     "takeoff.just_now": "Chiar acum",
     "takeoff.minutes_ago": "Acum {{count}} min",
     "takeoff.no_documents": "Niciun document încărcat",
-    "takeoff.no_documents_description":
-      "Încărcați planuri de construcție PDF pentru a începe extragerea cantităților cu AI.",
+    "takeoff.no_documents_description": "Încărcați planuri de construcție PDF pentru a începe extragerea cantităților cu AI.",
     "takeoff.pages": "pages",
     "takeoff.pdf_limit": "Fișiere .pdf până la {{size}}MB",
     "takeoff.quick_measurements": "Măsurători rapide",
@@ -2550,18 +2225,14 @@ const resource = {
     "takeoff.select_all": "Selectați tot",
     "takeoff.select_boq": "Antemăsurătoare",
     "takeoff.select_boq_placeholder": "Alegeți o Antemăsurătoare...",
-    "takeoff.select_boq_to_add":
-      "Selectați un proiect și o Antemăsurătoare mai sus pentru a adăuga măsurători.",
-    "takeoff.select_items_hint":
-      "Selectați elementele de adăugat în Antemăsurătoare",
+    "takeoff.select_boq_to_add": "Selectați un proiect și o Antemăsurătoare mai sus pentru a adăuga măsurători.",
+    "takeoff.select_items_hint": "Selectați elementele de adăugat în Antemăsurătoare",
     "takeoff.select_project": "Project",
     "takeoff.select_project_first": "Selectați mai întâi un proiect",
     "takeoff.select_project_placeholder": "Alegeți un proiect...",
     "takeoff.selected": "selected",
-    "takeoff.subtitle":
-      "Încărcați planuri de construcție pentru a extrage cantități",
-    "takeoff.workflow_desc":
-      "Încărcați un plan PDF — AI analizează paginile și extrage elementele (pereți, planșee, uși etc.) cu cantitățile — Verificați rezultatele și ajustați — Adăugați elementele selectate în Antemăsurătoarea dumneavoastră. Scoruri de încredere: verde (>80%) = încredere ridicată, galben (50-80%) = verificare recomandată, roșu (<50%) = verificare manuală necesară.",
+    "takeoff.subtitle": "Încărcați planuri de construcție pentru a extrage cantități",
+    "takeoff.workflow_desc": "Încărcați un plan PDF — AI analizează paginile și extrage elementele (pereți, planșee, uși etc.) cu cantitățile — Verificați rezultatele și ajustați — Adăugați elementele selectate în Antemăsurătoarea dumneavoastră. Scoruri de încredere: verde (>80%) = încredere ridicată, galben (50-80%) = verificare recomandată, roșu (<50%) = verificare manuală necesară.",
     "takeoff.summary": "Summary",
     "takeoff.title": "Takeoff PDF",
     "takeoff.total_quantity": "total",
@@ -2576,8 +2247,7 @@ const resource = {
     "tendering.award": "Award",
     "tendering.award_bid": "Atribuiți această ofertă",
     "tendering.bid_comparison": "Comparare oferte",
-    "tendering.bid_comparison_chart_label":
-      "Diagramă cu bare comparând totalurile ofertelor",
+    "tendering.bid_comparison_chart_label": "Diagramă cu bare comparând totalurile ofertelor",
     "tendering.bid_totals_chart": "Prezentare generală a totalurilor ofertelor",
     "tendering.bids_count": "bids",
     "tendering.bids_received": "Oferte primite",
@@ -2589,8 +2259,7 @@ const resource = {
     "tendering.create_package": "Creați pachet",
     "tendering.deadline": "Deadline",
     "tendering.description": "Description",
-    "tendering.description_placeholder":
-      "Scurtă descriere a domeniului de aplicare al pachetului...",
+    "tendering.description_placeholder": "Scurtă descriere a domeniului de aplicare al pachetului...",
     "tendering.empty_title": "Selectați un proiect",
     "tendering.export_comparison": "Export",
     "tendering.highest": "Highest",
@@ -2614,8 +2283,7 @@ const resource = {
     "tendering.source_boq": "Antemăsurătoare sursă",
     "tendering.submit_bid": "Depuneți oferta",
     "tendering.title": "Tendering",
-    "tendering.workflow_desc":
-      "Fluxul de licitație: Schiță (pregătire pachet) — Emis (trimitere către ofertanți) — Colectare (primire oferte) — Evaluare (comparare oferte) — Atribuit (selectare câștigător). Creați un pachet dintr-o Antemăsurătoare, adăugați ofertele subcontractanților, apoi utilizați tabelul de comparare pentru a identifica cea mai bună ofertă. Adăugați 2 sau mai multe oferte pentru a vedea o analiză comparativă.",
+    "tendering.workflow_desc": "Fluxul de licitație: Schiță (pregătire pachet) — Emis (trimitere către ofertanți) — Colectare (primire oferte) — Evaluare (comparare oferte) — Atribuit (selectare câștigător). Creați un pachet dintr-o Antemăsurătoare, adăugați ofertele subcontractanților, apoi utilizați tabelul de comparare pentru a identifica cea mai bună ofertă. Adăugați 2 sau mai multe oferte pentru a vedea o analiză comparativă.",
     "tendering.total": "TOTAL",
     "tendering.total_amount": "Suma totală",
     "tendering.vs_budget": "față de buget",
@@ -2629,8 +2297,7 @@ const resource = {
     "validation.filter_errors": "Erori",
     "validation.filter_passed": "Reușite",
     "validation.filter_warnings": "Avertismente",
-    "validation.no_results_for_filter":
-      "Niciun rezultat care să corespundă acestui filtru.",
+    "validation.no_results_for_filter": "Niciun rezultat care să corespundă acestui filtru.",
     "validation.passed": "Reușit",
     "validation.pending": "În așteptare",
     "validation.results_title": "Rezultate",
@@ -2676,8 +2343,7 @@ const resource = {
     "cde.label_revisions": "Istoric revizii",
     "cde.new_container": "Container nou",
     "cde.no_containers": "Niciun container încă",
-    "cde.no_containers_hint":
-      "Creați primul container de documente pentru a începe.",
+    "cde.no_containers_hint": "Creați primul container de documente pentru a începe.",
     "cde.no_results": "Niciun container corespunzător",
     "cde.no_results_hint": "Încercați să ajustați căutarea sau filtrele.",
     "cde.no_revisions": "Nicio revizuire înregistrată",
@@ -2694,24 +2360,20 @@ const resource = {
     "cde.suitability_none": "— None —",
     "cde.view_history": "History",
     "cde.history_title": "Istoricul tranzițiilor de stare",
-    "cde.history_empty":
-      "Nicio tranziție de stare încă — promovați containerul pentru a începe jurnalul de audit.",
+    "cde.history_empty": "Nicio tranziție de stare încă — promovați containerul pentru a începe jurnalul de audit.",
     "cde.history_by_role": "By: {{role}}",
     "cde.history_signature": "Signed: {{signer}}",
     "cde.gate_label": "Gate {{code}}",
     "cde.transmittals_badge": "{{count}} transmittals",
-    "cde.transmittals_badge_aria":
-      "{{count}} transmitteri legate de acest container",
+    "cde.transmittals_badge_aria": "{{count}} transmitteri legate de acest container",
     "cde.transmittals_drawer_title": "Transmitteri care conțin acest container",
     "cde.approval_modal_title": "Semnătură de aprobare pentru Poarta B",
-    "cde.approval_modal_body":
-      "Promovarea {{code}} din PARTAJAT în PUBLICAT necesită o aprobare semnată (ISO 19650). Semnătura și comentariile dumneavoastră sunt înregistrate în jurnalul de audit.",
+    "cde.approval_modal_body": "Promovarea {{code}} din PARTAJAT în PUBLICAT necesită o aprobare semnată (ISO 19650). Semnătura și comentariile dumneavoastră sunt înregistrate în jurnalul de audit.",
     "cde.approval_field_signature": "Signature",
     "cde.approval_field_comments": "Comments",
     "cde.approval_signature_placeholder": "Nume complet / inițiale",
     "cde.approval_signature_required": "Semnătura este obligatorie",
-    "cde.approval_comments_placeholder":
-      "Note opționale pentru jurnalul de audit...",
+    "cde.approval_comments_placeholder": "Note opționale pentru jurnalul de audit...",
     "cde.approval_submit": "Semnați și publicați",
     "transmittals.field_link_revision": "Legați revizia CDE",
     "transmittals.picker_select_container": "Selectați containerul...",
@@ -2824,11 +2486,9 @@ const resource = {
     "correspondence.label_to": "To",
     "correspondence.new_entry": "Înregistrare nouă",
     "correspondence.no_entries": "Nicio corespondență încă",
-    "correspondence.no_entries_hint":
-      "Înregistrați prima corespondență pentru a începe.",
+    "correspondence.no_entries_hint": "Înregistrați prima corespondență pentru a începe.",
     "correspondence.no_results": "Nicio înregistrare corespunzătoare",
-    "correspondence.no_results_hint":
-      "Încercați să ajustați căutarea sau filtrele.",
+    "correspondence.no_results_hint": "Încercați să ajustați căutarea sau filtrele.",
     "correspondence.notes_placeholder": "Note suplimentare...",
     "correspondence.page_title": "Registru corespondență",
     "correspondence.search_placeholder": "Căutați corespondență...",
@@ -2871,17 +2531,14 @@ const resource = {
     "finance.mark_paid": "Marcați ca plătit",
     "finance.method": "Method",
     "finance.no_budgets": "Niciun buget definit",
-    "finance.no_budgets_desc":
-      "Elementele de buget vor apărea aici odată definite.",
+    "finance.no_budgets_desc": "Elementele de buget vor apărea aici odată definite.",
     "finance.no_evm": "Nicio dată EVM",
-    "finance.no_evm_desc":
-      "Datele de valoare câștigată vor apărea odată ce sunt luate instantanee.",
+    "finance.no_evm_desc": "Datele de valoare câștigată vor apărea odată ce sunt luate instantanee.",
     "finance.no_invoices": "Nicio factură",
     "finance.no_invoices_desc": "Facturile vor apărea aici odată create.",
     "finance.no_payments": "Nicio plată",
     "finance.no_payments_desc": "Plățile vor apărea aici odată înregistrate.",
-    "finance.no_project":
-      "Selectați un proiect pentru a vizualiza datele financiare.",
+    "finance.no_project": "Selectați un proiect pentru a vizualiza datele financiare.",
     "finance.on_track": "Conform planului",
     "finance.original": "Original",
     "finance.payable": "Payable",
@@ -2908,8 +2565,7 @@ const resource = {
     "gantt.today": "Today",
     "integrations.add_another": "Adăugați altul",
     "integrations.calendar": "Calendar",
-    "integrations.calendar_desc":
-      "Abonați-vă în Google/Outlook Calendar (feed iCal)",
+    "integrations.calendar_desc": "Abonați-vă în Google/Outlook Calendar (feed iCal)",
     "integrations.coming_soon": "În curând",
     "integrations.confirm_disconnect": "Deconectați această integrare?",
     "integrations.connect": "Connect",
@@ -2923,13 +2579,10 @@ const resource = {
     "integrations.email_desc": "Primiți notificări prin e-mail (SMTP)",
     "integrations.setup_steps": "Instrucțiuni de configurare",
     "integrations.slack": "Slack",
-    "integrations.slack_desc":
-      "Trimiteți notificări în Slack prin Incoming Webhook",
-    "integrations.subtitle":
-      "Conectați servicii externe pentru a primi notificările proiectului în instrumentele dumneavoastră preferate.",
+    "integrations.slack_desc": "Trimiteți notificări în Slack prin Incoming Webhook",
+    "integrations.subtitle": "Conectați servicii externe pentru a primi notificările proiectului în instrumentele dumneavoastră preferate.",
     "integrations.teams": "Microsoft Teams",
-    "integrations.teams_desc":
-      "Trimiteți notificări în canalul dumneavoastră Teams prin Incoming Webhook",
+    "integrations.teams_desc": "Trimiteți notificări în canalul dumneavoastră Teams prin Incoming Webhook",
     "integrations.telegram": "Telegram",
     "integrations.telegram_desc": "Primiți notificări prin bot Telegram",
     "integrations.test": "Test",
@@ -2937,8 +2590,7 @@ const resource = {
     "integrations.test_ok": "Notificare de test trimisă!",
     "integrations.title": "Integrations",
     "integrations.webhook": "Webhooks",
-    "integrations.webhook_desc":
-      "Trimiteți evenimente la orice URL (HTTP POST)",
+    "integrations.webhook_desc": "Trimiteți evenimente la orice URL (HTTP POST)",
     "inspections.action_complete": "Complete",
     "inspections.col_date": "Date",
     "inspections.col_inspector": "Inspector",
@@ -2963,11 +2615,9 @@ const resource = {
     "inspections.location_placeholder": "Locul inspecției",
     "inspections.new_inspection": "Inspecție nouă",
     "inspections.no_inspections": "Nicio inspecție încă",
-    "inspections.no_inspections_hint":
-      "Programați prima inspecție pentru a începe.",
+    "inspections.no_inspections_hint": "Programați prima inspecție pentru a începe.",
     "inspections.no_results": "Nicio inspecție corespunzătoare",
-    "inspections.no_results_hint":
-      "Încercați să ajustați căutarea sau filtrele.",
+    "inspections.no_results_hint": "Încercați să ajustați căutarea sau filtrele.",
     "inspections.page_title": "Inspections",
     "inspections.search_placeholder": "Căutați inspecții...",
     "inspections.select_project": "Project...",
@@ -3067,21 +2717,15 @@ const resource = {
     "notifications.title": "Notificări",
     "notifications.unread": "{{count}} necitite",
     "notifications.boq.created.title": "BOQ creat",
-    "notifications.boq.created.body":
-      "Lista dvs. de cantități '{{boq_name}}' a fost salvată.",
-    "notifications.meeting.action_assigned.title":
-      "Element de acțiune atribuit dvs.",
-    "notifications.meeting.action_assigned.body":
-      "Din ședința {{meeting_number}}: {{description}}",
-    "notifications.cde.state_transitioned.title":
-      "Starea documentului s-a schimbat",
-    "notifications.cde.state_transitioned.body":
-      "Containerul a trecut la '{{new_state}}'.",
+    "notifications.boq.created.body": "Lista dvs. de cantități '{{boq_name}}' a fost salvată.",
+    "notifications.meeting.action_assigned.title": "Element de acțiune atribuit dvs.",
+    "notifications.meeting.action_assigned.body": "Din ședința {{meeting_number}}: {{description}}",
+    "notifications.cde.state_transitioned.title": "Starea documentului s-a schimbat",
+    "notifications.cde.state_transitioned.body": "Containerul a trecut la '{{new_state}}'.",
     "notifications.rfi.assigned.title": "RFI atribuit dvs.",
     "notifications.rfi.assigned.body": "{{code}} — {{title}}",
     "notifications.rfi.responded.title": "RFI a primit răspuns",
-    "notifications.rfi.responded.body":
-      "Cererea dvs. {{code}} ({{title}}) are răspuns.",
+    "notifications.rfi.responded.body": "Cererea dvs. {{code}} ({{title}}) are răspuns.",
     "notifications.risk.assigned.title": "Risc atribuit dvs.",
     "notifications.risk.assigned.body": "{{code}} — {{title}}",
     "notifications.submittal.submitted.title": "Submittal așteaptă analiză",
@@ -3089,33 +2733,25 @@ const resource = {
     "notifications.submittal.approved.title": "Submittal aprobat",
     "notifications.submittal.approved.body": "{{code}} — {{title}}",
     "notifications.submittal.rejected.title": "Submittal respins",
-    "notifications.submittal.rejected.body":
-      "{{code}} ({{title}}). Motiv: {{reason}}",
-    "notifications.submittal.revise_resubmit.title":
-      "Submittal necesită revizuire",
-    "notifications.submittal.revise_resubmit.body":
-      "{{code}} ({{title}}). Motiv: {{reason}}",
+    "notifications.submittal.rejected.body": "{{code}} ({{title}}). Motiv: {{reason}}",
+    "notifications.submittal.revise_resubmit.title": "Submittal necesită revizuire",
+    "notifications.submittal.revise_resubmit.body": "{{code}} ({{title}}). Motiv: {{reason}}",
     "notifications.transmittal.issued.title": "Transmittal emis pentru dvs.",
     "notifications.transmittal.issued.body": "{{code}} — {{title}}",
     "notifications.transmittal.acknowledged.title": "Transmittal confirmat",
-    "notifications.transmittal.acknowledged.body":
-      "Destinatarul a confirmat {{code}} ({{title}}).",
+    "notifications.transmittal.acknowledged.body": "Destinatarul a confirmat {{code}} ({{title}}).",
     "notifications.transmittal.responded.title": "Transmittal cu răspuns",
-    "notifications.transmittal.responded.body":
-      "{{code}} ({{title}}). {{response_summary}}",
+    "notifications.transmittal.responded.body": "{{code}} ({{title}}). {{response_summary}}",
     "procurement.amount": "Amount",
     "procurement.delivery_date": "Data de livrare",
     "procurement.goods_receipts": "Recepții de mărfuri",
     "procurement.gr_ref": "Referință recepție",
     "procurement.issue_date": "Data emiterii",
     "procurement.no_gr": "Nicio recepție de mărfuri",
-    "procurement.no_gr_desc":
-      "Recepțiile de mărfuri vor apărea aici odată înregistrate.",
+    "procurement.no_gr_desc": "Recepțiile de mărfuri vor apărea aici odată înregistrate.",
     "procurement.no_po": "Nicio comandă de achiziție",
-    "procurement.no_po_desc":
-      "Comenzile de achiziție vor apărea aici odată create.",
-    "procurement.no_project":
-      "Selectați un proiect pentru a vizualiza datele de achiziții.",
+    "procurement.no_po_desc": "Comenzile de achiziție vor apărea aici odată create.",
+    "procurement.no_project": "Selectați un proiect pentru a vizualiza datele de achiziții.",
     "procurement.po_number": "PO #",
     "procurement.po_ref": "Referință comandă",
     "procurement.purchase_orders": "Comenzi de achiziție",
@@ -3124,8 +2760,7 @@ const resource = {
     "procurement.search_gr": "Căutați recepții de mărfuri...",
     "procurement.search_po": "Căutați comenzi de achiziție...",
     "procurement.select_project": "Project...",
-    "procurement.subtitle":
-      "Gestionați comenzile de achiziție și recepțiile de mărfuri",
+    "procurement.subtitle": "Gestionați comenzile de achiziție și recepțiile de mărfuri",
     "procurement.title": "Procurement",
     "procurement.vendor": "Vendor",
     "reporting.generate_report": "Generați raport",
@@ -3182,10 +2817,8 @@ const resource = {
     "safety.no_incidents": "Niciun incident înregistrat",
     "safety.no_incidents_desc": "Incidentele vor apărea aici odată raportate.",
     "safety.no_observations": "Nicio observație înregistrată",
-    "safety.no_observations_desc":
-      "Observațiile vor apărea aici odată raportate.",
-    "safety.no_project":
-      "Selectați un proiect pentru a vizualiza datele de securitate.",
+    "safety.no_observations_desc": "Observațiile vor apărea aici odată raportate.",
+    "safety.no_project": "Selectați un proiect pentru a vizualiza datele de securitate.",
     "safety.observation_number": "Observation #",
     "safety.observations": "Observations",
     "safety.risk_critical": "Critical",
@@ -3207,28 +2840,22 @@ const resource = {
     "settings.edit_profile": "Editați numele profilului",
     "settings.full_name": "Nume complet",
     "settings.imperial": "Imperial (ft, lb)",
-    "settings.interface_mode_subtitle":
-      "Controlați ce funcții sunt vizibile în navigare",
+    "settings.interface_mode_subtitle": "Controlați ce funcții sunt vizibile în navigare",
     "settings.interface_mode_title": "Modul de interfață",
     "settings.measurement_system": "Sistem de măsurare",
     "settings.metric": "Metric (m, kg)",
-    "settings.mode_advanced_detail":
-      "Set complet de instrumente profesionale cu toate modulele și funcțiile vizibile.",
-    "settings.mode_simple_detail":
-      "Instrumente esențiale de estimare. Interfață simplă pentru lucru concentrat.",
-    "settings.modules_link_desc":
-      "Activați, dezactivați și configurați module individuale în secțiunea Module.",
+    "settings.mode_advanced_detail": "Set complet de instrumente profesionale cu toate modulele și funcțiile vizibile.",
+    "settings.mode_simple_detail": "Instrumente esențiale de estimare. Interfață simplă pentru lucru concentrat.",
+    "settings.modules_link_desc": "Activați, dezactivați și configurați module individuale în secțiunea Module.",
     "settings.modules_link_title": "Modules",
     "settings.number_format": "Format număr",
     "settings.paper_size": "Dimensiunea hârtiei",
     "settings.preferences_error": "Salvarea preferințelor a eșuat",
     "settings.preferences_saved": "Preferințe salvate",
-    "settings.regional_subtitle":
-      "Formate, unități și preferințe de localizare",
+    "settings.regional_subtitle": "Formate, unități și preferințe de localizare",
     "settings.regional_title": "Setări regionale",
     "settings.restart_onboarding": "Deschideți asistentul de configurare",
-    "settings.setup_wizard_subtitle":
-      "Rulați din nou configurarea inițială pentru a schimba limba, a instala baze de date, cataloage sau proiecte demo",
+    "settings.setup_wizard_subtitle": "Rulați din nou configurarea inițială pentru a schimba limba, a instala baze de date, cataloage sau proiecte demo",
     "settings.setup_wizard_title": "Asistent de configurare",
     "settings.time_days_ago": "{{count}}d ago",
     "settings.time_hours_ago": "{{count}}h ago",
@@ -3247,15 +2874,13 @@ const resource = {
     "settings.tm_import": "Import",
     "settings.tm_missing": "Missing",
     "settings.tm_missing_label": "(missing)",
-    "settings.tm_no_results":
-      "Nicio cheie nu corespunde căutării dumneavoastră.",
+    "settings.tm_no_results": "Nicio cheie nu corespunde căutării dumneavoastră.",
     "settings.tm_reset_tooltip": "Resetați la valoarea implicită",
     "settings.tm_search_placeholder": "Căutați chei de traducere...",
     "settings.tm_show_more": "Afișați mai mult ({{remaining}} rămase)",
     "settings.tm_total_keys": "Total chei",
     "settings.tm_translated": "Translated",
-    "settings.translation_manager_subtitle":
-      "Vizualizați și personalizați traducerile pentru limba curentă",
+    "settings.translation_manager_subtitle": "Vizualizați și personalizați traducerile pentru limba curentă",
     "settings.translation_manager_title": "Manager de traduceri",
     "submittals.action_review": "Review",
     "submittals.action_submit": "Submit",
@@ -3284,8 +2909,7 @@ const resource = {
     "submittals.label_title": "Title",
     "submittals.new_submittal": "Submittal nou",
     "submittals.no_results": "Niciun submittal corespunzător",
-    "submittals.no_results_hint":
-      "Încercați să ajustați căutarea sau filtrele.",
+    "submittals.no_results_hint": "Încercați să ajustați căutarea sau filtrele.",
     "submittals.no_submittals": "Niciun submittal încă",
     "submittals.no_submittals_hint": "Creați primul submittal pentru a începe.",
     "submittals.page_title": "Submittals",
@@ -3339,8 +2963,7 @@ const resource = {
     "transmittals.col_recipients": "Recipients",
     "transmittals.col_status": "Status",
     "transmittals.col_subject": "Subject",
-    "transmittals.cover_note_placeholder":
-      "Notă de însoțire pentru transmittal...",
+    "transmittals.cover_note_placeholder": "Notă de însoțire pentru transmittal...",
     "transmittals.create_transmittal": "Creați transmittal",
     "transmittals.created": "Transmittal creat",
     "transmittals.field_cover_note": "Notă de însoțire",
@@ -3357,14 +2980,11 @@ const resource = {
     "transmittals.label_recipients": "Recipients",
     "transmittals.new_transmittal": "Transmittal nou",
     "transmittals.no_results": "Niciun transmittal corespunzător",
-    "transmittals.no_results_hint":
-      "Încercați să ajustați căutarea sau filtrele.",
+    "transmittals.no_results_hint": "Încercați să ajustați căutarea sau filtrele.",
     "transmittals.no_transmittals": "Niciun transmittal încă",
-    "transmittals.no_transmittals_hint":
-      "Creați primul transmittal pentru a începe.",
+    "transmittals.no_transmittals_hint": "Creați primul transmittal pentru a începe.",
     "transmittals.page_title": "Transmittals",
-    "transmittals.recipients_placeholder":
-      "Introduceți numele destinatarilor...",
+    "transmittals.recipients_placeholder": "Introduceți numele destinatarilor...",
     "transmittals.search_placeholder": "Căutați transmittaluri...",
     "transmittals.select_project": "Project...",
     "transmittals.showing_count": "Se afișează {{count}} transmittaluri",
@@ -3414,8 +3034,7 @@ const resource = {
     "common.previous": "Anterior",
     "common.project": "Proiect",
     "common.quantity": "Cantitate",
-    "common.rate_limit_wait":
-      "Vă rugăm să așteptați {{seconds}} secunde înainte de a încerca din nou.",
+    "common.rate_limit_wait": "Vă rugăm să așteptați {{seconds}} secunde înainte de a încerca din nou.",
     "common.recommended": "Recomandat",
     "common.region": "Regiune",
     "common.remove": "Elimină",
@@ -3441,14 +3060,11 @@ const resource = {
     "dashboard.budget_warnings": "Avertismente buget",
     "dashboard.continue_work": "Continuați lucrul",
     "dashboard.create_first_project": "Creați primul proiect",
-    "dashboard.create_first_project_desc":
-      "Configurați o estimare nouă de la zero",
+    "dashboard.create_first_project_desc": "Configurați o estimare nouă de la zero",
     "dashboard.import_existing_boq": "Importați Antemăsurătoare existentă",
-    "dashboard.import_existing_boq_desc":
-      "Utilizați AI pentru a estima dintr-un document existent",
+    "dashboard.import_existing_boq_desc": "Utilizați AI pentru a estima dintr-un document existent",
     "dashboard.install_demo": "Instalați proiectul demo",
-    "dashboard.install_demo_desc":
-      "Proiect rezidențial pre-construit cu date realiste",
+    "dashboard.install_demo_desc": "Proiect rezidențial pre-construit cu date realiste",
     "dashboard.kpi_not_validated": "N/A",
     "dashboard.kpi_run_validation": "rulați validarea",
     "dashboard.over_budget": "depășit bugetul",
@@ -3457,22 +3073,16 @@ const resource = {
     "dashboard.quick_start": "Deviz rapid",
     "dashboard.run_setup": "Rulați asistentul de configurare",
     "dashboard.total_budget_all": "Buget total",
-    "dashboard.welcome_body":
-      "Acest proiect este construit și menținut de comunitate. Sprijinul dumneavoastră ne ajută să adăugăm noi funcții, baze de date regionale și să îl menținem gratuit pentru toată lumea.",
+    "dashboard.welcome_body": "Acest proiect este construit și menținut de comunitate. Sprijinul dumneavoastră ne ajută să adăugăm noi funcții, baze de date regionale și să îl menținem gratuit pentru toată lumea.",
     "dashboard.welcome_consult": "Consultanță profesională",
-    "dashboard.welcome_consult_desc":
-      "Implementare personalizată, training și soluții enterprise la nivel mondial",
-    "dashboard.welcome_desc":
-      "Începeți prin instalarea unui proiect demo sau prin crearea unuia propriu.",
+    "dashboard.welcome_consult_desc": "Implementare personalizată, training și soluții enterprise la nivel mondial",
+    "dashboard.welcome_desc": "Începeți prin instalarea unui proiect demo sau prin crearea unuia propriu.",
     "dashboard.welcome_sponsor": "Deveniți sponsor",
-    "dashboard.welcome_sponsor_desc":
-      "Finanțați funcții noi și mențineți proiectul gratuit pentru toată lumea",
+    "dashboard.welcome_sponsor_desc": "Finanțați funcții noi și mențineți proiectul gratuit pentru toată lumea",
     "dashboard.welcome_star": "Acordați o stea pe GitHub",
-    "dashboard.welcome_star_desc":
-      "Ajutați alții să descopere proiectul — durează 2 secunde",
+    "dashboard.welcome_star_desc": "Ajutați alții să descopere proiectul — durează 2 secunde",
     "dashboard.welcome_start": "Începeți",
-    "dashboard.welcome_sub":
-      "Estimare a costurilor de construcție gratuită și open-source",
+    "dashboard.welcome_sub": "Estimare a costurilor de construcție gratuită și open-source",
     "dashboard.welcome_title": "Bine ați venit în OpenConstructionERP",
     "dashboard.with_budget": "Cu buget",
     "analytics.action_create_project": "Creați un proiect",
@@ -3491,8 +3101,7 @@ const resource = {
     "analytics.col_status": "Status",
     "analytics.col_variance": "Variance",
     "analytics.col_variance_pct": "Var. %",
-    "analytics.empty_description":
-      "Creați proiecte cu bugete pentru a vedea analizele inter-proiect.",
+    "analytics.empty_description": "Creați proiecte cu bugete pentru a vedea analizele inter-proiect.",
     "analytics.empty_title": "Nicio dată analitică încă",
     "analytics.export_csv": "Exportați CSV",
     "analytics.filter_region": "Filtrați după regiune",
@@ -3515,39 +3124,32 @@ const resource = {
     "analytics.total_projects": "Total proiecte",
     "analytics.with_budget": "{{count}} cu buget",
     "backup.confirm_replace_btn": "Înlocuiți toate datele",
-    "backup.confirm_replace_message":
-      "Aceasta va înlocui toate datele existente cu conținutul copiei de rezervă. Această acțiune nu poate fi anulată.",
+    "backup.confirm_replace_message": "Aceasta va înlocui toate datele existente cu conținutul copiei de rezervă. Această acțiune nu poate fi anulată.",
     "backup.confirm_replace_title": "Înlocuiți toate datele?",
     "backup.drop_zone_hint": "Fișier de rezervă .zip",
-    "backup.drop_zone_label":
-      "Depuneți fișierul de rezervă aici sau faceți clic pentru a naviga",
+    "backup.drop_zone_label": "Depuneți fișierul de rezervă aici sau faceți clic pentru a naviga",
     "backup.export_btn": "Creați copie de rezervă",
-    "backup.export_desc":
-      "Descărcați o copie de rezervă completă a tuturor datelor dumneavoastră ca fișier ZIP.",
+    "backup.export_desc": "Descărcați o copie de rezervă completă a tuturor datelor dumneavoastră ca fișier ZIP.",
     "backup.export_error": "Exportul a eșuat",
     "backup.export_success": "Copie de rezervă creată",
     "backup.export_success_detail": "Fișierul de rezervă a fost descărcat.",
     "backup.export_title": "Creați copie de rezervă",
     "backup.exporting": "Se creează copia de rezervă...",
-    "backup.import_desc":
-      "Restaurați datele dintr-un fișier de rezervă exportat anterior.",
+    "backup.import_desc": "Restaurați datele dintr-un fișier de rezervă exportat anterior.",
     "backup.import_title": "Restaurați din copie de rezervă",
     "backup.incompatible": "Versiune de rezervă incompatibilă",
     "backup.invalid_file": "Fișier invalid",
     "backup.mode_merge": "Îmbinare (adăugați noi, păstrați existente)",
     "backup.mode_replace": "Înlocuire (suprascriți tot)",
     "backup.record_counts": "Numărul de înregistrări",
-    "backup.replace_warning":
-      "Avertisment: Modul de înlocuire va șterge toate datele existente.",
+    "backup.replace_warning": "Avertisment: Modul de înlocuire va șterge toate datele existente.",
     "backup.restore_btn": "Restore",
     "backup.restore_error": "Eroare la restaurare",
     "backup.restore_failed": "Restaurarea a eșuat",
-    "backup.restore_failed_detail":
-      "Nu s-a putut restaura din copia de rezervă",
+    "backup.restore_failed_detail": "Nu s-a putut restaura din copia de rezervă",
     "backup.restore_mode": "Mod de restaurare",
     "backup.restore_success": "Copie de rezervă restaurată",
-    "backup.restore_success_detail":
-      "Toate datele au fost restaurate din copia de rezervă.",
+    "backup.restore_success_detail": "Toate datele au fost restaurate din copia de rezervă.",
     "backup.restoring": "Restoring...",
     "backup.subtitle": "Exportați și importați datele dumneavoastră",
     "backup.title": "Copie de rezervă și restaurare",
@@ -3559,8 +3161,7 @@ const resource = {
     "changeorders.add_item": "Adăugați articol",
     "changeorders.all_statuses": "Toate statusurile",
     "changeorders.approve": "Approve",
-    "changeorders.approve_confirm":
-      "Aprobați acest ordin de modificare? Impactul asupra costurilor va fi aplicat bugetului proiectului.",
+    "changeorders.approve_confirm": "Aprobați acest ordin de modificare? Impactul asupra costurilor va fi aplicat bugetului proiectului.",
     "changeorders.approved": "Ordin de modificare aprobat",
     "changeorders.approved_at": "Approved",
     "changeorders.approved_impact": "Impact aprobat",
@@ -3572,28 +3173,24 @@ const resource = {
     "changeorders.delete_item_confirm": "Ștergeți acest articol?",
     "changeorders.deleted": "Ordin de modificare șters",
     "changeorders.empty": "Niciun ordin de modificare",
-    "changeorders.empty_desc":
-      "Creați un ordin de modificare pentru a urmări schimbările de domeniu cu impact asupra costurilor și programului",
+    "changeorders.empty_desc": "Creați un ordin de modificare pentru a urmări schimbările de domeniu cu impact asupra costurilor și programului",
     "changeorders.export_csv": "Exportați CSV",
     "changeorders.filter_status": "Filtrați după status",
     "changeorders.item_added": "Articol adăugat",
     "changeorders.item_deleted": "Articol șters",
     "changeorders.items": "Articole",
-    "changeorders.load_error":
-      "Nu s-au putut încărca ordinele de modificare. Vă rugăm să încercați din nou.",
+    "changeorders.load_error": "Nu s-au putut încărca ordinele de modificare. Vă rugăm să încercați din nou.",
     "changeorders.new": "Ordin de modificare nou",
     "changeorders.new_qty": "Cantitate nouă",
     "changeorders.new_rate": "Tarif nou",
     "changeorders.no_items": "Niciun articol încă",
-    "changeorders.no_items_desc":
-      "Adăugați articole pentru a defini modificarea de domeniu",
+    "changeorders.no_items_desc": "Adăugați articole pentru a defini modificarea de domeniu",
     "changeorders.of_total": "of",
     "changeorders.orig_qty": "Cantitate inițială",
     "changeorders.orig_rate": "Tarif inițial",
     "changeorders.pending": "Pending",
     "changeorders.pending_approval": "În așteptarea aprobării",
-    "changeorders.pending_approval_hint":
-      "Numai managerii și administratorii pot aproba.",
+    "changeorders.pending_approval_hint": "Numai managerii și administratorii pot aproba.",
     "changeorders.reason": "Reason",
     "changeorders.reject": "Reject",
     "changeorders.reject_confirm": "Respingeți acest ordin de modificare?",
@@ -3609,12 +3206,10 @@ const resource = {
     "changeorders.status_submitted": "Submitted",
     "changeorders.status_under_review": "În curs de verificare",
     "changeorders.submit": "Submit",
-    "changeorders.submit_confirm":
-      "Trimiteți acest ordin de modificare pentru verificare? Această acțiune nu poate fi anulată.",
+    "changeorders.submit_confirm": "Trimiteți acest ordin de modificare pentru verificare? Această acțiune nu poate fi anulată.",
     "changeorders.submitted": "Ordin de modificare transmis",
     "changeorders.submitted_at": "Submitted",
-    "changeorders.subtitle":
-      "Urmăriți modificările de domeniu cu impact asupra costurilor și programului",
+    "changeorders.subtitle": "Urmăriți modificările de domeniu cu impact asupra costurilor și programului",
     "changeorders.title_placeholder": "ex. Lucrări suplimentare de fundații",
     "changeorders.total": "Total ordine",
     "changeorders.type": "Type",
@@ -3623,19 +3218,15 @@ const resource = {
     "changeorders.type_removed": "Removed",
     "changeorders.unit_placeholder": "m2, m3, pcs...",
     "changeorders.workflow": "Workflow",
-    "changeorders.workflow_desc":
-      "Fluxul ordinului de modificare: Schiță (pregătire modificare de domeniu) → Transmis (trimitere pentru verificare) → Aprobat sau Respins. Fiecare ordin urmărește impactul asupra costurilor și programului în zile. Adăugați articole pentru a detalia ce s-a schimbat — cantități și tarife inițiale față de cele noi. Variația de cost este calculată automat.",
+    "changeorders.workflow_desc": "Fluxul ordinului de modificare: Schiță (pregătire modificare de domeniu) → Transmis (trimitere pentru verificare) → Aprobat sau Respins. Fiecare ordin urmărește impactul asupra costurilor și programului în zile. Adăugați articole pentru a detalia ce s-a schimbat — cantități și tarife inițiale față de cele noi. Variația de cost este calculată automat.",
     "explorer.analysis_name": "Name",
     "explorer.apply_pivot": "Apply",
     "explorer.bar": "Bar",
-    "explorer.boq_create_failed":
-      "Crearea articolelor în Antemăsurătoare a eșuat",
-    "explorer.boq_created_success":
-      "{{count}} articole create în Antemăsurătoare",
+    "explorer.boq_create_failed": "Crearea articolelor în Antemăsurătoare a eșuat",
+    "explorer.boq_created_success": "{{count}} articole create în Antemăsurătoare",
     "explorer.categories": "Categories",
     "explorer.chart_type": "Type",
-    "explorer.click_header_sort":
-      "Faceți clic pe antetele coloanelor pentru a sorta",
+    "explorer.click_header_sort": "Faceți clic pe antetele coloanelor pentru a sorta",
     "explorer.column": "Column",
     "explorer.column_statistics": "Statistici coloană",
     "explorer.columns": "Coloane de parametri",
@@ -3643,21 +3234,17 @@ const resource = {
     "explorer.conversion_complete": "Conversie finalizată",
     "explorer.conversion_failed": "Conversia a eșuat",
     "explorer.converters": "Convertoare CAD",
-    "explorer.converters_desc":
-      "Convertoare DDC Community pentru extragerea datelor de elemente BIM",
-    "explorer.converters_external_hint":
-      "Convertoarele CAD necesită instrumentele DDC cad2data instalate pe serverul dumneavoastră",
+    "explorer.converters_desc": "Convertoare DDC Community pentru extragerea datelor de elemente BIM",
+    "explorer.converters_external_hint": "Convertoarele CAD necesită instrumentele DDC cad2data instalate pe serverul dumneavoastră",
     "explorer.converting": "Converting {{name}}...",
     "explorer.converting_msg": "Converting...",
     "explorer.count": "Count",
     "explorer.create_boq_from_pivot": "Creați Antemăsurătoare",
-    "explorer.create_boq_subtitle":
-      "{{count}} grupuri vor deveni articole în Antemăsurătoare",
+    "explorer.create_boq_subtitle": "{{count}} grupuri vor deveni articole în Antemăsurătoare",
     "explorer.create_boq_title": "Creați Antemăsurătoare din pivot",
     "explorer.create_positions": "Creați {{count}} articole",
     "explorer.data_completeness": "Completitudinea datelor",
-    "explorer.delete_session_confirm":
-      "Ștergeți această analiză? Această acțiune nu poate fi anulată.",
+    "explorer.delete_session_confirm": "Ștergeți această analiză? Această acțiune nu poate fi anulată.",
     "explorer.documents": "Documents",
     "explorer.done": "Conversie finalizată! Se încarcă...",
     "explorer.drop_cad": "Depuneți un fișier CAD/BIM pentru explorare",
@@ -3672,8 +3259,7 @@ const resource = {
     "explorer.heatmap": "Activați/dezactivați harta termică a valorilor",
     "explorer.heatmap_short": "Heatmap",
     "explorer.installed": "installed",
-    "explorer.invalid_format":
-      "Format de fișier nesuportat. Utilizați RVT, IFC, DWG sau DGN.",
+    "explorer.invalid_format": "Format de fișier nesuportat. Utilizați RVT, IFC, DWG sau DGN.",
     "explorer.like_describe": "similar cu df.describe()",
     "explorer.max": "Max",
     "explorer.mean": "Mean",
@@ -3684,8 +3270,7 @@ const resource = {
     "explorer.no_chart_data": "Nicio dată pentru grafic",
     "explorer.no_groups": "Niciun grup găsit. Încercați coloane diferite.",
     "explorer.non_null": "Ne-nul",
-    "explorer.or_click":
-      "sau faceți clic pentru a naviga — tabel de date, pivot, grafice și statistici",
+    "explorer.or_click": "sau faceți clic pentru a naviga — tabel de date, pivot, grafice și statistici",
     "explorer.page_of": "Pagina {{page}} din {{total}}",
     "explorer.page_summary": "Totaluri pagină:",
     "explorer.pie": "Pie",
@@ -3694,27 +3279,22 @@ const resource = {
     "explorer.powered_by": "Alimentat de",
     "explorer.project": "Project",
     "explorer.recent_models": "Modele recente",
-    "explorer.requires_external":
-      "Instrument extern — faceți clic pentru instrucțiuni de configurare",
+    "explorer.requires_external": "Instrument extern — faceți clic pentru instrucțiuni de configurare",
     "explorer.rows": "rows",
     "explorer.save_analysis": "Salvați analiza",
     "explorer.save_as_bim": "Salvați ca model BIM",
     "explorer.save_permanently": "Salvați permanent",
     "explorer.save_to_project": "Salvați în proiect (BIM Hub)",
     "explorer.save_to_project_btn": "Salvați în proiect",
-    "explorer.save_to_project_desc":
-      "Creează un model BIM cu toate elementele extrase în proiectul selectat.",
+    "explorer.save_to_project_desc": "Creează un model BIM cu toate elementele extrase în proiectul selectat.",
     "explorer.saved": "Analiză salvată permanent",
     "explorer.saved_to_project": "Salvat în BIM Hub",
-    "explorer.saved_to_project_msg":
-      "Elementele au fost salvate în BIM Hub. Vizualizați-le în Vizualizatorul BIM.",
+    "explorer.saved_to_project_msg": "Elementele au fost salvate în BIM Hub. Vizualizați-le în Vizualizatorul BIM.",
     "explorer.search_all": "Căutați în toate coloanele...",
-    "explorer.select_columns_for_chart":
-      "Selectați coloanele de grupare și de valori pentru a genera un grafic.",
+    "explorer.select_columns_for_chart": "Selectați coloanele de grupare și de valori pentru a genera un grafic.",
     "explorer.select_project": "Selectați proiectul...",
     "explorer.selected": "selected",
-    "explorer.session_expired_desc":
-      "Sesiunile CAD sunt valabile 24 de ore. Încărcați din nou fișierul pentru a continua.",
+    "explorer.session_expired_desc": "Sesiunile CAD sunt valabile 24 de ore. Încărcați din nou fișierul pentru a continua.",
     "explorer.session_expired_title": "Sesiune expirată sau negăsită",
     "explorer.setup_guide": "Ghid de configurare",
     "explorer.sparse_columns": "Sparse (<10%)",
@@ -3734,8 +3314,7 @@ const resource = {
     "explorer.visible_columns": "Coloane vizibile",
     "explorer.active_filters": "Filtre active",
     "explorer.clear_all_filters": "Ștergeți tot",
-    "explorer.no_active_filters":
-      "Faceți clic pe orice bară, felie sau punct din grafic pentru a filtra între file.",
+    "explorer.no_active_filters": "Faceți clic pe orice bară, felie sau punct din grafic pentru a filtra între file.",
     "explorer.line": "Line",
     "explorer.scatter": "Scatter",
     "explorer.format": "Format",
@@ -3750,8 +3329,7 @@ const resource = {
     "explorer.save_view": "Salvați vizualizarea",
     "explorer.save_view_prompt": "Denumiți această vizualizare",
     "explorer.saved_views": "Vizualizări salvate",
-    "explorer.no_saved_views":
-      "Nicio vizualizare salvată încă. Salvați filtrele, graficul și configurația de pivot pentru utilizare ulterioară.",
+    "explorer.no_saved_views": "Nicio vizualizare salvată încă. Salvați filtrele, graficul și configurația de pivot pentru utilizare ulterioară.",
     "explorer.load_view": "Load",
     "explorer.delete_view": "Delete",
     "explorer.view_saved": "Vizualizare salvată",
@@ -3760,8 +3338,7 @@ const resource = {
     "explorer.drill_down_empty": "Niciun rând nu corespunde acestei selecții.",
     "explorer.close": "Close",
     "explorer.showing_rows": "Se afișează {{count}} rânduri",
-    "explorer.chart_click_hint":
-      "Faceți clic pe o bară / felie / punct pentru filtrare încrucișată",
+    "explorer.chart_click_hint": "Faceți clic pe o bară / felie / punct pentru filtrare încrucișată",
     "fieldreports.add_trade": "Adăugați meserie",
     "fieldreports.all_statuses": "Toate statusurile",
     "fieldreports.all_types": "Toate tipurile",
@@ -3786,12 +3363,10 @@ const resource = {
     "fieldreports.deliveries": "Deliveries",
     "fieldreports.deliveries_placeholder": "Materiale sau utilaje livrate...",
     "fieldreports.download_template": "Descărcați șablonul de import",
-    "fieldreports.drop_file":
-      "Depuneți fișierul Excel sau CSV aici, sau faceți clic pentru a naviga",
+    "fieldreports.drop_file": "Depuneți fișierul Excel sau CSV aici, sau faceți clic pentru a naviga",
     "fieldreports.edit_report": "Editați raportul de teren",
     "fieldreports.empty": "Niciun raport de teren încă",
-    "fieldreports.empty_desc":
-      "Creați primul raport zilnic de teren pentru a urmări activitățile de pe șantier.",
+    "fieldreports.empty_desc": "Creați primul raport zilnic de teren pentru a urmări activitățile de pe șantier.",
     "fieldreports.export": "Export",
     "fieldreports.export_failed": "Exportul a eșuat",
     "fieldreports.export_pdf": "Exportați PDF",
@@ -3803,24 +3378,20 @@ const resource = {
     "fieldreports.import": "Import",
     "fieldreports.import_btn": "Import",
     "fieldreports.import_reports": "Importați rapoarte de teren",
-    "fieldreports.import_result":
-      "Importate: {{imported}}, Omise: {{skipped}}, Erori: {{errors}}",
+    "fieldreports.import_result": "Importate: {{imported}}, Omise: {{skipped}}, Erori: {{errors}}",
     "fieldreports.list_view": "List",
     "fieldreports.new_report": "Raport nou",
     "fieldreports.no_match": "Niciun raport corespunzător",
-    "fieldreports.no_match_desc":
-      "Încercați să ajustați filtrele de status sau tip.",
+    "fieldreports.no_match_desc": "Încercați să ajustați filtrele de status sau tip.",
     "fieldreports.no_project": "Selectați un proiect",
-    "fieldreports.no_project_desc":
-      "Alegeți un proiect din bara laterală pentru a vizualiza rapoartele de teren.",
+    "fieldreports.no_project_desc": "Alegeți un proiect din bara laterală pentru a vizualiza rapoartele de teren.",
     "fieldreports.notes": "Notes",
     "fieldreports.notes_placeholder": "Note sau observații suplimentare...",
     "fieldreports.report_date": "Date",
     "fieldreports.report_type": "Tipul raportului",
     "fieldreports.row_error": "Row {{row}}: {{error}}",
     "fieldreports.safety_incidents": "Incidente de securitate",
-    "fieldreports.safety_placeholder":
-      "Raportați orice incidente de securitate sau situații periculoase...",
+    "fieldreports.safety_placeholder": "Raportați orice incidente de securitate sau situații periculoase...",
     "fieldreports.show_errors": "Afișați detaliile erorilor",
     "fieldreports.stat_approved": "Approved",
     "fieldreports.stat_draft": "Draft",
@@ -3843,8 +3414,7 @@ const resource = {
     "fieldreports.wind": "Wind",
     "fieldreports.wind_placeholder": "ex. 15 km/h NV",
     "fieldreports.work_performed": "Lucrări efectuate",
-    "fieldreports.work_performed_placeholder":
-      "Descrieți activitățile de lucru finalizate astăzi...",
+    "fieldreports.work_performed_placeholder": "Descrieți activitățile de lucru finalizate astăzi...",
     "fieldreports.workers": "workers",
     "fieldreports.workforce_section": "Workforce",
     "risk.all_categories": "Toate categoriile",
@@ -3856,20 +3426,17 @@ const resource = {
     "risk.contingency": "Plan de contingență",
     "risk.created": "Risc creat",
     "risk.critical": "Critical (16-25)",
-    "risk.delete_message":
-      "Acest risc va fi eliminat definitiv. Această acțiune nu poate fi anulată.",
+    "risk.delete_message": "Acest risc va fi eliminat definitiv. Această acțiune nu poate fi anulată.",
     "risk.delete_title": "Ștergeți riscul",
     "risk.deleted": "Risc șters",
-    "risk.disclaimer":
-      "Simularea Monte Carlo oferă estimări probabilistice. Rezultatele depind de ipotezele de intrare.",
+    "risk.disclaimer": "Simularea Monte Carlo oferă estimări probabilistice. Rezultatele depind de ipotezele de intrare.",
     "risk.dist": "Distribution",
     "risk.dist_pert": "PERT",
     "risk.dist_triangular": "Triangular",
     "risk.dist_uniform": "Uniform",
     "risk.distribution": "Distribuția costurilor (Histogramă)",
     "risk.empty": "Niciun risc înregistrat",
-    "risk.empty_desc":
-      "Adăugați riscuri pentru a urmări problemele potențiale și strategiile de atenuare",
+    "risk.empty_desc": "Adăugați riscuri pentru a urmări problemele potențiale și strategiile de atenuare",
     "risk.export_csv": "Exportați CSV",
     "risk.exposure": "Expunere totală",
     "risk.heatmap": "Matrice de risc",
@@ -3910,8 +3477,7 @@ const resource = {
     "risk.severity": "Severitatea impactului",
     "risk.status": "Status",
     "risk.std_dev": "Abatere standard",
-    "risk.subtitle":
-      "Estimare probabilistică a costurilor cu simularea Monte Carlo",
+    "risk.subtitle": "Estimare probabilistică a costurilor cu simularea Monte Carlo",
     "risk.title": "Analiză de risc (Monte Carlo)",
     "risk.title_placeholder": "ex. Instabilitate a solului fundației",
     "risk.top_drivers": "Top 10 factori de risc",
@@ -3943,15 +3509,11 @@ const resource = {
     "toasts.schedule_generated": "Program generat din BOQ",
     "toasts.status_updated": "Status actualizat",
     "toasts.update_failed": "Actualizarea a eșuat",
-    "bim.cad_processing_note":
-      "Procesarea poate dura câteva minute pentru fișierele mari",
-    "bim.cad_upload_queued":
-      "Fișierul CAD a fost pus în coadă pentru procesare",
+    "bim.cad_processing_note": "Procesarea poate dura câteva minute pentru fișierele mari",
+    "bim.cad_upload_queued": "Fișierul CAD a fost pus în coadă pentru procesare",
     "bim.cad_upload_success": "Fișier CAD încărcat",
-    "bim.cad_upload_success_desc":
-      "Fișier încărcat cu succes. Procesarea va începe în curând.",
-    "bim.confirm_delete_model":
-      'Ștergeți "{{name}}"? Toate elementele vor fi eliminate.',
+    "bim.cad_upload_success_desc": "Fișier încărcat cu succes. Procesarea va începe în curând.",
+    "bim.confirm_delete_model": "Ștergeți \"{{name}}\"? Toate elementele vor fi eliminate.",
     "bim.disc_architecture": "Architecture",
     "bim.disc_civil": "Civil",
     "bim.disc_electrical": "Electrical",
@@ -3963,30 +3525,22 @@ const resource = {
     "bim.disc_structural": "Structural",
     "bim.discipline_label": "Discipline",
     "bim.getting_started": "Vizualizator BIM",
-    "bim.getting_started_desc":
-      "Încărcați date de elemente (CSV/Excel) și geometrie 3D opțională (DAE) din convertorul dumneavoastră CAD pentru a vizualiza modele de clădiri în 3D. Elementele pot fi legate de articolele din Antemăsurătoare pentru verificarea cantităților.",
+    "bim.getting_started_desc": "Încărcați date de elemente (CSV/Excel) și geometrie 3D opțională (DAE) din convertorul dumneavoastră CAD pentru a vizualiza modele de clădiri în 3D. Elementele pot fi legate de articolele din Antemăsurătoare pentru verificarea cantităților.",
     "bim.hide_upload": "Close",
     "bim.landing_drop_here": "Depuneți fișierul dumneavoastră aici",
-    "bim.landing_feat_3d_desc":
-      "Vizualizator Three.js interactiv cu filtrare pe etaje, colorare pe discipline și selecție de elemente.",
+    "bim.landing_feat_3d_desc": "Vizualizator Three.js interactiv cu filtrare pe etaje, colorare pe discipline și selecție de elemente.",
     "bim.landing_feat_3d_title": "3D Visualization",
-    "bim.landing_feat_boq_desc":
-      "Conectați elementele BIM la articolele de cost pentru verificare automată a cantităților și takeoff 5D.",
+    "bim.landing_feat_boq_desc": "Conectați elementele BIM la articolele de cost pentru verificare automată a cantităților și takeoff 5D.",
     "bim.landing_feat_boq_title": "Legătură cu Antemăsurătoarea",
-    "bim.landing_feat_compare_desc":
-      "Comparați versiunile pentru a detecta automat elementele adăugate, eliminate și modificate.",
+    "bim.landing_feat_compare_desc": "Comparați versiunile pentru a detecta automat elementele adăugate, eliminate și modificate.",
     "bim.landing_feat_compare_title": "Comparare modele",
-    "bim.landing_feat_extract_desc":
-      "Pereți, planșee, stâlpi, grinzi, MEP — cu proprietăți, suprafețe, volume și clasificare.",
+    "bim.landing_feat_extract_desc": "Pereți, planșee, stâlpi, grinzi, MEP — cu proprietăți, suprafețe, volume și clasificare.",
     "bim.landing_feat_extract_title": "Extragerea elementelor",
-    "bim.landing_feat_format_desc":
-      "IFC procesat instant. RVT prin DDC cad2data. CSV/Excel pentru date pre-convertite.",
+    "bim.landing_feat_format_desc": "IFC procesat instant. RVT prin DDC cad2data. CSV/Excel pentru date pre-convertite.",
     "bim.landing_feat_format_title": "Agnostic față de format",
-    "bim.landing_feat_qty_desc":
-      "Definiți reguli pentru extragerea suprafeței, volumului și lungimii — aplicați întregului model dintr-o dată.",
+    "bim.landing_feat_qty_desc": "Definiți reguli pentru extragerea suprafeței, volumului și lungimii — aplicați întregului model dintr-o dată.",
     "bim.landing_feat_qty_title": "Hărți de cantități",
-    "bim.landing_hero_subtitle":
-      "Încărcați fișiere IFC sau Revit pentru a vizualiza elementele clădirii, a extrage cantități și a le lega de Antemăsurătoarea dumneavoastră.",
+    "bim.landing_hero_subtitle": "Încărcați fișiere IFC sau Revit pentru a vizualiza elementele clădirii, a extrage cantități și a le lega de Antemăsurătoarea dumneavoastră.",
     "bim.landing_hero_title": "Vizualizator BIM 3D",
     "bim.landing_processing": "Processing...",
     "bim.landing_size_hint": "IFC, Revit, CSV sau Excel",
@@ -3997,14 +3551,11 @@ const resource = {
     "bim.model_name_placeholder": "ex. Clădirea A — Arhitectură",
     "bim.no_models_hint_upload": "Încărcați date BIM pentru a începe.",
     "bim.overlay_delete_btn": "Delete",
-    "bim.overlay_error_desc":
-      "Nu s-au putut extrage elementele. Încercați să convertiți mai întâi în IFC sau încărcați datele manual.",
+    "bim.overlay_error_desc": "Nu s-au putut extrage elementele. Încercați să convertiți mai întâi în IFC sau încărcați datele manual.",
     "bim.overlay_error_title": "Procesarea a eșuat",
-    "bim.overlay_needs_converter_desc":
-      "Fișierele {{format}} necesită DDC cad2data pentru extragere. Convertiți mai întâi în IFC sau încărcați date pre-convertite.",
+    "bim.overlay_needs_converter_desc": "Fișierele {{format}} necesită DDC cad2data pentru extragere. Convertiți mai întâi în IFC sau încărcați date pre-convertite.",
     "bim.overlay_needs_converter_title": "Convertor necesar",
-    "bim.overlay_processing_desc":
-      "Se extrag elementele din fișierul dumneavoastră {{format}}. Aceasta poate dura un moment.",
+    "bim.overlay_processing_desc": "Se extrag elementele din fișierul dumneavoastră {{format}}. Aceasta poate dura un moment.",
     "bim.overlay_processing_title": "Se procesează modelul...",
     "bim.overlay_upload_converted_btn": "Încărcați date convertite",
     "bim.show_upload": "Încărcați date BIM",
@@ -4026,8 +3577,7 @@ const resource = {
     "bim.upload_data_columns": "Coloane detectate",
     "bim.upload_data_hint": "CSV sau Excel din convertorul CAD",
     "bim.upload_data_label": "Date elemente (obligatoriu)",
-    "bim.upload_desc_full":
-      "Încărcați date de elemente și geometrie 3D opțională",
+    "bim.upload_desc_full": "Încărcați date de elemente și geometrie 3D opțională",
     "bim.upload_failed": "Încărcarea a eșuat",
     "bim.upload_geo_hint": "Format DAE (Collada) pentru vizualizare 3D",
     "bim.upload_geo_label": "Geometrie 3D (opțional)",
@@ -4038,27 +3588,22 @@ const resource = {
     "bim.upload_advanced_element_data_hint": "CSV / Excel",
     "bim.upload_advanced_geometry": "3D Geometry",
     "bim.upload_advanced_geometry_hint": "DAE / COLLADA",
-    "bim.upload_advanced_mode_toggle":
-      "Deja convertit? Încărcați datele și geometria separat",
+    "bim.upload_advanced_mode_toggle": "Deja convertit? Încărcați datele și geometria separat",
     "bim.upload_depth_label": "Adâncimea conversiei",
     "bim.upload_depth_standard": "Standard · categorii principale (rapid)",
     "bim.upload_depth_medium": "Mediu · categorii extinse (echilibrat)",
     "bim.upload_depth_complete": "Complet · toate categoriile (lent)",
-    "bim.upload_depth_help":
-      "Controlează câte categorii Revit sunt extrase. ID-urile elementelor și proprietățile complete sunt întotdeauna păstrate.",
+    "bim.upload_depth_help": "Controlează câte categorii Revit sunt extrase. ID-urile elementelor și proprietățile complete sunt întotdeauna păstrate.",
     "bim.upload_discipline_label": "Discipline",
     "bim.upload_drop_here": "Depuneți fișierul aici",
-    "bim.upload_generate_pdf_label":
-      "Exportați și foile de proiect ca PDF (în fundal)",
-    "bim.upload_generate_pdf_help":
-      "Exports the sheets the designer prepared inside the model as a single PDF into Documents. Runs after the model is ready — upload is not delayed.",
+    "bim.upload_generate_pdf_label": "Exportați și foile de proiect ca PDF (în fundal)",
+    "bim.upload_generate_pdf_help": "Exports the sheets the designer prepared inside the model as a single PDF into Documents. Runs after the model is ready — upload is not delayed.",
     "bim.upload_model_name_label": "Denumirea modelului",
     "bim.upload_model_name_placeholder": "e.g. Building A",
     "bim.upload_panel_subtitle": "IFC, RVT, CSV, Excel",
     "bim.upload_panel_title": "Încărcați model",
     "bim.upload_remove_file": "Remove",
-    "bim.upload_rvt_note":
-      "Notă: Fișierele RVT necesită DDC cad2data. Luați în considerare IFC.",
+    "bim.upload_rvt_note": "Notă: Fișierele RVT necesită DDC cad2data. Luați în considerare IFC.",
     "bim.upload_simple_mode_toggle": "Comutați la modul simplu",
     "bim.upload_size_hint": "Revit (.rvt), IFC (.ifc)",
     "bim.upload_success_desc": "Model încărcat cu succes.",
@@ -4083,8 +3628,7 @@ const resource = {
     "modules.disabled": "{{name}} disabled",
     "modules.disabled_label": "Disabled",
     "modules.enabled": "{{name}} enabled",
-    "modules.page_subtitle":
-      "Activați, dezactivați și gestionați modulele platformei",
+    "modules.page_subtitle": "Activați, dezactivați și gestionați modulele platformei",
     "modules.page_title": "Module și Marketplace",
     "modules.required_by": "Necesar de: {{deps}}",
     "modules.required_by_short": "Necesar de {{count}} module",
@@ -4119,11 +3663,9 @@ const resource = {
     "reporting.invoices_month": "Facturi scadente (lună)",
     "reporting.invoices_week": "Facturi scadente (săptămână)",
     "reporting.no_boqs": "Nicio Antemăsurătoare în acest proiect",
-    "reporting.no_finance_data":
-      "Nu sunt disponibile date financiare pentru acest proiect. Creați mai întâi facturi și bugete.",
+    "reporting.no_finance_data": "Nu sunt disponibile date financiare pentru acest proiect. Creați mai întâi facturi și bugete.",
     "reporting.no_projects": "Niciun proiect găsit",
-    "reporting.no_safety_data":
-      "Nu sunt disponibile date de securitate pentru acest proiect.",
+    "reporting.no_safety_data": "Nu sunt disponibile date de securitate pentru acest proiect.",
     "reporting.observations": "Observations",
     "reporting.on_track": "Conform planului",
     "reporting.open": "Open",
@@ -4147,8 +3689,7 @@ const resource = {
     "reporting.schedule_progress": "Progresul planificării",
     "reporting.schedule_summary": "Sumar planificare",
     "reporting.select_project": "Project",
-    "reporting.select_project_prompt":
-      "Selectați un proiect pentru a vizualiza tabloul de bord",
+    "reporting.select_project_prompt": "Selectați un proiect pentru a vizualiza tabloul de bord",
     "reporting.spi": "SPI program",
     "reporting.subtitle": "Tablouri de bord de raportare",
     "reporting.today_activities": "Total activități",
@@ -4163,14 +3704,12 @@ const resource = {
     "settings.tm_showing": "Se afișează {{count}} din {{total}} chei",
     "punch.stat_avg_close": "Zile medii până la închidere",
     "match_elements.title": "Asociază elementele",
-    "match_elements.subtitle":
-      "Mapează elemente BIM → poziții CWICR. BIM este activ; DWG / PDF / Foto vin în fazele următoare.",
+    "match_elements.subtitle": "Mapează elemente BIM → poziții CWICR. BIM este activ; DWG / PDF / Foto vin în fazele următoare.",
     "match_elements.select_project": "Selectează proiect…",
     "match_elements.source.bim_live": "BIM (activ)",
     "match_elements.library": "Bibliotecă",
     "match_elements.library_title": "Bibliotecă de șabloane între proiecte",
-    "match_elements.refresh_title":
-      "Reîmprospătează — preia cele mai noi elemente BIM",
+    "match_elements.refresh_title": "Reîmprospătează — preia cele mai noi elemente BIM",
     "match_elements.clear_filter": "șterge filtrul",
     "match_elements.clear_selection": "șterge selecția",
     "match_elements.session_id": "Sesiune {{id}}…",
@@ -4178,11 +3717,9 @@ const resource = {
     "match_elements.detail": "Detaliu",
     "match_elements.no_match": "Nicio potrivire…",
     "match_elements.loading_groups": "Se încarcă grupurile…",
-    "match_elements.no_groups":
-      "Încă niciun grup — importă un model BIM pentru a popula acest proiect.",
+    "match_elements.no_groups": "Încă niciun grup — importă un model BIM pentru a popula acest proiect.",
     "match_elements.loading_detail": "Se încarcă detaliul…",
-    "match_elements.footer":
-      "Fazele A.10–A.12 — selecție multiplă, confirmare prag, flux fără potrivire și bibliotecă de șabloane chiriaș sunt active. Cipuri trase și evidențiere 3D vin în faza B.",
+    "match_elements.footer": "Fazele A.10–A.12 — selecție multiplă, confirmare prag, flux fără potrivire și bibliotecă de șabloane chiriaș sunt active. Cipuri trase și evidențiere 3D vin în faza B.",
     "match_elements.aria.select_all": "Selectează toate grupurile vizibile",
     "match_elements.aria.select_group": "Selectează {{key}}",
     "match_elements.col.group": "Grup",
@@ -4205,55 +3742,40 @@ const resource = {
     "match_elements.action.lexical_all": "Potrivire lexicală — top 10",
     "match_elements.action.resources_selected": "Resurse ({{count}})",
     "match_elements.action.resources_all": "Potrivire resurse — top 10",
-    "match_elements.action.resources_title":
-      "Asociază cu catalogul de materiale/resurse",
+    "match_elements.action.resources_title": "Asociază cu catalogul de materiale/resurse",
     "match_elements.action.confirm_selected": "Confirmă {{count}} ≥ {{thr}}",
     "match_elements.action.confirm_all": "Confirmă toate ≥ {{thr}}",
     "match_elements.action.skip_n": "Omite {{count}} (de stabilit)",
-    "match_elements.busy.run_selected":
-      "Se rulează matcher-ul {{method}} pe {{count}} selectate…",
-    "match_elements.busy.run_all":
-      "Se rulează matcher-ul {{method}} pe toate grupurile…",
-    "match_elements.busy.bulk_confirm_selected":
-      "Se confirmă în masă {{count}} selectate ≥ {{thr}}…",
-    "match_elements.busy.bulk_confirm_all":
-      "Se confirmă în masă potrivirile ≥ {{thr}}…",
-    "match_elements.busy.mark_tbd":
-      "Se marchează {{count}} grupuri ca de stabilit…",
+    "match_elements.busy.run_selected": "Se rulează matcher-ul {{method}} pe {{count}} selectate…",
+    "match_elements.busy.run_all": "Se rulează matcher-ul {{method}} pe toate grupurile…",
+    "match_elements.busy.bulk_confirm_selected": "Se confirmă în masă {{count}} selectate ≥ {{thr}}…",
+    "match_elements.busy.bulk_confirm_all": "Se confirmă în masă potrivirile ≥ {{thr}}…",
+    "match_elements.busy.mark_tbd": "Se marchează {{count}} grupuri ca de stabilit…",
     "match_elements.alert.confirmed": "Confirmat {{count}} grupuri",
-    "match_elements.alert.marked_tbd":
-      "Marcat {{count}} grupuri ca de stabilit",
+    "match_elements.alert.marked_tbd": "Marcat {{count}} grupuri ca de stabilit",
     "match_elements.detail.elements_count": "{{count}} elemente",
-    "match_elements.detail.no_matchers_run":
-      "Nu s-a rulat încă niciun matcher pentru acest grup.",
-    "match_elements.detail.use_action_bar":
-      "Folosește butoanele din bara de acțiuni de mai sus.",
+    "match_elements.detail.no_matchers_run": "Nu s-a rulat încă niciun matcher pentru acest grup.",
+    "match_elements.detail.use_action_bar": "Folosește butoanele din bara de acțiuni de mai sus.",
     "match_elements.detail.col.code": "Cod",
     "match_elements.detail.col.description": "Descriere",
     "match_elements.detail.col.unit_rate": "Unitate · Preț",
     "match_elements.detail.col.conf": "Încred.",
     "match_elements.detail.confirm": "Confirmă",
-    "match_elements.detail.element_ids_count":
-      "{{count}} ID(-uri) elemente. Evidențiere 3D în faza A.12.",
+    "match_elements.detail.element_ids_count": "{{count}} ID(-uri) elemente. Evidențiere 3D în faza A.12.",
     "match_elements.detail.and_more": "…și încă {{count}}",
-    "match_elements.detail.building_preview":
-      "Se construiește previzualizarea…",
+    "match_elements.detail.building_preview": "Se construiește previzualizarea…",
     "match_elements.detail.auto_loaded_resources": "Resurse încărcate automat:",
-    "match_elements.detail.confirm_first":
-      "Confirmă mai întâi o potrivire pentru a vedea previzualizarea BOQ.",
+    "match_elements.detail.confirm_first": "Confirmă mai întâi o potrivire pentru a vedea previzualizarea BOQ.",
     "match_elements.tab.methods": "Candidați la potrivire",
     "match_elements.tab.elements": "Elemente ({{count}})",
     "match_elements.tab.apply": "Previzualizare aplicare",
     "match_elements.no_match.heading": "Nicio potrivire — alege acțiunea",
     "match_elements.no_match.custom.title": "Creează poziție personalizată",
-    "match_elements.no_match.custom.sub":
-      "Adaugă o poziție specifică proiectului cu descriere, unitate și preț.",
+    "match_elements.no_match.custom.sub": "Adaugă o poziție specifică proiectului cu descriere, unitate și preț.",
     "match_elements.no_match.rfq.title": "Trimite la licitație",
-    "match_elements.no_match.rfq.sub":
-      "Marchează pentru licitație — solicită oferte de la subcontractanți.",
+    "match_elements.no_match.rfq.sub": "Marchează pentru licitație — solicită oferte de la subcontractanți.",
     "match_elements.no_match.tbd.title": "Marchează ca de stabilit",
-    "match_elements.no_match.tbd.sub":
-      "Suspendă grupul; revizuiește mai târziu. Exclus din totalurile BOQ până la rezolvare.",
+    "match_elements.no_match.tbd.sub": "Suspendă grupul; revizuiește mai târziu. Exclus din totalurile BOQ până la rezolvare.",
     "match_elements.no_match.placeholder.description": "Descriere poziție",
     "match_elements.no_match.placeholder.unit": "Unitate",
     "match_elements.no_match.placeholder.rate": "Preț unitar",
@@ -4263,24 +3785,19 @@ const resource = {
     "match_elements.templates.count": "{{count}} semnături",
     "match_elements.templates.loading": "Se încarcă biblioteca…",
     "match_elements.templates.empty": "Încă niciun șablon salvat.",
-    "match_elements.templates.empty_hint":
-      "Potrivirile confirmate cu opțiunea «Salvează în bibliotecă» activă apar aici și se propagă la proiectele viitoare.",
+    "match_elements.templates.empty_hint": "Potrivirile confirmate cu opțiunea «Salvează în bibliotecă» activă apar aici și se propagă la proiectele viitoare.",
     "match_elements.templates.unnamed": "(fără nume)",
     "match_elements.templates.sig": "semn: {{prefix}}…",
     "match_elements.templates.used": "Utilizat",
     "match_elements.templates.last": "ultima {{date}}",
-    "match_elements.templates.remove_confirm":
-      "Eliminați acest șablon din bibliotecă?",
+    "match_elements.templates.remove_confirm": "Eliminați acest șablon din bibliotecă?",
     "match_elements.templates.remove_title": "Elimină din bibliotecă",
-    "match_elements.templates.footer":
-      "Șabloanele sunt cu domeniu de chiriaș. Semnăturile confirmate sugerează automat potriviri în proiectele viitoare.",
+    "match_elements.templates.footer": "Șabloanele sunt cu domeniu de chiriaș. Semnăturile confirmate sugerează automat potriviri în proiectele viitoare.",
     "match_elements.no_project_title": "No active project selected.",
-    "match_elements.no_project_hint":
-      "Open the project picker in the header, or visit",
+    "match_elements.no_project_hint": "Open the project picker in the header, or visit",
     "match_elements.active_project": "Active project",
     "match_elements.loading_sessions": "Loading sessions…",
-    "match_elements.no_prior_sessions":
-      "No prior matching sessions for this project.",
+    "match_elements.no_prior_sessions": "No prior matching sessions for this project.",
     "match_elements.session_default_name": "Session {{id}}",
     "match_elements.new_session": "New session",
     "match_elements.legend_label": "Confidence",
@@ -4289,21 +3806,16 @@ const resource = {
     "match_elements.legend_low": "Low",
     "match_elements.col.suggested": "Suggested cost",
     "match_elements.subtractive_hint": "Subtractive / non-billable",
-    "match_elements.detail.opening_warning":
-      "host has openings but gross == net (IFC export bug)",
-    "match_elements.detail.candidate_no_id":
-      "Candidate has no DB id — cannot confirm",
+    "match_elements.detail.opening_warning": "host has openings but gross == net (IFC export bug)",
+    "match_elements.detail.candidate_no_id": "Candidate has no DB id — cannot confirm",
     "match_elements.detail.apply_total": "Total",
     "match_elements.auto_confirm_threshold": "Auto-confirm threshold",
-    "match_elements.auto_confirm_help":
-      "Suggested matches at or above this score auto-confirm.",
+    "match_elements.auto_confirm_help": "Suggested matches at or above this score auto-confirm.",
     "match_elements.use_net": "Use net quantities (deduct openings)",
-    "match_elements.use_net_help":
-      "Off = use gross. Default deducts IfcOpeningElement / IfcRelVoidsElement from host quantities.",
+    "match_elements.use_net_help": "Off = use gross. Default deducts IfcOpeningElement / IfcRelVoidsElement from host quantities.",
     "match_elements.trade_filter": "Filter by trade",
     "match_elements.stage_label": "Etapă de construcție",
-    "match_elements.stage_help":
-      "Fixează potrivirile la o singură fază OmniClass. Lăsați gol pentru a căuta în toate fazele.",
+    "match_elements.stage_help": "Fixează potrivirile la o singură fază OmniClass. Lăsați gol pentru a căuta în toate fazele.",
     "match_elements.stage_any": "Orice etapă",
     "match_elements.stage.02_Demolition": "Demolare",
     "match_elements.stage.03_Earthwork": "Lucrări de terasament",
@@ -4319,17 +3831,14 @@ const resource = {
     "match_elements.stage.13_Sitework": "Amenajări exterioare",
     "match_elements.group_by": "Grupează după",
     "match_elements.group_by_empty": "Selectează cel puțin un atribut",
-    "match_elements.group_by_active":
-      "{{count}} active · clic pentru a elimina",
+    "match_elements.group_by_active": "{{count}} active · clic pentru a elimina",
     "match_elements.group_by_remove": "Clic pentru a elimina din grupare",
     "match_elements.group_by_sample": "ex.",
     "match_elements.loading_attributes": "Se încarcă…",
     "match_elements.action.apply": "Apply to BOQ ({{n}})",
-    "match_elements.action.apply_title":
-      "Write confirmed matches to the project BOQ",
+    "match_elements.action.apply_title": "Write confirmed matches to the project BOQ",
     "match_elements.busy.applying": "Applying confirmed groups to BOQ…",
-    "match_elements.alert.applied":
-      "Created {{n}} BOQ positions · total {{total}} {{ccy}}",
+    "match_elements.alert.applied": "Created {{n}} BOQ positions · total {{total}} {{ccy}}",
     "match_elements.visible_groups": "{{n}} visible",
     "match_elements.selected_count": "{{n}} selected",
     "match_elements.trade.architectural": "Architectural",
@@ -4347,8 +3856,7 @@ const resource = {
     "nav.request_custom_module_hint": "Lipsește ceva? Spune-ne ce ai nevoie",
     "modules.dev_guide": "Construiește un modul — ghidul dezvoltatorului",
     "boq.accept": "Acceptă",
-    "boq.accept_all_anomaly_suggestions":
-      "Accept All Suggested Rates ({{count}})",
+    "boq.accept_all_anomaly_suggestions": "Accept All Suggested Rates ({{count}})",
     "boq.add_all_failed": "Could not add any of the {{count}} positions",
     "boq.add_as_resources": "Add {{count}} as resources",
     "boq.add_column_btn": "Adaugă coloană",
@@ -4370,68 +3878,54 @@ const resource = {
     "boq.ai_applied": "AI Suggestion Applied",
     "boq.ai_apply_description": "Apply Enhanced Description",
     "boq.ai_apply_rate": "Apply Escalated Rate",
-    "boq.ai_assistant_tooltip":
-      "Describe what you need in plain text — AI creates BOQ positions with realistic pricing.",
+    "boq.ai_assistant_tooltip": "Describe what you need in plain text — AI creates BOQ positions with realistic pricing.",
     "boq.ai_chat_short": "AI Chat",
     "boq.ai_classification": "AI Classification",
     "boq.ai_classify_error": "Classification failed",
     "boq.ai_connected_via": "Connected via {{provider}}",
-    "boq.ai_enhance_subtitle":
-      "Add technical specs, standards, material grades",
+    "boq.ai_enhance_subtitle": "Add technical specs, standards, material grades",
     "boq.ai_enhance_title": "Enhance Description",
-    "boq.ai_error_generic":
-      "Could not connect to AI service. Check that the embedding model is available.",
+    "boq.ai_error_generic": "Could not connect to AI service. Check that the embedding model is available.",
     "boq.ai_escalate_subtitle": "Adjust rate for inflation and market changes",
     "boq.ai_escalate_title": "Escalate Rate",
     "boq.ai_escalated": "Escalated",
     "boq.ai_factor_labor": "Labor",
     "boq.ai_factor_material": "Material",
     "boq.ai_factor_region": "Regional",
-    "boq.ai_generated_summary":
-      "Generated {{count}} positions totalling {{total}} {{currency}}.‌⁠‍",
+    "boq.ai_generated_summary": "Generated {{count}} positions totalling {{total}} {{currency}}.‌⁠‍",
     "boq.ai_global_actions": "BOQ-level Actions",
     "boq.ai_missing_items": "Missing Items",
     "boq.ai_no_classification": "No Classification Found",
-    "boq.ai_no_classification_msg":
-      "Could not determine classification from cost database.",
-    "boq.ai_no_prereqs":
-      "No missing items found — BOQ looks complete for this position.",
+    "boq.ai_no_classification_msg": "Could not determine classification from cost database.",
+    "boq.ai_no_prereqs": "No missing items found — BOQ looks complete for this position.",
     "boq.ai_no_rate": "No Rate Found",
     "boq.ai_no_rate_msg": "No similar items found in the cost database.",
-    "boq.ai_no_selection":
-      "Select a position in the grid for per-position AI actions‌⁠‍",
+    "boq.ai_no_selection": "Select a position in the grid for per-position AI actions‌⁠‍",
     "boq.ai_not_configured": "AI not configured‌⁠‍",
-    "boq.ai_not_configured_desc":
-      "Add your API key in Settings to use AI Smart Actions.‌⁠‍",
+    "boq.ai_not_configured_desc": "Add your API key in Settings to use AI Smart Actions.‌⁠‍",
     "boq.ai_original": "Original",
     "boq.ai_position_actions": "Position Actions",
-    "boq.ai_prereqs_subtitle":
-      "Find missing prerequisites, companions, successors",
+    "boq.ai_prereqs_subtitle": "Find missing prerequisites, companions, successors",
     "boq.ai_prereqs_title": "Suggest Related Items",
     "boq.ai_rate_error": "Rate suggestion failed",
     "boq.ai_rate_suggestion": "AI Rate Suggestion",
     "boq.ai_scope_score": "Completeness Score",
-    "boq.ai_scope_subtitle":
-      "Find missing trades, work packages, critical items",
+    "boq.ai_scope_subtitle": "Find missing trades, work packages, critical items",
     "boq.ai_scope_title": "Check Scope Completeness",
     "boq.ai_selected_position": "Selected Position‌⁠‍",
-    "boq.ai_smart_footer":
-      "Powered by your AI provider (Settings > AI). Results are suggestions — always review.",
+    "boq.ai_smart_footer": "Powered by your AI provider (Settings > AI). Results are suggestions — always review.",
     "boq.ai_smart_panel": "AI Smart Actions‌⁠‍",
-    "boq.ai_smart_tooltip":
-      "Enhance descriptions, find missing items, check scope completeness, escalate rates to current prices.",
+    "boq.ai_smart_tooltip": "Enhance descriptions, find missing items, check scope completeness, escalate rates to current prices.",
     "boq.ai_specs": "Specifications",
     "boq.all_anomalies_resolved": "All {{count}} suggested rates applied",
     "boq.all_rates_normal": "All rates are within normal market range.",
     "boq.anomalies_badge": "Anomalies ({{count}})",
-    "boq.anomalies_count":
-      "{{count}} anomalies detected in {{total}} positions",
+    "boq.anomalies_count": "{{count}} anomalies detected in {{total}} positions",
     "boq.anomalies_found": "Pricing Anomalies Found",
     "boq.anomaly_cancelled": "Price check cancelled",
     "boq.anomaly_check_error": "Anomaly check failed",
     "boq.anomaly_rate_applied": "Suggested Rate Applied",
-    "boq.anomaly_tip":
-      "Compares each unit rate against median market rates from the cost database. Flags overpriced and underpriced positions.",
+    "boq.anomaly_tip": "Compares each unit rate against median market rates from the cost database. Flags overpriced and underpriced positions.",
     "boq.applied": "Applied",
     "boq.apply_all_suggestions": "Apply All‌⁠‍",
     "boq.apply_defaults_failed": "Failed to apply template",
@@ -4445,27 +3939,22 @@ const resource = {
     "boq.autocomplete_tooltip_rate_per_unit": "Rate per unit‌⁠‍",
     "boq.autocomplete_tooltip_tab_to_insert": "Tab or Enter to insert‌⁠‍",
     "boq.autocomplete_tooltip_unit": "/",
-    "boq.autocomplete_tooltip_variants_available":
-      "${variantCount} variants available",
+    "boq.autocomplete_tooltip_variants_available": "${variantCount} variants available",
     "boq.batch_actions": "Batch actions‌⁠‍",
     "boq.batch_change_unit": "Change unit‌⁠‍",
     "boq.batch_clear_selection": "Clear selection",
     "boq.batch_delete": "Delete selected‌⁠‍",
     "boq.batch_delete_confirm": "Delete {{count}} positions",
-    "boq.batch_delete_confirm_message":
-      "Are you sure you want to delete {{count}} selected positions? This action cannot be undone.",
+    "boq.batch_delete_confirm_message": "Are you sure you want to delete {{count}} selected positions? This action cannot be undone.",
     "boq.batch_delete_confirm_title": "Delete positions",
     "boq.batch_deleted": "{{count}} positions deleted",
-    "boq.batch_unit_changed":
-      "Unit changed to {{unit}} for {{count}} positions",
+    "boq.batch_unit_changed": "Unit changed to {{unit}} for {{count}} positions",
     "boq.bim_agg_distinct_label": "{{n}} values",
-    "boq.bim_agg_distinct_title":
-      "Per-element value — summing is meaningless, so each unique value is listed. Click one to apply it.",
+    "boq.bim_agg_distinct_title": "Per-element value — summing is meaningless, so each unique value is listed. Click one to apply it.",
     "boq.bim_agg_sum_title": "Summed across all linked elements",
     "boq.bim_collapse_sums": "Show only headline quantities",
     "boq.bim_expand_sums": "Show all numeric values from BIM",
-    "boq.bim_link_tooltip":
-      "{{count}} BIM element(s) linked — click to preview",
+    "boq.bim_link_tooltip": "{{count}} BIM element(s) linked — click to preview",
     "boq.bim_properties": "Properties",
     "boq.bim_props_show_all_title": "Include every numeric property from BIM",
     "boq.bim_props_show_basic_title": "Hide non-quantity properties",
@@ -4492,22 +3981,19 @@ const resource = {
     "boq.column_calc_invalid_formula": "Formula has a syntax error",
     "boq.column_calc_needs_formula": "Calculated column needs a formula",
     "boq.column_decimals": "Decimals",
-    "boq.column_delete_confirm":
-      'Remove the "{{name}}" column? Existing values in positions are preserved but no longer shown.',
+    "boq.column_delete_confirm": "Remove the \"{{name}}\" column? Existing values in positions are preserved but no longer shown.",
     "boq.column_delete_confirm_title": "Remove column?",
     "boq.column_delete_failed": "Could not remove column‌⁠‍",
     "boq.column_formula": "Formula",
     "boq.column_name": "Column name",
-    "boq.column_name_duplicate": 'A column named "{{name}}" already exists',
+    "boq.column_name_duplicate": "A column named \"{{name}}\" already exists",
     "boq.column_name_invalid": "Column name is invalid",
-    "boq.column_name_invalid_hint":
-      "Use letters (any script), numbers and spaces. Must start with a letter.",
+    "boq.column_name_invalid_hint": "Use letters (any script), numbers and spaces. Must start with a letter.",
     "boq.column_name_placeholder": "e.g. Supplier, Notes, PO Number",
-    "boq.column_name_reserved": '"{{name}}" is a reserved column name',
+    "boq.column_name_reserved": "\"{{name}}\" is a reserved column name",
     "boq.column_options": "Options (comma or newline separated)",
     "boq.column_removed": "Column removed‌⁠‍",
-    "boq.column_select_needs_options":
-      "Select column needs at least one option",
+    "boq.column_select_needs_options": "Select column needs at least one option",
     "boq.column_test_formula": "Test",
     "boq.column_test_result": "Result:",
     "boq.column_type": "Tip",
@@ -4527,17 +4013,13 @@ const resource = {
     "boq.cost_finder_components": "{{count}} components",
     "boq.cost_finder_error": "Search failed. Check vector database.",
     "boq.cost_finder_for_position": "For: {{description}}",
-    "boq.cost_finder_no_query":
-      "Enter a description to search the cost database",
+    "boq.cost_finder_no_query": "Enter a description to search the cost database",
     "boq.cost_finder_no_results": "No matching items found",
     "boq.cost_finder_results_count": "{{count}} results ({{ms}}ms)",
-    "boq.cost_finder_search_placeholder":
-      "Search cost items by description...‌⁠‍",
+    "boq.cost_finder_search_placeholder": "Search cost items by description...‌⁠‍",
     "boq.cost_finder_title": "AI Cost Finder‌⁠‍",
-    "boq.cost_finder_tooltip":
-      "Search 55,000+ cost items by description. Find materials, labor, and equipment rates from regional databases.",
-    "boq.cost_risk_error":
-      "Failed to load cost risk analysis. Please try again.",
+    "boq.cost_finder_tooltip": "Search 55,000+ cost items by description. Find materials, labor, and equipment rates from regional databases.",
+    "boq.cost_risk_error": "Failed to load cost risk analysis. Please try again.",
     "boq.create_budget": "Create Budget",
     "boq.create_failed": "Failed to create BOQ",
     "boq.create_revision": "Create Revision",
@@ -4547,10 +4029,8 @@ const resource = {
     "boq.currency_group_world": "World currencies",
     "boq.current": "Current‌⁠‍",
     "boq.custom_columns": "Custom Columns",
-    "boq.custom_columns_hint":
-      "Custom columns appear in the BOQ grid before the actions column. Values are stored per position and exported with the BOQ. Removing a column hides it but preserves the underlying data.",
-    "boq.custom_columns_subtitle":
-      "Add your own fields — supplier, notes, procurement info…",
+    "boq.custom_columns_hint": "Custom columns appear in the BOQ grid before the actions column. Values are stored per position and exported with the BOQ. Removing a column hides it but preserves the underlying data.",
+    "boq.custom_columns_subtitle": "Add your own fields — supplier, notes, procurement info…",
     "boq.delete_section": "Delete section with all positions",
     "boq.display_base": "Base",
     "boq.display_currency_aria": "Choose currency for grand total display",
@@ -4559,8 +4039,7 @@ const resource = {
     "boq.duplicate_position": "Duplicate Position",
     "boq.dwg_link_tooltip_v2": "DWG drawing — click for details & navigation",
     "boq.element_count": "{{count}} element(s)",
-    "boq.empty_position_quality_hint":
-      "Empty position lowers Quality Score until quantity & rate are filled",
+    "boq.empty_position_quality_hint": "Empty position lowers Quality Score until quantity & rate are filled",
     "boq.errors": "errors",
     "boq.estimate_type_budget": "Buget",
     "boq.estimate_type_conceptual": "Conceptual",
@@ -4573,35 +4052,28 @@ const resource = {
     "boq.expand_resources": "Expand Resources",
     "boq.expand_section": "Expand Section",
     "boq.export_anyway": "Export Anyway",
-    "boq.export_quality_warning_desc":
-      "Your estimate has a quality score below 60%. Missing quantities, zero prices, or incomplete descriptions may affect the exported document. Consider reviewing the estimate before exporting.",
+    "boq.export_quality_warning_desc": "Your estimate has a quality score below 60%. Missing quantities, zero prices, or incomplete descriptions may affect the exported document. Consider reviewing the estimate before exporting.",
     "boq.filled": "filled",
     "boq.filtered_from": "filtered from {{total}}",
     "boq.fx_rate_global_badge": "GLOBAL",
     "boq.fx_rate_input": "FX rate {{from}}→{{to}}",
     "boq.fx_rate_label": "FX rate",
     "boq.fx_rate_project_badge": "PROJECT",
-    "boq.gaeb_export_desc":
-      "This will export your BOQ as GAEB XML 3.3 format, compatible with standard tender workflows.",
+    "boq.gaeb_export_desc": "This will export your BOQ as GAEB XML 3.3 format, compatible with standard tender workflows.",
     "boq.gaeb_export_title": "Export GAEB XML (X83)",
     "boq.gaeb_grand_total": "Grand Total",
     "boq.gaeb_positions": "Positions",
-    "boq.grand_total_conversion_tooltip_v2":
-      'Whole BOQ rendered in {{disp}} at rate {{rate}} ({{base}} → {{disp}}). View-only — server keeps base values. Switch to "Base" to edit prices.',
+    "boq.grand_total_conversion_tooltip_v2": "Whole BOQ rendered in {{disp}} at rate {{rate}} ({{base}} → {{disp}}). View-only — server keeps base values. Switch to \"Base\" to edit prices.",
     "boq.grid_settings": "Grid Settings",
     "boq.ignore": "Ignore",
-    "boq.import_catalog_hint":
-      "Import a resource catalog from Settings or the Catalog page",
+    "boq.import_catalog_hint": "Import a resource catalog from Settings or the Catalog page",
     "boq.import_database_cta": "Import a database",
     "boq.import_file": "Import File",
     "boq.import_rows": "Import {{count}} rows",
     "boq.import_started": "Importing {{name}}…",
-    "boq.import_started_gaeb_hint":
-      "Parsing GAEB XML — namespace-agnostic, X81/X83/X84 supported.",
-    "boq.import_started_hint":
-      "Large files (PDF / CAD / 1000+ rows) may take up to 60 seconds.",
-    "boq.import_timeout":
-      "Server did not respond within 90 seconds. The file may be too large — try splitting it.",
+    "boq.import_started_gaeb_hint": "Parsing GAEB XML — namespace-agnostic, X81/X83/X84 supported.",
+    "boq.import_started_hint": "Large files (PDF / CAD / 1000+ rows) may take up to 60 seconds.",
+    "boq.import_timeout": "Server did not respond within 90 seconds. The file may be too large — try splitting it.",
     "boq.import_tooltip": "Import GAEB, Excel, or CSV into this BOQ",
     "boq.inline_edit_number": "Edit value",
     "boq.inline_edit_text": "Edit text",
@@ -4612,16 +4084,13 @@ const resource = {
     "boq.link_finance": "View Budget",
     "boq.link_validation": "Run Validation",
     "boq.linked_geometry": "Linked Geometry",
-    "boq.list_subtitle_count":
-      "{{boqCount}} estimates across {{projectCount}} projects",
+    "boq.list_subtitle_count": "{{boqCount}} estimates across {{projectCount}} projects",
     "boq.loading_element_data": "Loading element data...",
     "boq.loading_full_properties": "Loading full properties…",
     "boq.lock": "Lock Estimate",
-    "boq.lock_confirm":
-      "Lock this estimate?nnLocked estimates cannot be edited. Unlocking requires admin privileges.",
+    "boq.lock_confirm": "Lock this estimate?nnLocked estimates cannot be edited. Unlocking requires admin privileges.",
     "boq.lock_failed": "Lock failed",
-    "boq.lock_tooltip":
-      "Lock prevents edits. Create a revision to make changes to a locked estimate.",
+    "boq.lock_tooltip": "Lock prevents edits. Create a revision to make changes to a locked estimate.",
     "boq.locked": "LOCKED",
     "boq.locked_next": "Estimate locked. Create project budget?",
     "boq.locked_success": "Estimate locked",
@@ -4632,8 +4101,7 @@ const resource = {
     "boq.markup_delete_failed": "Failed to delete markup‌⁠‍",
     "boq.markup_update_failed": "Failed to update markup‌⁠‍",
     "boq.mvp.apply_to_remaining": "Apply to remaining {{count}}",
-    "boq.mvp.apply_to_remaining_hint":
-      "Re-use these picks for all other multi-variant items in this batch",
+    "boq.mvp.apply_to_remaining_hint": "Re-use these picks for all other multi-variant items in this batch",
     "boq.mvp.subtitle": "{{count}} resource needs a choice‌⁠‍",
     "boq.mvp.toast_applied": "{{count}} variant chosen",
     "boq.mvp.toast_apply_to_remaining": "Applied picks to {{count}} more item",
@@ -4643,64 +4111,52 @@ const resource = {
     "boq.no_boqs_in_project": "No BOQs in this project.",
     "boq.no_catalog_results": "No resources match your search",
     "boq.no_changes": "No changes",
-    "boq.no_custom_columns":
-      "No custom columns yet. Pick a preset below or add your own.",
-    "boq.no_databases_help":
-      "There's no cost-rate database on this server, so search has nothing to show. Import a free CWICR pack — 30 regional databases are one click away.",
+    "boq.no_custom_columns": "No custom columns yet. Pick a preset below or add your own.",
+    "boq.no_databases_help": "There's no cost-rate database on this server, so search has nothing to show. Import a free CWICR pack — 30 regional databases are one click away.",
     "boq.no_databases_title": "No cost database installed yet",
     "boq.no_numeric_found": "No numeric values in this element",
     "boq.no_numeric_quantities": "No numeric quantities",
-    "boq.no_quantities_hint_button":
-      'No quantities — press "Show all" above to surface every BIM property',
+    "boq.no_quantities_hint_button": "No quantities — press \"Show all\" above to surface every BIM property",
     "boq.no_snapshots": "No snapshots yet",
     "boq.open_in_bim": "Open in BIM",
-    "boq.open_in_bim_title":
-      "Open in 3D viewer with the linked element pre-selected",
+    "boq.open_in_bim_title": "Open in 3D viewer with the linked element pre-selected",
     "boq.open_in_bim_viewer": "Open in BIM Viewer",
     "boq.options": "options",
     "boq.pagination_range": "{{from}}–{{to}} of {{total}} estimates",
     "boq.partial": "Partial",
     "boq.paste_columns": "Columns‌⁠‍",
     "boq.paste_detected": "{{count}} rows detected‌⁠‍",
-    "boq.paste_excel_hint":
-      "Copy rows from Excel or Google Sheets and paste below‌⁠‍",
+    "boq.paste_excel_hint": "Copy rows from Excel or Google Sheets and paste below‌⁠‍",
     "boq.paste_failed": "Could not paste — invalid data or read-only cells‌⁠‍",
     "boq.paste_from_excel": "Paste from Excel",
     "boq.paste_from_excel_short": "Paste",
     "boq.paste_import_count": "{{count}} positions added to BOQ",
     "boq.paste_import_failed": "Import failed",
     "boq.paste_import_success": "Imported successfully",
-    "boq.paste_no_data":
-      "No valid rows detected. Make sure data is tab-separated.",
-    "boq.paste_placeholder":
-      "Paste tab-separated data here...nnExample:nDescriptiontUnittQtytRatenConcrete foundationtm3t120t185.00nRebar B500Stkgt2400t1.45‌⁠‍",
+    "boq.paste_no_data": "No valid rows detected. Make sure data is tab-separated.",
+    "boq.paste_placeholder": "Paste tab-separated data here...nnExample:nDescriptiontUnittQtytRatenConcrete foundationtm3t120t185.00nRebar B500Stkgt2400t1.45‌⁠‍",
     "boq.paste_showing": "Showing first 50 of {{total}} rows",
     "boq.pdf_link_tooltip_v2": "PDF takeoff — click for details & navigation",
     "boq.per_unit": "per {{unit}}",
     "boq.pick_from_catalog": "Pick from Catalog‌⁠‍",
-    "boq.pick_from_catalog_desc":
-      "Search and add a resource from the catalog to this position‌⁠‍",
+    "boq.pick_from_catalog_desc": "Search and add a resource from the catalog to this position‌⁠‍",
     "boq.pick_qty_from_bim": "Pick quantity from BIM",
     "boq.pos": "Pos",
     "boq.position_deleted": "Position deleted",
     "boq.position_duplicated": "Position duplicated",
     "boq.position_restored": "Position restored",
     "boq.position_variant_v_label": "Expand resources",
-    "boq.position_variant_v_tooltip":
-      "This position carries a variant resource — click to expand the resource panel.",
+    "boq.position_variant_v_tooltip": "This position carries a variant resource — click to expand the resource panel.",
     "boq.positions_removed": "{{count}} pos removed",
     "boq.positions_reordered": "Positions reordered",
     "boq.positions_short": "pos.",
-    "boq.preset_already_applied":
-      "All columns from this preset already exist‌⁠‍",
-    "boq.preset_applied": '{{count}} columns added from "{{name}}" preset',
+    "boq.preset_already_applied": "All columns from this preset already exist‌⁠‍",
+    "boq.preset_applied": "{{count}} columns added from \"{{name}}\" preset",
     "boq.preset_partial": "Preset partially applied",
     "boq.preset_regional": "Regional standards",
     "boq.preset_universal": "Quick start with a preset",
-    "boq.preview_total_hint":
-      "Catalog-rate × quantity for the selection. Variant picks may adjust this.",
-    "boq.price_review_desc":
-      "Review each suggestion below. Accept to update the rate, or ignore to keep your current price.‌⁠‍",
+    "boq.preview_total_hint": "Catalog-rate × quantity for the selection. Variant picks may adjust this.",
+    "boq.price_review_desc": "Review each suggestion below. Accept to update the rate, or ignore to keep your current price.‌⁠‍",
     "boq.price_review_title": "Price Check Results‌⁠‍",
     "boq.quality_ai_menu": "Quality & AI",
     "boq.quality_ai_menu_tip": "All quality & AI tools",
@@ -4709,40 +4165,29 @@ const resource = {
     "boq.quantity_for_item": "Quantity for {{item}}",
     "boq.quantity_short": "Qty",
     "boq.rate_applied": "Rate Applied",
-    "boq.rate_from_resources":
-      "Rate is calculated from resources. Edit individual resources to change.‌⁠‍",
+    "boq.rate_from_resources": "Rate is calculated from resources. Edit individual resources to change.‌⁠‍",
     "boq.recalc_confirm_button": "Update Rates",
-    "boq.recalc_confirm_step1":
-      "1. Search cost database for matching items by description",
-    "boq.recalc_confirm_step2":
-      "2. Attach resource breakdowns (materials, labor, equipment)",
-    "boq.recalc_confirm_step3":
-      "3. Recalculate unit rates from resource components",
+    "boq.recalc_confirm_step1": "1. Search cost database for matching items by description",
+    "boq.recalc_confirm_step2": "2. Attach resource breakdowns (materials, labor, equipment)",
+    "boq.recalc_confirm_step3": "3. Recalculate unit rates from resource components",
     "boq.recalc_confirm_subtitle": "Match positions to cost database",
     "boq.recalc_confirm_title": "Update Unit Rates",
-    "boq.recalc_confirm_warning":
-      "Positions with manual rates that have no match in the cost database will not be changed.",
+    "boq.recalc_confirm_warning": "Positions with manual rates that have no match in the cost database will not be changed.",
     "boq.recalc_enriched": "{{count}} positions matched to cost database",
-    "boq.recalc_skipped":
-      "{{count}} positions without cost data (manual rates kept)",
+    "boq.recalc_skipped": "{{count}} positions without cost data (manual rates kept)",
     "boq.recalc_updated": "{{count}} unit rates recalculated from resources",
-    "boq.recalculate_all_manual":
-      "All positions use manual rates — add resources from cost database to enable automatic rate calculation.",
-    "boq.recalculate_failed_hint":
-      "Check that the backend is running and cost database is loaded.",
+    "boq.recalculate_all_manual": "All positions use manual rates — add resources from cost database to enable automatic rate calculation.",
+    "boq.recalculate_failed_hint": "Check that the backend is running and cost database is loaded.",
     "boq.recalculate_no_changes": "No changes needed",
-    "boq.recalculate_tip":
-      "Matches positions to cost database, attaches resource breakdowns (materials, labor, equipment), and recalculates unit rates from components.",
+    "boq.recalculate_tip": "Matches positions to cost database, attaches resource breakdowns (materials, labor, equipment), and recalculates unit rates from components.",
     "boq.recalculating": "Updating...",
     "boq.remove_resource": "Remove Resource",
     "boq.renumber": "Renumber Positions",
     "boq.renumber_apply": "Apply renumbering",
-    "boq.renumber_dialog_subtitle":
-      "Pick a numbering scheme. The current order is preserved — only ordinals are rewritten.‌⁠‍",
+    "boq.renumber_dialog_subtitle": "Pick a numbering scheme. The current order is preserved — only ordinals are rewritten.‌⁠‍",
     "boq.renumber_dialog_title": "Renumber positions‌⁠‍",
     "boq.renumber_done": "{{count}} positions renumbered",
-    "boq.renumber_done_hint":
-      "Order preserved — only ordinals were rewritten. Undo with Ctrl+Z is not supported for renumber.",
+    "boq.renumber_done_hint": "Order preserved — only ordinals were rewritten. Undo with Ctrl+Z is not supported for renumber.",
     "boq.renumber_failed": "Renumber failed",
     "boq.renumber_no_preview": "No positions to preview yet.",
     "boq.renumber_pad": "Zero-pad section numbers‌⁠‍",
@@ -4750,19 +4195,14 @@ const resource = {
     "boq.renumber_pad_on": "Sections will be 01, 02, 03 (two-digit padded)‌⁠‍",
     "boq.renumber_preview": "Preview (first 5 positions)",
     "boq.renumber_scheme_dotted": "Short decimal",
-    "boq.renumber_scheme_dotted_desc":
-      "Short-form decimal numbering common in NRM-style measurement.",
+    "boq.renumber_scheme_dotted_desc": "Short-form decimal numbering common in NRM-style measurement.",
     "boq.renumber_scheme_gap10": "Gap of 10",
-    "boq.renumber_scheme_gap10_desc":
-      "Leaves room to insert positions like 01.15 between 01.10 and 01.20 later. Standard German tender output.",
+    "boq.renumber_scheme_gap10_desc": "Leaves room to insert positions like 01.15 between 01.10 and 01.20 later. Standard German tender output.",
     "boq.renumber_scheme_gap100": "Gap of 100",
-    "boq.renumber_scheme_gap100_desc":
-      "Even more headroom for very large BOQs that may grow significantly post-tender.",
+    "boq.renumber_scheme_gap100_desc": "Even more headroom for very large BOQs that may grow significantly post-tender.",
     "boq.renumber_scheme_sequential": "Sequential",
-    "boq.renumber_scheme_sequential_desc":
-      "Compact, traditional numbering. Best for fixed-scope BOQs that won't get extra positions later.",
-    "boq.renumber_warning":
-      "This overwrites any manually edited position numbers. The current display order is preserved — only ordinals change.",
+    "boq.renumber_scheme_sequential_desc": "Compact, traditional numbering. Best for fixed-scope BOQs that won't get extra positions later.",
+    "boq.renumber_warning": "This overwrites any manually edited position numbers. The current display order is preserved — only ordinals change.",
     "boq.renumbering": "Renumbering...",
     "boq.reorder_failed": "Failed to reorder positions",
     "boq.resource_added": "Resource added",
@@ -4770,41 +4210,28 @@ const resource = {
     "boq.resource_catalog_code": "Catalogue code: {{code}}",
     "boq.resource_currency": "Monedă",
     "boq.resource_currency_add_custom": "Add custom: {{code}}",
-    "boq.resource_currency_custom":
-      "Custom currency: {{code}} (not in project FX or ISO 4217 list)",
-    "boq.resource_currency_hint":
-      "Currency for this resource. Defaults to project base currency.",
-    "boq.resource_currency_no_match":
-      "No matches — type at least 2 letters to add a custom code.",
+    "boq.resource_currency_custom": "Custom currency: {{code}} (not in project FX or ISO 4217 list)",
+    "boq.resource_currency_hint": "Currency for this resource. Defaults to project base currency.",
+    "boq.resource_currency_no_match": "No matches — type at least 2 letters to add a custom code.",
     "boq.resource_currency_pick": "Currency — {{symbol}} {{code}}",
     "boq.resource_currency_search": "Type or search (e.g. EUR, MYC)",
     "boq.resource_customised": "Customised resource — no catalogue code",
-    "boq.resource_is_variant_badge":
-      "Variant resource — multiple price options available",
+    "boq.resource_is_variant_badge": "Variant resource — multiple price options available",
     "boq.resource_name": "Nume",
     "boq.resource_name_placeholder": "e.g. Concrete C30/37",
-    "boq.resource_no_fx_rate":
-      "No FX rate configured for {{code}} — total shown in {{code}}",
-    "boq.resource_no_fx_rate_click":
-      "No FX rate configured for {{code}} — click to set one in Project Settings",
+    "boq.resource_no_fx_rate": "No FX rate configured for {{code}} — total shown in {{code}}",
+    "boq.resource_no_fx_rate_click": "No FX rate configured for {{code}} — click to set one in Project Settings",
     "boq.resource_no_fx_short": "set FX",
-    "boq.resource_total_in_base":
-      "{{foreign}} ≈ {{base}} (1 {{code}} = {{rate}} {{baseCode}})",
+    "boq.resource_total_in_base": "{{foreign}} ≈ {{base}} (1 {{code}} = {{rate}} {{baseCode}})",
     "boq.resource_type": "Tip",
     "boq.resource_type_variant_chip": "Variant",
-    "boq.resource_type_variant_tooltip":
-      "Variant resource — pick from {{base}} catalog. Click to reclassify resource type.",
-    "boq.resource_variant_bar_tooltip_default":
-      "Auto-default ({{strategy}}){{captured}} — click pill to refine.",
-    "boq.resource_variant_bar_tooltip_picked":
-      "Explicit variant: {{label}}{{captured}}",
+    "boq.resource_type_variant_tooltip": "Variant resource — pick from {{base}} catalog. Click to reclassify resource type.",
+    "boq.resource_variant_bar_tooltip_default": "Auto-default ({{strategy}}){{captured}} — click pill to refine.",
+    "boq.resource_variant_bar_tooltip_picked": "Explicit variant: {{label}}{{captured}}",
     "boq.resource_variant_pill": "▾ {{count}}",
-    "boq.resource_variant_pill_tooltip_default":
-      "Auto-applied with {{strategy}} rate. {{count}} options ({{range}}). Click to refine.",
-    "boq.resource_variant_pill_tooltip_picked":
-      "Variant: {{label}} @ {{price}} {{currency}}{{delta}}. Click to switch.",
-    "boq.resource_variant_pill_tooltip_unset":
-      "{{count}} priced variants available ({{range}}). Click to pick one.",
+    "boq.resource_variant_pill_tooltip_default": "Auto-applied with {{strategy}} rate. {{count}} options ({{range}}). Click to refine.",
+    "boq.resource_variant_pill_tooltip_picked": "Variant: {{label}} @ {{price}} {{currency}}{{delta}}. Click to switch.",
+    "boq.resource_variant_pill_tooltip_unset": "{{count}} priced variants available ({{range}}). Click to pick one.",
     "boq.resources_added": "Resources added to position",
     "boq.resources_total": "Resources total",
     "boq.restore": "Restore",
@@ -4812,25 +4239,19 @@ const resource = {
     "boq.restore_snapshot": "Restore this version",
     "boq.revision_created": "Revision created",
     "boq.revision_failed": "Create revision failed",
-    "boq.rs_abc_pill_tooltip":
-      "Class {{cls}} · {{pct}}% of project resource cost",
+    "boq.rs_abc_pill_tooltip": "Class {{cls}} · {{pct}}% of project resource cost",
     "boq.rs_col_abc": "ABC %",
-    "boq.rs_col_abc_tooltip":
-      "Pareto / ABC analysis — A items make up ~80% of cost, B ~15%, C ~5%. Click to highlight bucket boundaries.",
+    "boq.rs_col_abc_tooltip": "Pareto / ABC analysis — A items make up ~80% of cost, B ~15%, C ~5%. Click to highlight bucket boundaries.",
     "boq.rs_error": "Failed to load resource summary.",
-    "boq.rs_save_variant_to_catalog":
-      "Save as a regular article in your catalog",
+    "boq.rs_save_variant_to_catalog": "Save as a regular article in your catalog",
     "boq.rs_show_all": "Show all {{count}} resources",
     "boq.rs_show_less": "Show less",
     "boq.rs_variant_applied_to_n": "Applied to {{count}} position(s)‌⁠‍",
     "boq.rs_variant_pill_mixed": "Mixed · {{count}} options",
-    "boq.rs_variant_pill_mixed_tooltip":
-      "Different variants picked across positions. Click to choose one for all.",
+    "boq.rs_variant_pill_mixed_tooltip": "Different variants picked across positions. Click to choose one for all.",
     "boq.rs_variant_pill_options": "▾ {{count}} options",
-    "boq.rs_variant_pill_picked_tooltip":
-      "Variant: {{label}}. Click to switch (applies to all positions).",
-    "boq.rs_variant_pill_unset_tooltip":
-      "{{count}} priced variants available. Click to pick one for all positions.",
+    "boq.rs_variant_pill_picked_tooltip": "Variant: {{label}}. Click to switch (applies to all positions).",
+    "boq.rs_variant_pill_unset_tooltip": "{{count}} priced variants available. Click to pick one for all positions.",
     "boq.save_as_assembly": "Save as Assembly",
     "boq.save_as_assembly_failed": "Failed to create assembly",
     "boq.save_snapshot": "Save snapshot",
@@ -4839,10 +4260,8 @@ const resource = {
     "boq.saved_as_assembly": "Saved as Assembly",
     "boq.saved_to_catalog": "Saved to catalog",
     "boq.scope_of_work_label": "What work is included in this rate",
-    "boq.search_and_add_resources":
-      "Search cost items to add as resources to position",
-    "boq.search_catalog_resources":
-      "Search resources by name, code, or category...‌⁠‍",
+    "boq.search_and_add_resources": "Search cost items to add as resources to position",
+    "boq.search_catalog_resources": "Search resources by name, code, or category...‌⁠‍",
     "boq.section_add_failed": "Failed to add section",
     "boq.section_child_count": "{{count}} item",
     "boq.section_deleted": "Section deleted with {{count}} positions",
@@ -4850,8 +4269,7 @@ const resource = {
     "boq.section_optional": "Section (optional)",
     "boq.select_boq": "Select BOQ...",
     "boq.select_classification": "Classification...‌⁠‍",
-    "boq.sensitivity_error":
-      "Failed to load sensitivity analysis. Please try again.‌⁠‍",
+    "boq.sensitivity_error": "Failed to load sensitivity analysis. Please try again.‌⁠‍",
     "boq.set_as_quantity": "Set as qty",
     "boq.set_as_quantity_title": "Push this value into the BOQ quantity field",
     "boq.shortcut_ai_chat": "Toggle AI Chat",
@@ -4880,8 +4298,7 @@ const resource = {
     "boq.show_shortcuts": "Keyboard Shortcuts (F1)",
     "boq.snapshot_created": "Snapshot saved‌⁠‍",
     "boq.snapshot_failed": "Failed to save snapshot‌⁠‍",
-    "boq.snapshot_hint":
-      "Type a label above and click Save to create your first snapshot.",
+    "boq.snapshot_hint": "Type a label above and click Save to create your first snapshot.",
     "boq.snapshot_label": "Snapshot label (optional)...",
     "boq.snapshot_restored": "Snapshot restored‌⁠‍",
     "boq.snapshots_error": "Failed to load version history.",
@@ -4892,11 +4309,9 @@ const resource = {
     "boq.source_dwg": "DWG drawing",
     "boq.source_id_label": "Item id",
     "boq.source_measurement_label": "Measurement",
-    "boq.source_no_measurement":
-      "Measurement data not stored locally — open the source to view details.",
+    "boq.source_no_measurement": "Measurement data not stored locally — open the source to view details.",
     "boq.source_open": "Open source",
-    "boq.source_open_title":
-      "Open the source document in its viewer, focused on this item",
+    "boq.source_open_title": "Open the source document in its viewer, focused on this item",
     "boq.source_pdf": "PDF takeoff",
     "boq.source_pdf_page": "Page {{page}}",
     "boq.status_draft": "Draft",
@@ -4904,25 +4319,20 @@ const resource = {
     "boq.suggest_rate": "Suggest Rate",
     "boq.suggested": "Suggested‌⁠‍",
     "boq.toolbar_quality": "Quality",
-    "boq.toolbar_summary_aria":
-      "{{sections}} sections · {{positions}} positions",
+    "boq.toolbar_summary_aria": "{{sections}} sections · {{positions}} positions",
     "boq.try_different_search": "Try a different search term or filter",
     "boq.unit_options": "Unit options",
     "boq.unit_rate_variant_pill": "u25BE {{count}} options",
-    "boq.unit_rate_variant_pill_tooltip_default":
-      "Auto-applied with {{strategy}} rate ({{count}} options, {{range}}). Click to refine.",
-    "boq.unit_rate_variant_pill_tooltip_picked":
-      "Currently: {{label}}. Click to switch to a different variant.",
-    "boq.unit_rate_variant_pill_tooltip_unset":
-      "{{count}} priced variants available ({{range}}). Click to pick one.",
+    "boq.unit_rate_variant_pill_tooltip_default": "Auto-applied with {{strategy}} rate ({{count}} options, {{range}}). Click to refine.",
+    "boq.unit_rate_variant_pill_tooltip_picked": "Currently: {{label}}. Click to switch to a different variant.",
+    "boq.unit_rate_variant_pill_tooltip_unset": "{{count}} priced variants available ({{range}}). Click to pick one.",
     "boq.unlock": "Unlock",
     "boq.unlock_failed": "Unlock failed",
     "boq.unlocked_success": "Estimate unlocked",
     "boq.untitled": "Untitled BOQ‌⁠‍",
     "boq.untitled_section": "(untitled)",
     "boq.update_failed": "Failed to update position‌⁠‍",
-    "boq.validate_tip":
-      "Checks for missing descriptions, zero quantities, pricing gaps, classification compliance, and duplicate positions.",
+    "boq.validate_tip": "Checks for missing descriptions, zero quantities, pricing gaps, classification compliance, and duplicate positions.",
     "boq.validating": "Checking...",
     "boq.validation_all_passed": "All {{count}} checks passed",
     "boq.validation_errors": "{{count}} errors found",
@@ -4939,64 +4349,48 @@ const resource = {
     "boq.variables_description": "Descriere",
     "boq.variables_description_placeholder": "Optional note",
     "boq.variables_empty": "No variables yet. Add the first one below.‌⁠‍",
-    "boq.variables_help":
-      "Define named values you can reference in formulas. e.g. set $GFA = 1500, then write =$GFA * 0.15 in any quantity or rate cell.‌⁠‍",
+    "boq.variables_help": "Define named values you can reference in formulas. e.g. set $GFA = 1500, then write =$GFA * 0.15 in any quantity or rate cell.‌⁠‍",
     "boq.variables_name": "Nume",
     "boq.variables_saved": "Variables saved‌⁠‍",
     "boq.variables_title": "BOQ variables‌⁠‍",
     "boq.variables_type": "Tip",
     "boq.variables_value": "Value",
-    "boq.variant_default_applied_msg":
-      "Click the row in the BOQ to choose a specific variant.",
+    "boq.variant_default_applied_msg": "Click the row in the BOQ to choose a specific variant.",
     "boq.variant_default_applied_title": "Applied with average price",
     "boq.variant_default_pill": "Default u00B7 refine u25BE",
-    "boq.variant_default_pill_tooltip":
-      "Auto-applied with the {{strategy}} rate. Click the unit_rate cell to pick a specific variant.",
+    "boq.variant_default_pill_tooltip": "Auto-applied with the {{strategy}} rate. Click the unit_rate cell to pick a specific variant.",
     "boq.variant_default_pill_with_count": "Abstract u00B7 {{count}} options",
-    "boq.variant_header_code_tooltip":
-      "Abstract variant resource — inherits the position quantity",
-    "boq.variant_header_pill_tooltip":
-      "Choose / switch a price variant for this abstract resource",
-    "boq.variant_header_qty_edit_tooltip":
-      "Double-click to edit quantity (synced with the position).",
-    "boq.variant_header_type_tooltip":
-      "Click to pick a price variant from the catalog",
+    "boq.variant_header_code_tooltip": "Abstract variant resource — inherits the position quantity",
+    "boq.variant_header_pill_tooltip": "Choose / switch a price variant for this abstract resource",
+    "boq.variant_header_qty_edit_tooltip": "Double-click to edit quantity (synced with the position).",
+    "boq.variant_header_type_tooltip": "Click to pick a price variant from the catalog",
     "boq.variant_resource_added": "Resource added: {{label}}",
     "boq.variant_resource_repick_failed": "Variant re-pick failed",
     "boq.variant_resource_repicked": "Variant updated: {{label}}",
     "boq.vector_download": "Download cost database first",
-    "boq.vector_download_desc":
-      "Import CWICR databases (55,000+ items, 9 regions)",
-    "boq.vector_index_desc":
-      "Build vector index from your imported cost items (~30s)",
+    "boq.vector_download_desc": "Import CWICR databases (55,000+ items, 9 regions)",
+    "boq.vector_index_desc": "Build vector index from your imported cost items (~30s)",
     "boq.vector_index_error": "Indexing Failed",
-    "boq.vector_index_error_msg":
-      "Failed to index the cost database. Try importing a database first.",
+    "boq.vector_index_error_msg": "Failed to index the cost database. Try importing a database first.",
     "boq.vector_index_now": "Index existing cost database",
     "boq.vector_indexed": "Vector Database Ready",
-    "boq.vector_indexed_msg":
-      "Cost database indexed. AI features are now available.",
+    "boq.vector_indexed_msg": "Cost database indexed. AI features are now available.",
     "boq.vector_indexing": "Indexing...",
-    "boq.vector_setup_desc":
-      "AI rate suggestions, classification, and anomaly detection require a vector-indexed cost database. This is a one-time setup that takes about 30 seconds.",
+    "boq.vector_setup_desc": "AI rate suggestions, classification, and anomaly detection require a vector-indexed cost database. This is a one-time setup that takes about 30 seconds.",
     "boq.vector_setup_subtitle": "One-time setup required",
     "boq.vector_setup_title": "AI Features Setup",
-    "boq.vector_status_empty":
-      "No vector database found. Import a cost database or index your existing cost items.",
-    "boq.vector_status_partial":
-      "Vector DB has {{count}} items indexed. Minimum ~100 items needed for AI features.",
+    "boq.vector_status_empty": "No vector database found. Import a cost database or index your existing cost items.",
+    "boq.vector_status_partial": "Vector DB has {{count}} items indexed. Minimum ~100 items needed for AI features.",
     "boq.version_history": "Version History‌⁠‍",
     "boq.view_comments": "Comments ({{count}})",
     "boq.view_in_bim": "View in BIM 3D ({{count}})",
     "boq.view_in_cost_db": "View in Cost Database",
-    "boq.warn_lump_sum":
-      "Lump sum — quantity × rate may not match expected total",
+    "boq.warn_lump_sum": "Lump sum — quantity × rate may not match expected total",
     "boq.warn_zero_rate": "No rate — review before commit",
     "boq.warnings": "warnings",
     "compliance.tab_label": "Conformitate",
     "compliance.page.title": "Compliance documents",
-    "compliance.page.subtitle":
-      "Track insurance, permits, bonds and certifications with expiry reminders.",
+    "compliance.page.subtitle": "Track insurance, permits, bonds and certifications with expiry reminders.",
     "compliance.page.new": "New document",
     "compliance.modal.create_title": "New compliance document",
     "compliance.modal.create_submit": "Create document",
@@ -5027,10 +4421,8 @@ const resource = {
     "compliance.status.expired": "Expired",
     "compliance.status.cancelled": "Cancelled",
     "compliance.status.void": "Void",
-    "compliance.doc_type.insurance_general_liability":
-      "General liability insurance",
-    "compliance.doc_type.insurance_workers_comp":
-      "Workers' compensation insurance",
+    "compliance.doc_type.insurance_general_liability": "General liability insurance",
+    "compliance.doc_type.insurance_workers_comp": "Workers' compensation insurance",
     "compliance.doc_type.insurance_auto": "Auto insurance",
     "compliance.doc_type.insurance_umbrella": "Umbrella insurance",
     "compliance.doc_type.permit_building": "Building permit",
@@ -5044,11 +4436,9 @@ const resource = {
     "compliance.doc_type.certification_other": "Other certification",
     "compliance.doc_type.other": "Other",
     "compliance.empty.title": "No compliance documents yet",
-    "compliance.empty.description":
-      "Track insurance policies, permits, bonds and certifications. Get a warning before each one expires.",
+    "compliance.empty.description": "Track insurance policies, permits, bonds and certifications. Get a warning before each one expires.",
     "compliance.empty.no_project_title": "Open a project",
-    "compliance.empty.no_project_description":
-      "Compliance documents are scoped to a project — open one first.",
+    "compliance.empty.no_project_description": "Compliance documents are scoped to a project — open one first.",
     "compliance.toast.created": "Compliance document created.",
     "compliance.toast.create_failed": "Failed to create compliance document.",
     "compliance.toast.deleted": "Compliance document deleted.",
@@ -5071,8 +4461,7 @@ const resource = {
     "costs.base_cost": "Base cost",
     "costs.base_year": "Base year‌⁠‍",
     "costs.categories_title": "Categories",
-    "costs.clear_all_confirm_body":
-      "This will permanently remove all {{count}} CWICR cost items. You can re-import them later.",
+    "costs.clear_all_confirm_body": "This will permanently remove all {{count}} CWICR cost items. You can re-import them later.",
     "costs.clear_all_confirm_title": "Clear all {{count}} databases?",
     "costs.clear_filters": "Clear all",
     "costs.code_placeholder": "e.g. WALL-001",
@@ -5080,8 +4469,7 @@ const resource = {
     "costs.component_labor": "Labor",
     "costs.component_material": "Material",
     "costs.confirm_delete": "Delete this custom cost item?",
-    "costs.confirm_delete_region":
-      "Delete all cost items for {{region}}? This cannot be undone.",
+    "costs.confirm_delete_region": "Delete all cost items for {{region}}? This cannot be undone.",
     "costs.confirm_delete_title": "Delete cost item?",
     "costs.cost_items_count": "55,000+ cost items",
     "costs.custom_label": "Custom",
@@ -5099,30 +4487,23 @@ const resource = {
     "costs.cwicr_match.mode_label": "Mode",
     "costs.cwicr_match.mode_lexical": "Lexical‌⁠‍",
     "costs.cwicr_match.mode_semantic": "Semantic‌⁠‍",
-    "costs.cwicr_match.placeholder":
-      "Describe the work item (e.g. reinforced concrete wall)‌⁠‍",
+    "costs.cwicr_match.placeholder": "Describe the work item (e.g. reinforced concrete wall)‌⁠‍",
     "costs.cwicr_match.query_label": "Query",
     "costs.cwicr_match.search": "Caută",
     "costs.cwicr_match.title": "CWICR rate match‌⁠‍",
-    "costs.db_downloading":
-      "Downloading and indexing cost items with full resource breakdown. This is a one-time setup.",
+    "costs.db_downloading": "Downloading and indexing cost items with full resource breakdown. This is a one-time setup.",
     "costs.db_installed": "Database installed successfully‌⁠‍",
     "costs.db_installing": "Installing {{name}}...",
-    "costs.db_saved_offline":
-      "Cost items are saved locally and available offline.",
-    "costs.description_placeholder":
-      "e.g. Reinforced concrete wall C30/37, 25cm",
+    "costs.db_saved_offline": "Cost items are saved locally and available offline.",
+    "costs.description_placeholder": "e.g. Reinforced concrete wall C30/37, 25cm",
     "costs.duplicates_skipped": "duplicates skipped",
-    "costs.empty_pick_region_above":
-      "Pick a region card above and click Install to load a regional cost database.",
+    "costs.empty_pick_region_above": "Pick a region card above and click Install to load a regional cost database.",
     "costs.equipment": "Echipament",
     "costs.escalated_cost": "Escalated cost",
     "costs.escalation": "Escalation",
     "costs.escalation_calculator": "Cost Escalation Calculator‌⁠‍",
-    "costs.escalation_desc":
-      "Adjust costs for inflation using published construction indices‌⁠‍",
-    "costs.escalation_disclaimer":
-      "Based on published indices. Verify with project-specific data.",
+    "costs.escalation_desc": "Adjust costs for inflation using published construction indices‌⁠‍",
+    "costs.escalation_disclaimer": "Based on published indices. Verify with project-specific data.",
     "costs.escalation_factor": "Factor",
     "costs.filters_active": "filters active",
     "costs.is_now_active": "is now the active database‌⁠‍",
@@ -5141,26 +4522,21 @@ const resource = {
     "costs.n_items_selected": "{{count}} items selected",
     "costs.n_positions_will_be_created": "{{count}} positions will be created",
     "costs.n_selected": "{{count}} selected",
-    "costs.no_databases_installed":
-      "No databases installed yet. Pick a region above to install.",
+    "costs.no_databases_installed": "No databases installed yet. Pick a region above to install.",
     "costs.no_favourites": "No favourites yet",
-    "costs.no_favourites_hint":
-      "Click the star icon on any cost item to add it to your favourites",
+    "costs.no_favourites_hint": "Click the star icon on any cost item to add it to your favourites",
     "costs.no_recent": "No recently used items",
-    "costs.no_recent_hint":
-      "Items you add to BOQ will appear here for quick access",
+    "costs.no_recent_hint": "Items you add to BOQ will appear here for quick access",
     "costs.one_time_download": "One-time download",
     "costs.phase_complete": "Complete",
     "costs.phase_extracting": "Extracting resources & cost breakdown...",
     "costs.phase_finalizing": "Finalizing...",
     "costs.phase_reading": "Reading Parquet file...",
     "costs.phase_writing": "Writing to local database...",
-    "costs.positions_created_hint":
-      "Positions created with unit rates from cost database",
+    "costs.positions_created_hint": "Positions created with unit rates from cost database",
     "costs.region_filter_count": "{{shown}} of {{total}}‌⁠‍",
-    "costs.region_filter_no_results": 'No regions match "{{q}}"',
-    "costs.region_filter_placeholder":
-      "Filter by country, city, currency or language…‌⁠‍",
+    "costs.region_filter_no_results": "No regions match \"{{q}}\"",
+    "costs.region_filter_placeholder": "Filter by country, city, currency or language…‌⁠‍",
     "costs.region_plural": "regions",
     "costs.region_singular": "region",
     "costs.remove_from_favourites": "Remove from favourites",
@@ -5193,14 +4569,12 @@ const resource = {
     "costs.variant_sort_price_asc": "Price ↑",
     "costs.variant_sort_price_desc": "Price ↓",
     "costs.variant_use_average": "Use average rate",
-    "costs.variant_use_default_tooltip":
-      "Apply the average rate without picking a specific variant. You can refine later by clicking the row.",
+    "costs.variant_use_default_tooltip": "Apply the average rate without picking a specific variant. You can refine later by clicking the row.",
     "costs.variant_use_median": "Use median rate",
     "costs.vec_indexing_all": "Generating vectors for all regions...",
     "costs.vec_indexing_region": "Generating vectors for {{name}}...",
     "costs.vec_phase_checking": "Checking pre-built vectors on GitHub...",
-    "costs.vec_phase_embedding":
-      "Generating 384d embeddings from cost items...",
+    "costs.vec_phase_embedding": "Generating 384d embeddings from cost items...",
     "costs.vec_phase_indexing": "Indexing into LanceDB and refreshing stats...",
     "costs.vec_phase_model": "Loading embedding model (first-time only)...",
     "costs.vec_phase_progress": "Step {{step}} of 4",
@@ -5214,8 +4588,7 @@ const resource = {
     "files.activity.title": "Activitate",
     "files.activity.open": "View activity history",
     "files.activity.empty_title": "No activity yet",
-    "files.activity.empty_hint":
-      "Uploads, renames, and other changes will show up here.",
+    "files.activity.empty_hint": "Uploads, renames, and other changes will show up here.",
     "files.activity.error_title": "Couldn't load activity",
     "files.activity.error_hint": "Check your connection and try again.",
     "files.activity.actor_unknown": "Utilizator necunoscut",
@@ -5229,8 +4602,7 @@ const resource = {
     "files.activity.action.cde_state_changed": "CDE state changed",
     "files.permissions.manage": "Manage access",
     "files.permissions.title": "Folder access",
-    "files.permissions.subtitle":
-      "Restrict who can see and edit files in {{folder}}.",
+    "files.permissions.subtitle": "Restrict who can see and edit files in {{folder}}.",
     "files.permissions.empty": "All project members can access this folder.",
     "files.permissions.list_title": "Current access",
     "files.permissions.grant_title": "Grant access",
@@ -5245,15 +4617,12 @@ const resource = {
     "files.permissions.revoke": "Revoke",
     "files.permissions.revoke_confirm": "Revoke access for {{name}}?",
     "files.permissions.lock_tooltip": "Restricted: {{count}} member can access",
-    "files.permissions.lock_tooltip_plural":
-      "Restricted: {{count}} members can access",
+    "files.permissions.lock_tooltip_plural": "Restricted: {{count}} members can access",
     "files.permissions.error_grant": "Could not grant access.",
     "files.permissions.error_revoke": "Could not revoke access.",
-    "files.permissions.error_duplicate":
-      "This member already has access at this level.",
+    "files.permissions.error_duplicate": "This member already has access at this level.",
     "share.page.title": "Shared file",
-    "share.page.subtitle":
-      "Someone shared a file with you via OpenConstructionERP.",
+    "share.page.subtitle": "Someone shared a file with you via OpenConstructionERP.",
     "share.page.filename_label": "File",
     "share.page.password_prompt": "Enter the password to download.",
     "share.page.password_placeholder": "Parolă",
@@ -5268,81 +4637,57 @@ const resource = {
     "share.page.loading": "Loading link…",
     "share.page.ready_title": "Ready to download",
     "share.page.ready_body": "Click the button below to download the file.",
-    "files.bulk.delete_all_failed":
-      "None of the {{count}} selected file(s) could be deleted.",
+    "files.bulk.delete_all_failed": "None of the {{count}} selected file(s) could be deleted.",
     "files.bulk.delete_partial": "{{deleted}} of {{total}} deleted",
-    "files.bulk.delete_partial_detail":
-      "{{failed}} file(s) could not be deleted.",
-    "project_intelligence.ai.cost_advisor_title":
-      "Cost Intelligence Advisor‌⁠‍",
-    "project_intelligence.ai_not_configured_desc":
-      "Connect an AI provider (Anthropic Claude, OpenAI, or Google Gemini) to get personalized, context-aware recommendations for your project. Without AI, you still see rule-based analysis below.",
-    "project_intelligence.ai_not_configured_title":
-      "AI provider not connected‌⁠‍",
+    "files.bulk.delete_partial_detail": "{{failed}} file(s) could not be deleted.",
+    "project_intelligence.ai.cost_advisor_title": "Cost Intelligence Advisor‌⁠‍",
+    "project_intelligence.ai_not_configured_desc": "Connect an AI provider (Anthropic Claude, OpenAI, or Google Gemini) to get personalized, context-aware recommendations for your project. Without AI, you still see rule-based analysis below.",
+    "project_intelligence.ai_not_configured_title": "AI provider not connected‌⁠‍",
     "project_intelligence.analytics.cost_drivers": "Cost drivers‌⁠‍",
-    "project_intelligence.analytics.cost_drivers_sub":
-      "Top 5 line items by total cost‌⁠‍",
+    "project_intelligence.analytics.cost_drivers_sub": "Top 5 line items by total cost‌⁠‍",
     "project_intelligence.analytics.errors": "errors",
     "project_intelligence.analytics.no_data": "No data yet‌⁠‍",
     "project_intelligence.analytics.price_volatility": "Price volatility‌⁠‍",
-    "project_intelligence.analytics.price_volatility_sub":
-      "Bid total spread across vendors‌⁠‍",
+    "project_intelligence.analytics.price_volatility_sub": "Bid total spread across vendors‌⁠‍",
     "project_intelligence.analytics.schedule_cost": "Schedule ↔ cost",
     "project_intelligence.analytics.schedule_cost_sub": "Labour cost by phase",
     "project_intelligence.analytics.scope_coverage": "Scope coverage",
-    "project_intelligence.analytics.scope_coverage_ratio":
-      "{{current}} of {{baseline}} lines",
-    "project_intelligence.analytics.scope_coverage_sub":
-      "BOQ line count vs baseline",
+    "project_intelligence.analytics.scope_coverage_ratio": "{{current}} of {{baseline}} lines",
+    "project_intelligence.analytics.scope_coverage_sub": "BOQ line count vs baseline",
     "project_intelligence.analytics.validation_live": "Real-time validation",
-    "project_intelligence.analytics.validation_live_sub":
-      "Rule pass count (updates every 60s)",
-    "project_intelligence.analytics.vendor_concentration":
-      "Vendor concentration",
-    "project_intelligence.analytics.vendor_concentration_sub":
-      "Top 3 bidders’ share",
+    "project_intelligence.analytics.validation_live_sub": "Rule pass count (updates every 60s)",
+    "project_intelligence.analytics.vendor_concentration": "Vendor concentration",
+    "project_intelligence.analytics.vendor_concentration_sub": "Top 3 bidders’ share",
     "project_intelligence.analytics.warnings": "warnings",
     "project_intelligence.analyzing": "Analyzing project...‌⁠‍",
     "project_intelligence.analyzing_project": "Analyzing project...",
     "project_intelligence.ask_placeholder": "Ask about this project...",
     "project_intelligence.auth_error": "Session expired‌⁠‍",
-    "project_intelligence.auth_hint":
-      "Please refresh the page or sign in again to continue.",
+    "project_intelligence.auth_hint": "Please refresh the page or sign in again to continue.",
     "project_intelligence.back_to_rec": "Back to recommendations‌⁠‍",
-    "project_intelligence.chat_error":
-      "Sorry, I could not process your question. Please try again.‌⁠‍",
-    "project_intelligence.chat_prompt":
-      'Ask any question about this project. For example: "Why is my score so low?" or "What should I do first?"',
+    "project_intelligence.chat_error": "Sorry, I could not process your question. Please try again.‌⁠‍",
+    "project_intelligence.chat_prompt": "Ask any question about this project. For example: \"Why is my score so low?\" or \"What should I do first?\"",
     "project_intelligence.chat_toggle": "Toggle chat‌⁠‍",
     "project_intelligence.critical_gaps": "Critical Gaps",
     "project_intelligence.enable_failed": "Could not enable the module",
     "project_intelligence.enable_module": "Enable module",
     "project_intelligence.enabling": "Enabling…",
-    "project_intelligence.gaps.dollar_impact":
-      "{{count}} items missing prices → ~{{amount}} cost uncertainty",
+    "project_intelligence.gaps.dollar_impact": "{{count}} items missing prices → ~{{amount}} cost uncertainty",
     "project_intelligence.go_to_ai_settings": "Settings — AI Configuration",
     "project_intelligence.kpi.budget_variance": "Budget variance‌⁠‍",
     "project_intelligence.kpi.risk_adjusted_cost": "Risk-adjusted cost‌⁠‍",
-    "project_intelligence.kpi.risk_sub":
-      "±{{band}} (90% CI, {{count}} anomalies)",
+    "project_intelligence.kpi.risk_sub": "±{{band}} (90% CI, {{count}} anomalies)",
     "project_intelligence.kpi.schedule_health": "Schedule health‌⁠‍",
     "project_intelligence.kpi.schedule_sub": "Activities on baseline‌⁠‍",
-    "project_intelligence.kpi.variance_sub":
-      "Budget {{budget}} · Current {{current}}‌⁠‍",
+    "project_intelligence.kpi.variance_sub": "Budget {{budget}} · Current {{current}}‌⁠‍",
     "project_intelligence.load_error": "Could not load analysis",
-    "project_intelligence.module_disabled_ask_admin":
-      "Ask an admin to enable this module to continue.",
-    "project_intelligence.module_disabled_body":
-      "This dashboard runs against the optional Project Intelligence module. It is currently disabled on this server, so the AI advisor, gap detector and analytics grid have nothing to query.",
-    "project_intelligence.module_disabled_footnote":
-      "No data is collected while the module is off. Enabling is reversible from the Modules page.",
-    "project_intelligence.module_disabled_title":
-      "Project Intelligence is turned off",
-    "project_intelligence.no_gaps_desc":
-      "Your project has no critical issues. Keep refining to tighten variance.",
+    "project_intelligence.module_disabled_ask_admin": "Ask an admin to enable this module to continue.",
+    "project_intelligence.module_disabled_body": "This dashboard runs against the optional Project Intelligence module. It is currently disabled on this server, so the AI advisor, gap detector and analytics grid have nothing to query.",
+    "project_intelligence.module_disabled_footnote": "No data is collected while the module is off. Enabling is reversible from the Modules page.",
+    "project_intelligence.module_disabled_title": "Project Intelligence is turned off",
+    "project_intelligence.no_gaps_desc": "Your project has no critical issues. Keep refining to tighten variance.",
     "project_intelligence.no_gaps_title": "No critical gaps",
-    "project_intelligence.no_recommendations":
-      "No recommendations available yet. Try refreshing the analysis.",
+    "project_intelligence.no_recommendations": "No recommendations available yet. Try refreshing the analysis.",
     "project_intelligence.open_modules_page": "Open Modules page",
     "project_intelligence.page_title_v191": "Estimation Dashboard‌⁠‍",
     "project_intelligence.readiness_title": "Estimation readiness",
@@ -5351,24 +4696,18 @@ const resource = {
     "project_intelligence.role_estimator": "Estimator",
     "project_intelligence.role_explorer": "Explorer",
     "project_intelligence.role_manager": "Manager",
-    "project_intelligence.score_tooltip_v191":
-      "Score weighting (RFC 25): BOQ 40%, Cost Model 30%, Validation 20%, Risk 10%.",
-    "project_intelligence.select_domain":
-      "Select a domain tab above to see detailed metrics.‌⁠‍",
+    "project_intelligence.score_tooltip_v191": "Score weighting (RFC 25): BOQ 40%, Cost Model 30%, Validation 20%, Risk 10%.",
+    "project_intelligence.select_domain": "Select a domain tab above to see detailed metrics.‌⁠‍",
     "project_intelligence.show_more_gaps": "{{count}} more",
     "project_intelligence.thinking": "Thinking...",
     "project_intelligence.unnamed": "Unnamed Project",
-    "project_intelligence.v191_header_desc":
-      "Cost variance, anomalies, bid analytics — refreshed every 60s.",
-    "project_intelligence.v191_select_prompt":
-      "Select a project from the header to see its cost variance, anomalies, and bid analytics.‌⁠‍",
+    "project_intelligence.v191_header_desc": "Cost variance, anomalies, bid analytics — refreshed every 60s.",
+    "project_intelligence.v191_select_prompt": "Select a project from the header to see its cost variance, anomalies, and bid analytics.‌⁠‍",
     "projects.photos.tab_label": "Fotografii",
     "projects.photos.no_project": "No active project",
-    "projects.photos.no_project_desc":
-      "Open a project to view and upload photos.",
+    "projects.photos.no_project_desc": "Open a project to view and upload photos.",
     "projects.photos.empty_title": "No photos yet",
-    "projects.photos.empty_desc":
-      "Upload site photos to keep visual records alongside the project.",
+    "projects.photos.empty_desc": "Upload site photos to keep visual records alongside the project.",
     "projects.photos.upload_cta": "Upload photos",
     "projects.photos.search_placeholder": "Search filename…",
     "projects.photos.search_aria": "Search photos by filename",
@@ -5388,8 +4727,7 @@ const resource = {
     "takeoff.markup.close": "Închide",
     "takeoff.markup.comments_drawer": "Markup comments",
     "takeoff.markup.comments_title": "Comentarii",
-    "takeoff.markup.comments_empty":
-      "No comments yet — be the first to add one.",
+    "takeoff.markup.comments_empty": "No comments yet — be the first to add one.",
     "takeoff.markup.comments_load_failed": "Could not load comments.",
     "takeoff.markup.comment_added": "Comment added",
     "takeoff.markup.comment_deleted": "Comment deleted",
@@ -5399,8 +4737,7 @@ const resource = {
     "takeoff.markup.comment_placeholder": "Write a comment...",
     "takeoff.markup.comment_hint": "Ctrl/Cmd+Enter to send",
     "takeoff.markup.comment_send": "Send",
-    "tendering.award_confirm":
-      "Award this contract to {{company}}? This action cannot be undone.",
+    "tendering.award_confirm": "Award this contract to {{company}}? This action cannot be undone.",
     "tendering.award_confirm_title": "Award contract?",
     "tendering.bid_count": "{{count}} bids‌⁠‍",
     "tendering.close_package": "Închide",
@@ -5410,10 +4747,8 @@ const resource = {
     "tendering.evaluate": "Evaluate Bids",
     "tendering.exported": "Comparison exported",
     "tendering.mark_awarded": "Mark Awarded",
-    "tendering.no_packages_description":
-      "Create a tender from a BOQ to start collecting bids",
-    "tendering.select_project_desc":
-      "Select a project and create a tender from a BOQ to get started",
+    "tendering.no_packages_description": "Create a tender from a BOQ to start collecting bids",
+    "tendering.select_project_desc": "Select a project and create a tender from a BOQ to get started",
     "tendering.select_project_first": "Select a project first",
     "tendering.select_project_title": "Select a project",
     "tendering.start_collecting": "Start Collecting",
@@ -5429,8 +4764,7 @@ const resource = {
     "tendering.status_submitted": "Submitted",
     "conflict.panel_aria_label": "Conflict resolution panel",
     "conflict.panel_title": "Merge Conflict Detected",
-    "conflict.panel_subtitle":
-      "A remote collaborator edited the same field. Choose how to resolve.",
+    "conflict.panel_subtitle": "A remote collaborator edited the same field. Choose how to resolve.",
     "conflict.changed_by": "Changed by",
     "conflict.your_version": "Your version",
     "conflict.their_version": "Their version",
@@ -5444,18 +4778,14 @@ const resource = {
     "conflict.conflict_number": "Conflict",
     "conflict.next": "Next",
     "finance.approve_failed": "Failed to approve invoice",
-    "finance.boq_tip_desc":
-      'Go to your BOQ → Lock the estimate → Click "Create Budget from Estimate" to auto-populate budget lines.',
+    "finance.boq_tip_desc": "Go to your BOQ → Lock the estimate → Click \"Create Budget from Estimate\" to auto-populate budget lines.",
     "finance.boq_tip_title": "Sfat:",
     "finance.budget_create_failed": "Failed to create budget line",
     "finance.budget_created": "Budget line created successfully",
-    "finance.budget_file_hint":
-      "Columns: WBS Code, Category, Original Budget, Notes",
+    "finance.budget_file_hint": "Columns: WBS Code, Category, Original Budget, Notes",
     "finance.budget_line": "Buget",
-    "finance.budget_notes_placeholder":
-      "e.g., Includes contingency for weather delays",
-    "finance.budgets_explanation":
-      "Project budget tracks original vs actual costs by WBS category. Variance is highlighted green when under budget, red when over.",
+    "finance.budget_notes_placeholder": "e.g., Includes contingency for weather delays",
+    "finance.budgets_explanation": "Project budget tracks original vs actual costs by WBS category. Variance is highlighted green when under budget, red when over.",
     "finance.cat_equipment": "Echipament",
     "finance.cat_labor": "Labor",
     "finance.cat_material": "Material",
@@ -5469,10 +4799,8 @@ const resource = {
     "finance.create_snapshot": "Create Snapshot",
     "finance.currency": "Monedă",
     "finance.direction": "Direction",
-    "finance.drop_budget_file":
-      "Drop Excel or CSV file here, or click to browse",
-    "finance.evm_explanation":
-      "Earned Value Management (EVM) compares planned progress with actual performance. SPI > 1.0 = ahead of schedule. CPI > 1.0 = under budget. Create snapshots periodically to track trends over time.",
+    "finance.drop_budget_file": "Drop Excel or CSV file here, or click to browse",
+    "finance.evm_explanation": "Earned Value Management (EVM) compares planned progress with actual performance. SPI > 1.0 = ahead of schedule. CPI > 1.0 = under budget. Create snapshots periodically to track trends over time.",
     "finance.evm_hint_cost": "cost efficiency",
     "finance.evm_hint_forecast": "forecast total cost",
     "finance.evm_hint_schedule": "schedule efficiency",
@@ -5486,14 +4814,11 @@ const resource = {
     "finance.import": "Import",
     "finance.import_btn": "Import",
     "finance.import_budgets": "Import Budgets",
-    "finance.import_result":
-      "Imported: {{imported}}, Skipped: {{skipped}}, Errors: {{errors}}",
+    "finance.import_result": "Imported: {{imported}}, Skipped: {{skipped}}, Errors: {{errors}}",
     "finance.invoice_create_failed": "Failed to create invoice",
     "finance.invoice_created": "Invoice created successfully",
-    "finance.invoice_desc_placeholder":
-      "e.g., Progress payment for concrete works - Phase 2",
-    "finance.invoices_explanation":
-      "Track all project invoices in one place. Payable = invoices from subcontractors/vendors. Receivable = invoices you send to clients. Mark invoices as paid to auto-generate payment records.",
+    "finance.invoice_desc_placeholder": "e.g., Progress payment for concrete works - Phase 2",
+    "finance.invoices_explanation": "Track all project invoices in one place. Payable = invoices from subcontractors/vendors. Receivable = invoices you send to clients. Mark invoices as paid to auto-generate payment records.",
     "finance.invoices_export_failed": "Failed to export invoices",
     "finance.invoices_export_success": "Invoices exported successfully",
     "finance.link_to_boq": "BOQ Estimate‌⁠‍",
@@ -5501,15 +4826,12 @@ const resource = {
     "finance.new_invoice": "New Invoice",
     "finance.no_budget_match": "No matching budget lines",
     "finance.no_invoices_match": "No matching invoices",
-    "finance.no_invoices_match_desc":
-      "Try adjusting your search or status filter.",
+    "finance.no_invoices_match_desc": "Try adjusting your search or status filter.",
     "finance.notes": "Notes / Description",
     "finance.pay_failed": "Failed to mark invoice as paid",
     "finance.payable_desc": "Invoice you need to pay",
-    "finance.payable_receivable_tooltip":
-      "Payable = invoices you owe to vendors. Receivable = invoices clients owe to you.",
-    "finance.payments_explanation":
-      "Payment records are created when invoices are marked as paid.",
+    "finance.payable_receivable_tooltip": "Payable = invoices you owe to vendors. Receivable = invoices clients owe to you.",
+    "finance.payments_explanation": "Payment records are created when invoices are marked as paid.",
     "finance.receivable_desc": "Invoice you're sending",
     "finance.search_client": "Search client...",
     "finance.search_vendor": "Search vendor...",
@@ -5540,19 +4862,15 @@ const resource = {
     "notification.task_assigned_title": "New task assigned",
     "notification.task_assigned_body": "{{task_title}}",
     "notification.invoice_approved_title": "Invoice approved",
-    "notification.invoice_approved_body":
-      "Invoice {{invoice_number}} — {{amount_total}} {{currency_code}}",
+    "notification.invoice_approved_body": "Invoice {{invoice_number}} — {{amount_total}} {{currency_code}}",
     "notification.inspection_scheduled_title": "Inspection scheduled",
-    "notification.inspection_scheduled_body":
-      "{{inspection_number}} — {{title}} on {{inspection_date}}",
+    "notification.inspection_scheduled_body": "{{inspection_number}} — {{title}} on {{inspection_date}}",
     "notification.submittal_status_changed_title": "Submittal status changed",
-    "notification.submittal_status_changed_body":
-      "{{submittal_number}} ({{title}}) — {{new_status}}",
+    "notification.submittal_status_changed_body": "{{submittal_number}} ({{title}}) — {{new_status}}",
     "notification.meeting_scheduled_title": "Meeting scheduled",
     "notification.meeting_scheduled_body": "{{title}} on {{meeting_date}}",
     "notification.ncr_created_title": "Non-conformance raised",
-    "notification.ncr_created_body":
-      "NCR {{ncr_number}} — {{title}} ({{severity}})",
+    "notification.ncr_created_body": "NCR {{ncr_number}} — {{title}} ({{severity}})",
     "notification.document_uploaded_title": "Document uploaded",
     "notification.document_uploaded_body": "{{document_name}}",
     "procurement.add_item": "Adaugă element",
@@ -5573,8 +4891,7 @@ const resource = {
     "procurement.no_gr_match": "No matching goods receipts",
     "procurement.no_po_match": "No matching purchase orders",
     "procurement.notes": "Notes",
-    "procurement.notes_placeholder":
-      "Optional notes or special instructions...",
+    "procurement.notes_placeholder": "Optional notes or special instructions...",
     "procurement.payment_terms": "Payment Terms",
     "procurement.po_created": "Purchase order created",
     "procurement.po_type": "PO Type",
@@ -5590,103 +4907,72 @@ const resource = {
     "match_elements.info.dialog_aria": "How matching works",
     "match_elements.info.title": "How matching works",
     "match_elements.info.bullet_upload": "Upload your BIM model or BoQ.",
-    "match_elements.info.bullet_extract":
-      "We extract elements: descriptions, units, quantities, regions, classification.",
-    "match_elements.info.bullet_search":
-      "Each element is searched against the selected cost catalogue using vector similarity + lexical hints + region/unit boost.",
-    "match_elements.info.bullet_shortlist":
-      "You get a confidence-scored shortlist per element — pick the best, edit quantity if needed.",
-    "match_elements.info.bullet_save":
-      "Save the session — you can revisit, edit, and export it as BoQ later.",
-    "match_elements.info.footer":
-      "Saved sessions live in the list on this page.",
+    "match_elements.info.bullet_extract": "We extract elements: descriptions, units, quantities, regions, classification.",
+    "match_elements.info.bullet_search": "Each element is searched against the selected cost catalogue using vector similarity + lexical hints + region/unit boost.",
+    "match_elements.info.bullet_shortlist": "You get a confidence-scored shortlist per element — pick the best, edit quantity if needed.",
+    "match_elements.info.bullet_save": "Save the session — you can revisit, edit, and export it as BoQ later.",
+    "match_elements.info.footer": "Saved sessions live in the list on this page.",
     "match_elements.new_text.button": "From text",
     "match_elements.new_text.button_title": "Paste descriptions — one per line",
     "match_elements.new_text.title": "New session — paste descriptions",
-    "match_elements.new_text.hint":
-      "One line per item. Each line becomes a group; semantic search finds the closest CWICR rates. Use any language — the multilingual encoder handles cross-lang queries.",
+    "match_elements.new_text.hint": "One line per item. Each line becomes a group; semantic search finds the closest CWICR rates. Use any language — the multilingual encoder handles cross-lang queries.",
     "match_elements.new_text.name_label": "Session name (optional)",
     "match_elements.new_text.name_placeholder": "e.g. Quick estimate Q3",
     "match_elements.new_text.lines_label": "Descriptions (one per line)",
-    "match_elements.new_text.lines_placeholder":
-      "Stahlbetonwand C30/37, d=240mm\nленточный фундамент 800x600\nconcrete slab 200mm",
+    "match_elements.new_text.lines_placeholder": "Stahlbetonwand C30/37, d=240mm\nленточный фундамент 800x600\nconcrete slab 200mm",
     "match_elements.new_text.create": "Create session",
     "match_elements.new_excel.button": "From Excel BoQ",
-    "match_elements.new_excel.button_title":
-      "Upload an .xlsx Bill of Quantities",
+    "match_elements.new_excel.button_title": "Upload an .xlsx Bill of Quantities",
     "match_elements.new_excel.title": "New session from Excel BoQ",
-    "match_elements.new_excel.hint":
-      'Upload an .xlsx with at least a "Description" column (or its localised equivalent — Beschreibung, Описание, Descripción, 描述, etc.). Optional columns: Qty, Unit, Code, Category. Decimal-comma quantities are recognised.',
+    "match_elements.new_excel.hint": "Upload an .xlsx with at least a \"Description\" column (or its localised equivalent — Beschreibung, Описание, Descripción, 描述, etc.). Optional columns: Qty, Unit, Code, Category. Decimal-comma quantities are recognised.",
     "match_elements.new_excel.name_label": "Session name (optional)",
     "match_elements.new_excel.name_placeholder": "e.g. Tender BoQ rev 3",
     "match_elements.new_excel.drop": "Drop your .xlsx here or click to browse",
-    "match_elements.new_excel.format_hint":
-      ".xlsx only · multi-language headers supported",
+    "match_elements.new_excel.format_hint": ".xlsx only · multi-language headers supported",
     "match_elements.new_excel.create": "Upload & create session",
     "match_elements.group_by_show_all": "Show all ({{count}})",
     "match_elements.group_by_show_less": "Show less",
-    "match_elements.group_by_show_all_help":
-      "Tenant-specific attributes from this BIM model",
+    "match_elements.group_by_show_all_help": "Tenant-specific attributes from this BIM model",
     "match_elements.region_bim_models": "BIM model",
-    "match_elements.region_bim_models_help":
-      "Pick the source model — quantities are read from here",
+    "match_elements.region_bim_models_help": "Pick the source model — quantities are read from here",
     "match_elements.region_sessions": "Matching session",
-    "match_elements.region_sessions_help":
-      "Resume an existing run or start a new one",
+    "match_elements.region_sessions_help": "Resume an existing run or start a new one",
     "match_elements.region_settings": "Match settings",
-    "match_elements.region_settings_help":
-      "Tune how matches are found and what shows up below",
+    "match_elements.region_settings_help": "Tune how matches are found and what shows up below",
     "match_elements.session_confirmed": "confirmed",
-    "match_elements.region_lang_help":
-      "Project region resolves to this language → cwicr_{{lang}}_v3 collection",
+    "match_elements.region_lang_help": "Project region resolves to this language → cwicr_{{lang}}_v3 collection",
     "match_elements.project_settings": "Project settings",
-    "match_elements.project_settings_help":
-      "Open project settings (region, currency, locale, fx rates)",
+    "match_elements.project_settings_help": "Open project settings (region, currency, locale, fx rates)",
     "match_elements.vector_status_loading": "Checking vector DB…",
     "match_elements.vector_status_ready": "Vector DB ready",
-    "match_elements.vector_status_ready_detail":
-      "{{lang}} · {{rateCount}} rates · {{collection}}",
+    "match_elements.vector_status_ready_detail": "{{lang}} · {{rateCount}} rates · {{collection}}",
     "match_elements.vector_status_empty": "Vector DB empty",
-    "match_elements.vector_status_empty_detail":
-      "{{lang}} · {{collection}} loaded but 0 rates — vectorize on /costs",
+    "match_elements.vector_status_empty_detail": "{{lang}} · {{collection}} loaded but 0 rates — vectorize on /costs",
     "match_elements.vector_status_missing": "Collection not loaded",
-    "match_elements.vector_status_missing_detail":
-      '{{collection}} for language "{{lang}}" not in Qdrant — visit /costs to vectorize',
+    "match_elements.vector_status_missing_detail": "{{collection}} for language \"{{lang}}\" not in Qdrant — visit /costs to vectorize",
     "match_elements.vector_status_no_country": "Region/language unknown",
-    "match_elements.vector_status_no_country_detail":
-      "Set the project region in /projects/.../settings to pin the collection",
+    "match_elements.vector_status_no_country_detail": "Set the project region in /projects/.../settings to pin the collection",
     "match_elements.vector_status_non_qdrant": "Legacy LanceDB backend",
-    "match_elements.vector_status_non_qdrant_detail":
-      "Per-language collections only apply on Qdrant — current engine is LanceDB",
+    "match_elements.vector_status_non_qdrant_detail": "Per-language collections only apply on Qdrant — current engine is LanceDB",
     "match_elements.vector_status_disconnected": "Vector DB unreachable",
-    "match_elements.vector_status_disconnected_detail":
-      "Qdrant is not responding · {{error}}",
-    "match_elements.vector_status_disconnected_help":
-      "Qdrant is not responding — matchers will fall back to lexical only",
+    "match_elements.vector_status_disconnected_detail": "Qdrant is not responding · {{error}}",
+    "match_elements.vector_status_disconnected_help": "Qdrant is not responding — matchers will fall back to lexical only",
     "match_elements.vector_status_open_costs": "Open /costs",
-    "match_elements.lang_mismatch_title":
-      "Catalogue language does not match project",
-    "match_elements.lang_mismatch_detail":
-      "Project region {{region}} speaks {{projLang}}, but the bound catalogue {{catalogue}} is in {{boundLang}}. Match results will surface in the wrong language until you re-bind.",
+    "match_elements.lang_mismatch_title": "Catalogue language does not match project",
+    "match_elements.lang_mismatch_detail": "Project region {{region}} speaks {{projLang}}, but the bound catalogue {{catalogue}} is in {{boundLang}}. Match results will surface in the wrong language until you re-bind.",
     "match_elements.lang_mismatch_rebind": "Re-bind catalogue",
     "match_elements.lang_mismatch_open_costs": "Or load a {{lang}} catalogue",
     "match_elements.advisor_mismatch_title": "Switch to a {{lang}} catalogue",
-    "match_elements.advisor_mismatch_detail":
-      "Pick a {{lang}} catalogue below — your project speaks {{lang}}, so matches need to come from a same-language rate book.",
-    "match_elements.advisor_missing_title":
-      "{{lang}} vector collection not loaded",
-    "match_elements.advisor_missing_detail":
-      "Pick a ready catalogue below, or load a new one.",
+    "match_elements.advisor_mismatch_detail": "Pick a {{lang}} catalogue below — your project speaks {{lang}}, so matches need to come from a same-language rate book.",
+    "match_elements.advisor_missing_title": "{{lang}} vector collection not loaded",
+    "match_elements.advisor_missing_detail": "Pick a ready catalogue below, or load a new one.",
     "match_elements.advisor_empty_title": "Catalogue not vectorised yet",
-    "match_elements.advisor_empty_detail":
-      "Pick a different ready catalogue below, or vectorise the current one.",
+    "match_elements.advisor_empty_detail": "Pick a different ready catalogue below, or vectorise the current one.",
     "match_elements.advisor_loading": "Loading available catalogues…",
     "match_elements.advisor_region_match": "Best",
     "match_elements.advisor_rates_count": "{{n}} rates",
-    "match_elements.advisor_none_available":
-      "No {{lang}} catalogues are loaded yet. Visit /costs to import one.",
-    "match_elements.advisor_install_hint":
-      "No {{lang}} catalogues loaded yet. One-click install:",
+    "match_elements.advisor_none_available": "No {{lang}} catalogues are loaded yet. Visit /costs to import one.",
+    "match_elements.advisor_install_hint": "No {{lang}} catalogues loaded yet. One-click install:",
     "match_elements.advisor_install_size": "~{{mb}} MB · {{lang}}",
     "match_elements.advisor_browse_all": "All on Hugging Face",
     "match_elements.hero_eyebrow": "BIM → BOQ",
@@ -5704,17 +4990,12 @@ const resource = {
     "match_elements.step_4_help": "Write to BOQ",
     "match_elements.embedder_loading": "Checking language model…",
     "match_elements.embedder_required_title": "Free language model required",
-    "match_elements.embedder_required_body":
-      "OpenConstructionERP uses BGE-M3 — a free, open-source multilingual encoder by BAAI. It runs entirely on your machine. No API key. No cloud calls. Install once with one command:",
+    "match_elements.embedder_required_body": "OpenConstructionERP uses BGE-M3 — a free, open-source multilingual encoder by BAAI. It runs entirely on your machine. No API key. No cloud calls. Install once with one command:",
     "match_elements.embedder_loaded_title": "Language model ready",
-    "match_elements.embedder_loaded_caption":
-      "{{model}} · {{precision}} · ~{{size}} MB · {{license}} · {{n}}+ languages",
-    "match_elements.embedder_runtime_caption":
-      "Runtime: {{runtime}} · model_loaded={{loaded}}",
-    "match_elements.embedder_install_hint_after":
-      "After install, restart the backend.",
-    "match_elements.embedder_size_caption":
-      "~{{int8}} MB download (INT8) or ~{{fp32}} MB (FP32).",
+    "match_elements.embedder_loaded_caption": "{{model}} · {{precision}} · ~{{size}} MB · {{license}} · {{n}}+ languages",
+    "match_elements.embedder_runtime_caption": "Runtime: {{runtime}} · model_loaded={{loaded}}",
+    "match_elements.embedder_install_hint_after": "After install, restart the backend.",
+    "match_elements.embedder_size_caption": "~{{int8}} MB download (INT8) or ~{{fp32}} MB (FP32).",
     "match_elements.embedder_languages_caption": "{{n}}+ languages",
     "match_elements.embedder_runs_locally": "Runs locally",
     "match_elements.embedder_no_api_key": "No API key",
@@ -5725,10 +5006,8 @@ const resource = {
     "match_elements.analytics_title": "Match analytics",
     "match_elements.analytics_alerts_count": "{{n}} alert",
     "match_elements.analytics_alerts_count_plural": "{{n}} alerts",
-    "match_elements.analytics_caption":
-      "{{n}} searches · {{picks}} picks · pick rate {{rate}} · mean score {{score}} · last {{days}}d",
-    "match_elements.analytics_empty_caption":
-      "No searches yet in the last {{days}}d window — run /match-elements to populate.",
+    "match_elements.analytics_caption": "{{n}} searches · {{picks}} picks · pick rate {{rate}} · mean score {{score}} · last {{days}}d",
+    "match_elements.analytics_empty_caption": "No searches yet in the last {{days}}d window — run /match-elements to populate.",
     "match_elements.analytics_window_label": "Window",
     "match_elements.analytics_window_days": "{{n}}d",
     "match_elements.analytics_tile_searches": "Searches",
@@ -5769,18 +5048,14 @@ const resource = {
     "match_progress.title_running": "Potrivire în curs",
     "match_progress.title_done": "Potrivire finalizată",
     "match_progress.title_error": "Potrivire eșuată",
-    "match_progress.subtitle_running":
-      "We’re searching the catalogue with vector + lexical + region signals. Safe to leave open in a tab.",
-    "match_progress.subtitle_done":
-      "All stages green — handing over to the review panel.",
-    "match_progress.subtitle_error":
-      "The matcher couldn’t finish — try again or pick a different catalogue.",
+    "match_progress.subtitle_running": "We’re searching the catalogue with vector + lexical + region signals. Safe to leave open in a tab.",
+    "match_progress.subtitle_done": "All stages green — handing over to the review panel.",
+    "match_progress.subtitle_error": "The matcher couldn’t finish — try again or pick a different catalogue.",
     "match_progress.elapsed": "Scurs",
     "match_progress.overall_aria": "Overall match progress",
     "match_progress.headline_done": "All done — opening your results",
     "match_progress.headline_error": "Something went wrong",
-    "match_progress.headline_long":
-      "Almost done — large projects can take a minute",
+    "match_progress.headline_long": "Almost done — large projects can take a minute",
     "match_progress.stage_load": "Loading BIM elements",
     "match_progress.stage_embed": "Building embeddings",
     "match_progress.stage_vector": "Vector search (top candidates)",
@@ -5790,8 +5065,7 @@ const resource = {
     "match_progress.error_label": "Error details",
     "match_progress.error_fallback": "Unknown error",
     "match_progress.retry": "Try again",
-    "match_progress.long_hint":
-      "Still working — first runs on large BIM models take longer because vectors are warming up. Subsequent runs on the same project are much faster.",
+    "match_progress.long_hint": "Still working — first runs on large BIM models take longer because vectors are warming up. Subsequent runs on the same project are much faster.",
     "match_progress.toast_failed_title": "Potrivire eșuată",
     "projects.team.strip_label": "Project team",
     "projects.team.empty": "No members yet",
@@ -5809,13 +5083,11 @@ const resource = {
     "projects.team.role.viewer": "Viewer",
     "projects.team.role.project_manager": "Project manager",
     "onboarding.company_property_developer": "Dezvoltator imobiliar",
-    "onboarding.company_property_developer_desc":
-      "Echipe de dezvoltare imobiliară",
+    "onboarding.company_property_developer_desc": "Echipe de dezvoltare imobiliară",
     "onboarding.explore_all_modules": "Explorați toate cele {{count}} module",
     "boq.add_child_position": "Add Child Partida",
     "boq.add_sub_section": "Add Sub-section",
-    "boq.ai_no_answer":
-      "The assistant did not return an answer. Please rephrase or try again.‌⁠‍",
+    "boq.ai_no_answer": "The assistant did not return an answer. Please rephrase or try again.‌⁠‍",
     "boq.compare_added": "Added",
     "boq.compare_against": "Compare against",
     "boq.compare_btn": "Compare",
@@ -5831,8 +5103,7 @@ const resource = {
     "boq.compare_qty": "Qty",
     "boq.compare_rate": "Rate",
     "boq.compare_removed": "Removed",
-    "boq.compare_select_hint":
-      "Pick another BOQ above to see a line-by-line diff.",
+    "boq.compare_select_hint": "Pick another BOQ above to see a line-by-line diff.",
     "boq.compare_unchanged": "Unchanged",
     "boq.compare_ct_added": "Added",
     "boq.compare_ct_removed": "Removed",
@@ -5849,8 +5120,7 @@ const resource = {
     "boq.model_link_agg_first": "First",
     "boq.model_link_create": "Create link",
     "boq.model_link_created": "Model link created",
-    "boq.model_link_created_hint":
-      "The quantity is not changed yet — use “Refresh from model” then Apply to pull it in.",
+    "boq.model_link_created_hint": "The quantity is not changed yet — use “Refresh from model” then Apply to pull it in.",
     "boq.model_link_delete": "Delete link",
     "boq.model_link_delete_failed": "Could not remove model link",
     "boq.model_link_deleted": "Model link removed",
@@ -5869,63 +5139,48 @@ const resource = {
     "boq.model_link_status_active": "In sync",
     "boq.model_link_status_stale": "Stale",
     "boq.model_link_status_broken": "Broken",
-    "boq.model_link_subtitle":
-      "Position {{ordinal}} — bind its quantity to BIM model elements",
+    "boq.model_link_subtitle": "Position {{ordinal}} — bind its quantity to BIM model elements",
     "boq.model_link_title": "Model link",
     "boq.model_link_version": "model v{{v}}",
-    "boq.model_review_all_synced":
-      "All linked quantities are in sync with the model.",
+    "boq.model_review_all_synced": "All linked quantities are in sync with the model.",
     "boq.model_review_applied": "{{count}} quantity update(s) applied",
     "boq.model_review_apply": "Apply {{count}} selected",
     "boq.model_review_apply_failed": "Apply failed",
     "boq.model_review_btn": "Model sync",
     "boq.model_review_btn_hint": "Re-pull quantities from linked BIM models",
-    "boq.model_review_hint":
-      "Re-pulls bound quantities against the latest model version. Nothing changes until you Apply.",
+    "boq.model_review_hint": "Re-pulls bound quantities against the latest model version. Nothing changes until you Apply.",
     "boq.model_review_missing": "{{count}} missing",
     "boq.model_review_no_links": "No model links in this BOQ",
     "boq.model_review_refresh": "Refresh from model",
     "boq.model_review_refresh_failed": "Refresh from model failed",
     "boq.model_review_run": "Run a refresh to see model-driven changes.",
     "boq.model_review_title": "Model quantity review",
-    "boq.position_added_edit_hint":
-      "Type the description, then Tab through unit, quantity & rate‌⁠‍",
-    "boq.link_badge_instance":
-      "Linked instance of code {{code}} — edits to its definition will diverge it‌⁠‍",
+    "boq.position_added_edit_hint": "Type the description, then Tab through unit, quantity & rate‌⁠‍",
+    "boq.link_badge_instance": "Linked instance of code {{code}} — edits to its definition will diverge it‌⁠‍",
     "boq.link_badge_master": "Master of code {{code}} — {{count}} linked‌⁠‍",
     "boq.link_master_badge": "Master‌⁠‍",
-    "boq.link_propagated_msg":
-      "Updated {{count}} linked position(s) across this project.‌⁠‍",
+    "boq.link_propagated_msg": "Updated {{count}} linked position(s) across this project.‌⁠‍",
     "boq.link_propagated_title": "Definition propagated‌⁠‍",
-    "boq.max_depth_reached_tooltip":
-      "Maximum nesting depth of {{max}} levels reached — flatten the structure or use fewer sub-levels.",
-    "boq.resource_link_propagated_msg":
-      "Updated the shared resource on {{count}} other position(s) across this project.‌⁠‍",
+    "boq.max_depth_reached_tooltip": "Maximum nesting depth of {{max}} levels reached — flatten the structure or use fewer sub-levels.",
+    "boq.resource_link_propagated_msg": "Updated the shared resource on {{count}} other position(s) across this project.‌⁠‍",
     "boq.resource_link_propagated_title": "Resource definition propagated‌⁠‍",
     "boq.link_role_instance": "Linked instance‌⁠‍",
     "boq.link_role_master": "Master (definition of record)‌⁠‍",
-    "boq.link_unlinked_msg":
-      "Your edit changed this linked copy, so it no longer follows the shared code. If you did not mean to diverge it, change its code back instead.‌⁠‍",
+    "boq.link_unlinked_msg": "Your edit changed this linked copy, so it no longer follows the shared code. If you did not mean to diverge it, change its code back instead.‌⁠‍",
     "boq.link_unlinked_title": "Position unlinked from shared code‌⁠‍",
-    "boq.linked_positions_count":
-      "{{total}} positions share this code ({{instances}} linked instance(s)). The master is the definition of record; editing it propagates to every instance in this project.‌⁠‍",
+    "boq.linked_positions_count": "{{total}} positions share this code ({{instances}} linked instance(s)). The master is the definition of record; editing it propagates to every instance in this project.‌⁠‍",
     "boq.linked_positions_error": "Could not load linked positions.‌⁠‍",
-    "boq.linked_positions_none":
-      "This position is standalone — no other position shares its code.‌⁠‍",
-    "boq.linked_positions_subtitle":
-      "Code {{code}} — viewing from position {{ordinal}}",
+    "boq.linked_positions_none": "This position is standalone — no other position shares its code.‌⁠‍",
+    "boq.linked_positions_subtitle": "Code {{code}} — viewing from position {{ordinal}}",
     "boq.linked_positions_title": "Linked positions‌⁠‍",
     "boq.no_description": "(no description)‌⁠‍",
     "boq.reuse_code_action": "Reuse Existing Code…",
     "boq.reuse_code_existing": "Existing codes: {{codes}}",
-    "boq.reuse_code_msg":
-      "Linked instance created — {{count}} positions share this code. Its quantity is independently editable.‌⁠‍",
-    "boq.reuse_code_prompt":
-      "Enter an existing code to reuse it here (its definition & sub-items are copied; quantity stays independent):",
+    "boq.reuse_code_msg": "Linked instance created — {{count}} positions share this code. Its quantity is independently editable.‌⁠‍",
+    "boq.reuse_code_prompt": "Enter an existing code to reuse it here (its definition & sub-items are copied; quantity stays independent):",
     "boq.reuse_code_title": "Reused code {{code}}‌⁠‍",
     "boq.show_linked": "Show Linked Positions",
-    "boq.unlink_done_msg":
-      "Code {{code}} kept. This position no longer follows the shared code; its values were preserved.‌⁠‍",
+    "boq.unlink_done_msg": "Code {{code}} kept. This position no longer follows the shared code; its values were preserved.‌⁠‍",
     "boq.unlink_done_title": "Position unlinked‌⁠‍",
     "boq.unlink_failed": "Failed to unlink position‌⁠‍",
     "boq.unlink_this": "Unlink this position‌⁠‍",
@@ -5935,8 +5190,7 @@ const resource = {
     "login.community_sub": "Get help & discuss",
     "login.brand_edit": "Customize logo",
     "login.brand_title": "White-label branding",
-    "login.brand_desc":
-      "Shown on this sign-in screen and across the app. Stored only in this browser.",
+    "login.brand_desc": "Shown on this sign-in screen and across the app. Stored only in this browser.",
     "login.brand_upload": "Upload logo",
     "login.brand_name_ph": "Company name",
     "login.brand_reset": "Reset to default",
@@ -5948,10 +5202,8 @@ const resource = {
     "nav.phase_execution": "Execution",
     "nav.phase_closure": "Quality & Closure",
     "nav.clash_detection": "Clash Detection",
-    "schedule_advanced.master_hint":
-      "Select a master schedule to make it the working plan for the Phases, Look-Ahead, Weekly and Constraints tabs. Use the row actions to rename it, change its planned dates and status, or delete it.",
-    "schedule_advanced.no_master_yet_desc":
-      "The master schedule is the top-level plan that every phase plan, look-ahead and weekly work plan rolls up to. Create one to start pull-planning — you can rename it, change its dates, or delete it at any time.",
+    "schedule_advanced.master_hint": "Select a master schedule to make it the working plan for the Phases, Look-Ahead, Weekly and Constraints tabs. Use the row actions to rename it, change its planned dates and status, or delete it.",
+    "schedule_advanced.no_master_yet_desc": "The master schedule is the top-level plan that every phase plan, look-ahead and weekly work plan rolls up to. Create one to start pull-planning — you can rename it, change its dates, or delete it at any time.",
     "schedule_advanced.active_selection": "Working plan",
     "schedule_advanced.master_status.active": "Active",
     "schedule_advanced.master_status.archived": "Archived",
@@ -5959,153 +5211,95 @@ const resource = {
     "schedule_advanced.master_updated": "Master schedule updated",
     "schedule_advanced.master_deleted": "Master schedule deleted",
     "schedule_advanced.delete_master_title": "Delete master schedule?",
-    "schedule_advanced.delete_master_message":
-      '"{{name}}" and everything under it — phase plans, look-aheads, weekly work plans, commitments and baselines — will be permanently deleted. This cannot be undone.',
-    "schedule_advanced.err_master_name_required":
-      "Master schedule name is required.",
-    "schedule_advanced.master_name_placeholder":
-      "e.g. Construction master schedule",
-    "schedule_advanced.master_status_hint":
-      "Archive a schedule to keep its history without it being the working plan. Archived schedules can be reactivated here at any time.",
-    "schedule_advanced.master_notes_placeholder":
-      "Scope, contract reference, key milestones…",
+    "schedule_advanced.delete_master_message": "\"{{name}}\" and everything under it — phase plans, look-aheads, weekly work plans, commitments and baselines — will be permanently deleted. This cannot be undone.",
+    "schedule_advanced.err_master_name_required": "Master schedule name is required.",
+    "schedule_advanced.master_name_placeholder": "e.g. Construction master schedule",
+    "schedule_advanced.master_status_hint": "Archive a schedule to keep its history without it being the working plan. Archived schedules can be reactivated here at any time.",
+    "schedule_advanced.master_notes_placeholder": "Scope, contract reference, key milestones…",
     "files.cta.add_first_short": "Add files",
     "files.folder.files_count": "files",
     "files.folder.subfolders": "{{count}} folders",
     "files.folder.share": "{{pct}}% of total storage",
     "notifications.safety.incident_created": "Safety incident reported",
-    "notifications.safety.incident_created_body":
-      "Incident {{incident_number}} ({{severity}}): {{description}}",
-    "notifications.safety.high_risk_observation":
-      "High-risk safety observation",
-    "notifications.safety.high_risk_body":
-      "Observation {{observation_number}} (risk {{risk_score}}): {{description}}",
+    "notifications.safety.incident_created_body": "Incident {{incident_number}} ({{severity}}): {{description}}",
+    "notifications.safety.high_risk_observation": "High-risk safety observation",
+    "notifications.safety.high_risk_body": "Observation {{observation_number}} (risk {{risk_score}}): {{description}}",
     "notifications.bi.alert.title": "Dashboard alert triggered",
-    "notifications.bi.alert.body":
-      "{{alert_name}} — {{kpi_code}} is {{value}} ({{condition}} threshold {{threshold}}).",
+    "notifications.bi.alert.body": "{{alert_name}} — {{kpi_code}} is {{value}} ({{condition}} threshold {{threshold}}).",
     "notifications.bi.report.title": "Scheduled report ready",
-    "notifications.bi.report.body":
-      "Report {{report_code}} generated with {{row_count}} rows.",
+    "notifications.bi.report.body": "Report {{report_code}} generated with {{row_count}} rows.",
     "notifications.supplier_catalogs.po.sent.title": "Purchase order sent",
-    "notifications.supplier_catalogs.po.sent.body":
-      "PO sent to vendor {{vendor_id}} for {{total}} {{currency}}.",
-    "notifications.supplier_catalogs.invoice.exception.title":
-      "Invoice exception",
-    "notifications.supplier_catalogs.invoice.exception.body":
-      "Invoice for PO {{po_id}} needs review: {{reason}}",
+    "notifications.supplier_catalogs.po.sent.body": "PO sent to vendor {{vendor_id}} for {{total}} {{currency}}.",
+    "notifications.supplier_catalogs.invoice.exception.title": "Invoice exception",
+    "notifications.supplier_catalogs.invoice.exception.body": "Invoice for PO {{po_id}} needs review: {{reason}}",
     "notifications.supplier_catalogs.stock.low.title": "Low stock warning",
-    "notifications.supplier_catalogs.stock.low.body":
-      "{{sku}}: {{available_qty}} left, at or below reorder point {{reorder_point}}.",
-    "notifications.supplier_catalogs.vendor.blacklisted.title":
-      "Vendor blacklisted",
-    "notifications.supplier_catalogs.vendor.blacklisted.body":
-      "Vendor {{code}} was blacklisted: {{reason}}",
-    "notifications.supplier_catalogs.kyc.expired.title":
-      "Vendor compliance document expired",
-    "notifications.supplier_catalogs.kyc.expired.body":
-      "{{doc_type}} expired on {{expires_on}}.",
-    "notifications.supplier_catalogs.kyc.expiring.title":
-      "Vendor compliance document expiring",
-    "notifications.supplier_catalogs.kyc.expiring.body":
-      "{{doc_type}} expires on {{expires_on}} ({{days_until_expiry}} days left).",
+    "notifications.supplier_catalogs.stock.low.body": "{{sku}}: {{available_qty}} left, at or below reorder point {{reorder_point}}.",
+    "notifications.supplier_catalogs.vendor.blacklisted.title": "Vendor blacklisted",
+    "notifications.supplier_catalogs.vendor.blacklisted.body": "Vendor {{code}} was blacklisted: {{reason}}",
+    "notifications.supplier_catalogs.kyc.expired.title": "Vendor compliance document expired",
+    "notifications.supplier_catalogs.kyc.expired.body": "{{doc_type}} expired on {{expires_on}}.",
+    "notifications.supplier_catalogs.kyc.expiring.title": "Vendor compliance document expiring",
+    "notifications.supplier_catalogs.kyc.expiring.body": "{{doc_type}} expires on {{expires_on}} ({{days_until_expiry}} days left).",
     "notifications.resources.cert_expiring.title": "Certification expiring",
-    "notifications.resources.cert_expiring.body":
-      "{{resource_name}} — {{cert_type}} expires {{valid_until}} ({{days_left}} days left).",
-    "notifications.resources.assignment_proposed.title":
-      "Resource assignment proposed",
-    "notifications.resources.assignment_proposed.body":
-      "Proposed for task {{task}} starting {{start}}.",
-    "notifications.resources.assignment_confirmed.title":
-      "Resource assignment confirmed",
-    "notifications.resources.assignment_confirmed.body":
-      "Assignment confirmed for task {{task}}.",
+    "notifications.resources.cert_expiring.body": "{{resource_name}} — {{cert_type}} expires {{valid_until}} ({{days_left}} days left).",
+    "notifications.resources.assignment_proposed.title": "Resource assignment proposed",
+    "notifications.resources.assignment_proposed.body": "Proposed for task {{task}} starting {{start}}.",
+    "notifications.resources.assignment_confirmed.title": "Resource assignment confirmed",
+    "notifications.resources.assignment_confirmed.body": "Assignment confirmed for task {{task}}.",
     "notifications.contracts.signed.title": "Contract signed",
-    "notifications.contracts.signed.body":
-      "Contract {{code}} signed for {{value}} {{currency}}.",
+    "notifications.contracts.signed.body": "Contract {{code}} signed for {{value}} {{currency}}.",
     "notifications.contracts.claim_submitted.title": "Contract claim submitted",
-    "notifications.contracts.claim_submitted.body":
-      "Claim submitted for {{amount}} {{currency}}.",
+    "notifications.contracts.claim_submitted.body": "Claim submitted for {{amount}} {{currency}}.",
     "notifications.contracts.claim_paid.title": "Contract claim paid",
-    "notifications.contracts.claim_paid.body":
-      "Claim paid: {{amount}} {{currency}}.",
+    "notifications.contracts.claim_paid.body": "Claim paid: {{amount}} {{currency}}.",
     "notifications.contracts.retention_released.title": "Retention released",
-    "notifications.contracts.retention_released.body":
-      "Contract {{contract_code}}: {{amount_released}} released, {{remaining}} remaining.",
+    "notifications.contracts.retention_released.body": "Contract {{contract_code}}: {{amount_released}} released, {{remaining}} remaining.",
     "notifications.crm.lead_qualified.title": "Lead qualified",
-    "notifications.crm.lead_qualified.body":
-      "Lead {{name}} has been qualified.",
+    "notifications.crm.lead_qualified.body": "Lead {{name}} has been qualified.",
     "notifications.crm.opportunity_won.title": "Opportunity won",
     "notifications.crm.opportunity_won.body": "{{name}} won — value {{value}}.",
     "notifications.crm.opportunity_scored.title": "Opportunity scored",
-    "notifications.crm.opportunity_scored.body":
-      "{{title}} scored {{score}} (band {{band}}).",
-    "notifications.carbon.boq_position_assigned.title":
-      "Carbon factor assigned",
-    "notifications.carbon.boq_position_assigned.body":
-      "BOQ position {{boq_position_id}}: {{carbon_kg}} kg CO₂e ({{stage}}).",
+    "notifications.crm.opportunity_scored.body": "{{title}} scored {{score}} (band {{band}}).",
+    "notifications.carbon.boq_position_assigned.title": "Carbon factor assigned",
+    "notifications.carbon.boq_position_assigned.body": "BOQ position {{boq_position_id}}: {{carbon_kg}} kg CO₂e ({{stage}}).",
     "notifications.property_dev.buyer_contracted.title": "Buyer contracted",
-    "notifications.property_dev.buyer_contracted.body":
-      "{{buyer}} contracted for plot {{plot}}.",
+    "notifications.property_dev.buyer_contracted.body": "{{buyer}} contracted for plot {{plot}}.",
     "notifications.property_dev.handover_completed.title": "Handover completed",
-    "notifications.property_dev.handover_completed.body":
-      "Plot {{plot}} handover completed.",
+    "notifications.property_dev.handover_completed.body": "Plot {{plot}} handover completed.",
     "notifications.property_dev.warranty_raised.title": "Warranty claim raised",
-    "notifications.property_dev.warranty_raised.body":
-      "{{category}} warranty claim raised for plot {{plot}}.",
+    "notifications.property_dev.warranty_raised.body": "{{category}} warranty claim raised for plot {{plot}}.",
     "notifications.bid_management.invitation_sent.title": "Bid invitation sent",
-    "notifications.bid_management.invitation_sent.body":
-      "Invitation for {{package}} sent, due {{due}}.",
+    "notifications.bid_management.invitation_sent.body": "Invitation for {{package}} sent, due {{due}}.",
     "notifications.bid_management.awarded.title": "Bid awarded",
-    "notifications.bid_management.awarded.body":
-      "{{package}} awarded for {{amount}}.",
-    "notifications.schedule_advanced.constraint_cleared.title":
-      "Schedule constraint cleared",
-    "notifications.schedule_advanced.constraint_cleared.body":
-      "Task {{task}} is no longer blocked.",
+    "notifications.bid_management.awarded.body": "{{package}} awarded for {{amount}}.",
+    "notifications.schedule_advanced.constraint_cleared.title": "Schedule constraint cleared",
+    "notifications.schedule_advanced.constraint_cleared.body": "Task {{task}} is no longer blocked.",
     "notifications.daily_diary.signed.title": "Daily diary signed",
-    "notifications.daily_diary.signed.body":
-      "Diary for {{date}} has been signed.",
-    "notifications.service.ticket_dispatched.title":
-      "Service ticket dispatched",
-    "notifications.service.ticket_dispatched.body":
-      "Ticket {{ticket_number}} dispatched ({{priority}} priority).",
+    "notifications.daily_diary.signed.body": "Diary for {{date}} has been signed.",
+    "notifications.service.ticket_dispatched.title": "Service ticket dispatched",
+    "notifications.service.ticket_dispatched.body": "Ticket {{ticket_number}} dispatched ({{priority}} priority).",
     "notifications.service.ticket_resolved.title": "Service ticket resolved",
-    "notifications.service.ticket_resolved.body":
-      "Ticket {{ticket_number}} has been resolved.",
+    "notifications.service.ticket_resolved.body": "Ticket {{ticket_number}} has been resolved.",
     "notifications.service.work_order_billed.title": "Work order billed",
-    "notifications.service.work_order_billed.body":
-      "Work order {{wo_number}} billed for {{amount}} {{currency}}.",
-    "notifications.subcontractors.prequal_submitted.title":
-      "Prequalification submitted",
-    "notifications.subcontractors.prequal_submitted.body":
-      "{{subcontractor_name}} submitted a prequalification.",
-    "notifications.subcontractors.payment_app_submitted.title":
-      "Payment application submitted",
-    "notifications.subcontractors.payment_app_submitted.body":
-      "Application {{application_number}} submitted for {{net_amount}} {{currency}}.",
-    "notifications.subcontractors.retention_released.title":
-      "Subcontractor retention released",
-    "notifications.subcontractors.retention_released.body":
-      "{{amount}} {{currency}} retention released.",
+    "notifications.service.work_order_billed.body": "Work order {{wo_number}} billed for {{amount}} {{currency}}.",
+    "notifications.subcontractors.prequal_submitted.title": "Prequalification submitted",
+    "notifications.subcontractors.prequal_submitted.body": "{{subcontractor_name}} submitted a prequalification.",
+    "notifications.subcontractors.payment_app_submitted.title": "Payment application submitted",
+    "notifications.subcontractors.payment_app_submitted.body": "Application {{application_number}} submitted for {{net_amount}} {{currency}}.",
+    "notifications.subcontractors.retention_released.title": "Subcontractor retention released",
+    "notifications.subcontractors.retention_released.body": "{{amount}} {{currency}} retention released.",
     "notifications.equipment.assigned.title": "Equipment assigned",
-    "notifications.equipment.assigned.body":
-      "{{equipment_code}} assigned to {{project_name}}.",
-    "notifications.equipment.damage_reported.title":
-      "Equipment damage reported",
-    "notifications.equipment.damage_reported.body":
-      "{{equipment_code}} damage reported ({{severity}}).",
+    "notifications.equipment.assigned.body": "{{equipment_code}} assigned to {{project_name}}.",
+    "notifications.equipment.damage_reported.title": "Equipment damage reported",
+    "notifications.equipment.damage_reported.body": "{{equipment_code}} damage reported ({{severity}}).",
     "notifications.portal.user_invited.title": "Portal user invited",
-    "notifications.portal.user_invited.body":
-      "{{portal_user_email}} invited as {{portal_role}}.",
-    "match_elements.vector_status_disconnected_explainer":
-      'Semantic vector search is optional — it sharpens matches by meaning but needs a running Qdrant vector database. Use the "Vector database" panel below to start or install Qdrant natively (no Docker required), then retry.',
-    "match_elements.vector_status_disconnected_fallback":
-      "You can still proceed now: matching automatically falls back to lexical (keyword) and rule-based scoring while the vector DB is offline.",
+    "notifications.portal.user_invited.body": "{{portal_user_email}} invited as {{portal_role}}.",
+    "match_elements.vector_status_disconnected_explainer": "Semantic vector search is optional — it sharpens matches by meaning but needs a running Qdrant vector database. Use the \"Vector database\" panel below to start or install Qdrant natively (no Docker required), then retry.",
+    "match_elements.vector_status_disconnected_fallback": "You can still proceed now: matching automatically falls back to lexical (keyword) and rule-based scoring while the vector DB is offline.",
     "match_elements.vector_status_retry": "Retry connection",
     "match_elements.vector_status_open_costs_long": "Open cost-database tools",
     "match_elements.pipeline.title": "Match pipeline",
-    "match_elements.pipeline.subtitle":
-      "Seven steps from CAD file to priced BoQ — every step is visible and tunable",
+    "match_elements.pipeline.subtitle": "Seven steps from CAD file to priced BoQ — every step is visible and tunable",
     "match_elements.pipeline.done_suffix": "done",
     "match_elements.pipeline.run_all": "Run all stages",
     "match_elements.pipeline.running_all": "Running all…",
@@ -6123,20 +5317,17 @@ const resource = {
     "match_elements.pipeline.status_error": "Error",
     "match_elements.pipeline.status_stale": "Needs re-run",
     "match_elements.pipeline.status_skipped": "Skipped",
-    "match_elements.pipeline.stale_hint":
-      "An earlier stage changed — re-run this step to refresh its output.",
+    "match_elements.pipeline.stale_hint": "An earlier stage changed — re-run this step to refresh its output.",
     "match_elements.pipeline.llm_badge": "LLM",
     "match_elements.pipeline.llm_tunable": "LLM-augmented — prompt is editable",
     "match_elements.pipeline.group_by": "Group by keys",
-    "match_elements.pipeline.group_by_hint":
-      "Comma-separated. RVT → category, type_name · IFC → ifc_class, predefined_type · DWG → layer, block_name",
+    "match_elements.pipeline.group_by_hint": "Comma-separated. RVT → category, type_name · IFC → ifc_class, predefined_type · DWG → layer, block_name",
     "match_elements.pipeline.method": "Method",
     "match_elements.pipeline.max_groups": "Max groups",
     "match_elements.pipeline.llm_provider": "LLM provider",
     "match_elements.pipeline.prompt": "Prompt",
     "match_elements.pipeline.system": "system",
-    "match_elements.pipeline.system_readonly":
-      "System prompt — read-only. Fork it to edit and tune for your company.",
+    "match_elements.pipeline.system_readonly": "System prompt — read-only. Fork it to edit and tune for your company.",
     "match_elements.pipeline.system_prompt": "System prompt",
     "match_elements.pipeline.user_template": "User template",
     "match_elements.pipeline.variables": "Variables the stage fills:",
@@ -6146,12 +5337,10 @@ const resource = {
     "match_elements.pipeline.revert": "Revert",
     "match_elements.pipeline.run_failed": "Stage run failed",
     "match_elements.pipeline.intro_title": "Open the visible match pipeline",
-    "match_elements.pipeline.intro_blurb":
-      "Seven steps from CAD file to priced BoQ — Convert, Load, Schema, Filter, Group, Match, Rollup. Every step is visible, explained, and tunable (prompts, LLM provider, group keys).",
+    "match_elements.pipeline.intro_blurb": "Seven steps from CAD file to priced BoQ — Convert, Load, Schema, Filter, Group, Match, Rollup. Every step is visible, explained, and tunable (prompts, LLM provider, group keys).",
     "match_elements.pipeline.intro_cta": "Open the pipeline",
     "match_elements.pipeline.intro_resume": "Resume last session",
-    "match_elements.pipeline.busy_hint":
-      "A stage is running — wait for it to finish before starting another.",
+    "match_elements.pipeline.busy_hint": "A stage is running — wait for it to finish before starting another.",
     "match_elements.pipeline.step_convert": "Convert",
     "match_elements.pipeline.step_load": "Load",
     "match_elements.pipeline.step_schema": "Schema",
@@ -6160,8 +5349,7 @@ const resource = {
     "match_elements.pipeline.step_match": "Match",
     "match_elements.pipeline.step_rollup": "Rollup",
     "clash.title": "Clash Detection",
-    "clash.subtitle":
-      "Geometric interference & clearance coordination across federated BIM models — with a clash matrix and BCF export.",
+    "clash.subtitle": "Geometric interference & clearance coordination across federated BIM models — with a clash matrix and BCF export.",
     "clash.pick_project": "Select a project",
     "clash.new_run": "New clash run",
     "clash.models": "Models",
@@ -6172,12 +5360,10 @@ const resource = {
     "clash.mode_cross": "Cross-discipline only",
     "clash.mode_all": "Every pair",
     "clash.mode_sets": "Set A vs Set B (by type)",
-    "clash.sets_hint":
-      "Only pairs where one element is in Set A and the other in Set B are tested — e.g. all Walls (A) against all Pipes (B).",
+    "clash.sets_hint": "Only pairs where one element is in Set A and the other in Set B are tested — e.g. all Walls (A) against all Pipes (B).",
     "clash.set_a": "Set A",
     "clash.set_b": "Set B",
-    "clash.sets_required":
-      "Pick at least one type or discipline for both Set A and Set B.",
+    "clash.sets_required": "Pick at least one type or discipline for both Set A and Set B.",
     "clash.set_search": "Search types / disciplines…",
     "clash.set_empty": "No elements — select a parsed model first.",
     "clash.disciplines": "Disciplines",
@@ -6191,8 +5377,7 @@ const resource = {
     "clash.status_saved": "Status updated",
     "clash.bcf_done": "Exported {{n}} clash(es) to BCF ({{s}} skipped)",
     "clash.empty_title": "No clash run selected",
-    "clash.empty_desc":
-      "Pick the BIM models on the left and run clash detection to build the coordination matrix.",
+    "clash.empty_desc": "Pick the BIM models on the left and run clash detection to build the coordination matrix.",
     "clash.kpi_total": "Total clashes",
     "clash.kpi_hard": "Hard",
     "clash.kpi_clearance": "Clearance",
@@ -6208,11 +5393,9 @@ const resource = {
     "clash.no_match_title": "No clashes match the filters",
     "clash.no_match_desc": "Try widening or clearing the active filters.",
     "clash.results_error": "Failed to load clash results",
-    "clash.results_error_desc":
-      "The clash results could not be loaded. This does not mean the models are clean — please retry.",
+    "clash.results_error_desc": "The clash results could not be loaded. This does not mean the models are clean — please retry.",
     "clash.retry": "Retry",
-    "clash.capped_notice":
-      "Showing the first {{loaded}} of {{total}} clashes — refine the filters to narrow the review set.",
+    "clash.capped_notice": "Showing the first {{loaded}} of {{total}} clashes — refine the filters to narrow the review set.",
     "clash.results": "Clash results",
     "clash.count_of": "{{shown}} of {{total}}",
     "clash.search_ph": "Search element name…",
@@ -6253,23 +5436,18 @@ const resource = {
     "nav.pipelines": "Pipeline Builder",
     "pipeline.untitled": "Untitled pipeline",
     "pipeline.empty.title": "Build your first automation",
-    "pipeline.empty.description":
-      "Drag a trigger and a few steps from the palette on the left, connect them, then press Run.",
+    "pipeline.empty.description": "Drag a trigger and a few steps from the palette on the left, connect them, then press Run.",
     "pipeline.toast.saved": "Pipeline saved",
     "pipeline.toast.save_failed": "Could not save pipeline",
     "pipeline.toast.run_failed": "Could not start the run",
     "pipeline.explain.coming_soon_title": "Explain this pipeline",
-    "pipeline.explain.coming_soon_body":
-      "The plain-language story view arrives in the next release.",
+    "pipeline.explain.coming_soon_body": "The plain-language story view arrives in the next release.",
     "pipeline.tour.palette_title": "Pick your steps",
-    "pipeline.tour.palette_body":
-      "Drag a step from here onto the canvas, or just click it to drop it in the middle.",
+    "pipeline.tour.palette_body": "Drag a step from here onto the canvas, or just click it to drop it in the middle.",
     "pipeline.tour.canvas_title": "Connect the steps",
-    "pipeline.tour.canvas_body":
-      "Drag from one step output dot to the next step input. Colours show the data type.",
+    "pipeline.tour.canvas_body": "Drag from one step output dot to the next step input. Colours show the data type.",
     "pipeline.tour.run_title": "Run it",
-    "pipeline.tour.run_body":
-      "Press Run to execute the pipeline and watch each step light up live.",
+    "pipeline.tour.run_body": "Press Run to execute the pipeline and watch each step light up live.",
     "pipeline.toolbar.aria": "Pipeline toolbar",
     "pipeline.toolbar.undo": "Undo",
     "pipeline.toolbar.redo": "Redo",
@@ -6285,12 +5463,11 @@ const resource = {
     "pipeline.palette.collapse": "Collapse palette",
     "pipeline.palette.search": "Search steps",
     "pipeline.palette.search_ph": "Search…",
-    "pipeline.palette.no_match": 'No steps match "{{query}}"',
+    "pipeline.palette.no_match": "No steps match \"{{query}}\"",
     "pipeline.palette.none": "No step types available.",
     "pipeline.palette.module_chip": "Touches the {{module}} module",
     "pipeline.palette.writes": "writes",
-    "pipeline.palette.writes_chip":
-      "This step writes data — needs a gate before it",
+    "pipeline.palette.writes_chip": "This step writes data — needs a gate before it",
     "pipeline.palette.cat_trigger": "Sources / Triggers",
     "pipeline.palette.cat_source": "Get data",
     "pipeline.palette.cat_transform": "Transform",
@@ -6314,24 +5491,18 @@ const resource = {
     "pipeline.inspector.name_ph": "My automation",
     "pipeline.inspector.description": "Description",
     "pipeline.inspector.published": "Published (can be triggered)",
-    "pipeline.inspector.summary_stub":
-      'A plain-language summary of what this pipeline does will appear here. Use "Explain this pipeline" for the full story.',
+    "pipeline.inspector.summary_stub": "A plain-language summary of what this pipeline does will appear here. Use \"Explain this pipeline\" for the full story.",
     "pipeline.canvas.aria": "Pipeline editor canvas",
-    "pipeline.canvas.hint":
-      "Drag steps from the palette, connect their ports, then press Run.",
-    "pipeline.canvas.legend_sr":
-      "Edge colour, shape and dash together encode the data type.",
+    "pipeline.canvas.hint": "Drag steps from the palette, connect their ports, then press Run.",
+    "pipeline.canvas.legend_sr": "Edge colour, shape and dash together encode the data type.",
     "pipeline.connect.incompatible_title": "These steps can't be connected",
-    "pipeline.connect.incompatible_body":
-      "This output is a {{from}}; that input expects a {{to}}.",
+    "pipeline.connect.incompatible_body": "This output is a {{from}}; that input expects a {{to}}.",
     "pipeline.node.rename": "Rename node",
     "pipeline.node.rename_hint": "Double-click to rename",
     "pipeline.node.ai_badge": "AI",
-    "pipeline.node.ai_confidence":
-      "AI suggestion — review the confidence score",
+    "pipeline.node.ai_confidence": "AI suggestion — review the confidence score",
     "pipeline.node.help": "What this node does",
-    "pipeline.node.help_generic":
-      "Configure this step in the Inspector. It receives data from the connected step before it and passes its result on.",
+    "pipeline.node.help_generic": "Configure this step in the Inspector. It receives data from the connected step before it and passes its result on.",
     "pipeline.node.collapse": "Collapse",
     "pipeline.node.expand": "Expand",
     "pipeline.node.more_params": "+{{count}} more",
@@ -6352,12 +5523,10 @@ const resource = {
     "pipeline.dock.progress": "{{pct}}%",
     "pipeline.dock.tab_run": "Run",
     "pipeline.dock.tab_history": "History",
-    "pipeline.dock.no_steps":
-      "Add steps and press Run to watch data flow through your pipeline.",
+    "pipeline.dock.no_steps": "Add steps and press Run to watch data flow through your pipeline.",
     "pipeline.dock.loading_history": "Loading run history…",
     "pipeline.dock.no_runs_title": "No runs yet",
-    "pipeline.dock.no_runs_desc":
-      "Press Run to see data flow through your pipeline.",
+    "pipeline.dock.no_runs_desc": "Press Run to see data flow through your pipeline.",
     "pipeline.dock.manual": "Manual",
     "pipeline.dock.queued_hint": "Waiting for a worker to pick up the run…",
     "pipeline.runstatus.pending": "Pending",
@@ -6376,35 +5545,23 @@ const resource = {
     "pipeline.trigger.schedule": "Scheduled",
     "pipeline.trigger.event": "Event",
     "pipeline.nodetype.trigger.manual": "Manual trigger",
-    "pipeline.nodetype.trigger.manual.desc":
-      "Start the pipeline from a REST call. No inputs.",
+    "pipeline.nodetype.trigger.manual.desc": "Start the pipeline from a REST call. No inputs.",
     "pipeline.nodetype.source.project": "Get project",
-    "pipeline.nodetype.source.project.desc":
-      "Load the bound project's id + name.",
+    "pipeline.nodetype.source.project.desc": "Load the bound project's id + name.",
     "pipeline.nodetype.source.boq": "Get BOQ positions",
-    "pipeline.nodetype.source.boq.desc":
-      "Load every BOQ position for the project as rows (ids + a small sample).",
+    "pipeline.nodetype.source.boq.desc": "Load every BOQ position for the project as rows (ids + a small sample).",
     "pipeline.nodetype.transform.filter": "Filter rows",
-    "pipeline.nodetype.transform.filter.desc":
-      "Keep only rows matching a simple field/op/value test.",
+    "pipeline.nodetype.transform.filter.desc": "Keep only rows matching a simple field/op/value test.",
     "pipeline.nodetype.gate.validation": "Validation gate",
-    "pipeline.nodetype.gate.validation.desc":
-      "Run the validation engine over the rows; stop the run on blocking errors.",
+    "pipeline.nodetype.gate.validation.desc": "Run the validation engine over the rows; stop the run on blocking errors.",
     "pipeline.nodetype.action.export.excel": "Export to Excel",
-    "pipeline.nodetype.action.export.excel.desc":
-      "Write the rows to an .xlsx file (returns a download reference; does not mutate the database).",
-    "pipeline.nodehelp.trigger.manual":
-      "This is where the pipeline begins. It carries no settings — connect it to a data step next.",
-    "pipeline.nodehelp.source.project":
-      "Loads the project this pipeline is bound to. Leave the project id blank to use the one from the page URL.",
-    "pipeline.nodehelp.source.boq":
-      "Reads every BOQ position for the project. Only ids and a small preview travel between steps; the full data stays on the server.",
-    "pipeline.nodehelp.transform.filter":
-      "Keeps only the rows that match the field / operator / value test you set in the Inspector. Leave the field blank to pass everything through.",
-    "pipeline.nodehelp.gate.validation":
-      "Runs the validation engine over the rows. If there are blocking errors the run stops here, so write steps after it never act on bad data.",
-    "pipeline.nodehelp.action.export.excel":
-      "Writes the incoming rows to an Excel file and returns a download reference. It does not change any data.",
+    "pipeline.nodetype.action.export.excel.desc": "Write the rows to an .xlsx file (returns a download reference; does not mutate the database).",
+    "pipeline.nodehelp.trigger.manual": "This is where the pipeline begins. It carries no settings — connect it to a data step next.",
+    "pipeline.nodehelp.source.project": "Loads the project this pipeline is bound to. Leave the project id blank to use the one from the page URL.",
+    "pipeline.nodehelp.source.boq": "Reads every BOQ position for the project. Only ids and a small preview travel between steps; the full data stays on the server.",
+    "pipeline.nodehelp.transform.filter": "Keeps only the rows that match the field / operator / value test you set in the Inspector. Leave the field blank to pass everything through.",
+    "pipeline.nodehelp.gate.validation": "Runs the validation engine over the rows. If there are blocking errors the run stops here, so write steps after it never act on bad data.",
+    "pipeline.nodehelp.action.export.excel": "Writes the incoming rows to an Excel file and returns a download reference. It does not change any data.",
     "pipeline.param.source.project.project_id": "Project id (optional)",
     "pipeline.param.source.boq.project_id": "Project id (optional)",
     "pipeline.param.transform.filter.field": "Field",
@@ -6413,7 +5570,61 @@ const resource = {
     "pipeline.param.gate.validation.rule_sets": "Rule sets",
     "pipeline.param.action.export.excel.filename": "File name",
     "pipeline.param.action.export.excel.columns": "Columns",
-  },
+    "admin.audit_log_title": "Audit Log",
+    "admin.audit_log_subtitle": "Read-only timeline of every recorded change. Filter by user, module, action or date — open a row for the full payload.",
+    "admin.permissions.title": "Permissions Matrix",
+    "admin.permissions.subtitle": "Read-only view of every permission registered by every module, and which roles can use it. Admin always passes — locked cells indicate admin-only by design.",
+    "admin.permissions.search_placeholder": "Filter by module or permission key",
+    "admin.permissions.search_label": "Search permissions",
+    "admin.permissions.col_permission": "Permission",
+    "admin.permissions.role_viewer": "Viewer",
+    "admin.permissions.role_editor": "Editor",
+    "admin.permissions.role_member": "Member",
+    "admin.permissions.role_manager": "Manager",
+    "admin.permissions.role_admin": "Admin",
+    "admin.permissions.min_role_label": "min role",
+    "admin.permissions.module_count_one": "{{count}} permission",
+    "admin.permissions.module_count_other": "{{count}} permissions",
+    "admin.permissions.summary": "{{modules}} modules · {{permissions}} permissions",
+    "admin.permissions.empty_title": "No permissions registered",
+    "admin.permissions.empty_description": "No modules have registered permissions yet. They appear here as soon as a module loads.",
+    "admin.permissions.error_title": "Could not load permissions matrix",
+    "admin.permissions.error_unknown": "Unknown error",
+    "admin.permissions.legend_allowed": "allowed",
+    "admin.permissions.legend_denied": "denied",
+    "admin.permissions.legend_admin_bypass": "admin-only by design",
+    "admin.permissions.tooltip_allowed": "{{role}} can do {{key}} (min role: {{min}})",
+    "admin.permissions.tooltip_denied": "{{role}} cannot do {{key}} (min role: {{min}})",
+    "admin.permissions.tooltip_admin_bypass": "Admin-only by design — {{key}} requires admin",
+    "admin.permissions.subtitle_edit": "Click any cell to set the minimum role for that permission. Changes apply immediately and are audit-logged.",
+    "admin.permissions.edit_on": "Enable edit mode",
+    "admin.permissions.edit_off": "Done editing",
+    "admin.permissions.export_csv": "Export CSV",
+    "admin.permissions.role_filter_label": "Role",
+    "admin.permissions.role_filter_all": "All roles",
+    "admin.permissions.role_filter_denied_to": "Denied to {{role}}",
+    "admin.permissions.preset_label": "Reset to preset",
+    "admin.permissions.read_only_notice": "Read-only: admin role required to edit",
+    "admin.permissions.confirm_toggle_title": "Change permission?",
+    "admin.permissions.confirm_toggle_message": "Set \"{{key}}\" minimum role from {{from}} to {{to}}? This is audit-logged.",
+    "admin.permissions.confirm_toggle_confirm": "Change",
+    "admin.permissions.confirm_preset_title": "Apply preset?",
+    "admin.permissions.confirm_preset_message": "Reset every permission to the \"{{preset}}\" baseline? This rewrites the entire matrix and is audit-logged.",
+    "admin.permissions.confirm_preset_confirm": "Apply preset",
+    "admin.permissions.lockout_title": "Cannot demote admin permission",
+    "admin.permissions.lockout_message": "\"{{key}}\" must remain admin-only — lowering it would let non-admins edit the permissions matrix and lock you out.",
+    "admin.permissions.lockout_dismiss": "Got it",
+    "admin.permissions.toggle_success_title": "Permission updated",
+    "admin.permissions.toggle_success_message": "{{key}} → {{role}}",
+    "admin.permissions.toggle_error_title": "Update failed",
+    "admin.permissions.toggle_error": "Could not update permission",
+    "admin.permissions.preset_success_title": "Preset applied",
+    "admin.permissions.preset_success_message": "{{count}} permission(s) updated to \"{{preset}}\"",
+    "admin.permissions.preset_error_title": "Preset failed",
+    "admin.permissions.preset_error": "Could not apply preset",
+    "admin.permissions.noop_title": "No change",
+    "admin.permissions.noop_message": "{{key}} is already minimum {{role}}"
+  }
 } as { translation: Record<string, string> };
 
 export default resource;

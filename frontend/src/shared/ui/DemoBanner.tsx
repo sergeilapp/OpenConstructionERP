@@ -14,11 +14,11 @@
  * local install). No render cost for non-demo deployments.
  */
 
-import { useEffect, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
-import { AlertTriangle, X, Download, ExternalLink } from "lucide-react";
+import { useEffect, useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { AlertTriangle, X, Download, ExternalLink } from 'lucide-react';
 
-const SESSION_KEY = "oe_demo_modal_dismissed";
+const SESSION_KEY = 'oe_demo_modal_dismissed';
 
 export function DemoBanner() {
   const [modalOpen, setModalOpen] = useState(false);
@@ -28,21 +28,21 @@ export function DemoBanner() {
   // every page render. ``staleTime: Infinity`` is fine — demo_mode is fixed
   // for the life of the deployment and the query is invalidated on logout.
   const { data } = useQuery<{ demo_mode?: boolean }>({
-    queryKey: ["system-status"],
-    queryFn: () => fetch("/api/system/status").then((r) => r.json()),
+    queryKey: ['system-status'],
+    queryFn: () => fetch('/api/system/status').then((r) => r.json()),
     retry: false,
     staleTime: Infinity,
   });
   const demoMode = data?.demo_mode === true;
 
   useEffect(() => {
-    if (demoMode && sessionStorage.getItem(SESSION_KEY) !== "1") {
+    if (demoMode && sessionStorage.getItem(SESSION_KEY) !== '1') {
       setModalOpen(true);
     }
   }, [demoMode]);
 
   const closeModal = () => {
-    sessionStorage.setItem(SESSION_KEY, "1");
+    sessionStorage.setItem(SESSION_KEY, '1');
     setModalOpen(false);
   };
 
@@ -85,10 +85,7 @@ export function DemoBanner() {
             {/* Header */}
             <div className="flex items-start gap-3 px-6 pt-6 pb-3">
               <div className="shrink-0 w-11 h-11 rounded-full bg-amber-100 dark:bg-amber-950/40 flex items-center justify-center">
-                <AlertTriangle
-                  size={22}
-                  className="text-amber-600 dark:text-amber-400"
-                />
+                <AlertTriangle size={22} className="text-amber-600 dark:text-amber-400" />
               </div>
               <div className="flex-1 min-w-0">
                 <h2 className="text-lg font-bold text-content-primary leading-tight">
@@ -111,12 +108,19 @@ export function DemoBanner() {
             {/* Body */}
             <div className="px-6 pb-2 space-y-3 text-sm text-content-secondary leading-relaxed">
               <p>
-                You're looking at the public hosted demo of{" "}
+                You're looking at the public hosted demo of{' '}
                 <strong className="text-content-primary">
                   OpenConstructionERP
                 </strong>
-                . It runs on a single small VPS and is shared with everyone in
-                the world who clicks the demo link, so:
+                . It runs on a{' '}
+                <strong className="text-content-primary">
+                  small 2&nbsp;GB&nbsp;RAM VPS
+                </strong>{' '}
+                shared with every visitor on the internet — it is meant for a{' '}
+                <strong className="text-content-primary">
+                  quick surface walkthrough
+                </strong>{' '}
+                of the product, nothing more. Specifically:
               </p>
               <ul className="space-y-2 pl-1">
                 <li className="flex gap-2.5">
@@ -124,7 +128,7 @@ export function DemoBanner() {
                   <span>
                     <strong className="text-content-primary">
                       Do not upload real or confidential data.
-                    </strong>{" "}
+                    </strong>{' '}
                     Anything you put here is visible to other demo visitors.
                   </span>
                 </li>
@@ -132,11 +136,13 @@ export function DemoBanner() {
                   <span className="shrink-0 w-1.5 h-1.5 rounded-full bg-amber-500 mt-1.5" />
                   <span>
                     <strong className="text-content-primary">
-                      Not every module is stable here.
-                    </strong>{" "}
+                      Expect a surface-level look only.
+                    </strong>{' '}
                     Heavy features (CAD/BIM conversion, AI inference, vector
-                    search) are tuned for local installs and may be slow or
-                    rate-limited on the demo.
+                    search) need real RAM and are tuned for local installs —
+                    on the 2&nbsp;GB demo box they may be slow, rate-limited,
+                    or simply unavailable. For benchmarks or full workflows,
+                    install locally.
                   </span>
                 </li>
                 <li className="flex gap-2.5">
@@ -144,7 +150,7 @@ export function DemoBanner() {
                   <span>
                     <strong className="text-content-primary">
                       Install locally for real work.
-                    </strong>{" "}
+                    </strong>{' '}
                     The full product runs on your own machine in two minutes.
                     Your data stays on your computer.
                   </span>

@@ -20,6 +20,7 @@ from decimal import ROUND_HALF_UP, Decimal, InvalidOperation
 from typing import Any
 
 from fastapi import HTTPException, status
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.events import event_bus
@@ -75,6 +76,28 @@ logger = logging.getLogger(__name__)
 
 REQUIRED_CERT_TYPES_FOR_PAYMENT: tuple[str, ...] = ("insurance", "license")
 EXPIRY_WINDOWS: tuple[int, ...] = (60, 30, 7)
+
+# ── R5 PII safety ──────────────────────────────────────────────────────────
+# Subcontractor contacts carry e-mail + phone — GDPR Art. 5(1)(c) requires
+# logs strip them before interpolation. Mirror the v4.2.4 contacts pattern.
+
+# Fields on SubcontractorUpdate that NO caller may set directly via PATCH —
+# they are derived from internal events (rating roll-up).
+_DERIVED_FIELDS_ON_SUB: frozenset[str] = frozenset({"rating_score"})
+
+
+def _redact_email(email: str | None) -> str:
+    if not email or "@" not in email:
+        return "<redacted>"
+    local, _, domain = email.partition("@")
+    return f"{local[:1]}***@{domain}" if local else f"***@{domain}"
+
+
+def _redact_phone(phone: str | None) -> str:
+    if not phone:
+        return "<redacted>"
+    digits = re.sub(r"\D", "", phone)
+    return f"***{digits[-2:]}" if len(digits) >= 2 else "<redacted>"
 
 
 # ── Pure helpers ─────────────────────────────────────────────────────────
@@ -165,7 +188,11 @@ def next_payment_blocked(
             reasons.append(f"missing_required_certificate:{cert_type}")
             continue
         # Need at least one valid (not revoked, not expired) cert per type.
-        has_valid = any((not c.revoked) and (c.valid_until is None or c.valid_until >= ref) for c in certs_of_type)
+        has_valid = any(
+            (not c.revoked)
+            and (c.valid_until is None or c.valid_until >= ref)
+            for c in certs_of_type
+        )
         if not has_valid:
             reasons.append(f"expired_or_revoked_certificate:{cert_type}")
 
@@ -276,7 +303,12 @@ def compute_rating(
     schedule = _clamp(schedule)
     cost = _clamp(cost)
 
-    overall = quality * w["quality"] + hse * w["hse"] + schedule * w["schedule"] + cost * w["cost"]
+    overall = (
+        quality * w["quality"]
+        + hse * w["hse"]
+        + schedule * w["schedule"]
+        + cost * w["cost"]
+    )
 
     return Rating(
         quality_score=quality,
@@ -440,10 +472,7 @@ _AGREEMENT_TRANSITIONS: dict[str, set[str]] = {
 
 
 def _assert_transition(
-    from_status: str,
-    to_status: str,
-    table: dict[str, set[str]],
-    label: str,
+    from_status: str, to_status: str, table: dict[str, set[str]], label: str,
 ) -> None:
     if to_status not in table.get(from_status, set()):
         raise HTTPException(
@@ -474,10 +503,26 @@ class SubcontractorService:
     # ── Subcontractor CRUD ─────────────────────────────────────────────
 
     async def create_subcontractor(
-        self,
-        data: SubcontractorCreate,
-        user_id: str | None = None,
+        self, data: SubcontractorCreate, user_id: str | None = None,
     ) -> Subcontractor:
+        # Read-then-write duplicate guard on (country, tax_id). The DB
+        # also carries a partial unique index post-v3099 — that's the
+        # backstop; this read keeps the happy path 409 instead of 500.
+        # Stub repositories in unit tests don't implement the method;
+        # the IntegrityError handler below still catches a race.
+        find_by_tax_id = getattr(self.subs, "find_by_tax_id", None)
+        if data.tax_id and find_by_tax_id is not None:
+            existing = await find_by_tax_id(
+                data.tax_id, country=data.country,
+            )
+            if existing is not None:
+                raise HTTPException(
+                    status_code=status.HTTP_409_CONFLICT,
+                    detail=(
+                        "A subcontractor with this tax_id already exists "
+                        f"for country {data.country or '?'}."
+                    ),
+                )
         entity = Subcontractor(
             contact_id=data.contact_id,
             legal_name=data.legal_name,
@@ -491,11 +536,24 @@ class SubcontractorService:
             notes=data.notes,
             created_by=user_id,
         )
-        await self.subs.create(entity)
+        try:
+            await self.subs.create(entity)
+        except IntegrityError:
+            # Two concurrent POSTs raced past the read-then-write check
+            # above. Translate to 409 so callers retry intelligently.
+            await self.session.rollback()
+            raise HTTPException(
+                status_code=status.HTTP_409_CONFLICT,
+                detail="A subcontractor with this tax_id already exists.",
+            ) from None
         event_bus.publish_detached(
             "subcontractors.subcontractor.created",
             {"subcontractor_id": str(entity.id), "legal_name": entity.legal_name},
             source_module="subcontractors",
+        )
+        logger.info(
+            "subcontractor.created id=%s name=%s by=%s",
+            entity.id, entity.legal_name, user_id or "<anon>",
         )
         return entity
 
@@ -506,12 +564,20 @@ class SubcontractorService:
         return entity
 
     async def update_subcontractor(
-        self,
-        sub_id: uuid.UUID,
-        data: SubcontractorUpdate,
+        self, sub_id: uuid.UUID, data: SubcontractorUpdate,
     ) -> Subcontractor:
         await self.get_subcontractor(sub_id)
         fields = data.model_dump(exclude_unset=True)
+        # Defence-in-depth: even if a future schema regression re-introduces
+        # ``rating_score`` on the update payload, the service must never
+        # accept it through this gate.
+        for derived in _DERIVED_FIELDS_ON_SUB:
+            if derived in fields:
+                fields.pop(derived, None)
+                logger.warning(
+                    "Refusing PATCH to derived field %s on sub=%s",
+                    derived, sub_id,
+                )
         if fields:
             await self.subs.update_fields(sub_id, **fields)
         entity = await self.get_subcontractor(sub_id)
@@ -524,8 +590,7 @@ class SubcontractorService:
     # ── Contact CRUD ─────────────────────────────────────────────────────
 
     async def create_contact(
-        self,
-        data: SubcontractorContactCreate,
+        self, data: SubcontractorContactCreate,
     ) -> SubcontractorContact:
         entity = SubcontractorContact(
             subcontractor_id=data.subcontractor_id,
@@ -536,12 +601,16 @@ class SubcontractorService:
             primary=data.primary,
         )
         await self.contacts.create(entity)
+        # PII-safe log line — never interpolate raw e-mail / phone.
+        logger.info(
+            "subcontractor_contact.created id=%s sub=%s role=%s email=%s phone=%s",
+            entity.id, data.subcontractor_id, data.role or "<none>",
+            _redact_email(data.email), _redact_phone(data.phone),
+        )
         return entity
 
     async def update_contact(
-        self,
-        contact_id: uuid.UUID,
-        data: SubcontractorContactUpdate,
+        self, contact_id: uuid.UUID, data: SubcontractorContactUpdate,
     ) -> SubcontractorContact:
         entity = await self.contacts.get_by_id(contact_id)
         if entity is None:
@@ -550,6 +619,12 @@ class SubcontractorService:
         if fields:
             await self.contacts.update_fields(contact_id, **fields)
             await self.session.refresh(entity)
+            # Log only field *names* — values may carry new PII the
+            # operator should not see in centralised log storage.
+            logger.info(
+                "subcontractor_contact.updated id=%s changed=%s",
+                contact_id, sorted(fields.keys()),
+            )
         return entity
 
     async def delete_contact(self, contact_id: uuid.UUID) -> None:
@@ -558,9 +633,7 @@ class SubcontractorService:
     # ── Prequalification workflow ───────────────────────────────────────
 
     async def create_prequalification(
-        self,
-        data: PrequalificationCreate,
-        user_id: str | None = None,
+        self, data: PrequalificationCreate, user_id: str | None = None,
     ) -> PrequalificationApplication:
         # Ensure parent subcontractor exists.
         await self.get_subcontractor(data.subcontractor_id)
@@ -574,9 +647,7 @@ class SubcontractorService:
         return entity
 
     async def update_prequalification(
-        self,
-        prequal_id: uuid.UUID,
-        data: PrequalificationUpdate,
+        self, prequal_id: uuid.UUID, data: PrequalificationUpdate,
     ) -> PrequalificationApplication:
         entity = await self.prequal.get_by_id(prequal_id)
         if entity is None:
@@ -590,8 +661,7 @@ class SubcontractorService:
         return entity
 
     async def submit_prequalification(
-        self,
-        prequal_id: uuid.UUID,
+        self, prequal_id: uuid.UUID,
     ) -> PrequalificationApplication:
         entity = await self.prequal.get_by_id(prequal_id)
         if entity is None:
@@ -633,8 +703,7 @@ class SubcontractorService:
         )
         # Cascade: parent subcontractor is now approved.
         await self.subs.update_fields(
-            entity.subcontractor_id,
-            prequalification_status="approved",
+            entity.subcontractor_id, prequalification_status="approved",
         )
         await self.session.refresh(entity)
         event_bus.publish_detached(
@@ -662,8 +731,7 @@ class SubcontractorService:
             decision_notes=notes,
         )
         await self.subs.update_fields(
-            entity.subcontractor_id,
-            prequalification_status="rejected",
+            entity.subcontractor_id, prequalification_status="rejected",
         )
         await self.session.refresh(entity)
         return entity
@@ -671,10 +739,7 @@ class SubcontractorService:
     # ── Certificate management ──────────────────────────────────────────
 
     async def record_certificate(
-        self,
-        data: CertificateCreate,
-        *,
-        today: date | None = None,
+        self, data: CertificateCreate, *, today: date | None = None,
     ) -> Certificate:
         await self.get_subcontractor(data.subcontractor_id)
         status_value = derive_cert_status(data.valid_until, revoked=False, today=today)
@@ -716,10 +781,7 @@ class SubcontractorService:
         await self.certs.delete(certificate_id)
 
     async def list_expiring_certificates(
-        self,
-        days: int = 60,
-        *,
-        today: date | None = None,
+        self, days: int = 60, *, today: date | None = None,
     ) -> list[ExpiryAlert]:
         ref = today or date.today()
         # Pull anything ending within `days` (inclusive of already-expired
@@ -734,9 +796,7 @@ class SubcontractorService:
     # ── Agreements ──────────────────────────────────────────────────────
 
     async def create_agreement(
-        self,
-        data: AgreementCreate,
-        user_id: str | None = None,
+        self, data: AgreementCreate, user_id: str | None = None,
     ) -> SubcontractAgreement:
         await self.get_subcontractor(data.subcontractor_id)
         entity = SubcontractAgreement(
@@ -760,9 +820,7 @@ class SubcontractorService:
         return entity
 
     async def update_agreement(
-        self,
-        agreement_id: uuid.UUID,
-        data: AgreementUpdate,
+        self, agreement_id: uuid.UUID, data: AgreementUpdate,
     ) -> SubcontractAgreement:
         entity = await self.agreements.get_by_id(agreement_id)
         if entity is None:
@@ -770,10 +828,7 @@ class SubcontractorService:
         fields = data.model_dump(exclude_unset=True)
         if "status" in fields and fields["status"] is not None:
             _assert_transition(
-                entity.status,
-                fields["status"],
-                _AGREEMENT_TRANSITIONS,
-                "agreement",
+                entity.status, fields["status"], _AGREEMENT_TRANSITIONS, "agreement",
             )
         if fields:
             await self.agreements.update_fields(agreement_id, **fields)
@@ -801,9 +856,7 @@ class SubcontractorService:
         return entity
 
     async def update_work_package(
-        self,
-        wp_id: uuid.UUID,
-        data: WorkPackageUpdate,
+        self, wp_id: uuid.UUID, data: WorkPackageUpdate,
     ) -> WorkPackage:
         entity = await self.work_packages.get_by_id(wp_id)
         if entity is None:
@@ -860,11 +913,12 @@ class SubcontractorService:
 
         retention_pct = Decimal(str(agreement.retention_percent))
         retention_amount = (gross * retention_pct / Decimal("100")).quantize(
-            Decimal("0.01"),
-            rounding=ROUND_HALF_UP,
+            Decimal("0.01"), rounding=ROUND_HALF_UP,
         )
         net_amount = gross - retention_amount
-        application_number = data.application_number or (await self.payments.next_application_number(data.agreement_id))
+        application_number = data.application_number or (
+            await self.payments.next_application_number(data.agreement_id)
+        )
         currency = data.currency or agreement.currency
 
         entity = PaymentApplication(
@@ -919,9 +973,7 @@ class SubcontractorService:
         return entity
 
     async def update_payment_application(
-        self,
-        payment_id: uuid.UUID,
-        data: PaymentApplicationUpdate,
+        self, payment_id: uuid.UUID, data: PaymentApplicationUpdate,
     ) -> PaymentApplication:
         entity = await self.payments.get_by_id(payment_id)
         if entity is None:
@@ -943,9 +995,9 @@ class SubcontractorService:
             agreement = await self.agreements.get_by_id(entity.agreement_id)
             if agreement is None:
                 raise HTTPException(status_code=404, detail="Agreement not found")
-            retention_amount = (gross * Decimal(str(agreement.retention_percent)) / Decimal("100")).quantize(
-                Decimal("0.01"), rounding=ROUND_HALF_UP
-            )
+            retention_amount = (
+                gross * Decimal(str(agreement.retention_percent)) / Decimal("100")
+            ).quantize(Decimal("0.01"), rounding=ROUND_HALF_UP)
             fields["retention_amount"] = retention_amount
             fields["net_amount"] = gross - retention_amount
             # Keep the linked accrual ledger entry in lock-step — otherwise the
@@ -953,8 +1005,7 @@ class SubcontractorService:
             for ledger in await self.retention.list_for_payment_application(payment_id):
                 if ledger.released_amount == 0:
                     await self.retention.update_fields(
-                        ledger.id,
-                        accrued_amount=retention_amount,
+                        ledger.id, accrued_amount=retention_amount,
                     )
         if fields:
             await self.payments.update_fields(payment_id, **fields)
@@ -962,38 +1013,29 @@ class SubcontractorService:
         return entity
 
     async def approve_payment_application_foreman(
-        self,
-        payment_id: uuid.UUID,
-        user_id: str,
+        self, payment_id: uuid.UUID, user_id: str,
     ) -> PaymentApplication:
         return await self._transition_payment(
-            payment_id,
-            "foreman_approved",
+            payment_id, "foreman_approved",
             extra={"foreman_approved_at": datetime.now(UTC), "foreman_approved_by": user_id},
         )
 
     async def approve_payment_application_finance(
-        self,
-        payment_id: uuid.UUID,
-        user_id: str,
+        self, payment_id: uuid.UUID, user_id: str,
     ) -> PaymentApplication:
         return await self._transition_payment(
-            payment_id,
-            "finance_approved",
+            payment_id, "finance_approved",
             extra={"finance_approved_at": datetime.now(UTC), "finance_approved_by": user_id},
         )
 
     async def mark_paid(self, payment_id: uuid.UUID) -> PaymentApplication:
         return await self._transition_payment(
-            payment_id,
-            "paid",
+            payment_id, "paid",
             extra={"paid_at": datetime.now(UTC)},
         )
 
     async def reject_payment_application(
-        self,
-        payment_id: uuid.UUID,
-        reason: str,
+        self, payment_id: uuid.UUID, reason: str,
     ) -> PaymentApplication:
         entity = await self.payments.get_by_id(payment_id)
         if entity is None:
@@ -1004,9 +1046,7 @@ class SubcontractorService:
                 detail=f"Cannot reject a payment in status {entity.status}",
             )
         await self.payments.update_fields(
-            payment_id,
-            status="rejected",
-            rejection_reason=reason,
+            payment_id, status="rejected", rejection_reason=reason,
         )
         # Reverse the retention accrual booked at submission — a rejected
         # payment application must not keep inflating the pending-retention
@@ -1016,7 +1056,8 @@ class SubcontractorService:
                 await self.retention.update_fields(
                     ledger.id,
                     accrued_amount=Decimal("0"),
-                    notes=(ledger.notes or "") + f" [reversed: payment {entity.application_number} rejected]",
+                    notes=(ledger.notes or "")
+                    + f" [reversed: payment {entity.application_number} rejected]",
                 )
         await self.session.refresh(entity)
         return entity
@@ -1086,7 +1127,10 @@ class SubcontractorService:
         if amount > balance:
             raise HTTPException(
                 status_code=status.HTTP_409_CONFLICT,
-                detail=(f"Cannot release {amount}: exceeds the outstanding retention balance of {balance}"),
+                detail=(
+                    f"Cannot release {amount}: exceeds the outstanding "
+                    f"retention balance of {balance}"
+                ),
             )
         entry = RetentionLedger(
             agreement_id=agreement_id,
@@ -1117,9 +1161,7 @@ class SubcontractorService:
     # ── Rating ─────────────────────────────────────────────────────────
 
     async def update_rating(
-        self,
-        data: RatingCreate,
-        events: dict[str, Any] | None = None,
+        self, data: RatingCreate, events: dict[str, Any] | None = None,
     ) -> SubcontractorRating:
         await self.get_subcontractor(data.subcontractor_id)
 
@@ -1184,33 +1226,53 @@ class SubcontractorService:
     # ── Dashboard ──────────────────────────────────────────────────────
 
     async def dashboard(
-        self,
-        sub_id: uuid.UUID,
-        *,
-        today: date | None = None,
+        self, sub_id: uuid.UUID, *, today: date | None = None,
     ) -> SubcontractorDashboard:
         sub = await self.get_subcontractor(sub_id)
         agreements = await self.agreements.list_for_subcontractor(sub_id)
         active_agreements = sum(1 for a in agreements if a.status == "active")
 
-        open_payments = 0
-        for ag in agreements:
-            payments = await self.payments.list_for_agreement(ag.id)
-            open_payments += sum(
-                1 for p in payments if p.status in ("submitted", "foreman_approved", "finance_approved")
-            )
-
-        pending_retention = Decimal("0")
-        for ag in agreements:
-            pending_retention += await self.retention_balance(ag.id)
+        # R5: collapse N+1 — single COUNT over all of this sub's agreements
+        # and a single SUM(GROUP BY) over the retention ledger. Old code
+        # fired 2 queries per agreement; for a sub with 30 agreements that
+        # was 60 round-trips per dashboard hit.
+        agreement_ids = [a.id for a in agreements]
+        count_batched = getattr(self.payments, "count_open_for_agreements", None)
+        if count_batched is not None:
+            open_payments = await count_batched(agreement_ids)
+        else:
+            open_payments = 0
+            for ag in agreements:
+                payments = await self.payments.list_for_agreement(ag.id)
+                open_payments += sum(
+                    1
+                    for p in payments
+                    if p.status in (
+                        "submitted", "foreman_approved", "finance_approved",
+                    )
+                )
+        balance_batched = getattr(self.retention, "balance_for_agreements", None)
+        if balance_batched is not None:
+            balances = await balance_batched(agreement_ids)
+            pending_retention = Decimal("0")
+            for accrued, released in balances.values():
+                pending_retention += Decimal(accrued) - Decimal(released)
+        else:
+            pending_retention = Decimal("0")
+            for ag in agreements:
+                pending_retention += await self.retention_balance(ag.id)
 
         ref = today or date.today()
         certs = await self.certs.list_by_subcontractor(sub_id)
-        expired = sum(1 for c in certs if c.valid_until is not None and c.valid_until < ref)
+        expired = sum(
+            1 for c in certs if c.valid_until is not None and c.valid_until < ref
+        )
         expiring_soon = sum(
             1
             for c in certs
-            if c.valid_until is not None and ref <= c.valid_until <= (ref + timedelta(days=60)) and not c.revoked
+            if c.valid_until is not None
+            and ref <= c.valid_until <= (ref + timedelta(days=60))
+            and not c.revoked
         )
         block = next_payment_blocked(certs, today=ref)
 
@@ -1487,10 +1549,14 @@ class SubcontractorService:
                     "subcontractor_id": str(sub.id),
                     "legal_name": sub.legal_name,
                     "insurance_expiry_date": (
-                        sub.insurance_expiry_date.isoformat() if sub.insurance_expiry_date else None
+                        sub.insurance_expiry_date.isoformat()
+                        if sub.insurance_expiry_date
+                        else None
                     ),
                     "days_until_expiry": (
-                        (sub.insurance_expiry_date - ref).days if sub.insurance_expiry_date else None
+                        (sub.insurance_expiry_date - ref).days
+                        if sub.insurance_expiry_date
+                        else None
                     ),
                 },
                 source_module="subcontractors",
@@ -1511,9 +1577,7 @@ class SubcontractorService:
         """
         await self.get_subcontractor(sub_id)
         await self.subs.update_fields(
-            sub_id,
-            is_blocked=True,
-            blocked_reason=reason,
+            sub_id, is_blocked=True, blocked_reason=reason,
         )
         event_bus.publish_detached(
             "subcontractors.blocked",
@@ -1534,9 +1598,7 @@ class SubcontractorService:
         """Clear the block flag + reason on a subcontractor."""
         await self.get_subcontractor(sub_id)
         await self.subs.update_fields(
-            sub_id,
-            is_blocked=False,
-            blocked_reason=None,
+            sub_id, is_blocked=False, blocked_reason=None,
         )
         event_bus.publish_detached(
             "subcontractors.unblocked",
@@ -1552,30 +1614,12 @@ class SubcontractorService:
 # ── Prequal score helper ─────────────────────────────────────────────────
 
 
-_PREQUAL_TRUTHY: frozenset[str] = frozenset(
-    {
-        "yes",
-        "true",
-        "y",
-        "1",
-        "ok",
-        "pass",
-        "passed",
-        "compliant",
-    }
-)
-_PREQUAL_NEGATIVE: frozenset[str] = frozenset(
-    {
-        "no",
-        "false",
-        "n",
-        "0",
-        "fail",
-        "failed",
-        "non-compliant",
-        "noncompliant",
-    }
-)
+_PREQUAL_TRUTHY: frozenset[str] = frozenset({
+    "yes", "true", "y", "1", "ok", "pass", "passed", "compliant",
+})
+_PREQUAL_NEGATIVE: frozenset[str] = frozenset({
+    "no", "false", "n", "0", "fail", "failed", "non-compliant", "noncompliant",
+})
 
 
 def _compute_prequal_score(answers: dict[str, Any]) -> int:

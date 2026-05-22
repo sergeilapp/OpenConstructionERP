@@ -2,40 +2,29 @@
 // Regenerate with: node --experimental-strip-types scripts/split-i18n-fallbacks.mjs
 
 const resource = {
-  translation: {
-    "about.ai_desc":
-      "OpenConstructionERP obsahuje volitelné nástroje s umělou inteligencí — rychlý odhad z textového popisu, chytré návrhy cen a chatového asistenta pro rozpočty. Tyto funkce vyžadují API klíč od poskytovatele dle vašeho výběru (Anthropic, OpenAI, Google). AI je vždy volitelná: aktivuje se pouze po konfiguraci a vy rozhodujete, jaká data odešlete. Bez API klíče fungují všechny ostatní funkce plně offline.",
+  "translation": {
+    "about.ai_desc": "OpenConstructionERP obsahuje volitelné nástroje s umělou inteligencí — rychlý odhad z textového popisu, chytré návrhy cen a chatového asistenta pro rozpočty. Tyto funkce vyžadují API klíč od poskytovatele dle vašeho výběru (Anthropic, OpenAI, Google). AI je vždy volitelná: aktivuje se pouze po konfiguraci a vy rozhodujete, jaká data odešlete. Bez API klíče fungují všechny ostatní funkce plně offline.",
     "about.ai_title": "O funkcích AI",
     "about.cap.boq": "Rozpočet",
-    "about.cap.boq_desc":
-      "Vytvářejte podrobné rozpočty s hierarchickými sekcemi, položkami, sestavami, přirážkami (režie, zisk, DPH) a automatickými součty. Podporuje DIN 276, NRM 1/2, MasterFormat a vlastní klasifikační systémy.",
+    "about.cap.boq_desc": "Vytvářejte podrobné rozpočty s hierarchickými sekcemi, položkami, sestavami, přirážkami (režie, zisk, DPH) a automatickými součty. Podporuje DIN 276, NRM 1/2, MasterFormat a vlastní klasifikační systémy.",
     "about.cap.catalog": "Katalog zdrojů",
-    "about.cap.catalog_desc":
-      "7 000+ zdrojů — materiály, stroje, práce, obsluha a služby. Sestavujte opakovaně použitelné kalkulace (složené sazby) z položek katalogu a aplikujte je přímo na položky rozpočtu.",
+    "about.cap.catalog_desc": "7 000+ zdrojů — materiály, stroje, práce, obsluha a služby. Sestavujte opakovaně použitelné kalkulace (složené sazby) z položek katalogu a aplikujte je přímo na položky rozpočtu.",
     "about.cap.costmodel": "5D model nákladů",
-    "about.cap.costmodel_desc":
-      'Sledujte rozpočty v čase pomocí řízení dosažené hodnoty (SPI, CPI), vizualizace S-křivky, projekcí cash flow, snímků nákladů a modelování scénářů „co když" pro informované rozhodování.',
+    "about.cap.costmodel_desc": "Sledujte rozpočty v čase pomocí řízení dosažené hodnoty (SPI, CPI), vizualizace S-křivky, projekcí cash flow, snímků nákladů a modelování scénářů „co když\" pro informované rozhodování.",
     "about.cap.costs": "Databáze cen",
-    "about.cap.costs_desc":
-      "55 000+ cenových položek v 11 regionálních databázích pokrývajících DACH, Velkou Británii, Severní Ameriku, Blízký východ a další. Přidejte vlastní sazby, importujte z Excelu nebo vytvořte vlastní databázi od nuly.",
+    "about.cap.costs_desc": "55 000+ cenových položek v 11 regionálních databázích pokrývajících DACH, Velkou Británii, Severní Ameriku, Blízký východ a další. Přidejte vlastní sazby, importujte z Excelu nebo vytvořte vlastní databázi od nuly.",
     "about.cap.import": "Import a export",
-    "about.cap.import_desc":
-      "Plná podpora importu/exportu GAEB XML (X83), Excelu a CSV. Generujte profesionální PDF reporty. Bezproblémová integrace s vašimi stávajícími nástroji a procesy.",
+    "about.cap.import_desc": "Plná podpora importu/exportu GAEB XML (X83), Excelu a CSV. Generujte profesionální PDF reporty. Bezproblémová integrace s vašimi stávajícími nástroji a procesy.",
     "about.cap.schedule": "4D harmonogram",
-    "about.cap.schedule_desc":
-      "Vytvářejte harmonogramy projektů s výpočtem kritické cesty (CPM), interaktivními Ganttovými diagramy, analýzou rizik Monte Carlo, přiřazením zdrojů a automatickým generováním činností z vašeho rozpočtu.",
+    "about.cap.schedule_desc": "Vytvářejte harmonogramy projektů s výpočtem kritické cesty (CPM), interaktivními Ganttovými diagramy, analýzou rizik Monte Carlo, přiřazením zdrojů a automatickým generováním činností z vašeho rozpočtu.",
     "about.cap.tendering": "Výběrová řízení a nabídky",
-    "about.cap.tendering_desc":
-      "Vytvářejte balíčky výběrových řízení s rozsahem a položkami, rozesílejte subdodavatelům, sbírejte a porovnávejte nabídky vedle sebe v cenovém zrcadle a rozhodujte o zadání na základě dat.",
+    "about.cap.tendering_desc": "Vytvářejte balíčky výběrových řízení s rozsahem a položkami, rozesílejte subdodavatelům, sbírejte a porovnávejte nabídky vedle sebe v cenovém zrcadle a rozhodujte o zadání na základě dat.",
     "about.cap.validation": "Kontrola kvality",
-    "about.cap.validation_desc":
-      "Vestavěný systém kvality automaticky kontroluje chybějící množství, nulové ceny, duplicitní položky, shodu klasifikace a anomálie sazeb — s přehledovým panelem semaforu.",
+    "about.cap.validation_desc": "Vestavěný systém kvality automaticky kontroluje chybějící množství, nulové ceny, duplicitní položky, shodu klasifikace a anomálie sazeb — s přehledovým panelem semaforu.",
     "about.capabilities_title": "Co můžete dělat",
     "about.close": "Rozumím",
-    "about.intro":
-      "OpenConstructionERP je moderní platforma pro řízení nákladů ve stavebnictví. Pokrývá celý proces kalkulace — od vytvoření výkazu výměr po výběrové řízení a porovnání nabídek. Navržena pro profesionály po celém světě, podporuje mezinárodní standardy a funguje ve 20 jazycích.",
-    "about.intro2":
-      "Na rozdíl od tradičních komerčních řešení OpenConstructionERP běží výhradně na vašem počítači. Vaše projektová data nikdy neopouštějí váš stroj — máte plné vlastnictví a kontrolu. Zdrojový kód je otevřený a auditovatelný, takže vždy přesně víte, co software dělá.",
+    "about.intro": "OpenConstructionERP je moderní platforma pro řízení nákladů ve stavebnictví. Pokrývá celý proces kalkulace — od vytvoření výkazu výměr po výběrové řízení a porovnání nabídek. Navržena pro profesionály po celém světě, podporuje mezinárodní standardy a funguje ve 20 jazycích.",
+    "about.intro2": "Na rozdíl od tradičních komerčních řešení OpenConstructionERP běží výhradně na vašem počítači. Vaše projektová data nikdy neopouštějí váš stroj — máte plné vlastnictví a kontrolu. Zdrojový kód je otevřený a auditovatelný, takže vždy přesně víte, co software dělá.",
     "about.numbers_title": "Platforma v číslech",
     "about.stat.costs": "Cenových položek",
     "about.stat.free": "Zdarma a open source",
@@ -52,15 +41,11 @@ const resource = {
     "about.who.qsurveyor": "Rozpočtáři a měřiči",
     "about.who.students": "Studenti a pedagogové",
     "about.who.subs": "Subdodavatelé",
-    "about.who_desc":
-      "OpenConstructionERP je navržen pro každého, kdo se zabývá řízením nákladů ve stavebnictví — ať už pracujete na rezidenčních projektech nebo velkých infrastrukturních stavbách, interně nebo jako konzultant.",
+    "about.who_desc": "OpenConstructionERP je navržen pro každého, kdo se zabývá řízením nákladů ve stavebnictví — ať už pracujete na rezidenčních projektech nebo velkých infrastrukturních stavbách, interně nebo jako konzultant.",
     "about.who_title": "Pro koho je určen",
-    "about.why_1":
-      "Data o stavebních nákladech patří k nejcennějším aktivům firmy. U proprietárního softwaru jsou vaše data často uzamčena ve formátech, které nemůžete ovládat. Pokud dodavatel zvýší ceny, změní podmínky nebo ukončí produkt — můžete přijít o roky práce.",
-    "about.why_2":
-      "OpenConstructionERP má jiný přístup. Vaše data jsou uložena v otevřených formátech (SQLite, JSON, CSV) na vašem vlastním hardwaru. Vše můžete kdykoli exportovat. Zdrojový kód je veřejně auditovatelný pod licencí AGPL-3.0, takže nejsou žádné skryté přenosy dat, žádná telemetrie a žádná překvapení.",
-    "about.why_3":
-      "Platforma je modulární — nainstalujte si jen to, co potřebujete. Komunitní moduly rozšiřují funkčnost bez zatěžování jádra. A protože běží lokálně, funguje i offline a je rychlá i u velkých projektů.",
+    "about.why_1": "Data o stavebních nákladech patří k nejcennějším aktivům firmy. U proprietárního softwaru jsou vaše data často uzamčena ve formátech, které nemůžete ovládat. Pokud dodavatel zvýší ceny, změní podmínky nebo ukončí produkt — můžete přijít o roky práce.",
+    "about.why_2": "OpenConstructionERP má jiný přístup. Vaše data jsou uložena v otevřených formátech (SQLite, JSON, CSV) na vašem vlastním hardwaru. Vše můžete kdykoli exportovat. Zdrojový kód je veřejně auditovatelný pod licencí AGPL-3.0, takže nejsou žádné skryté přenosy dat, žádná telemetrie a žádná překvapení.",
+    "about.why_3": "Platforma je modulární — nainstalujte si jen to, co potřebujete. Komunitní moduly rozšiřují funkčnost bez zatěžování jádra. A protože běží lokálně, funguje i offline a je rychlá i u velkých projektů.",
     "about.why_title": "Proč záleží na open source",
     "ai.analyze_photo": "Analyzovat fotku",
     "ai.area": "Plocha (m²)",
@@ -68,8 +53,7 @@ const resource = {
     "ai.boq_name_placeholder": "Název tohoto rozpočtu...",
     "ai.boq_saved": "Rozpočet úspěšně uložen",
     "ai.building_type": "Typ budovy",
-    "ai.cad_info":
-      "CAD/BIM soubory (.rvt, .ifc, .dwg, .dgn) vyžadují nainstalovaný DDC konvertor. Elementy budou extrahovány a použity pro generování odhadu nákladů. Stáhněte konvertory z GitHubu a umístěte je do ~/.openestimator/converters/.",
+    "ai.cad_info": "CAD/BIM soubory (.rvt, .ifc, .dwg, .dgn) vyžadují nainstalovaný DDC konvertor. Elementy budou extrahovány a použity pro generování odhadu nákladů. Stáhněte konvertory z GitHubu a umístěte je do ~/.openestimator/converters/.",
     "ai.choose_project": "-- Vyberte projekt --",
     "ai.col_description": "Popis",
     "ai.col_pos": "Pol.",
@@ -90,8 +74,7 @@ const resource = {
     "ai.estimate_failed": "Odhad se nezdařil",
     "ai.estimate_subtitle": "Vytvořte odhad z libovolného zdroje",
     "ai.estimate_title": "AI odhad",
-    "ai.excel_hint":
-      "Nejlépe funguje se sloupci: Popis, MJ, Množství, Sazba/Cena.",
+    "ai.excel_hint": "Nejlépe funguje se sloupci: Popis, MJ, Množství, Sazba/Cena.",
     "ai.export_coming_soon": "Export bude brzy k dispozici",
     "ai.export_pdf": "Exportovat PDF",
     "ai.extract_estimate": "Extrahovat a odhadnout",
@@ -106,12 +89,9 @@ const resource = {
     "ai.location_placeholder": "např. Praha",
     "ai.new_estimate": "Nový odhad",
     "ai.parse_import": "Analyzovat a importovat",
-    "ai.paste_info":
-      "Automaticky rozpozná tabulátory, středníky nebo čárky jako oddělovače. AI analyzuje a strukturuje vaše data do položek odhadu.",
-    "ai.paste_placeholder":
-      "Vložte data rozpočtu (z Excelu, Wordu nebo libovolné tabulky)...\n\nPříklad:\nPol.\tPopis\tMJ\tMn.\tSazba\n01.01\tVýkopy\tm3\t250\t18,50\n01.02\tBeton C30/37\tm3\t120\t145,00\n01.03\tVýztuž BSt 500\tkg\t12000\t1,85",
-    "ai.pdf_hint":
-      "Nahrajte rozpočtové dokumenty, specifikace nebo výkresy ve formátu PDF.",
+    "ai.paste_info": "Automaticky rozpozná tabulátory, středníky nebo čárky jako oddělovače. AI analyzuje a strukturuje vaše data do položek odhadu.",
+    "ai.paste_placeholder": "Vložte data rozpočtu (z Excelu, Wordu nebo libovolné tabulky)...\n\nPříklad:\nPol.\tPopis\tMJ\tMn.\tSazba\n01.01\tVýkopy\tm3\t250\t18,50\n01.02\tBeton C30/37\tm3\t120\t145,00\n01.03\tVýztuž BSt 500\tkg\t12000\t1,85",
+    "ai.pdf_hint": "Nahrajte rozpočtové dokumenty, specifikace nebo výkresy ve formátu PDF.",
     "ai.powered_by": "Poháněno {{model}}",
     "ai.results": "Výsledky odhadu",
     "ai.save": "Uložit",
@@ -119,21 +99,18 @@ const resource = {
     "ai.save_failed": "Uložení rozpočtu selhalo",
     "ai.save_to_boq": "Uložit jako rozpočet",
     "ai.select_project": "Vybrat projekt",
-    "ai.setup_required_desc":
-      "Přidejte svůj API klíč pro Anthropic Claude, OpenAI nebo Google Gemini k generování odhadů z textu, fotek, PDF a CAD souborů.",
+    "ai.setup_required_desc": "Přidejte svůj API klíč pro Anthropic Claude, OpenAI nebo Google Gemini k generování odhadů z textu, fotek, PDF a CAD souborů.",
     "ai.setup_required_title": "Připojte AI a začněte",
     "ai.standard_label": "Standard",
     "ai.supported_formats": "Podporuje: {{formats}}",
     "ai.try_again": "Zkuste to prosím znovu nebo zkontrolujte nastavení AI.",
     "ai.advisor_title": "AI poradce nákladů",
-    "ai.advisor_desc":
-      "Ptejte se na náklady, materiály a ceny — z vaší databáze a znalostí AI",
+    "ai.advisor_desc": "Ptejte se na náklady, materiály a ceny — z vaší databáze a znalostí AI",
     "ai.advisor_empty": "Zeptejte se mě na stavební náklady",
     "ai.advisor_placeholder": "Ptejte se na náklady, materiály, ceny...",
     "ai.advisor_sources": "Zdroje:",
     "ai.advisor_error": "Chyba AI poradce",
-    "ai.advisor_unavailable":
-      "Nepodařilo se získat odpověď. Zkontrolujte nastavení AI.",
+    "ai.advisor_unavailable": "Nepodařilo se získat odpověď. Zkontrolujte nastavení AI.",
     "ai.advisor_q1": "Jaká je průměrná cena za m² omítky?",
     "ai.advisor_q2": "Porovnat ceny betonu podle regionů",
     "ai.advisor_q3": "Navrhnout levnější alternativy k oceli",
@@ -141,10 +118,8 @@ const resource = {
     "app.name": "OpenConstructionERP",
     "app.tagline": "Profesionální platforma pro stavební kalkulace",
     "assemblies.assemblies_found": "sestav",
-    "assemblies.description":
-      "Opakovaně použitelné kalkulace pro běžné stavební prvky",
-    "assemblies.what_are_assemblies":
-      'Sestavy jsou opakovaně použitelné kalkulace, které kombinují více zdrojů (materiály, práce, stroje) do jedné složené sazby. Například sestava „Železobetonová stěna" obsahuje beton, výztuž, bednění a práci. Aplikujte sestavy na položky rozpočtu pro automatické vyplnění nákladů komponentů.',
+    "assemblies.description": "Opakovaně použitelné kalkulace pro běžné stavební prvky",
+    "assemblies.what_are_assemblies": "Sestavy jsou opakovaně použitelné kalkulace, které kombinují více zdrojů (materiály, práce, stroje) do jedné složené sazby. Například sestava „Železobetonová stěna\" obsahuje beton, výztuž, bednění a práci. Aplikujte sestavy na položky rozpočtu pro automatické vyplnění nákladů komponentů.",
     "assemblies.new_assembly": "Nová sestava",
     "assemblies.no_results": "Žádné sestavy nenalezeny",
     "assemblies.no_results_hint": "Zkuste upravit vyhledávání nebo filtry",
@@ -153,20 +128,17 @@ const resource = {
     "auth.check_email": "Zkontrolujte svůj e-mail",
     "auth.confirm_password": "Potvrzení hesla",
     "auth.confirm_password_placeholder": "Zopakujte heslo",
-    "auth.connection_error":
-      "Nelze se připojit k serveru. Zkuste to prosím znovu.",
+    "auth.connection_error": "Nelze se připojit k serveru. Zkuste to prosím znovu.",
     "auth.create_account": "Vytvořit účet",
     "auth.email": "E-mail",
     "auth.forgot_password": "Zapomenuté heslo?",
-    "auth.forgot_subtitle":
-      "Zadejte svůj e-mail a zašleme vám odkaz pro obnovení.",
+    "auth.forgot_subtitle": "Zadejte svůj e-mail a zašleme vám odkaz pro obnovení.",
     "auth.full_name": "Celé jméno",
     "auth.full_name_placeholder": "Jan Novák",
     "auth.has_account": "Máte již účet?",
     "auth.invalid_credentials": "Neplatný e-mail nebo heslo",
     "auth.login": "Přihlásit se",
-    "auth.login_subtitle":
-      "Zadejte přihlašovací údaje pro přístup do pracovního prostoru",
+    "auth.login_subtitle": "Zadejte přihlašovací údaje pro přístup do pracovního prostoru",
     "auth.logout": "Odhlásit se",
     "auth.no_account": "Nemáte účet?",
     "auth.password": "Heslo",
@@ -180,10 +152,8 @@ const resource = {
     "auth.register_subtitle": "Začněte s OpenEstimate",
     "auth.register_title": "Vytvořit účet",
     "auth.remember_me": "Zapamatovat na 30 dní",
-    "auth.reset_error":
-      "Nelze zpracovat požadavek na obnovení. Zkuste to prosím znovu.",
-    "auth.reset_sent":
-      "Pokud pro tento e-mail existuje účet, obdržíte odkaz pro obnovení hesla.",
+    "auth.reset_error": "Nelze zpracovat požadavek na obnovení. Zkuste to prosím znovu.",
+    "auth.reset_sent": "Pokud pro tento e-mail existuje účet, obdržíte odkaz pro obnovení hesla.",
     "auth.send_reset_link": "Odeslat odkaz pro obnovení",
     "auth.server_error": "Nelze se připojit k serveru. Zkuste to prosím znovu.",
     "auth.sign_in": "Přihlásit se",
@@ -195,8 +165,7 @@ const resource = {
     "boq.aace_methodology": "Metodika",
     "boq.aace_metrics": "Metriky klasifikace",
     "boq.aace_positions": "Položky",
-    "boq.aace_reference":
-      "Na základě doporučené praxe AACE International 18R-97. Klasifikace je automaticky určena z metrik úplnosti rozpočtu.",
+    "boq.aace_reference": "Na základě doporučené praxe AACE International 18R-97. Klasifikace je automaticky určena z metrik úplnosti rozpočtu.",
     "boq.aace_to": "až",
     "boq.aace_with_classification": "S klasifikací",
     "boq.aace_with_rates": "S jednotkovými cenami",
@@ -215,17 +184,14 @@ const resource = {
     "boq.adding": "Přidávám...",
     "boq.ai_assistant": "AI asistent",
     "boq.ai_chat_error": "Požadavek AI selhal. Zkuste to prosím znovu.",
-    "boq.ai_hint":
-      'Požádejte mě o vygenerování položek rozpočtu. Například: „Přidej položky TZB pro 5podlažní kancelářskou budovu"',
+    "boq.ai_hint": "Požádejte mě o vygenerování položek rozpočtu. Například: „Přidej položky TZB pro 5podlažní kancelářskou budovu\"",
     "boq.ai_placeholder": "Popište položky k vygenerování...",
-    "boq.ai_welcome":
-      "Požádejte mě o vygenerování položek rozpočtu. Například: ",
+    "boq.ai_welcome": "Požádejte mě o vygenerování položek rozpočtu. Například: ",
     "boq.all_projects": "Všechny projekty",
     "boq.all_statuses": "Všechny stavy",
     "boq.area_m2": "Plocha (m²)",
     "boq.back_to_project": "Zpět na projekt",
-    "boq.toolbar_hint":
-      "Pomocí panelu nástrojů přidávejte sekce a položky, importujte z databáze cen nebo sestav, exportujte do GAEB/PDF/Excelu nebo spusťte AI odhad. Netto = součet celkových cen položek. Přirážky se aplikují jako procenta. Celkem = Netto + Přirážky + DPH.",
+    "boq.toolbar_hint": "Pomocí panelu nástrojů přidávejte sekce a položky, importujte z databáze cen nebo sestav, exportujte do GAEB/PDF/Excelu nebo spusťte AI odhad. Netto = součet celkových cen položek. Přirážky se aplikují jako procenta. Celkem = Netto + Přirážky + DPH.",
     "boq.boq_created": "Rozpočet vytvořen",
     "boq.boq_name": "Název rozpočtu",
     "boq.cancel_compare": "Zrušit porovnání",
@@ -236,8 +202,7 @@ const resource = {
     "boq.compare_by_section": "Podle sekcí",
     "boq.compare_diff": "Rozdíl",
     "boq.compare_difference": "Rozdíl (B vs A)",
-    "boq.compare_load_error":
-      "Nepodařilo se načíst data rozpočtu pro porovnání",
+    "boq.compare_load_error": "Nepodařilo se načíst data rozpočtu pro porovnání",
     "boq.compare_select_second": "Vyberte druhý rozpočet k porovnání",
     "boq.compare_selected": "Vybráno k porovnání",
     "boq.compare_title": "Porovnání rozpočtů",
@@ -259,8 +224,7 @@ const resource = {
     "boq.cost_risk_contingency": "Rezerva (P80 - P50)",
     "boq.cost_risk_distribution": "Rozložení nákladů",
     "boq.cost_risk_drivers": "Hlavní rizikové faktory",
-    "boq.cost_risk_empty":
-      "Přidejte položky s náklady pro spuštění simulace Monte Carlo.",
+    "boq.cost_risk_empty": "Přidejte položky s náklady pro spuštění simulace Monte Carlo.",
     "boq.cost_risk_iterations": "Iterace",
     "boq.cost_risk_iterations_label": "iter.",
     "boq.cost_risk_loading": "Spouštím simulaci Monte Carlo...",
@@ -286,8 +250,7 @@ const resource = {
     "boq.markup_bond": "Záruka",
     "boq.markup_other": "Ostatní",
     "boq.template_applied": "Regionální šablona použita",
-    "boq.confirm_replace_markups":
-      "Toto nahradí stávající přirážky. Pokračovat?",
+    "boq.confirm_replace_markups": "Toto nahradí stávající přirážky. Pokračovat?",
     "boq.no_markups": "Žádné přirážky. Přidejte nebo použijte šablonu.",
     "boq.new_markup": "Nová přirážka",
     "boq.markup_added": "Přirážka přidána",
@@ -301,8 +264,7 @@ const resource = {
     "boq.duplicate_failed": "Duplikování selhalo",
     "boq.duplicated": "Rozpočet duplikován",
     "boq.editor": "Editor rozpočtu",
-    "boq.empty_section":
-      'V této sekci nejsou žádné položky. Klikněte na „Přidat položku" pro přidání.',
+    "boq.empty_section": "V této sekci nejsou žádné položky. Klikněte na „Přidat položku\" pro přidání.",
     "boq.enter_description": "Zadejte popis...",
     "boq.estimated_total": "Odhadovaný celkem",
     "boq.estimates": "odhady",
@@ -336,8 +298,7 @@ const resource = {
     "boq.no_boqs_hint": "Nejprve vytvořte projekt a poté přidejte rozpočet",
     "boq.no_items_found": "Žádné odpovídající položky nenalezeny",
     "boq.no_positions": "Zatím žádné položky. Přidejte sekci pro začátek.",
-    "boq.no_resources":
-      "Žádné přiřazené zdroje. Vyberte cenovou položku s ikonou ⚡ z návrhů automatického doplňování pro automatické vyplnění.",
+    "boq.no_resources": "Žádné přiřazené zdroje. Vyberte cenovou položku s ikonou ⚡ z návrhů automatického doplňování pro automatické vyplnění.",
     "boq.no_results": "Žádné odpovídající odhady",
     "boq.no_results_hint": "Zkuste upravit vyhledávání nebo filtry",
     "boq.no_section": "Bez sekce (nejvyšší úroveň)",
@@ -358,8 +319,7 @@ const resource = {
     "boq.quality_descriptions": "Popisy vyplněny",
     "boq.quality_fair": "Dostatečná",
     "boq.quality_great": "Výborná",
-    "boq.quality_hint":
-      "Vyplňte všechna pole pro dosažení 100 % a zajištění přesnosti odhadu.",
+    "boq.quality_hint": "Vyplňte všechna pole pro dosažení 100 % a zajištění přesnosti odhadu.",
     "boq.quality_markups": "Přirážky přidány",
     "boq.quality_missing": "Chybí",
     "boq.quality_needs_work": "Vyžaduje úpravy",
@@ -372,15 +332,13 @@ const resource = {
     "boq.quick_add_section": "Přidat sekci",
     "boq.quick_add_section_desc": "Vytvořit novou sekci pro organizaci položek",
     "boq.quick_import_costs": "Import z databáze cen",
-    "boq.quick_import_costs_desc":
-      "Procházejte a vybírejte položky z databáze cen",
+    "boq.quick_import_costs_desc": "Procházejte a vybírejte položky z databáze cen",
     "boq.quick_use_template": "Použít šablonu",
     "boq.quick_use_template_desc": "Začněte z připravené šablony odhadu",
     "boq.recalculate": "Přepočítat",
     "boq.recalculate_complete": "Přepočet dokončen",
     "boq.recalculate_failed": "Přepočet selhal",
-    "boq.recalculate_summary":
-      "Přepočteno: {{sections}} sekcí, {{positions}} položek",
+    "boq.recalculate_summary": "Přepočteno: {{sections}} sekcí, {{positions}} položek",
     "boq.recent_activity": "Poslední aktivita",
     "boq.redo": "Znovu (Ctrl+Y)",
     "boq.redone": "Obnoveno",
@@ -440,8 +398,7 @@ const resource = {
     "boq.sections": "sekcí",
     "boq.select_project": "Vyberte projekt...",
     "boq.sensitivity_base_total": "Základní celkem",
-    "boq.sensitivity_empty":
-      "Přidejte položky s náklady pro zobrazení analýzy citlivosti.",
+    "boq.sensitivity_empty": "Přidejte položky s náklady pro zobrazení analýzy citlivosti.",
     "boq.sensitivity_impact_high": "Dopad (+)",
     "boq.sensitivity_impact_low": "Dopad (-)",
     "boq.sensitivity_overrun": "Navýšení nákladů",
@@ -452,21 +409,16 @@ const resource = {
     "boq.show_all_activity": "Zobrazit veškerou aktivitu...",
     "boq.showing_estimates": "{{shown}} z {{total}} odhadů",
     "boq.start_building": "Začněte sestavovat odhad",
-    "boq.start_building_desc":
-      "Postupujte podle těchto kroků pro vytvoření profesionálního rozpočtu",
+    "boq.start_building_desc": "Postupujte podle těchto kroků pro vytvoření profesionálního rozpočtu",
     "boq.status": "Stav",
     "boq.step_add_positions": "Přidat položky",
-    "boq.step_add_positions_desc":
-      "Přidejte řádkové položky s popisy a měrnými jednotkami do každé sekce",
+    "boq.step_add_positions_desc": "Přidejte řádkové položky s popisy a měrnými jednotkami do každé sekce",
     "boq.step_add_sections": "Přidat sekce",
-    "boq.step_add_sections_desc":
-      "Uspořádejte odhad do sekcí (např. Základy, Stěny, Střecha)",
+    "boq.step_add_sections_desc": "Uspořádejte odhad do sekcí (např. Základy, Stěny, Střecha)",
     "boq.step_review": "Zkontrolovat součty",
-    "boq.step_review_desc":
-      "Přidejte přirážky za režii a zisk, pak zkontrolujte celkovou cenu",
+    "boq.step_review_desc": "Přidejte přirážky za režii a zisk, pak zkontrolujte celkovou cenu",
     "boq.step_set_quantities": "Nastavit množství",
-    "boq.step_set_quantities_desc":
-      "Zadejte množství a jednotkové ceny pro každou položku k výpočtu součtů",
+    "boq.step_set_quantities_desc": "Zadejte množství a jednotkové ceny pro každou položku k výpočtu součtů",
     "boq.subtotal": "Mezisoučet",
     "boq.sync_rate": "Synchronizovat sazbu",
     "boq.table_label": "Položky rozpočtu",
@@ -474,18 +426,12 @@ const resource = {
     "boq.template_error": "Nepodařilo se vytvořit rozpočet ze šablony",
     "boq.templates": "Šablony rozpočtů",
     "boq.templates_coming_soon": "Šablony budou brzy k dispozici",
-    "boq.templates_coming_soon_desc":
-      "Výběr šablon bude dostupný v budoucí aktualizaci.",
-    "boq.templates_subtitle":
-      "Začněte s profesionální šablonou pro váš typ budovy. Vyberte šablonu, nastavte plochu a okamžitě vygenerujte kompletní rozpočet.",
-    "boq.tip_autocomplete":
-      "Vyplňte popisy všech položek — začněte psát pro zobrazení návrhů z databáze cen",
-    "boq.tip_markups":
-      "Přidejte přirážky za režijní náklady a zisk v sekci Přirážky pod tabulkou",
-    "boq.tip_menu":
-      "Klikněte na menu (...) u sekce pro přidání položek nebo její smazání",
-    "boq.tip_sections":
-      "Přidejte sekce pro organizaci odhadu (např. Základy, Stěny, Střecha)",
+    "boq.templates_coming_soon_desc": "Výběr šablon bude dostupný v budoucí aktualizaci.",
+    "boq.templates_subtitle": "Začněte s profesionální šablonou pro váš typ budovy. Vyberte šablonu, nastavte plochu a okamžitě vygenerujte kompletní rozpočet.",
+    "boq.tip_autocomplete": "Vyplňte popisy všech položek — začněte psát pro zobrazení návrhů z databáze cen",
+    "boq.tip_markups": "Přidejte přirážky za režijní náklady a zisk v sekci Přirážky pod tabulkou",
+    "boq.tip_menu": "Klikněte na menu (...) u sekce pro přidání položek nebo její smazání",
+    "boq.tip_sections": "Přidejte sekce pro organizaci odhadu (např. Základy, Stěny, Střecha)",
     "boq.tip_tab": "Použijte Tab pro přesun mezi poli, Enter pro uložení změn",
     "boq.tips_title": "Tipy a nápověda",
     "boq.mvp.title": "Choose materials",
@@ -553,15 +499,12 @@ const resource = {
     "catalog.creating": "Vytvářím...",
     "catalog.delete_failed": "Smazání selhalo",
     "catalog.delete_region": "Smazat region",
-    "catalog.empty_hint":
-      "Importujte regionální katalog pro naplnění zdrojů nebo je extrahujte z cenových položek.",
-    "catalog.empty_with_regions":
-      "Žádné zdroje neodpovídají aktuálním filtrům. Zkuste změnit typ nebo region.",
+    "catalog.empty_hint": "Importujte regionální katalog pro naplnění zdrojů nebo je extrahujte z cenových položek.",
+    "catalog.empty_with_regions": "Žádné zdroje neodpovídají aktuálním filtrům. Zkuste změnit typ nebo region.",
     "catalog.import": "Import",
     "catalog.import_failed": "Import selhal",
     "catalog.import_region": "Importovat region",
-    "catalog.import_regions_desc":
-      "Stáhněte předpřipravené katalogy zdrojů z regionálních databází CWICR",
+    "catalog.import_regions_desc": "Stáhněte předpřipravené katalogy zdrojů z regionálních databází CWICR",
     "catalog.import_regions_title": "Import katalogu zdrojů",
     "catalog.import_success": "Import dokončen",
     "catalog.importing": "Importuji...",
@@ -570,8 +513,7 @@ const resource = {
     "catalog.loaded": "Načteno",
     "catalog.my_catalog": "Můj katalog",
     "catalog.my_catalog_empty": "Váš katalog je prázdný",
-    "catalog.my_catalog_empty_desc":
-      "Přidejte vlastní materiály, stroje a sazby práce. Vlastní zdroje lze použít v sestavách a aplikovat na položky rozpočtu.",
+    "catalog.my_catalog_empty_desc": "Přidejte vlastní materiály, stroje a sazby práce. Vlastní zdroje lze použít v sestavách a aplikovat na položky rozpočtu.",
     "catalog.name": "Název",
     "catalog.no_results": "Žádné zdroje nenalezeny",
     "catalog.no_results_hint": "Zkuste upravit vyhledávání nebo filtry",
@@ -588,8 +530,7 @@ const resource = {
     "catalog.resources_imported": "zdrojů importováno",
     "catalog.resources_removed": "zdrojů odstraněno",
     "catalog.search_hint": "Procházejte materiály, stroje, práce a obsluhu",
-    "catalog.what_is_catalog":
-      "Materiály, práce, stroje a sazby obsluhy organizované podle regionu. Nainstalujte regionální katalogy z Modulů a poté je používejte k sestavování kalkulací nebo přidávání položek přímo do rozpočtu.",
+    "catalog.what_is_catalog": "Materiály, práce, stroje a sazby obsluhy organizované podle regionu. Nainstalujte regionální katalogy z Modulů a poté je používejte k sestavování kalkulací nebo přidávání položek přímo do rozpočtu.",
     "catalog.search_in": "Hledat v",
     "catalog.search_placeholder": "Hledat podle názvu nebo kódu...",
     "catalog.selected": "vybráno",
@@ -614,14 +555,12 @@ const resource = {
     "command_palette.action_run_validation": "Spustit validaci",
     "command_palette.action_import_database": "Importovat databázi",
     "error.something_wrong": "Něco se pokazilo",
-    "error.unexpected_error":
-      "Při vykreslování této stránky došlo k neočekávané chybě. Můžete zkusit stránku znovu načíst nebo se vrátit na přehled.",
+    "error.unexpected_error": "Při vykreslování této stránky došlo k neočekávané chybě. Můžete zkusit stránku znovu načíst nebo se vrátit na přehled.",
     "error.details": "Podrobnosti chyby",
     "error.try_again": "Zkusit znovu",
     "error.go_dashboard": "Přejít na přehled",
     "error.not_found": "Stránka nenalezena",
-    "error.not_found_desc":
-      "Stránka, kterou hledáte, neexistuje nebo byla přesunuta. Zkontrolujte URL nebo se vraťte na přehled.",
+    "error.not_found_desc": "Stránka, kterou hledáte, neexistuje nebo byla přesunuta. Zkontrolujte URL nebo se vraťte na přehled.",
     "error.go_back": "Zpět",
     "common.archive": "Archivovat",
     "common.back": "Zpět",
@@ -658,8 +597,7 @@ const resource = {
     "costmodel.benchmark_area_value": "{{area}} m²",
     "costmodel.benchmark_cost_per_m2": "Náklady / m²",
     "costmodel.benchmark_current_cost": "Aktuální: {{value}}/m²",
-    "costmodel.benchmark_enter_area":
-      "Zadejte plochu projektu pro zobrazení srovnání nákladů na m²",
+    "costmodel.benchmark_enter_area": "Zadejte plochu projektu pro zobrazení srovnání nákladů na m²",
     "costmodel.benchmark_per_m2": "za m²",
     "costmodel.benchmark_project_area": "Plocha projektu (m²)",
     "costmodel.benchmark_project_type": "Typ projektu",
@@ -703,8 +641,7 @@ const resource = {
     "costmodel.evm_spi": "SPI",
     "costmodel.evm_status": "Stav",
     "costmodel.evm_sv_label": "SV",
-    "costmodel.evm_tcpi_hint":
-      "Pro dodržení rozpočtu je potřeba CPI {{tcpi}} v dalším průběhu",
+    "costmodel.evm_tcpi_hint": "Pro dodržení rozpočtu je potřeba CPI {{tcpi}} v dalším průběhu",
     "costmodel.evm_time_elapsed": "Uplynulý čas",
     "costmodel.evm_title": "Analýza dosažené hodnoty",
     "costmodel.evm_unknown": "Neznámý",
@@ -724,8 +661,7 @@ const resource = {
     "costmodel.s_curve": "S-křivka (EVM)",
     "costmodel.s_curve_chart": "Graf S-křivky",
     "costmodel.title": "5D model nákladů",
-    "costmodel.what_is_5d":
-      '5D řízení nákladů přidává k vašemu projektu sledování nákladů v čase. Sledujte rozpočet vs. skutečné výdaje pomocí grafů S-křivky, sledujte dosaženou hodnotu (SPI = efektivita harmonogramu, CPI = efektivita nákladů — obě >= 1,0 znamená zdravý stav) a spouštějte scénáře „co když" pro prognózu výsledků.',
+    "costmodel.what_is_5d": "5D řízení nákladů přidává k vašemu projektu sledování nákladů v čase. Sledujte rozpočet vs. skutečné výdaje pomocí grafů S-křivky, sledujte dosaženou hodnotu (SPI = efektivita harmonogramu, CPI = efektivita nákladů — obě >= 1,0 znamená zdravý stav) a spouštějte scénáře „co když\" pro prognózu výsledků.",
     "costmodel.total": "Celkem",
     "costmodel.total_budget": "Celkový rozpočet",
     "costmodel.variance": "Odchylka",
@@ -740,9 +676,8 @@ const resource = {
     "costmodel.whatif_material": "Náklady na materiál",
     "costmodel.whatif_original_bac": "Původní BAC",
     "costmodel.whatif_reset": "Resetovat",
-    "costmodel.whatif_scenario_name":
-      "Co když: M{{material}}% P{{labor}}% D{{duration}}%",
-    "costmodel.whatif_title": 'Scénáře „Co když"',
+    "costmodel.whatif_scenario_name": "Co když: M{{material}}% P{{labor}}% D{{duration}}%",
+    "costmodel.whatif_title": "Scénáře „Co když\"",
     "costs.add_database": "Import",
     "costs.add_item": "Přidat položku",
     "costs.add_to_boq": "Vybrat pro rozpočet",
@@ -763,8 +698,7 @@ const resource = {
     "costs.copy_rate": "Kopírovat sazbu",
     "costs.create": "Vytvořit položku",
     "costs.create_item": "Přidat vlastní cenovou položku",
-    "costs.create_item_desc":
-      "Vytvořte vlastní cenovou položku pro tento projekt",
+    "costs.create_item_desc": "Vytvořte vlastní cenovou položku pro tento projekt",
     "costs.creating": "Vytvářím...",
     "costs.currency": "Měna",
     "costs.delete_failed": "Smazání selhalo",
@@ -780,22 +714,18 @@ const resource = {
     "costs.import_and_more": "a {{count}} dalších chyb",
     "costs.import_another": "Importovat další",
     "costs.import_click_to_change": "Klikněte pro výběr jiného souboru",
-    "costs.import_columns_hint":
-      "Sloupce jsou detekovány automaticky. Přijímané hlavičky: Kód, Popis, MJ, Sazba/Cena/Náklady, Měna, DIN 276/Klasifikace.",
+    "costs.import_columns_hint": "Sloupce jsou detekovány automaticky. Přijímané hlavičky: Kód, Popis, MJ, Sazba/Cena/Náklady, Měna, DIN 276/Klasifikace.",
     "costs.import_complete": "Import dokončen",
     "costs.import_database": "Importovat databázi",
     "costs.import_drop_here": "Přetáhněte soubor sem",
-    "costs.import_drop_or_click":
-      "Přetáhněte soubor sem nebo klikněte pro výběr",
+    "costs.import_drop_or_click": "Přetáhněte soubor sem nebo klikněte pro výběr",
     "costs.import_error_details": "Podrobnosti chyby",
     "costs.import_errors": "Chyby",
     "costs.import_failed": "Import selhal",
     "costs.import_file_too_large": "Soubor je příliš velký",
-    "costs.import_first_hint":
-      "Importujte regionální databázi cen a začněte vyhledávat v 55 000+ položkách.",
+    "costs.import_first_hint": "Importujte regionální databázi cen a začněte vyhledávat v 55 000+ položkách.",
     "costs.import_format_csv": "CSV (.csv) se stejnými sloupci",
-    "costs.import_format_excel":
-      "Excel (.xlsx) se sloupci: Kód, Popis, MJ, Sazba",
+    "costs.import_format_excel": "Excel (.xlsx) se sloupci: Kód, Popis, MJ, Sazba",
     "costs.import_formats_title": "Podporované formáty",
     "costs.import_go_to_database": "Přejít do databáze cen",
     "costs.import_imported": "Importováno",
@@ -804,11 +734,9 @@ const resource = {
     "costs.import_row": "Řádek",
     "costs.import_rows_processed": "řádků zpracováno",
     "costs.import_skipped": "Přeskočeno",
-    "costs.import_subtitle":
-      "Načtěte cenovou databázi nebo nahrajte vlastní soubor.",
+    "costs.import_subtitle": "Načtěte cenovou databázi nebo nahrajte vlastní soubor.",
     "costs.import_success": "Import dokončen",
-    "costs.import_supported_hint":
-      "Nahrajte prosím soubor Excel (.xlsx) nebo CSV (.csv).",
+    "costs.import_supported_hint": "Nahrajte prosím soubor Excel (.xlsx) nebo CSV (.csv).",
     "costs.import_title": "Import databáze cen",
     "costs.import_unsupported_format": "Nepodporovaný formát souboru",
     "costs.indexing_failed": "Indexace selhala",
@@ -817,8 +745,7 @@ const resource = {
     "costs.items_copied": "{{count}} položek zkopírováno do schránky",
     "costs.load_more": "Načíst více",
     "costs.loaded_databases": "Načtené databáze",
-    "costs.no_boqs_helper":
-      "V tomto projektu nejsou žádné rozpočty. Nejprve vytvořte jeden v editoru rozpočtu.",
+    "costs.no_boqs_helper": "V tomto projektu nejsou žádné rozpočty. Nejprve vytvořte jeden v editoru rozpočtu.",
     "costs.no_database_loaded": "Žádná databáze nenačtena",
     "costs.no_results": "Žádné cenové položky nenalezeny",
     "costs.no_results_hint": "Zkuste upravit vyhledávání nebo filtry",
@@ -830,19 +757,16 @@ const resource = {
     "costs.region_cleared": "Region vymazán",
     "costs.results_found": "výsledků nalezeno",
     "costs.search_hint": "Hledat cenové položky podle popisu nebo kódu",
-    "costs.what_is_cost_db":
-      "Jednotkové ceny a složené sazby pro materiály, práci a stroje. Importujte regionální databáze (CWICR, BKI, RSMeans) z Modulů nebo přidejte vlastní sazby. Zapněte AI sémantické vyhledávání pro dotazy v přirozeném jazyce.",
+    "costs.what_is_cost_db": "Jednotkové ceny a složené sazby pro materiály, práci a stroje. Importujte regionální databáze (CWICR, BKI, RSMeans) z Modulů nebo přidejte vlastní sazby. Zapněte AI sémantické vyhledávání pro dotazy v přirozeném jazyce.",
     "costs.search_placeholder": "Hledat podle popisu nebo kódu...",
-    "costs.semantic_placeholder":
-      "Popište, co potřebujete (AI najde podobné)...",
+    "costs.semantic_placeholder": "Popište, co potřebujete (AI najde podobné)...",
     "costs.showing": "Zobrazeno",
     "costs.title": "Databáze cen",
     "costs.yes_clear_all": "Ano, vymazat vše",
     "dashboard.add_api_keys": "Přidat API klíče",
     "dashboard.ai_providers": "Poskytovatelé AI",
     "dashboard.analytics": "Analytika",
-    "dashboard.kpi_hint":
-      "Souhrn napříč všemi projekty. Hodnoty se aktualizují při přidávání odhadů a činností harmonogramu.",
+    "dashboard.kpi_hint": "Souhrn napříč všemi projekty. Hodnoty se aktualizují při přidávání odhadů a činností harmonogramu.",
     "dashboard.api_server": "API server",
     "dashboard.boq_status": "Stav rozpočtu",
     "dashboard.completed": "Dokončeno",
@@ -873,22 +797,17 @@ const resource = {
     "dashboard.recent_projects": "Poslední projekty",
     "dashboard.show_shortcuts": "Zobrazit klávesové zkratky",
     "dashboard.step_ai_search": "Zapnout AI vyhledávání",
-    "dashboard.step_ai_search_desc":
-      "Generujte vektorové embeddings pro sémantické párování cen",
+    "dashboard.step_ai_search_desc": "Generujte vektorové embeddings pro sémantické párování cen",
     "dashboard.step_build_boq": "Sestavit rozpočet",
     "dashboard.step_build_boq_desc": "Vytvořte rozpočet s pomocí AI",
     "dashboard.step_connect_ai": "Připojit AI",
-    "dashboard.step_connect_ai_desc":
-      "Přidejte API klíče pro odhady s pomocí AI",
+    "dashboard.step_connect_ai_desc": "Přidejte API klíče pro odhady s pomocí AI",
     "dashboard.step_create_project": "Vytvořit projekt",
-    "dashboard.step_create_project_desc":
-      "Založte svůj první projekt stavební kalkulace",
+    "dashboard.step_create_project_desc": "Založte svůj první projekt stavební kalkulace",
     "dashboard.step_load_db": "Načíst databázi cen",
-    "dashboard.step_load_db_desc":
-      "Importujte regionální cenová data s 55 000+ položkami",
+    "dashboard.step_load_db_desc": "Importujte regionální cenová data s 55 000+ položkami",
     "dashboard.subtitle": "Váš pracovní prostor pro stavební kalkulace",
-    "dashboard.subtitle_2":
-      "Chytré plánování zdrojů pro vaše stavební projekty",
+    "dashboard.subtitle_2": "Chytré plánování zdrojů pro vaše stavební projekty",
     "dashboard.system_status": "Stav systému",
     "dashboard.total_boqs": "Celkem rozpočtů",
     "dashboard.total_projects": "Celkem projektů",
@@ -899,22 +818,18 @@ const resource = {
     "dashboard.welcome": "Vítejte v OpenConstructionERP",
     "demo.import_demo": "Importovat demo",
     "demo.install": "Instalovat",
-    "demo.install_error":
-      "Instalace demo projektu selhala. Zkuste to prosím znovu.",
+    "demo.install_error": "Instalace demo projektu selhala. Zkuste to prosím znovu.",
     "demo.installing": "Instaluji...",
-    "demo.modal_subtitle":
-      "Nainstalujte kompletní projekt s rozpočtem, harmonogramem, rozpočtem nákladů a výběrovým řízením",
+    "demo.modal_subtitle": "Nainstalujte kompletní projekt s rozpočtem, harmonogramem, rozpočtem nákladů a výběrovým řízením",
     "demo.modal_title": "Import demo projektu",
     "documents.title": "Dokumenty",
-    "documents.subtitle":
-      "Nahrávejte a spravujte soubory projektu — výkresy, smlouvy, specifikace",
+    "documents.subtitle": "Nahrávejte a spravujte soubory projektu — výkresy, smlouvy, specifikace",
     "documents.upload": "Nahrát soubory",
     "documents.uploaded": "Nahráno",
     "documents.upload_failed": "Nahrávání selhalo",
     "documents.upload_skipped": "Soubor přeskočen",
     "documents.file_too_large": "{{name}} překračuje limit 100 MB",
-    "documents.upload_summary":
-      "Nahrávání dokončeno: {{success}} nahráno, {{failed}} selhalo",
+    "documents.upload_summary": "Nahrávání dokončeno: {{success}} nahráno, {{failed}} selhalo",
     "documents.delete_failed": "Smazání selhalo",
     "documents.deleted": "Dokument smazán",
     "documents.download": "Stáhnout",
@@ -926,14 +841,11 @@ const resource = {
     "documents.no_results_hint": "Zkuste jiný hledaný výraz",
     "documents.clear_search": "Vymazat hledání",
     "documents.drop_hint": "Přetáhněte soubory sem, nebo klikněte na Nahrát",
-    "documents.drop_hint_types":
-      "PDF, obrázky, Excel, DWG, IFC — jakýkoli typ souboru",
+    "documents.drop_hint_types": "PDF, obrázky, Excel, DWG, IFC — jakýkoli typ souboru",
     "documents.empty": "Zatím žádné dokumenty",
-    "documents.empty_hint":
-      "Nahrajte svůj první soubor — výkresy, smlouvy, fotky nebo jakýkoli projektový dokument.",
+    "documents.empty_hint": "Nahrajte svůj první soubor — výkresy, smlouvy, fotky nebo jakýkoli projektový dokument.",
     "documents.select_project": "Vyberte projekt",
-    "documents.select_project_hint":
-      "Nejprve vyberte projekt pomocí přepínače v záhlaví.",
+    "documents.select_project_hint": "Nejprve vyberte projekt pomocí přepínače v záhlaví.",
     "documents.sort_date": "Podle data",
     "documents.sort_name": "Podle názvu",
     "documents.sort_size": "Podle velikosti",
@@ -947,45 +859,33 @@ const resource = {
     "documents.cat_correspondence": "Korespondence",
     "documents.cat_other": "Ostatní",
     "login.benefit.ai": "Odhady s pomocí AI",
-    "login.benefit.ai_desc":
-      "Chytré návrhy s hodnocením spolehlivosti. Vy rozhodujete, AI pomáhá.",
+    "login.benefit.ai_desc": "Chytré návrhy s hodnocením spolehlivosti. Vy rozhodujete, AI pomáhá.",
     "login.benefit.allinone": "BOQ + 4D + 5D + výběrová řízení",
-    "login.benefit.allinone_desc":
-      "Kompletní proces od kalkulace nákladů po porovnání nabídek v jednom nástroji.",
+    "login.benefit.allinone_desc": "Kompletní proces od kalkulace nákladů po porovnání nabídek v jednom nástroji.",
     "login.benefit.free": "Zdarma pro všechny",
-    "login.benefit.free_desc":
-      "Žádné licenční poplatky. Žádné limity. Vytvořeno rozpočtáři pro rozpočtáře.",
+    "login.benefit.free_desc": "Žádné licenční poplatky. Žádné limity. Vytvořeno rozpočtáři pro rozpočtáře.",
     "login.benefit.local": "Vaše data zůstávají na vašem počítači",
-    "login.benefit.local_desc":
-      "Žádný cloud. Žádné servery třetích stran. Plná kontrola nad projektovými daty.",
+    "login.benefit.local_desc": "Žádný cloud. Žádné servery třetích stran. Plná kontrola nad projektovými daty.",
     "login.benefit.open_source": "100% open source",
-    "login.benefit.open_source_desc":
-      "Transparentní kód. Žádné uzamčení dodavatelem. Exportujte vše, kdykoli.",
+    "login.benefit.open_source_desc": "Transparentní kód. Žádné uzamčení dodavatelem. Exportujte vše, kdykoli.",
     "login.benefit.standards": "Mezinárodní standardy",
-    "login.benefit.standards_desc":
-      "Více než 55 000 nákladových položek v 11 regionálních databázích po celém světě.",
-    "login.hero_desc":
-      "Profesionální rozpočet, 4D harmonogram, 5D model nákladů a výběrová řízení — vše v jedné open-source platformě.",
+    "login.benefit.standards_desc": "Více než 55 000 nákladových položek v 11 regionálních databázích po celém světě.",
+    "login.hero_desc": "Profesionální rozpočet, 4D harmonogram, 5D model nákladů a výběrová řízení — vše v jedné open-source platformě.",
     "login.hero_highlight": "přepracovaná",
     "login.hero_title": "Stavební kalkulace,",
     "login.open_source_badge": "První open-source stavební ERP",
     "dashboard.open_source_badge": "První open-source stavební ERP",
     "login.learn_more": "Více o platformě",
-    "login.privacy":
-      "Veškerá data jsou zpracovávána a ukládána lokálně na vašem počítači. Na externí servery se nic neodesílá. Vaše data patří vám — vždy.",
-    "login.privacy_ai":
-      "Pokud používáte vestavěné AI nástroje, některá data mohou být odeslána poskytovateli AI, kterého nastavíte (OpenAI, Anthropic atd.). Vy rozhodujete, kterého poskytovatele použijete a jaká data sdílíte.",
+    "login.privacy": "Veškerá data jsou zpracovávána a ukládána lokálně na vašem počítači. Na externí servery se nic neodesílá. Vaše data patří vám — vždy.",
+    "login.privacy_ai": "Pokud používáte vestavěné AI nástroje, některá data mohou být odeslána poskytovateli AI, kterého nastavíte (OpenAI, Anthropic atd.). Vy rozhodujete, kterého poskytovatele použijete a jaká data sdílíte.",
     "marketplace.active": "Aktivní",
     "marketplace.available": "Dostupné moduly",
     "marketplace.builtin": "Vestavěný",
-    "marketplace.builtin_message":
-      "Tento modul je součástí vaší instalace a je připraven k použití.",
+    "marketplace.builtin_message": "Tento modul je součástí vaší instalace a je připraven k použití.",
     "marketplace.catalog_imported": "Katalog importován",
-    "marketplace.catalog_imported_message":
-      "{{imported}} zdrojů importováno, {{skipped}} přeskočeno pro {{region}}.",
+    "marketplace.catalog_imported_message": "{{imported}} zdrojů importováno, {{skipped}} přeskočeno pro {{region}}.",
     "marketplace.demo_installed": "Demo nainstalováno",
-    "marketplace.demo_installed_message":
-      "{{name}} vytvořen s kompletním rozpočtem, harmonogramem, rozpočtem nákladů a výběrovým řízením.",
+    "marketplace.demo_installed_message": "{{name}} vytvořen s kompletním rozpočtem, harmonogramem, rozpočtem nákladů a výběrovým řízením.",
     "marketplace.free": "Zdarma",
     "marketplace.import_failed": "Import selhal",
     "marketplace.imported": "Importováno",
@@ -994,8 +894,7 @@ const resource = {
     "marketplace.install_failed": "Instalace selhala",
     "marketplace.installed_modules": "Instalované základní moduly",
     "marketplace.installing": "Instaluji...",
-    "marketplace.language_activated":
-      "Jazykový balíček aktivován. Změňte jazyk v Nastavení.",
+    "marketplace.language_activated": "Jazykový balíček aktivován. Změňte jazyk v Nastavení.",
     "marketplace.language_already_included": "Tento jazyk je již zahrnut.",
     "marketplace.manage": "Spravovat",
     "marketplace.module_disabled": "{{name}} deaktivován",
@@ -1003,22 +902,18 @@ const resource = {
     "marketplace.my_modules": "Instalované moduly",
     "marketplace.no_region_mapping": "Žádné mapování regionu pro {{id}}",
     "marketplace.no_results": "Žádné moduly nenalezeny",
-    "marketplace.no_results_hint":
-      "Zkuste upravit vyhledávání nebo filtr kategorie.",
+    "marketplace.no_results_hint": "Zkuste upravit vyhledávání nebo filtr kategorie.",
     "marketplace.rules": "pravidel",
     "marketplace.search_placeholder": "Hledat moduly...",
-    "marketplace.subtitle":
-      "Procházejte a instalujte doplňky pro databáze cen, AI nástroje, CAD konvertory a další.",
-    "marketplace.description":
-      "Rozšiřte OpenEstimate o regionální databáze cen, katalogy zdrojů (CWICR), vektorové indexy pro AI, jazykové balíčky, demo projekty a integrace. Nainstalujte modul pro jeho aktivaci — odinstalujte kdykoli.",
+    "marketplace.subtitle": "Procházejte a instalujte doplňky pro databáze cen, AI nástroje, CAD konvertory a další.",
+    "marketplace.description": "Rozšiřte OpenEstimate o regionální databáze cen, katalogy zdrojů (CWICR), vektorové indexy pro AI, jazykové balíčky, demo projekty a integrace. Nainstalujte modul pro jeho aktivaci — odinstalujte kdykoli.",
     "marketplace.title": "Tržiště modulů",
     "marketplace.uninstall": "Odinstalovat",
     "marketplace.unknown_region": "Neznámý region",
     "marketplace.validation_rule_sets": "Sady validačních pravidel",
     "marketplace.validation_rules_active": "aktivních validačních pravidel",
     "marketplace.vector_index": "Vektorový index",
-    "marketplace.vector_index_hint":
-      "Nejprve importujte databázi cen, poté vygenerujte vektory.",
+    "marketplace.vector_index_hint": "Nejprve importujte databázi cen, poté vygenerujte vektory.",
     "modules.title": "Moduly",
     "files.title": "Soubory projektu",
     "files.empty": "Žádný soubor neodpovídá filtrům.",
@@ -1067,27 +962,20 @@ const resource = {
     "files.toast.copied": "Zkopírováno",
     "files.toast.copy_failed": "Nelze zkopírovat",
     "files.no_project_title": "Žádný aktivní projekt",
-    "files.no_project_desc":
-      "Vyberte projekt na nástěnce, abyste viděli všechny jeho dokumenty, fotografie, BIM a DWG soubory na jednom místě.",
+    "files.no_project_desc": "Vyberte projekt na nástěnce, abyste viděli všechny jeho dokumenty, fotografie, BIM a DWG soubory na jednom místě.",
     "files.go_to_projects": "Přejít na projekty",
     "files.export.title": "Exportovat balík projektu",
-    "files.export.intro":
-      "Vyberte, co zahrnout. Menší balíky se přenášejí rychleji; větší zachovávají více.",
+    "files.export.intro": "Vyberte, co zahrnout. Menší balíky se přenášejí rychleji; větší zachovávají více.",
     "files.export.scope_metadata": "Pouze metadata",
-    "files.export.scope_metadata_hint":
-      "Vhodné pro e-mail. Výkazy, tabulky a odkazy — bez příloh.",
+    "files.export.scope_metadata_hint": "Vhodné pro e-mail. Výkazy, tabulky a odkazy — bez příloh.",
     "files.export.scope_documents": "Dokumenty",
-    "files.export.scope_documents_hint":
-      "Přidá nahrané dokumenty a fotografie s náhledy.",
+    "files.export.scope_documents_hint": "Přidá nahrané dokumenty a fotografie s náhledy.",
     "files.export.scope_bim": "BIM modely",
-    "files.export.scope_bim_hint":
-      "Přidá BIM modely, prvky a kanonickou geometrii.",
+    "files.export.scope_bim_hint": "Přidá BIM modely, prvky a kanonickou geometrii.",
     "files.export.scope_dwg": "DWG výkresy",
-    "files.export.scope_dwg_hint":
-      "Přidá DWG výkresy, verze a související listy.",
+    "files.export.scope_dwg_hint": "Přidá DWG výkresy, verze a související listy.",
     "files.export.scope_full": "Celý projekt",
-    "files.export.scope_full_hint":
-      "Vše — kompletní migrační balík včetně všech příloh.",
+    "files.export.scope_full_hint": "Vše — kompletní migrační balík včetně všech příloh.",
     "files.export.stat_scope": "Rozsah",
     "files.export.stat_attachments": "Přílohy",
     "files.export.stat_size": "Odhadovaná velikost",
@@ -1095,12 +983,10 @@ const resource = {
     "files.export.tables": "Tabulky",
     "files.export.preview_btn": "Náhled",
     "files.export.download_btn": "Stáhnout balík",
-    "files.export.large_warn":
-      "Velký balík — během exportu nezavírejte tuto kartu.",
+    "files.export.large_warn": "Velký balík — během exportu nezavírejte tuto kartu.",
     "files.export.success_title": "Balík stažen",
     "files.import.title": "Importovat balík projektu",
-    "files.import.intro":
-      "Vyberte balík .ocep exportovaný z tohoto nebo jiného pracovního prostoru.",
+    "files.import.intro": "Vyberte balík .ocep exportovaný z tohoto nebo jiného pracovního prostoru.",
     "files.import.select_file": "Vybrat soubor .ocep",
     "files.import.drop_hint": "Klikněte pro procházení",
     "files.import.validating": "Validace balíku…",
@@ -1112,19 +998,15 @@ const resource = {
     "files.import.stat_format": "Formát",
     "files.import.choose_mode": "Režim importu",
     "files.import.mode_new": "Vytvořit nový projekt",
-    "files.import.mode_new_hint":
-      "Nejbezpečnější. Všude nová ID; ve vašem prostoru se nic nemění.",
+    "files.import.mode_new_hint": "Nejbezpečnější. Všude nová ID; ve vašem prostoru se nic nemění.",
     "files.import.mode_merge": "Sloučit s existujícím projektem",
-    "files.import.mode_merge_hint":
-      "Přidá řádky do vybraného projektu. Existující ID se přeskočí.",
+    "files.import.mode_merge_hint": "Přidá řádky do vybraného projektu. Existující ID se přeskočí.",
     "files.import.mode_replace": "Nahradit existující projekt",
-    "files.import.mode_replace_hint":
-      "Vymaže řádky vybraného projektu spravované balíkem a poté importuje. Destruktivní.",
+    "files.import.mode_replace_hint": "Vymaže řádky vybraného projektu spravované balíkem a poté importuje. Destruktivní.",
     "files.import.rename": "Nový název projektu (volitelné)",
     "files.import.target_project": "Cílový projekt",
     "files.import.pick_project": "— vyberte projekt —",
-    "files.import.destructive_warn":
-      "Tato akce před importem trvale smaže řádky cílového projektu spravované balíkem. Nelze vrátit zpět.",
+    "files.import.destructive_warn": "Tato akce před importem trvale smaže řádky cílového projektu spravované balíkem. Nelze vrátit zpět.",
     "files.import.confirm": "Importovat",
     "files.import.result_done": "Import dokončen",
     "files.import.imported": "Importováno",
@@ -1144,8 +1026,7 @@ const resource = {
     "files.email.paste_into_email": "Ukázkový text e-mailu",
     "files.email.open_mail_client": "Otevřít e-mailového klienta",
     "files.email.sample_subject": "Soubor: {{name}}",
-    "files.email.sample_body":
-      "Dobrý den,\n\nzde je požadovaný soubor — {{name}} ({{size}}).\nOdkaz ke stažení (vyprší {{expires}}):\n{{url}}\n\n— odesláno z OpenConstructionERP",
+    "files.email.sample_body": "Dobrý den,\n\nzde je požadovaný soubor — {{name}} ({{size}}).\nOdkaz ke stažení (vyprší {{expires}}):\n{{url}}\n\n— odesláno z OpenConstructionERP",
     "files.title_all": "Všechny soubory",
     "files.empty_category": "Zatím žádné {{category}}",
     "files.cta.add_first": "Přidejte první {{category}}",
@@ -1159,8 +1040,7 @@ const resource = {
     "files.upload_browse": "Procházet soubory",
     "files.upload_no_project": "Žádný aktivní projekt",
     "files.upload_too_large": "Soubory příliš velké",
-    "files.upload_too_large_msg":
-      "{{count}} soubor(ů) překračuje limit 100 MB a byly přeskočeny.",
+    "files.upload_too_large_msg": "{{count}} soubor(ů) překračuje limit 100 MB a byly přeskočeny.",
     "files.upload_queued": "{{count}} soubor(ů) ve frontě",
     "files.uploading": "Nahrávání…",
     "files.uploaded": "Nahráno",
@@ -1212,10 +1092,10 @@ const resource = {
     "nav.equipment": "Vybavení a vozový park",
     "nav.resources": "Zdroje a personál",
     "nav.service": "Servis a údržba",
-    "nav.portal": "Portál subdodavatelů",
+    "nav.portal": "Sub-portál",
     "nav.crm": "CRM",
     "nav.contracts": "Smlouvy",
-    "nav.subcontractors": "Subdodavatelé",
+    "nav.subcontractors": "Adresář subdodavatelů",
     "nav.bid_management": "Správa nabídek",
     "nav.variations": "Změnové listy",
     "nav.supplier_catalogs": "Katalogy dodavatelů",
@@ -1227,19 +1107,21 @@ const resource = {
     "nav.bi_dashboards": "BI dashboardy",
     "nav.match_elements": "Spárovat prvky → Náklady",
     "nav.group_operations": "Provoz stavby",
-    "nav.group_operations_desc":
-      "Každodenní provoz stavby — servisní tikety, vybavení, deník, portál subdodavatelů, zdroje",
+    "nav.group_operations_desc": "Každodenní provoz stavby — servisní tikety, vybavení, deník, portál subdodavatelů, zdroje",
     "nav.group_commercial": "Obchodní",
-    "nav.group_commercial_desc":
-      "Obchodní pipeline — CRM, smlouvy, nabídky, změny, dodavatelé, developerství",
+    "nav.group_commercial_desc": "Obchodní pipeline — CRM, smlouvy, nabídky, změny, dodavatelé, developerství",
     "nav.group_bi": "Analytika",
-    "nav.group_bi_desc":
-      "BI dashboardy postavené na projekcích datového skladu",
+    "nav.group_bi_desc": "BI dashboardy postavené na projekcích datového skladu",
+    "nav.group_analytics": "Analytika & Reporty",
+    "nav.group_analytics_desc": "Reporty napříč moduly, BI dashboardy a projekce datového skladu",
     "nav.group_estimation": "Kalkulace",
-    "nav.group_estimation_desc":
-      "Základní nástroje: projekty, rozpočet, ceny a sestavy",
+    "nav.group_estimation_desc": "Kalkulace projektů — výkaz výměr, mapování BIM na ceny, AI odhad, analytika",
+    "nav.group_catalogues": "Katalogy & Reference",
+    "nav.group_catalogues_desc": "Cenové databáze, regionální katalogy, šablony sestav",
     "nav.group_databases": "Databáze",
     "nav.group_takeoff": "Výkaz výměr",
+    "nav.group_cad_bim_analytics": "Koordinace modelů",
+    "nav.group_cad_bim_analytics_desc": "Federace, detekce kolizí, sady pravidel a koordinační centrum",
     "nav.group_cad_bim": "CAD / BIM & BI",
     "nav.takeoff_overview": "Přehled",
     "nav.pdf_takeoff": "PDF výkaz",
@@ -1300,10 +1182,8 @@ const resource = {
     "requirements.notes": "Poznámky",
     "requirements.notes_placeholder": "Dodatečné poznámky nebo kontext...",
     "requirements.import_text": "Importovat z textu",
-    "requirements.import_text_desc":
-      "Vložte specifikace požadavků. Každý řádek ve formátu: entita | atribut | typ_omezení | hodnota | jednotka | kategorie | priorita",
-    "requirements.import_placeholder":
-      "stěna | tloušťka | min | 200 | mm | konstrukční | musí\nstřecha | u_hodnota | max | 0,20 | W/m²K | tepelný | musí",
+    "requirements.import_text_desc": "Vložte specifikace požadavků. Každý řádek ve formátu: entita | atribut | typ_omezení | hodnota | jednotka | kategorie | priorita",
+    "requirements.import_placeholder": "stěna | tloušťka | min | 200 | mm | konstrukční | musí\nstřecha | u_hodnota | max | 0,20 | W/m²K | tepelný | musí",
     "requirements.set_created": "Sada požadavků vytvořena",
     "requirements.new_set": "Nová sada požadavků",
     "requirements.set_name_placeholder": "např.: Konstrukční požadavky Fáze 1",
@@ -1322,42 +1202,35 @@ const resource = {
     "requirements.all_priorities": "Všechny priority",
     "requirements.all_statuses": "Všechny stavy",
     "requirements.no_sets": "Žádné sady požadavků",
-    "requirements.no_sets_desc":
-      "Vytvořte sadu požadavků pro definování projektových požadavků a bran kvality.",
+    "requirements.no_sets_desc": "Vytvořte sadu požadavků pro definování projektových požadavků a bran kvality.",
     "requirements.empty": "Zatím žádné požadavky",
-    "requirements.empty_desc":
-      "Přidejte požadavky pro definování trojic Entita-Atribut-Omezení pro váš projekt.",
+    "requirements.empty_desc": "Přidejte požadavky pro definování trojic Entita-Atribut-Omezení pro váš projekt.",
     "requirements.no_match": "Žádné požadavky neodpovídají vašim filtrům.",
     "requirements.constraint": "Omezení",
     "requirements.confidence": "Dův.",
     "requirements.source": "Zdroj",
     "requirements.showing": "{{count}} požadavků",
     "requirements.of_total": "z {{total}}",
-    "requirements.confirm_delete_set":
-      "Smazat tuto sadu požadavků a všechny její požadavky?",
+    "requirements.confirm_delete_set": "Smazat tuto sadu požadavků a všechny její požadavky?",
     "requirements.delete_set": "Smazat sadu",
     "requirements.and_more": "a dalších {{count}}...",
     "requirements.click_to_upload_csv": "Klikněte pro nahrání souboru CSV",
     "requirements.click_to_upload_json": "Klikněte pro nahrání souboru JSON",
     "requirements.csv_loaded": "{{count}} řádků načteno z CSV",
-    "requirements.csv_parse_error":
-      "CSV musí mít záhlaví: entity, attribute, constraint_value",
+    "requirements.csv_parse_error": "CSV musí mít záhlaví: entity, attribute, constraint_value",
     "requirements.export": "Exportovat",
     "requirements.export_csv": "Exportovat CSV",
     "requirements.export_excel": "Exportovat Excel",
     "requirements.export_json": "Exportovat JSON",
     "requirements.exported": "Požadavky exportovány",
     "requirements.import_count": "Importuje se {{count}} požadavků...",
-    "requirements.import_csv_desc":
-      "Nahrajte soubor CSV se sloupci: entity, attribute, constraint_value",
+    "requirements.import_csv_desc": "Nahrajte soubor CSV se sloupci: entity, attribute, constraint_value",
     "requirements.import_json_desc": "Nahrajte JSON pole objektů požadavků",
     "requirements.import_requirements": "Importovat Požadavky",
     "requirements.json_loaded": "{{count}} položek načteno z JSON",
-    "requirements.json_parse_error":
-      "JSON musí být pole objektů s entity, attribute, constraint_value",
+    "requirements.json_parse_error": "JSON musí být pole objektů s entity, attribute, constraint_value",
     "requirements.preview": "Náhled",
-    "requirements.regex_hint":
-      "Zadejte vzor regulárního výrazu, např. ^F[0-9]+$",
+    "requirements.regex_hint": "Zadejte vzor regulárního výrazu, např. ^F[0-9]+$",
     "requirements.regex_invalid": "Neplatný vzor",
     "requirements.regex_placeholder": "^F[0-9]+$",
     "requirements.regex_valid": "Platný vzor",
@@ -1409,8 +1282,7 @@ const resource = {
     "markups.col_measurement": "Měření",
     "markups.col_date": "Datum",
     "markups.empty_title": "Nebyly nalezeny žádné poznámky",
-    "markups.empty_desc":
-      "Poznámky a anotace z vašich projektových dokumentů se zobrazí zde.",
+    "markups.empty_desc": "Poznámky a anotace z vašich projektových dokumentů se zobrazí zde.",
     "markups.action_resolve": "Vyřešit",
     "markups.action_archive": "Archivovat",
     "markups.add_markup": "Přidat poznámku",
@@ -1432,8 +1304,7 @@ const resource = {
     "markups.measurement_unit": "Jednotka",
     "markups.measurement_value": "Hodnota",
     "markups.no_document": "Žádný dokument",
-    "markups.no_project_desc":
-      "Vyberte projekt pro zobrazení a správu poznámek",
+    "markups.no_project_desc": "Vyberte projekt pro zobrazení a správu poznámek",
     "markups.no_project_title": "Žádný projekt nevybrán",
     "markups.page": "Stránka",
     "markups.resolved": "Vyřešeno",
@@ -1454,8 +1325,7 @@ const resource = {
     "punch.stat_overdue": "Po termínu",
     "punch.add_item": "Přidat vadu",
     "punch.field_title": "Název",
-    "punch.title_placeholder":
-      "např. Chybějící protipožární utěsnění na úrovni 3",
+    "punch.title_placeholder": "např. Chybějící protipožární utěsnění na úrovni 3",
     "punch.field_description": "Popis",
     "punch.description_placeholder": "Uveďte podrobnosti o problému...",
     "punch.field_priority": "Priorita",
@@ -1493,8 +1363,7 @@ const resource = {
     "punch.all_assignees": "Všichni přiřazení",
     "punch.kanban_empty": "Žádné položky",
     "punch.empty_title": "Žádné vady",
-    "punch.empty_desc":
-      "Vytvářejte položky pro sledování vad, nedodělků a nedokončených prací.",
+    "punch.empty_desc": "Vytvářejte položky pro sledování vad, nedodělků a nedokončených prací.",
     "punch.col_title": "Název",
     "punch.col_priority": "Priorita",
     "punch.col_status": "Stav",
@@ -1560,8 +1429,7 @@ const resource = {
     "field_reports.total": "Celkem záznamů",
     "field_reports.workforce_hours": "Pracovní hodiny",
     "field_reports.empty": "Zatím žádné záznamy",
-    "field_reports.empty_desc":
-      "Vytvořte svůj první denní záznam a začněte dokumentovat průběh stavby",
+    "field_reports.empty_desc": "Vytvořte svůj první denní záznam a začněte dokumentovat průběh stavby",
     "nav.photos": "Fotografie projektu",
     "photos.title": "Fotografie projektu",
     "photos.upload": "Nahrát fotografie",
@@ -1580,8 +1448,7 @@ const resource = {
     "photos.grid": "Mřížka",
     "photos.timeline": "Časová osa",
     "photos.empty": "Zatím žádné fotografie",
-    "photos.empty_desc":
-      "Nahrajte fotografie ze staveniště pro dokumentaci průběhu",
+    "photos.empty_desc": "Nahrajte fotografie ze staveniště pro dokumentaci průběhu",
     "photos.delete_confirm": "Smazat tuto fotografii?",
     "photos.edit": "Upravit fotografii",
     "onboarding.ai_feature_1": "Generování odhadů z textového popisu",
@@ -1595,10 +1462,8 @@ const resource = {
     "onboarding.ai_title": "Poskytovatel AI (volitelné)",
     "onboarding.api_key": "API klíč",
     "onboarding.api_key_placeholder": "Vložte svůj API klíč...",
-    "onboarding.cost_db_hint":
-      "Další databáze můžete přidat později v Databáze cen → Import.",
-    "onboarding.cost_db_subtitle":
-      "Načtěte cenovou databázi pro přesné odhady. Vyberte svůj region:",
+    "onboarding.cost_db_hint": "Další databáze můžete přidat později v Databáze cen → Import.",
+    "onboarding.cost_db_subtitle": "Načtěte cenovou databázi pro přesné odhady. Vyberte svůj region:",
     "onboarding.cost_db_title": "Databáze cen",
     "onboarding.create_error": "Vytvoření projektu selhalo",
     "onboarding.create_project": "Vytvořit a začít kalkulovat",
@@ -1608,11 +1473,9 @@ const resource = {
     "onboarding.get_started": "Začít",
     "onboarding.items_loaded": "položek načteno",
     "onboarding.loading_database": "Importuji databázi...",
-    "onboarding.loading_database_hint":
-      "Načítání ~55 000 položek. Trvá to 1–3 minuty.",
+    "onboarding.loading_database_hint": "Načítání ~55 000 položek. Trvá to 1–3 minuty.",
     "onboarding.project_created": "Projekt vytvořen!",
-    "onboarding.project_created_msg":
-      "Váš pracovní prostor je připraven. Pojďme",
+    "onboarding.project_created_msg": "Váš pracovní prostor je připraven. Pojďme",
     "onboarding.project_error": "Vytvoření projektu selhalo",
     "onboarding.project_name": "Název projektu",
     "onboarding.project_name_placeholder": "např. Kancelářská věž centrum",
@@ -1625,10 +1488,8 @@ const resource = {
     "onboarding.standard": "Standard",
     "onboarding.test_connection": "Otestovat připojení",
     "onboarding.testing": "Testuji...",
-    "onboarding.welcome_hint":
-      "Zdarma a open source. Kreditní karta není vyžadována.",
-    "onboarding.welcome_subtitle":
-      "Profesionální platforma pro stavební kalkulace.\nNastavte si pracovní prostor v několika jednoduchých krocích.",
+    "onboarding.welcome_hint": "Zdarma a open source. Kreditní karta není vyžadována.",
+    "onboarding.welcome_subtitle": "Profesionální platforma pro stavební kalkulace.\nNastavte si pracovní prostor v několika jednoduchých krocích.",
     "onboarding.welcome_title": "Vítejte v OpenConstructionERP",
     "onboarding.tour_step": "Krok prohlídky",
     "onboarding.step_label": "Krok",
@@ -1637,20 +1498,15 @@ const resource = {
     "onboarding.next": "Další",
     "onboarding.finish": "Dokončit",
     "onboarding.step1.title": "Navigační panel",
-    "onboarding.step1.description":
-      "Postranní panel vám poskytuje rychlý přístup ke všem modulům: projekty, odhady, databáze cen, harmonogramy a další.",
+    "onboarding.step1.description": "Postranní panel vám poskytuje rychlý přístup ke všem modulům: projekty, odhady, databáze cen, harmonogramy a další.",
     "onboarding.step2.title": "Projekty",
-    "onboarding.step2.description":
-      "Začněte zde vytvořením prvního projektu. Každý projekt obsahuje rozpočty, harmonogramy a dokumenty na jednom místě.",
+    "onboarding.step2.description": "Začněte zde vytvořením prvního projektu. Každý projekt obsahuje rozpočty, harmonogramy a dokumenty na jednom místě.",
     "onboarding.step3.title": "Rozpočet",
-    "onboarding.step3.description":
-      "Sestavujte podrobné odhady v editoru rozpočtu — hierarchické položky, sestavy a průběžný přepočet nákladů.",
+    "onboarding.step3.description": "Sestavujte podrobné odhady v editoru rozpočtu — hierarchické položky, sestavy a průběžný přepočet nákladů.",
     "onboarding.step4.title": "Databáze cen",
-    "onboarding.step4.description":
-      "Procházejte a spravujte databáze cenových sazeb včetně vestavěné CWICR s 55 000+ položkami v 9 jazycích.",
+    "onboarding.step4.description": "Procházejte a spravujte databáze cenových sazeb včetně vestavěné CWICR s 55 000+ položkami v 9 jazycích.",
     "onboarding.step5.title": "Jednoduchý / Pokročilý režim",
-    "onboarding.step5.description":
-      "Přepínejte mezi jednoduchým režimem (základní nástroje) a pokročilým režimem (všechny funkce včetně výběrových řízení a harmonogramů).",
+    "onboarding.step5.description": "Přepínejte mezi jednoduchým režimem (základní nástroje) a pokročilým režimem (všechny funkce včetně výběrových řízení a harmonogramů).",
     "projects.4d_schedule": "4D harmonogram",
     "projects.5d_budget": "5D rozpočet",
     "projects.active": "aktivní",
@@ -1682,28 +1538,21 @@ const resource = {
     "projects.name_placeholder": "např. Kancelářská věž centrum",
     "projects.new_boq": "Nový rozpočet",
     "projects.new_project": "Nový projekt",
-    "projects.create_hint":
-      "Region určuje dostupné databáze cen a sazby DPH. Klasifikační standard definuje strukturu nákladů: DIN 276 pro země DACH, NRM pro Velkou Británii, MasterFormat pro USA/Kanadu, UniFormat pro Oceánii. Měna nastavuje všechny ceny v rozpočtu.",
+    "projects.create_hint": "Region určuje dostupné databáze cen a sazby DPH. Klasifikační standard definuje strukturu nákladů: DIN 276 pro země DACH, NRM pro Velkou Británii, MasterFormat pro USA/Kanadu, UniFormat pro Oceánii. Měna nastavuje všechny ceny v rozpočtu.",
     "projects.no_boqs": "Zatím žádné rozpočty",
-    "projects.no_boqs_desc":
-      "Vytvořte rozpočet a začněte odhadovat náklady tohoto projektu.",
+    "projects.no_boqs_desc": "Vytvořte rozpočet a začněte odhadovat náklady tohoto projektu.",
     "projects.no_budget": "Žádná rozpočtová data",
-    "projects.no_budget_desc":
-      "Nastavte 5D model nákladů pro sledování plánovaných vs. skutečných nákladů.",
+    "projects.no_budget_desc": "Nastavte 5D model nákladů pro sledování plánovaných vs. skutečných nákladů.",
     "projects.no_projects": "Zatím žádné projekty",
-    "projects.no_projects_description":
-      "Vytvořte svůj první projekt stavební kalkulace",
+    "projects.no_projects_description": "Vytvořte svůj první projekt stavební kalkulace",
     "projects.no_results": "Žádné odpovídající projekty",
     "projects.no_results_hint": "Zkuste upravit vyhledávání nebo filtry",
     "projects.no_schedules": "Zatím žádné harmonogramy",
-    "projects.no_schedules_desc":
-      "Vytvořte harmonogram pro správu časového plánu projektu.",
+    "projects.no_schedules_desc": "Vytvořte harmonogram pro správu časového plánu projektu.",
     "projects.no_tenders": "Žádné balíčky výběrových řízení",
-    "projects.no_tenders_desc":
-      "Vytvořte balíčky výběrových řízení pro správu nabídek tohoto projektu.",
+    "projects.no_tenders_desc": "Vytvořte balíčky výběrových řízení pro správu nabídek tohoto projektu.",
     "projects.not_found": "Projekt nenalezen",
-    "projects.not_found_desc":
-      "Projekt, který hledáte, neexistuje nebo byl smazán.",
+    "projects.not_found_desc": "Projekt, který hledáte, neexistuje nebo byl smazán.",
     "projects.of": "z",
     "projects.open_tendering": "Otevřít výběrové řízení",
     "projects.overview": "Přehled",
@@ -1716,8 +1565,7 @@ const resource = {
     "projects.projects_label": "projektů",
     "projects.region": "Region",
     "projects.regional_factor": "Regionální koeficient",
-    "projects.regional_factor_hint":
-      "Vynásobte všechny sazby tímto koeficientem (např. Praha = 1,05, Brno = 0,95)",
+    "projects.regional_factor_hint": "Vynásobte všechny sazby tímto koeficientem (např. Praha = 1,05, Brno = 0,95)",
     "projects.remaining": "Zbývající",
     "projects.schedule_subtitle": "Harmonogramy projektu a časový plán",
     "projects.search_placeholder": "Hledat projekty...",
@@ -1744,65 +1592,51 @@ const resource = {
     "quantities.badge_cad": "CAD",
     "quantities.badge_coming_soon": "Připravujeme",
     "quantities.how_it_works": "Jak to funguje",
-    "quantities.manual_desc":
-      "Potřebujete zadat množství přímo? Přejděte do editoru rozpočtu.",
+    "quantities.manual_desc": "Potřebujete zadat množství přímo? Přejděte do editoru rozpočtu.",
     "quantities.manual_title": "Rychlé ruční zadání",
-    "quantities.method_ai_desc":
-      "Popište svou budovu a AI vygeneruje rozpočet s odhadovanými objemy a náklady.",
+    "quantities.method_ai_desc": "Popište svou budovu a AI vygeneruje rozpočet s odhadovanými objemy a náklady.",
     "quantities.method_ai_title": "AI textový vstup",
-    "quantities.method_cad_desc":
-      "Importujte soubory DWG, RVT, IFC nebo DGN a extrahujte množství přímo z 3D geometrie.",
+    "quantities.method_cad_desc": "Importujte soubory DWG, RVT, IFC nebo DGN a extrahujte množství přímo z 3D geometrie.",
     "quantities.method_cad_title": "CAD / BIM modely",
-    "quantities.method_pdf_desc":
-      "Nahrajte stavební výkresy (PDF) a extrahujte množství automaticky pomocí AI výkazu výměr.",
+    "quantities.method_pdf_desc": "Nahrajte stavební výkresy (PDF) a extrahujte množství automaticky pomocí AI výkazu výměr.",
     "quantities.method_pdf_title": "PDF výkresy",
     "quantities.open": "Otevřít",
     "quantities.open_boq": "Otevřít editor rozpočtu",
     "quantities.step1_desc": "Zvolte metodu vstupu: text, PDF nebo CAD model.",
     "quantities.step1_title": "Nahrát nebo popsat",
-    "quantities.step2_desc":
-      "Naše AI analyzuje váš vstup a extrahuje strukturovaná množství.",
+    "quantities.step2_desc": "Naše AI analyzuje váš vstup a extrahuje strukturovaná množství.",
     "quantities.step2_title": "AI extrahuje množství",
     "quantities.step3_desc": "Zkontrolujte výsledky a přidejte je do rozpočtu.",
     "quantities.step3_title": "Kontrola a přidání do rozpočtu",
-    "quantities.subtitle":
-      "Sbírejte projektová množství — z AI textového vstupu, PDF výkresů nebo CAD/BIM modelů",
+    "quantities.subtitle": "Sbírejte projektová množství — z AI textového vstupu, PDF výkresů nebo CAD/BIM modelů",
     "quantities.converter_title": "Jak funguje konverze CAD/BIM",
-    "quantities.converter_desc":
-      "Nahrajte své CAD/BIM soubory (.rvt, .ifc, .dwg, .dgn) a DDC konvertor extrahuje všechny elementy do strukturované tabulky — stěny, desky, sloupy, dveře, okna — s vypočtenými objemy, plochami a množstvím. AI poté namapuje tyto elementy na cenové položky a automaticky vygeneruje kompletní rozpočet.",
+    "quantities.converter_desc": "Nahrajte své CAD/BIM soubory (.rvt, .ifc, .dwg, .dgn) a DDC konvertor extrahuje všechny elementy do strukturované tabulky — stěny, desky, sloupy, dveře, okna — s vypočtenými objemy, plochami a množstvím. AI poté namapuje tyto elementy na cenové položky a automaticky vygeneruje kompletní rozpočet.",
     "quantities.download_converters": "Stáhnout DDC konvertory",
     "quantities.converter_path": "Instalovat do: ~/.openestimator/converters/",
     "quantities.title": "Výkaz výměr",
     "reports.5d_report": "5D report nákladů",
-    "reports.5d_report_desc":
-      "Analýza rozpočtu vs. skutečnosti s S-křivkou a prognózou nákladů.",
+    "reports.5d_report_desc": "Analýza rozpočtu vs. skutečnosti s S-křivkou a prognózou nákladů.",
     "reports.boq_report": "Report rozpočtu",
-    "reports.boq_report_desc":
-      "Kompletní rozpočet se sekcemi, položkami, přirážkami a součty. K dispozici jako PDF nebo Excel.",
+    "reports.boq_report_desc": "Kompletní rozpočet se sekcemi, položkami, přirážkami a součty. K dispozici jako PDF nebo Excel.",
     "reports.coming_soon": "Připravujeme",
     "reports.cost_report": "Report nákladů",
-    "reports.cost_report_desc":
-      "Rozpad nákladů podle kategorie se souhrnnými grafy a podrobnou analýzou nákladů.",
+    "reports.cost_report_desc": "Rozpad nákladů podle kategorie se souhrnnými grafy a podrobnou analýzou nákladů.",
     "reports.download_error": "Generování reportu selhalo",
     "reports.download_format": "Stáhnout {{format}}",
     "reports.download_success": "Report úspěšně stažen",
     "reports.gaeb_xml": "GAEB XML",
-    "reports.gaeb_xml_desc":
-      "GAEB X83 export pro výběrová řízení — standardní výměnný formát pro stavební trh DACH.",
+    "reports.gaeb_xml_desc": "GAEB X83 export pro výběrová řízení — standardní výměnný formát pro stavební trh DACH.",
     "reports.no_boqs": "V tomto projektu nejsou žádné rozpočty",
     "reports.no_projects": "Žádné projekty k dispozici",
     "reports.schedule_report": "Report harmonogramu",
-    "reports.schedule_report_desc":
-      "Ganttův diagram s časovým plánem projektu, milníky a kritickou cestou.",
+    "reports.schedule_report_desc": "Ganttův diagram s časovým plánem projektu, milníky a kritickou cestou.",
     "reports.select_boq_first": "Nejprve vyberte projekt a rozpočet",
     "reports.select_project_first": "Nejprve vyberte projekt",
     "reports.subtitle": "Generujte profesionální reporty pro své projekty",
-    "reports.guide_desc":
-      "Report rozpočtu = podrobný rozpočet se součty. Report nákladů = rozpad nákladů podle kategorie. GAEB XML = německý formát pro výběrová řízení (.x83) pro výměnu se subdodavateli. Validace = výsledky kontroly shody. Harmonogram = souhrn činností Ganttova diagramu. 5D = křivky rozpočtu vs. skutečných nákladů.",
+    "reports.guide_desc": "Report rozpočtu = podrobný rozpočet se součty. Report nákladů = rozpad nákladů podle kategorie. GAEB XML = německý formát pro výběrová řízení (.x83) pro výměnu se subdodavateli. Validace = výsledky kontroly shody. Harmonogram = souhrn činností Ganttova diagramu. 5D = křivky rozpočtu vs. skutečných nákladů.",
     "reports.title": "Reporty",
     "reports.validation_report": "Validační report",
-    "reports.validation_report_desc":
-      "Report kontroly shody podle standardů DIN 276, NRM nebo MasterFormat.",
+    "reports.validation_report_desc": "Report kontroly shody podle standardů DIN 276, NRM nebo MasterFormat.",
     "schedule.activity": "Činnost",
     "schedule.activity_name": "Název činnosti",
     "schedule.activity_name_placeholder": "např. Základové práce",
@@ -1813,8 +1647,7 @@ const resource = {
     "schedule.buffer": "Rezerva",
     "schedule.calculate_cpm": "Kritická cesta",
     "schedule.completed": "Dokončeno",
-    "schedule.cpm_result":
-      "Kritická cesta: {{duration}} dní, {{count}} kritických činností",
+    "schedule.cpm_result": "Kritická cesta: {{duration}} dní, {{count}} kritických činností",
     "schedule.create_activity": "Vytvořit činnost",
     "schedule.create_schedule": "Vytvořit harmonogram",
     "schedule.critical_path": "Kritická cesta",
@@ -1829,40 +1662,32 @@ const resource = {
     "schedule.fifty_pct_confidence": "50% spolehlivost",
     "schedule.generate": "Generovat",
     "schedule.generate_from_boq": "Generovat z rozpočtu",
-    "schedule.generate_from_boq_description":
-      "Vyberte rozpočet pro automatické generování činností harmonogramu. Pro každou sekci rozpočtu bude vytvořena jedna činnost s délkou úměrnou nákladům.",
+    "schedule.generate_from_boq_description": "Vyberte rozpočet pro automatické generování činností harmonogramu. Pro každou sekci rozpočtu bude vytvořena jedna činnost s délkou úměrnou nákladům.",
     "schedule.in_progress": "Probíhá",
     "schedule.mean_label": "Průměr (kritická cesta)",
     "schedule.ninetyfive_pct_confidence": "95% spolehlivost",
     "schedule.no_activities": "Zatím žádné činnosti",
-    "schedule.no_activities_hint":
-      "Přidejte činnosti pro sestavení harmonogramu projektu",
-    "schedule.no_boqs_available":
-      "Pro tento projekt nejsou k dispozici žádné rozpočty.",
+    "schedule.no_activities_hint": "Přidejte činnosti pro sestavení harmonogramu projektu",
+    "schedule.no_boqs_available": "Pro tento projekt nejsou k dispozici žádné rozpočty.",
     "schedule.no_dates": "Žádná data nenastavena",
     "schedule.no_projects": "Žádné projekty k dispozici",
-    "schedule.no_projects_hint":
-      "Nejprve vytvořte projekt, poté k němu přidejte harmonogramy",
+    "schedule.no_projects_hint": "Nejprve vytvořte projekt, poté k němu přidejte harmonogramy",
     "schedule.no_schedules": "Zatím žádné harmonogramy",
-    "schedule.no_schedules_hint":
-      "Vytvořte harmonogram a začněte plánovat časový plán projektu",
+    "schedule.no_schedules_hint": "Vytvořte harmonogram a začněte plánovat časový plán projektu",
     "schedule.planned_duration": "Plánovaná délka",
     "schedule.project_schedules": "Harmonogramy tohoto projektu",
     "schedule.risk_analysis": "Analýza rizik (PERT)",
     "schedule.risk_analysis_btn": "Analýza rizik",
     "schedule.schedule_name": "Název harmonogramu",
     "schedule.schedule_name_placeholder": "např. Hlavní harmonogram výstavby",
-    "schedule.select_project":
-      "Vyberte projekt pro zobrazení a správu harmonogramu výstavby",
+    "schedule.select_project": "Vyberte projekt pro zobrazení a správu harmonogramu výstavby",
     "schedule.start": "Začátek",
     "schedule.start_date": "Datum zahájení",
     "schedule.status_active": "aktivní",
     "schedule.status_draft": "koncept",
     "schedule.std_dev_label": "Směr. odchylka",
-    "schedule.subtitle":
-      "Vyberte projekt pro zobrazení a správu harmonogramu výstavby",
-    "schedule.what_is_4d":
-      "4D harmonogram propojuje položky rozpočtu s časovým plánem projektu. Vytvářejte činnosti, nastavujte závislosti a vizualizujte postup na Ganttově diagramu. Analýza kritické cesty zvýrazňuje činnosti, které přímo ovlivňují datum ukončení projektu. Typy činností: Úkol = pracovní činnost, Milník = kontrolní bod s nulovou délkou, Souhrn = seskupující záhlaví.",
+    "schedule.subtitle": "Vyberte projekt pro zobrazení a správu harmonogramu výstavby",
+    "schedule.what_is_4d": "4D harmonogram propojuje položky rozpočtu s časovým plánem projektu. Vytvářejte činnosti, nastavujte závislosti a vizualizujte postup na Ganttově diagramu. Analýza kritické cesty zvýrazňuje činnosti, které přímo ovlivňují datum ukončení projektu. Typy činností: Úkol = pracovní činnost, Milník = kontrolní bod s nulovou délkou, Souhrn = seskupující záhlaví.",
     "schedule.title": "4D harmonogram",
     "schedule.total_activities": "Celkem",
     "schedule.type_milestone": "Milník",
@@ -1878,17 +1703,14 @@ const resource = {
     "settings.active": "Aktivní",
     "settings.ai_api_key": "API klíč",
     "settings.ai_connected": "Připojeno",
-    "settings.ai_desc_anthropic":
-      "Claude 3.5 Sonnet / Opus — nejlepší pro stavební kalkulace",
+    "settings.ai_desc_anthropic": "Claude 3.5 Sonnet / Opus — nejlepší pro stavební kalkulace",
     "settings.ai_desc_gemini": "Gemini 1.5 Pro — multimodální schopnosti",
     "settings.ai_desc_openai": "GPT-4o / GPT-4 Turbo — široce podporovaný",
     "settings.ai_error": "Chyba připojení",
     "settings.ai_get_key": "Získat API klíč",
-    "settings.ai_key_hint":
-      "Váš API klíč je šifrován a bezpečně uložen. Nikdy není sdílen.",
+    "settings.ai_key_hint": "Váš API klíč je šifrován a bezpečně uložen. Nikdy není sdílen.",
     "settings.ai_key_placeholder": "Zadejte svůj API klíč...",
-    "settings.ai_key_placeholder_existing":
-      "Zadejte nový klíč pro nahrazení stávajícího...",
+    "settings.ai_key_placeholder_existing": "Zadejte nový klíč pro nahrazení stávajícího...",
     "settings.ai_key_set": "Klíč nastaven",
     "settings.ai_last_tested": "(naposledy testováno: {{time}})",
     "settings.ai_not_configured": "Nenastaveno",
@@ -1919,8 +1741,7 @@ const resource = {
     "settings.sign_out": "Odhlásit se",
     "settings.status": "Stav",
     "settings.subtitle": "Spravujte svůj účet a předvolby",
-    "settings.ai_guidance":
-      "Funkce AI (kalkulace, analýza výkazů, sémantické vyhledávání) vyžadují API klíč. Anthropic Claude je doporučen pro nejlepší přesnost. Klíče jsou uloženy šifrovaně a nikdy neopouštějí váš server.",
+    "settings.ai_guidance": "Funkce AI (kalkulace, analýza výkazů, sémantické vyhledávání) vyžadují API klíč. Anthropic Claude je doporučen pro nejlepší přesnost. Klíče jsou uloženy šifrovaně a nikdy neopouštějí váš server.",
     "settings.theme_dark": "Tmavý",
     "settings.theme_light": "Světlý",
     "settings.theme_system": "Systémový",
@@ -1929,8 +1750,7 @@ const resource = {
     "shortcuts.cancel_editing": "Zrušit úpravy",
     "shortcuts.command_palette": "Příkazová paleta",
     "shortcuts.confirm_next_row": "Potvrdit / Další řádek",
-    "shortcuts.footer_hint":
-      "Zkratky jsou deaktivovány při zaměření na vstupní pole.",
+    "shortcuts.footer_hint": "Zkratky jsou deaktivovány při zaměření na vstupní pole.",
     "shortcuts.group.actions": "Akce",
     "shortcuts.group.boq_editor": "Editor rozpočtu",
     "shortcuts.group.general": "Obecné",
@@ -1956,13 +1776,11 @@ const resource = {
     "shortcuts.separator_then": "pak",
     "shortcuts.show_help": "Zobrazit tento dialog",
     "shortcuts.title": "Klávesové zkratky",
-    "errors.bad_request":
-      "Požadavek nelze zpracovat. Zkontrolujte zadané údaje.",
+    "errors.bad_request": "Požadavek nelze zpracovat. Zkontrolujte zadané údaje.",
     "errors.unauthorized": "Vaše relace vypršela. Přihlaste se znovu.",
     "errors.forbidden": "Nemáte oprávnění k této akci.",
     "errors.not_found": "Požadovaná položka nebyla nalezena.",
-    "errors.conflict":
-      "Konflikt se stávajícími daty — obnovte stránku a zkuste znovu.",
+    "errors.conflict": "Konflikt se stávajícími daty — obnovte stránku a zkuste znovu.",
     "errors.payload_too_large": "Soubor je příliš velký. Zkuste menší.",
     "errors.validation": "Některá pole jsou neplatná. Zkontrolujte údaje.",
     "errors.rate_limit": "Příliš mnoho požadavků. Chvíli počkejte.",
@@ -1971,29 +1789,25 @@ const resource = {
     "errors.client": "Požadavek nelze dokončit.",
     "errors.unknown": "Něco se pokazilo. Zkuste to znovu.",
     "errors.network": "Nelze se spojit se serverem. Zkontrolujte připojení.",
-    "errors.timeout":
-      "Požadavek trval příliš dlouho a byl zrušen. Zkuste to znovu.",
+    "errors.timeout": "Požadavek trval příliš dlouho a byl zrušen. Zkuste to znovu.",
     "shortcuts.undo": "Zpět",
     "sustainability.area": "Plocha (m2)",
     "sustainability.benchmark": "Benchmark",
     "sustainability.boq": "Rozpočet",
     "sustainability.breakdown_title": "Rozpad podle materiálu",
     "sustainability.calculate": "Vypočítat",
-    "sustainability.empty_desc":
-      "Vyberte projekt a rozpočet výše, poté klikněte na Vypočítat pro analýzu emisí CO2 podle typů materiálů.",
+    "sustainability.empty_desc": "Vyberte projekt a rozpočet výše, poté klikněte na Vypočítat pro analýzu emisí CO2 podle typů materiálů.",
     "sustainability.empty_title": "Analýza uhlíkové stopy CO2",
     "sustainability.export_pdf": "Exportovat CO2 report PDF",
     "sustainability.material": "Materiál",
-    "sustainability.no_area":
-      "Zadejte plochu projektu pro zobrazení benchmarku na m2",
+    "sustainability.no_area": "Zadejte plochu projektu pro zobrazení benchmarku na m2",
     "sustainability.positions_matched": "položek přiřazeno",
     "sustainability.project": "Projekt",
     "sustainability.project_area": "projekt",
     "sustainability.rating": "Hodnocení",
     "sustainability.select_boq": "-- Vyberte rozpočet --",
     "sustainability.select_project": "-- Vyberte projekt --",
-    "sustainability.subtitle":
-      "Vyberte projekt a rozpočet pro analýzu uhlíkové stopy CO2",
+    "sustainability.subtitle": "Vyberte projekt a rozpočet pro analýzu uhlíkové stopy CO2",
     "sustainability.title": "Udržitelnost / CO2",
     "sustainability.total_co2": "Celkem CO2",
     "takeoff.add_selected_to_boq": "Přidat {{count}} do rozpočtu",
@@ -2015,8 +1829,7 @@ const resource = {
     "takeoff.just_now": "Právě teď",
     "takeoff.minutes_ago": "před {{count}} min",
     "takeoff.no_documents": "Žádné nahrané dokumenty",
-    "takeoff.no_documents_description":
-      "Nahrajte PDF stavební výkresy a začněte extrahovat množství pomocí AI.",
+    "takeoff.no_documents_description": "Nahrajte PDF stavební výkresy a začněte extrahovat množství pomocí AI.",
     "takeoff.pages": "stran",
     "takeoff.pdf_limit": "soubory .pdf do {{size}} MB",
     "takeoff.quick_measurements": "Rychlá měření",
@@ -2024,16 +1837,14 @@ const resource = {
     "takeoff.select_all": "Vybrat vše",
     "takeoff.select_boq": "Rozpočet",
     "takeoff.select_boq_placeholder": "Vyberte rozpočet...",
-    "takeoff.select_boq_to_add":
-      "Vyberte projekt a rozpočet výše pro přidání měření.",
+    "takeoff.select_boq_to_add": "Vyberte projekt a rozpočet výše pro přidání měření.",
     "takeoff.select_items_hint": "Vyberte položky pro přidání do rozpočtu",
     "takeoff.select_project": "Projekt",
     "takeoff.select_project_first": "Nejprve vyberte projekt",
     "takeoff.select_project_placeholder": "Vyberte projekt...",
     "takeoff.selected": "vybráno",
     "takeoff.subtitle": "Nahrajte stavební výkresy pro extrakci množství",
-    "takeoff.workflow_desc":
-      "Nahrajte PDF výkres → AI analyzuje stránky a extrahuje elementy (stěny, desky, dveře atd.) s množstvím → Zkontrolujte výsledky a upravte → Přidejte vybrané položky do rozpočtu. Skóre spolehlivosti: zelená (>80 %) = vysoká spolehlivost, žlutá (50–80 %) = doporučena kontrola, červená (<50 %) = nutné ruční ověření.",
+    "takeoff.workflow_desc": "Nahrajte PDF výkres → AI analyzuje stránky a extrahuje elementy (stěny, desky, dveře atd.) s množstvím → Zkontrolujte výsledky a upravte → Přidejte vybrané položky do rozpočtu. Skóre spolehlivosti: zelená (>80 %) = vysoká spolehlivost, žlutá (50–80 %) = doporučena kontrola, červená (<50 %) = nutné ruční ověření.",
     "takeoff.summary": "Souhrn",
     "takeoff.title": "PDF výkaz výměr",
     "takeoff.total_quantity": "celkem",
@@ -2048,8 +1859,7 @@ const resource = {
     "tendering.award": "Zadat",
     "tendering.award_bid": "Zadat tuto nabídku",
     "tendering.bid_comparison": "Porovnání nabídek",
-    "tendering.bid_comparison_chart_label":
-      "Sloupcový graf porovnání celkových nabídek",
+    "tendering.bid_comparison_chart_label": "Sloupcový graf porovnání celkových nabídek",
     "tendering.bid_totals_chart": "Přehled celkových nabídek",
     "tendering.bids_count": "nabídek",
     "tendering.bids_received": "Přijaté nabídky",
@@ -2085,8 +1895,7 @@ const resource = {
     "tendering.source_boq": "Zdrojový rozpočet",
     "tendering.submit_bid": "Podat nabídku",
     "tendering.title": "Výběrové řízení",
-    "tendering.workflow_desc":
-      "Proces výběrového řízení: Koncept (příprava balíčku) → Vydáno (odeslání uchazečům) → Sběr (příjem nabídek) → Hodnocení (porovnání nabídek vedle sebe) → Zadáno (výběr vítěze). Vytvořte balíček z rozpočtu, přidejte nabídky subdodavatelů a pak použijte srovnávací tabulku pro identifikaci nejlepší nabídky. Přidejte 2+ nabídky pro zobrazení porovnání.",
+    "tendering.workflow_desc": "Proces výběrového řízení: Koncept (příprava balíčku) → Vydáno (odeslání uchazečům) → Sběr (příjem nabídek) → Hodnocení (porovnání nabídek vedle sebe) → Zadáno (výběr vítěze). Vytvořte balíček z rozpočtu, přidejte nabídky subdodavatelů a pak použijte srovnávací tabulku pro identifikaci nejlepší nabídky. Přidejte 2+ nabídky pro zobrazení porovnání.",
     "tendering.total": "CELKEM",
     "tendering.total_amount": "Celková částka",
     "tendering.vs_budget": "vs rozpočet",
@@ -2100,8 +1909,7 @@ const resource = {
     "validation.filter_errors": "Chyby",
     "validation.filter_passed": "Prošlo",
     "validation.filter_warnings": "Upozornění",
-    "validation.no_results_for_filter":
-      "Tomuto filtru neodpovídají žádné výsledky.",
+    "validation.no_results_for_filter": "Tomuto filtru neodpovídají žádné výsledky.",
     "validation.passed": "Prošlo",
     "validation.pending": "Čeká na vyřízení",
     "validation.results_title": "Výsledky",
@@ -2147,8 +1955,7 @@ const resource = {
     "cde.label_revisions": "Historie revizí",
     "cde.new_container": "Nový kontejner",
     "cde.no_containers": "Zatím žádné kontejnery",
-    "cde.no_containers_hint":
-      "Vytvořte svůj první dokumentový kontejner, abyste mohli začít.",
+    "cde.no_containers_hint": "Vytvořte svůj první dokumentový kontejner, abyste mohli začít.",
     "cde.no_results": "Žádné odpovídající kontejnery",
     "cde.no_results_hint": "Zkuste upravit vyhledávání nebo filtry.",
     "cde.no_revisions": "Žádné revize nezaznamenány",
@@ -2201,8 +2008,7 @@ const resource = {
     "contacts.filter_all_types": "Všechny typy",
     "contacts.name_placeholder": "Celé jméno",
     "contacts.no_contacts": "Zatím žádné kontakty",
-    "contacts.no_contacts_hint":
-      "Přidejte svůj první kontakt, abyste mohli začít.",
+    "contacts.no_contacts_hint": "Přidejte svůj první kontakt, abyste mohli začít.",
     "contacts.no_results": "Žádné odpovídající kontakty",
     "contacts.no_results_hint": "Zkuste upravit vyhledávání nebo filtry.",
     "contacts.notes_placeholder": "Další poznámky...",
@@ -2240,8 +2046,7 @@ const resource = {
     "correspondence.label_to": "To",
     "correspondence.new_entry": "Nový záznam",
     "correspondence.no_entries": "Zatím žádná korespondence",
-    "correspondence.no_entries_hint":
-      "Zaznamenejte svou první korespondenci, abyste mohli začít.",
+    "correspondence.no_entries_hint": "Zaznamenejte svou první korespondenci, abyste mohli začít.",
     "correspondence.no_results": "Žádné odpovídající záznamy",
     "correspondence.no_results_hint": "Zkuste upravit vyhledávání nebo filtry.",
     "correspondence.notes_placeholder": "Další poznámky...",
@@ -2286,17 +2091,13 @@ const resource = {
     "finance.mark_paid": "Označit jako zaplacené",
     "finance.method": "Method",
     "finance.no_budgets": "Žádné rozpočty nejsou definovány",
-    "finance.no_budgets_desc":
-      "Položky rozpočtu se zobrazí, jakmile budou definovány.",
+    "finance.no_budgets_desc": "Položky rozpočtu se zobrazí, jakmile budou definovány.",
     "finance.no_evm": "Žádná data EVM",
-    "finance.no_evm_desc":
-      "Data vykazované hodnoty se zobrazí po pořízení snímků.",
+    "finance.no_evm_desc": "Data vykazované hodnoty se zobrazí po pořízení snímků.",
     "finance.no_invoices": "Žádné faktury",
-    "finance.no_invoices_desc":
-      "Faktury se zobrazí zde, jakmile budou vytvořeny.",
+    "finance.no_invoices_desc": "Faktury se zobrazí zde, jakmile budou vytvořeny.",
     "finance.no_payments": "Žádné platby",
-    "finance.no_payments_desc":
-      "Platby se zobrazí zde, jakmile budou zaznamenány.",
+    "finance.no_payments_desc": "Platby se zobrazí zde, jakmile budou zaznamenány.",
     "finance.no_project": "Vyberte projekt pro zobrazení finančních dat.",
     "finance.on_track": "V souladu s plánem",
     "finance.original": "Original",
@@ -2346,8 +2147,7 @@ const resource = {
     "inspections.location_placeholder": "Místo kontroly",
     "inspections.new_inspection": "Nová kontrola",
     "inspections.no_inspections": "Zatím žádné kontroly",
-    "inspections.no_inspections_hint":
-      "Naplánujte svou první kontrolu, abyste mohli začít.",
+    "inspections.no_inspections_hint": "Naplánujte svou první kontrolu, abyste mohli začít.",
     "inspections.no_results": "Žádné odpovídající kontroly",
     "inspections.no_results_hint": "Zkuste upravit vyhledávání nebo filtry.",
     "inspections.page_title": "Inspections",
@@ -2387,8 +2187,7 @@ const resource = {
     "meetings.location_placeholder": "Místo konání porady",
     "meetings.new_meeting": "Nová porada",
     "meetings.no_meetings": "Zatím žádné porady",
-    "meetings.no_meetings_hint":
-      "Naplánujte svou první poradu, abyste mohli začít.",
+    "meetings.no_meetings_hint": "Naplánujte svou první poradu, abyste mohli začít.",
     "meetings.no_results": "Žádné odpovídající porady",
     "meetings.no_results_hint": "Zkuste upravit vyhledávání nebo filtry.",
     "meetings.page_title": "Zápisy z porad",
@@ -2450,19 +2249,15 @@ const resource = {
     "notifications.title": "Oznámení",
     "notifications.unread": "Unread",
     "notifications.boq.created.title": "BOQ vytvořeno",
-    "notifications.boq.created.body":
-      "Váš výkaz výměr '{{boq_name}}' byl uložen.",
+    "notifications.boq.created.body": "Váš výkaz výměr '{{boq_name}}' byl uložen.",
     "notifications.meeting.action_assigned.title": "Byl vám přiřazen úkol",
-    "notifications.meeting.action_assigned.body":
-      "Z jednání {{meeting_number}}: {{description}}",
+    "notifications.meeting.action_assigned.body": "Z jednání {{meeting_number}}: {{description}}",
     "notifications.cde.state_transitioned.title": "Stav dokumentu změněn",
-    "notifications.cde.state_transitioned.body":
-      "Kontejner přešel do stavu '{{new_state}}'.",
+    "notifications.cde.state_transitioned.body": "Kontejner přešel do stavu '{{new_state}}'.",
     "notifications.rfi.assigned.title": "RFI přiřazeno vám",
     "notifications.rfi.assigned.body": "{{code}} — {{title}}",
     "notifications.rfi.responded.title": "RFI zodpovězeno",
-    "notifications.rfi.responded.body":
-      "Váš požadavek {{code}} ({{title}}) má odpověď.",
+    "notifications.rfi.responded.body": "Váš požadavek {{code}} ({{title}}) má odpověď.",
     "notifications.risk.assigned.title": "Riziko přiřazeno vám",
     "notifications.risk.assigned.body": "{{code}} — {{title}}",
     "notifications.submittal.submitted.title": "Submittal čeká na revizi",
@@ -2470,31 +2265,24 @@ const resource = {
     "notifications.submittal.approved.title": "Submittal schválen",
     "notifications.submittal.approved.body": "{{code}} — {{title}}",
     "notifications.submittal.rejected.title": "Submittal zamítnut",
-    "notifications.submittal.rejected.body":
-      "{{code}} ({{title}}). Důvod: {{reason}}",
-    "notifications.submittal.revise_resubmit.title":
-      "Submittal vyžaduje revizi",
-    "notifications.submittal.revise_resubmit.body":
-      "{{code}} ({{title}}). Důvod: {{reason}}",
+    "notifications.submittal.rejected.body": "{{code}} ({{title}}). Důvod: {{reason}}",
+    "notifications.submittal.revise_resubmit.title": "Submittal vyžaduje revizi",
+    "notifications.submittal.revise_resubmit.body": "{{code}} ({{title}}). Důvod: {{reason}}",
     "notifications.transmittal.issued.title": "Transmittal vydán vám",
     "notifications.transmittal.issued.body": "{{code}} — {{title}}",
     "notifications.transmittal.acknowledged.title": "Transmittal potvrzen",
-    "notifications.transmittal.acknowledged.body":
-      "Příjemce potvrdil {{code}} ({{title}}).",
+    "notifications.transmittal.acknowledged.body": "Příjemce potvrdil {{code}} ({{title}}).",
     "notifications.transmittal.responded.title": "Transmittal zodpovězen",
-    "notifications.transmittal.responded.body":
-      "{{code}} ({{title}}). {{response_summary}}",
+    "notifications.transmittal.responded.body": "{{code}} ({{title}}). {{response_summary}}",
     "procurement.amount": "Amount",
     "procurement.delivery_date": "Datum dodání",
     "procurement.goods_receipts": "Příjemky zboží",
     "procurement.gr_ref": "Číslo příjemky",
     "procurement.issue_date": "Datum vystavení",
     "procurement.no_gr": "Žádné příjemky zboží",
-    "procurement.no_gr_desc":
-      "Příjemky zboží se zobrazí zde, jakmile budou zaznamenány.",
+    "procurement.no_gr_desc": "Příjemky zboží se zobrazí zde, jakmile budou zaznamenány.",
     "procurement.no_po": "Žádné objednávky",
-    "procurement.no_po_desc":
-      "Objednávky se zobrazí zde, jakmile budou vytvořeny.",
+    "procurement.no_po_desc": "Objednávky se zobrazí zde, jakmile budou vytvořeny.",
     "procurement.no_project": "Vyberte projekt pro zobrazení dat o nákupu.",
     "procurement.po_number": "PO #",
     "procurement.po_ref": "Číslo objednávky",
@@ -2559,11 +2347,9 @@ const resource = {
     "safety.incident_number": "Incident #",
     "safety.incidents": "Incidents",
     "safety.no_incidents": "Žádné incidenty nezaznamenány",
-    "safety.no_incidents_desc":
-      "Incidenty se zobrazí zde, jakmile budou nahlášeny.",
+    "safety.no_incidents_desc": "Incidenty se zobrazí zde, jakmile budou nahlášeny.",
     "safety.no_observations": "Žádná pozorování nezaznamenána",
-    "safety.no_observations_desc":
-      "Pozorování se zobrazí zde, jakmile budou nahlášena.",
+    "safety.no_observations_desc": "Pozorování se zobrazí zde, jakmile budou nahlášena.",
     "safety.no_project": "Vyberte projekt pro zobrazení bezpečnostních dat.",
     "safety.observation_number": "Observation #",
     "safety.observations": "Observations",
@@ -2586,17 +2372,13 @@ const resource = {
     "settings.edit_profile": "Upravit název profilu",
     "settings.full_name": "Celé jméno",
     "settings.imperial": "Imperiální (ft, lb)",
-    "settings.interface_mode_subtitle":
-      "Ovladujte, které funkce jsou viditelné v navigaci",
+    "settings.interface_mode_subtitle": "Ovladujte, které funkce jsou viditelné v navigaci",
     "settings.interface_mode_title": "Režim rozhraní",
     "settings.measurement_system": "Měrný systém",
     "settings.metric": "Metrický (m, kg)",
-    "settings.mode_advanced_detail":
-      "Plná profesionální sada nástrojů se všemi moduly a funkcemi.",
-    "settings.mode_simple_detail":
-      "Základní nástroje pro rozpočtování. Přehledné rozhraní pro soustředěnou práci.",
-    "settings.modules_link_desc":
-      "Povolujte, zakáže a konfigurujte jednotlivé moduly v části Moduly.",
+    "settings.mode_advanced_detail": "Plná profesionální sada nástrojů se všemi moduly a funkcemi.",
+    "settings.mode_simple_detail": "Základní nástroje pro rozpočtování. Přehledné rozhraní pro soustředěnou práci.",
+    "settings.modules_link_desc": "Povolujte, zakáže a konfigurujte jednotlivé moduly v části Moduly.",
     "settings.modules_link_title": "Modules",
     "settings.number_format": "Formát čísla",
     "settings.paper_size": "Formát papíru",
@@ -2605,8 +2387,7 @@ const resource = {
     "settings.regional_subtitle": "Formáty, jednotky a předvolby lokalizace",
     "settings.regional_title": "Regionální nastavení",
     "settings.restart_onboarding": "Otevřít průvodce nastavením",
-    "settings.setup_wizard_subtitle":
-      "Opakujte počáteční nastavení pro změnu jazyka, instalaci databází, katalogů nebo ukázkových projektů",
+    "settings.setup_wizard_subtitle": "Opakujte počáteční nastavení pro změnu jazyka, instalaci databází, katalogů nebo ukázkových projektů",
     "settings.setup_wizard_title": "Průvodce nastavením",
     "settings.time_days_ago": "{{count}}d ago",
     "settings.time_hours_ago": "{{count}}h ago",
@@ -2631,8 +2412,7 @@ const resource = {
     "settings.tm_show_more": "Zobrazit více (zbývá {{remaining}})",
     "settings.tm_total_keys": "Celkem klíčů",
     "settings.tm_translated": "Translated",
-    "settings.translation_manager_subtitle":
-      "Zobrazení a přizpůsobení překladů pro aktuální jazyk",
+    "settings.translation_manager_subtitle": "Zobrazení a přizpůsobení překladů pro aktuální jazyk",
     "settings.translation_manager_title": "Správce překladů",
     "submittals.action_review": "Review",
     "submittals.action_submit": "Submit",
@@ -2663,8 +2443,7 @@ const resource = {
     "submittals.no_results": "Žádné odpovídající podklady",
     "submittals.no_results_hint": "Zkuste upravit vyhledávání nebo filtry.",
     "submittals.no_submittals": "Zatím žádné podklady",
-    "submittals.no_submittals_hint":
-      "Vytvořte svůj první podklad, abyste mohli začít.",
+    "submittals.no_submittals_hint": "Vytvořte svůj první podklad, abyste mohli začít.",
     "submittals.page_title": "Submittals",
     "submittals.review_title": "Přezkoumat podklad",
     "submittals.reviewed": "Podklad přezkoumán",
@@ -2716,8 +2495,7 @@ const resource = {
     "transmittals.col_recipients": "Recipients",
     "transmittals.col_status": "Status",
     "transmittals.col_subject": "Subject",
-    "transmittals.cover_note_placeholder":
-      "Průvodní poznámka k průvodnímu listu...",
+    "transmittals.cover_note_placeholder": "Průvodní poznámka k průvodnímu listu...",
     "transmittals.create_transmittal": "Vytvořit průvodní list",
     "transmittals.created": "Průvodní list vytvořen",
     "transmittals.field_cover_note": "Průvodní poznámka",
@@ -2736,8 +2514,7 @@ const resource = {
     "transmittals.no_results": "Žádné odpovídající průvodní listy",
     "transmittals.no_results_hint": "Zkuste upravit vyhledávání nebo filtry.",
     "transmittals.no_transmittals": "Zatím žádné průvodní listy",
-    "transmittals.no_transmittals_hint":
-      "Vytvořte svůj první průvodní list, abyste mohli začít.",
+    "transmittals.no_transmittals_hint": "Vytvořte svůj první průvodní list, abyste mohli začít.",
     "transmittals.page_title": "Transmittals",
     "transmittals.recipients_placeholder": "Zadejte jména příjemců...",
     "transmittals.search_placeholder": "Hledat průvodní listy...",
@@ -2800,27 +2577,21 @@ const resource = {
     "costs.variant_per_unit": "Za jednotku",
     "dashboard.activity": "Nedávná aktivita",
     "modules.cat_regional": "Regionální normy",
-    "modules.cat_regional_desc":
-      "Formáty importu/exportu výkazů výměr a klasifikační normy specifické pro danou zemi",
+    "modules.cat_regional_desc": "Formáty importu/exportu výkazů výměr a klasifikační normy specifické pro danou zemi",
     "modules.community_title": "Vytvořte vlastní modul",
-    "modules.community_desc":
-      "OpenConstructionERP má modulární pluginovou architekturu. Kdokoli může vytvářet vlastní moduly — databáze nákladů, regionální normy, CAD konvertory, analytické panely, integrace s externími systémy nebo jakoukoli jinou funkcionalitu. Váš modul se zobrazí v části Moduly a může být nainstalován libovolným uživatelem.",
+    "modules.community_desc": "OpenConstructionERP má modulární pluginovou architekturu. Kdokoli může vytvářet vlastní moduly — databáze nákladů, regionální normy, CAD konvertory, analytické panely, integrace s externími systémy nebo jakoukoli jinou funkcionalitu. Váš modul se zobrazí v části Moduly a může být nainstalován libovolným uživatelem.",
     "modules.community_type_data": "Datové moduly",
-    "modules.community_type_data_desc":
-      "Regionální databáze nákladů, katalogy zdrojů, knihovny materiálů, klasifikační normy (DIN, NRM, SNIP, atd.)",
+    "modules.community_type_data_desc": "Regionální databáze nákladů, katalogy zdrojů, knihovny materiálů, klasifikační normy (DIN, NRM, SNIP, atd.)",
     "modules.community_type_integration": "Integrace",
-    "modules.community_type_integration_desc":
-      "Propojení s SAP, Procore, MS Project, BIM 360, PlanRadar, Primavera nebo libovolným externím systémem přes API",
+    "modules.community_type_integration_desc": "Propojení s SAP, Procore, MS Project, BIM 360, PlanRadar, Primavera nebo libovolným externím systémem přes API",
     "modules.community_type_tools": "Nástroje & Analytika",
-    "modules.community_type_tools_desc":
-      "Vlastní sestavy, panely, kalkulačky, konvertory formátů, modely AI nebo jakýkoli specializovaný stavební nástroj",
-    "modules.community_how":
-      "Každý modul je Python balíček se souborem manifest.py. Vytvořte svůj modul, otestujte ho lokálně a sdílejte ho s komunitou. I pokud máte jen nápad — pošlete nám textový popis a pomůžeme Vám ho vytvořit.",
+    "modules.community_type_tools_desc": "Vlastní sestavy, panely, kalkulačky, konvertory formátů, modely AI nebo jakýkoli specializovaný stavební nástroj",
+    "modules.community_how": "Každý modul je Python balíček se souborem manifest.py. Vytvořte svůj modul, otestujte ho lokálně a sdílejte ho s komunitou. I pokud máte jen nápad — pošlete nám textový popis a pomůžeme Vám ho vytvořit.",
     "modules.community_submit_email": "Odeslat modul e-mailem",
     "modules.community_submit_github": "Navrhnout na GitHub",
     "modules.community_telegram": "Diskutovat v Telegramu",
     "nav.cad_bim_explorer": "Průzkumník CAD-BIM BI",
-    "nav.bim_viewer": "BIM 3D Viewer",
+    "nav.bim_viewer": "BIM 3D výkaz výměr",
     "nav.bim_rules": "Pravidla BIM",
     "nav.quantity_rules": "Pravidla výměr",
     "nav.assets": "Registr aktiv",
@@ -2837,16 +2608,13 @@ const resource = {
     "bim.loading_geometry": "Načítání 3D geometrie…",
     "bim.loading_finalising": "Dokončování scény…",
     "bim.loading_streaming": "Streamování geometrie ze serveru…",
-    "bim.loading_parsing":
-      "Zpracování 3D geometrie — u velkých modelů (>50 MB) to může trvat 20-60 s; neobnovujte stránku",
-    "bim.loading_navigate_hint":
-      "Můžete přejít na jiné stránky — načítání bude pokračovat na pozadí",
+    "bim.loading_parsing": "Zpracování 3D geometrie — u velkých modelů (>50 MB) to může trvat 20-60 s; neobnovujte stránku",
+    "bim.loading_navigate_hint": "Můžete přejít na jiné stránky — načítání bude pokračovat na pozadí",
     "bim.no_models": "Zatím nebyly nahrány žádné modely",
     "bim.no_project": "Žádný projekt nevybrán",
     "bim.no_project_desc": "Vyberte projekt pro zobrazení BIM modelů.",
     "bim.select_model": "Vybrat model",
-    "bim.select_model_desc":
-      "Zvolte BIM model ze seznamu pro jeho 3D vizualizaci.",
+    "bim.select_model_desc": "Zvolte BIM model ze seznamu pro jeho 3D vizualizaci.",
     "bim.search_elements": "Hledat prvky...",
     "bim.no_search_results": "Žádné odpovídající prvky",
     "bim.load_error": "Nepodařilo se načíst prvky modelu",
@@ -2868,11 +2636,13 @@ const resource = {
     "bim.properties": "Vlastnosti",
     "bim.disciplines": "Profese",
     "nav.group_overview": "Přehled",
-    "nav.group_ai_estimation": "AI & Rozpočtování",
+    "nav.group_ai_estimation": "AI a Nástroje",
+    "nav.group_ai_estimation_desc": "AI agenti, poradce, ERP chat — AI odhad přesunut do Kalkulace",
     "nav.group_finance": "Finance & Nákup",
     "nav.group_communication": "Komunikace",
     "nav.group_documentation": "Dokumenty",
-    "nav.group_quality": "Kvalita a bezpečnost",
+    "nav.group_quality": "Kvalita",
+    "nav.group_safety": "Bezpečnost a HSE",
     "nav.group_field": "Terén & Výkazy",
     "nav.group_quality_risk": "Kvalita & Rizika",
     "nav.about": "O aplikaci",
@@ -2914,27 +2684,20 @@ const resource = {
     "onboarding.step_modules": "Moduly",
     "onboarding.step_mode": "Režim",
     "onboarding.company_type_title": "Jaký typ společnosti jste?",
-    "onboarding.company_type_subtitle":
-      "Předkonfigurujeme nejlepší sadu modulů pro Váš pracovní postup.",
+    "onboarding.company_type_subtitle": "Předkonfigurujeme nejlepší sadu modulů pro Váš pracovní postup.",
     "onboarding.company_general_contractor": "Hlavní dodavatel",
-    "onboarding.company_general_contractor_desc":
-      "Realizujeme projekty — rozpočtování, nákup, správa staveniště",
+    "onboarding.company_general_contractor_desc": "Realizujeme projekty — rozpočtování, nákup, správa staveniště",
     "onboarding.company_estimator": "Rozpočtář / Nákladový poradce",
-    "onboarding.company_estimator_desc":
-      "Zaměřujeme se na sestavování rozpočtů a výkaz výměr",
+    "onboarding.company_estimator_desc": "Zaměřujeme se na sestavování rozpočtů a výkaz výměr",
     "onboarding.company_project_management": "Firma projektového řízení",
-    "onboarding.company_project_management_desc":
-      "Řídíme velké projekty — plánování, komunikace, dokumenty",
+    "onboarding.company_project_management_desc": "Řídíme velké projekty — plánování, komunikace, dokumenty",
     "onboarding.company_architecture": "Architektonická / Inženýrská kancelář",
-    "onboarding.company_architecture_desc":
-      "Navrhujeme budovy — BIM, dokumenty, Společné datové prostředí",
+    "onboarding.company_architecture_desc": "Navrhujeme budovy — BIM, dokumenty, Společné datové prostředí",
     "onboarding.company_full_enterprise": "Plný enterprise",
-    "onboarding.company_full_enterprise_desc":
-      "Potřebujeme vše — celý životní cyklus stavby",
+    "onboarding.company_full_enterprise_desc": "Potřebujeme vše — celý životní cyklus stavby",
     "onboarding.modules_label": "modulů",
     "onboarding.modules_title": "Zkontrolujte své moduly",
-    "onboarding.modules_subtitle":
-      "Předvybrány podle Vašeho typu společnosti. Libovolný modul zapněte nebo vypněte.",
+    "onboarding.modules_subtitle": "Předvybrány podle Vašeho typu společnosti. Libovolný modul zapněte nebo vypněte.",
     "onboarding.modules_active": "modulů aktivních",
     "onboarding.mod_group_core": "Základní rozpočtování",
     "onboarding.mod_group_takeoff": "Výkaz výměr & AI",
@@ -2950,8 +2713,7 @@ const resource = {
     "onboarding.mod_costs_desc": "Databáze nákladů a správa sazeb",
     "onboarding.mod_assemblies_desc": "Složené sazby, recepty a šablony",
     "onboarding.mod_catalog_desc": "Katalog materiálů, práce a vybavení",
-    "onboarding.mod_templates_desc":
-      "Opakovaně použitelné šablony výkazu výměr",
+    "onboarding.mod_templates_desc": "Opakovaně použitelné šablony výkazu výměr",
     "onboarding.mod_validation_desc": "Pravidla kvality a kontrola shody",
     "onboarding.mod_takeoff_desc": "Přehled výkazu výměr",
     "onboarding.mod_pdf_takeoff_desc": "Měření a anotace z PDF",
@@ -2960,15 +2722,12 @@ const resource = {
     "onboarding.mod_data_explorer_desc": "Průzkum dat CAD/BIM",
     "onboarding.mod_bim_desc": "3D BIM prohlížeč modelů",
     "onboarding.mod_schedule_desc": "4D Ganttův diagram a CPM plánování",
-    "onboarding.mod_5d_desc":
-      "5D nákladový model se sledováním vykazované hodnoty",
+    "onboarding.mod_5d_desc": "5D nákladový model se sledováním vykazované hodnoty",
     "onboarding.mod_tasks_desc": "Správa úkolů a přiřazení",
     "onboarding.mod_finance_desc": "Sledování rozpočtu a finanční přehled",
     "onboarding.mod_procurement_desc": "Objednávky a správa dodavatelů",
-    "onboarding.mod_tendering_desc":
-      "Balíčky výběrového řízení a pracovní postupy",
-    "onboarding.mod_changeorders_desc":
-      "Sledování a schvalování změnových příkazů",
+    "onboarding.mod_tendering_desc": "Balíčky výběrového řízení a pracovní postupy",
+    "onboarding.mod_changeorders_desc": "Sledování a schvalování změnových příkazů",
     "onboarding.mod_contacts_desc": "Adresář kontaktů a týmy",
     "onboarding.mod_meetings_desc": "Správa porad a zápisy",
     "onboarding.mod_rfi_desc": "Žádosti o informace",
@@ -2989,35 +2748,26 @@ const resource = {
     "onboarding.mod_reports_desc": "Generování a export sestav",
     "onboarding.mod_reporting_desc": "Reportingové panely",
     "onboarding.mod_analytics_desc": "Datová analytika a přehledy",
-    "onboarding.mod_sustainability_desc":
-      "Udržitelnost a sledování uhlíkové stopy",
+    "onboarding.mod_sustainability_desc": "Udržitelnost a sledování uhlíkové stopy",
     "onboarding.mod_cost_benchmark_desc": "Srovnávací analýza nákladů",
-    "onboarding.mod_collaboration_desc":
-      "Nástroje pro spolupráci v reálném čase",
+    "onboarding.mod_collaboration_desc": "Nástroje pro spolupráci v reálném čase",
     "support.button_label": "Podpořte nás",
-    "support.button_tooltip":
-      "Podpořte projekt — dejte hvězdičku, sdílejte nebo pošlete případovou studii",
+    "support.button_tooltip": "Podpořte projekt — dejte hvězdičku, sdílejte nebo pošlete případovou studii",
     "support.button_aria": "Podpořte nás",
     "support.modal_title": "Pomozte OpenConstructionERP růst",
-    "support.modal_subtitle":
-      "Vyvíjíme to otevřeně a každou funkci dodáváme zdarma. Pár malých akcí z vaší strany udržuje vývoj v chodu — nic nestojí, ale dělají obrovský rozdíl.",
+    "support.modal_subtitle": "Vyvíjíme to otevřeně a každou funkci dodáváme zdarma. Pár malých akcí z vaší strany udržuje vývoj v chodu — nic nestojí, ale dělají obrovský rozdíl.",
     "support.action_star_title": "Dejte nám hvězdičku na GitHubu",
-    "support.action_star_body":
-      "30 sekund. Díky hvězdičkám nové stavební týmy objevují projekt a my si zajistíme čas na další verzi.",
+    "support.action_star_body": "30 sekund. Díky hvězdičkám nové stavební týmy objevují projekt a my si zajistíme čas na další verzi.",
     "support.action_share_title": "Sdílejte se svým týmem nebo sítí",
-    "support.action_share_body":
-      "Jeden příspěvek na LinkedIn nebo X / Twitter osloví desítky rozpočtářů, plánovačů a BIM manažerů. Pomozte nám dostat open-source stavební software na mapu.",
+    "support.action_share_body": "Jeden příspěvek na LinkedIn nebo X / Twitter osloví desítky rozpočtářů, plánovačů a BIM manažerů. Pomozte nám dostat open-source stavební software na mapu.",
     "support.share_twitter": "Sdílet na X",
     "support.share_linkedin": "Sdílet na LinkedIn",
     "support.share_copy": "Zkopírovat text + odkaz",
     "support.share_copied": "Zkopírováno!",
-    "support.action_case_study_title":
-      "Máte případovou studii, video nebo článek?",
+    "support.action_case_study_title": "Máte případovou studii, video nebo článek?",
     "support.action_case_study_tag": "Zesílíme to",
-    "support.action_case_study_body":
-      "Ukažte nám, jak používáte OpenConstructionERP — video, případová studie, článek na LinkedIn. Můžete poslat odkaz přímo nebo prostě označit @DataDrivenConstruction ve svém příspěvku — všimneme si a znovu sdílíme přes náš newsletter a sociální kanály, kde desítky tisíc stavebních profesionálů a starších odborníků z oboru sleduje naši práci. E-mail pro odkazy: ",
-    "support.thanks":
-      "Děkujeme. Každá hvězdička, sdílení a příběh skutečně udržuje tento projekt naživu — vytvořeno s ❤️ pro stavební komunitu.",
+    "support.action_case_study_body": "Ukažte nám, jak používáte OpenConstructionERP — video, případová studie, článek na LinkedIn. Můžete poslat odkaz přímo nebo prostě označit @DataDrivenConstruction ve svém příspěvku — všimneme si a znovu sdílíme přes náš newsletter a sociální kanály, kde desítky tisíc stavebních profesionálů a starších odborníků z oboru sleduje naši práci. E-mail pro odkazy: ",
+    "support.thanks": "Děkujeme. Každá hvězdička, sdílení a příběh skutečně udržuje tento projekt naživu — vytvořeno s ❤️ pro stavební komunitu.",
     "onboarding.mod_group_estimation": "Rozpočtování",
     "onboarding.mod_group_ai": "AI",
     "onboarding.mod_group_bim_advanced": "BIM a 3D",
@@ -3030,158 +2780,109 @@ const resource = {
     "onboarding.mod_group_regional": "Regionální balíčky",
     "onboarding.mod_group_platform": "Platforma",
     "onboarding.mod_cost_match": "Párování nákladů",
-    "onboarding.mod_cost_match_desc":
-      "Automatické párování položek rozpočtu s položkami databáze nákladů",
+    "onboarding.mod_cost_match_desc": "Automatické párování položek rozpočtu s položkami databáze nákladů",
     "onboarding.mod_match": "Párování prvků",
-    "onboarding.mod_match_desc":
-      "Propojení BIM/CAD prvků s položkami rozpočtu a sazbami",
+    "onboarding.mod_match_desc": "Propojení BIM/CAD prvků s položkami rozpočtu a sazbami",
     "onboarding.mod_dwg_takeoff": "Výkaz výměr z DWG",
     "onboarding.mod_dwg_takeoff_desc": "Výpočet množství přímo z DWG výkresů",
     "onboarding.mod_cad": "Import CAD",
-    "onboarding.mod_cad_desc":
-      "Import DWG/DGN/RVT/IFC přes pipeline DDC cad2data",
+    "onboarding.mod_cad_desc": "Import DWG/DGN/RVT/IFC přes pipeline DDC cad2data",
     "onboarding.mod_bim_requirements": "Požadavky BIM",
-    "onboarding.mod_bim_requirements_desc":
-      "Definice a validace požadavků na model (IDS / EIR)",
+    "onboarding.mod_bim_requirements_desc": "Definice a validace požadavků na model (IDS / EIR)",
     "onboarding.mod_match_elements": "Spárovat prvky",
-    "onboarding.mod_match_elements_desc":
-      "Párování BIM-náklad s pomocí AI a skóre spolehlivosti",
+    "onboarding.mod_match_elements_desc": "Párování BIM-náklad s pomocí AI a skóre spolehlivosti",
     "onboarding.mod_opencde_api": "OpenCDE API",
-    "onboarding.mod_opencde_api_desc":
-      "API kompatibilní s OpenCDE pro BCF + Dokumenty + Foundation",
+    "onboarding.mod_opencde_api_desc": "API kompatibilní s OpenCDE pro BCF + Dokumenty + Foundation",
     "onboarding.mod_erp_chat": "ERP chat",
-    "onboarding.mod_erp_chat_desc":
-      "AI chatovací asistent v aplikaci s plným kontextem ERP",
+    "onboarding.mod_erp_chat_desc": "AI chatovací asistent v aplikaci s plným kontextem ERP",
     "onboarding.mod_compliance_ai": "Compliance AI",
-    "onboarding.mod_compliance_ai_desc":
-      "Kontroly regulační compliance založené na LLM",
+    "onboarding.mod_compliance_ai_desc": "Kontroly regulační compliance založené na LLM",
     "onboarding.mod_schedule_advanced": "Pokročilé plánování",
-    "onboarding.mod_schedule_advanced_desc":
-      "Last Planner System s týdenními look-aheads a PPC",
+    "onboarding.mod_schedule_advanced_desc": "Last Planner System s týdenními look-aheads a PPC",
     "onboarding.mod_eac": "EAC engine",
     "onboarding.mod_eac_desc": "Estimate at Completion s klouzavými prognózami",
     "onboarding.mod_bid_management": "Správa nabídek",
-    "onboarding.mod_bid_management_desc":
-      "Spravujte odchozí nabídky, cenové strategie, sledování výher/proher",
+    "onboarding.mod_bid_management_desc": "Spravujte odchozí nabídky, cenové strategie, sledování výher/proher",
     "onboarding.mod_contracts": "Smlouvy",
-    "onboarding.mod_contracts_desc":
-      "Engine typů smluv (FIDIC, NEC, JCT, paušál, T&M)",
+    "onboarding.mod_contracts_desc": "Engine typů smluv (FIDIC, NEC, JCT, paušál, T&M)",
     "onboarding.mod_variations": "Změny",
-    "onboarding.mod_variations_desc":
-      "Změny měření na stavbě se schvalovacím workflow",
+    "onboarding.mod_variations_desc": "Změny měření na stavbě se schvalovacím workflow",
     "onboarding.mod_crm": "CRM",
     "onboarding.mod_crm_desc": "Prodejní pipeline, leady, příležitosti, účty",
     "onboarding.mod_supplier_catalogs": "Katalogy dodavatelů",
-    "onboarding.mod_supplier_catalogs_desc":
-      "Aktuální cenové feeds dodavatelů a správa dodavatelů",
+    "onboarding.mod_supplier_catalogs_desc": "Aktuální cenové feeds dodavatelů a správa dodavatelů",
     "onboarding.mod_property_dev": "Developing nemovitostí",
-    "onboarding.mod_property_dev_desc":
-      "Pozemek, fáze, mix prodejů, proveditelnost pro developery",
+    "onboarding.mod_property_dev_desc": "Pozemek, fáze, mix prodejů, proveditelnost pro developery",
     "onboarding.mod_service": "Servis a údržba",
-    "onboarding.mod_service_desc":
-      "Servisní požadavky po předání, záruky, údržba",
+    "onboarding.mod_service_desc": "Servisní požadavky po předání, záruky, údržba",
     "onboarding.mod_equipment": "Vybavení a vozový park",
-    "onboarding.mod_equipment_desc":
-      "Stroje, nářadí, vozidla — využití, údržba, sazby pronájmu",
+    "onboarding.mod_equipment_desc": "Stroje, nářadí, vozidla — využití, údržba, sazby pronájmu",
     "onboarding.mod_resources": "Zdroje",
-    "onboarding.mod_resources_desc":
-      "Plánování zdrojů: práce, materiál, vybavení",
+    "onboarding.mod_resources_desc": "Plánování zdrojů: práce, materiál, vybavení",
     "onboarding.mod_daily_diary": "Stavební deník",
-    "onboarding.mod_daily_diary_desc":
-      "Denní stavební deník s počasím, partami, vybavením, fotkami",
+    "onboarding.mod_daily_diary_desc": "Denní stavební deník s počasím, partami, vybavením, fotkami",
     "onboarding.mod_subcontractors": "Subdodavatelé",
-    "onboarding.mod_subcontractors_desc":
-      "Onboarding subdodavatelů, smlouvy, platby, výkonnost",
+    "onboarding.mod_subcontractors_desc": "Onboarding subdodavatelů, smlouvy, platby, výkonnost",
     "onboarding.mod_portal": "Zákaznický portál",
-    "onboarding.mod_portal_desc":
-      "Externí portál pro klienty a partnery s omezeným přístupem",
+    "onboarding.mod_portal_desc": "Externí portál pro klienty a partnery s omezeným přístupem",
     "onboarding.mod_notifications": "Notifikace",
-    "onboarding.mod_notifications_desc":
-      "Notifikace v aplikaci, e-mailem a přes webhook",
+    "onboarding.mod_notifications_desc": "Notifikace v aplikaci, e-mailem a přes webhook",
     "onboarding.mod_hse_advanced": "Pokročilé HSE",
-    "onboarding.mod_hse_advanced_desc":
-      "Pokročilá BOZP a životní prostředí — toolbox talks, JHA, audity",
+    "onboarding.mod_hse_advanced_desc": "Pokročilá BOZP a životní prostředí — toolbox talks, JHA, audity",
     "onboarding.mod_qms": "Systém managementu kvality",
-    "onboarding.mod_qms_desc":
-      "QMS v souladu s ISO 9001 — procedury, audity, KPI",
+    "onboarding.mod_qms_desc": "QMS v souladu s ISO 9001 — procedury, audity, KPI",
     "onboarding.mod_compliance": "Compliance DSL",
-    "onboarding.mod_compliance_desc":
-      "Doménově specifický jazyk code-as-rules pro compliance",
+    "onboarding.mod_compliance_desc": "Doménově specifický jazyk code-as-rules pro compliance",
     "onboarding.mod_compliance_docs": "Compliance dokumenty",
-    "onboarding.mod_compliance_docs_desc":
-      "Knihovna certifikátů, sledování platnosti, připomínky obnovení",
+    "onboarding.mod_compliance_docs_desc": "Knihovna certifikátů, sledování platnosti, připomínky obnovení",
     "onboarding.mod_carbon": "Uhlík a udržitelnost",
-    "onboarding.mod_carbon_desc":
-      "Vtělený + provozní uhlík, ESG reporting, EN 15978",
+    "onboarding.mod_carbon_desc": "Vtělený + provozní uhlík, ESG reporting, EN 15978",
     "onboarding.mod_bi_dashboards": "BI dashboardy",
-    "onboarding.mod_bi_dashboards_desc":
-      "Interaktivní cross-modulová analytika s drill-down",
+    "onboarding.mod_bi_dashboards_desc": "Interaktivní cross-modulová analytika s drill-down",
     "onboarding.mod_enterprise_workflows": "Enterprise workflowy",
-    "onboarding.mod_enterprise_workflows_desc":
-      "Vlastní schvalovací workflowy na bázi FSM pro velké organizace",
+    "onboarding.mod_enterprise_workflows_desc": "Vlastní schvalovací workflowy na bázi FSM pro velké organizace",
     "onboarding.mod_full_evm": "Plný EVM",
-    "onboarding.mod_full_evm_desc":
-      "Plný Earned Value Management — PV/EV/AC, SPI/CPI, CV/SV, ETC/EAC",
+    "onboarding.mod_full_evm_desc": "Plný Earned Value Management — PV/EV/AC, SPI/CPI, CV/SV, ETC/EAC",
     "onboarding.mod_rfq_bidding": "RFQ a výběrová řízení",
-    "onboarding.mod_rfq_bidding_desc":
-      "Vícekolové RFQ workflowy, uzavřená výběrová řízení, e-aukce",
+    "onboarding.mod_rfq_bidding_desc": "Vícekolové RFQ workflowy, uzavřená výběrová řízení, e-aukce",
     "onboarding.mod_integrations": "Integrace",
-    "onboarding.mod_integrations_desc":
-      "Webhooks, SAP, Procore, MS Project přes n8n",
+    "onboarding.mod_integrations_desc": "Webhooks, SAP, Procore, MS Project přes n8n",
     "onboarding.mod_dach_pack": "Regionální balíček — DACH (DE/AT/CH)",
-    "onboarding.mod_dach_pack_desc":
-      "Standardy, klasifikace, měny, formáty pro DACH (DE/AT/CH)",
+    "onboarding.mod_dach_pack_desc": "Standardy, klasifikace, měny, formáty pro DACH (DE/AT/CH)",
     "onboarding.mod_uk_pack": "Regionální balíček — Spojené království",
-    "onboarding.mod_uk_pack_desc":
-      "Standardy, klasifikace, měny, formáty pro Spojené království",
+    "onboarding.mod_uk_pack_desc": "Standardy, klasifikace, měny, formáty pro Spojené království",
     "onboarding.mod_us_pack": "Regionální balíček — Spojené státy",
-    "onboarding.mod_us_pack_desc":
-      "Standardy, klasifikace, měny, formáty pro Spojené státy",
+    "onboarding.mod_us_pack_desc": "Standardy, klasifikace, měny, formáty pro Spojené státy",
     "onboarding.mod_india_pack": "Regionální balíček — Indie",
-    "onboarding.mod_india_pack_desc":
-      "Standardy, klasifikace, měny, formáty pro Indii",
-    "onboarding.mod_middle_east_pack":
-      "Regionální balíček — Blízký východ a GCC",
-    "onboarding.mod_middle_east_pack_desc":
-      "Standardy, klasifikace, měny, formáty pro Blízký východ a GCC",
+    "onboarding.mod_india_pack_desc": "Standardy, klasifikace, měny, formáty pro Indii",
+    "onboarding.mod_middle_east_pack": "Regionální balíček — Blízký východ a GCC",
+    "onboarding.mod_middle_east_pack_desc": "Standardy, klasifikace, měny, formáty pro Blízký východ a GCC",
     "onboarding.mod_latam_pack": "Regionální balíček — Latinská Amerika",
-    "onboarding.mod_latam_pack_desc":
-      "Standardy, klasifikace, měny, formáty pro Latinskou Ameriku",
+    "onboarding.mod_latam_pack_desc": "Standardy, klasifikace, měny, formáty pro Latinskou Ameriku",
     "onboarding.mod_asia_pac_pack": "Regionální balíček — Asie-Pacifik",
-    "onboarding.mod_asia_pac_pack_desc":
-      "Standardy, klasifikace, měny, formáty pro Asii-Pacifik",
+    "onboarding.mod_asia_pac_pack_desc": "Standardy, klasifikace, měny, formáty pro Asii-Pacifik",
     "onboarding.mod_russia_pack": "Regionální balíček — Rusko a SNS",
-    "onboarding.mod_russia_pack_desc":
-      "Standardy, klasifikace, měny, formáty pro Rusko a SNS",
+    "onboarding.mod_russia_pack_desc": "Standardy, klasifikace, měny, formáty pro Rusko a SNS",
     "onboarding.mod_users": "Uživatelé a Auth",
     "onboarding.mod_users_desc": "Uživatelské účty, role, JWT, API klíče",
     "onboarding.mod_teams": "Týmy",
-    "onboarding.mod_teams_desc":
-      "Seskupení týmů, scope viditelnosti, přiřazení projektů",
+    "onboarding.mod_teams_desc": "Seskupení týmů, scope viditelnosti, přiřazení projektů",
     "onboarding.mod_uploads": "Nahrávání",
-    "onboarding.mod_uploads_desc":
-      "Přímé nahrávání velkých souborů s pokračováním",
+    "onboarding.mod_uploads_desc": "Přímé nahrávání velkých souborů s pokračováním",
     "onboarding.mod_jobs": "Úlohy na pozadí",
-    "onboarding.mod_jobs_desc":
-      "Worker fronty pro importy, exporty, CV pipeline",
+    "onboarding.mod_jobs_desc": "Worker fronty pro importy, exporty, CV pipeline",
     "onboarding.mod_search": "Sémantické vyhledávání",
-    "onboarding.mod_search_desc":
-      "Vektorové + lexikální vyhledávání napříč rozpočtem, dokumenty, výkresy",
+    "onboarding.mod_search_desc": "Vektorové + lexikální vyhledávání napříč rozpočtem, dokumenty, výkresy",
     "onboarding.mod_backup": "Zálohování a obnovení",
-    "onboarding.mod_backup_desc":
-      "Automatické zálohy s obnovením do bodu v čase",
+    "onboarding.mod_backup_desc": "Automatické zálohy s obnovením do bodu v čase",
     "onboarding.mod_admin": "Admin konzole",
-    "onboarding.mod_admin_desc":
-      "Endpointy operátora, QA pipeline, údržba systému",
+    "onboarding.mod_admin_desc": "Endpointy operátora, QA pipeline, údržba systému",
     "onboarding.mod_i18n_foundation": "i18n základy",
-    "onboarding.mod_i18n_foundation_desc":
-      "i18n runtime pro 27 jazyků s líně načítanými locale chunky",
+    "onboarding.mod_i18n_foundation_desc": "i18n runtime pro 27 jazyků s líně načítanými locale chunky",
     "onboarding.mod_collaboration_locks": "Zámky spolupráce",
-    "onboarding.mod_collaboration_locks_desc":
-      "Optimistické a pesimistické zamykání pro víceuživatelské úpravy",
+    "onboarding.mod_collaboration_locks_desc": "Optimistické a pesimistické zamykání pro víceuživatelské úpravy",
     "onboarding.mod_architecture_map": "Mapa architektury",
-    "onboarding.mod_architecture_map_desc":
-      "Interaktivní vizuální mapa architektury systému",
+    "onboarding.mod_architecture_map_desc": "Interaktivní vizuální mapa architektury systému",
     "onboarding.mod_dashboards": "Dashboardy",
     "onboarding.mod_dashboards_desc": "Dashboardy na projekt a portfolio",
     "onboarding.mode_title": "Zvolit režim rozhraní",
@@ -3192,20 +2893,15 @@ const resource = {
     "onboarding.summary_modules": "Aktivní moduly",
     "onboarding.summary_mode": "Režim rozhraní",
     "reports.cash_flow": "Prognóza peněžních toků",
-    "reports.cash_flow_desc":
-      "Měsíční projekce peněžních toků z S-křivky plánovaných vs. skutečných výdajů.",
+    "reports.cash_flow_desc": "Měsíční projekce peněžních toků z S-křivky plánovaných vs. skutečných výdajů.",
     "reports.change_order_register": "Registr změnových příkazů",
-    "reports.change_order_register_desc":
-      "Úplný registr změn rozsahu s kumulativním dopadem na náklady a harmonogram.",
+    "reports.change_order_register_desc": "Úplný registr změn rozsahu s kumulativním dopadem na náklady a harmonogram.",
     "reports.tender_comparison": "Srovnání nabídek",
-    "reports.tender_comparison_desc":
-      "Srovnání nabídek subdodavatelů vedle sebe s analýzou odchylek.",
+    "reports.tender_comparison_desc": "Srovnání nabídek subdodavatelů vedle sebe s analýzou odchylek.",
     "reports.risk_register": "Registr rizik",
-    "reports.risk_register_desc":
-      "Riziková matice s pravděpodobností, dopadem, skóre a plány zmírnění.",
+    "reports.risk_register_desc": "Riziková matice s pravděpodobností, dopadem, skóre a plány zmírnění.",
     "reports.progress_report": "Zpráva o průběhu",
-    "reports.progress_report_desc":
-      "Výkon EVM, stav harmonogramu a hlavní rizika v jedné zprávě.",
+    "reports.progress_report_desc": "Výkon EVM, stav harmonogramu a hlavní rizika v jedné zprávě.",
     "reports.preset_monthly": "Měsíční průběh",
     "reports.preset_client": "Prezentace pro klienta",
     "reports.preset_audit": "Auditní zpráva",
@@ -3216,32 +2912,26 @@ const resource = {
     "shortcuts.nav_contacts": "Kontakty",
     "shortcuts.new_task": "Nový úkol",
     "shortcuts.group.module_pages": "Stránky modulů",
-    "shortcuts.create_new_item":
-      "Vytvořit novou položku (na stránkách seznamů)",
+    "shortcuts.create_new_item": "Vytvořit novou položku (na stránkách seznamů)",
     "shortcuts.save_recalculate": "Uložit / Přepočítat sazby",
     "cde.field_state": "Stav",
     "cde.suitability_none": "— Žádná —",
     "cde.view_history": "Historie",
     "cde.history_title": "Historie přechodů stavů",
-    "cde.history_empty":
-      "Zatím žádné přechody stavů — povyšte kontejner pro zahájení auditní stopy.",
+    "cde.history_empty": "Zatím žádné přechody stavů — povyšte kontejner pro zahájení auditní stopy.",
     "cde.history_by_role": "Autor: {{role}}",
     "cde.history_signature": "Podepsáno: {{signer}}",
     "cde.gate_label": "Brána {{code}}",
     "cde.transmittals_badge": "{{count}} průvodních listů",
-    "cde.transmittals_badge_aria":
-      "{{count}} průvodních listů propojených s tímto kontejnerem",
-    "cde.transmittals_drawer_title":
-      "Průvodní listy obsahující tento kontejner",
+    "cde.transmittals_badge_aria": "{{count}} průvodních listů propojených s tímto kontejnerem",
+    "cde.transmittals_drawer_title": "Průvodní listy obsahující tento kontejner",
     "cde.approval_modal_title": "Podpis schválení brány B",
-    "cde.approval_modal_body":
-      "Povýšení {{code}} ze SDÍLENÉHO na PUBLIKOVANÝ vyžaduje podepsané schválení (ISO 19650). Váš podpis a komentáře jsou zaznamenány v auditním protokolu.",
+    "cde.approval_modal_body": "Povýšení {{code}} ze SDÍLENÉHO na PUBLIKOVANÝ vyžaduje podepsané schválení (ISO 19650). Váš podpis a komentáře jsou zaznamenány v auditním protokolu.",
     "cde.approval_field_signature": "Podpis",
     "cde.approval_field_comments": "Komentáře",
     "cde.approval_signature_placeholder": "Celé jméno / iniciály",
     "cde.approval_signature_required": "Podpis je povinný",
-    "cde.approval_comments_placeholder":
-      "Volitelné poznámky pro auditní stopu...",
+    "cde.approval_comments_placeholder": "Volitelné poznámky pro auditní stopu...",
     "cde.approval_submit": "Podepsat a publikovat",
     "transmittals.field_link_revision": "Propojit revizi CDE",
     "transmittals.picker_select_container": "Vybrat kontejner…",
@@ -3278,8 +2968,7 @@ const resource = {
     "users.role_viewer_desc": "Přístup pouze pro čtení",
     "integrations.add_another": "Přidat další",
     "integrations.calendar": "Kalendář",
-    "integrations.calendar_desc":
-      "Odebírat v Google/Outlook Kalendáři (iCal feed)",
+    "integrations.calendar_desc": "Odebírat v Google/Outlook Kalendáři (iCal feed)",
     "integrations.coming_soon": "Připravujeme",
     "integrations.confirm_disconnect": "Odpojit tuto integraci?",
     "integrations.connect": "Připojit",
@@ -3293,13 +2982,10 @@ const resource = {
     "integrations.email_desc": "Přijímat e-mailová upozornění (SMTP)",
     "integrations.setup_steps": "Pokyny k nastavení",
     "integrations.slack": "Slack",
-    "integrations.slack_desc":
-      "Odesílat upozornění do Slacku přes Incoming Webhook",
-    "integrations.subtitle":
-      "Připojte externí služby pro přijímání projektových upozornění ve Vašich oblíbených nástrojích.",
+    "integrations.slack_desc": "Odesílat upozornění do Slacku přes Incoming Webhook",
+    "integrations.subtitle": "Připojte externí služby pro přijímání projektových upozornění ve Vašich oblíbených nástrojích.",
     "integrations.teams": "Microsoft Teams",
-    "integrations.teams_desc":
-      "Odesílat upozornění do kanálu Teams přes Incoming Webhook",
+    "integrations.teams_desc": "Odesílat upozornění do kanálu Teams přes Incoming Webhook",
     "integrations.telegram": "Telegram",
     "integrations.telegram_desc": "Přijímat upozornění přes Telegram bota",
     "integrations.test": "Otestovat",
@@ -3307,8 +2993,7 @@ const resource = {
     "integrations.test_ok": "Testovací upozornění odesláno!",
     "integrations.title": "Integrace",
     "integrations.webhook": "Webhooky",
-    "integrations.webhook_desc":
-      "Odesílat události na libovolnou URL (HTTP POST)",
+    "integrations.webhook_desc": "Odesílat události na libovolnou URL (HTTP POST)",
     "common.actions": "Akce",
     "common.add": "Přidat",
     "common.added": "Přidáno",
@@ -3347,8 +3032,7 @@ const resource = {
     "common.previous": "Předchozí",
     "common.project": "Projekt",
     "common.quantity": "Množství",
-    "common.rate_limit_wait":
-      "Počkejte prosím {{seconds}} sekund, než to zkusíte znovu.",
+    "common.rate_limit_wait": "Počkejte prosím {{seconds}} sekund, než to zkusíte znovu.",
     "common.recommended": "Doporučeno",
     "common.region": "Region",
     "common.remove": "Odebrat",
@@ -3376,11 +3060,9 @@ const resource = {
     "dashboard.create_first_project": "Vytvořit první projekt",
     "dashboard.create_first_project_desc": "Nastavit nový rozpočet od základu",
     "dashboard.import_existing_boq": "Importovat existující výkaz výměr",
-    "dashboard.import_existing_boq_desc":
-      "Použijte AI pro ocenění z existujícího dokumentu",
+    "dashboard.import_existing_boq_desc": "Použijte AI pro ocenění z existujícího dokumentu",
     "dashboard.install_demo": "Nainstalovat ukázkový projekt",
-    "dashboard.install_demo_desc":
-      "Předem připravený bytový projekt s reálnými daty",
+    "dashboard.install_demo_desc": "Předem připravený bytový projekt s reálnými daty",
     "dashboard.kpi_not_validated": "N/A",
     "dashboard.kpi_run_validation": "spustit validaci",
     "dashboard.over_budget": "nad rozpočtem",
@@ -3389,22 +3071,16 @@ const resource = {
     "dashboard.quick_start": "Rychlý start rozpočtu",
     "dashboard.run_setup": "Spustit průvodce nastavením",
     "dashboard.total_budget_all": "Celkový rozpočet",
-    "dashboard.welcome_body":
-      "Tento projekt je budován a udržován komunitou. Vaše podpora nám pomáhá přidávat nové funkce, regionální databáze a udržovat vše pro všechny zdarma.",
+    "dashboard.welcome_body": "Tento projekt je budován a udržován komunitou. Vaše podpora nám pomáhá přidávat nové funkce, regionální databáze a udržovat vše pro všechny zdarma.",
     "dashboard.welcome_consult": "Profesionální poradenství",
-    "dashboard.welcome_consult_desc":
-      "Vlastní nasazení, školení a podniková řešení po celém světě",
-    "dashboard.welcome_desc":
-      "Začněte instalací ukázkového projektu nebo vytvořením vlastního.",
+    "dashboard.welcome_consult_desc": "Vlastní nasazení, školení a podniková řešení po celém světě",
+    "dashboard.welcome_desc": "Začněte instalací ukázkového projektu nebo vytvořením vlastního.",
     "dashboard.welcome_sponsor": "Stát se sponzorem",
-    "dashboard.welcome_sponsor_desc":
-      "Financujte nové funkce a udržujte projekt pro všechny zdarma",
+    "dashboard.welcome_sponsor_desc": "Financujte nové funkce a udržujte projekt pro všechny zdarma",
     "dashboard.welcome_star": "Ohodnotit na GitHub",
-    "dashboard.welcome_star_desc":
-      "Pomozte ostatním projekt objevit — trvá 2 sekundy",
+    "dashboard.welcome_star_desc": "Pomozte ostatním projekt objevit — trvá 2 sekundy",
     "dashboard.welcome_start": "Začít",
-    "dashboard.welcome_sub":
-      "Bezplatné & open-source oceňování stavebních nákladů",
+    "dashboard.welcome_sub": "Bezplatné & open-source oceňování stavebních nákladů",
     "dashboard.welcome_title": "Vítejte v OpenConstructionERP",
     "dashboard.with_budget": "S rozpočtem",
     "analytics.action_create_project": "Vytvořit projekt",
@@ -3423,8 +3099,7 @@ const resource = {
     "analytics.col_status": "Stav",
     "analytics.col_variance": "Odchylka",
     "analytics.col_variance_pct": "Odch. %",
-    "analytics.empty_description":
-      "Vytvořte projekty s rozpočty pro zobrazení meziprojektové analytiky.",
+    "analytics.empty_description": "Vytvořte projekty s rozpočty pro zobrazení meziprojektové analytiky.",
     "analytics.empty_title": "Zatím žádná analytická data",
     "analytics.export_csv": "Exportovat do CSV",
     "analytics.filter_region": "Filtrovat podle regionu",
@@ -3447,30 +3122,25 @@ const resource = {
     "analytics.total_projects": "Celkem projektů",
     "analytics.with_budget": "{{count}} s rozpočtem",
     "backup.confirm_replace_btn": "Nahradit všechna data",
-    "backup.confirm_replace_message":
-      "Tím se nahradí všechna existující data obsahem zálohy. Tuto akci nelze vrátit zpět.",
+    "backup.confirm_replace_message": "Tím se nahradí všechna existující data obsahem zálohy. Tuto akci nelze vrátit zpět.",
     "backup.confirm_replace_title": "Nahradit všechna data?",
     "backup.drop_zone_hint": ".zip záložní soubor",
-    "backup.drop_zone_label":
-      "Přetáhněte záložní soubor sem nebo klikněte pro procházení",
+    "backup.drop_zone_label": "Přetáhněte záložní soubor sem nebo klikněte pro procházení",
     "backup.export_btn": "Vytvořit zálohu",
-    "backup.export_desc":
-      "Stáhněte úplnou zálohu všech Vašich dat jako ZIP soubor.",
+    "backup.export_desc": "Stáhněte úplnou zálohu všech Vašich dat jako ZIP soubor.",
     "backup.export_error": "Export selhal",
     "backup.export_success": "Záloha vytvořena",
     "backup.export_success_detail": "Váš záložní soubor byl stažen.",
     "backup.export_title": "Vytvořit zálohu",
     "backup.exporting": "Vytvářím zálohu...",
-    "backup.import_desc":
-      "Obnovte data z dříve exportovaného záložního souboru.",
+    "backup.import_desc": "Obnovte data z dříve exportovaného záložního souboru.",
     "backup.import_title": "Obnovit ze zálohy",
     "backup.incompatible": "Nekompatibilní verze zálohy",
     "backup.invalid_file": "Neplatný soubor",
     "backup.mode_merge": "Sloučit (přidat nové, zachovat existující)",
     "backup.mode_replace": "Nahradit (přepsat vše)",
     "backup.record_counts": "Počty záznamů",
-    "backup.replace_warning":
-      "Varování: Režim nahrazení smaže všechna existující data.",
+    "backup.replace_warning": "Varování: Režim nahrazení smaže všechna existující data.",
     "backup.restore_btn": "Obnovit",
     "backup.restore_error": "Chyba při obnově",
     "backup.restore_failed": "Obnova selhala",
@@ -3489,8 +3159,7 @@ const resource = {
     "changeorders.add_item": "Přidat položku",
     "changeorders.all_statuses": "Všechny stavy",
     "changeorders.approve": "Schválit",
-    "changeorders.approve_confirm":
-      "Schválit tento změnový příkaz? Dopad na náklady bude aplikován na rozpočet projektu.",
+    "changeorders.approve_confirm": "Schválit tento změnový příkaz? Dopad na náklady bude aplikován na rozpočet projektu.",
     "changeorders.approved": "Změnový příkaz schválen",
     "changeorders.approved_at": "Schváleno",
     "changeorders.approved_impact": "Schválený dopad",
@@ -3502,28 +3171,24 @@ const resource = {
     "changeorders.delete_item_confirm": "Smazat tuto položku?",
     "changeorders.deleted": "Změnový příkaz smazán",
     "changeorders.empty": "Žádné změnové příkazy",
-    "changeorders.empty_desc":
-      "Vytvořte změnový příkaz pro sledování změn rozsahu s dopadem na náklady a harmonogram",
+    "changeorders.empty_desc": "Vytvořte změnový příkaz pro sledování změn rozsahu s dopadem na náklady a harmonogram",
     "changeorders.export_csv": "Exportovat do CSV",
     "changeorders.filter_status": "Filtrovat podle stavu",
     "changeorders.item_added": "Položka přidána",
     "changeorders.item_deleted": "Položka smazána",
     "changeorders.items": "Řádkové položky",
-    "changeorders.load_error":
-      "Načtení změnových příkazů selhalo. Zkuste to prosím znovu.",
+    "changeorders.load_error": "Načtení změnových příkazů selhalo. Zkuste to prosím znovu.",
     "changeorders.new": "Nový změnový příkaz",
     "changeorders.new_qty": "Nové množ.",
     "changeorders.new_rate": "Nová sazba",
     "changeorders.no_items": "Zatím žádné položky",
-    "changeorders.no_items_desc":
-      "Přidejte řádkové položky pro definování změny rozsahu",
+    "changeorders.no_items_desc": "Přidejte řádkové položky pro definování změny rozsahu",
     "changeorders.of_total": "z",
     "changeorders.orig_qty": "Původní množ.",
     "changeorders.orig_rate": "Původní sazba",
     "changeorders.pending": "Čeká na vyřízení",
     "changeorders.pending_approval": "Čeká na schválení",
-    "changeorders.pending_approval_hint":
-      "Schvalovat mohou pouze manažeři a správci.",
+    "changeorders.pending_approval_hint": "Schvalovat mohou pouze manažeři a správci.",
     "changeorders.reason": "Důvod",
     "changeorders.reject": "Zamítnout",
     "changeorders.reject_confirm": "Zamítnout tento změnový příkaz?",
@@ -3539,12 +3204,10 @@ const resource = {
     "changeorders.status_submitted": "Odesláno",
     "changeorders.status_under_review": "V přezkoumání",
     "changeorders.submit": "Odeslat",
-    "changeorders.submit_confirm":
-      "Odeslat tento změnový příkaz k přezkoumání? Tuto akci nelze vrátit zpět.",
+    "changeorders.submit_confirm": "Odeslat tento změnový příkaz k přezkoumání? Tuto akci nelze vrátit zpět.",
     "changeorders.submitted": "Změnový příkaz odeslán",
     "changeorders.submitted_at": "Odesláno",
-    "changeorders.subtitle":
-      "Sledování změn rozsahu s dopadem na náklady a harmonogram",
+    "changeorders.subtitle": "Sledování změn rozsahu s dopadem na náklady a harmonogram",
     "changeorders.title_placeholder": "např. Dodatečné základové práce",
     "changeorders.total": "Celkem příkazů",
     "changeorders.type": "Typ",
@@ -3553,14 +3216,12 @@ const resource = {
     "changeorders.type_removed": "Odebráno",
     "changeorders.unit_placeholder": "m2, m3, ks...",
     "changeorders.workflow": "Pracovní postup",
-    "changeorders.workflow_desc":
-      "Pracovní postup změnového příkazu: Koncept (připravit změnu rozsahu) → Odesláno (odeslat k přezkoumání) → Schváleno nebo Zamítnuto. Každý příkaz sleduje dopad na náklady a harmonogram ve dnech. Přidejte řádkové položky pro specifikaci změny — původní vs. nová množství a sazby. Rozdíl nákladů se vypočítá automaticky.",
+    "changeorders.workflow_desc": "Pracovní postup změnového příkazu: Koncept (připravit změnu rozsahu) → Odesláno (odeslat k přezkoumání) → Schváleno nebo Zamítnuto. Každý příkaz sleduje dopad na náklady a harmonogram ve dnech. Přidejte řádkové položky pro specifikaci změny — původní vs. nová množství a sazby. Rozdíl nákladů se vypočítá automaticky.",
     "explorer.analysis_name": "Název",
     "explorer.apply_pivot": "Použít",
     "explorer.bar": "Sloupcový graf",
     "explorer.boq_create_failed": "Vytvoření položek výkazu výměr selhalo",
-    "explorer.boq_created_success":
-      "{{count}} položek vytvořeno ve výkazu výměr",
+    "explorer.boq_created_success": "{{count}} položek vytvořeno ve výkazu výměr",
     "explorer.categories": "Kategorie",
     "explorer.chart_type": "Typ",
     "explorer.click_header_sort": "Kliknutím na záhlaví sloupce seřadíte",
@@ -3571,21 +3232,17 @@ const resource = {
     "explorer.conversion_complete": "Konverze dokončena",
     "explorer.conversion_failed": "Konverze selhala",
     "explorer.converters": "CAD konvertory",
-    "explorer.converters_desc":
-      "DDC komunitní konvertory pro extrakci dat prvků BIM",
-    "explorer.converters_external_hint":
-      "CAD konvertory vyžadují nainstalované nástroje DDC cad2data na Vašem serveru",
+    "explorer.converters_desc": "DDC komunitní konvertory pro extrakci dat prvků BIM",
+    "explorer.converters_external_hint": "CAD konvertory vyžadují nainstalované nástroje DDC cad2data na Vašem serveru",
     "explorer.converting": "Konvertuji {{name}}...",
     "explorer.converting_msg": "Konvertuji...",
     "explorer.count": "Počet",
     "explorer.create_boq_from_pivot": "Vytvořit výkaz výměr",
-    "explorer.create_boq_subtitle":
-      "{{count}} skupin se stane položkami výkazu výměr",
+    "explorer.create_boq_subtitle": "{{count}} skupin se stane položkami výkazu výměr",
     "explorer.create_boq_title": "Vytvořit výkaz výměr z pivotu",
     "explorer.create_positions": "Vytvořit {{count}} položek",
     "explorer.data_completeness": "Úplnost dat",
-    "explorer.delete_session_confirm":
-      "Smazat tuto analýzu? Tuto akci nelze vrátit zpět.",
+    "explorer.delete_session_confirm": "Smazat tuto analýzu? Tuto akci nelze vrátit zpět.",
     "explorer.documents": "Dokumenty",
     "explorer.done": "Konverze dokončena! Načítám...",
     "explorer.drop_cad": "Přetáhněte soubor CAD/BIM pro průzkum",
@@ -3600,8 +3257,7 @@ const resource = {
     "explorer.heatmap": "Přepnout teplotní mapu hodnot",
     "explorer.heatmap_short": "Teplotní mapa",
     "explorer.installed": "nainstalováno",
-    "explorer.invalid_format":
-      "Nepodporovaný formát souboru. Použijte RVT, IFC, DWG nebo DGN.",
+    "explorer.invalid_format": "Nepodporovaný formát souboru. Použijte RVT, IFC, DWG nebo DGN.",
     "explorer.like_describe": "jako df.describe()",
     "explorer.max": "Max",
     "explorer.mean": "Průměr",
@@ -3612,8 +3268,7 @@ const resource = {
     "explorer.no_chart_data": "Žádná data grafu",
     "explorer.no_groups": "Nenalezeny žádné skupiny. Zkuste jiné sloupce.",
     "explorer.non_null": "Nenulové",
-    "explorer.or_click":
-      "nebo klikněte pro procházení — datová tabulka, pivot, grafy & statistiky",
+    "explorer.or_click": "nebo klikněte pro procházení — datová tabulka, pivot, grafy & statistiky",
     "explorer.page_of": "Stránka {{page}} z {{total}}",
     "explorer.page_summary": "Součty stránky:",
     "explorer.pie": "Koláčový graf",
@@ -3622,27 +3277,22 @@ const resource = {
     "explorer.powered_by": "Pohání",
     "explorer.project": "Projekt",
     "explorer.recent_models": "Nedávné modely",
-    "explorer.requires_external":
-      "Externí nástroj — klikněte pro pokyny k nastavení",
+    "explorer.requires_external": "Externí nástroj — klikněte pro pokyny k nastavení",
     "explorer.rows": "řádků",
     "explorer.save_analysis": "Uložit analýzu",
     "explorer.save_as_bim": "Uložit jako BIM model",
     "explorer.save_permanently": "Uložit trvale",
     "explorer.save_to_project": "Uložit do projektu (BIM Hub)",
     "explorer.save_to_project_btn": "Uložit do projektu",
-    "explorer.save_to_project_desc":
-      "Vytvoří BIM model se všemi extrahovanými prvky ve vybraném projektu.",
+    "explorer.save_to_project_desc": "Vytvoří BIM model se všemi extrahovanými prvky ve vybraném projektu.",
     "explorer.saved": "Analýza trvale uložena",
     "explorer.saved_to_project": "Uloženo do BIM Hubu",
-    "explorer.saved_to_project_msg":
-      "Prvky uloženy do BIM Hubu. Zobrazte je v BIM Vieweru.",
+    "explorer.saved_to_project_msg": "Prvky uloženy do BIM Hubu. Zobrazte je v BIM Vieweru.",
     "explorer.search_all": "Prohledat všechny sloupce...",
-    "explorer.select_columns_for_chart":
-      "Vyberte sloupce pro seskupení a hodnoty pro generování grafu.",
+    "explorer.select_columns_for_chart": "Vyberte sloupce pro seskupení a hodnoty pro generování grafu.",
     "explorer.select_project": "Vybrat projekt...",
     "explorer.selected": "vybráno",
-    "explorer.session_expired_desc":
-      "CAD relace jsou platné 24 hodin. Nahrajte soubor znovu pro pokračování.",
+    "explorer.session_expired_desc": "CAD relace jsou platné 24 hodin. Nahrajte soubor znovu pro pokračování.",
     "explorer.session_expired_title": "Relace vypršela nebo nebyla nalezena",
     "explorer.setup_guide": "Průvodce nastavením",
     "explorer.sparse_columns": "Řídké (<10%)",
@@ -3662,8 +3312,7 @@ const resource = {
     "explorer.visible_columns": "Viditelné sloupce",
     "explorer.active_filters": "Aktivní filtry",
     "explorer.clear_all_filters": "Vymazat vše",
-    "explorer.no_active_filters":
-      "Kliknutím na sloupec grafu nebo výseč filtrujete napříč kartami.",
+    "explorer.no_active_filters": "Kliknutím na sloupec grafu nebo výseč filtrujete napříč kartami.",
     "explorer.line": "Spojnicový graf",
     "explorer.scatter": "Bodový graf",
     "explorer.format": "Formát",
@@ -3678,8 +3327,7 @@ const resource = {
     "explorer.save_view": "Uložit pohled",
     "explorer.save_view_prompt": "Pojmenujte tento pohled",
     "explorer.saved_views": "Uložené pohledy",
-    "explorer.no_saved_views":
-      "Zatím žádné uložené pohledy. Uložte filtry, konfiguraci grafu a pivotu pro pozdější použití.",
+    "explorer.no_saved_views": "Zatím žádné uložené pohledy. Uložte filtry, konfiguraci grafu a pivotu pro pozdější použití.",
     "explorer.load_view": "Načíst",
     "explorer.delete_view": "Smazat",
     "explorer.view_saved": "Pohled uložen",
@@ -3688,8 +3336,7 @@ const resource = {
     "explorer.drill_down_empty": "Žádné řádky neodpovídají tomuto výseči.",
     "explorer.close": "Zavřít",
     "explorer.showing_rows": "Zobrazeno {{count}} řádků",
-    "explorer.chart_click_hint":
-      "Kliknutím na sloupec / výseč / bod aplikujete křížový filtr",
+    "explorer.chart_click_hint": "Kliknutím na sloupec / výseč / bod aplikujete křížový filtr",
     "fieldreports.add_trade": "Přidat profesi",
     "fieldreports.all_statuses": "Všechny stavy",
     "fieldreports.all_types": "Všechny typy",
@@ -3714,12 +3361,10 @@ const resource = {
     "fieldreports.deliveries": "Dodávky",
     "fieldreports.deliveries_placeholder": "Dodané materiály nebo vybavení...",
     "fieldreports.download_template": "Stáhnout šablonu pro import",
-    "fieldreports.drop_file":
-      "Přetáhněte soubor Excel nebo CSV sem nebo klikněte pro procházení",
+    "fieldreports.drop_file": "Přetáhněte soubor Excel nebo CSV sem nebo klikněte pro procházení",
     "fieldreports.edit_report": "Upravit terénní výkaz",
     "fieldreports.empty": "Zatím žádné terénní výkazy",
-    "fieldreports.empty_desc":
-      "Vytvořte svůj první denní terénní výkaz pro sledování aktivit na staveništi.",
+    "fieldreports.empty_desc": "Vytvořte svůj první denní terénní výkaz pro sledování aktivit na staveništi.",
     "fieldreports.export": "Exportovat",
     "fieldreports.export_failed": "Export selhal",
     "fieldreports.export_pdf": "Exportovat PDF",
@@ -3731,23 +3376,20 @@ const resource = {
     "fieldreports.import": "Importovat",
     "fieldreports.import_btn": "Importovat",
     "fieldreports.import_reports": "Importovat terénní výkazy",
-    "fieldreports.import_result":
-      "Importováno: {{imported}}, Přeskočeno: {{skipped}}, Chyby: {{errors}}",
+    "fieldreports.import_result": "Importováno: {{imported}}, Přeskočeno: {{skipped}}, Chyby: {{errors}}",
     "fieldreports.list_view": "Seznam",
     "fieldreports.new_report": "Nový výkaz",
     "fieldreports.no_match": "Žádné odpovídající výkazy",
     "fieldreports.no_match_desc": "Zkuste upravit filtry stavu nebo typu.",
     "fieldreports.no_project": "Vyberte projekt",
-    "fieldreports.no_project_desc":
-      "Vyberte projekt z bočního panelu pro zobrazení terénních výkazů.",
+    "fieldreports.no_project_desc": "Vyberte projekt z bočního panelu pro zobrazení terénních výkazů.",
     "fieldreports.notes": "Poznámky",
     "fieldreports.notes_placeholder": "Další poznámky nebo pozorování...",
     "fieldreports.report_date": "Datum",
     "fieldreports.report_type": "Typ výkazu",
     "fieldreports.row_error": "Řádek {{row}}: {{error}}",
     "fieldreports.safety_incidents": "Bezpečnostní incidenty",
-    "fieldreports.safety_placeholder":
-      "Nahlaste případné bezpečnostní incidenty nebo téměř-nehody...",
+    "fieldreports.safety_placeholder": "Nahlaste případné bezpečnostní incidenty nebo téměř-nehody...",
     "fieldreports.show_errors": "Zobrazit podrobnosti chyb",
     "fieldreports.stat_approved": "Schváleno",
     "fieldreports.stat_draft": "Koncept",
@@ -3770,8 +3412,7 @@ const resource = {
     "fieldreports.wind": "Vítr",
     "fieldreports.wind_placeholder": "např. 15 km/h SZ",
     "fieldreports.work_performed": "Provedené práce",
-    "fieldreports.work_performed_placeholder":
-      "Popište dnes provedené pracovní činnosti...",
+    "fieldreports.work_performed_placeholder": "Popište dnes provedené pracovní činnosti...",
     "fieldreports.workers": "pracovníků",
     "fieldreports.workforce_section": "Pracovníci",
     "risk.all_categories": "Všechny kategorie",
@@ -3783,20 +3424,17 @@ const resource = {
     "risk.contingency": "Havarijní plán",
     "risk.created": "Riziko vytvořeno",
     "risk.critical": "Kritické (16-25)",
-    "risk.delete_message":
-      "Toto riziko bude trvale odstraněno. Tuto akci nelze vrátit zpět.",
+    "risk.delete_message": "Toto riziko bude trvale odstraněno. Tuto akci nelze vrátit zpět.",
     "risk.delete_title": "Smazat riziko",
     "risk.deleted": "Riziko smazáno",
-    "risk.disclaimer":
-      "Simulace Monte Carlo poskytuje pouze pravděpodobnostní odhady. Výsledky závisí na vstupních předpokladech.",
+    "risk.disclaimer": "Simulace Monte Carlo poskytuje pouze pravděpodobnostní odhady. Výsledky závisí na vstupních předpokladech.",
     "risk.dist": "Rozdělení",
     "risk.dist_pert": "PERT",
     "risk.dist_triangular": "Trojúhelníkové",
     "risk.dist_uniform": "Rovnoměrné",
     "risk.distribution": "Rozdělení nákladů (histogram)",
     "risk.empty": "Žádná rizika nezaregistrována",
-    "risk.empty_desc":
-      "Přidejte rizika pro sledování potenciálních problémů a strategií zmírnění",
+    "risk.empty_desc": "Přidejte rizika pro sledování potenciálních problémů a strategií zmírnění",
     "risk.export_csv": "Exportovat do CSV",
     "risk.exposure": "Celková expozice",
     "risk.heatmap": "Riziková matice",
@@ -3837,8 +3475,7 @@ const resource = {
     "risk.severity": "Závažnost dopadu",
     "risk.status": "Stav",
     "risk.std_dev": "Směr. odch.",
-    "risk.subtitle":
-      "Pravděpodobnostní oceňování nákladů se simulací Monte Carlo",
+    "risk.subtitle": "Pravděpodobnostní oceňování nákladů se simulací Monte Carlo",
     "risk.title": "Analýza rizik (Monte Carlo)",
     "risk.title_placeholder": "např. Nestabilita základové půdy",
     "risk.top_drivers": "Top 10 rizikových faktorů",
@@ -3870,14 +3507,11 @@ const resource = {
     "toasts.schedule_generated": "Harmonogram vygenerován z výkazu výměr",
     "toasts.status_updated": "Stav aktualizován",
     "toasts.update_failed": "Aktualizace selhala",
-    "bim.cad_processing_note":
-      "Zpracování může trvat několik minut u velkých souborů",
+    "bim.cad_processing_note": "Zpracování může trvat několik minut u velkých souborů",
     "bim.cad_upload_queued": "CAD soubor zařazen do fronty ke zpracování",
     "bim.cad_upload_success": "CAD soubor nahrán",
-    "bim.cad_upload_success_desc":
-      "Soubor úspěšně nahrán. Zpracování brzy začne.",
-    "bim.confirm_delete_model":
-      'Smazat "{{name}}"? Všechny prvky budou odstraněny.',
+    "bim.cad_upload_success_desc": "Soubor úspěšně nahrán. Zpracování brzy začne.",
+    "bim.confirm_delete_model": "Smazat \"{{name}}\"? Všechny prvky budou odstraněny.",
     "bim.disc_architecture": "Architektura",
     "bim.disc_civil": "Stavební",
     "bim.disc_electrical": "Elektro",
@@ -3889,30 +3523,22 @@ const resource = {
     "bim.disc_structural": "Konstrukční",
     "bim.discipline_label": "Profese",
     "bim.getting_started": "BIM Viewer",
-    "bim.getting_started_desc":
-      "Nahrajte data prvků (CSV/Excel) a volitelnou 3D geometrii (DAE) z Vašeho CAD konvertoru pro vizualizaci stavebních modelů ve 3D. Prvky lze propojit s položkami výkazu výměr pro ověření výměr.",
+    "bim.getting_started_desc": "Nahrajte data prvků (CSV/Excel) a volitelnou 3D geometrii (DAE) z Vašeho CAD konvertoru pro vizualizaci stavebních modelů ve 3D. Prvky lze propojit s položkami výkazu výměr pro ověření výměr.",
     "bim.hide_upload": "Zavřít",
     "bim.landing_drop_here": "Přetáhněte soubor sem",
-    "bim.landing_feat_3d_desc":
-      "Interaktivní prohlížeč Three.js s filtrováním podle podlaží, barvením podle profese a výběrem prvků.",
+    "bim.landing_feat_3d_desc": "Interaktivní prohlížeč Three.js s filtrováním podle podlaží, barvením podle profese a výběrem prvků.",
     "bim.landing_feat_3d_title": "3D Vizualizace",
-    "bim.landing_feat_boq_desc":
-      "Propojte prvky BIM s nákladovými položkami pro automatické ověření výměr a 5D výkaz výměr.",
+    "bim.landing_feat_boq_desc": "Propojte prvky BIM s nákladovými položkami pro automatické ověření výměr a 5D výkaz výměr.",
     "bim.landing_feat_boq_title": "Propojení s výkazem výměr",
-    "bim.landing_feat_compare_desc":
-      "Porovnávejte verze pro automatické zjišťování přidaných, odebraných a upravených prvků.",
+    "bim.landing_feat_compare_desc": "Porovnávejte verze pro automatické zjišťování přidaných, odebraných a upravených prvků.",
     "bim.landing_feat_compare_title": "Porovnání modelů",
-    "bim.landing_feat_extract_desc":
-      "Stěny, desky, sloupy, nosníky, MEP — s vlastnostmi, plochami, objemy a klasifikací.",
+    "bim.landing_feat_extract_desc": "Stěny, desky, sloupy, nosníky, MEP — s vlastnostmi, plochami, objemy a klasifikací.",
     "bim.landing_feat_extract_title": "Extrakce prvků",
-    "bim.landing_feat_format_desc":
-      "IFC zpracováno okamžitě. RVT přes DDC cad2data. CSV/Excel pro předem konvertovaná data.",
+    "bim.landing_feat_format_desc": "IFC zpracováno okamžitě. RVT přes DDC cad2data. CSV/Excel pro předem konvertovaná data.",
     "bim.landing_feat_format_title": "Nezávislý na formátu",
-    "bim.landing_feat_qty_desc":
-      "Definujte pravidla pro extrakci plochy, objemu a délky — aplikujte na celý model najednou.",
+    "bim.landing_feat_qty_desc": "Definujte pravidla pro extrakci plochy, objemu a délky — aplikujte na celý model najednou.",
     "bim.landing_feat_qty_title": "Mapy výměr",
-    "bim.landing_hero_subtitle":
-      "Nahrajte soubory IFC nebo Revit pro vizualizaci stavebních prvků, extrakci výměr a propojení s Vaším výkazem výměr.",
+    "bim.landing_hero_subtitle": "Nahrajte soubory IFC nebo Revit pro vizualizaci stavebních prvků, extrakci výměr a propojení s Vaším výkazem výměr.",
     "bim.landing_hero_title": "BIM 3D Viewer",
     "bim.landing_processing": "Zpracovávám...",
     "bim.landing_size_hint": "IFC, Revit, CSV nebo Excel",
@@ -3923,14 +3549,11 @@ const resource = {
     "bim.model_name_placeholder": "např. Budova A — Architektura",
     "bim.no_models_hint_upload": "Nahrajte data BIM pro začátek.",
     "bim.overlay_delete_btn": "Smazat",
-    "bim.overlay_error_desc":
-      "Prvky nelze extrahovat. Zkuste nejprve převést do IFC nebo nahrajte data ručně.",
+    "bim.overlay_error_desc": "Prvky nelze extrahovat. Zkuste nejprve převést do IFC nebo nahrajte data ručně.",
     "bim.overlay_error_title": "Zpracování selhalo",
-    "bim.overlay_needs_converter_desc":
-      "Soubory {{format}} vyžadují DDC cad2data pro extrakci. Nejprve převeďte do IFC nebo nahrajte předem konvertovaná data.",
+    "bim.overlay_needs_converter_desc": "Soubory {{format}} vyžadují DDC cad2data pro extrakci. Nejprve převeďte do IFC nebo nahrajte předem konvertovaná data.",
     "bim.overlay_needs_converter_title": "Konvertor je vyžadován",
-    "bim.overlay_processing_desc":
-      "Extrahuji prvky z Vašeho souboru {{format}}. Může to chvíli trvat.",
+    "bim.overlay_processing_desc": "Extrahuji prvky z Vašeho souboru {{format}}. Může to chvíli trvat.",
     "bim.overlay_processing_title": "Zpracovávám model...",
     "bim.overlay_upload_converted_btn": "Nahrát konvertovaná data",
     "bim.show_upload": "Nahrát data BIM",
@@ -3963,25 +3586,21 @@ const resource = {
     "bim.upload_advanced_element_data_hint": "CSV / Excel",
     "bim.upload_advanced_geometry": "3D geometrie",
     "bim.upload_advanced_geometry_hint": "DAE / COLLADA",
-    "bim.upload_advanced_mode_toggle":
-      "Již konvertováno? Nahrát data + geometrii samostatně",
+    "bim.upload_advanced_mode_toggle": "Již konvertováno? Nahrát data + geometrii samostatně",
     "bim.upload_depth_label": "Hloubka konverze",
     "bim.upload_depth_standard": "Standardní · hlavní kategorie (rychlé)",
     "bim.upload_depth_medium": "Střední · rozšířené kategorie (vyvážené)",
     "bim.upload_depth_complete": "Úplné · všechny kategorie (pomalé)",
-    "bim.upload_depth_help":
-      "Určuje, kolik kategorií Revit bude extrahováno. ID prvků a plné vlastnosti jsou vždy zachovány.",
+    "bim.upload_depth_help": "Určuje, kolik kategorií Revit bude extrahováno. ID prvků a plné vlastnosti jsou vždy zachovány.",
     "bim.upload_discipline_label": "Profese",
     "bim.upload_drop_here": "Přetáhněte soubor sem",
-    "bim.upload_generate_pdf_label":
-      "Také exportovat projektové listy jako PDF (na pozadí)",
+    "bim.upload_generate_pdf_label": "Také exportovat projektové listy jako PDF (na pozadí)",
     "bim.upload_model_name_label": "Název modelu",
     "bim.upload_model_name_placeholder": "např. Budova A",
     "bim.upload_panel_subtitle": "IFC, RVT, CSV, Excel",
     "bim.upload_panel_title": "Nahrát model",
     "bim.upload_remove_file": "Odebrat",
-    "bim.upload_rvt_note":
-      "Poznámka: Soubory RVT vyžadují DDC cad2data. Zvažte použití IFC.",
+    "bim.upload_rvt_note": "Poznámka: Soubory RVT vyžadují DDC cad2data. Zvažte použití IFC.",
     "bim.upload_simple_mode_toggle": "Přepnout na jednoduchý režim",
     "bim.upload_size_hint": "Revit (.rvt), IFC (.ifc)",
     "bim.upload_success_desc": "Model úspěšně nahrán.",
@@ -4041,11 +3660,9 @@ const resource = {
     "reporting.invoices_month": "Faktury splatné (měsíc)",
     "reporting.invoices_week": "Faktury splatné (týden)",
     "reporting.no_boqs": "Žádné výkazy výměr v tomto projektu",
-    "reporting.no_finance_data":
-      "Pro tento projekt nejsou k dispozici finanční data. Nejprve vytvořte faktury a rozpočty.",
+    "reporting.no_finance_data": "Pro tento projekt nejsou k dispozici finanční data. Nejprve vytvořte faktury a rozpočty.",
     "reporting.no_projects": "Žádné projekty nenalezeny",
-    "reporting.no_safety_data":
-      "Pro tento projekt nejsou k dispozici bezpečnostní data.",
+    "reporting.no_safety_data": "Pro tento projekt nejsou k dispozici bezpečnostní data.",
     "reporting.observations": "Pozorování",
     "reporting.on_track": "V souladu s plánem",
     "reporting.open": "Otevřeno",
@@ -4084,8 +3701,7 @@ const resource = {
     "settings.tm_showing": "Zobrazeno {{count}} z {{total}} klíčů",
     "punch.stat_avg_close": "Prům. dní do uzavření",
     "match_elements.title": "Spárovat prvky",
-    "match_elements.subtitle":
-      "Mapování BIM prvků → CWICR pozic. BIM je aktivní; DWG / PDF / Foto přijdou v dalších fázích.",
+    "match_elements.subtitle": "Mapování BIM prvků → CWICR pozic. BIM je aktivní; DWG / PDF / Foto přijdou v dalších fázích.",
     "match_elements.select_project": "Vybrat projekt…",
     "match_elements.source.bim_live": "BIM (aktivní)",
     "match_elements.library": "Knihovna",
@@ -4098,11 +3714,9 @@ const resource = {
     "match_elements.detail": "Detail",
     "match_elements.no_match": "Žádná shoda…",
     "match_elements.loading_groups": "Načítání skupin…",
-    "match_elements.no_groups":
-      "Zatím žádné skupiny — importujte BIM model pro naplnění tohoto projektu.",
+    "match_elements.no_groups": "Zatím žádné skupiny — importujte BIM model pro naplnění tohoto projektu.",
     "match_elements.loading_detail": "Načítání detailu…",
-    "match_elements.footer":
-      "Fáze A.10–A.12 — vícenásobný výběr, prahové potvrzení, tok bez shody a knihovna šablon nájemce jsou aktivní. Přetahovatelné chipy a 3D zvýraznění přijdou ve fázi B.",
+    "match_elements.footer": "Fáze A.10–A.12 — vícenásobný výběr, prahové potvrzení, tok bez shody a knihovna šablon nájemce jsou aktivní. Přetahovatelné chipy a 3D zvýraznění přijdou ve fázi B.",
     "match_elements.aria.select_all": "Vybrat všechny viditelné skupiny",
     "match_elements.aria.select_group": "Vybrat {{key}}",
     "match_elements.col.group": "Skupina",
@@ -4125,55 +3739,40 @@ const resource = {
     "match_elements.action.lexical_all": "Lexikální shoda — top 10",
     "match_elements.action.resources_selected": "Zdroje ({{count}})",
     "match_elements.action.resources_all": "Shoda zdrojů — top 10",
-    "match_elements.action.resources_title":
-      "Spárovat s katalogem materiálů/zdrojů",
+    "match_elements.action.resources_title": "Spárovat s katalogem materiálů/zdrojů",
     "match_elements.action.confirm_selected": "Potvrdit {{count}} ≥ {{thr}}",
     "match_elements.action.confirm_all": "Potvrdit vše ≥ {{thr}}",
     "match_elements.action.skip_n": "Přeskočit {{count}} (k upřesnění)",
-    "match_elements.busy.run_selected":
-      "Spouštění matcheru {{method}} na {{count}} vybraných…",
-    "match_elements.busy.run_all":
-      "Spouštění matcheru {{method}} na všech skupinách…",
-    "match_elements.busy.bulk_confirm_selected":
-      "Hromadné potvrzování {{count}} vybraných ≥ {{thr}}…",
-    "match_elements.busy.bulk_confirm_all":
-      "Hromadné potvrzování shod ≥ {{thr}}…",
-    "match_elements.busy.mark_tbd":
-      "Označení {{count}} skupin jako k upřesnění…",
+    "match_elements.busy.run_selected": "Spouštění matcheru {{method}} na {{count}} vybraných…",
+    "match_elements.busy.run_all": "Spouštění matcheru {{method}} na všech skupinách…",
+    "match_elements.busy.bulk_confirm_selected": "Hromadné potvrzování {{count}} vybraných ≥ {{thr}}…",
+    "match_elements.busy.bulk_confirm_all": "Hromadné potvrzování shod ≥ {{thr}}…",
+    "match_elements.busy.mark_tbd": "Označení {{count}} skupin jako k upřesnění…",
     "match_elements.alert.confirmed": "Potvrzeno {{count}} skupin",
-    "match_elements.alert.marked_tbd":
-      "Označeno {{count}} skupin jako k upřesnění",
+    "match_elements.alert.marked_tbd": "Označeno {{count}} skupin jako k upřesnění",
     "match_elements.detail.elements_count": "{{count}} prvků",
-    "match_elements.detail.no_matchers_run":
-      "Pro tuto skupinu zatím nebyl spuštěn žádný matcher.",
-    "match_elements.detail.use_action_bar":
-      "Použijte tlačítka v akčním pruhu výše.",
+    "match_elements.detail.no_matchers_run": "Pro tuto skupinu zatím nebyl spuštěn žádný matcher.",
+    "match_elements.detail.use_action_bar": "Použijte tlačítka v akčním pruhu výše.",
     "match_elements.detail.col.code": "Kód",
     "match_elements.detail.col.description": "Popis",
     "match_elements.detail.col.unit_rate": "Jednotka · Cena",
     "match_elements.detail.col.conf": "Spol.",
     "match_elements.detail.confirm": "Potvrdit",
-    "match_elements.detail.element_ids_count":
-      "{{count}} ID prvků. 3D zvýraznění ve fázi A.12.",
+    "match_elements.detail.element_ids_count": "{{count}} ID prvků. 3D zvýraznění ve fázi A.12.",
     "match_elements.detail.and_more": "…a {{count}} dalších",
     "match_elements.detail.building_preview": "Sestavování náhledu…",
-    "match_elements.detail.auto_loaded_resources":
-      "Automaticky načtené zdroje:",
-    "match_elements.detail.confirm_first":
-      "Pro zobrazení náhledu rozpočtu nejprve potvrďte shodu.",
+    "match_elements.detail.auto_loaded_resources": "Automaticky načtené zdroje:",
+    "match_elements.detail.confirm_first": "Pro zobrazení náhledu rozpočtu nejprve potvrďte shodu.",
     "match_elements.tab.methods": "Kandidáti shody",
     "match_elements.tab.elements": "Prvky ({{count}})",
     "match_elements.tab.apply": "Náhled aplikace",
     "match_elements.no_match.heading": "Žádná shoda — vyberte akci",
     "match_elements.no_match.custom.title": "Vytvořit vlastní pozici",
-    "match_elements.no_match.custom.sub":
-      "Přidejte pozici specifickou pro projekt s popisem, jednotkou a cenou.",
+    "match_elements.no_match.custom.sub": "Přidejte pozici specifickou pro projekt s popisem, jednotkou a cenou.",
     "match_elements.no_match.rfq.title": "Odeslat do výběrového řízení",
-    "match_elements.no_match.rfq.sub":
-      "Označit pro výběrové řízení — vyžádat nabídky od subdodavatelů.",
+    "match_elements.no_match.rfq.sub": "Označit pro výběrové řízení — vyžádat nabídky od subdodavatelů.",
     "match_elements.no_match.tbd.title": "Označit k upřesnění",
-    "match_elements.no_match.tbd.sub":
-      "Pozastavit skupinu; zkontrolovat později. Vyloučeno z celkových rozpočtů do vyřešení.",
+    "match_elements.no_match.tbd.sub": "Pozastavit skupinu; zkontrolovat později. Vyloučeno z celkových rozpočtů do vyřešení.",
     "match_elements.no_match.placeholder.description": "Popis pozice",
     "match_elements.no_match.placeholder.unit": "Jednotka",
     "match_elements.no_match.placeholder.rate": "Jednotková cena",
@@ -4183,24 +3782,19 @@ const resource = {
     "match_elements.templates.count": "{{count}} podpisů",
     "match_elements.templates.loading": "Načítání knihovny…",
     "match_elements.templates.empty": "Zatím žádné uložené šablony.",
-    "match_elements.templates.empty_hint":
-      "Potvrzené shody s povolenou možností „Uložit do knihovny“ se zde objevují a šíří se do budoucích projektů.",
+    "match_elements.templates.empty_hint": "Potvrzené shody s povolenou možností „Uložit do knihovny“ se zde objevují a šíří se do budoucích projektů.",
     "match_elements.templates.unnamed": "(bez názvu)",
     "match_elements.templates.sig": "podpis: {{prefix}}…",
     "match_elements.templates.used": "Použito",
     "match_elements.templates.last": "naposledy {{date}}",
-    "match_elements.templates.remove_confirm":
-      "Odebrat tuto šablonu z knihovny?",
+    "match_elements.templates.remove_confirm": "Odebrat tuto šablonu z knihovny?",
     "match_elements.templates.remove_title": "Odebrat z knihovny",
-    "match_elements.templates.footer":
-      "Šablony jsou v rámci nájemce. Potvrzené podpisy automaticky navrhují shody v budoucích projektech.",
+    "match_elements.templates.footer": "Šablony jsou v rámci nájemce. Potvrzené podpisy automaticky navrhují shody v budoucích projektech.",
     "match_elements.no_project_title": "No active project selected.",
-    "match_elements.no_project_hint":
-      "Open the project picker in the header, or visit",
+    "match_elements.no_project_hint": "Open the project picker in the header, or visit",
     "match_elements.active_project": "Active project",
     "match_elements.loading_sessions": "Loading sessions…",
-    "match_elements.no_prior_sessions":
-      "No prior matching sessions for this project.",
+    "match_elements.no_prior_sessions": "No prior matching sessions for this project.",
     "match_elements.session_default_name": "Session {{id}}",
     "match_elements.new_session": "New session",
     "match_elements.legend_label": "Confidence",
@@ -4209,21 +3803,16 @@ const resource = {
     "match_elements.legend_low": "Low",
     "match_elements.col.suggested": "Suggested cost",
     "match_elements.subtractive_hint": "Subtractive / non-billable",
-    "match_elements.detail.opening_warning":
-      "host has openings but gross == net (IFC export bug)",
-    "match_elements.detail.candidate_no_id":
-      "Candidate has no DB id — cannot confirm",
+    "match_elements.detail.opening_warning": "host has openings but gross == net (IFC export bug)",
+    "match_elements.detail.candidate_no_id": "Candidate has no DB id — cannot confirm",
     "match_elements.detail.apply_total": "Total",
     "match_elements.auto_confirm_threshold": "Auto-confirm threshold",
-    "match_elements.auto_confirm_help":
-      "Suggested matches at or above this score auto-confirm.",
+    "match_elements.auto_confirm_help": "Suggested matches at or above this score auto-confirm.",
     "match_elements.use_net": "Use net quantities (deduct openings)",
-    "match_elements.use_net_help":
-      "Off = use gross. Default deducts IfcOpeningElement / IfcRelVoidsElement from host quantities.",
+    "match_elements.use_net_help": "Off = use gross. Default deducts IfcOpeningElement / IfcRelVoidsElement from host quantities.",
     "match_elements.trade_filter": "Filter by trade",
     "match_elements.stage_label": "Fáze stavby",
-    "match_elements.stage_help":
-      "Připojit shody k jedné fázi OmniClass. Ponechte prázdné pro vyhledávání ve všech fázích.",
+    "match_elements.stage_help": "Připojit shody k jedné fázi OmniClass. Ponechte prázdné pro vyhledávání ve všech fázích.",
     "match_elements.stage_any": "Všechny fáze",
     "match_elements.stage.02_Demolition": "Demolice",
     "match_elements.stage.03_Earthwork": "Zemní práce",
@@ -4239,17 +3828,14 @@ const resource = {
     "match_elements.stage.13_Sitework": "Venkovní úpravy",
     "match_elements.group_by": "Seskupit podle",
     "match_elements.group_by_empty": "Vyberte alespoň jeden atribut",
-    "match_elements.group_by_active":
-      "{{count}} aktivní · klikněte pro odstranění",
+    "match_elements.group_by_active": "{{count}} aktivní · klikněte pro odstranění",
     "match_elements.group_by_remove": "Kliknutím odstraníte ze seskupení",
     "match_elements.group_by_sample": "např.",
     "match_elements.loading_attributes": "Načítání…",
     "match_elements.action.apply": "Apply to BOQ ({{n}})",
-    "match_elements.action.apply_title":
-      "Write confirmed matches to the project BOQ",
+    "match_elements.action.apply_title": "Write confirmed matches to the project BOQ",
     "match_elements.busy.applying": "Applying confirmed groups to BOQ…",
-    "match_elements.alert.applied":
-      "Created {{n}} BOQ positions · total {{total}} {{ccy}}",
+    "match_elements.alert.applied": "Created {{n}} BOQ positions · total {{total}} {{ccy}}",
     "match_elements.visible_groups": "{{n}} visible",
     "match_elements.selected_count": "{{n}} selected",
     "match_elements.trade.architectural": "Architectural",
@@ -4267,8 +3853,7 @@ const resource = {
     "nav.request_custom_module_hint": "Něco chybí? Řekněte nám, co potřebujete",
     "modules.dev_guide": "Sestavit modul — průvodce vývojáře",
     "boq.accept": "Přijmout",
-    "boq.accept_all_anomaly_suggestions":
-      "Accept All Suggested Rates ({{count}})",
+    "boq.accept_all_anomaly_suggestions": "Accept All Suggested Rates ({{count}})",
     "boq.add_all_failed": "Could not add any of the {{count}} positions",
     "boq.add_as_resources": "Add {{count}} as resources",
     "boq.add_column_btn": "Přidat sloupec",
@@ -4290,68 +3875,54 @@ const resource = {
     "boq.ai_applied": "AI Suggestion Applied",
     "boq.ai_apply_description": "Apply Enhanced Description",
     "boq.ai_apply_rate": "Apply Escalated Rate",
-    "boq.ai_assistant_tooltip":
-      "Describe what you need in plain text — AI creates BOQ positions with realistic pricing.",
+    "boq.ai_assistant_tooltip": "Describe what you need in plain text — AI creates BOQ positions with realistic pricing.",
     "boq.ai_chat_short": "AI Chat",
     "boq.ai_classification": "AI Classification",
     "boq.ai_classify_error": "Classification failed",
     "boq.ai_connected_via": "Connected via {{provider}}",
-    "boq.ai_enhance_subtitle":
-      "Add technical specs, standards, material grades",
+    "boq.ai_enhance_subtitle": "Add technical specs, standards, material grades",
     "boq.ai_enhance_title": "Enhance Description",
-    "boq.ai_error_generic":
-      "Could not connect to AI service. Check that the embedding model is available.",
+    "boq.ai_error_generic": "Could not connect to AI service. Check that the embedding model is available.",
     "boq.ai_escalate_subtitle": "Adjust rate for inflation and market changes",
     "boq.ai_escalate_title": "Escalate Rate",
     "boq.ai_escalated": "Escalated",
     "boq.ai_factor_labor": "Labor",
     "boq.ai_factor_material": "Material",
     "boq.ai_factor_region": "Regional",
-    "boq.ai_generated_summary":
-      "Generated {{count}} positions totalling {{total}} {{currency}}.‌⁠‍",
+    "boq.ai_generated_summary": "Generated {{count}} positions totalling {{total}} {{currency}}.‌⁠‍",
     "boq.ai_global_actions": "BOQ-level Actions",
     "boq.ai_missing_items": "Missing Items",
     "boq.ai_no_classification": "No Classification Found",
-    "boq.ai_no_classification_msg":
-      "Could not determine classification from cost database.",
-    "boq.ai_no_prereqs":
-      "No missing items found — BOQ looks complete for this position.",
+    "boq.ai_no_classification_msg": "Could not determine classification from cost database.",
+    "boq.ai_no_prereqs": "No missing items found — BOQ looks complete for this position.",
     "boq.ai_no_rate": "No Rate Found",
     "boq.ai_no_rate_msg": "No similar items found in the cost database.",
-    "boq.ai_no_selection":
-      "Select a position in the grid for per-position AI actions‌⁠‍",
+    "boq.ai_no_selection": "Select a position in the grid for per-position AI actions‌⁠‍",
     "boq.ai_not_configured": "AI not configured‌⁠‍",
-    "boq.ai_not_configured_desc":
-      "Add your API key in Settings to use AI Smart Actions.‌⁠‍",
+    "boq.ai_not_configured_desc": "Add your API key in Settings to use AI Smart Actions.‌⁠‍",
     "boq.ai_original": "Original",
     "boq.ai_position_actions": "Position Actions",
-    "boq.ai_prereqs_subtitle":
-      "Find missing prerequisites, companions, successors",
+    "boq.ai_prereqs_subtitle": "Find missing prerequisites, companions, successors",
     "boq.ai_prereqs_title": "Suggest Related Items",
     "boq.ai_rate_error": "Rate suggestion failed",
     "boq.ai_rate_suggestion": "AI Rate Suggestion",
     "boq.ai_scope_score": "Completeness Score",
-    "boq.ai_scope_subtitle":
-      "Find missing trades, work packages, critical items",
+    "boq.ai_scope_subtitle": "Find missing trades, work packages, critical items",
     "boq.ai_scope_title": "Check Scope Completeness",
     "boq.ai_selected_position": "Selected Position‌⁠‍",
-    "boq.ai_smart_footer":
-      "Powered by your AI provider (Settings > AI). Results are suggestions — always review.",
+    "boq.ai_smart_footer": "Powered by your AI provider (Settings > AI). Results are suggestions — always review.",
     "boq.ai_smart_panel": "AI Smart Actions‌⁠‍",
-    "boq.ai_smart_tooltip":
-      "Enhance descriptions, find missing items, check scope completeness, escalate rates to current prices.",
+    "boq.ai_smart_tooltip": "Enhance descriptions, find missing items, check scope completeness, escalate rates to current prices.",
     "boq.ai_specs": "Specifications",
     "boq.all_anomalies_resolved": "All {{count}} suggested rates applied",
     "boq.all_rates_normal": "All rates are within normal market range.",
     "boq.anomalies_badge": "Anomalies ({{count}})",
-    "boq.anomalies_count":
-      "{{count}} anomalies detected in {{total}} positions",
+    "boq.anomalies_count": "{{count}} anomalies detected in {{total}} positions",
     "boq.anomalies_found": "Pricing Anomalies Found",
     "boq.anomaly_cancelled": "Price check cancelled",
     "boq.anomaly_check_error": "Anomaly check failed",
     "boq.anomaly_rate_applied": "Suggested Rate Applied",
-    "boq.anomaly_tip":
-      "Compares each unit rate against median market rates from the cost database. Flags overpriced and underpriced positions.",
+    "boq.anomaly_tip": "Compares each unit rate against median market rates from the cost database. Flags overpriced and underpriced positions.",
     "boq.applied": "Applied",
     "boq.apply_all_suggestions": "Apply All‌⁠‍",
     "boq.apply_defaults_failed": "Failed to apply template",
@@ -4365,27 +3936,22 @@ const resource = {
     "boq.autocomplete_tooltip_rate_per_unit": "Rate per unit‌⁠‍",
     "boq.autocomplete_tooltip_tab_to_insert": "Tab or Enter to insert‌⁠‍",
     "boq.autocomplete_tooltip_unit": "/",
-    "boq.autocomplete_tooltip_variants_available":
-      "${variantCount} variants available",
+    "boq.autocomplete_tooltip_variants_available": "${variantCount} variants available",
     "boq.batch_actions": "Batch actions‌⁠‍",
     "boq.batch_change_unit": "Change unit‌⁠‍",
     "boq.batch_clear_selection": "Clear selection",
     "boq.batch_delete": "Delete selected‌⁠‍",
     "boq.batch_delete_confirm": "Delete {{count}} positions",
-    "boq.batch_delete_confirm_message":
-      "Are you sure you want to delete {{count}} selected positions? This action cannot be undone.",
+    "boq.batch_delete_confirm_message": "Are you sure you want to delete {{count}} selected positions? This action cannot be undone.",
     "boq.batch_delete_confirm_title": "Delete positions",
     "boq.batch_deleted": "{{count}} positions deleted",
-    "boq.batch_unit_changed":
-      "Unit changed to {{unit}} for {{count}} positions",
+    "boq.batch_unit_changed": "Unit changed to {{unit}} for {{count}} positions",
     "boq.bim_agg_distinct_label": "{{n}} values",
-    "boq.bim_agg_distinct_title":
-      "Per-element value — summing is meaningless, so each unique value is listed. Click one to apply it.",
+    "boq.bim_agg_distinct_title": "Per-element value — summing is meaningless, so each unique value is listed. Click one to apply it.",
     "boq.bim_agg_sum_title": "Summed across all linked elements",
     "boq.bim_collapse_sums": "Show only headline quantities",
     "boq.bim_expand_sums": "Show all numeric values from BIM",
-    "boq.bim_link_tooltip":
-      "{{count}} BIM element(s) linked — click to preview",
+    "boq.bim_link_tooltip": "{{count}} BIM element(s) linked — click to preview",
     "boq.bim_properties": "Properties",
     "boq.bim_props_show_all_title": "Include every numeric property from BIM",
     "boq.bim_props_show_basic_title": "Hide non-quantity properties",
@@ -4412,22 +3978,19 @@ const resource = {
     "boq.column_calc_invalid_formula": "Formula has a syntax error",
     "boq.column_calc_needs_formula": "Calculated column needs a formula",
     "boq.column_decimals": "Decimals",
-    "boq.column_delete_confirm":
-      'Remove the "{{name}}" column? Existing values in positions are preserved but no longer shown.',
+    "boq.column_delete_confirm": "Remove the \"{{name}}\" column? Existing values in positions are preserved but no longer shown.",
     "boq.column_delete_confirm_title": "Remove column?",
     "boq.column_delete_failed": "Could not remove column‌⁠‍",
     "boq.column_formula": "Formula",
     "boq.column_name": "Column name",
-    "boq.column_name_duplicate": 'A column named "{{name}}" already exists',
+    "boq.column_name_duplicate": "A column named \"{{name}}\" already exists",
     "boq.column_name_invalid": "Column name is invalid",
-    "boq.column_name_invalid_hint":
-      "Use letters (any script), numbers and spaces. Must start with a letter.",
+    "boq.column_name_invalid_hint": "Use letters (any script), numbers and spaces. Must start with a letter.",
     "boq.column_name_placeholder": "e.g. Supplier, Notes, PO Number",
-    "boq.column_name_reserved": '"{{name}}" is a reserved column name',
+    "boq.column_name_reserved": "\"{{name}}\" is a reserved column name",
     "boq.column_options": "Options (comma or newline separated)",
     "boq.column_removed": "Column removed‌⁠‍",
-    "boq.column_select_needs_options":
-      "Select column needs at least one option",
+    "boq.column_select_needs_options": "Select column needs at least one option",
     "boq.column_test_formula": "Test",
     "boq.column_test_result": "Result:",
     "boq.column_type": "Typ",
@@ -4447,17 +4010,13 @@ const resource = {
     "boq.cost_finder_components": "{{count}} components",
     "boq.cost_finder_error": "Search failed. Check vector database.",
     "boq.cost_finder_for_position": "For: {{description}}",
-    "boq.cost_finder_no_query":
-      "Enter a description to search the cost database",
+    "boq.cost_finder_no_query": "Enter a description to search the cost database",
     "boq.cost_finder_no_results": "No matching items found",
     "boq.cost_finder_results_count": "{{count}} results ({{ms}}ms)",
-    "boq.cost_finder_search_placeholder":
-      "Search cost items by description...‌⁠‍",
+    "boq.cost_finder_search_placeholder": "Search cost items by description...‌⁠‍",
     "boq.cost_finder_title": "AI Cost Finder‌⁠‍",
-    "boq.cost_finder_tooltip":
-      "Search 55,000+ cost items by description. Find materials, labor, and equipment rates from regional databases.",
-    "boq.cost_risk_error":
-      "Failed to load cost risk analysis. Please try again.",
+    "boq.cost_finder_tooltip": "Search 55,000+ cost items by description. Find materials, labor, and equipment rates from regional databases.",
+    "boq.cost_risk_error": "Failed to load cost risk analysis. Please try again.",
     "boq.create_budget": "Create Budget",
     "boq.create_failed": "Failed to create BOQ",
     "boq.create_revision": "Create Revision",
@@ -4467,10 +4026,8 @@ const resource = {
     "boq.currency_group_world": "World currencies",
     "boq.current": "Current‌⁠‍",
     "boq.custom_columns": "Custom Columns",
-    "boq.custom_columns_hint":
-      "Custom columns appear in the BOQ grid before the actions column. Values are stored per position and exported with the BOQ. Removing a column hides it but preserves the underlying data.",
-    "boq.custom_columns_subtitle":
-      "Add your own fields — supplier, notes, procurement info…",
+    "boq.custom_columns_hint": "Custom columns appear in the BOQ grid before the actions column. Values are stored per position and exported with the BOQ. Removing a column hides it but preserves the underlying data.",
+    "boq.custom_columns_subtitle": "Add your own fields — supplier, notes, procurement info…",
     "boq.delete_section": "Delete section with all positions",
     "boq.display_base": "Base",
     "boq.display_currency_aria": "Choose currency for grand total display",
@@ -4479,8 +4036,7 @@ const resource = {
     "boq.duplicate_position": "Duplicate Position",
     "boq.dwg_link_tooltip_v2": "DWG drawing — click for details & navigation",
     "boq.element_count": "{{count}} element(s)",
-    "boq.empty_position_quality_hint":
-      "Empty position lowers Quality Score until quantity & rate are filled",
+    "boq.empty_position_quality_hint": "Empty position lowers Quality Score until quantity & rate are filled",
     "boq.errors": "errors",
     "boq.estimate_type_budget": "Rozpočet",
     "boq.estimate_type_conceptual": "Conceptual",
@@ -4493,35 +4049,28 @@ const resource = {
     "boq.expand_resources": "Expand Resources",
     "boq.expand_section": "Expand Section",
     "boq.export_anyway": "Export Anyway",
-    "boq.export_quality_warning_desc":
-      "Your estimate has a quality score below 60%. Missing quantities, zero prices, or incomplete descriptions may affect the exported document. Consider reviewing the estimate before exporting.",
+    "boq.export_quality_warning_desc": "Your estimate has a quality score below 60%. Missing quantities, zero prices, or incomplete descriptions may affect the exported document. Consider reviewing the estimate before exporting.",
     "boq.filled": "filled",
     "boq.filtered_from": "filtered from {{total}}",
     "boq.fx_rate_global_badge": "GLOBAL",
     "boq.fx_rate_input": "FX rate {{from}}→{{to}}",
     "boq.fx_rate_label": "FX rate",
     "boq.fx_rate_project_badge": "PROJECT",
-    "boq.gaeb_export_desc":
-      "This will export your BOQ as GAEB XML 3.3 format, compatible with standard tender workflows.",
+    "boq.gaeb_export_desc": "This will export your BOQ as GAEB XML 3.3 format, compatible with standard tender workflows.",
     "boq.gaeb_export_title": "Export GAEB XML (X83)",
     "boq.gaeb_grand_total": "Grand Total",
     "boq.gaeb_positions": "Positions",
-    "boq.grand_total_conversion_tooltip_v2":
-      'Whole BOQ rendered in {{disp}} at rate {{rate}} ({{base}} → {{disp}}). View-only — server keeps base values. Switch to "Base" to edit prices.',
+    "boq.grand_total_conversion_tooltip_v2": "Whole BOQ rendered in {{disp}} at rate {{rate}} ({{base}} → {{disp}}). View-only — server keeps base values. Switch to \"Base\" to edit prices.",
     "boq.grid_settings": "Grid Settings",
     "boq.ignore": "Ignore",
-    "boq.import_catalog_hint":
-      "Import a resource catalog from Settings or the Catalog page",
+    "boq.import_catalog_hint": "Import a resource catalog from Settings or the Catalog page",
     "boq.import_database_cta": "Import a database",
     "boq.import_file": "Import File",
     "boq.import_rows": "Import {{count}} rows",
     "boq.import_started": "Importing {{name}}…",
-    "boq.import_started_gaeb_hint":
-      "Parsing GAEB XML — namespace-agnostic, X81/X83/X84 supported.",
-    "boq.import_started_hint":
-      "Large files (PDF / CAD / 1000+ rows) may take up to 60 seconds.",
-    "boq.import_timeout":
-      "Server did not respond within 90 seconds. The file may be too large — try splitting it.",
+    "boq.import_started_gaeb_hint": "Parsing GAEB XML — namespace-agnostic, X81/X83/X84 supported.",
+    "boq.import_started_hint": "Large files (PDF / CAD / 1000+ rows) may take up to 60 seconds.",
+    "boq.import_timeout": "Server did not respond within 90 seconds. The file may be too large — try splitting it.",
     "boq.import_tooltip": "Import GAEB, Excel, or CSV into this BOQ",
     "boq.inline_edit_number": "Edit value",
     "boq.inline_edit_text": "Edit text",
@@ -4532,16 +4081,13 @@ const resource = {
     "boq.link_finance": "View Budget",
     "boq.link_validation": "Run Validation",
     "boq.linked_geometry": "Linked Geometry",
-    "boq.list_subtitle_count":
-      "{{boqCount}} estimates across {{projectCount}} projects",
+    "boq.list_subtitle_count": "{{boqCount}} estimates across {{projectCount}} projects",
     "boq.loading_element_data": "Loading element data...",
     "boq.loading_full_properties": "Loading full properties…",
     "boq.lock": "Lock Estimate",
-    "boq.lock_confirm":
-      "Lock this estimate?nnLocked estimates cannot be edited. Unlocking requires admin privileges.",
+    "boq.lock_confirm": "Lock this estimate?nnLocked estimates cannot be edited. Unlocking requires admin privileges.",
     "boq.lock_failed": "Lock failed",
-    "boq.lock_tooltip":
-      "Lock prevents edits. Create a revision to make changes to a locked estimate.",
+    "boq.lock_tooltip": "Lock prevents edits. Create a revision to make changes to a locked estimate.",
     "boq.locked": "LOCKED",
     "boq.locked_next": "Estimate locked. Create project budget?",
     "boq.locked_success": "Estimate locked",
@@ -4552,8 +4098,7 @@ const resource = {
     "boq.markup_delete_failed": "Failed to delete markup‌⁠‍",
     "boq.markup_update_failed": "Failed to update markup‌⁠‍",
     "boq.mvp.apply_to_remaining": "Apply to remaining {{count}}",
-    "boq.mvp.apply_to_remaining_hint":
-      "Re-use these picks for all other multi-variant items in this batch",
+    "boq.mvp.apply_to_remaining_hint": "Re-use these picks for all other multi-variant items in this batch",
     "boq.mvp.subtitle": "{{count}} resource needs a choice‌⁠‍",
     "boq.mvp.toast_applied": "{{count}} variant chosen",
     "boq.mvp.toast_apply_to_remaining": "Applied picks to {{count}} more item",
@@ -4563,64 +4108,52 @@ const resource = {
     "boq.no_boqs_in_project": "No BOQs in this project.",
     "boq.no_catalog_results": "No resources match your search",
     "boq.no_changes": "No changes",
-    "boq.no_custom_columns":
-      "No custom columns yet. Pick a preset below or add your own.",
-    "boq.no_databases_help":
-      "There's no cost-rate database on this server, so search has nothing to show. Import a free CWICR pack — 30 regional databases are one click away.",
+    "boq.no_custom_columns": "No custom columns yet. Pick a preset below or add your own.",
+    "boq.no_databases_help": "There's no cost-rate database on this server, so search has nothing to show. Import a free CWICR pack — 30 regional databases are one click away.",
     "boq.no_databases_title": "No cost database installed yet",
     "boq.no_numeric_found": "No numeric values in this element",
     "boq.no_numeric_quantities": "No numeric quantities",
-    "boq.no_quantities_hint_button":
-      'No quantities — press "Show all" above to surface every BIM property',
+    "boq.no_quantities_hint_button": "No quantities — press \"Show all\" above to surface every BIM property",
     "boq.no_snapshots": "No snapshots yet",
     "boq.open_in_bim": "Open in BIM",
-    "boq.open_in_bim_title":
-      "Open in 3D viewer with the linked element pre-selected",
+    "boq.open_in_bim_title": "Open in 3D viewer with the linked element pre-selected",
     "boq.open_in_bim_viewer": "Open in BIM Viewer",
     "boq.options": "options",
     "boq.pagination_range": "{{from}}–{{to}} of {{total}} estimates",
     "boq.partial": "Partial",
     "boq.paste_columns": "Columns‌⁠‍",
     "boq.paste_detected": "{{count}} rows detected‌⁠‍",
-    "boq.paste_excel_hint":
-      "Copy rows from Excel or Google Sheets and paste below‌⁠‍",
+    "boq.paste_excel_hint": "Copy rows from Excel or Google Sheets and paste below‌⁠‍",
     "boq.paste_failed": "Could not paste — invalid data or read-only cells‌⁠‍",
     "boq.paste_from_excel": "Paste from Excel",
     "boq.paste_from_excel_short": "Paste",
     "boq.paste_import_count": "{{count}} positions added to BOQ",
     "boq.paste_import_failed": "Import failed",
     "boq.paste_import_success": "Imported successfully",
-    "boq.paste_no_data":
-      "No valid rows detected. Make sure data is tab-separated.",
-    "boq.paste_placeholder":
-      "Paste tab-separated data here...nnExample:nDescriptiontUnittQtytRatenConcrete foundationtm3t120t185.00nRebar B500Stkgt2400t1.45‌⁠‍",
+    "boq.paste_no_data": "No valid rows detected. Make sure data is tab-separated.",
+    "boq.paste_placeholder": "Paste tab-separated data here...nnExample:nDescriptiontUnittQtytRatenConcrete foundationtm3t120t185.00nRebar B500Stkgt2400t1.45‌⁠‍",
     "boq.paste_showing": "Showing first 50 of {{total}} rows",
     "boq.pdf_link_tooltip_v2": "PDF takeoff — click for details & navigation",
     "boq.per_unit": "per {{unit}}",
     "boq.pick_from_catalog": "Pick from Catalog‌⁠‍",
-    "boq.pick_from_catalog_desc":
-      "Search and add a resource from the catalog to this position‌⁠‍",
+    "boq.pick_from_catalog_desc": "Search and add a resource from the catalog to this position‌⁠‍",
     "boq.pick_qty_from_bim": "Pick quantity from BIM",
     "boq.pos": "Pos",
     "boq.position_deleted": "Position deleted",
     "boq.position_duplicated": "Position duplicated",
     "boq.position_restored": "Position restored",
     "boq.position_variant_v_label": "Expand resources",
-    "boq.position_variant_v_tooltip":
-      "This position carries a variant resource — click to expand the resource panel.",
+    "boq.position_variant_v_tooltip": "This position carries a variant resource — click to expand the resource panel.",
     "boq.positions_removed": "{{count}} pos removed",
     "boq.positions_reordered": "Positions reordered",
     "boq.positions_short": "pos.",
-    "boq.preset_already_applied":
-      "All columns from this preset already exist‌⁠‍",
-    "boq.preset_applied": '{{count}} columns added from "{{name}}" preset',
+    "boq.preset_already_applied": "All columns from this preset already exist‌⁠‍",
+    "boq.preset_applied": "{{count}} columns added from \"{{name}}\" preset",
     "boq.preset_partial": "Preset partially applied",
     "boq.preset_regional": "Regional standards",
     "boq.preset_universal": "Quick start with a preset",
-    "boq.preview_total_hint":
-      "Catalog-rate × quantity for the selection. Variant picks may adjust this.",
-    "boq.price_review_desc":
-      "Review each suggestion below. Accept to update the rate, or ignore to keep your current price.‌⁠‍",
+    "boq.preview_total_hint": "Catalog-rate × quantity for the selection. Variant picks may adjust this.",
+    "boq.price_review_desc": "Review each suggestion below. Accept to update the rate, or ignore to keep your current price.‌⁠‍",
     "boq.price_review_title": "Price Check Results‌⁠‍",
     "boq.quality_ai_menu": "Quality & AI",
     "boq.quality_ai_menu_tip": "All quality & AI tools",
@@ -4629,40 +4162,29 @@ const resource = {
     "boq.quantity_for_item": "Quantity for {{item}}",
     "boq.quantity_short": "Qty",
     "boq.rate_applied": "Rate Applied",
-    "boq.rate_from_resources":
-      "Rate is calculated from resources. Edit individual resources to change.‌⁠‍",
+    "boq.rate_from_resources": "Rate is calculated from resources. Edit individual resources to change.‌⁠‍",
     "boq.recalc_confirm_button": "Update Rates",
-    "boq.recalc_confirm_step1":
-      "1. Search cost database for matching items by description",
-    "boq.recalc_confirm_step2":
-      "2. Attach resource breakdowns (materials, labor, equipment)",
-    "boq.recalc_confirm_step3":
-      "3. Recalculate unit rates from resource components",
+    "boq.recalc_confirm_step1": "1. Search cost database for matching items by description",
+    "boq.recalc_confirm_step2": "2. Attach resource breakdowns (materials, labor, equipment)",
+    "boq.recalc_confirm_step3": "3. Recalculate unit rates from resource components",
     "boq.recalc_confirm_subtitle": "Match positions to cost database",
     "boq.recalc_confirm_title": "Update Unit Rates",
-    "boq.recalc_confirm_warning":
-      "Positions with manual rates that have no match in the cost database will not be changed.",
+    "boq.recalc_confirm_warning": "Positions with manual rates that have no match in the cost database will not be changed.",
     "boq.recalc_enriched": "{{count}} positions matched to cost database",
-    "boq.recalc_skipped":
-      "{{count}} positions without cost data (manual rates kept)",
+    "boq.recalc_skipped": "{{count}} positions without cost data (manual rates kept)",
     "boq.recalc_updated": "{{count}} unit rates recalculated from resources",
-    "boq.recalculate_all_manual":
-      "All positions use manual rates — add resources from cost database to enable automatic rate calculation.",
-    "boq.recalculate_failed_hint":
-      "Check that the backend is running and cost database is loaded.",
+    "boq.recalculate_all_manual": "All positions use manual rates — add resources from cost database to enable automatic rate calculation.",
+    "boq.recalculate_failed_hint": "Check that the backend is running and cost database is loaded.",
     "boq.recalculate_no_changes": "No changes needed",
-    "boq.recalculate_tip":
-      "Matches positions to cost database, attaches resource breakdowns (materials, labor, equipment), and recalculates unit rates from components.",
+    "boq.recalculate_tip": "Matches positions to cost database, attaches resource breakdowns (materials, labor, equipment), and recalculates unit rates from components.",
     "boq.recalculating": "Updating...",
     "boq.remove_resource": "Remove Resource",
     "boq.renumber": "Renumber Positions",
     "boq.renumber_apply": "Apply renumbering",
-    "boq.renumber_dialog_subtitle":
-      "Pick a numbering scheme. The current order is preserved — only ordinals are rewritten.‌⁠‍",
+    "boq.renumber_dialog_subtitle": "Pick a numbering scheme. The current order is preserved — only ordinals are rewritten.‌⁠‍",
     "boq.renumber_dialog_title": "Renumber positions‌⁠‍",
     "boq.renumber_done": "{{count}} positions renumbered",
-    "boq.renumber_done_hint":
-      "Order preserved — only ordinals were rewritten. Undo with Ctrl+Z is not supported for renumber.",
+    "boq.renumber_done_hint": "Order preserved — only ordinals were rewritten. Undo with Ctrl+Z is not supported for renumber.",
     "boq.renumber_failed": "Renumber failed",
     "boq.renumber_no_preview": "No positions to preview yet.",
     "boq.renumber_pad": "Zero-pad section numbers‌⁠‍",
@@ -4670,19 +4192,14 @@ const resource = {
     "boq.renumber_pad_on": "Sections will be 01, 02, 03 (two-digit padded)‌⁠‍",
     "boq.renumber_preview": "Preview (first 5 positions)",
     "boq.renumber_scheme_dotted": "Short decimal",
-    "boq.renumber_scheme_dotted_desc":
-      "Short-form decimal numbering common in NRM-style measurement.",
+    "boq.renumber_scheme_dotted_desc": "Short-form decimal numbering common in NRM-style measurement.",
     "boq.renumber_scheme_gap10": "Gap of 10",
-    "boq.renumber_scheme_gap10_desc":
-      "Leaves room to insert positions like 01.15 between 01.10 and 01.20 later. Standard German tender output.",
+    "boq.renumber_scheme_gap10_desc": "Leaves room to insert positions like 01.15 between 01.10 and 01.20 later. Standard German tender output.",
     "boq.renumber_scheme_gap100": "Gap of 100",
-    "boq.renumber_scheme_gap100_desc":
-      "Even more headroom for very large BOQs that may grow significantly post-tender.",
+    "boq.renumber_scheme_gap100_desc": "Even more headroom for very large BOQs that may grow significantly post-tender.",
     "boq.renumber_scheme_sequential": "Sequential",
-    "boq.renumber_scheme_sequential_desc":
-      "Compact, traditional numbering. Best for fixed-scope BOQs that won't get extra positions later.",
-    "boq.renumber_warning":
-      "This overwrites any manually edited position numbers. The current display order is preserved — only ordinals change.",
+    "boq.renumber_scheme_sequential_desc": "Compact, traditional numbering. Best for fixed-scope BOQs that won't get extra positions later.",
+    "boq.renumber_warning": "This overwrites any manually edited position numbers. The current display order is preserved — only ordinals change.",
     "boq.renumbering": "Renumbering...",
     "boq.reorder_failed": "Failed to reorder positions",
     "boq.resource_added": "Resource added",
@@ -4690,41 +4207,28 @@ const resource = {
     "boq.resource_catalog_code": "Catalogue code: {{code}}",
     "boq.resource_currency": "Měna",
     "boq.resource_currency_add_custom": "Add custom: {{code}}",
-    "boq.resource_currency_custom":
-      "Custom currency: {{code}} (not in project FX or ISO 4217 list)",
-    "boq.resource_currency_hint":
-      "Currency for this resource. Defaults to project base currency.",
-    "boq.resource_currency_no_match":
-      "No matches — type at least 2 letters to add a custom code.",
+    "boq.resource_currency_custom": "Custom currency: {{code}} (not in project FX or ISO 4217 list)",
+    "boq.resource_currency_hint": "Currency for this resource. Defaults to project base currency.",
+    "boq.resource_currency_no_match": "No matches — type at least 2 letters to add a custom code.",
     "boq.resource_currency_pick": "Currency — {{symbol}} {{code}}",
     "boq.resource_currency_search": "Type or search (e.g. EUR, MYC)",
     "boq.resource_customised": "Customised resource — no catalogue code",
-    "boq.resource_is_variant_badge":
-      "Variant resource — multiple price options available",
+    "boq.resource_is_variant_badge": "Variant resource — multiple price options available",
     "boq.resource_name": "Název",
     "boq.resource_name_placeholder": "e.g. Concrete C30/37",
-    "boq.resource_no_fx_rate":
-      "No FX rate configured for {{code}} — total shown in {{code}}",
-    "boq.resource_no_fx_rate_click":
-      "No FX rate configured for {{code}} — click to set one in Project Settings",
+    "boq.resource_no_fx_rate": "No FX rate configured for {{code}} — total shown in {{code}}",
+    "boq.resource_no_fx_rate_click": "No FX rate configured for {{code}} — click to set one in Project Settings",
     "boq.resource_no_fx_short": "set FX",
-    "boq.resource_total_in_base":
-      "{{foreign}} ≈ {{base}} (1 {{code}} = {{rate}} {{baseCode}})",
+    "boq.resource_total_in_base": "{{foreign}} ≈ {{base}} (1 {{code}} = {{rate}} {{baseCode}})",
     "boq.resource_type": "Typ",
     "boq.resource_type_variant_chip": "Variant",
-    "boq.resource_type_variant_tooltip":
-      "Variant resource — pick from {{base}} catalog. Click to reclassify resource type.",
-    "boq.resource_variant_bar_tooltip_default":
-      "Auto-default ({{strategy}}){{captured}} — click pill to refine.",
-    "boq.resource_variant_bar_tooltip_picked":
-      "Explicit variant: {{label}}{{captured}}",
+    "boq.resource_type_variant_tooltip": "Variant resource — pick from {{base}} catalog. Click to reclassify resource type.",
+    "boq.resource_variant_bar_tooltip_default": "Auto-default ({{strategy}}){{captured}} — click pill to refine.",
+    "boq.resource_variant_bar_tooltip_picked": "Explicit variant: {{label}}{{captured}}",
     "boq.resource_variant_pill": "▾ {{count}}",
-    "boq.resource_variant_pill_tooltip_default":
-      "Auto-applied with {{strategy}} rate. {{count}} options ({{range}}). Click to refine.",
-    "boq.resource_variant_pill_tooltip_picked":
-      "Variant: {{label}} @ {{price}} {{currency}}{{delta}}. Click to switch.",
-    "boq.resource_variant_pill_tooltip_unset":
-      "{{count}} priced variants available ({{range}}). Click to pick one.",
+    "boq.resource_variant_pill_tooltip_default": "Auto-applied with {{strategy}} rate. {{count}} options ({{range}}). Click to refine.",
+    "boq.resource_variant_pill_tooltip_picked": "Variant: {{label}} @ {{price}} {{currency}}{{delta}}. Click to switch.",
+    "boq.resource_variant_pill_tooltip_unset": "{{count}} priced variants available ({{range}}). Click to pick one.",
     "boq.resources_added": "Resources added to position",
     "boq.resources_total": "Resources total",
     "boq.restore": "Restore",
@@ -4732,25 +4236,19 @@ const resource = {
     "boq.restore_snapshot": "Restore this version",
     "boq.revision_created": "Revision created",
     "boq.revision_failed": "Create revision failed",
-    "boq.rs_abc_pill_tooltip":
-      "Class {{cls}} · {{pct}}% of project resource cost",
+    "boq.rs_abc_pill_tooltip": "Class {{cls}} · {{pct}}% of project resource cost",
     "boq.rs_col_abc": "ABC %",
-    "boq.rs_col_abc_tooltip":
-      "Pareto / ABC analysis — A items make up ~80% of cost, B ~15%, C ~5%. Click to highlight bucket boundaries.",
+    "boq.rs_col_abc_tooltip": "Pareto / ABC analysis — A items make up ~80% of cost, B ~15%, C ~5%. Click to highlight bucket boundaries.",
     "boq.rs_error": "Failed to load resource summary.",
-    "boq.rs_save_variant_to_catalog":
-      "Save as a regular article in your catalog",
+    "boq.rs_save_variant_to_catalog": "Save as a regular article in your catalog",
     "boq.rs_show_all": "Show all {{count}} resources",
     "boq.rs_show_less": "Show less",
     "boq.rs_variant_applied_to_n": "Applied to {{count}} position(s)‌⁠‍",
     "boq.rs_variant_pill_mixed": "Mixed · {{count}} options",
-    "boq.rs_variant_pill_mixed_tooltip":
-      "Different variants picked across positions. Click to choose one for all.",
+    "boq.rs_variant_pill_mixed_tooltip": "Different variants picked across positions. Click to choose one for all.",
     "boq.rs_variant_pill_options": "▾ {{count}} options",
-    "boq.rs_variant_pill_picked_tooltip":
-      "Variant: {{label}}. Click to switch (applies to all positions).",
-    "boq.rs_variant_pill_unset_tooltip":
-      "{{count}} priced variants available. Click to pick one for all positions.",
+    "boq.rs_variant_pill_picked_tooltip": "Variant: {{label}}. Click to switch (applies to all positions).",
+    "boq.rs_variant_pill_unset_tooltip": "{{count}} priced variants available. Click to pick one for all positions.",
     "boq.save_as_assembly": "Save as Assembly",
     "boq.save_as_assembly_failed": "Failed to create assembly",
     "boq.save_snapshot": "Save snapshot",
@@ -4759,10 +4257,8 @@ const resource = {
     "boq.saved_as_assembly": "Saved as Assembly",
     "boq.saved_to_catalog": "Saved to catalog",
     "boq.scope_of_work_label": "What work is included in this rate",
-    "boq.search_and_add_resources":
-      "Search cost items to add as resources to position",
-    "boq.search_catalog_resources":
-      "Search resources by name, code, or category...‌⁠‍",
+    "boq.search_and_add_resources": "Search cost items to add as resources to position",
+    "boq.search_catalog_resources": "Search resources by name, code, or category...‌⁠‍",
     "boq.section_add_failed": "Failed to add section",
     "boq.section_child_count": "{{count}} item",
     "boq.section_deleted": "Section deleted with {{count}} positions",
@@ -4770,8 +4266,7 @@ const resource = {
     "boq.section_optional": "Section (optional)",
     "boq.select_boq": "Select BOQ...",
     "boq.select_classification": "Classification...‌⁠‍",
-    "boq.sensitivity_error":
-      "Failed to load sensitivity analysis. Please try again.‌⁠‍",
+    "boq.sensitivity_error": "Failed to load sensitivity analysis. Please try again.‌⁠‍",
     "boq.set_as_quantity": "Set as qty",
     "boq.set_as_quantity_title": "Push this value into the BOQ quantity field",
     "boq.shortcut_ai_chat": "Toggle AI Chat",
@@ -4800,8 +4295,7 @@ const resource = {
     "boq.show_shortcuts": "Keyboard Shortcuts (F1)",
     "boq.snapshot_created": "Snapshot saved‌⁠‍",
     "boq.snapshot_failed": "Failed to save snapshot‌⁠‍",
-    "boq.snapshot_hint":
-      "Type a label above and click Save to create your first snapshot.",
+    "boq.snapshot_hint": "Type a label above and click Save to create your first snapshot.",
     "boq.snapshot_label": "Snapshot label (optional)...",
     "boq.snapshot_restored": "Snapshot restored‌⁠‍",
     "boq.snapshots_error": "Failed to load version history.",
@@ -4812,11 +4306,9 @@ const resource = {
     "boq.source_dwg": "DWG drawing",
     "boq.source_id_label": "Item id",
     "boq.source_measurement_label": "Measurement",
-    "boq.source_no_measurement":
-      "Measurement data not stored locally — open the source to view details.",
+    "boq.source_no_measurement": "Measurement data not stored locally — open the source to view details.",
     "boq.source_open": "Open source",
-    "boq.source_open_title":
-      "Open the source document in its viewer, focused on this item",
+    "boq.source_open_title": "Open the source document in its viewer, focused on this item",
     "boq.source_pdf": "PDF takeoff",
     "boq.source_pdf_page": "Page {{page}}",
     "boq.status_draft": "Draft",
@@ -4824,25 +4316,20 @@ const resource = {
     "boq.suggest_rate": "Suggest Rate",
     "boq.suggested": "Suggested‌⁠‍",
     "boq.toolbar_quality": "Quality",
-    "boq.toolbar_summary_aria":
-      "{{sections}} sections · {{positions}} positions",
+    "boq.toolbar_summary_aria": "{{sections}} sections · {{positions}} positions",
     "boq.try_different_search": "Try a different search term or filter",
     "boq.unit_options": "Unit options",
     "boq.unit_rate_variant_pill": "u25BE {{count}} options",
-    "boq.unit_rate_variant_pill_tooltip_default":
-      "Auto-applied with {{strategy}} rate ({{count}} options, {{range}}). Click to refine.",
-    "boq.unit_rate_variant_pill_tooltip_picked":
-      "Currently: {{label}}. Click to switch to a different variant.",
-    "boq.unit_rate_variant_pill_tooltip_unset":
-      "{{count}} priced variants available ({{range}}). Click to pick one.",
+    "boq.unit_rate_variant_pill_tooltip_default": "Auto-applied with {{strategy}} rate ({{count}} options, {{range}}). Click to refine.",
+    "boq.unit_rate_variant_pill_tooltip_picked": "Currently: {{label}}. Click to switch to a different variant.",
+    "boq.unit_rate_variant_pill_tooltip_unset": "{{count}} priced variants available ({{range}}). Click to pick one.",
     "boq.unlock": "Unlock",
     "boq.unlock_failed": "Unlock failed",
     "boq.unlocked_success": "Estimate unlocked",
     "boq.untitled": "Untitled BOQ‌⁠‍",
     "boq.untitled_section": "(untitled)",
     "boq.update_failed": "Failed to update position‌⁠‍",
-    "boq.validate_tip":
-      "Checks for missing descriptions, zero quantities, pricing gaps, classification compliance, and duplicate positions.",
+    "boq.validate_tip": "Checks for missing descriptions, zero quantities, pricing gaps, classification compliance, and duplicate positions.",
     "boq.validating": "Checking...",
     "boq.validation_all_passed": "All {{count}} checks passed",
     "boq.validation_errors": "{{count}} errors found",
@@ -4859,64 +4346,48 @@ const resource = {
     "boq.variables_description": "Popis",
     "boq.variables_description_placeholder": "Optional note",
     "boq.variables_empty": "No variables yet. Add the first one below.‌⁠‍",
-    "boq.variables_help":
-      "Define named values you can reference in formulas. e.g. set $GFA = 1500, then write =$GFA * 0.15 in any quantity or rate cell.‌⁠‍",
+    "boq.variables_help": "Define named values you can reference in formulas. e.g. set $GFA = 1500, then write =$GFA * 0.15 in any quantity or rate cell.‌⁠‍",
     "boq.variables_name": "Název",
     "boq.variables_saved": "Variables saved‌⁠‍",
     "boq.variables_title": "BOQ variables‌⁠‍",
     "boq.variables_type": "Typ",
     "boq.variables_value": "Value",
-    "boq.variant_default_applied_msg":
-      "Click the row in the BOQ to choose a specific variant.",
+    "boq.variant_default_applied_msg": "Click the row in the BOQ to choose a specific variant.",
     "boq.variant_default_applied_title": "Applied with average price",
     "boq.variant_default_pill": "Default u00B7 refine u25BE",
-    "boq.variant_default_pill_tooltip":
-      "Auto-applied with the {{strategy}} rate. Click the unit_rate cell to pick a specific variant.",
+    "boq.variant_default_pill_tooltip": "Auto-applied with the {{strategy}} rate. Click the unit_rate cell to pick a specific variant.",
     "boq.variant_default_pill_with_count": "Abstract u00B7 {{count}} options",
-    "boq.variant_header_code_tooltip":
-      "Abstract variant resource — inherits the position quantity",
-    "boq.variant_header_pill_tooltip":
-      "Choose / switch a price variant for this abstract resource",
-    "boq.variant_header_qty_edit_tooltip":
-      "Double-click to edit quantity (synced with the position).",
-    "boq.variant_header_type_tooltip":
-      "Click to pick a price variant from the catalog",
+    "boq.variant_header_code_tooltip": "Abstract variant resource — inherits the position quantity",
+    "boq.variant_header_pill_tooltip": "Choose / switch a price variant for this abstract resource",
+    "boq.variant_header_qty_edit_tooltip": "Double-click to edit quantity (synced with the position).",
+    "boq.variant_header_type_tooltip": "Click to pick a price variant from the catalog",
     "boq.variant_resource_added": "Resource added: {{label}}",
     "boq.variant_resource_repick_failed": "Variant re-pick failed",
     "boq.variant_resource_repicked": "Variant updated: {{label}}",
     "boq.vector_download": "Download cost database first",
-    "boq.vector_download_desc":
-      "Import CWICR databases (55,000+ items, 9 regions)",
-    "boq.vector_index_desc":
-      "Build vector index from your imported cost items (~30s)",
+    "boq.vector_download_desc": "Import CWICR databases (55,000+ items, 9 regions)",
+    "boq.vector_index_desc": "Build vector index from your imported cost items (~30s)",
     "boq.vector_index_error": "Indexing Failed",
-    "boq.vector_index_error_msg":
-      "Failed to index the cost database. Try importing a database first.",
+    "boq.vector_index_error_msg": "Failed to index the cost database. Try importing a database first.",
     "boq.vector_index_now": "Index existing cost database",
     "boq.vector_indexed": "Vector Database Ready",
-    "boq.vector_indexed_msg":
-      "Cost database indexed. AI features are now available.",
+    "boq.vector_indexed_msg": "Cost database indexed. AI features are now available.",
     "boq.vector_indexing": "Indexing...",
-    "boq.vector_setup_desc":
-      "AI rate suggestions, classification, and anomaly detection require a vector-indexed cost database. This is a one-time setup that takes about 30 seconds.",
+    "boq.vector_setup_desc": "AI rate suggestions, classification, and anomaly detection require a vector-indexed cost database. This is a one-time setup that takes about 30 seconds.",
     "boq.vector_setup_subtitle": "One-time setup required",
     "boq.vector_setup_title": "AI Features Setup",
-    "boq.vector_status_empty":
-      "No vector database found. Import a cost database or index your existing cost items.",
-    "boq.vector_status_partial":
-      "Vector DB has {{count}} items indexed. Minimum ~100 items needed for AI features.",
+    "boq.vector_status_empty": "No vector database found. Import a cost database or index your existing cost items.",
+    "boq.vector_status_partial": "Vector DB has {{count}} items indexed. Minimum ~100 items needed for AI features.",
     "boq.version_history": "Version History‌⁠‍",
     "boq.view_comments": "Comments ({{count}})",
     "boq.view_in_bim": "View in BIM 3D ({{count}})",
     "boq.view_in_cost_db": "View in Cost Database",
-    "boq.warn_lump_sum":
-      "Lump sum — quantity × rate may not match expected total",
+    "boq.warn_lump_sum": "Lump sum — quantity × rate may not match expected total",
     "boq.warn_zero_rate": "No rate — review before commit",
     "boq.warnings": "warnings",
     "compliance.tab_label": "Soulad",
     "compliance.page.title": "Compliance documents",
-    "compliance.page.subtitle":
-      "Track insurance, permits, bonds and certifications with expiry reminders.",
+    "compliance.page.subtitle": "Track insurance, permits, bonds and certifications with expiry reminders.",
     "compliance.page.new": "New document",
     "compliance.modal.create_title": "New compliance document",
     "compliance.modal.create_submit": "Create document",
@@ -4947,10 +4418,8 @@ const resource = {
     "compliance.status.expired": "Expired",
     "compliance.status.cancelled": "Cancelled",
     "compliance.status.void": "Void",
-    "compliance.doc_type.insurance_general_liability":
-      "General liability insurance",
-    "compliance.doc_type.insurance_workers_comp":
-      "Workers' compensation insurance",
+    "compliance.doc_type.insurance_general_liability": "General liability insurance",
+    "compliance.doc_type.insurance_workers_comp": "Workers' compensation insurance",
     "compliance.doc_type.insurance_auto": "Auto insurance",
     "compliance.doc_type.insurance_umbrella": "Umbrella insurance",
     "compliance.doc_type.permit_building": "Building permit",
@@ -4964,11 +4433,9 @@ const resource = {
     "compliance.doc_type.certification_other": "Other certification",
     "compliance.doc_type.other": "Other",
     "compliance.empty.title": "No compliance documents yet",
-    "compliance.empty.description":
-      "Track insurance policies, permits, bonds and certifications. Get a warning before each one expires.",
+    "compliance.empty.description": "Track insurance policies, permits, bonds and certifications. Get a warning before each one expires.",
     "compliance.empty.no_project_title": "Open a project",
-    "compliance.empty.no_project_description":
-      "Compliance documents are scoped to a project — open one first.",
+    "compliance.empty.no_project_description": "Compliance documents are scoped to a project — open one first.",
     "compliance.toast.created": "Compliance document created.",
     "compliance.toast.create_failed": "Failed to create compliance document.",
     "compliance.toast.deleted": "Compliance document deleted.",
@@ -4991,8 +4458,7 @@ const resource = {
     "costs.base_cost": "Base cost",
     "costs.base_year": "Base year‌⁠‍",
     "costs.categories_title": "Categories",
-    "costs.clear_all_confirm_body":
-      "This will permanently remove all {{count}} CWICR cost items. You can re-import them later.",
+    "costs.clear_all_confirm_body": "This will permanently remove all {{count}} CWICR cost items. You can re-import them later.",
     "costs.clear_all_confirm_title": "Clear all {{count}} databases?",
     "costs.clear_filters": "Clear all",
     "costs.code_placeholder": "e.g. WALL-001",
@@ -5000,8 +4466,7 @@ const resource = {
     "costs.component_labor": "Labor",
     "costs.component_material": "Material",
     "costs.confirm_delete": "Delete this custom cost item?",
-    "costs.confirm_delete_region":
-      "Delete all cost items for {{region}}? This cannot be undone.",
+    "costs.confirm_delete_region": "Delete all cost items for {{region}}? This cannot be undone.",
     "costs.confirm_delete_title": "Delete cost item?",
     "costs.cost_items_count": "55,000+ cost items",
     "costs.custom_label": "Custom",
@@ -5019,30 +4484,23 @@ const resource = {
     "costs.cwicr_match.mode_label": "Mode",
     "costs.cwicr_match.mode_lexical": "Lexical‌⁠‍",
     "costs.cwicr_match.mode_semantic": "Semantic‌⁠‍",
-    "costs.cwicr_match.placeholder":
-      "Describe the work item (e.g. reinforced concrete wall)‌⁠‍",
+    "costs.cwicr_match.placeholder": "Describe the work item (e.g. reinforced concrete wall)‌⁠‍",
     "costs.cwicr_match.query_label": "Query",
     "costs.cwicr_match.search": "Hledat",
     "costs.cwicr_match.title": "CWICR rate match‌⁠‍",
-    "costs.db_downloading":
-      "Downloading and indexing cost items with full resource breakdown. This is a one-time setup.",
+    "costs.db_downloading": "Downloading and indexing cost items with full resource breakdown. This is a one-time setup.",
     "costs.db_installed": "Database installed successfully‌⁠‍",
     "costs.db_installing": "Installing {{name}}...",
-    "costs.db_saved_offline":
-      "Cost items are saved locally and available offline.",
-    "costs.description_placeholder":
-      "e.g. Reinforced concrete wall C30/37, 25cm",
+    "costs.db_saved_offline": "Cost items are saved locally and available offline.",
+    "costs.description_placeholder": "e.g. Reinforced concrete wall C30/37, 25cm",
     "costs.duplicates_skipped": "duplicates skipped",
-    "costs.empty_pick_region_above":
-      "Pick a region card above and click Install to load a regional cost database.",
+    "costs.empty_pick_region_above": "Pick a region card above and click Install to load a regional cost database.",
     "costs.equipment": "Zařízení",
     "costs.escalated_cost": "Escalated cost",
     "costs.escalation": "Escalation",
     "costs.escalation_calculator": "Cost Escalation Calculator‌⁠‍",
-    "costs.escalation_desc":
-      "Adjust costs for inflation using published construction indices‌⁠‍",
-    "costs.escalation_disclaimer":
-      "Based on published indices. Verify with project-specific data.",
+    "costs.escalation_desc": "Adjust costs for inflation using published construction indices‌⁠‍",
+    "costs.escalation_disclaimer": "Based on published indices. Verify with project-specific data.",
     "costs.escalation_factor": "Factor",
     "costs.filters_active": "filters active",
     "costs.is_now_active": "is now the active database‌⁠‍",
@@ -5061,26 +4519,21 @@ const resource = {
     "costs.n_items_selected": "{{count}} items selected",
     "costs.n_positions_will_be_created": "{{count}} positions will be created",
     "costs.n_selected": "{{count}} selected",
-    "costs.no_databases_installed":
-      "No databases installed yet. Pick a region above to install.",
+    "costs.no_databases_installed": "No databases installed yet. Pick a region above to install.",
     "costs.no_favourites": "No favourites yet",
-    "costs.no_favourites_hint":
-      "Click the star icon on any cost item to add it to your favourites",
+    "costs.no_favourites_hint": "Click the star icon on any cost item to add it to your favourites",
     "costs.no_recent": "No recently used items",
-    "costs.no_recent_hint":
-      "Items you add to BOQ will appear here for quick access",
+    "costs.no_recent_hint": "Items you add to BOQ will appear here for quick access",
     "costs.one_time_download": "One-time download",
     "costs.phase_complete": "Complete",
     "costs.phase_extracting": "Extracting resources & cost breakdown...",
     "costs.phase_finalizing": "Finalizing...",
     "costs.phase_reading": "Reading Parquet file...",
     "costs.phase_writing": "Writing to local database...",
-    "costs.positions_created_hint":
-      "Positions created with unit rates from cost database",
+    "costs.positions_created_hint": "Positions created with unit rates from cost database",
     "costs.region_filter_count": "{{shown}} of {{total}}‌⁠‍",
-    "costs.region_filter_no_results": 'No regions match "{{q}}"',
-    "costs.region_filter_placeholder":
-      "Filter by country, city, currency or language…‌⁠‍",
+    "costs.region_filter_no_results": "No regions match \"{{q}}\"",
+    "costs.region_filter_placeholder": "Filter by country, city, currency or language…‌⁠‍",
     "costs.region_plural": "regions",
     "costs.region_singular": "region",
     "costs.remove_from_favourites": "Remove from favourites",
@@ -5113,14 +4566,12 @@ const resource = {
     "costs.variant_sort_price_asc": "Price ↑",
     "costs.variant_sort_price_desc": "Price ↓",
     "costs.variant_use_average": "Use average rate",
-    "costs.variant_use_default_tooltip":
-      "Apply the average rate without picking a specific variant. You can refine later by clicking the row.",
+    "costs.variant_use_default_tooltip": "Apply the average rate without picking a specific variant. You can refine later by clicking the row.",
     "costs.variant_use_median": "Use median rate",
     "costs.vec_indexing_all": "Generating vectors for all regions...",
     "costs.vec_indexing_region": "Generating vectors for {{name}}...",
     "costs.vec_phase_checking": "Checking pre-built vectors on GitHub...",
-    "costs.vec_phase_embedding":
-      "Generating 384d embeddings from cost items...",
+    "costs.vec_phase_embedding": "Generating 384d embeddings from cost items...",
     "costs.vec_phase_indexing": "Indexing into LanceDB and refreshing stats...",
     "costs.vec_phase_model": "Loading embedding model (first-time only)...",
     "costs.vec_phase_progress": "Step {{step}} of 4",
@@ -5134,8 +4585,7 @@ const resource = {
     "files.activity.title": "Aktivita",
     "files.activity.open": "View activity history",
     "files.activity.empty_title": "No activity yet",
-    "files.activity.empty_hint":
-      "Uploads, renames, and other changes will show up here.",
+    "files.activity.empty_hint": "Uploads, renames, and other changes will show up here.",
     "files.activity.error_title": "Couldn't load activity",
     "files.activity.error_hint": "Check your connection and try again.",
     "files.activity.actor_unknown": "Neznámý uživatel",
@@ -5149,8 +4599,7 @@ const resource = {
     "files.activity.action.cde_state_changed": "CDE state changed",
     "files.permissions.manage": "Manage access",
     "files.permissions.title": "Folder access",
-    "files.permissions.subtitle":
-      "Restrict who can see and edit files in {{folder}}.",
+    "files.permissions.subtitle": "Restrict who can see and edit files in {{folder}}.",
     "files.permissions.empty": "All project members can access this folder.",
     "files.permissions.list_title": "Current access",
     "files.permissions.grant_title": "Grant access",
@@ -5165,15 +4614,12 @@ const resource = {
     "files.permissions.revoke": "Revoke",
     "files.permissions.revoke_confirm": "Revoke access for {{name}}?",
     "files.permissions.lock_tooltip": "Restricted: {{count}} member can access",
-    "files.permissions.lock_tooltip_plural":
-      "Restricted: {{count}} members can access",
+    "files.permissions.lock_tooltip_plural": "Restricted: {{count}} members can access",
     "files.permissions.error_grant": "Could not grant access.",
     "files.permissions.error_revoke": "Could not revoke access.",
-    "files.permissions.error_duplicate":
-      "This member already has access at this level.",
+    "files.permissions.error_duplicate": "This member already has access at this level.",
     "share.page.title": "Shared file",
-    "share.page.subtitle":
-      "Someone shared a file with you via OpenConstructionERP.",
+    "share.page.subtitle": "Someone shared a file with you via OpenConstructionERP.",
     "share.page.filename_label": "File",
     "share.page.password_prompt": "Enter the password to download.",
     "share.page.password_placeholder": "Heslo",
@@ -5188,85 +4634,59 @@ const resource = {
     "share.page.loading": "Loading link…",
     "share.page.ready_title": "Ready to download",
     "share.page.ready_body": "Click the button below to download the file.",
-    "files.bulk.delete_all_failed":
-      "None of the {{count}} selected file(s) could be deleted.",
+    "files.bulk.delete_all_failed": "None of the {{count}} selected file(s) could be deleted.",
     "files.bulk.delete_partial": "{{deleted}} of {{total}} deleted",
-    "files.bulk.delete_partial_detail":
-      "{{failed}} file(s) could not be deleted.",
-    "onboarding.mode_simple_desc":
-      "I'm getting started — show me the essentials. A clean interface with the most important features.",
-    "onboarding.mode_advanced_desc":
-      "I'm experienced — show me everything. Full professional toolset with all options visible.",
-    "project_intelligence.ai.cost_advisor_title":
-      "Cost Intelligence Advisor‌⁠‍",
-    "project_intelligence.ai_not_configured_desc":
-      "Connect an AI provider (Anthropic Claude, OpenAI, or Google Gemini) to get personalized, context-aware recommendations for your project. Without AI, you still see rule-based analysis below.",
-    "project_intelligence.ai_not_configured_title":
-      "AI provider not connected‌⁠‍",
+    "files.bulk.delete_partial_detail": "{{failed}} file(s) could not be deleted.",
+    "onboarding.mode_simple_desc": "I'm getting started — show me the essentials. A clean interface with the most important features.",
+    "onboarding.mode_advanced_desc": "I'm experienced — show me everything. Full professional toolset with all options visible.",
+    "project_intelligence.ai.cost_advisor_title": "Cost Intelligence Advisor‌⁠‍",
+    "project_intelligence.ai_not_configured_desc": "Connect an AI provider (Anthropic Claude, OpenAI, or Google Gemini) to get personalized, context-aware recommendations for your project. Without AI, you still see rule-based analysis below.",
+    "project_intelligence.ai_not_configured_title": "AI provider not connected‌⁠‍",
     "project_intelligence.analytics.cost_drivers": "Cost drivers‌⁠‍",
-    "project_intelligence.analytics.cost_drivers_sub":
-      "Top 5 line items by total cost‌⁠‍",
+    "project_intelligence.analytics.cost_drivers_sub": "Top 5 line items by total cost‌⁠‍",
     "project_intelligence.analytics.errors": "errors",
     "project_intelligence.analytics.no_data": "No data yet‌⁠‍",
     "project_intelligence.analytics.price_volatility": "Price volatility‌⁠‍",
-    "project_intelligence.analytics.price_volatility_sub":
-      "Bid total spread across vendors‌⁠‍",
+    "project_intelligence.analytics.price_volatility_sub": "Bid total spread across vendors‌⁠‍",
     "project_intelligence.analytics.schedule_cost": "Schedule ↔ cost",
     "project_intelligence.analytics.schedule_cost_sub": "Labour cost by phase",
     "project_intelligence.analytics.scope_coverage": "Scope coverage",
-    "project_intelligence.analytics.scope_coverage_ratio":
-      "{{current}} of {{baseline}} lines",
-    "project_intelligence.analytics.scope_coverage_sub":
-      "BOQ line count vs baseline",
+    "project_intelligence.analytics.scope_coverage_ratio": "{{current}} of {{baseline}} lines",
+    "project_intelligence.analytics.scope_coverage_sub": "BOQ line count vs baseline",
     "project_intelligence.analytics.validation_live": "Real-time validation",
-    "project_intelligence.analytics.validation_live_sub":
-      "Rule pass count (updates every 60s)",
-    "project_intelligence.analytics.vendor_concentration":
-      "Vendor concentration",
-    "project_intelligence.analytics.vendor_concentration_sub":
-      "Top 3 bidders’ share",
+    "project_intelligence.analytics.validation_live_sub": "Rule pass count (updates every 60s)",
+    "project_intelligence.analytics.vendor_concentration": "Vendor concentration",
+    "project_intelligence.analytics.vendor_concentration_sub": "Top 3 bidders’ share",
     "project_intelligence.analytics.warnings": "warnings",
     "project_intelligence.analyzing": "Analyzing project...‌⁠‍",
     "project_intelligence.analyzing_project": "Analyzing project...",
     "project_intelligence.ask_placeholder": "Ask about this project...",
     "project_intelligence.auth_error": "Session expired‌⁠‍",
-    "project_intelligence.auth_hint":
-      "Please refresh the page or sign in again to continue.",
+    "project_intelligence.auth_hint": "Please refresh the page or sign in again to continue.",
     "project_intelligence.back_to_rec": "Back to recommendations‌⁠‍",
-    "project_intelligence.chat_error":
-      "Sorry, I could not process your question. Please try again.‌⁠‍",
-    "project_intelligence.chat_prompt":
-      'Ask any question about this project. For example: "Why is my score so low?" or "What should I do first?"',
+    "project_intelligence.chat_error": "Sorry, I could not process your question. Please try again.‌⁠‍",
+    "project_intelligence.chat_prompt": "Ask any question about this project. For example: \"Why is my score so low?\" or \"What should I do first?\"",
     "project_intelligence.chat_toggle": "Toggle chat‌⁠‍",
     "project_intelligence.critical_gaps": "Critical Gaps",
     "project_intelligence.enable_failed": "Could not enable the module",
     "project_intelligence.enable_module": "Enable module",
     "project_intelligence.enabling": "Enabling…",
-    "project_intelligence.gaps.dollar_impact":
-      "{{count}} items missing prices → ~{{amount}} cost uncertainty",
+    "project_intelligence.gaps.dollar_impact": "{{count}} items missing prices → ~{{amount}} cost uncertainty",
     "project_intelligence.go_to_ai_settings": "Settings — AI Configuration",
     "project_intelligence.kpi.budget_variance": "Budget variance‌⁠‍",
     "project_intelligence.kpi.risk_adjusted_cost": "Risk-adjusted cost‌⁠‍",
-    "project_intelligence.kpi.risk_sub":
-      "±{{band}} (90% CI, {{count}} anomalies)",
+    "project_intelligence.kpi.risk_sub": "±{{band}} (90% CI, {{count}} anomalies)",
     "project_intelligence.kpi.schedule_health": "Schedule health‌⁠‍",
     "project_intelligence.kpi.schedule_sub": "Activities on baseline‌⁠‍",
-    "project_intelligence.kpi.variance_sub":
-      "Budget {{budget}} · Current {{current}}‌⁠‍",
+    "project_intelligence.kpi.variance_sub": "Budget {{budget}} · Current {{current}}‌⁠‍",
     "project_intelligence.load_error": "Could not load analysis",
-    "project_intelligence.module_disabled_ask_admin":
-      "Ask an admin to enable this module to continue.",
-    "project_intelligence.module_disabled_body":
-      "This dashboard runs against the optional Project Intelligence module. It is currently disabled on this server, so the AI advisor, gap detector and analytics grid have nothing to query.",
-    "project_intelligence.module_disabled_footnote":
-      "No data is collected while the module is off. Enabling is reversible from the Modules page.",
-    "project_intelligence.module_disabled_title":
-      "Project Intelligence is turned off",
-    "project_intelligence.no_gaps_desc":
-      "Your project has no critical issues. Keep refining to tighten variance.",
+    "project_intelligence.module_disabled_ask_admin": "Ask an admin to enable this module to continue.",
+    "project_intelligence.module_disabled_body": "This dashboard runs against the optional Project Intelligence module. It is currently disabled on this server, so the AI advisor, gap detector and analytics grid have nothing to query.",
+    "project_intelligence.module_disabled_footnote": "No data is collected while the module is off. Enabling is reversible from the Modules page.",
+    "project_intelligence.module_disabled_title": "Project Intelligence is turned off",
+    "project_intelligence.no_gaps_desc": "Your project has no critical issues. Keep refining to tighten variance.",
     "project_intelligence.no_gaps_title": "No critical gaps",
-    "project_intelligence.no_recommendations":
-      "No recommendations available yet. Try refreshing the analysis.",
+    "project_intelligence.no_recommendations": "No recommendations available yet. Try refreshing the analysis.",
     "project_intelligence.open_modules_page": "Open Modules page",
     "project_intelligence.page_title_v191": "Estimation Dashboard‌⁠‍",
     "project_intelligence.readiness_title": "Estimation readiness",
@@ -5275,24 +4695,18 @@ const resource = {
     "project_intelligence.role_estimator": "Estimator",
     "project_intelligence.role_explorer": "Explorer",
     "project_intelligence.role_manager": "Manager",
-    "project_intelligence.score_tooltip_v191":
-      "Score weighting (RFC 25): BOQ 40%, Cost Model 30%, Validation 20%, Risk 10%.",
-    "project_intelligence.select_domain":
-      "Select a domain tab above to see detailed metrics.‌⁠‍",
+    "project_intelligence.score_tooltip_v191": "Score weighting (RFC 25): BOQ 40%, Cost Model 30%, Validation 20%, Risk 10%.",
+    "project_intelligence.select_domain": "Select a domain tab above to see detailed metrics.‌⁠‍",
     "project_intelligence.show_more_gaps": "{{count}} more",
     "project_intelligence.thinking": "Thinking...",
     "project_intelligence.unnamed": "Unnamed Project",
-    "project_intelligence.v191_header_desc":
-      "Cost variance, anomalies, bid analytics — refreshed every 60s.",
-    "project_intelligence.v191_select_prompt":
-      "Select a project from the header to see its cost variance, anomalies, and bid analytics.‌⁠‍",
+    "project_intelligence.v191_header_desc": "Cost variance, anomalies, bid analytics — refreshed every 60s.",
+    "project_intelligence.v191_select_prompt": "Select a project from the header to see its cost variance, anomalies, and bid analytics.‌⁠‍",
     "projects.photos.tab_label": "Fotografie",
     "projects.photos.no_project": "No active project",
-    "projects.photos.no_project_desc":
-      "Open a project to view and upload photos.",
+    "projects.photos.no_project_desc": "Open a project to view and upload photos.",
     "projects.photos.empty_title": "No photos yet",
-    "projects.photos.empty_desc":
-      "Upload site photos to keep visual records alongside the project.",
+    "projects.photos.empty_desc": "Upload site photos to keep visual records alongside the project.",
     "projects.photos.upload_cta": "Upload photos",
     "projects.photos.search_placeholder": "Search filename…",
     "projects.photos.search_aria": "Search photos by filename",
@@ -5312,8 +4726,7 @@ const resource = {
     "takeoff.markup.close": "Zavřít",
     "takeoff.markup.comments_drawer": "Markup comments",
     "takeoff.markup.comments_title": "Komentáře",
-    "takeoff.markup.comments_empty":
-      "No comments yet — be the first to add one.",
+    "takeoff.markup.comments_empty": "No comments yet — be the first to add one.",
     "takeoff.markup.comments_load_failed": "Could not load comments.",
     "takeoff.markup.comment_added": "Comment added",
     "takeoff.markup.comment_deleted": "Comment deleted",
@@ -5323,8 +4736,7 @@ const resource = {
     "takeoff.markup.comment_placeholder": "Write a comment...",
     "takeoff.markup.comment_hint": "Ctrl/Cmd+Enter to send",
     "takeoff.markup.comment_send": "Send",
-    "tendering.award_confirm":
-      "Award this contract to {{company}}? This action cannot be undone.",
+    "tendering.award_confirm": "Award this contract to {{company}}? This action cannot be undone.",
     "tendering.award_confirm_title": "Award contract?",
     "tendering.bid_count": "{{count}} bids‌⁠‍",
     "tendering.close_package": "Zavřít",
@@ -5334,10 +4746,8 @@ const resource = {
     "tendering.evaluate": "Evaluate Bids",
     "tendering.exported": "Comparison exported",
     "tendering.mark_awarded": "Mark Awarded",
-    "tendering.no_packages_description":
-      "Create a tender from a BOQ to start collecting bids",
-    "tendering.select_project_desc":
-      "Select a project and create a tender from a BOQ to get started",
+    "tendering.no_packages_description": "Create a tender from a BOQ to start collecting bids",
+    "tendering.select_project_desc": "Select a project and create a tender from a BOQ to get started",
     "tendering.select_project_first": "Select a project first",
     "tendering.select_project_title": "Select a project",
     "tendering.start_collecting": "Start Collecting",
@@ -5353,8 +4763,7 @@ const resource = {
     "tendering.status_submitted": "Submitted",
     "conflict.panel_aria_label": "Conflict resolution panel",
     "conflict.panel_title": "Merge Conflict Detected",
-    "conflict.panel_subtitle":
-      "A remote collaborator edited the same field. Choose how to resolve.",
+    "conflict.panel_subtitle": "A remote collaborator edited the same field. Choose how to resolve.",
     "conflict.changed_by": "Changed by",
     "conflict.your_version": "Your version",
     "conflict.their_version": "Their version",
@@ -5368,18 +4777,14 @@ const resource = {
     "conflict.conflict_number": "Conflict",
     "conflict.next": "Next",
     "finance.approve_failed": "Failed to approve invoice",
-    "finance.boq_tip_desc":
-      'Go to your BOQ → Lock the estimate → Click "Create Budget from Estimate" to auto-populate budget lines.',
+    "finance.boq_tip_desc": "Go to your BOQ → Lock the estimate → Click \"Create Budget from Estimate\" to auto-populate budget lines.",
     "finance.boq_tip_title": "Tip:",
     "finance.budget_create_failed": "Failed to create budget line",
     "finance.budget_created": "Budget line created successfully",
-    "finance.budget_file_hint":
-      "Columns: WBS Code, Category, Original Budget, Notes",
+    "finance.budget_file_hint": "Columns: WBS Code, Category, Original Budget, Notes",
     "finance.budget_line": "Rozpočet",
-    "finance.budget_notes_placeholder":
-      "e.g., Includes contingency for weather delays",
-    "finance.budgets_explanation":
-      "Project budget tracks original vs actual costs by WBS category. Variance is highlighted green when under budget, red when over.",
+    "finance.budget_notes_placeholder": "e.g., Includes contingency for weather delays",
+    "finance.budgets_explanation": "Project budget tracks original vs actual costs by WBS category. Variance is highlighted green when under budget, red when over.",
     "finance.cat_equipment": "Zařízení",
     "finance.cat_labor": "Labor",
     "finance.cat_material": "Material",
@@ -5393,10 +4798,8 @@ const resource = {
     "finance.create_snapshot": "Create Snapshot",
     "finance.currency": "Měna",
     "finance.direction": "Direction",
-    "finance.drop_budget_file":
-      "Drop Excel or CSV file here, or click to browse",
-    "finance.evm_explanation":
-      "Earned Value Management (EVM) compares planned progress with actual performance. SPI > 1.0 = ahead of schedule. CPI > 1.0 = under budget. Create snapshots periodically to track trends over time.",
+    "finance.drop_budget_file": "Drop Excel or CSV file here, or click to browse",
+    "finance.evm_explanation": "Earned Value Management (EVM) compares planned progress with actual performance. SPI > 1.0 = ahead of schedule. CPI > 1.0 = under budget. Create snapshots periodically to track trends over time.",
     "finance.evm_hint_cost": "cost efficiency",
     "finance.evm_hint_forecast": "forecast total cost",
     "finance.evm_hint_schedule": "schedule efficiency",
@@ -5410,14 +4813,11 @@ const resource = {
     "finance.import": "Import",
     "finance.import_btn": "Import",
     "finance.import_budgets": "Import Budgets",
-    "finance.import_result":
-      "Imported: {{imported}}, Skipped: {{skipped}}, Errors: {{errors}}",
+    "finance.import_result": "Imported: {{imported}}, Skipped: {{skipped}}, Errors: {{errors}}",
     "finance.invoice_create_failed": "Failed to create invoice",
     "finance.invoice_created": "Invoice created successfully",
-    "finance.invoice_desc_placeholder":
-      "e.g., Progress payment for concrete works - Phase 2",
-    "finance.invoices_explanation":
-      "Track all project invoices in one place. Payable = invoices from subcontractors/vendors. Receivable = invoices you send to clients. Mark invoices as paid to auto-generate payment records.",
+    "finance.invoice_desc_placeholder": "e.g., Progress payment for concrete works - Phase 2",
+    "finance.invoices_explanation": "Track all project invoices in one place. Payable = invoices from subcontractors/vendors. Receivable = invoices you send to clients. Mark invoices as paid to auto-generate payment records.",
     "finance.invoices_export_failed": "Failed to export invoices",
     "finance.invoices_export_success": "Invoices exported successfully",
     "finance.link_to_boq": "BOQ Estimate‌⁠‍",
@@ -5425,15 +4825,12 @@ const resource = {
     "finance.new_invoice": "New Invoice",
     "finance.no_budget_match": "No matching budget lines",
     "finance.no_invoices_match": "No matching invoices",
-    "finance.no_invoices_match_desc":
-      "Try adjusting your search or status filter.",
+    "finance.no_invoices_match_desc": "Try adjusting your search or status filter.",
     "finance.notes": "Notes / Description",
     "finance.pay_failed": "Failed to mark invoice as paid",
     "finance.payable_desc": "Invoice you need to pay",
-    "finance.payable_receivable_tooltip":
-      "Payable = invoices you owe to vendors. Receivable = invoices clients owe to you.",
-    "finance.payments_explanation":
-      "Payment records are created when invoices are marked as paid.",
+    "finance.payable_receivable_tooltip": "Payable = invoices you owe to vendors. Receivable = invoices clients owe to you.",
+    "finance.payments_explanation": "Payment records are created when invoices are marked as paid.",
     "finance.receivable_desc": "Invoice you're sending",
     "finance.search_client": "Search client...",
     "finance.search_vendor": "Search vendor...",
@@ -5464,19 +4861,15 @@ const resource = {
     "notification.task_assigned_title": "New task assigned",
     "notification.task_assigned_body": "{{task_title}}",
     "notification.invoice_approved_title": "Invoice approved",
-    "notification.invoice_approved_body":
-      "Invoice {{invoice_number}} — {{amount_total}} {{currency_code}}",
+    "notification.invoice_approved_body": "Invoice {{invoice_number}} — {{amount_total}} {{currency_code}}",
     "notification.inspection_scheduled_title": "Inspection scheduled",
-    "notification.inspection_scheduled_body":
-      "{{inspection_number}} — {{title}} on {{inspection_date}}",
+    "notification.inspection_scheduled_body": "{{inspection_number}} — {{title}} on {{inspection_date}}",
     "notification.submittal_status_changed_title": "Submittal status changed",
-    "notification.submittal_status_changed_body":
-      "{{submittal_number}} ({{title}}) — {{new_status}}",
+    "notification.submittal_status_changed_body": "{{submittal_number}} ({{title}}) — {{new_status}}",
     "notification.meeting_scheduled_title": "Meeting scheduled",
     "notification.meeting_scheduled_body": "{{title}} on {{meeting_date}}",
     "notification.ncr_created_title": "Non-conformance raised",
-    "notification.ncr_created_body":
-      "NCR {{ncr_number}} — {{title}} ({{severity}})",
+    "notification.ncr_created_body": "NCR {{ncr_number}} — {{title}} ({{severity}})",
     "notification.document_uploaded_title": "Document uploaded",
     "notification.document_uploaded_body": "{{document_name}}",
     "procurement.add_item": "Přidat položku",
@@ -5497,8 +4890,7 @@ const resource = {
     "procurement.no_gr_match": "No matching goods receipts",
     "procurement.no_po_match": "No matching purchase orders",
     "procurement.notes": "Notes",
-    "procurement.notes_placeholder":
-      "Optional notes or special instructions...",
+    "procurement.notes_placeholder": "Optional notes or special instructions...",
     "procurement.payment_terms": "Payment Terms",
     "procurement.po_created": "Purchase order created",
     "procurement.po_type": "PO Type",
@@ -5509,110 +4901,78 @@ const resource = {
     "procurement.subtotal": "Subtotal",
     "procurement.tax": "Tax",
     "procurement.total": "Total",
-    "bim.upload_generate_pdf_help":
-      "Exports the sheets the designer prepared inside the model as a single PDF into Documents. Runs after the model is ready — upload is not delayed.",
+    "bim.upload_generate_pdf_help": "Exports the sheets the designer prepared inside the model as a single PDF into Documents. Runs after the model is ready — upload is not delayed.",
     "match_elements.info.button_aria": "How matching works",
     "match_elements.info.button_title": "How matching works",
     "match_elements.info.dialog_aria": "How matching works",
     "match_elements.info.title": "How matching works",
     "match_elements.info.bullet_upload": "Upload your BIM model or BoQ.",
-    "match_elements.info.bullet_extract":
-      "We extract elements: descriptions, units, quantities, regions, classification.",
-    "match_elements.info.bullet_search":
-      "Each element is searched against the selected cost catalogue using vector similarity + lexical hints + region/unit boost.",
-    "match_elements.info.bullet_shortlist":
-      "You get a confidence-scored shortlist per element — pick the best, edit quantity if needed.",
-    "match_elements.info.bullet_save":
-      "Save the session — you can revisit, edit, and export it as BoQ later.",
-    "match_elements.info.footer":
-      "Saved sessions live in the list on this page.",
+    "match_elements.info.bullet_extract": "We extract elements: descriptions, units, quantities, regions, classification.",
+    "match_elements.info.bullet_search": "Each element is searched against the selected cost catalogue using vector similarity + lexical hints + region/unit boost.",
+    "match_elements.info.bullet_shortlist": "You get a confidence-scored shortlist per element — pick the best, edit quantity if needed.",
+    "match_elements.info.bullet_save": "Save the session — you can revisit, edit, and export it as BoQ later.",
+    "match_elements.info.footer": "Saved sessions live in the list on this page.",
     "match_elements.new_text.button": "From text",
     "match_elements.new_text.button_title": "Paste descriptions — one per line",
     "match_elements.new_text.title": "New session — paste descriptions",
-    "match_elements.new_text.hint":
-      "One line per item. Each line becomes a group; semantic search finds the closest CWICR rates. Use any language — the multilingual encoder handles cross-lang queries.",
+    "match_elements.new_text.hint": "One line per item. Each line becomes a group; semantic search finds the closest CWICR rates. Use any language — the multilingual encoder handles cross-lang queries.",
     "match_elements.new_text.name_label": "Session name (optional)",
     "match_elements.new_text.name_placeholder": "e.g. Quick estimate Q3",
     "match_elements.new_text.lines_label": "Descriptions (one per line)",
-    "match_elements.new_text.lines_placeholder":
-      "Stahlbetonwand C30/37, d=240mm\nленточный фундамент 800x600\nconcrete slab 200mm",
+    "match_elements.new_text.lines_placeholder": "Stahlbetonwand C30/37, d=240mm\nленточный фундамент 800x600\nconcrete slab 200mm",
     "match_elements.new_text.create": "Create session",
     "match_elements.new_excel.button": "From Excel BoQ",
-    "match_elements.new_excel.button_title":
-      "Upload an .xlsx Bill of Quantities",
+    "match_elements.new_excel.button_title": "Upload an .xlsx Bill of Quantities",
     "match_elements.new_excel.title": "New session from Excel BoQ",
-    "match_elements.new_excel.hint":
-      'Upload an .xlsx with at least a "Description" column (or its localised equivalent — Beschreibung, Описание, Descripción, 描述, etc.). Optional columns: Qty, Unit, Code, Category. Decimal-comma quantities are recognised.',
+    "match_elements.new_excel.hint": "Upload an .xlsx with at least a \"Description\" column (or its localised equivalent — Beschreibung, Описание, Descripción, 描述, etc.). Optional columns: Qty, Unit, Code, Category. Decimal-comma quantities are recognised.",
     "match_elements.new_excel.name_label": "Session name (optional)",
     "match_elements.new_excel.name_placeholder": "e.g. Tender BoQ rev 3",
     "match_elements.new_excel.drop": "Drop your .xlsx here or click to browse",
-    "match_elements.new_excel.format_hint":
-      ".xlsx only · multi-language headers supported",
+    "match_elements.new_excel.format_hint": ".xlsx only · multi-language headers supported",
     "match_elements.new_excel.create": "Upload & create session",
     "match_elements.group_by_show_all": "Show all ({{count}})",
     "match_elements.group_by_show_less": "Show less",
-    "match_elements.group_by_show_all_help":
-      "Tenant-specific attributes from this BIM model",
+    "match_elements.group_by_show_all_help": "Tenant-specific attributes from this BIM model",
     "match_elements.region_bim_models": "BIM model",
-    "match_elements.region_bim_models_help":
-      "Pick the source model — quantities are read from here",
+    "match_elements.region_bim_models_help": "Pick the source model — quantities are read from here",
     "match_elements.region_sessions": "Matching session",
-    "match_elements.region_sessions_help":
-      "Resume an existing run or start a new one",
+    "match_elements.region_sessions_help": "Resume an existing run or start a new one",
     "match_elements.region_settings": "Match settings",
-    "match_elements.region_settings_help":
-      "Tune how matches are found and what shows up below",
+    "match_elements.region_settings_help": "Tune how matches are found and what shows up below",
     "match_elements.session_confirmed": "confirmed",
-    "match_elements.region_lang_help":
-      "Project region resolves to this language → cwicr_{{lang}}_v3 collection",
+    "match_elements.region_lang_help": "Project region resolves to this language → cwicr_{{lang}}_v3 collection",
     "match_elements.project_settings": "Project settings",
-    "match_elements.project_settings_help":
-      "Open project settings (region, currency, locale, fx rates)",
+    "match_elements.project_settings_help": "Open project settings (region, currency, locale, fx rates)",
     "match_elements.vector_status_loading": "Checking vector DB…",
     "match_elements.vector_status_ready": "Vector DB ready",
-    "match_elements.vector_status_ready_detail":
-      "{{lang}} · {{rateCount}} rates · {{collection}}",
+    "match_elements.vector_status_ready_detail": "{{lang}} · {{rateCount}} rates · {{collection}}",
     "match_elements.vector_status_empty": "Vector DB empty",
-    "match_elements.vector_status_empty_detail":
-      "{{lang}} · {{collection}} loaded but 0 rates — vectorize on /costs",
+    "match_elements.vector_status_empty_detail": "{{lang}} · {{collection}} loaded but 0 rates — vectorize on /costs",
     "match_elements.vector_status_missing": "Collection not loaded",
-    "match_elements.vector_status_missing_detail":
-      '{{collection}} for language "{{lang}}" not in Qdrant — visit /costs to vectorize',
+    "match_elements.vector_status_missing_detail": "{{collection}} for language \"{{lang}}\" not in Qdrant — visit /costs to vectorize",
     "match_elements.vector_status_no_country": "Region/language unknown",
-    "match_elements.vector_status_no_country_detail":
-      "Set the project region in /projects/.../settings to pin the collection",
+    "match_elements.vector_status_no_country_detail": "Set the project region in /projects/.../settings to pin the collection",
     "match_elements.vector_status_non_qdrant": "Legacy LanceDB backend",
-    "match_elements.vector_status_non_qdrant_detail":
-      "Per-language collections only apply on Qdrant — current engine is LanceDB",
+    "match_elements.vector_status_non_qdrant_detail": "Per-language collections only apply on Qdrant — current engine is LanceDB",
     "match_elements.vector_status_disconnected": "Vector DB unreachable",
-    "match_elements.vector_status_disconnected_detail":
-      "Qdrant is not responding · {{error}}",
-    "match_elements.vector_status_disconnected_help":
-      "Qdrant is not responding — matchers will fall back to lexical only",
+    "match_elements.vector_status_disconnected_detail": "Qdrant is not responding · {{error}}",
+    "match_elements.vector_status_disconnected_help": "Qdrant is not responding — matchers will fall back to lexical only",
     "match_elements.vector_status_open_costs": "Open /costs",
-    "match_elements.lang_mismatch_title":
-      "Catalogue language does not match project",
-    "match_elements.lang_mismatch_detail":
-      "Project region {{region}} speaks {{projLang}}, but the bound catalogue {{catalogue}} is in {{boundLang}}. Match results will surface in the wrong language until you re-bind.",
+    "match_elements.lang_mismatch_title": "Catalogue language does not match project",
+    "match_elements.lang_mismatch_detail": "Project region {{region}} speaks {{projLang}}, but the bound catalogue {{catalogue}} is in {{boundLang}}. Match results will surface in the wrong language until you re-bind.",
     "match_elements.lang_mismatch_rebind": "Re-bind catalogue",
     "match_elements.lang_mismatch_open_costs": "Or load a {{lang}} catalogue",
     "match_elements.advisor_mismatch_title": "Switch to a {{lang}} catalogue",
-    "match_elements.advisor_mismatch_detail":
-      "Pick a {{lang}} catalogue below — your project speaks {{lang}}, so matches need to come from a same-language rate book.",
-    "match_elements.advisor_missing_title":
-      "{{lang}} vector collection not loaded",
-    "match_elements.advisor_missing_detail":
-      "Pick a ready catalogue below, or load a new one.",
+    "match_elements.advisor_mismatch_detail": "Pick a {{lang}} catalogue below — your project speaks {{lang}}, so matches need to come from a same-language rate book.",
+    "match_elements.advisor_missing_title": "{{lang}} vector collection not loaded",
+    "match_elements.advisor_missing_detail": "Pick a ready catalogue below, or load a new one.",
     "match_elements.advisor_empty_title": "Catalogue not vectorised yet",
-    "match_elements.advisor_empty_detail":
-      "Pick a different ready catalogue below, or vectorise the current one.",
+    "match_elements.advisor_empty_detail": "Pick a different ready catalogue below, or vectorise the current one.",
     "match_elements.advisor_loading": "Loading available catalogues…",
     "match_elements.advisor_region_match": "Best",
     "match_elements.advisor_rates_count": "{{n}} rates",
-    "match_elements.advisor_none_available":
-      "No {{lang}} catalogues are loaded yet. Visit /costs to import one.",
-    "match_elements.advisor_install_hint":
-      "No {{lang}} catalogues loaded yet. One-click install:",
+    "match_elements.advisor_none_available": "No {{lang}} catalogues are loaded yet. Visit /costs to import one.",
+    "match_elements.advisor_install_hint": "No {{lang}} catalogues loaded yet. One-click install:",
     "match_elements.advisor_install_size": "~{{mb}} MB · {{lang}}",
     "match_elements.advisor_browse_all": "All on Hugging Face",
     "match_elements.hero_eyebrow": "BIM → BOQ",
@@ -5630,17 +4990,12 @@ const resource = {
     "match_elements.step_4_help": "Write to BOQ",
     "match_elements.embedder_loading": "Checking language model…",
     "match_elements.embedder_required_title": "Free language model required",
-    "match_elements.embedder_required_body":
-      "OpenConstructionERP uses BGE-M3 — a free, open-source multilingual encoder by BAAI. It runs entirely on your machine. No API key. No cloud calls. Install once with one command:",
+    "match_elements.embedder_required_body": "OpenConstructionERP uses BGE-M3 — a free, open-source multilingual encoder by BAAI. It runs entirely on your machine. No API key. No cloud calls. Install once with one command:",
     "match_elements.embedder_loaded_title": "Language model ready",
-    "match_elements.embedder_loaded_caption":
-      "{{model}} · {{precision}} · ~{{size}} MB · {{license}} · {{n}}+ languages",
-    "match_elements.embedder_runtime_caption":
-      "Runtime: {{runtime}} · model_loaded={{loaded}}",
-    "match_elements.embedder_install_hint_after":
-      "After install, restart the backend.",
-    "match_elements.embedder_size_caption":
-      "~{{int8}} MB download (INT8) or ~{{fp32}} MB (FP32).",
+    "match_elements.embedder_loaded_caption": "{{model}} · {{precision}} · ~{{size}} MB · {{license}} · {{n}}+ languages",
+    "match_elements.embedder_runtime_caption": "Runtime: {{runtime}} · model_loaded={{loaded}}",
+    "match_elements.embedder_install_hint_after": "After install, restart the backend.",
+    "match_elements.embedder_size_caption": "~{{int8}} MB download (INT8) or ~{{fp32}} MB (FP32).",
     "match_elements.embedder_languages_caption": "{{n}}+ languages",
     "match_elements.embedder_runs_locally": "Runs locally",
     "match_elements.embedder_no_api_key": "No API key",
@@ -5651,10 +5006,8 @@ const resource = {
     "match_elements.analytics_title": "Match analytics",
     "match_elements.analytics_alerts_count": "{{n}} alert",
     "match_elements.analytics_alerts_count_plural": "{{n}} alerts",
-    "match_elements.analytics_caption":
-      "{{n}} searches · {{picks}} picks · pick rate {{rate}} · mean score {{score}} · last {{days}}d",
-    "match_elements.analytics_empty_caption":
-      "No searches yet in the last {{days}}d window — run /match-elements to populate.",
+    "match_elements.analytics_caption": "{{n}} searches · {{picks}} picks · pick rate {{rate}} · mean score {{score}} · last {{days}}d",
+    "match_elements.analytics_empty_caption": "No searches yet in the last {{days}}d window — run /match-elements to populate.",
     "match_elements.analytics_window_label": "Window",
     "match_elements.analytics_window_days": "{{n}}d",
     "match_elements.analytics_tile_searches": "Searches",
@@ -5695,18 +5048,14 @@ const resource = {
     "match_progress.title_running": "Probíhá porovnání",
     "match_progress.title_done": "Porovnání dokončeno",
     "match_progress.title_error": "Porovnání selhalo",
-    "match_progress.subtitle_running":
-      "We’re searching the catalogue with vector + lexical + region signals. Safe to leave open in a tab.",
-    "match_progress.subtitle_done":
-      "All stages green — handing over to the review panel.",
-    "match_progress.subtitle_error":
-      "The matcher couldn’t finish — try again or pick a different catalogue.",
+    "match_progress.subtitle_running": "We’re searching the catalogue with vector + lexical + region signals. Safe to leave open in a tab.",
+    "match_progress.subtitle_done": "All stages green — handing over to the review panel.",
+    "match_progress.subtitle_error": "The matcher couldn’t finish — try again or pick a different catalogue.",
     "match_progress.elapsed": "Uplynulo",
     "match_progress.overall_aria": "Overall match progress",
     "match_progress.headline_done": "All done — opening your results",
     "match_progress.headline_error": "Something went wrong",
-    "match_progress.headline_long":
-      "Almost done — large projects can take a minute",
+    "match_progress.headline_long": "Almost done — large projects can take a minute",
     "match_progress.stage_load": "Loading BIM elements",
     "match_progress.stage_embed": "Building embeddings",
     "match_progress.stage_vector": "Vector search (top candidates)",
@@ -5716,8 +5065,7 @@ const resource = {
     "match_progress.error_label": "Error details",
     "match_progress.error_fallback": "Unknown error",
     "match_progress.retry": "Try again",
-    "match_progress.long_hint":
-      "Still working — first runs on large BIM models take longer because vectors are warming up. Subsequent runs on the same project are much faster.",
+    "match_progress.long_hint": "Still working — first runs on large BIM models take longer because vectors are warming up. Subsequent runs on the same project are much faster.",
     "match_progress.toast_failed_title": "Porovnání selhalo",
     "projects.team.strip_label": "Project team",
     "projects.team.empty": "No members yet",
@@ -5735,13 +5083,11 @@ const resource = {
     "projects.team.role.viewer": "Viewer",
     "projects.team.role.project_manager": "Project manager",
     "onboarding.company_property_developer": "Developer",
-    "onboarding.company_property_developer_desc":
-      "Týmy developmentu nemovitostí",
+    "onboarding.company_property_developer_desc": "Týmy developmentu nemovitostí",
     "onboarding.explore_all_modules": "Prozkoumat všech {{count}} modulů",
     "boq.add_child_position": "Add Child Partida",
     "boq.add_sub_section": "Add Sub-section",
-    "boq.ai_no_answer":
-      "The assistant did not return an answer. Please rephrase or try again.‌⁠‍",
+    "boq.ai_no_answer": "The assistant did not return an answer. Please rephrase or try again.‌⁠‍",
     "boq.compare_added": "Added",
     "boq.compare_against": "Compare against",
     "boq.compare_btn": "Compare",
@@ -5757,8 +5103,7 @@ const resource = {
     "boq.compare_qty": "Qty",
     "boq.compare_rate": "Rate",
     "boq.compare_removed": "Removed",
-    "boq.compare_select_hint":
-      "Pick another BOQ above to see a line-by-line diff.",
+    "boq.compare_select_hint": "Pick another BOQ above to see a line-by-line diff.",
     "boq.compare_unchanged": "Unchanged",
     "boq.compare_ct_added": "Added",
     "boq.compare_ct_removed": "Removed",
@@ -5775,8 +5120,7 @@ const resource = {
     "boq.model_link_agg_first": "First",
     "boq.model_link_create": "Create link",
     "boq.model_link_created": "Model link created",
-    "boq.model_link_created_hint":
-      "The quantity is not changed yet — use “Refresh from model” then Apply to pull it in.",
+    "boq.model_link_created_hint": "The quantity is not changed yet — use “Refresh from model” then Apply to pull it in.",
     "boq.model_link_delete": "Delete link",
     "boq.model_link_delete_failed": "Could not remove model link",
     "boq.model_link_deleted": "Model link removed",
@@ -5795,63 +5139,48 @@ const resource = {
     "boq.model_link_status_active": "In sync",
     "boq.model_link_status_stale": "Stale",
     "boq.model_link_status_broken": "Broken",
-    "boq.model_link_subtitle":
-      "Position {{ordinal}} — bind its quantity to BIM model elements",
+    "boq.model_link_subtitle": "Position {{ordinal}} — bind its quantity to BIM model elements",
     "boq.model_link_title": "Model link",
     "boq.model_link_version": "model v{{v}}",
-    "boq.model_review_all_synced":
-      "All linked quantities are in sync with the model.",
+    "boq.model_review_all_synced": "All linked quantities are in sync with the model.",
     "boq.model_review_applied": "{{count}} quantity update(s) applied",
     "boq.model_review_apply": "Apply {{count}} selected",
     "boq.model_review_apply_failed": "Apply failed",
     "boq.model_review_btn": "Model sync",
     "boq.model_review_btn_hint": "Re-pull quantities from linked BIM models",
-    "boq.model_review_hint":
-      "Re-pulls bound quantities against the latest model version. Nothing changes until you Apply.",
+    "boq.model_review_hint": "Re-pulls bound quantities against the latest model version. Nothing changes until you Apply.",
     "boq.model_review_missing": "{{count}} missing",
     "boq.model_review_no_links": "No model links in this BOQ",
     "boq.model_review_refresh": "Refresh from model",
     "boq.model_review_refresh_failed": "Refresh from model failed",
     "boq.model_review_run": "Run a refresh to see model-driven changes.",
     "boq.model_review_title": "Model quantity review",
-    "boq.position_added_edit_hint":
-      "Type the description, then Tab through unit, quantity & rate‌⁠‍",
-    "boq.link_badge_instance":
-      "Linked instance of code {{code}} — edits to its definition will diverge it‌⁠‍",
+    "boq.position_added_edit_hint": "Type the description, then Tab through unit, quantity & rate‌⁠‍",
+    "boq.link_badge_instance": "Linked instance of code {{code}} — edits to its definition will diverge it‌⁠‍",
     "boq.link_badge_master": "Master of code {{code}} — {{count}} linked‌⁠‍",
     "boq.link_master_badge": "Master‌⁠‍",
-    "boq.link_propagated_msg":
-      "Updated {{count}} linked position(s) across this project.‌⁠‍",
+    "boq.link_propagated_msg": "Updated {{count}} linked position(s) across this project.‌⁠‍",
     "boq.link_propagated_title": "Definition propagated‌⁠‍",
-    "boq.max_depth_reached_tooltip":
-      "Maximum nesting depth of {{max}} levels reached — flatten the structure or use fewer sub-levels.",
-    "boq.resource_link_propagated_msg":
-      "Updated the shared resource on {{count}} other position(s) across this project.‌⁠‍",
+    "boq.max_depth_reached_tooltip": "Maximum nesting depth of {{max}} levels reached — flatten the structure or use fewer sub-levels.",
+    "boq.resource_link_propagated_msg": "Updated the shared resource on {{count}} other position(s) across this project.‌⁠‍",
     "boq.resource_link_propagated_title": "Resource definition propagated‌⁠‍",
     "boq.link_role_instance": "Linked instance‌⁠‍",
     "boq.link_role_master": "Master (definition of record)‌⁠‍",
-    "boq.link_unlinked_msg":
-      "Your edit changed this linked copy, so it no longer follows the shared code. If you did not mean to diverge it, change its code back instead.‌⁠‍",
+    "boq.link_unlinked_msg": "Your edit changed this linked copy, so it no longer follows the shared code. If you did not mean to diverge it, change its code back instead.‌⁠‍",
     "boq.link_unlinked_title": "Position unlinked from shared code‌⁠‍",
-    "boq.linked_positions_count":
-      "{{total}} positions share this code ({{instances}} linked instance(s)). The master is the definition of record; editing it propagates to every instance in this project.‌⁠‍",
+    "boq.linked_positions_count": "{{total}} positions share this code ({{instances}} linked instance(s)). The master is the definition of record; editing it propagates to every instance in this project.‌⁠‍",
     "boq.linked_positions_error": "Could not load linked positions.‌⁠‍",
-    "boq.linked_positions_none":
-      "This position is standalone — no other position shares its code.‌⁠‍",
-    "boq.linked_positions_subtitle":
-      "Code {{code}} — viewing from position {{ordinal}}",
+    "boq.linked_positions_none": "This position is standalone — no other position shares its code.‌⁠‍",
+    "boq.linked_positions_subtitle": "Code {{code}} — viewing from position {{ordinal}}",
     "boq.linked_positions_title": "Linked positions‌⁠‍",
     "boq.no_description": "(no description)‌⁠‍",
     "boq.reuse_code_action": "Reuse Existing Code…",
     "boq.reuse_code_existing": "Existing codes: {{codes}}",
-    "boq.reuse_code_msg":
-      "Linked instance created — {{count}} positions share this code. Its quantity is independently editable.‌⁠‍",
-    "boq.reuse_code_prompt":
-      "Enter an existing code to reuse it here (its definition & sub-items are copied; quantity stays independent):",
+    "boq.reuse_code_msg": "Linked instance created — {{count}} positions share this code. Its quantity is independently editable.‌⁠‍",
+    "boq.reuse_code_prompt": "Enter an existing code to reuse it here (its definition & sub-items are copied; quantity stays independent):",
     "boq.reuse_code_title": "Reused code {{code}}‌⁠‍",
     "boq.show_linked": "Show Linked Positions",
-    "boq.unlink_done_msg":
-      "Code {{code}} kept. This position no longer follows the shared code; its values were preserved.‌⁠‍",
+    "boq.unlink_done_msg": "Code {{code}} kept. This position no longer follows the shared code; its values were preserved.‌⁠‍",
     "boq.unlink_done_title": "Position unlinked‌⁠‍",
     "boq.unlink_failed": "Failed to unlink position‌⁠‍",
     "boq.unlink_this": "Unlink this position‌⁠‍",
@@ -5861,8 +5190,7 @@ const resource = {
     "login.community_sub": "Get help & discuss",
     "login.brand_edit": "Customize logo",
     "login.brand_title": "White-label branding",
-    "login.brand_desc":
-      "Shown on this sign-in screen and across the app. Stored only in this browser.",
+    "login.brand_desc": "Shown on this sign-in screen and across the app. Stored only in this browser.",
     "login.brand_upload": "Upload logo",
     "login.brand_name_ph": "Company name",
     "login.brand_reset": "Reset to default",
@@ -5874,10 +5202,8 @@ const resource = {
     "nav.phase_execution": "Execution",
     "nav.phase_closure": "Quality & Closure",
     "nav.clash_detection": "Clash Detection",
-    "schedule_advanced.master_hint":
-      "Select a master schedule to make it the working plan for the Phases, Look-Ahead, Weekly and Constraints tabs. Use the row actions to rename it, change its planned dates and status, or delete it.",
-    "schedule_advanced.no_master_yet_desc":
-      "The master schedule is the top-level plan that every phase plan, look-ahead and weekly work plan rolls up to. Create one to start pull-planning — you can rename it, change its dates, or delete it at any time.",
+    "schedule_advanced.master_hint": "Select a master schedule to make it the working plan for the Phases, Look-Ahead, Weekly and Constraints tabs. Use the row actions to rename it, change its planned dates and status, or delete it.",
+    "schedule_advanced.no_master_yet_desc": "The master schedule is the top-level plan that every phase plan, look-ahead and weekly work plan rolls up to. Create one to start pull-planning — you can rename it, change its dates, or delete it at any time.",
     "schedule_advanced.active_selection": "Working plan",
     "schedule_advanced.master_status.active": "Active",
     "schedule_advanced.master_status.archived": "Archived",
@@ -5885,153 +5211,95 @@ const resource = {
     "schedule_advanced.master_updated": "Master schedule updated",
     "schedule_advanced.master_deleted": "Master schedule deleted",
     "schedule_advanced.delete_master_title": "Delete master schedule?",
-    "schedule_advanced.delete_master_message":
-      '"{{name}}" and everything under it — phase plans, look-aheads, weekly work plans, commitments and baselines — will be permanently deleted. This cannot be undone.',
-    "schedule_advanced.err_master_name_required":
-      "Master schedule name is required.",
-    "schedule_advanced.master_name_placeholder":
-      "e.g. Construction master schedule",
-    "schedule_advanced.master_status_hint":
-      "Archive a schedule to keep its history without it being the working plan. Archived schedules can be reactivated here at any time.",
-    "schedule_advanced.master_notes_placeholder":
-      "Scope, contract reference, key milestones…",
+    "schedule_advanced.delete_master_message": "\"{{name}}\" and everything under it — phase plans, look-aheads, weekly work plans, commitments and baselines — will be permanently deleted. This cannot be undone.",
+    "schedule_advanced.err_master_name_required": "Master schedule name is required.",
+    "schedule_advanced.master_name_placeholder": "e.g. Construction master schedule",
+    "schedule_advanced.master_status_hint": "Archive a schedule to keep its history without it being the working plan. Archived schedules can be reactivated here at any time.",
+    "schedule_advanced.master_notes_placeholder": "Scope, contract reference, key milestones…",
     "files.cta.add_first_short": "Add files",
     "files.folder.files_count": "files",
     "files.folder.subfolders": "{{count}} folders",
     "files.folder.share": "{{pct}}% of total storage",
     "notifications.safety.incident_created": "Safety incident reported",
-    "notifications.safety.incident_created_body":
-      "Incident {{incident_number}} ({{severity}}): {{description}}",
-    "notifications.safety.high_risk_observation":
-      "High-risk safety observation",
-    "notifications.safety.high_risk_body":
-      "Observation {{observation_number}} (risk {{risk_score}}): {{description}}",
+    "notifications.safety.incident_created_body": "Incident {{incident_number}} ({{severity}}): {{description}}",
+    "notifications.safety.high_risk_observation": "High-risk safety observation",
+    "notifications.safety.high_risk_body": "Observation {{observation_number}} (risk {{risk_score}}): {{description}}",
     "notifications.bi.alert.title": "Dashboard alert triggered",
-    "notifications.bi.alert.body":
-      "{{alert_name}} — {{kpi_code}} is {{value}} ({{condition}} threshold {{threshold}}).",
+    "notifications.bi.alert.body": "{{alert_name}} — {{kpi_code}} is {{value}} ({{condition}} threshold {{threshold}}).",
     "notifications.bi.report.title": "Scheduled report ready",
-    "notifications.bi.report.body":
-      "Report {{report_code}} generated with {{row_count}} rows.",
+    "notifications.bi.report.body": "Report {{report_code}} generated with {{row_count}} rows.",
     "notifications.supplier_catalogs.po.sent.title": "Purchase order sent",
-    "notifications.supplier_catalogs.po.sent.body":
-      "PO sent to vendor {{vendor_id}} for {{total}} {{currency}}.",
-    "notifications.supplier_catalogs.invoice.exception.title":
-      "Invoice exception",
-    "notifications.supplier_catalogs.invoice.exception.body":
-      "Invoice for PO {{po_id}} needs review: {{reason}}",
+    "notifications.supplier_catalogs.po.sent.body": "PO sent to vendor {{vendor_id}} for {{total}} {{currency}}.",
+    "notifications.supplier_catalogs.invoice.exception.title": "Invoice exception",
+    "notifications.supplier_catalogs.invoice.exception.body": "Invoice for PO {{po_id}} needs review: {{reason}}",
     "notifications.supplier_catalogs.stock.low.title": "Low stock warning",
-    "notifications.supplier_catalogs.stock.low.body":
-      "{{sku}}: {{available_qty}} left, at or below reorder point {{reorder_point}}.",
-    "notifications.supplier_catalogs.vendor.blacklisted.title":
-      "Vendor blacklisted",
-    "notifications.supplier_catalogs.vendor.blacklisted.body":
-      "Vendor {{code}} was blacklisted: {{reason}}",
-    "notifications.supplier_catalogs.kyc.expired.title":
-      "Vendor compliance document expired",
-    "notifications.supplier_catalogs.kyc.expired.body":
-      "{{doc_type}} expired on {{expires_on}}.",
-    "notifications.supplier_catalogs.kyc.expiring.title":
-      "Vendor compliance document expiring",
-    "notifications.supplier_catalogs.kyc.expiring.body":
-      "{{doc_type}} expires on {{expires_on}} ({{days_until_expiry}} days left).",
+    "notifications.supplier_catalogs.stock.low.body": "{{sku}}: {{available_qty}} left, at or below reorder point {{reorder_point}}.",
+    "notifications.supplier_catalogs.vendor.blacklisted.title": "Vendor blacklisted",
+    "notifications.supplier_catalogs.vendor.blacklisted.body": "Vendor {{code}} was blacklisted: {{reason}}",
+    "notifications.supplier_catalogs.kyc.expired.title": "Vendor compliance document expired",
+    "notifications.supplier_catalogs.kyc.expired.body": "{{doc_type}} expired on {{expires_on}}.",
+    "notifications.supplier_catalogs.kyc.expiring.title": "Vendor compliance document expiring",
+    "notifications.supplier_catalogs.kyc.expiring.body": "{{doc_type}} expires on {{expires_on}} ({{days_until_expiry}} days left).",
     "notifications.resources.cert_expiring.title": "Certification expiring",
-    "notifications.resources.cert_expiring.body":
-      "{{resource_name}} — {{cert_type}} expires {{valid_until}} ({{days_left}} days left).",
-    "notifications.resources.assignment_proposed.title":
-      "Resource assignment proposed",
-    "notifications.resources.assignment_proposed.body":
-      "Proposed for task {{task}} starting {{start}}.",
-    "notifications.resources.assignment_confirmed.title":
-      "Resource assignment confirmed",
-    "notifications.resources.assignment_confirmed.body":
-      "Assignment confirmed for task {{task}}.",
+    "notifications.resources.cert_expiring.body": "{{resource_name}} — {{cert_type}} expires {{valid_until}} ({{days_left}} days left).",
+    "notifications.resources.assignment_proposed.title": "Resource assignment proposed",
+    "notifications.resources.assignment_proposed.body": "Proposed for task {{task}} starting {{start}}.",
+    "notifications.resources.assignment_confirmed.title": "Resource assignment confirmed",
+    "notifications.resources.assignment_confirmed.body": "Assignment confirmed for task {{task}}.",
     "notifications.contracts.signed.title": "Contract signed",
-    "notifications.contracts.signed.body":
-      "Contract {{code}} signed for {{value}} {{currency}}.",
+    "notifications.contracts.signed.body": "Contract {{code}} signed for {{value}} {{currency}}.",
     "notifications.contracts.claim_submitted.title": "Contract claim submitted",
-    "notifications.contracts.claim_submitted.body":
-      "Claim submitted for {{amount}} {{currency}}.",
+    "notifications.contracts.claim_submitted.body": "Claim submitted for {{amount}} {{currency}}.",
     "notifications.contracts.claim_paid.title": "Contract claim paid",
-    "notifications.contracts.claim_paid.body":
-      "Claim paid: {{amount}} {{currency}}.",
+    "notifications.contracts.claim_paid.body": "Claim paid: {{amount}} {{currency}}.",
     "notifications.contracts.retention_released.title": "Retention released",
-    "notifications.contracts.retention_released.body":
-      "Contract {{contract_code}}: {{amount_released}} released, {{remaining}} remaining.",
+    "notifications.contracts.retention_released.body": "Contract {{contract_code}}: {{amount_released}} released, {{remaining}} remaining.",
     "notifications.crm.lead_qualified.title": "Lead qualified",
-    "notifications.crm.lead_qualified.body":
-      "Lead {{name}} has been qualified.",
+    "notifications.crm.lead_qualified.body": "Lead {{name}} has been qualified.",
     "notifications.crm.opportunity_won.title": "Opportunity won",
     "notifications.crm.opportunity_won.body": "{{name}} won — value {{value}}.",
     "notifications.crm.opportunity_scored.title": "Opportunity scored",
-    "notifications.crm.opportunity_scored.body":
-      "{{title}} scored {{score}} (band {{band}}).",
-    "notifications.carbon.boq_position_assigned.title":
-      "Carbon factor assigned",
-    "notifications.carbon.boq_position_assigned.body":
-      "BOQ position {{boq_position_id}}: {{carbon_kg}} kg CO₂e ({{stage}}).",
+    "notifications.crm.opportunity_scored.body": "{{title}} scored {{score}} (band {{band}}).",
+    "notifications.carbon.boq_position_assigned.title": "Carbon factor assigned",
+    "notifications.carbon.boq_position_assigned.body": "BOQ position {{boq_position_id}}: {{carbon_kg}} kg CO₂e ({{stage}}).",
     "notifications.property_dev.buyer_contracted.title": "Buyer contracted",
-    "notifications.property_dev.buyer_contracted.body":
-      "{{buyer}} contracted for plot {{plot}}.",
+    "notifications.property_dev.buyer_contracted.body": "{{buyer}} contracted for plot {{plot}}.",
     "notifications.property_dev.handover_completed.title": "Handover completed",
-    "notifications.property_dev.handover_completed.body":
-      "Plot {{plot}} handover completed.",
+    "notifications.property_dev.handover_completed.body": "Plot {{plot}} handover completed.",
     "notifications.property_dev.warranty_raised.title": "Warranty claim raised",
-    "notifications.property_dev.warranty_raised.body":
-      "{{category}} warranty claim raised for plot {{plot}}.",
+    "notifications.property_dev.warranty_raised.body": "{{category}} warranty claim raised for plot {{plot}}.",
     "notifications.bid_management.invitation_sent.title": "Bid invitation sent",
-    "notifications.bid_management.invitation_sent.body":
-      "Invitation for {{package}} sent, due {{due}}.",
+    "notifications.bid_management.invitation_sent.body": "Invitation for {{package}} sent, due {{due}}.",
     "notifications.bid_management.awarded.title": "Bid awarded",
-    "notifications.bid_management.awarded.body":
-      "{{package}} awarded for {{amount}}.",
-    "notifications.schedule_advanced.constraint_cleared.title":
-      "Schedule constraint cleared",
-    "notifications.schedule_advanced.constraint_cleared.body":
-      "Task {{task}} is no longer blocked.",
+    "notifications.bid_management.awarded.body": "{{package}} awarded for {{amount}}.",
+    "notifications.schedule_advanced.constraint_cleared.title": "Schedule constraint cleared",
+    "notifications.schedule_advanced.constraint_cleared.body": "Task {{task}} is no longer blocked.",
     "notifications.daily_diary.signed.title": "Daily diary signed",
-    "notifications.daily_diary.signed.body":
-      "Diary for {{date}} has been signed.",
-    "notifications.service.ticket_dispatched.title":
-      "Service ticket dispatched",
-    "notifications.service.ticket_dispatched.body":
-      "Ticket {{ticket_number}} dispatched ({{priority}} priority).",
+    "notifications.daily_diary.signed.body": "Diary for {{date}} has been signed.",
+    "notifications.service.ticket_dispatched.title": "Service ticket dispatched",
+    "notifications.service.ticket_dispatched.body": "Ticket {{ticket_number}} dispatched ({{priority}} priority).",
     "notifications.service.ticket_resolved.title": "Service ticket resolved",
-    "notifications.service.ticket_resolved.body":
-      "Ticket {{ticket_number}} has been resolved.",
+    "notifications.service.ticket_resolved.body": "Ticket {{ticket_number}} has been resolved.",
     "notifications.service.work_order_billed.title": "Work order billed",
-    "notifications.service.work_order_billed.body":
-      "Work order {{wo_number}} billed for {{amount}} {{currency}}.",
-    "notifications.subcontractors.prequal_submitted.title":
-      "Prequalification submitted",
-    "notifications.subcontractors.prequal_submitted.body":
-      "{{subcontractor_name}} submitted a prequalification.",
-    "notifications.subcontractors.payment_app_submitted.title":
-      "Payment application submitted",
-    "notifications.subcontractors.payment_app_submitted.body":
-      "Application {{application_number}} submitted for {{net_amount}} {{currency}}.",
-    "notifications.subcontractors.retention_released.title":
-      "Subcontractor retention released",
-    "notifications.subcontractors.retention_released.body":
-      "{{amount}} {{currency}} retention released.",
+    "notifications.service.work_order_billed.body": "Work order {{wo_number}} billed for {{amount}} {{currency}}.",
+    "notifications.subcontractors.prequal_submitted.title": "Prequalification submitted",
+    "notifications.subcontractors.prequal_submitted.body": "{{subcontractor_name}} submitted a prequalification.",
+    "notifications.subcontractors.payment_app_submitted.title": "Payment application submitted",
+    "notifications.subcontractors.payment_app_submitted.body": "Application {{application_number}} submitted for {{net_amount}} {{currency}}.",
+    "notifications.subcontractors.retention_released.title": "Subcontractor retention released",
+    "notifications.subcontractors.retention_released.body": "{{amount}} {{currency}} retention released.",
     "notifications.equipment.assigned.title": "Equipment assigned",
-    "notifications.equipment.assigned.body":
-      "{{equipment_code}} assigned to {{project_name}}.",
-    "notifications.equipment.damage_reported.title":
-      "Equipment damage reported",
-    "notifications.equipment.damage_reported.body":
-      "{{equipment_code}} damage reported ({{severity}}).",
+    "notifications.equipment.assigned.body": "{{equipment_code}} assigned to {{project_name}}.",
+    "notifications.equipment.damage_reported.title": "Equipment damage reported",
+    "notifications.equipment.damage_reported.body": "{{equipment_code}} damage reported ({{severity}}).",
     "notifications.portal.user_invited.title": "Portal user invited",
-    "notifications.portal.user_invited.body":
-      "{{portal_user_email}} invited as {{portal_role}}.",
-    "match_elements.vector_status_disconnected_explainer":
-      'Semantic vector search is optional — it sharpens matches by meaning but needs a running Qdrant vector database. Use the "Vector database" panel below to start or install Qdrant natively (no Docker required), then retry.',
-    "match_elements.vector_status_disconnected_fallback":
-      "You can still proceed now: matching automatically falls back to lexical (keyword) and rule-based scoring while the vector DB is offline.",
+    "notifications.portal.user_invited.body": "{{portal_user_email}} invited as {{portal_role}}.",
+    "match_elements.vector_status_disconnected_explainer": "Semantic vector search is optional — it sharpens matches by meaning but needs a running Qdrant vector database. Use the \"Vector database\" panel below to start or install Qdrant natively (no Docker required), then retry.",
+    "match_elements.vector_status_disconnected_fallback": "You can still proceed now: matching automatically falls back to lexical (keyword) and rule-based scoring while the vector DB is offline.",
     "match_elements.vector_status_retry": "Retry connection",
     "match_elements.vector_status_open_costs_long": "Open cost-database tools",
     "match_elements.pipeline.title": "Match pipeline",
-    "match_elements.pipeline.subtitle":
-      "Seven steps from CAD file to priced BoQ — every step is visible and tunable",
+    "match_elements.pipeline.subtitle": "Seven steps from CAD file to priced BoQ — every step is visible and tunable",
     "match_elements.pipeline.done_suffix": "done",
     "match_elements.pipeline.run_all": "Run all stages",
     "match_elements.pipeline.running_all": "Running all…",
@@ -6049,20 +5317,17 @@ const resource = {
     "match_elements.pipeline.status_error": "Error",
     "match_elements.pipeline.status_stale": "Needs re-run",
     "match_elements.pipeline.status_skipped": "Skipped",
-    "match_elements.pipeline.stale_hint":
-      "An earlier stage changed — re-run this step to refresh its output.",
+    "match_elements.pipeline.stale_hint": "An earlier stage changed — re-run this step to refresh its output.",
     "match_elements.pipeline.llm_badge": "LLM",
     "match_elements.pipeline.llm_tunable": "LLM-augmented — prompt is editable",
     "match_elements.pipeline.group_by": "Group by keys",
-    "match_elements.pipeline.group_by_hint":
-      "Comma-separated. RVT → category, type_name · IFC → ifc_class, predefined_type · DWG → layer, block_name",
+    "match_elements.pipeline.group_by_hint": "Comma-separated. RVT → category, type_name · IFC → ifc_class, predefined_type · DWG → layer, block_name",
     "match_elements.pipeline.method": "Method",
     "match_elements.pipeline.max_groups": "Max groups",
     "match_elements.pipeline.llm_provider": "LLM provider",
     "match_elements.pipeline.prompt": "Prompt",
     "match_elements.pipeline.system": "system",
-    "match_elements.pipeline.system_readonly":
-      "System prompt — read-only. Fork it to edit and tune for your company.",
+    "match_elements.pipeline.system_readonly": "System prompt — read-only. Fork it to edit and tune for your company.",
     "match_elements.pipeline.system_prompt": "System prompt",
     "match_elements.pipeline.user_template": "User template",
     "match_elements.pipeline.variables": "Variables the stage fills:",
@@ -6072,12 +5337,10 @@ const resource = {
     "match_elements.pipeline.revert": "Revert",
     "match_elements.pipeline.run_failed": "Stage run failed",
     "match_elements.pipeline.intro_title": "Open the visible match pipeline",
-    "match_elements.pipeline.intro_blurb":
-      "Seven steps from CAD file to priced BoQ — Convert, Load, Schema, Filter, Group, Match, Rollup. Every step is visible, explained, and tunable (prompts, LLM provider, group keys).",
+    "match_elements.pipeline.intro_blurb": "Seven steps from CAD file to priced BoQ — Convert, Load, Schema, Filter, Group, Match, Rollup. Every step is visible, explained, and tunable (prompts, LLM provider, group keys).",
     "match_elements.pipeline.intro_cta": "Open the pipeline",
     "match_elements.pipeline.intro_resume": "Resume last session",
-    "match_elements.pipeline.busy_hint":
-      "A stage is running — wait for it to finish before starting another.",
+    "match_elements.pipeline.busy_hint": "A stage is running — wait for it to finish before starting another.",
     "match_elements.pipeline.step_convert": "Convert",
     "match_elements.pipeline.step_load": "Load",
     "match_elements.pipeline.step_schema": "Schema",
@@ -6086,8 +5349,7 @@ const resource = {
     "match_elements.pipeline.step_match": "Match",
     "match_elements.pipeline.step_rollup": "Rollup",
     "clash.title": "Clash Detection",
-    "clash.subtitle":
-      "Geometric interference & clearance coordination across federated BIM models — with a clash matrix and BCF export.",
+    "clash.subtitle": "Geometric interference & clearance coordination across federated BIM models — with a clash matrix and BCF export.",
     "clash.pick_project": "Select a project",
     "clash.new_run": "New clash run",
     "clash.models": "Models",
@@ -6098,12 +5360,10 @@ const resource = {
     "clash.mode_cross": "Cross-discipline only",
     "clash.mode_all": "Every pair",
     "clash.mode_sets": "Set A vs Set B (by type)",
-    "clash.sets_hint":
-      "Only pairs where one element is in Set A and the other in Set B are tested — e.g. all Walls (A) against all Pipes (B).",
+    "clash.sets_hint": "Only pairs where one element is in Set A and the other in Set B are tested — e.g. all Walls (A) against all Pipes (B).",
     "clash.set_a": "Set A",
     "clash.set_b": "Set B",
-    "clash.sets_required":
-      "Pick at least one type or discipline for both Set A and Set B.",
+    "clash.sets_required": "Pick at least one type or discipline for both Set A and Set B.",
     "clash.set_search": "Search types / disciplines…",
     "clash.set_empty": "No elements — select a parsed model first.",
     "clash.disciplines": "Disciplines",
@@ -6117,8 +5377,7 @@ const resource = {
     "clash.status_saved": "Status updated",
     "clash.bcf_done": "Exported {{n}} clash(es) to BCF ({{s}} skipped)",
     "clash.empty_title": "No clash run selected",
-    "clash.empty_desc":
-      "Pick the BIM models on the left and run clash detection to build the coordination matrix.",
+    "clash.empty_desc": "Pick the BIM models on the left and run clash detection to build the coordination matrix.",
     "clash.kpi_total": "Total clashes",
     "clash.kpi_hard": "Hard",
     "clash.kpi_clearance": "Clearance",
@@ -6134,11 +5393,9 @@ const resource = {
     "clash.no_match_title": "No clashes match the filters",
     "clash.no_match_desc": "Try widening or clearing the active filters.",
     "clash.results_error": "Failed to load clash results",
-    "clash.results_error_desc":
-      "The clash results could not be loaded. This does not mean the models are clean — please retry.",
+    "clash.results_error_desc": "The clash results could not be loaded. This does not mean the models are clean — please retry.",
     "clash.retry": "Retry",
-    "clash.capped_notice":
-      "Showing the first {{loaded}} of {{total}} clashes — refine the filters to narrow the review set.",
+    "clash.capped_notice": "Showing the first {{loaded}} of {{total}} clashes — refine the filters to narrow the review set.",
     "clash.results": "Clash results",
     "clash.count_of": "{{shown}} of {{total}}",
     "clash.search_ph": "Search element name…",
@@ -6179,23 +5436,18 @@ const resource = {
     "nav.pipelines": "Pipeline Builder",
     "pipeline.untitled": "Untitled pipeline",
     "pipeline.empty.title": "Build your first automation",
-    "pipeline.empty.description":
-      "Drag a trigger and a few steps from the palette on the left, connect them, then press Run.",
+    "pipeline.empty.description": "Drag a trigger and a few steps from the palette on the left, connect them, then press Run.",
     "pipeline.toast.saved": "Pipeline saved",
     "pipeline.toast.save_failed": "Could not save pipeline",
     "pipeline.toast.run_failed": "Could not start the run",
     "pipeline.explain.coming_soon_title": "Explain this pipeline",
-    "pipeline.explain.coming_soon_body":
-      "The plain-language story view arrives in the next release.",
+    "pipeline.explain.coming_soon_body": "The plain-language story view arrives in the next release.",
     "pipeline.tour.palette_title": "Pick your steps",
-    "pipeline.tour.palette_body":
-      "Drag a step from here onto the canvas, or just click it to drop it in the middle.",
+    "pipeline.tour.palette_body": "Drag a step from here onto the canvas, or just click it to drop it in the middle.",
     "pipeline.tour.canvas_title": "Connect the steps",
-    "pipeline.tour.canvas_body":
-      "Drag from one step output dot to the next step input. Colours show the data type.",
+    "pipeline.tour.canvas_body": "Drag from one step output dot to the next step input. Colours show the data type.",
     "pipeline.tour.run_title": "Run it",
-    "pipeline.tour.run_body":
-      "Press Run to execute the pipeline and watch each step light up live.",
+    "pipeline.tour.run_body": "Press Run to execute the pipeline and watch each step light up live.",
     "pipeline.toolbar.aria": "Pipeline toolbar",
     "pipeline.toolbar.undo": "Undo",
     "pipeline.toolbar.redo": "Redo",
@@ -6211,12 +5463,11 @@ const resource = {
     "pipeline.palette.collapse": "Collapse palette",
     "pipeline.palette.search": "Search steps",
     "pipeline.palette.search_ph": "Search…",
-    "pipeline.palette.no_match": 'No steps match "{{query}}"',
+    "pipeline.palette.no_match": "No steps match \"{{query}}\"",
     "pipeline.palette.none": "No step types available.",
     "pipeline.palette.module_chip": "Touches the {{module}} module",
     "pipeline.palette.writes": "writes",
-    "pipeline.palette.writes_chip":
-      "This step writes data — needs a gate before it",
+    "pipeline.palette.writes_chip": "This step writes data — needs a gate before it",
     "pipeline.palette.cat_trigger": "Sources / Triggers",
     "pipeline.palette.cat_source": "Get data",
     "pipeline.palette.cat_transform": "Transform",
@@ -6240,24 +5491,18 @@ const resource = {
     "pipeline.inspector.name_ph": "My automation",
     "pipeline.inspector.description": "Description",
     "pipeline.inspector.published": "Published (can be triggered)",
-    "pipeline.inspector.summary_stub":
-      'A plain-language summary of what this pipeline does will appear here. Use "Explain this pipeline" for the full story.',
+    "pipeline.inspector.summary_stub": "A plain-language summary of what this pipeline does will appear here. Use \"Explain this pipeline\" for the full story.",
     "pipeline.canvas.aria": "Pipeline editor canvas",
-    "pipeline.canvas.hint":
-      "Drag steps from the palette, connect their ports, then press Run.",
-    "pipeline.canvas.legend_sr":
-      "Edge colour, shape and dash together encode the data type.",
+    "pipeline.canvas.hint": "Drag steps from the palette, connect their ports, then press Run.",
+    "pipeline.canvas.legend_sr": "Edge colour, shape and dash together encode the data type.",
     "pipeline.connect.incompatible_title": "These steps can't be connected",
-    "pipeline.connect.incompatible_body":
-      "This output is a {{from}}; that input expects a {{to}}.",
+    "pipeline.connect.incompatible_body": "This output is a {{from}}; that input expects a {{to}}.",
     "pipeline.node.rename": "Rename node",
     "pipeline.node.rename_hint": "Double-click to rename",
     "pipeline.node.ai_badge": "AI",
-    "pipeline.node.ai_confidence":
-      "AI suggestion — review the confidence score",
+    "pipeline.node.ai_confidence": "AI suggestion — review the confidence score",
     "pipeline.node.help": "What this node does",
-    "pipeline.node.help_generic":
-      "Configure this step in the Inspector. It receives data from the connected step before it and passes its result on.",
+    "pipeline.node.help_generic": "Configure this step in the Inspector. It receives data from the connected step before it and passes its result on.",
     "pipeline.node.collapse": "Collapse",
     "pipeline.node.expand": "Expand",
     "pipeline.node.more_params": "+{{count}} more",
@@ -6278,12 +5523,10 @@ const resource = {
     "pipeline.dock.progress": "{{pct}}%",
     "pipeline.dock.tab_run": "Run",
     "pipeline.dock.tab_history": "History",
-    "pipeline.dock.no_steps":
-      "Add steps and press Run to watch data flow through your pipeline.",
+    "pipeline.dock.no_steps": "Add steps and press Run to watch data flow through your pipeline.",
     "pipeline.dock.loading_history": "Loading run history…",
     "pipeline.dock.no_runs_title": "No runs yet",
-    "pipeline.dock.no_runs_desc":
-      "Press Run to see data flow through your pipeline.",
+    "pipeline.dock.no_runs_desc": "Press Run to see data flow through your pipeline.",
     "pipeline.dock.manual": "Manual",
     "pipeline.dock.queued_hint": "Waiting for a worker to pick up the run…",
     "pipeline.runstatus.pending": "Pending",
@@ -6302,35 +5545,23 @@ const resource = {
     "pipeline.trigger.schedule": "Scheduled",
     "pipeline.trigger.event": "Event",
     "pipeline.nodetype.trigger.manual": "Manual trigger",
-    "pipeline.nodetype.trigger.manual.desc":
-      "Start the pipeline from a REST call. No inputs.",
+    "pipeline.nodetype.trigger.manual.desc": "Start the pipeline from a REST call. No inputs.",
     "pipeline.nodetype.source.project": "Get project",
-    "pipeline.nodetype.source.project.desc":
-      "Load the bound project's id + name.",
+    "pipeline.nodetype.source.project.desc": "Load the bound project's id + name.",
     "pipeline.nodetype.source.boq": "Get BOQ positions",
-    "pipeline.nodetype.source.boq.desc":
-      "Load every BOQ position for the project as rows (ids + a small sample).",
+    "pipeline.nodetype.source.boq.desc": "Load every BOQ position for the project as rows (ids + a small sample).",
     "pipeline.nodetype.transform.filter": "Filter rows",
-    "pipeline.nodetype.transform.filter.desc":
-      "Keep only rows matching a simple field/op/value test.",
+    "pipeline.nodetype.transform.filter.desc": "Keep only rows matching a simple field/op/value test.",
     "pipeline.nodetype.gate.validation": "Validation gate",
-    "pipeline.nodetype.gate.validation.desc":
-      "Run the validation engine over the rows; stop the run on blocking errors.",
+    "pipeline.nodetype.gate.validation.desc": "Run the validation engine over the rows; stop the run on blocking errors.",
     "pipeline.nodetype.action.export.excel": "Export to Excel",
-    "pipeline.nodetype.action.export.excel.desc":
-      "Write the rows to an .xlsx file (returns a download reference; does not mutate the database).",
-    "pipeline.nodehelp.trigger.manual":
-      "This is where the pipeline begins. It carries no settings — connect it to a data step next.",
-    "pipeline.nodehelp.source.project":
-      "Loads the project this pipeline is bound to. Leave the project id blank to use the one from the page URL.",
-    "pipeline.nodehelp.source.boq":
-      "Reads every BOQ position for the project. Only ids and a small preview travel between steps; the full data stays on the server.",
-    "pipeline.nodehelp.transform.filter":
-      "Keeps only the rows that match the field / operator / value test you set in the Inspector. Leave the field blank to pass everything through.",
-    "pipeline.nodehelp.gate.validation":
-      "Runs the validation engine over the rows. If there are blocking errors the run stops here, so write steps after it never act on bad data.",
-    "pipeline.nodehelp.action.export.excel":
-      "Writes the incoming rows to an Excel file and returns a download reference. It does not change any data.",
+    "pipeline.nodetype.action.export.excel.desc": "Write the rows to an .xlsx file (returns a download reference; does not mutate the database).",
+    "pipeline.nodehelp.trigger.manual": "This is where the pipeline begins. It carries no settings — connect it to a data step next.",
+    "pipeline.nodehelp.source.project": "Loads the project this pipeline is bound to. Leave the project id blank to use the one from the page URL.",
+    "pipeline.nodehelp.source.boq": "Reads every BOQ position for the project. Only ids and a small preview travel between steps; the full data stays on the server.",
+    "pipeline.nodehelp.transform.filter": "Keeps only the rows that match the field / operator / value test you set in the Inspector. Leave the field blank to pass everything through.",
+    "pipeline.nodehelp.gate.validation": "Runs the validation engine over the rows. If there are blocking errors the run stops here, so write steps after it never act on bad data.",
+    "pipeline.nodehelp.action.export.excel": "Writes the incoming rows to an Excel file and returns a download reference. It does not change any data.",
     "pipeline.param.source.project.project_id": "Project id (optional)",
     "pipeline.param.source.boq.project_id": "Project id (optional)",
     "pipeline.param.transform.filter.field": "Field",
@@ -6339,7 +5570,61 @@ const resource = {
     "pipeline.param.gate.validation.rule_sets": "Rule sets",
     "pipeline.param.action.export.excel.filename": "File name",
     "pipeline.param.action.export.excel.columns": "Columns",
-  },
+    "admin.audit_log_title": "Audit Log",
+    "admin.audit_log_subtitle": "Read-only timeline of every recorded change. Filter by user, module, action or date — open a row for the full payload.",
+    "admin.permissions.title": "Permissions Matrix",
+    "admin.permissions.subtitle": "Read-only view of every permission registered by every module, and which roles can use it. Admin always passes — locked cells indicate admin-only by design.",
+    "admin.permissions.search_placeholder": "Filter by module or permission key",
+    "admin.permissions.search_label": "Search permissions",
+    "admin.permissions.col_permission": "Permission",
+    "admin.permissions.role_viewer": "Viewer",
+    "admin.permissions.role_editor": "Editor",
+    "admin.permissions.role_member": "Member",
+    "admin.permissions.role_manager": "Manager",
+    "admin.permissions.role_admin": "Admin",
+    "admin.permissions.min_role_label": "min role",
+    "admin.permissions.module_count_one": "{{count}} permission",
+    "admin.permissions.module_count_other": "{{count}} permissions",
+    "admin.permissions.summary": "{{modules}} modules · {{permissions}} permissions",
+    "admin.permissions.empty_title": "No permissions registered",
+    "admin.permissions.empty_description": "No modules have registered permissions yet. They appear here as soon as a module loads.",
+    "admin.permissions.error_title": "Could not load permissions matrix",
+    "admin.permissions.error_unknown": "Unknown error",
+    "admin.permissions.legend_allowed": "allowed",
+    "admin.permissions.legend_denied": "denied",
+    "admin.permissions.legend_admin_bypass": "admin-only by design",
+    "admin.permissions.tooltip_allowed": "{{role}} can do {{key}} (min role: {{min}})",
+    "admin.permissions.tooltip_denied": "{{role}} cannot do {{key}} (min role: {{min}})",
+    "admin.permissions.tooltip_admin_bypass": "Admin-only by design — {{key}} requires admin",
+    "admin.permissions.subtitle_edit": "Click any cell to set the minimum role for that permission. Changes apply immediately and are audit-logged.",
+    "admin.permissions.edit_on": "Enable edit mode",
+    "admin.permissions.edit_off": "Done editing",
+    "admin.permissions.export_csv": "Export CSV",
+    "admin.permissions.role_filter_label": "Role",
+    "admin.permissions.role_filter_all": "All roles",
+    "admin.permissions.role_filter_denied_to": "Denied to {{role}}",
+    "admin.permissions.preset_label": "Reset to preset",
+    "admin.permissions.read_only_notice": "Read-only: admin role required to edit",
+    "admin.permissions.confirm_toggle_title": "Change permission?",
+    "admin.permissions.confirm_toggle_message": "Set \"{{key}}\" minimum role from {{from}} to {{to}}? This is audit-logged.",
+    "admin.permissions.confirm_toggle_confirm": "Change",
+    "admin.permissions.confirm_preset_title": "Apply preset?",
+    "admin.permissions.confirm_preset_message": "Reset every permission to the \"{{preset}}\" baseline? This rewrites the entire matrix and is audit-logged.",
+    "admin.permissions.confirm_preset_confirm": "Apply preset",
+    "admin.permissions.lockout_title": "Cannot demote admin permission",
+    "admin.permissions.lockout_message": "\"{{key}}\" must remain admin-only — lowering it would let non-admins edit the permissions matrix and lock you out.",
+    "admin.permissions.lockout_dismiss": "Got it",
+    "admin.permissions.toggle_success_title": "Permission updated",
+    "admin.permissions.toggle_success_message": "{{key}} → {{role}}",
+    "admin.permissions.toggle_error_title": "Update failed",
+    "admin.permissions.toggle_error": "Could not update permission",
+    "admin.permissions.preset_success_title": "Preset applied",
+    "admin.permissions.preset_success_message": "{{count}} permission(s) updated to \"{{preset}}\"",
+    "admin.permissions.preset_error_title": "Preset failed",
+    "admin.permissions.preset_error": "Could not apply preset",
+    "admin.permissions.noop_title": "No change",
+    "admin.permissions.noop_message": "{{key}} is already minimum {{role}}"
+  }
 } as { translation: Record<string, string> };
 
 export default resource;

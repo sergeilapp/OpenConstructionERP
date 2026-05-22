@@ -514,7 +514,6 @@ class ScheduleService:
         # Self-reference is the trivial case.
         if any(p == activity_id for p in proposed_predecessors):
             from fastapi import HTTPException
-
             raise HTTPException(
                 status_code=400,
                 detail="An activity cannot depend on itself.",
@@ -523,42 +522,44 @@ class ScheduleService:
         # Load all activities in the schedule and build adjacency
         # (predecessor -> {successors}) from each activity's stored deps.
         existing_activities, _total = await self.activity_repo.list_for_schedule(
-            schedule_id,
-            limit=10_000,
+            schedule_id, limit=10_000,
         )
         adjacency: dict[uuid.UUID, set[uuid.UUID]] = {}
         for act in existing_activities:
-            for dep in act.dependencies or []:
+            for dep in (act.dependencies or []):
                 try:
                     pred_id = uuid.UUID(str(dep.get("activity_id")))
                 except (TypeError, ValueError):
                     continue
                 adjacency.setdefault(pred_id, set()).add(act.id)
 
-        # For every proposed predecessor P, BFS from activity_id through
-        # the current graph; if we land on P, then P depends (transitively)
-        # on activity_id, and adding P -> activity_id would close a cycle.
-        for predecessor in proposed_predecessors:
-            visited: set[uuid.UUID] = set()
-            queue: list[uuid.UUID] = list(adjacency.get(activity_id, set()))
-            while queue:
-                current = queue.pop(0)
-                if current == predecessor:
-                    from fastapi import HTTPException
+        # Pre-compute the reachability set from ``activity_id`` ONCE for
+        # this mutation request. Adding ``P -> activity_id`` closes a cycle
+        # iff P is transitively reachable from ``activity_id`` in the
+        # current graph. The naive previous version re-ran a BFS per
+        # proposed predecessor (O(P × V)); a single traversal is O(V+E).
+        reachable_from_activity: set[uuid.UUID] = set()
+        stack: list[uuid.UUID] = list(adjacency.get(activity_id, set()))
+        while stack:
+            current = stack.pop()
+            if current in reachable_from_activity:
+                continue
+            reachable_from_activity.add(current)
+            for successor in adjacency.get(current, ()):
+                if successor not in reachable_from_activity:
+                    stack.append(successor)
 
-                    raise HTTPException(
-                        status_code=400,
-                        detail=(
-                            "Adding this dependency would create a circular "
-                            "reference. Check the dependency chain for cycles."
-                        ),
-                    )
-                if current in visited:
-                    continue
-                visited.add(current)
-                for successor in adjacency.get(current, set()):
-                    if successor not in visited:
-                        queue.append(successor)
+        # Now every proposed predecessor is a hash-set membership test.
+        for predecessor in proposed_predecessors:
+            if predecessor in reachable_from_activity:
+                from fastapi import HTTPException
+                raise HTTPException(
+                    status_code=400,
+                    detail=(
+                        "Adding this dependency would create a circular "
+                        "reference. Check the dependency chain for cycles."
+                    ),
+                )
 
     async def update_activity(self, activity_id: uuid.UUID, data: ActivityUpdate) -> Activity:
         """Update an activity and recalculate duration if dates changed.
@@ -604,7 +605,9 @@ class ScheduleService:
             await self._reject_dependency_cycles(
                 activity_id=activity_id,
                 schedule_id=activity.schedule_id,
-                proposed_predecessors=[uuid.UUID(d["activity_id"]) for d in serialized],
+                proposed_predecessors=[
+                    uuid.UUID(d["activity_id"]) for d in serialized
+                ],
             )
 
         if "resources" in fields and fields["resources"] is not None:
@@ -1067,7 +1070,9 @@ class ScheduleService:
             # number than the rest of the UI for any multi-week activity.
             duration = act.duration_days or 0
             if not duration:
-                duration = compute_duration(str(act.start_date), str(act.end_date))
+                duration = compute_duration(
+                    str(act.start_date), str(act.end_date)
+                )
 
             gantt_activities.append(
                 GanttActivity(
@@ -1700,7 +1705,9 @@ class ScheduleService:
 
         from app.modules.schedule.models import ScheduleRelationship
 
-        rel_stmt = select(ScheduleRelationship).where(ScheduleRelationship.schedule_id == schedule_id)
+        rel_stmt = select(ScheduleRelationship).where(
+            ScheduleRelationship.schedule_id == schedule_id
+        )
         rel_result = await self.session.execute(rel_stmt)
         seen_pairs: set[tuple[str, str]] = set()
         for r in rel_result.scalars().all():
@@ -1736,7 +1743,9 @@ class ScheduleService:
                 adj[pred_id].append(succ_id)
                 in_degree[succ_id] += 1
 
-        queue: deque[str] = deque([d["id"] for d in act_data if in_degree[d["id"]] == 0])
+        queue: deque[str] = deque(
+            [d["id"] for d in act_data if in_degree[d["id"]] == 0]
+        )
         sorted_ids: list[str] = []
         while queue:
             nid = queue.popleft()
@@ -1751,7 +1760,10 @@ class ScheduleService:
             unsorted_names = [idx[aid]["name"] or aid for aid in unsorted_ids[:5]]
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
-                detail=("Schedule has a dependency cycle. Affected activities: " + ", ".join(unsorted_names)),
+                detail=(
+                    "Schedule has a dependency cycle. Affected activities: "
+                    + ", ".join(unsorted_names)
+                ),
             )
 
         sorted_act_data: list[dict] = [idx[aid] for aid in sorted_ids]
@@ -1786,8 +1798,7 @@ class ScheduleService:
                 else:
                     logger.warning(
                         "Unknown dependency type '%s' on activity %s; treating as FS",
-                        dep_type,
-                        act_id,
+                        dep_type, act_id,
                     )
                     candidate = pred_ef + lag
                 act_es = max(act_es, candidate)
@@ -1829,9 +1840,7 @@ class ScheduleService:
                 else:
                     logger.warning(
                         "Unknown dependency type '%s' on backward pass %s → %s; treating as FS",
-                        dep_type,
-                        act_id,
-                        succ_id,
+                        dep_type, act_id, succ_id,
                     )
                     lf[act_id] = min(lf[act_id], succ_ls - lag)
             ls[act_id] = lf[act_id] - dur
@@ -2040,7 +2049,9 @@ class ScheduleService:
 
         position_totals: dict[uuid.UUID, float] = {}
         if all_boq_ids:
-            pos_stmt = _select(Position.id, Position.total).where(Position.id.in_(all_boq_ids))
+            pos_stmt = _select(Position.id, Position.total).where(
+                Position.id.in_(all_boq_ids)
+            )
             pos_result = await self.session.execute(pos_stmt)
             for pid, total in pos_result.all():
                 position_totals[pid] = _str_to_float(total)
@@ -2087,7 +2098,9 @@ class ScheduleService:
             )
             entry["activity_count"] = int(entry["activity_count"]) + 1
             entry["labor_cost"] = float(entry["labor_cost"]) + labour
-            entry["total_cost"] = float(entry["total_cost"]) + labour + linked_total
+            entry["total_cost"] = (
+                float(entry["total_cost"]) + labour + linked_total
+            )
             start = str(entry["start_date"] or "")
             end = str(entry["end_date"] or "")
             if act.start_date and (not start or act.start_date < start):

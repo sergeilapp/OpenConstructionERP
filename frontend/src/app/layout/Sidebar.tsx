@@ -1,15 +1,17 @@
-import { useState, useCallback, useEffect, useRef } from "react";
-import { NavLink, useLocation, useNavigate } from "react-router-dom";
-import { CustomBranding } from "./CustomBranding";
-import { useTranslation } from "react-i18next";
-import clsx from "clsx";
+import { useState, useCallback, useEffect, useRef, Fragment } from 'react';
+import { NavLink, useLocation, useNavigate } from 'react-router-dom';
+import { CustomBranding } from './CustomBranding';
+import { useTranslation } from 'react-i18next';
+import clsx from 'clsx';
 import {
   LayoutDashboard,
   FolderOpen,
   Table2,
   CalendarDays,
   Database,
+  Bot,
   Layers,
+  Library,
   Boxes,
   Box,
   ShieldCheck,
@@ -69,27 +71,31 @@ import {
   BarChart3,
   LineChart,
   Radar,
+  ScrollText,
   type LucideIcon,
-} from "lucide-react";
-import { useModuleStore } from "@/stores/useModuleStore";
-import { UpdateNotification } from "@/shared/ui/UpdateChecker";
-import { useViewModeStore } from "@/stores/useViewModeStore";
-import { useRecentStore } from "@/stores/useRecentStore";
-import { useGlobalSearchStore } from "@/stores/useGlobalSearchStore";
-import { getModuleNavItems } from "@/modules/_registry";
-import { APP_VERSION } from "@/shared/lib/version";
-import { useSidebarBadges } from "@/shared/hooks/useSidebarBadges";
-import { useIsRTL } from "@/shared/hooks/useIsRTL";
+} from 'lucide-react';
+import { useAuthStore } from '@/stores/useAuthStore';
+import { useModuleStore } from '@/stores/useModuleStore';
+import { UpdateNotification } from '@/shared/ui/UpdateChecker';
+import { useViewModeStore } from '@/stores/useViewModeStore';
+import { useRecentStore } from '@/stores/useRecentStore';
+import { useGlobalSearchStore } from '@/stores/useGlobalSearchStore';
+import { getModuleNavItems } from '@/modules/_registry';
+import { APP_VERSION } from '@/shared/lib/version';
+import { useSidebarBadges } from '@/shared/hooks/useSidebarBadges';
+import { useModulePresence } from '@/shared/hooks/useModulePresence';
+import { useIsRTL } from '@/shared/hooks/useIsRTL';
 import {
   useSidebarCollapseStore,
   SIDEBAR_WIDTH_FULL,
   SIDEBAR_WIDTH_ICON,
-} from "@/stores/useSidebarCollapseStore";
-import { RequestCustomModuleDialog } from "@/features/modules/RequestCustomModuleDialog";
+} from '@/stores/useSidebarCollapseStore';
+import { RequestCustomModuleDialog } from '@/features/modules/RequestCustomModuleDialog';
 import {
   useActiveProjectProfile,
   buildModuleGate,
-} from "@/features/projects/useProjectProfile";
+} from '@/features/projects/useProjectProfile';
+
 
 interface NavItem {
   labelKey: string;
@@ -100,6 +106,10 @@ interface NavItem {
   moduleKey?: string;
   advancedOnly?: boolean; // Hidden in simple mode
   tourId?: string; // data-tour attribute for onboarding
+  /** Optional role gate — hide the entry unless the JWT role matches.
+   *  Used for admin-only items like the Audit Log (`audit.view`
+   *  permission, MANAGER+ on the backend). */
+  roleGate?: ('admin' | 'manager' | 'editor' | 'viewer')[];
 }
 
 interface NavGroup {
@@ -109,350 +119,300 @@ interface NavGroup {
   items: NavItem[];
   defaultOpen: boolean;
   hideInSimple?: boolean; // Entire group hidden in simple mode
+  /** Render a thin horizontal divider above this group. Used to peel
+   *  reference/setup groups (Regional, Modules, Settings) away from
+   *  the project-work surface above. */
+  separator?: boolean;
 }
 
 // Navigation groups — collapsible sections
 const navGroups: NavGroup[] = [
   // ── CORE (always visible) ──────────────────────────────────────────
   {
-    id: "overview",
-    labelKey: "nav.group_overview",
+    id: 'overview',
+    labelKey: 'nav.group_overview',
     defaultOpen: true,
     items: [
-      { labelKey: "nav.dashboard", to: "/", icon: LayoutDashboard },
-      {
-        labelKey: "projects.title",
-        to: "/projects",
-        icon: FolderOpen,
-        tourId: "projects",
-      },
+      { labelKey: 'nav.dashboard', to: '/', icon: LayoutDashboard },
+      { labelKey: 'projects.title', to: '/projects', icon: FolderOpen, tourId: 'projects' },
       // Files lives in Overview because it's the unified entry point
       // into a project's documents, photos, BIM and DWG — users land
       // here to pick what to work on, just like the dashboard.
-      { labelKey: "nav.project_files", to: "/files", icon: HardDrive },
+      { labelKey: 'nav.project_files', to: '/files', icon: HardDrive },
     ],
   },
+  // ── ESTIMATING ─────────────────────────────────────────────────────
+  // The project's actual cost work-product: BOQ, AI-driven estimate,
+  // and the BIM↔catalogue link that powers both. Catalogues themselves
+  // live in the next group ("Catalogues & Reference") so they don't
+  // crowd the day-to-day estimating surface.
   {
-    id: "estimation",
-    labelKey: "nav.group_estimation",
-    descriptionKey: "nav.group_estimation_desc",
+    id: 'estimation',
+    labelKey: 'nav.group_estimation',
+    descriptionKey: 'nav.group_estimation_desc',
     defaultOpen: true,
     items: [
-      { labelKey: "boq.title", to: "/boq", icon: Table2, tourId: "boq" },
-      {
-        labelKey: "costs.title",
-        to: "/costs",
-        icon: Database,
-        tourId: "costs",
-      },
-      {
-        labelKey: "nav.match_elements",
-        to: "/match-elements",
-        icon: Link2,
-        badge: "BETA",
-      },
-      { labelKey: "nav.assemblies", to: "/assemblies", icon: Layers },
-      { labelKey: "catalog.title", to: "/catalog", icon: Boxes },
-      {
-        labelKey: "nav.quantity_rules",
-        to: "/bim/rules",
-        icon: ClipboardCheck,
-        badge: "BETA",
-      },
+      { labelKey: 'boq.title', to: '/boq', icon: Table2, tourId: 'boq' },
+      { labelKey: 'nav.match_elements', to: '/match-elements', icon: Link2, badge: 'BETA' },
+      { labelKey: 'nav.ai_estimate', to: '/ai-estimate', icon: Sparkles, badge: 'BETA' },
+      { labelKey: 'nav.estimation_dashboard', to: '/project-intelligence', icon: BrainCircuit, badge: 'BETA' },
+    ],
+  },
+  // ── CATALOGUES & REFERENCE ─────────────────────────────────────────
+  // Cross-project reference data: cost databases, regional catalogues
+  // and assembly templates. Live next to Estimating but separate so
+  // database curators have their own home.
+  {
+    id: 'catalogues',
+    labelKey: 'nav.group_catalogues',
+    descriptionKey: 'nav.group_catalogues_desc',
+    defaultOpen: false,
+    items: [
+      { labelKey: 'costs.title', to: '/costs', icon: Database, tourId: 'costs' },
+      { labelKey: 'catalog.title', to: '/catalog', icon: Boxes },
+      { labelKey: 'nav.assemblies', to: '/assemblies', icon: Layers },
+      { labelKey: 'nav.assembly_library', to: '/assemblies/library', icon: Library, badge: 'BETA' },
     ],
   },
   {
-    id: "takeoff",
-    labelKey: "nav.group_takeoff",
+    id: 'takeoff',
+    labelKey: 'nav.group_takeoff',
     defaultOpen: true,
     items: [
-      {
-        labelKey: "nav.pdf_measurements",
-        to: "/takeoff?tab=measurements",
-        icon: Ruler,
-      },
-      { labelKey: "nav.dwg_takeoff", to: "/dwg-takeoff", icon: PencilRuler },
-      {
-        labelKey: "nav.cad_bim_explorer",
-        to: "/data-explorer",
-        icon: TableProperties,
-      },
-      { labelKey: "nav.bim_viewer", to: "/bim", icon: Box },
-      {
-        labelKey: "nav.clash_detection",
-        to: "/clash",
-        icon: Radar,
-        badge: "BETA",
-      },
-      {
-        labelKey: "nav.bim_rules",
-        to: "/bim/rules?mode=requirements",
-        icon: SlidersHorizontal,
-        badge: "BETA",
-      },
+      { labelKey: 'nav.pdf_measurements', to: '/takeoff?tab=measurements', icon: Ruler },
+      { labelKey: 'nav.dwg_takeoff', to: '/dwg-takeoff', icon: PencilRuler },
+      { labelKey: 'nav.cad_bim_explorer', to: '/data-explorer', icon: TableProperties },
+      { labelKey: 'nav.bim_viewer', to: '/bim', icon: Box },
     ],
   },
+  // ── CAD-BIM ANALYTICS ──────────────────────────────────────────────
+  // Coordinated multi-model analyses live in their own group so users
+  // who only need quantity takeoff don't have to scroll past clash
+  // detection / federations / rule packs every time.
   {
-    id: "ai",
-    labelKey: "nav.group_ai_estimation",
+    id: 'cad_bim_analytics',
+    labelKey: 'nav.group_cad_bim_analytics',
+    descriptionKey: 'nav.group_cad_bim_analytics_desc',
     defaultOpen: true,
+    items: [
+      { labelKey: 'nav.coordination_hub', to: '/coordination', icon: LayoutDashboard, badge: 'NEW' },
+      { labelKey: 'nav.bim_federations', to: '/bim/federations', icon: Layers, badge: 'NEW' },
+      { labelKey: 'nav.clash_detection', to: '/clash', icon: Radar, badge: 'BETA' },
+      { labelKey: 'nav.bim_rules', to: '/bim/rules?mode=requirements', icon: SlidersHorizontal, badge: 'BETA' },
+    ],
+  },
+  // ── AI & TOOLS ─────────────────────────────────────────────────────
+  // AI agents, advisor, project intelligence and ERP chat. AI Estimate
+  // moved to the Estimating group above (it's estimation work, not
+  // a standalone tool).
+  {
+    id: 'ai',
+    labelKey: 'nav.group_ai_estimation',
+    descriptionKey: 'nav.group_ai_estimation_desc',
+    defaultOpen: false,
     hideInSimple: true,
     items: [
-      {
-        labelKey: "nav.ai_estimate",
-        to: "/ai-estimate",
-        icon: Sparkles,
-        badge: "BETA",
-      },
-      { labelKey: "nav.ai_advisor", to: "/advisor", icon: MessageSquare },
-      {
-        labelKey: "nav.estimation_dashboard",
-        to: "/project-intelligence",
-        icon: BrainCircuit,
-        badge: "BETA",
-      },
-      {
-        labelKey: "nav.erp_chat",
-        to: "/chat",
-        icon: MessageSquare,
-        badge: "BETA",
-      },
+      { labelKey: 'nav.ai_agents', to: '/ai-agents', icon: Bot, badge: 'NEW' },
+      { labelKey: 'nav.ai_advisor', to: '/advisor', icon: MessageSquare },
+      { labelKey: 'nav.erp_chat', to: '/chat', icon: MessageSquare, badge: 'BETA' },
+    ],
+  },
+  // ── COMMERCIAL ─────────────────────────────────────────────────────
+  // Commercial pipeline — CRM lead → contract award → variations,
+  // subcontractor management, bid management, supplier catalogs,
+  // property/asset development. Moved up to sit next to Estimating
+  // because it's the same "before-construction" phase: sales, bidding,
+  // commit.
+  {
+    id: 'commercial',
+    labelKey: 'nav.group_commercial',
+    descriptionKey: 'nav.group_commercial_desc',
+    defaultOpen: false,
+    hideInSimple: true,
+    items: [
+      { labelKey: 'nav.crm', to: '/crm', icon: Briefcase },
+      { labelKey: 'nav.contracts', to: '/contracts', icon: FileSignature },
+      { labelKey: 'nav.subcontractors', to: '/subcontractors', icon: HardHat },
+      { labelKey: 'nav.bid_management', to: '/bid-management', icon: Scale },
+      { labelKey: 'nav.variations', to: '/variations', icon: GitBranch },
+      { labelKey: 'nav.supplier_catalogs', to: '/supplier-catalogs', icon: ShoppingCart },
+      { labelKey: 'nav.property_dev', to: '/property-dev', icon: Building2 },
     ],
   },
   // ── PLANNING & CONTROL (advanced) ──────────────────────────────────
+  // After the deal closes: schedule, tasks, 5D cost model, risk.
   {
-    id: "planning",
-    labelKey: "nav.group_planning",
-    descriptionKey: "nav.group_planning_desc",
+    id: 'planning',
+    labelKey: 'nav.group_planning',
+    descriptionKey: 'nav.group_planning_desc',
     defaultOpen: false,
     hideInSimple: true,
     items: [
-      {
-        labelKey: "schedule.title",
-        to: "/schedule",
-        icon: CalendarDays,
-        moduleKey: "schedule",
-      },
-      {
-        labelKey: "nav.schedule_advanced",
-        to: "/schedule-advanced",
-        icon: LineChart,
-        advancedOnly: true,
-      },
-      { labelKey: "tasks.title", to: "/tasks", icon: ClipboardList },
-      {
-        labelKey: "nav.5d_cost_model",
-        to: "/5d",
-        icon: TrendingUp,
-        moduleKey: "5d",
-        advancedOnly: true,
-      },
+      { labelKey: 'schedule.title', to: '/schedule', icon: CalendarDays, moduleKey: 'schedule' },
+      { labelKey: 'nav.schedule_advanced', to: '/schedule-advanced', icon: LineChart, advancedOnly: true },
+      { labelKey: 'tasks.title', to: '/tasks', icon: ClipboardList },
+      { labelKey: 'nav.5d_cost_model', to: '/5d', icon: TrendingUp, moduleKey: '5d', advancedOnly: true },
       // Requirements merged into /bim/rules — sidebar entry removed
-      {
-        labelKey: "nav.risk_register",
-        to: "/risks",
-        icon: ShieldAlert,
-        advancedOnly: true,
-      },
+      { labelKey: 'nav.risk_register', to: '/risks', icon: ShieldAlert, advancedOnly: true },
     ],
   },
-  // ── FIELD OPERATIONS (18-Modules Wave) ─────────────────────────────
-  // Day-to-day site operations: service tickets, equipment, daily diary,
-  // subcontractor portal, resource/crew assignment. Most useful to PMs,
-  // site engineers, and field supervisors.
+  // ── FIELD OPERATIONS ───────────────────────────────────────────────
+  // Day-to-day site operations: service tickets, equipment, diary,
+  // sub portal, resources, and the physical assets register. Most
+  // useful to PMs, site engineers, and field supervisors.
   {
-    id: "operations",
-    labelKey: "nav.group_operations",
-    descriptionKey: "nav.group_operations_desc",
+    id: 'operations',
+    labelKey: 'nav.group_operations',
+    descriptionKey: 'nav.group_operations_desc',
     defaultOpen: false,
     hideInSimple: true,
     items: [
-      { labelKey: "nav.daily_diary", to: "/daily-diary", icon: BookOpen },
-      { labelKey: "nav.equipment", to: "/equipment", icon: Truck },
-      { labelKey: "nav.resources", to: "/resources", icon: Users },
-      { labelKey: "nav.service", to: "/service", icon: Wrench },
-      { labelKey: "nav.portal", to: "/portal", icon: Globe },
-    ],
-  },
-  {
-    id: "finance",
-    labelKey: "nav.group_finance",
-    defaultOpen: false,
-    hideInSimple: true,
-    items: [
-      {
-        labelKey: "finance.title",
-        to: "/finance",
-        icon: Wallet,
-        advancedOnly: true,
-      },
-      {
-        labelKey: "procurement.title",
-        to: "/procurement",
-        icon: Package,
-        advancedOnly: true,
-      },
-      {
-        labelKey: "tendering.title",
-        to: "/tendering",
-        icon: FileText,
-        moduleKey: "tendering",
-        advancedOnly: true,
-      },
-      {
-        labelKey: "nav.change_orders",
-        to: "/changeorders",
-        icon: FileEdit,
-        advancedOnly: true,
-      },
-    ],
-  },
-  // ── COMMERCIAL (18-Modules Wave) ───────────────────────────────────
-  // Commercial pipeline — from CRM lead to contract award to variations,
-  // including subcontractor management, bid management, supplier
-  // catalogs, and property/asset development tracking.
-  {
-    id: "commercial",
-    labelKey: "nav.group_commercial",
-    descriptionKey: "nav.group_commercial_desc",
-    defaultOpen: false,
-    hideInSimple: true,
-    items: [
-      { labelKey: "nav.crm", to: "/crm", icon: Briefcase },
-      { labelKey: "nav.contracts", to: "/contracts", icon: FileSignature },
-      { labelKey: "nav.subcontractors", to: "/subcontractors", icon: HardHat },
-      { labelKey: "nav.bid_management", to: "/bid-management", icon: Scale },
-      { labelKey: "nav.variations", to: "/variations", icon: GitBranch },
-      {
-        labelKey: "nav.supplier_catalogs",
-        to: "/supplier-catalogs",
-        icon: ShoppingCart,
-      },
-      { labelKey: "nav.property_dev", to: "/property-dev", icon: Building2 },
+      { labelKey: 'nav.daily_diary', to: '/daily-diary', icon: BookOpen },
+      { labelKey: 'nav.field_reports', to: '/field-reports', icon: ClipboardList, advancedOnly: true },
+      { labelKey: 'nav.equipment', to: '/equipment', icon: Truck },
+      { labelKey: 'nav.resources', to: '/resources', icon: Users },
+      { labelKey: 'nav.service', to: '/service', icon: Wrench },
+      { labelKey: 'nav.portal', to: '/portal', icon: Globe },
+      // Assets live here (not Documents) — they're physical inventory,
+      // not paperwork. The /assets page already mirrors equipment-style
+      // detail views, not a document viewer.
+      { labelKey: 'nav.assets', to: '/assets', icon: Package, badge: 'BETA' },
     ],
   },
   // ── COMMUNICATION ──────────────────────────────────────────────────
   {
-    id: "communication",
-    labelKey: "nav.group_communication",
+    id: 'communication',
+    labelKey: 'nav.group_communication',
     defaultOpen: false,
     hideInSimple: true,
     items: [
-      { labelKey: "contacts.title", to: "/contacts", icon: Users },
-      { labelKey: "meetings.title", to: "/meetings", icon: CalendarDays },
-      {
-        labelKey: "rfi.title",
-        to: "/rfi",
-        icon: HelpCircle,
-        advancedOnly: true,
-      },
-      {
-        labelKey: "submittals.title",
-        to: "/submittals",
-        icon: FileCheck,
-        advancedOnly: true,
-      },
-      {
-        labelKey: "transmittals.title",
-        to: "/transmittals",
-        icon: Send,
-        advancedOnly: true,
-      },
-      {
-        labelKey: "correspondence.title",
-        to: "/correspondence",
-        icon: Mail,
-        advancedOnly: true,
-      },
+      { labelKey: 'contacts.title', to: '/contacts', icon: Users },
+      { labelKey: 'meetings.title', to: '/meetings', icon: CalendarDays },
+      { labelKey: 'rfi.title', to: '/rfi', icon: HelpCircle, advancedOnly: true },
+      { labelKey: 'submittals.title', to: '/submittals', icon: FileCheck, advancedOnly: true },
+      { labelKey: 'transmittals.title', to: '/transmittals', icon: Send, advancedOnly: true },
+      { labelKey: 'correspondence.title', to: '/correspondence', icon: Mail, advancedOnly: true },
     ],
   },
   // ── DOCUMENTS ──────────────────────────────────────────────────────
-  // /files moved to Overview (unified entry point); leaving the
-  // narrower per-type entries here for users who jump straight to a
-  // category-specific tool.
+  // Paperwork: CDE binder, project photos, drawing markups. Assets
+  // moved up to Field Operations (they're physical things, not docs).
   {
-    id: "documentation",
-    labelKey: "nav.group_documentation",
+    id: 'documentation',
+    labelKey: 'nav.group_documentation',
     defaultOpen: false,
     hideInSimple: true,
     items: [
-      { labelKey: "nav.assets", to: "/assets", icon: Package, badge: "BETA" },
-      { labelKey: "cde.title", to: "/cde", icon: Database },
-      { labelKey: "nav.photos", to: "/photos", icon: Camera },
-      { labelKey: "nav.markups", to: "/markups", icon: PenTool },
-      {
-        labelKey: "nav.field_reports",
-        to: "/field-reports",
-        icon: ClipboardList,
-        advancedOnly: true,
-      },
-      {
-        labelKey: "nav.reports",
-        to: "/reports",
-        icon: FileBarChart,
-        advancedOnly: true,
-      },
-      {
-        labelKey: "nav.bi_dashboards",
-        to: "/bi-dashboards",
-        icon: BarChart3,
-        advancedOnly: true,
-      },
+      { labelKey: 'cde.title', to: '/cde', icon: Database },
+      { labelKey: 'nav.photos', to: '/photos', icon: Camera },
+      { labelKey: 'nav.markups', to: '/markups', icon: PenTool },
     ],
   },
-  // ── QUALITY & SAFETY ───────────────────────────────────────────────
+  // ── QUALITY ────────────────────────────────────────────────────────
+  // Validation, inspections, NCR, QMS, punchlist — anything that
+  // certifies "the work passes". Safety/HSE/ESG is split into its own
+  // sibling group below so site supervisors don't have to scroll past
+  // QA paperwork to log a hazard.
   {
-    id: "quality",
-    labelKey: "nav.group_quality",
+    id: 'quality',
+    labelKey: 'nav.group_quality',
     defaultOpen: false,
     hideInSimple: true,
     items: [
-      {
-        labelKey: "validation.title",
-        to: "/validation",
-        icon: ShieldCheck,
-        moduleKey: "validation",
-      },
-      {
-        labelKey: "inspections.title",
-        to: "/inspections",
-        icon: ClipboardCheck,
-      },
-      { labelKey: "ncr.title", to: "/ncr", icon: AlertOctagon },
-      { labelKey: "safety.title", to: "/safety", icon: HardHat },
-      { labelKey: "nav.punchlist", to: "/punchlist", icon: ListChecks },
-      // 18-Modules Wave additions
-      { labelKey: "nav.qms", to: "/qms", icon: BadgeCheck, advancedOnly: true },
-      {
-        labelKey: "nav.hse_advanced",
-        to: "/hse-advanced",
-        icon: Shield,
-        advancedOnly: true,
-      },
-      { labelKey: "nav.carbon", to: "/carbon", icon: Leaf, advancedOnly: true },
+      { labelKey: 'validation.title', to: '/validation', icon: ShieldCheck, moduleKey: 'validation' },
+      { labelKey: 'inspections.title', to: '/inspections', icon: ClipboardCheck },
+      { labelKey: 'ncr.title', to: '/ncr', icon: AlertOctagon },
+      { labelKey: 'nav.punchlist', to: '/punchlist', icon: ListChecks },
+      { labelKey: 'nav.qms', to: '/qms', icon: BadgeCheck, advancedOnly: true },
       // sustainability + cost-benchmark injected dynamically from module registry
     ],
   },
-  // BI Dashboards moved into the Documentation group (above) — the
-  // remaining "Analytics" group had only one entry and now feels
-  // redundant alongside Reports / Field Reports in Documentation.
+  // ── SAFETY & HSE ───────────────────────────────────────────────────
+  // Site safety, HSE management, carbon/sustainability tracking. Lives
+  // next to Quality but its own collapsible header so HSE officers can
+  // bookmark just this group.
   {
-    id: "regional",
-    labelKey: "modules.cat_regional",
-    descriptionKey: "modules.cat_regional_desc",
+    id: 'safety',
+    labelKey: 'nav.group_safety',
     defaultOpen: false,
     hideInSimple: true,
+    items: [
+      { labelKey: 'safety.title', to: '/safety', icon: HardHat },
+      { labelKey: 'nav.hse_advanced', to: '/hse-advanced', icon: Shield, advancedOnly: true },
+      { labelKey: 'nav.carbon', to: '/carbon', icon: Leaf, advancedOnly: true },
+    ],
+  },
+  // ── FINANCE & PROCUREMENT ──────────────────────────────────────────
+  // Money roll-up: finance, procurement, tendering, change orders.
+  // Sits near the bottom because it's the close-out / accounting view
+  // of work done elsewhere — not the daily action surface.
+  {
+    id: 'finance',
+    labelKey: 'nav.group_finance',
+    defaultOpen: false,
+    hideInSimple: true,
+    items: [
+      { labelKey: 'finance.title', to: '/finance', icon: Wallet, advancedOnly: true },
+      { labelKey: 'procurement.title', to: '/procurement', icon: Package, advancedOnly: true },
+      { labelKey: 'tendering.title', to: '/tendering', icon: FileText, moduleKey: 'tendering', advancedOnly: true },
+      { labelKey: 'nav.change_orders', to: '/changeorders', icon: FileEdit, advancedOnly: true },
+    ],
+  },
+  // ── ANALYTICS & REPORTS ────────────────────────────────────────────
+  // Cross-module reporting + BI. End of the lifecycle: everything else
+  // has happened, this is where you look at the result.
+  {
+    id: 'analytics',
+    labelKey: 'nav.group_analytics',
+    descriptionKey: 'nav.group_analytics_desc',
+    defaultOpen: false,
+    hideInSimple: true,
+    items: [
+      { labelKey: 'nav.reports', to: '/reports', icon: FileBarChart, advancedOnly: true },
+      { labelKey: 'nav.bi_dashboards', to: '/bi-dashboards', icon: BarChart3, advancedOnly: true },
+    ],
+  },
+  // ── REGIONAL EXCHANGE (setup-only, dynamic) ────────────────────────
+  // A visual separator marks the boundary between the project-work
+  // surface (Overview … Analytics) and reference/setup surfaces (this
+  // group + Modules + Settings in the admin grid below).
+  {
+    id: 'regional',
+    labelKey: 'modules.cat_regional',
+    descriptionKey: 'modules.cat_regional_desc',
+    defaultOpen: false,
+    hideInSimple: true,
+    separator: true,
     items: [
       // All regional exchange modules injected dynamically from module registry
     ],
   },
 ];
 
-const bottomNav: NavItem[] = [
-  { labelKey: "users.management", to: "/users", icon: Users },
-  { labelKey: "modules.title", to: "/modules", icon: Package },
-  { labelKey: "nav.settings", to: "/settings", icon: Settings },
-  { labelKey: "nav.about", to: "/about", icon: Info },
+// Admin / setup surfaces — rendered as a 2-column button grid pinned
+// at the bottom of the sidebar (below the scroll area, above the
+// GitHub/version footer). The grid is denser than the main nav list
+// and keeps these always-available shortcuts out of the project-work
+// flow. Role-gated items (audit log, permissions matrix) only render
+// for admin/manager JWTs — backend `RequirePermission` remains
+// authoritative; the client gate just keeps the grid tidy.
+const adminGridItems: NavItem[] = [
+  { labelKey: 'sidebar.admin_grid.users', to: '/users', icon: Users },
+  {
+    labelKey: 'sidebar.admin_grid.audit',
+    to: '/admin/audit-log',
+    icon: ScrollText,
+    roleGate: ['admin', 'manager'],
+  },
+  {
+    labelKey: 'sidebar.admin_grid.permissions',
+    to: '/admin/permissions',
+    icon: ShieldCheck,
+    roleGate: ['admin', 'manager'],
+  },
+  { labelKey: 'sidebar.admin_grid.modules', to: '/modules', icon: Package },
+  { labelKey: 'sidebar.admin_grid.settings', to: '/settings', icon: Settings },
+  { labelKey: 'sidebar.admin_grid.about', to: '/about', icon: Info },
 ];
 
 /** Flat lookup of every NavItem in the sidebar, keyed by `to`. The
@@ -461,15 +421,14 @@ const bottomNav: NavItem[] = [
  *  the source-of-truth list. */
 const ALL_NAV_ITEMS: Record<string, NavItem> = (() => {
   const map: Record<string, NavItem> = {};
-  for (const group of navGroups)
-    for (const item of group.items) map[item.to] = item;
-  for (const item of bottomNav) map[item.to] = item;
+  for (const group of navGroups) for (const item of group.items) map[item.to] = item;
+  for (const item of adminGridItems) map[item.to] = item;
   return map;
 })();
 
 // localStorage key for collapsed state
-const COLLAPSED_KEY = "oe_sidebar_collapsed";
-const PINNED_KEY = "oe_sidebar_pinned";
+const COLLAPSED_KEY = 'oe_sidebar_collapsed';
+const PINNED_KEY = 'oe_sidebar_pinned';
 
 function readCollapsedState(): Record<string, boolean> {
   try {
@@ -494,8 +453,7 @@ function readPinned(): string[] {
     const raw = localStorage.getItem(PINNED_KEY);
     if (raw) {
       const parsed = JSON.parse(raw);
-      if (Array.isArray(parsed))
-        return parsed.filter((p) => typeof p === "string");
+      if (Array.isArray(parsed)) return parsed.filter((p) => typeof p === 'string');
     }
   } catch {
     /* ignore */
@@ -516,22 +474,22 @@ function writePinned(arr: string[]) {
 // GitHub use, so muscle memory transfers. We surface the hint inline
 // next to the item so users can discover the shortcut without docs.
 const KBD_HINTS: Record<string, string> = {
-  "/": "G D",
-  "/projects": "G P",
-  "/boq": "G B",
-  "/costs": "G C",
-  "/bim": "G M",
-  "/ai-estimate": "G A",
-  "/settings": "G ,",
+  '/': 'G D',
+  '/projects': 'G P',
+  '/boq': 'G B',
+  '/costs': 'G C',
+  '/bim': 'G M',
+  '/ai-estimate': 'G A',
+  '/settings': 'G ,',
 };
 const KBD_BY_LETTER: Record<string, string> = {
-  d: "/",
-  p: "/projects",
-  b: "/boq",
-  c: "/costs",
-  m: "/bim",
-  a: "/ai-estimate",
-  ",": "/settings",
+  d: '/',
+  p: '/projects',
+  b: '/boq',
+  c: '/costs',
+  m: '/bim',
+  a: '/ai-estimate',
+  ',': '/settings',
 };
 
 /** Compute the single best-matching nav route for the current location.
@@ -551,9 +509,9 @@ function pickActiveRoute(
   //    `/takeoff` and over the broader `/takeoff?tab=...` siblings when
   //    every required param value is present in the current URL.
   const queryMatches = routes
-    .filter((r) => r.includes("?"))
+    .filter((r) => r.includes('?'))
     .filter((r) => {
-      const [pathname, qs] = r.split("?");
+      const [pathname, qs] = r.split('?');
       if (location.pathname !== pathname) return false;
       const want = new URLSearchParams(qs);
       for (const [k, v] of want) {
@@ -569,7 +527,7 @@ function pickActiveRoute(
   let best: string | null = null;
   let bestLen = -1;
   for (const route of routes) {
-    if (route.includes("?")) continue;
+    if (route.includes('?')) continue;
     if (route === location.pathname) {
       if (route.length > bestLen) {
         best = route;
@@ -577,12 +535,12 @@ function pickActiveRoute(
       }
       continue;
     }
-    if (route !== "/" && location.pathname.startsWith(route + "/")) {
+    if (route !== '/' && location.pathname.startsWith(route + '/')) {
       if (route.length > bestLen) {
         best = route;
         bestLen = route.length;
       }
-    } else if (route === "/" && location.pathname === "/") {
+    } else if (route === '/' && location.pathname === '/') {
       if (route.length > bestLen) {
         best = route;
         bestLen = route.length;
@@ -599,10 +557,20 @@ export function Sidebar({ onClose }: { onClose?: () => void }) {
   const { isModuleEnabled } = useModuleStore();
   const isAdvanced = useViewModeStore((s) => s.isAdvanced);
   const badgeCounts = useSidebarBadges();
+  const modulePresence = useModulePresence();
   const openSearch = useGlobalSearchStore((s) => s.openModal);
   const iconified = useSidebarCollapseStore((s) => s.iconified);
   const toggleIconified = useSidebarCollapseStore((s) => s.toggle);
   const isRTL = useIsRTL();
+  const userRole = useAuthStore((s) => s.userRole);
+
+  // Role-gate the admin grid. Items without a `roleGate` always show;
+  // gated items only render when the current JWT role matches. The
+  // backend `RequirePermission` decorator still enforces real access —
+  // this is just to keep the sidebar tidy for non-admin users.
+  const visibleAdminGridItems = adminGridItems.filter(
+    (item) => !item.roleGate || (userRole && (item.roleGate as string[]).includes(userRole)),
+  );
 
   // Drive the global CSS variable so both the aside (`w-sidebar`) and
   // the main-content offset (`lg:pl-sidebar`) shrink/grow in lockstep.
@@ -612,16 +580,16 @@ export function Sidebar({ onClose }: { onClose?: () => void }) {
   // the user logs out.
   useEffect(() => {
     document.documentElement.style.setProperty(
-      "--oe-sidebar-width",
+      '--oe-sidebar-width',
       iconified ? SIDEBAR_WIDTH_ICON : SIDEBAR_WIDTH_FULL,
     );
   }, [iconified]);
 
   // Map route paths → open-item counts for sidebar badges
   const badgeMap: Record<string, number> = {
-    "/tasks": badgeCounts.tasks,
-    "/rfi": badgeCounts.rfi,
-    "/safety": badgeCounts.safety,
+    '/tasks': badgeCounts.tasks,
+    '/rfi': badgeCounts.rfi,
+    '/safety': badgeCounts.safety,
   };
 
   // Initialize collapsed state from localStorage, falling back to group defaults
@@ -683,14 +651,17 @@ export function Sidebar({ onClose }: { onClose?: () => void }) {
 
     const handler = (e: KeyboardEvent) => {
       const tag = (e.target as HTMLElement | null)?.tagName;
-      if (tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT") return;
+      if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
       const editable = (e.target as HTMLElement | null)?.isContentEditable;
       if (editable) return;
       if (e.metaKey || e.ctrlKey || e.altKey) return;
 
-      const key = e.key.toLowerCase();
+      // #153 guard — non-printable keys (Dead/Meta combos on certain layouts)
+      // can land with `e.key === undefined`.
+      const key = (e.key ?? '').toLowerCase();
+      if (!key) return;
 
-      if (firstKeyRef.current === "g") {
+      if (firstKeyRef.current === 'g') {
         const route = KBD_BY_LETTER[key];
         if (route) {
           e.preventDefault();
@@ -699,9 +670,9 @@ export function Sidebar({ onClose }: { onClose?: () => void }) {
           // until the wizard is finished, but a deliberate chord nav
           // means "show me the dashboard now". Sentinel is read+cleared
           // by DashboardPage's first-launch effect.
-          if (key === "d") {
+          if (key === 'd') {
             try {
-              sessionStorage.setItem("oe_skip_onboarding_redirect", "1");
+              sessionStorage.setItem('oe_skip_onboarding_redirect', '1');
             } catch {
               /* storage unavailable */
             }
@@ -712,15 +683,15 @@ export function Sidebar({ onClose }: { onClose?: () => void }) {
         return;
       }
 
-      if (key === "g") {
-        firstKeyRef.current = "g";
+      if (key === 'g') {
+        firstKeyRef.current = 'g';
         firstKeyTimerRef.current = window.setTimeout(clearFirst, 1500);
       }
     };
 
-    document.addEventListener("keydown", handler);
+    document.addEventListener('keydown', handler);
     return () => {
-      document.removeEventListener("keydown", handler);
+      document.removeEventListener('keydown', handler);
       clearFirst();
     };
   }, [navigate]);
@@ -764,7 +735,7 @@ export function Sidebar({ onClose }: { onClose?: () => void }) {
         // the hard `border-r border-border-light` for a Linear/Vercel
         // feel: definition without rigidity.
         boxShadow:
-          "1px 0 0 rgba(15, 23, 42, 0.05), 4px 0 12px -8px rgba(15, 23, 42, 0.06)",
+          '1px 0 0 rgba(15, 23, 42, 0.05), 4px 0 12px -8px rgba(15, 23, 42, 0.06)',
       }}
     >
       {/* Page-scoped CSS — sidebar-only animations. Defined inline to
@@ -809,8 +780,8 @@ export function Sidebar({ onClose }: { onClose?: () => void }) {
           <CollapseTab/> right below — not in the header. */}
       <div
         className={clsx(
-          "relative flex h-header items-center px-5",
-          iconified ? "justify-center px-0" : "justify-between",
+          'relative flex h-header items-center px-5',
+          iconified ? 'justify-center px-0' : 'justify-between',
         )}
       >
         {/* Brand block — white-labellable. When the user has set a
@@ -822,7 +793,7 @@ export function Sidebar({ onClose }: { onClose?: () => void }) {
           <button
             onClick={onClose}
             className="lg:hidden flex h-7 w-7 min-h-[44px] min-w-[44px] items-center justify-center rounded-lg text-content-tertiary hover:bg-surface-secondary hover:text-content-primary transition-colors"
-            aria-label={t("common.close", { defaultValue: "Close" })}
+            aria-label={t('common.close', { defaultValue: 'Close' })}
           >
             <X size={16} />
           </button>
@@ -838,54 +809,54 @@ export function Sidebar({ onClose }: { onClose?: () => void }) {
         onClick={toggleIconified}
         aria-label={
           iconified
-            ? t("sidebar.expand", { defaultValue: "Expand sidebar" })
-            : t("sidebar.collapse", { defaultValue: "Collapse sidebar" })
+            ? t('sidebar.expand', { defaultValue: 'Expand sidebar' })
+            : t('sidebar.collapse', { defaultValue: 'Collapse sidebar' })
         }
         title={
           iconified
-            ? t("sidebar.expand", { defaultValue: "Expand sidebar" })
-            : t("sidebar.collapse", { defaultValue: "Collapse sidebar" })
+            ? t('sidebar.expand', { defaultValue: 'Expand sidebar' })
+            : t('sidebar.collapse', { defaultValue: 'Collapse sidebar' })
         }
         className={clsx(
           // Position: vertical centre, sitting on the outer border with
           // half its width protruding into the main content area.
           // LTR → outer = right; RTL → outer = left.
-          "hidden lg:flex absolute top-1/2 z-10",
-          isRTL ? "left-0" : "right-0",
+          'hidden lg:flex absolute top-1/2 z-10',
+          isRTL ? 'left-0' : 'right-0',
           // Size + shape: tall pill, narrow.
-          "h-12 w-5 items-center justify-center rounded-full",
+          'h-12 w-5 items-center justify-center rounded-full',
           // Surface: clean white with a subtle ring; hover lifts to the
           // brand colour. Smooth transition on both background and the
           // chevron rotation, so the toggle feels intentional.
-          "border border-border-light bg-surface-primary text-content-tertiary shadow-sm",
-          "hover:border-oe-blue hover:bg-oe-blue hover:text-white hover:shadow-md hover:shadow-oe-blue/20",
-          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue/40",
-          "transition-all duration-200 ease-oe",
+          'border border-border-light bg-surface-primary text-content-tertiary shadow-sm',
+          'hover:border-oe-blue hover:bg-oe-blue hover:text-white hover:shadow-md hover:shadow-oe-blue/20',
+          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue/40',
+          'transition-all duration-200 ease-oe',
         )}
         style={{
           // Manual translate: Tailwind has no logical translate-x, so
           // we compose Y-centre and X-protrude in one transform.
           // RTL flips the X sign so the pill still protrudes outward.
           transform: isRTL
-            ? "translateY(-50%) translateX(-50%)"
-            : "translateY(-50%) translateX(50%)",
+            ? 'translateY(-50%) translateX(-50%)'
+            : 'translateY(-50%) translateX(50%)',
         }}
       >
         <ChevronRight
           size={12}
           strokeWidth={2.5}
           className={clsx(
-            "transition-transform duration-200 ease-oe",
+            'transition-transform duration-200 ease-oe',
             // The chevron always points in the direction the click will
             // move the panel. In RTL the outward direction flips, so
             // the rotation logic flips too.
             isRTL
               ? iconified
-                ? "rotate-180"
-                : "rotate-0"
+                ? 'rotate-180'
+                : 'rotate-0'
               : iconified
-                ? "rotate-0"
-                : "rotate-180",
+                ? 'rotate-0'
+                : 'rotate-180',
           )}
         />
       </button>
@@ -895,31 +866,22 @@ export function Sidebar({ onClose }: { onClose?: () => void }) {
           users who don't know the ⌘K shortcut, while still surfacing
           it for those who do. When iconified, collapses to a single
           icon button — the ⌘K shortcut still works regardless. */}
-      <div
-        className={clsx(
-          "pt-1 pb-1",
-          iconified ? "px-2 flex justify-center" : "px-3",
-        )}
-      >
+      <div className={clsx('pt-1 pb-1', iconified ? 'px-2 flex justify-center' : 'px-3')}>
         <button
           type="button"
           onClick={() => openSearch()}
           className={clsx(
-            "group flex items-center gap-2 rounded-md border border-border-light bg-surface-secondary/60 text-[12px] text-content-tertiary hover:border-content-quaternary/30 hover:bg-surface-secondary hover:text-content-secondary transition-colors",
-            iconified ? "h-8 w-8 justify-center" : "w-full px-2.5 py-1.5",
+            'group flex items-center gap-2 rounded-md border border-border-light bg-surface-secondary/60 text-[12px] text-content-tertiary hover:border-content-quaternary/30 hover:bg-surface-secondary hover:text-content-secondary transition-colors',
+            iconified ? 'h-8 w-8 justify-center' : 'w-full px-2.5 py-1.5',
           )}
-          aria-label={t("search.open", { defaultValue: "Open search" })}
-          title={
-            iconified
-              ? t("search.open", { defaultValue: "Open search" })
-              : undefined
-          }
+          aria-label={t('search.open', { defaultValue: 'Open search' })}
+          title={iconified ? t('search.open', { defaultValue: 'Open search' }) : undefined}
         >
           <Search size={13} strokeWidth={1.75} className="shrink-0" />
           {!iconified && (
             <>
               <span className="truncate">
-                {t("search.placeholder", { defaultValue: "Search…" })}
+                {t('search.placeholder', { defaultValue: 'Search…' })}
               </span>
               <kbd className="ms-auto hidden sm:inline-flex items-center gap-0.5 rounded border border-border-light bg-surface-primary px-1 py-px text-[9px] font-medium text-content-quaternary group-hover:text-content-tertiary">
                 ⌘K
@@ -929,11 +891,17 @@ export function Sidebar({ onClose }: { onClose?: () => void }) {
         </button>
       </div>
 
-      {/* Main navigation — grouped with collapsible headers */}
+      {/* Main navigation — grouped with collapsible headers.
+          role="navigation" + aria-label make this an addressable
+          landmark for screen readers; previously the sidebar was just
+          a div soup with no landmark, so AT users could not jump to
+          the nav region (WCAG 2.4.1 + 1.3.1, Round 2 Wave D audit). */}
       <nav
+        role="navigation"
+        aria-label="Main navigation"
         className={clsx(
-          "flex-1 overflow-y-auto pt-2 pb-3",
-          iconified ? "px-2" : "px-3",
+          'flex-1 overflow-y-auto pt-2 pb-3',
+          iconified ? 'px-2' : 'px-3',
         )}
         data-engine="cwicr"
       >
@@ -944,13 +912,9 @@ export function Sidebar({ onClose }: { onClose?: () => void }) {
           <div className="mb-2">
             {!iconified && (
               <div className="mt-2 mb-0.5 flex items-center gap-1.5 px-2.5">
-                <Pin
-                  size={9}
-                  strokeWidth={2.25}
-                  className="text-content-quaternary"
-                />
+                <Pin size={9} strokeWidth={2.25} className="text-content-quaternary" />
                 <span className="text-2xs font-medium uppercase tracking-wider text-content-tertiary">
-                  {t("nav.pinned", { defaultValue: "Pinned" })}
+                  {t('nav.pinned', { defaultValue: 'Pinned' })}
                 </span>
               </div>
             )}
@@ -975,10 +939,7 @@ export function Sidebar({ onClose }: { onClose?: () => void }) {
               ))}
             </ul>
             {iconified && (
-              <div
-                className="my-2 mx-auto h-px w-6 bg-border-light"
-                aria-hidden
-              />
+              <div className="my-2 mx-auto h-px w-6 bg-border-light" aria-hidden />
             )}
           </div>
         )}
@@ -994,7 +955,7 @@ export function Sidebar({ onClose }: { onClose?: () => void }) {
           // Merge static items + dynamic module items for this group
           const dynamicItems: NavItem[] = getModuleNavItems(group.id)
             .filter((mi) => {
-              const moduleId = mi.labelKey.split(".")[1] ?? mi.to.slice(1);
+              const moduleId = mi.labelKey.split('.')[1] ?? mi.to.slice(1);
               return isModuleEnabled(moduleId);
             })
             .map((mi) => ({
@@ -1021,8 +982,14 @@ export function Sidebar({ onClose }: { onClose?: () => void }) {
           const isCollapsed = collapsed[group.id] ?? false;
 
           return (
+            <Fragment key={group.id}>
+              {group.separator && (
+                <div
+                  className="my-3 mx-auto h-px w-10/12 bg-border-light/70"
+                  aria-hidden
+                />
+              )}
             <NavGroupSection
-              key={group.id}
               label={t(group.labelKey, { defaultValue: group.id })}
               isCollapsed={isCollapsed}
               onToggle={() => toggleGroup(group.id)}
@@ -1040,10 +1007,21 @@ export function Sidebar({ onClose }: { onClose?: () => void }) {
                   const notNeeded = g != null && !g.enabled;
                   const needed = g != null && g.enabled;
                   const seq = needed ? (routeSeq += 1) : null;
+                  // Module-presence dimming: modules with no data for
+                  // this project render at 55 % opacity so users see at
+                  // a glance which surfaces are populated. Only applies
+                  // when project-focus is OFF (project-focus already
+                  // greys-out unrelated rows more strongly via opacity-45).
+                  const isEmptyForProject =
+                    !notNeeded && !modulePresence.isPopulated(item.to);
                   return (
                     <li
                       key={item.to}
-                      className={clsx("oe-stagger", notNeeded && "opacity-45")}
+                      className={clsx(
+                        'oe-stagger',
+                        notNeeded && 'opacity-45',
+                        isEmptyForProject && 'opacity-55',
+                      )}
                       style={{ animationDelay: `${i * 18}ms` }}
                     >
                       <SidebarItem
@@ -1063,6 +1041,7 @@ export function Sidebar({ onClose }: { onClose?: () => void }) {
                 })}
               </ul>
             </NavGroupSection>
+            </Fragment>
           );
         })}
         {/* Add-a-module CTA — dashed-border tile with a plus icon. Sits at
@@ -1072,23 +1051,14 @@ export function Sidebar({ onClose }: { onClose?: () => void }) {
              contributors a clearer first step. When iconified, shrinks
              to a centred icon-only square — the dashed border still
              signals "add something". */}
-        <li
-          className={clsx(
-            "pt-2 pb-1",
-            iconified ? "px-0 flex justify-center" : "px-3",
-          )}
-        >
+        <li className={clsx('pt-2 pb-1', iconified ? 'px-0 flex justify-center' : 'px-3')}>
           <NavLink
             to="/modules/developer-guide"
             onClick={onClose}
-            title={
-              iconified
-                ? t("nav.add_module", { defaultValue: "Add module" })
-                : undefined
-            }
+            title={iconified ? t('nav.add_module', { defaultValue: 'Add module' }) : undefined}
             className={clsx(
-              "group flex items-center rounded-lg border border-dashed border-oe-blue/40 bg-gradient-to-br from-oe-blue/5 via-transparent to-blue-50/40 dark:from-oe-blue/10 dark:via-transparent dark:to-slate-900/30 hover:border-oe-blue hover:from-oe-blue/10 hover:shadow-sm transition-all",
-              iconified ? "h-9 w-9 justify-center" : "gap-2.5 px-2.5 py-2",
+              'group flex items-center rounded-lg border border-dashed border-oe-blue/40 bg-gradient-to-br from-oe-blue/5 via-transparent to-blue-50/40 dark:from-oe-blue/10 dark:via-transparent dark:to-slate-900/30 hover:border-oe-blue hover:from-oe-blue/10 hover:shadow-sm transition-all',
+              iconified ? 'h-9 w-9 justify-center' : 'gap-2.5 px-2.5 py-2',
             )}
           >
             <span className="shrink-0 flex h-7 w-7 items-center justify-center rounded-md bg-oe-blue/10 text-oe-blue group-hover:bg-oe-blue group-hover:text-white transition-colors">
@@ -1097,12 +1067,10 @@ export function Sidebar({ onClose }: { onClose?: () => void }) {
             {!iconified && (
               <span className="min-w-0 flex-1">
                 <span className="block text-xs font-semibold text-content-primary leading-tight">
-                  {t("nav.add_module", { defaultValue: "Add module‌⁠‍" })}
+                  {t('nav.add_module', { defaultValue: 'Add module‌⁠‍' })}
                 </span>
                 <span className="block text-[10px] text-content-tertiary leading-tight mt-0.5 truncate">
-                  {t("nav.add_module_hint", {
-                    defaultValue: "Build your own · developer guide‌⁠‍",
-                  })}
+                  {t('nav.add_module_hint', { defaultValue: 'Build your own · developer guide‌⁠‍' })}
                 </span>
               </span>
             )}
@@ -1120,12 +1088,7 @@ export function Sidebar({ onClose }: { onClose?: () => void }) {
              on purpose: contributors who want to build a module
              themselves use the guide; users who want us to build it
              for them use this dialog. */}
-        <li
-          className={clsx(
-            "pt-1 pb-3",
-            iconified ? "px-0 flex justify-center" : "px-3",
-          )}
-        >
+        <li className={clsx('pt-1 pb-3', iconified ? 'px-0 flex justify-center' : 'px-3')}>
           <button
             type="button"
             onClick={() => {
@@ -1134,16 +1097,12 @@ export function Sidebar({ onClose }: { onClose?: () => void }) {
             }}
             title={
               iconified
-                ? t("nav.request_custom_module", {
-                    defaultValue: "Request a custom module",
-                  })
+                ? t('nav.request_custom_module', { defaultValue: 'Request a custom module' })
                 : undefined
             }
             className={clsx(
-              "group flex items-center rounded-lg border border-dashed border-purple-400/40 bg-gradient-to-br from-purple-500/5 via-transparent to-purple-50/40 dark:from-purple-500/10 dark:via-transparent dark:to-slate-900/30 hover:border-purple-500 hover:from-purple-500/10 hover:shadow-sm transition-all text-left",
-              iconified
-                ? "h-9 w-9 justify-center"
-                : "w-full gap-2.5 px-2.5 py-2",
+              'group flex items-center rounded-lg border border-dashed border-purple-400/40 bg-gradient-to-br from-purple-500/5 via-transparent to-purple-50/40 dark:from-purple-500/10 dark:via-transparent dark:to-slate-900/30 hover:border-purple-500 hover:from-purple-500/10 hover:shadow-sm transition-all text-left',
+              iconified ? 'h-9 w-9 justify-center' : 'w-full gap-2.5 px-2.5 py-2',
             )}
             aria-haspopup="dialog"
             aria-expanded={customModuleOpen}
@@ -1154,13 +1113,13 @@ export function Sidebar({ onClose }: { onClose?: () => void }) {
             {!iconified && (
               <span className="min-w-0 flex-1">
                 <span className="block text-xs font-semibold text-content-primary leading-tight">
-                  {t("nav.request_custom_module", {
-                    defaultValue: "Request a custom module‌⁠‍",
+                  {t('nav.request_custom_module', {
+                    defaultValue: 'Request a custom module‌⁠‍',
                   })}
                 </span>
                 <span className="block text-[10px] text-content-tertiary leading-tight mt-0.5 truncate">
-                  {t("nav.request_custom_module_hint", {
-                    defaultValue: "Missing something? Tell us what you need‌⁠‍",
+                  {t('nav.request_custom_module_hint', {
+                    defaultValue: 'Missing something? Tell us what you need‌⁠‍',
                   })}
                 </span>
               </span>
@@ -1169,44 +1128,41 @@ export function Sidebar({ onClose }: { onClose?: () => void }) {
         </li>
       </nav>
 
-      {/* Bottom navigation — soft hairline separator instead of a hard
-          1px border; subtle paper-tint background. Compact mode: smaller
-          rows, tighter spacing, no pin buttons (pinning Users / Modules /
-          Settings / About has no real value — they're already always
-          available here). */}
+      {/* Admin / setup surfaces — rendered as a 2-column button grid
+          (1-column in icon-only mode). Soft hairline separator + subtle
+          paper-tint background as before. The grid keeps Users / Audit
+          Log / Permissions / Modules / Settings / About visually grouped
+          and out of the project-work nav flow above. */}
       <div
         className={clsx(
-          "relative py-1 bg-black/[0.02] dark:bg-white/[0.02]",
-          iconified ? "px-2" : "px-3",
+          'relative py-2 bg-black/[0.02] dark:bg-white/[0.02]',
+          iconified ? 'px-2' : 'px-2',
         )}
       >
         <div
           className={clsx(
-            "absolute top-0 h-px bg-gradient-to-r from-transparent via-border to-transparent",
-            iconified ? "left-2 right-2" : "left-3 right-3",
+            'absolute top-0 h-px bg-gradient-to-r from-transparent via-border to-transparent',
+            iconified ? 'left-2 right-2' : 'left-3 right-3',
           )}
         />
-        <ul className="space-y-px">
-          {bottomNav.map((item) => (
-            <li key={item.to}>
-              <SidebarItem
-                item={item}
-                label={t(item.labelKey)}
-                onClick={onClose}
-                activeRoute={activeRoute}
-                iconified={iconified}
-                compact
-              />
-            </li>
-          ))}
-        </ul>
+        <AdminGrid
+          items={visibleAdminGridItems}
+          activeRoute={activeRoute}
+          iconified={iconified}
+          onNavigate={onClose}
+        />
 
         {/* Update notification — compact clickable card in the sidebar; the
             whole card opens a full-screen modal with highlights + install
             commands when the user clicks it. Hidden in icon-only mode
             because the card is text-heavy; users will still see it after
-            expanding the sidebar. */}
-        {!iconified && <UpdateNotification />}
+            expanding the sidebar. `mt-3` breathes the card away from the
+            admin grid buttons above. */}
+        {!iconified && (
+          <div className="mt-3">
+            <UpdateNotification />
+          </div>
+        )}
 
         {/* Version + AGPL + GitHub link
             Layout: GitHub icon (left) · version · AGPL link.
@@ -1226,28 +1182,17 @@ export function Sidebar({ onClose }: { onClose?: () => void }) {
               aria-label="GitHub repository"
               className="flex h-8 w-8 items-center justify-center rounded-md border border-border-light bg-surface-primary hover:bg-surface-elevated transition-all"
             >
-              <Github
-                size={13}
-                strokeWidth={1.75}
-                className="text-content-secondary"
-              />
+              <Github size={13} strokeWidth={1.75} className="text-content-secondary" />
             </a>
             <a
               href="https://t.me/datadrivenconstruction"
               target="_blank"
               rel="noopener noreferrer"
-              title={t("sidebar.community_title", {
-                defaultValue: "Community",
-              })}
+              title={t('sidebar.community_title', { defaultValue: 'Community' })}
               aria-label="Telegram community"
               className="flex h-8 w-8 items-center justify-center rounded-md border border-border-light bg-surface-primary hover:bg-surface-elevated transition-all"
             >
-              <svg
-                viewBox="0 0 24 24"
-                fill="currentColor"
-                className="h-[13px] w-[13px] text-content-secondary"
-                aria-hidden
-              >
+              <svg viewBox="0 0 24 24" fill="currentColor" className="h-[13px] w-[13px] text-content-secondary" aria-hidden>
                 <path d="M9.78 18.65l.28-4.23 7.68-6.92c.34-.31-.07-.46-.52-.19L7.74 13.3 3.64 12c-.88-.25-.89-.86.2-1.3l15.97-6.16c.73-.33 1.43.18 1.15 1.3l-2.72 12.81c-.19.91-.74 1.13-1.5.71l-4.14-3.06-1.99 1.93c-.23.23-.42.42-.83.42z" />
               </svg>
             </a>
@@ -1263,14 +1208,8 @@ export function Sidebar({ onClose }: { onClose?: () => void }) {
                 aria-label="GitHub repository"
                 className="flex-1 flex items-center justify-center gap-1.5 rounded-md border border-border-light bg-surface-primary hover:bg-surface-elevated hover:border-border-medium px-2 py-1.5 transition-all"
               >
-                <Github
-                  size={13}
-                  strokeWidth={1.75}
-                  className="text-content-secondary"
-                />
-                <span className="text-xs font-medium text-content-secondary">
-                  GitHub
-                </span>
+                <Github size={13} strokeWidth={1.75} className="text-content-secondary" />
+                <span className="text-xs font-medium text-content-secondary">GitHub</span>
               </a>
               <a
                 href="https://t.me/datadrivenconstruction"
@@ -1280,23 +1219,16 @@ export function Sidebar({ onClose }: { onClose?: () => void }) {
                 aria-label="Telegram community"
                 className="flex-1 flex items-center justify-center gap-1.5 rounded-md border border-border-light bg-surface-primary hover:bg-surface-elevated hover:border-border-medium px-2 py-1.5 transition-all"
               >
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="currentColor"
-                  className="h-[13px] w-[13px] text-content-secondary"
-                  aria-hidden
-                >
+                <svg viewBox="0 0 24 24" fill="currentColor" className="h-[13px] w-[13px] text-content-secondary" aria-hidden>
                   <path d="M9.78 18.65l.28-4.23 7.68-6.92c.34-.31-.07-.46-.52-.19L7.74 13.3 3.64 12c-.88-.25-.89-.86.2-1.3l15.97-6.16c.73-.33 1.43.18 1.15 1.3l-2.72 12.81c-.19.91-.74 1.13-1.5.71l-4.14-3.06-1.99 1.93c-.23.23-.42.42-.83.42z" />
                 </svg>
                 <span className="text-xs font-medium text-content-secondary">
-                  {t("sidebar.community_title", { defaultValue: "Community" })}
+                  {t('sidebar.community_title', { defaultValue: 'Community' })}
                 </span>
               </a>
             </div>
             <div className="flex items-center justify-center gap-1.5 min-w-0">
-              <span className="text-2xs text-content-tertiary">
-                v{APP_VERSION}
-              </span>
+              <span className="text-2xs text-content-tertiary">v{APP_VERSION}</span>
               <span className="text-2xs text-content-quaternary/40">·</span>
               <a
                 href="/api/source"
@@ -1343,10 +1275,7 @@ function NavGroupSection({
   if (iconified) {
     return (
       <div className="mb-1">
-        <div
-          className="my-1.5 mx-auto h-px w-6 bg-border-light/60"
-          aria-hidden
-        />
+        <div className="my-1.5 mx-auto h-px w-6 bg-border-light/60" aria-hidden />
         {children}
       </div>
     );
@@ -1356,17 +1285,7 @@ function NavGroupSection({
       <button
         onClick={onToggle}
         aria-expanded={!isCollapsed}
-        aria-label={
-          isCollapsed
-            ? t("common.expand_section", {
-                defaultValue: "Expand {{label}}‌⁠‍",
-                label,
-              })
-            : t("common.collapse_section", {
-                defaultValue: "Collapse {{label}}‌⁠‍",
-                label,
-              })
-        }
+        aria-label={isCollapsed ? t('common.expand_section', { defaultValue: 'Expand {{label}}‌⁠‍', label }) : t('common.collapse_section', { defaultValue: 'Collapse {{label}}‌⁠‍', label })}
         className="mt-3 mb-0.5 flex w-full items-center justify-between px-2.5 group cursor-pointer"
       >
         <span className="text-2xs font-medium uppercase tracking-wider text-content-tertiary group-hover:text-content-secondary transition-colors">
@@ -1376,9 +1295,9 @@ function NavGroupSection({
           size={12}
           strokeWidth={2}
           className={clsx(
-            "text-content-quaternary group-hover:text-content-secondary",
-            "transition-transform duration-200 ease-[cubic-bezier(0.2,0.8,0.2,1)]",
-            isCollapsed && "-rotate-90",
+            'text-content-quaternary group-hover:text-content-secondary',
+            'transition-transform duration-200 ease-[cubic-bezier(0.2,0.8,0.2,1)]',
+            isCollapsed && '-rotate-90',
           )}
         />
       </button>
@@ -1424,7 +1343,7 @@ function SidebarItem({
   // route across all visible items, so only the most-specific match
   // lights up (no more "/bim" + "/bim/rules" both glowing blue).
   const isActive = activeRoute === item.to;
-  const hasQuery = item.to.includes("?");
+  const hasQuery = item.to.includes('?');
 
   // Icon-only branch — short-circuits the full row layout. Native
   // `title` surfaces the label on hover; the active-state dot replaces
@@ -1435,17 +1354,17 @@ function SidebarItem({
     return (
       <NavLink
         to={item.to}
-        end={item.to === "/" || hasQuery}
+        end={item.to === '/' || hasQuery}
         onClick={onClick}
         title={label}
         aria-label={label}
-        {...(item.tourId ? { "data-tour": item.tourId } : {})}
+        {...(item.tourId ? { 'data-tour': item.tourId } : {})}
         className={() =>
           clsx(
-            "relative mx-auto flex h-9 w-9 items-center justify-center rounded-md transition-colors duration-fast ease-oe",
+            'relative mx-auto flex h-9 w-9 items-center justify-center rounded-md transition-colors duration-fast ease-oe',
             isActive
-              ? "bg-oe-blue/[0.14] text-oe-blue shadow-[inset_0_0_0_1px_rgba(0,122,255,0.18)] dark:bg-oe-blue/25"
-              : "text-content-secondary hover:bg-surface-secondary hover:text-content-primary",
+              ? 'bg-oe-blue/[0.14] text-oe-blue shadow-[inset_0_0_0_1px_rgba(0,122,255,0.18)] dark:bg-oe-blue/25'
+              : 'text-content-secondary hover:bg-surface-secondary hover:text-content-primary',
           )
         }
       >
@@ -1453,8 +1372,8 @@ function SidebarItem({
         {hasBadge && (
           <span
             className={clsx(
-              "absolute top-1 right-1 h-1.5 w-1.5 rounded-full",
-              isActive ? "bg-oe-blue" : "bg-semantic-error/80",
+              'absolute top-1 right-1 h-1.5 w-1.5 rounded-full',
+              isActive ? 'bg-oe-blue' : 'bg-semantic-error/80',
             )}
             aria-hidden
           />
@@ -1464,63 +1383,59 @@ function SidebarItem({
   }
 
   return (
-    <NavLink
-      to={item.to}
-      end={item.to === "/" || hasQuery}
-      onClick={onClick}
-      title={label}
-      {...(item.tourId ? { "data-tour": item.tourId } : {})}
-      className={() => {
-        const active = isActive;
-        return clsx(
-          // 2px transparent left border on every item — when active
-          // it flips to oe-blue. No layout shift between states. The
-          // accent bar is the entire visual change for "active",
-          // alongside the subtle background tint and bolded label.
-          // This is the Linear/Vercel pattern — solid, calm, fast.
-          "relative flex items-center rounded-md border-l-2 border-transparent",
-          "transition-colors duration-fast ease-oe",
-          compact
-            ? "gap-1.5 pl-2 pr-1.5 py-[3px] text-[12px]"
-            : "gap-2 pl-[10px] pr-2.5 py-1 text-[13px]",
-          item.highlight && !active
-            ? "font-medium bg-gradient-to-r from-[#7c3aed]/10 to-[#0ea5e9]/10 text-[#6d28d9] hover:from-[#7c3aed]/15 hover:to-[#0ea5e9]/15"
-            : active
-              ? "font-semibold border-oe-blue bg-oe-blue/[0.14] text-oe-blue shadow-[inset_0_0_0_1px_rgba(0,122,255,0.06)] dark:bg-oe-blue/25"
-              : "font-medium text-content-secondary hover:bg-surface-secondary hover:text-content-primary",
-        );
-      }}
-    >
-      {/* Project-focus sequence number — only set for rows the active
+      <NavLink
+        to={item.to}
+        end={item.to === '/' || hasQuery}
+        onClick={onClick}
+        title={label}
+        {...(item.tourId ? { 'data-tour': item.tourId } : {})}
+        className={() => {
+          const active = isActive;
+          return clsx(
+            // 2px transparent left border on every item — when active
+            // it flips to oe-blue. No layout shift between states. The
+            // accent bar is the entire visual change for "active",
+            // alongside the subtle background tint and bolded label.
+            // This is the Linear/Vercel pattern — solid, calm, fast.
+            'relative flex items-center rounded-md border-l-2 border-transparent',
+            'transition-colors duration-fast ease-oe',
+            compact
+              ? 'gap-1.5 pl-2 pr-1.5 py-[3px] text-[12px]'
+              : 'gap-2 pl-[10px] pr-2.5 py-1 text-[13px]',
+            item.highlight && !active
+              ? 'font-medium bg-gradient-to-r from-[#7c3aed]/10 to-[#0ea5e9]/10 text-[#6d28d9] hover:from-[#7c3aed]/15 hover:to-[#0ea5e9]/15'
+              : active
+                ? 'font-semibold border-oe-blue bg-oe-blue/[0.14] text-oe-blue shadow-[inset_0_0_0_1px_rgba(0,122,255,0.06)] dark:bg-oe-blue/25'
+                : 'font-medium text-content-secondary hover:bg-surface-secondary hover:text-content-primary',
+          );
+        }}
+      >
+        {/* Project-focus sequence number — only set for rows the active
             project needs (focus mode on). A small leading chip so the
             menu reads as a numbered route while keeping its order. */}
-      {seq != null && (
-        <span
-          className={clsx(
-            "shrink-0 flex h-4 min-w-[1rem] items-center justify-center rounded-full px-1 text-[10px] font-bold tabular-nums transition-colors",
-            isActive
-              ? "bg-oe-blue text-white"
-              : "bg-oe-blue-subtle text-oe-blue",
-          )}
-          aria-hidden
-        >
-          {seq}
-        </span>
-      )}
-      <Icon
-        size={compact ? 14 : 16}
-        strokeWidth={isActive ? 2 : 1.75}
-        className="shrink-0"
-      />
-      {/* Hover-tooltip via title falls back to the full label even when
+        {seq != null && (
+          <span
+            className={clsx(
+              'shrink-0 flex h-4 min-w-[1rem] items-center justify-center rounded-full px-1 text-[10px] font-bold tabular-nums transition-colors',
+              isActive
+                ? 'bg-oe-blue text-white'
+                : 'bg-oe-blue-subtle text-oe-blue',
+            )}
+            aria-hidden
+          >
+            {seq}
+          </span>
+        )}
+        <Icon size={compact ? 14 : 16} strokeWidth={isActive ? 2 : 1.75} className="shrink-0" />
+        {/* Hover-tooltip via title falls back to the full label even when
             CSS truncates with an ellipsis. The visible width is now
             264px (was 232) so most labels render in full at default
             zoom; this is the safety net for narrow sidebars / dense
             translations / large-text accessibility settings. */}
-      <span className="truncate" title={label}>
-        {label}
-      </span>
-      {/* Right-edge cluster — kbd hint first, badges last, so the
+        <span className="truncate" title={label}>
+          {label}
+        </span>
+        {/* Right-edge cluster — kbd hint first, badges last, so the
             BETA / NEW chips always sit at the absolute right margin
             (flush against the row edge) instead of being pushed inward
             by the fixed-width keyboard hint column. Reserve the 26px
@@ -1528,86 +1443,175 @@ function SidebarItem({
             empty rows previously paid the same 26px tax for nothing,
             squeezing the label width and triggering avoidable
             ellipsis truncation. */}
-      <span
-        className={clsx(
-          "ms-auto flex items-center shrink-0",
-          compact ? "gap-1 ps-1" : "gap-1.5 ps-1.5",
-        )}
-      >
-        {!compact && (
-          <span
-            className={clsx(
-              "hidden lg:inline-flex justify-end items-center gap-0.5 text-[9px] font-medium tracking-wide tabular-nums",
-              kbdHint ? "min-w-[26px]" : "min-w-0",
-              isActive ? "text-oe-blue/60" : "text-content-quaternary",
-            )}
-          >
-            {kbdHint ?? (
-              <ChevronRight
-                size={12}
-                className="oe-hover-arrow text-content-tertiary"
-              />
-            )}
-          </span>
-        )}
-        {numericBadge != null && numericBadge > 0 && (
-          <span
-            className={clsx(
-              "flex h-4 min-w-[1.25rem] items-center justify-center rounded-full text-2xs font-bold px-1 transition-colors",
-              isActive
-                ? "bg-oe-blue text-white"
-                : "bg-surface-tertiary text-content-secondary",
-            )}
-          >
-            {numericBadge > 99 ? "99+" : numericBadge}
-          </span>
-        )}
-        {item.badge && (
-          <span
-            className={clsx(
-              item.badge === "BETA"
-                ? "text-[9px] font-medium uppercase tracking-wide px-1.5 py-px rounded text-content-quaternary bg-surface-tertiary/60 dark:bg-surface-tertiary/40"
-                : item.highlight
-                  ? "text-2xs font-semibold px-1.5 py-0.5 rounded-full bg-gradient-to-r from-[#7c3aed] to-[#0ea5e9] text-white"
-                  : "text-2xs font-semibold px-1.5 py-0.5 rounded-full text-content-tertiary",
-            )}
-          >
-            {item.badge === "BETA" ? "beta" : item.badge}
-          </span>
-        )}
-      </span>
-      {/* Pin / unpin button — only shown when the item supports it
+        <span className={clsx('ms-auto flex items-center shrink-0', compact ? 'gap-1 ps-1' : 'gap-1.5 ps-1.5')}>
+          {!compact && (
+            <span
+              className={clsx(
+                'hidden lg:inline-flex justify-end items-center gap-0.5 text-[9px] font-medium tracking-wide tabular-nums',
+                kbdHint ? 'min-w-[26px]' : 'min-w-0',
+                isActive ? 'text-oe-blue/60' : 'text-content-quaternary',
+              )}
+            >
+              {kbdHint ?? (
+                <ChevronRight
+                  size={12}
+                  className="oe-hover-arrow text-content-tertiary"
+                />
+              )}
+            </span>
+          )}
+          {numericBadge != null && numericBadge > 0 && (
+            <span
+              className={clsx(
+                'flex h-4 min-w-[1.25rem] items-center justify-center rounded-full text-2xs font-bold px-1 transition-colors',
+                isActive
+                  ? 'bg-oe-blue text-white'
+                  : 'bg-surface-tertiary text-content-secondary',
+              )}
+            >
+              {numericBadge > 99 ? '99+' : numericBadge}
+            </span>
+          )}
+          {item.badge && (
+            <span
+              className={clsx(
+                item.badge === 'BETA'
+                  ? 'text-[9px] font-medium uppercase tracking-wide px-1.5 py-px rounded text-content-quaternary bg-surface-tertiary/60 dark:bg-surface-tertiary/40'
+                  : item.highlight
+                    ? 'text-2xs font-semibold px-1.5 py-0.5 rounded-full bg-gradient-to-r from-[#7c3aed] to-[#0ea5e9] text-white'
+                    : 'text-2xs font-semibold px-1.5 py-0.5 rounded-full text-content-tertiary',
+              )}
+            >
+              {item.badge === 'BETA' ? 'beta' : item.badge}
+            </span>
+          )}
+        </span>
+        {/* Pin / unpin button — only shown when the item supports it
             (any item with an onTogglePin handler). Visible on hover or
             persistently when pinned. Click does not navigate. */}
-      {onTogglePin && (
-        <button
-          type="button"
-          onClick={handlePinClick}
-          data-pinned={isPinned ? "true" : undefined}
-          aria-label={
-            isPinned
-              ? t("nav.unpin", { defaultValue: "Unpin {{label}}", label })
-              : t("nav.pin", { defaultValue: "Pin {{label}}", label })
-          }
-          title={
-            isPinned
-              ? t("nav.unpin", { defaultValue: "Unpin" })
-              : t("nav.pin", { defaultValue: "Pin" })
-          }
-          className={clsx(
-            "oe-pin-btn ms-1 flex h-4 w-4 shrink-0 items-center justify-center rounded",
-            "text-content-quaternary hover:text-oe-blue hover:bg-oe-blue/10",
-            isPinned && "text-oe-blue",
-          )}
-        >
-          {isPinned ? (
-            <PinOff size={10} strokeWidth={2} />
-          ) : (
-            <Pin size={10} strokeWidth={2} />
-          )}
-        </button>
-      )}
-    </NavLink>
+        {onTogglePin && (
+          <button
+            type="button"
+            onClick={handlePinClick}
+            data-pinned={isPinned ? 'true' : undefined}
+            aria-label={
+              isPinned
+                ? t('nav.unpin', { defaultValue: 'Unpin {{label}}', label })
+                : t('nav.pin', { defaultValue: 'Pin {{label}}', label })
+            }
+            title={isPinned ? t('nav.unpin', { defaultValue: 'Unpin' }) : t('nav.pin', { defaultValue: 'Pin' })}
+            className={clsx(
+              'oe-pin-btn ms-1 flex h-4 w-4 shrink-0 items-center justify-center rounded',
+              'text-content-quaternary hover:text-oe-blue hover:bg-oe-blue/10',
+              isPinned && 'text-oe-blue',
+            )}
+          >
+            {isPinned ? <PinOff size={10} strokeWidth={2} /> : <Pin size={10} strokeWidth={2} />}
+          </button>
+        )}
+      </NavLink>
+  );
+}
+
+/** 2-column button grid for admin/setup surfaces (Users, Audit Log,
+ *  Permissions Matrix, Modules, Settings, About). Renders pinned at the
+ *  bottom of the sidebar above the GitHub/version footer.
+ *
+ *  Layout:
+ *    - Expanded sidebar  → grid-cols-2, square-ish tiles with icon
+ *                          stacked above the label.
+ *    - Iconified sidebar → single column, icon-only tiles (same width
+ *                          as the rest of the iconified rail).
+ *
+ *  Active route uses the same translucent oe-blue highlight as the
+ *  iconified branch of `SidebarItem`, so the visual language is
+ *  consistent across the whole sidebar. */
+function AdminGrid({
+  items,
+  activeRoute,
+  iconified,
+  onNavigate,
+}: {
+  items: NavItem[];
+  activeRoute?: string | null;
+  iconified?: boolean;
+  onNavigate?: () => void;
+}) {
+  const { t } = useTranslation();
+  const navigate = useNavigate();
+
+  if (iconified) {
+    // Icon-only rail — stack as a single column, matching the rest of
+    // the iconified sidebar (each tile is 36×36 like SidebarItem).
+    return (
+      <ul className="flex flex-col items-center gap-1">
+        {items.map((item) => {
+          const Icon = item.icon;
+          const isActive = activeRoute === item.to;
+          const label = t(item.labelKey);
+          return (
+            <li key={item.to}>
+              <NavLink
+                to={item.to}
+                onClick={onNavigate}
+                title={label}
+                aria-label={label}
+                className={() =>
+                  clsx(
+                    'relative flex h-9 w-9 items-center justify-center rounded-md transition-colors duration-fast ease-oe',
+                    isActive
+                      ? 'bg-oe-blue/[0.14] text-oe-blue shadow-[inset_0_0_0_1px_rgba(0,122,255,0.18)] dark:bg-oe-blue/25'
+                      : 'text-content-secondary hover:bg-surface-secondary hover:text-content-primary',
+                  )
+                }
+              >
+                <Icon size={16} strokeWidth={isActive ? 2 : 1.75} aria-hidden />
+              </NavLink>
+            </li>
+          );
+        })}
+      </ul>
+    );
+  }
+
+  // Expanded mode: 2×N grid. Each tile is a real <button> so keyboard
+  // focus + Enter activation Just Work; we navigate imperatively so the
+  // button retains semantics (NavLink renders as <a>, which would
+  // confuse screen readers that expect a button grid).
+  return (
+    <ul className="grid grid-cols-2 gap-1">
+      {items.map((item) => {
+        const Icon = item.icon;
+        const isActive = activeRoute === item.to;
+        const label = t(item.labelKey);
+        return (
+          <li key={item.to}>
+            <button
+              type="button"
+              onClick={() => {
+                navigate(item.to);
+                onNavigate?.();
+              }}
+              aria-label={label}
+              aria-current={isActive ? 'page' : undefined}
+              title={label}
+              className={clsx(
+                'group flex h-8 w-full items-center justify-start gap-1.5 rounded-md border px-2 text-left transition-colors duration-fast ease-oe',
+                'focus:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue/40',
+                isActive
+                  ? 'border-transparent bg-oe-blue/[0.14] text-oe-blue shadow-[inset_0_0_0_1px_rgba(0,122,255,0.18)] dark:bg-oe-blue/25'
+                  : 'border-border-light/60 bg-surface-primary text-content-secondary hover:bg-surface-secondary hover:text-content-primary hover:border-border-medium',
+              )}
+            >
+              <Icon size={14} strokeWidth={isActive ? 2 : 1.75} aria-hidden className="shrink-0" />
+              <span className="min-w-0 flex-1 text-[11px] font-medium leading-none whitespace-nowrap overflow-hidden text-ellipsis">
+                {label}
+              </span>
+            </button>
+          </li>
+        );
+      })}
+    </ul>
   );
 }
 
@@ -1636,13 +1640,8 @@ export function FloatingRecentButton() {
       {open && (
         <div className="absolute bottom-12 end-0 w-72 rounded-xl border border-border-light bg-surface-primary shadow-xl overflow-hidden animate-in fade-in slide-in-from-bottom-2 duration-150">
           <div className="flex items-center justify-between px-4 py-2.5 border-b border-border-light">
-            <span className="text-xs font-semibold text-content-primary">
-              {t("nav.recent", { defaultValue: "Recent‌⁠‍" })}
-            </span>
-            <button
-              onClick={() => setOpen(false)}
-              className="p-0.5 rounded text-content-tertiary hover:text-content-primary"
-            >
+            <span className="text-xs font-semibold text-content-primary">{t('nav.recent', { defaultValue: 'Recent‌⁠‍' })}</span>
+            <button onClick={() => setOpen(false)} className="p-0.5 rounded text-content-tertiary hover:text-content-primary">
               <X size={14} />
             </button>
           </div>
@@ -1657,17 +1656,10 @@ export function FloatingRecentButton() {
                     title={item.title}
                     className="flex items-center gap-2.5 px-4 py-2 text-[13px] font-medium text-content-secondary hover:bg-surface-secondary hover:text-content-primary transition-all"
                   >
-                    <Icon
-                      size={14}
-                      strokeWidth={1.75}
-                      className="shrink-0 text-content-tertiary"
-                    />
+                    <Icon size={14} strokeWidth={1.75} className="shrink-0 text-content-tertiary" />
                     <span className="truncate flex-1">{item.title}</span>
                     <span className="text-[10px] text-content-quaternary shrink-0 tabular-nums">
-                      {new Date(item.visitedAt).toLocaleTimeString(undefined, {
-                        hour: "2-digit",
-                        minute: "2-digit",
-                      })}
+                      {new Date(item.visitedAt).toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' })}
                     </span>
                   </NavLink>
                 </li>
@@ -1681,18 +1673,19 @@ export function FloatingRecentButton() {
       <button
         onClick={() => setOpen((p) => !p)}
         className={clsx(
-          "w-10 h-10 rounded-full flex items-center justify-center shadow-lg border transition-all duration-200 hover:scale-105 active:scale-95",
+          'w-10 h-10 rounded-full flex items-center justify-center shadow-lg border transition-all duration-200 hover:scale-105 active:scale-95',
           open
-            ? "bg-oe-blue text-white border-oe-blue shadow-oe-blue/20"
-            : "bg-surface-primary text-content-secondary border-border-light hover:border-oe-blue/30 hover:text-oe-blue",
+            ? 'bg-oe-blue text-white border-oe-blue shadow-oe-blue/20'
+            : 'bg-surface-primary text-content-secondary border-border-light hover:border-oe-blue/30 hover:text-oe-blue',
         )}
-        title={t("nav.recent", { defaultValue: "Recent" })}
+        title={t('nav.recent', { defaultValue: 'Recent' })}
       >
         <History size={18} strokeWidth={2} />
       </button>
     </div>
   );
 }
+
 
 /** Floating AI Chat button — large pill-shaped FAB in bottom-right that
  *  navigates to /chat. Hidden when already on the chat page. */
@@ -1701,17 +1694,17 @@ export function FloatingChatButton() {
   const location = useLocation();
 
   // Hide when already on the chat page so it doesn't overlap the chat itself
-  if (location.pathname.startsWith("/chat")) return null;
+  if (location.pathname.startsWith('/chat')) return null;
 
   return (
     <NavLink
       to="/chat"
       className="fixed bottom-6 end-6 z-40 group flex items-center gap-2.5 px-5 py-3.5 rounded-full bg-gradient-to-r from-oe-blue to-blue-600 text-white shadow-xl shadow-oe-blue/30 hover:shadow-2xl hover:shadow-oe-blue/40 hover:scale-105 active:scale-95 transition-all duration-200 border border-oe-blue/50"
-      title={t("nav.erp_chat", { defaultValue: "AI Chat" })}
+      title={t('nav.erp_chat', { defaultValue: 'AI Chat' })}
     >
       <MessageSquare size={20} strokeWidth={2.25} className="shrink-0" />
       <span className="text-sm font-semibold whitespace-nowrap">
-        {t("nav.erp_chat", { defaultValue: "AI Chat" })}
+        {t('nav.erp_chat', { defaultValue: 'AI Chat' })}
       </span>
       {/* Subtle pulse indicator */}
       <span className="relative flex h-2 w-2">

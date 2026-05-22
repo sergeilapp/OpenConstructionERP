@@ -28,20 +28,22 @@
 // the heading. Initial focus is moved into the first focusable form
 // element; Escape and backdrop click both call onClose.
 
-import { useEffect, useId, useRef } from "react";
-import { createPortal } from "react-dom";
-import { X } from "lucide-react";
-import clsx from "clsx";
+import { useEffect, useId, useRef } from 'react';
+import { createPortal } from 'react-dom';
+import { X } from 'lucide-react';
+import clsx from 'clsx';
 
-export type WideModalSize = "sm" | "md" | "lg" | "xl" | "2xl" | "full";
+import { useFocusTrap } from '@/shared/hooks/useFocusTrap';
+
+export type WideModalSize = 'sm' | 'md' | 'lg' | 'xl' | '2xl' | 'full';
 
 const SIZE_CLASSES: Record<WideModalSize, string> = {
-  sm: "max-w-md",
-  md: "max-w-2xl",
-  lg: "max-w-3xl",
-  xl: "max-w-5xl",
-  "2xl": "max-w-6xl",
-  full: "max-w-[min(1280px,calc(100vw-2rem))]",
+  sm: 'max-w-md',
+  md: 'max-w-2xl',
+  lg: 'max-w-3xl',
+  xl: 'max-w-5xl',
+  '2xl': 'max-w-6xl',
+  full: 'max-w-[min(1280px,calc(100vw-2rem))]',
 };
 
 export interface WideModalProps {
@@ -72,7 +74,7 @@ export function WideModal({
   onClose,
   title,
   subtitle,
-  size = "lg",
+  size = 'lg',
   children,
   footer,
   busy = false,
@@ -87,22 +89,21 @@ export function WideModal({
   useEffect(() => {
     if (!open) return;
     const handler = (e: KeyboardEvent) => {
-      if (e.key === "Escape" && !busy) {
+      if (e.key === 'Escape' && !busy) {
         e.preventDefault();
         e.stopPropagation();
         onClose();
       }
     };
-    document.addEventListener("keydown", handler, { capture: true });
-    return () =>
-      document.removeEventListener("keydown", handler, { capture: true });
+    document.addEventListener('keydown', handler, { capture: true });
+    return () => document.removeEventListener('keydown', handler, { capture: true });
   }, [open, onClose, busy]);
 
   // Lock body scroll while open; restore previous overflow on unmount.
   useEffect(() => {
     if (!open) return;
     const previous = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
+    document.body.style.overflow = 'hidden';
     return () => {
       document.body.style.overflow = previous;
     };
@@ -116,10 +117,16 @@ export function WideModal({
     const node = panelRef.current;
     if (!node) return;
     const focusable = node.querySelector<HTMLElement>(
-      "input:not([disabled]), select:not([disabled]), textarea:not([disabled]), button:not([disabled])",
+      'input:not([disabled]), select:not([disabled]), textarea:not([disabled]), button:not([disabled])',
     );
     focusable?.focus();
   }, [open]);
+
+  // Trap Tab inside the panel and restore focus to the triggering
+  // element when the modal closes (covers Escape, backdrop click and
+  // explicit close-button). The earlier source comment claimed a trap
+  // existed but the implementation was missing — Round 2 Wave D audit.
+  useFocusTrap(panelRef, open);
 
   if (!open) return null;
 
@@ -140,12 +147,12 @@ export function WideModal({
       <div
         ref={panelRef}
         className={clsx(
-          "relative w-full mx-auto my-auto",
+          'relative w-full mx-auto my-auto',
           SIZE_CLASSES[size],
-          "rounded-2xl border border-border-light shadow-2xl",
-          "bg-surface-elevated",
-          "animate-scale-in",
-          "flex flex-col max-h-[calc(100vh-4rem)]",
+          'rounded-2xl border border-border-light shadow-2xl',
+          'bg-surface-elevated',
+          'animate-scale-in',
+          'flex flex-col max-h-[calc(100vh-4rem)]',
           className,
         )}
         // Stop propagation so click inside the panel does not bubble up
@@ -177,11 +184,11 @@ export function WideModal({
               disabled={busy}
               aria-label="Close"
               className={clsx(
-                "shrink-0 -mt-1 -mr-1 inline-flex h-8 w-8 items-center justify-center rounded-lg",
-                "text-content-secondary hover:text-content-primary",
-                "hover:bg-surface-secondary",
-                "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue",
-                "disabled:opacity-40 disabled:pointer-events-none transition-colors",
+                'shrink-0 -mt-1 -mr-1 inline-flex h-8 w-8 items-center justify-center rounded-lg',
+                'text-content-secondary hover:text-content-primary',
+                'hover:bg-surface-secondary',
+                'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue',
+                'disabled:opacity-40 disabled:pointer-events-none transition-colors',
               )}
             >
               <X size={18} />
@@ -223,9 +230,9 @@ export interface WideModalSectionProps {
 }
 
 const COLUMN_CLASSES: Record<1 | 2 | 3, string> = {
-  1: "grid-cols-1",
-  2: "grid-cols-1 sm:grid-cols-2",
-  3: "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3",
+  1: 'grid-cols-1',
+  2: 'grid-cols-1 sm:grid-cols-2',
+  3: 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3',
 };
 
 export function WideModalSection({
@@ -236,7 +243,7 @@ export function WideModalSection({
   className,
 }: WideModalSectionProps) {
   return (
-    <section className={clsx("mb-6 last:mb-0", className)}>
+    <section className={clsx('mb-6 last:mb-0', className)}>
       {title && (
         <h3 className="text-sm font-semibold text-content-primary mb-1">
           {title}
@@ -247,7 +254,7 @@ export function WideModalSection({
           {description}
         </p>
       )}
-      <div className={clsx("grid gap-4", COLUMN_CLASSES[columns])}>
+      <div className={clsx('grid gap-4', COLUMN_CLASSES[columns])}>
         {children}
       </div>
     </section>
@@ -277,9 +284,9 @@ export interface WideModalFieldProps {
 }
 
 const SPAN_CLASSES: Record<1 | 2 | 3, string> = {
-  1: "sm:col-span-1",
-  2: "sm:col-span-2",
-  3: "sm:col-span-2 lg:col-span-3",
+  1: 'sm:col-span-1',
+  2: 'sm:col-span-2',
+  3: 'sm:col-span-2 lg:col-span-3',
 };
 
 export function WideModalField({
@@ -293,7 +300,7 @@ export function WideModalField({
   htmlFor,
 }: WideModalFieldProps) {
   return (
-    <div className={clsx("flex flex-col", SPAN_CLASSES[span], className)}>
+    <div className={clsx('flex flex-col', SPAN_CLASSES[span], className)}>
       <label
         htmlFor={htmlFor}
         className="text-xs font-medium text-content-primary mb-1.5 flex items-center gap-1"

@@ -40,7 +40,7 @@ import hashlib
 import logging
 import math
 import uuid
-from datetime import UTC, datetime
+from datetime import datetime, timezone
 from itertools import combinations
 
 import numpy as np
@@ -50,9 +50,16 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.modules.bcf.bcf_xml import BCFParseError, parse_bcfzip
 from app.modules.bcf.schemas import PerspectiveCamera, TopicCreate, Vec3, ViewpointCreate
 from app.modules.bcf.service import BCFService
-from app.modules.clash.models import ClashCluster, ClashResult, ClashRun
+from app.modules.clash.models import (
+    ClashCluster,
+    ClashIssue,
+    ClashResult,
+    ClashRun,
+    ClashSuppression,
+)
 from app.modules.clash.repository import ClashRepository
 from app.modules.clash.schemas import (
+    CLASH_ISSUE_STATUSES,
     CLASH_SEVERITIES,
     CLASH_STATUSES,
     CLASH_TYPES,
@@ -89,7 +96,7 @@ _UNSET: object = object()
 
 
 def _now() -> datetime:
-    return datetime.now(UTC)
+    return datetime.now(timezone.utc)
 
 
 def _signature_from_description(desc: str) -> str:
@@ -194,6 +201,111 @@ def _signature(a_stable_id: str, b_stable_id: str, clash_type: str) -> str:
     return hashlib.sha1(raw.encode("utf-8")).hexdigest()[:16]
 
 
+# ── Smart-issue signature (v41) ─────────────────────────────────────────
+
+# Default spatial grid in millimetres for ``ClashRun.spatial_grid_mm`` —
+# coarse enough to absorb sub-mm geometry drift on re-runs but fine
+# enough that a real geometry change (moving a pipe by half a metre)
+# hashes to a fresh issue. Tweakable per-run on the model.
+_DEFAULT_SPATIAL_GRID_MM = 500
+# How many consecutive runs an issue must be absent for before we move
+# it from ``resolved`` to ``archived``. Three is the convention from
+# Navisworks/Solibri: one missing run is noise, three is "really gone".
+_ARCHIVE_AFTER_MISSING = 3
+
+
+def _canon_guid(value: object) -> str:
+    """Canonicalise a stable id / guid for the signature input.
+
+    NFKC-normalises unicode + lower-cases + trims so two callers can pass
+    e.g. ``"GUID-AB12"`` and ``" guid-ab12 "`` and get the same hash.
+    ``None`` / empty → ``""`` so the caller knows the GUID is missing and
+    can decide to fall back to the weak signature.
+    """
+    if value is None:
+        return ""
+    import unicodedata as _ud
+
+    s = str(value).strip()
+    if not s:
+        return ""
+    return _ud.normalize("NFKC", s).lower()
+
+
+def _bucket(value: float, grid_mm: int) -> int:
+    """Quantise a metre coordinate to its ``grid_mm`` cell index.
+
+    ``floor((value_m * 1000) / grid_mm)``. Pure integer arithmetic on the
+    millimetre scale so two centroids that differ by < grid_mm map to
+    the same bucket and therefore the same signature.
+    """
+    if grid_mm <= 0:
+        return 0
+    try:
+        mm = float(value) * 1000.0
+    except (TypeError, ValueError):
+        return 0
+    if not math.isfinite(mm):
+        return 0
+    return int(math.floor(mm / float(grid_mm)))
+
+
+def _compute_signature_hash(
+    *,
+    a_guid: str | None,
+    b_guid: str | None,
+    centroid: tuple[float, float, float],
+    clash_type: str,
+    grid_mm: int = _DEFAULT_SPATIAL_GRID_MM,
+    weak_fallback: tuple[str, str, list[str]] | None = None,
+) -> tuple[str, str]:
+    """Compute the canonical clash signature hash.
+
+    Returns ``(signature_hash, quality)`` where ``quality`` is ``"strong"``
+    when real stable ids drove the hash, ``"weak"`` when the GUID-less
+    fallback (ifc_class | material | sorted quantity keys) was used.
+
+    ``signature = SHA1(canon(min) || "|" || canon(max) || "|" ||
+                       bucket(cx) || "," || bucket(cy) || "," || bucket(cz)
+                       || "|" || clash_type)``
+
+    The GUID pair is sorted before hashing so ``(A, B)`` and ``(B, A)``
+    yield the same hash. The clash-box centroid is bucketed by
+    ``grid_mm`` so sub-mm drift between re-runs hashes to the same
+    issue. ``clash_type`` is included so a hard hit and a clearance hit
+    at the same spot are tracked as separate issues.
+
+    Weak fallback: when either ``a_guid`` or ``b_guid`` canonicalises to
+    the empty string AND ``weak_fallback`` is supplied
+    (``(ifc_class, material, [quantity_keys])``), the GUIDs are replaced
+    with ``sha1(ifc_class | material | sorted-keys)`` and the function
+    flags the result as ``"weak"``. Without a fallback the strong path
+    is used regardless (preserving the historical strong-only contract).
+    """
+    a_canon = _canon_guid(a_guid)
+    b_canon = _canon_guid(b_guid)
+    quality = "strong"
+    if (not a_canon or not b_canon) and weak_fallback is not None:
+        ifc_class, material, qty_keys = weak_fallback
+        ifc_c = _canon_guid(ifc_class)
+        mat_c = _canon_guid(material)
+        keys = sorted(_canon_guid(k) for k in (qty_keys or []) if k)
+        raw = f"{ifc_c}|{mat_c}|{','.join(keys)}"
+        weak_hash = hashlib.sha1(raw.encode("utf-8")).hexdigest()
+        # Re-use the weak hash on both sides so the sort still works.
+        a_canon = weak_hash
+        b_canon = weak_hash
+        quality = "weak"
+    lo, hi = (a_canon, b_canon) if a_canon <= b_canon else (b_canon, a_canon)
+    cx, cy, cz = centroid
+    bx = _bucket(cx, grid_mm)
+    by = _bucket(cy, grid_mm)
+    bz = _bucket(cz, grid_mm)
+    ctype = _canon_guid(clash_type) or "hard"
+    raw = f"{lo}|{hi}|{bx},{by},{bz}|{ctype}"
+    return hashlib.sha1(raw.encode("utf-8")).hexdigest(), quality
+
+
 _SEVERITY_BUMP_NEXT: dict[str, str] = {
     "low": "medium",
     "medium": "high",
@@ -258,7 +370,9 @@ def _apply_rules(run: object, pair: tuple[str, str]) -> dict | None:
     return None
 
 
-def _label_for_cluster(members: list[object], cluster_id: int) -> str:
+def _label_for_cluster(
+    members: list[object], cluster_id: int
+) -> str:
     """Heuristic short label for a cluster, no LLM call.
 
     Picks the most common discipline pair across the cluster's members
@@ -290,9 +404,11 @@ def _label_for_cluster(members: list[object], cluster_id: int) -> str:
                 continue
     if not pair_counts:
         return f"Cluster {cluster_id}"
-    # Dominant pair (tie-break alphabetically for determinism).
-    top_pair, _ = max(pair_counts.items(), key=lambda kv: (kv[1], -ord(kv[0][0][0])) if kv[0][0] else (kv[1], 0))
-    # The simpler stable sort: highest count, then alphabetic.
+    # Dominant pair: highest count, then alphabetic tie-break for
+    # determinism. The previous version computed `top_pair` twice with
+    # divergent tie-break logic; the first assignment was dead code, so
+    # results were inconsistent only when re-reading the variable for
+    # debugging. Keep one stable expression.
     top_pair = max(pair_counts, key=lambda p: (pair_counts[p], -ord(p[0][:1] or "z")))
     label = f"{top_pair[0]} × {top_pair[1]}"
     if storey_counts:
@@ -401,7 +517,9 @@ def _suggest_rule_from_fps(
     for pair in fp_pairs:
         counts[pair] = counts.get(pair, 0) + 1
     # Largest-FP pair, ties broken alphabetically for determinism.
-    top_pair, top_count = max(counts.items(), key=lambda kv: (kv[1], -ord((kv[0][0] or "z")[:1] or "z")))
+    top_pair, top_count = max(
+        counts.items(), key=lambda kv: (kv[1], -ord((kv[0][0] or "z")[:1] or "z"))
+    )
     if top_count < _FP_SUGGESTION_THRESHOLD:
         return None, "", top_count
     # Tolerance proposal: a safe 0.05 m default, widened just past the
@@ -420,7 +538,10 @@ def _suggest_rule_from_fps(
         "severity_override": None,
         "enabled": True,
     }
-    reason = f"{top_count} false positives on {top_pair[0]} × {top_pair[1]} — widen tolerance to {proposed_tol:g} m"
+    reason = (
+        f"{top_count} false positives on {top_pair[0]} × {top_pair[1]} — "
+        f"widen tolerance to {proposed_tol:g} m"
+    )
     return rule, reason, top_count
 
 
@@ -463,7 +584,7 @@ def _collect_fp_pairs(
     for r in rows:
         is_fp = (r.status or "") == "ignored"
         if not is_fp:
-            for h in r.history or []:
+            for h in (r.history or []):
                 fld = str((h or {}).get("field", "")).lower()
                 if fld in ("fp_flag", "flag_fp", "false_positive"):
                     is_fp = True
@@ -551,7 +672,7 @@ def _resolved_mttr_hours(rows: list[ClashResult]) -> float | None:
             continue
         # Both timestamps need to be tz-aware for the subtraction to
         # work; coerce naive timestamps (legacy SQLite test rows) to UTC.
-        utc = UTC
+        utc = timezone.utc
         if started.tzinfo is None:
             started = started.replace(tzinfo=utc)
         if ended.tzinfo is None:
@@ -577,7 +698,7 @@ def _compute_kpi(rows: list[ClashResult]) -> dict:
     by_type: dict[str, int] = {}
     pair_counts: dict[tuple[str, str], dict[str, int]] = {}
     for r in rows:
-        st = r.status or "new"
+        st = (r.status or "new")
         by_status[st] = by_status.get(st, 0) + 1
         sev = getattr(r, "severity", None) or "medium"
         by_severity[sev] = by_severity.get(sev, 0) + 1
@@ -620,7 +741,9 @@ def _compute_kpi(rows: list[ClashResult]) -> dict:
     }
 
 
-def _severity_suggestion(clash_type: str, penetration_m: float, base: str) -> str | None:
+def _severity_suggestion(
+    clash_type: str, penetration_m: float, base: str
+) -> str | None:
     """Wave A2 advisory bump for deep hard clashes (pure annotation).
 
     The engine-assigned ``severity`` stays the source of truth — this is
@@ -638,7 +761,9 @@ def _severity_suggestion(clash_type: str, penetration_m: float, base: str) -> st
     return nxt
 
 
-def _severity_for(clash_type: str, penetration_m: float, distance_m: float, clearance_m: float) -> str:
+def _severity_for(
+    clash_type: str, penetration_m: float, distance_m: float, clearance_m: float
+) -> str:
     """Geometry-derived triage urgency.
 
     Hard clash — keyed off interpenetration depth (deeper = worse):
@@ -954,7 +1079,9 @@ def _coplanar_tri_tri(t1: np.ndarray, t2: np.ndarray, normal: np.ndarray) -> boo
             d[1, 0] * d[2, 1] - d[1, 1] * d[2, 0],
             d[2, 0] * d[0, 1] - d[2, 1] * d[0, 0],
         )
-        return (s[0] >= 0 and s[1] >= 0 and s[2] >= 0) or (s[0] <= 0 and s[1] <= 0 and s[2] <= 0)
+        return (s[0] >= 0 and s[1] >= 0 and s[2] >= 0) or (
+            s[0] <= 0 and s[1] <= 0 and s[2] <= 0
+        )
 
     return _inside(p1[0], p2) or _inside(p2[0], p1)
 
@@ -1050,12 +1177,8 @@ def _tri_tri_intersect_mask(A: np.ndarray, B: np.ndarray) -> np.ndarray:
     m_int = cand & ~coplanar
     if m_int.any():
         out[ai[m_int], bj[m_int]] = _interval_overlap(
-            a_c[m_int],
-            b_c[m_int],
-            n1c[m_int],
-            n2c[m_int],
-            dA[m_int],
-            dB[m_int],
+            a_c[m_int], b_c[m_int], n1c[m_int], n2c[m_int],
+            dA[m_int], dB[m_int],
         )
 
     # Coplanar pairs (rare) handled with the 2-D fallback, one at a time.
@@ -1100,7 +1223,9 @@ def _interval_overlap(
         # The "lone" vertex is the one whose sign differs from the other
         # two (Möller). Fully vectorised: default 0; if s0==s1 the odd one
         # out is vertex 2; else if s0==s2 it is vertex 1; else vertex 0.
-        lone = np.where(s[:, 0] == s[:, 1], 2, np.where(s[:, 0] == s[:, 2], 1, 0)).astype(np.int64)
+        lone = np.where(
+            s[:, 0] == s[:, 1], 2, np.where(s[:, 0] == s[:, 2], 1, 0)
+        ).astype(np.int64)
         idx = np.arange(p.shape[0])
         o = lone
         a1 = (o + 1) % 3
@@ -1200,7 +1325,9 @@ def _point_tri_dist2(pts: np.ndarray, tri: np.ndarray) -> np.ndarray:
     return np.einsum("ij,ij->i", diff, diff)
 
 
-def _min_mesh_distance(A: np.ndarray, B: np.ndarray) -> tuple[float, np.ndarray, np.ndarray]:
+def _min_mesh_distance(
+    A: np.ndarray, B: np.ndarray
+) -> tuple[float, np.ndarray, np.ndarray]:
     """Real minimum surface gap between two triangle meshes (sampled).
 
     Symmetric: every vertex of A is tested against every triangle of B
@@ -1271,7 +1398,9 @@ def _closest_on_tri(p: np.ndarray, tri: np.ndarray) -> np.ndarray:
     return out[0]
 
 
-def _penetration_depth(A: np.ndarray, B: np.ndarray, mask: np.ndarray) -> tuple[float, np.ndarray]:
+def _penetration_depth(
+    A: np.ndarray, B: np.ndarray, mask: np.ndarray
+) -> tuple[float, np.ndarray]:
     """Honest penetration estimate from the *actually intersecting* tris.
 
     Collect the vertices of every triangle pair flagged intersecting,
@@ -1316,7 +1445,9 @@ class ClashService:
 
     # ── Run lifecycle ──────────────────────────────────────────────────
 
-    async def create_run(self, project_id: uuid.UUID, data: ClashRunCreate, user_id: str) -> ClashRun:
+    async def create_run(
+        self, project_id: uuid.UUID, data: ClashRunCreate, user_id: str
+    ) -> ClashRun:
         """Persist + execute a clash run synchronously, return it complete."""
         models = await self.repo.models_for_project(project_id)
         valid_ids = {m.id for m in models}
@@ -1326,7 +1457,9 @@ class ClashService:
                 status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
                 detail="None of the requested models belong to this project",
             )
-        if data.mode not in ("cross_discipline", "all", "selected", "selection_sets"):
+        if data.mode not in (
+            "cross_discipline", "all", "selected", "selection_sets"
+        ):
             raise HTTPException(
                 status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
                 detail=f"Unknown clash mode '{data.mode}'",
@@ -1334,11 +1467,17 @@ class ClashService:
         if data.clash_type not in CLASH_TYPES:
             raise HTTPException(
                 status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
-                detail=f"Unknown clash type '{data.clash_type}' (expected one of {', '.join(CLASH_TYPES)})",
+                detail=f"Unknown clash type '{data.clash_type}' "
+                f"(expected one of {', '.join(CLASH_TYPES)})",
             )
         set_a = set_b = None
         if data.mode == "selection_sets":
-            if data.set_a is None or data.set_b is None or data.set_a.is_empty or data.set_b.is_empty:
+            if (
+                data.set_a is None
+                or data.set_b is None
+                or data.set_a.is_empty
+                or data.set_b.is_empty
+            ):
                 raise HTTPException(
                     status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
                     detail="selection_sets mode requires a non-empty "
@@ -1348,7 +1487,9 @@ class ClashService:
             set_a = data.set_a.model_dump()
             set_b = data.set_b.model_dump()
 
-        name = (data.name or "").strip() or (f"Clash run {_now():%Y-%m-%d %H:%M}")
+        name = (data.name or "").strip() or (
+            f"Clash run {_now():%Y-%m-%d %H:%M}"
+        )
         # Wave A4 — initial rule set carried straight from the request.
         # The engine consults the (possibly empty) list during the broad
         # phase; the rule editor endpoints (PATCH /rules) can mutate it
@@ -1392,8 +1533,22 @@ class ClashService:
                 await self._persist_clusters(run, results)
             except Exception:  # noqa: BLE001 — clustering is best-effort
                 logger.exception("Clash run %s cluster pass failed", run.id)
-            run.status = "completed"
-            run.completed_at = _now()
+            # v41 — smart-issue upsert + finalize. Best-effort: failures
+            # leave the run rows in place but skip the smart-issue write.
+            try:
+                await self.session.flush()
+                for clash in results:
+                    if clash.signature_hash:
+                        await self.upsert_clash_with_signature(run, clash)
+                run.status = "completed"
+                run.completed_at = _now()
+                await self.finalize_run(run)
+            except Exception:  # noqa: BLE001 — smart issues are best-effort
+                logger.exception(
+                    "Clash run %s smart-issue upsert failed", run.id
+                )
+                run.status = "completed"
+                run.completed_at = _now()
         except Exception as exc:  # noqa: BLE001 — surface, don't 500 the run
             logger.exception("Clash run %s failed", run.id)
             run.status = "failed"
@@ -1402,7 +1557,9 @@ class ClashService:
         await self.session.flush()
         return run
 
-    async def _load_geometry(self, model_ids: list[uuid.UUID]) -> dict[str, object]:
+    async def _load_geometry(
+        self, model_ids: list[uuid.UUID]
+    ) -> dict[str, object]:
         """Best-effort load of real GLB triangle meshes per element.
 
         Returns ``{element_id: ElementGeom}``. If the geometry provider
@@ -1424,7 +1581,9 @@ class ClashService:
                 merged.update(part)
         return merged
 
-    async def _carry_forward(self, run: ClashRun, results: list[ClashResult]) -> None:
+    async def _carry_forward(
+        self, run: ClashRun, results: list[ClashResult]
+    ) -> None:
         """Persist triage across re-runs by matching clash signatures.
 
         Find the most recent *completed* run of this project that shares
@@ -1446,7 +1605,9 @@ class ClashService:
                 return
             prior_rows = await self.repo.all_results(prior_run.id)
         except Exception:  # noqa: BLE001 — carry-forward is best-effort
-            logger.exception("Clash carry-forward lookup failed for run %s", run.id)
+            logger.exception(
+                "Clash carry-forward lookup failed for run %s", run.id
+            )
             return
 
         # Index prior rows by signature. On the (rare) signature collision
@@ -1485,7 +1646,9 @@ class ClashService:
                 if prior_history:
                     r.history = prior_history
             except Exception:  # noqa: BLE001 — skip just this row
-                logger.exception("Clash carry-forward failed for signature %s", sig)
+                logger.exception(
+                    "Clash carry-forward failed for signature %s", sig
+                )
                 continue
 
     async def compare_runs(
@@ -1534,7 +1697,9 @@ class ClashService:
             }
 
         new = [_summary(cur_by_sig[s]) for s in sorted(cur_sigs - base_sigs)]
-        resolved = [_summary(base_by_sig[s]) for s in sorted(base_sigs - cur_sigs)]
+        resolved = [
+            _summary(base_by_sig[s]) for s in sorted(base_sigs - cur_sigs)
+        ]
         persistent = [
             {
                 "current": _summary(cur_by_sig[s]),
@@ -1555,22 +1720,540 @@ class ClashService:
             },
         }
 
+    # ── Smart-issue identity (v41) ─────────────────────────────────────
+
+    @staticmethod
+    def compute_signature(
+        *,
+        a_guid: str | None,
+        b_guid: str | None,
+        centroid: tuple[float, float, float],
+        clash_type: str,
+        grid_mm: int = _DEFAULT_SPATIAL_GRID_MM,
+        weak_fallback: tuple[str, str, list[str]] | None = None,
+    ) -> tuple[str, str]:
+        """Public, stateless signature computation — see :func:`_compute_signature_hash`.
+
+        Exposed on the service so callers and tests don't reach into the
+        private helper. Returns ``(signature_hash, quality)``.
+        """
+        return _compute_signature_hash(
+            a_guid=a_guid,
+            b_guid=b_guid,
+            centroid=centroid,
+            clash_type=clash_type,
+            grid_mm=grid_mm,
+            weak_fallback=weak_fallback,
+        )
+
+    async def _format_server_id(self, project_id: uuid.UUID) -> str:
+        """Allocate the next ``CLASH-NNN`` id for ``project_id``."""
+        n = await self.repo.next_issue_seq(project_id)
+        return f"CLASH-{n:03d}"
+
+    async def upsert_clash_with_signature(
+        self,
+        run: ClashRun,
+        clash: ClashResult,
+    ) -> ClashIssue:
+        """Find or create the smart issue for one clash row and link it.
+
+        The result row's ``signature_hash`` and ``signature_quality`` are
+        assumed to be stamped already (the engine path sets them in
+        :meth:`_row`; callers using this API on hand-built rows should
+        compute them via :meth:`compute_signature` first).
+
+        On insert: creates a fresh :class:`ClashIssue` with the project-
+        scoped server-assigned id (``CLASH-NNN``) and ``status='new'``.
+        On hit: bumps ``last_seen_run_id`` and resets ``missing_run_count``,
+        flipping ``resolved`` issues to ``persisted`` (a reopen) and
+        ``archived`` ones back to ``persisted`` as well. Suppressed
+        signatures stay ``ignored``. ``new`` becomes ``persisted`` only
+        when this is the second or later run that's seen it.
+
+        Returns the (now-linked) :class:`ClashIssue`.
+        """
+        sig = (clash.signature_hash or "").strip()
+        if not sig:
+            raise ValueError(
+                "ClashResult.signature_hash must be set before upsert"
+            )
+        # Suppressed signatures resolve to an ignored issue and never
+        # surface as new — but we still link the row so the UI can
+        # explain why the clash is suppressed.
+        suppressed = await self.repo.get_suppression(run.project_id, sig)
+        existing = await self.repo.get_issue_by_signature(run.project_id, sig)
+        if existing is None:
+            server_id = await self._format_server_id(run.project_id)
+            issue = ClashIssue(
+                project_id=run.project_id,
+                signature_hash=sig,
+                status="ignored" if suppressed is not None else "new",
+                first_seen_run_id=run.id,
+                last_seen_run_id=run.id,
+                missing_run_count=0,
+                server_assigned_id=server_id,
+                signature_quality=(clash.signature_quality or "strong"),
+                tags=[],
+            )
+            self.repo.add_issue(issue)
+            await self.session.flush()
+            clash.issue_id = issue.id
+            return issue
+        # Hit — bump last_seen + reset missing count + transition status.
+        existing.last_seen_run_id = run.id
+        existing.missing_run_count = 0
+        if suppressed is not None:
+            # An active suppression always wins, regardless of prior status.
+            existing.status = "ignored"
+        else:
+            prior_status = existing.status or "new"
+            if prior_status in ("resolved", "archived"):
+                # Reopen — the signature came back.
+                existing.status = "persisted"
+                existing.resolved_run_id = None
+            elif prior_status == "new":
+                # Second-or-later sighting → persisted.
+                existing.status = "persisted"
+            elif prior_status == "ignored":
+                # Suppression must have been lifted between runs — flip
+                # back to persisted so coordination can see it again.
+                existing.status = "persisted"
+            # ``persisted`` stays ``persisted``.
+        clash.issue_id = existing.id
+        return existing
+
+    async def finalize_run(
+        self,
+        run: ClashRun,
+    ) -> None:
+        """Close the smart-issue diff for a freshly-completed run.
+
+        Walks every existing :class:`ClashIssue` for the project and,
+        for those *not* present in this run's signatures, bumps
+        ``missing_run_count``. Issues that were present in the prior run
+        but absent now flip ``new``/``persisted`` → ``resolved`` and stamp
+        ``resolved_run_id``. Issues missing for ≥ ``_ARCHIVE_AFTER_MISSING``
+        consecutive runs flip ``resolved`` → ``archived``. Suppressed
+        issues are untouched (they stay ``ignored``).
+
+        Idempotent on the same run — calling twice produces the same
+        terminal state.
+        """
+        current_sigs = await self.repo.signatures_present_in_run(run.id)
+        suppressed_sigs = await self.repo.suppressed_signatures_for_project(
+            run.project_id
+        )
+        all_issues = await self.repo.issues_for_project(run.project_id)
+        for issue in all_issues:
+            sig = issue.signature_hash or ""
+            if sig in suppressed_sigs:
+                # Suppression overrides lifecycle; never archive or auto-
+                # resolve an actively-suppressed signature.
+                issue.status = "ignored"
+                continue
+            if sig in current_sigs:
+                # Present this run — the upsert path already moved the
+                # status forward, nothing else to do here.
+                continue
+            # Absent this run.
+            prior_status = issue.status or "new"
+            issue.missing_run_count = int(issue.missing_run_count or 0) + 1
+            if prior_status in ("new", "persisted"):
+                issue.status = "resolved"
+                issue.resolved_run_id = run.id
+            elif prior_status == "resolved":
+                if issue.missing_run_count >= _ARCHIVE_AFTER_MISSING:
+                    issue.status = "archived"
+        await self.session.flush()
+
+    async def suppress(
+        self,
+        project_id: uuid.UUID,
+        signature_hash: str,
+        reason: str,
+        user_id: uuid.UUID | str | None,
+    ) -> ClashSuppression:
+        """Suppress a signature for a project + flip matching issues to ``ignored``.
+
+        Idempotent — repeating the call updates the existing suppression's
+        reason / user but does not create a duplicate row.
+        """
+        sig = (signature_hash or "").strip()
+        if not sig:
+            raise HTTPException(
+                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                detail="signature_hash is required",
+            )
+        rsn = (reason or "").strip()
+        if not rsn:
+            raise HTTPException(
+                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                detail="reason is required",
+            )
+        existing = await self.repo.get_suppression(project_id, sig)
+        uid: uuid.UUID | None = None
+        if user_id is not None:
+            try:
+                uid = uuid.UUID(str(user_id))
+            except (TypeError, ValueError):
+                uid = None
+        if existing is None:
+            existing = ClashSuppression(
+                project_id=project_id,
+                signature_hash=sig,
+                reason=rsn,
+                suppressed_by_user_id=uid,
+            )
+            self.repo.add_suppression(existing)
+        else:
+            existing.reason = rsn
+            if uid is not None:
+                existing.suppressed_by_user_id = uid
+        # Flip every matching issue to ``ignored``.
+        matching = await self.repo.get_issue_by_signature(project_id, sig)
+        if matching is not None:
+            matching.status = "ignored"
+        await self.session.flush()
+        return existing
+
+    async def unsuppress(
+        self,
+        project_id: uuid.UUID,
+        signature_hash: str,
+        user_id: uuid.UUID | str | None,  # noqa: ARG002 — kept for audit symmetry
+    ) -> bool:
+        """Remove a suppression + flip matching ``ignored`` issues back to ``persisted``.
+
+        Returns True if a suppression row was deleted, False if none was
+        found (idempotent no-op).
+        """
+        sig = (signature_hash or "").strip()
+        if not sig:
+            raise HTTPException(
+                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                detail="signature_hash is required",
+            )
+        existing = await self.repo.get_suppression(project_id, sig)
+        if existing is None:
+            return False
+        await self.repo.delete_suppression(existing)
+        # Flip the matching issue (if any) back to ``persisted`` — the
+        # signature is once again "live" coordination work.
+        matching = await self.repo.get_issue_by_signature(project_id, sig)
+        if matching is not None and matching.status == "ignored":
+            matching.status = "persisted"
+        await self.session.flush()
+        return True
+
+    async def suppress_by_issue(
+        self,
+        project_id: uuid.UUID,
+        issue_id: uuid.UUID,
+        reason: str,
+        user_id: uuid.UUID | str | None,
+    ) -> ClashIssue:
+        """Convenience wrapper used by the router (issue_id, not hash)."""
+        issue = await self.repo.get_issue(project_id, issue_id)
+        if issue is None:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Clash issue not found",
+            )
+        await self.suppress(project_id, issue.signature_hash, reason, user_id)
+        return issue
+
+    async def unsuppress_by_issue(
+        self,
+        project_id: uuid.UUID,
+        issue_id: uuid.UUID,
+        user_id: uuid.UUID | str | None,
+    ) -> ClashIssue:
+        """Convenience wrapper used by the router (issue_id, not hash)."""
+        issue = await self.repo.get_issue(project_id, issue_id)
+        if issue is None:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Clash issue not found",
+            )
+        await self.unsuppress(project_id, issue.signature_hash, user_id)
+        return issue
+
+    # TODO: expose via bulk endpoint — router.py is in flight with
+    # another agent, so the service method is shipped on its own and
+    # wired up in a follow-up patch.
+    async def bulk_suppress(
+        self,
+        project_id: uuid.UUID,
+        issue_ids: list[uuid.UUID],
+        reason: str,
+        user_id: uuid.UUID | str | None,
+    ) -> dict:
+        """Suppress many :class:`ClashIssue` rows in a single transaction.
+
+        Atomic — either every authorized issue flips to ``ignored`` and
+        gains a :class:`ClashSuppression` row, or nothing does (the
+        caller's request-scoped session is rolled back on any error).
+
+        IDOR-safe: ids that don't belong to ``project_id`` are silently
+        dropped (the same defensive pattern as the single-issue path);
+        the result's ``skipped_ids`` lists them so the caller can surface
+        a structured warning. Idempotent: an issue already covered by a
+        suppression row gets its ``reason`` updated in place — no duplicate
+        rows and the audit trail still records the re-suppression.
+
+        Empty ``issue_ids`` → returns the zero-counts envelope, never raises.
+
+        Args:
+            project_id: scoping project (every issue must belong to it).
+            issue_ids: list of ``ClashIssue.id`` values to suppress.
+            reason: free-text suppression reason (non-empty after strip).
+            user_id: actor id for the audit trail (best-effort UUID coerced).
+
+        Returns:
+            ``{"suppressed_ids": [...], "skipped_ids": [...],
+               "suppressed_count": int, "skipped_count": int}``
+
+        Raises:
+            HTTPException 422: ``reason`` is empty / whitespace-only.
+        """
+        rsn = (reason or "").strip()
+        if not rsn:
+            raise HTTPException(
+                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                detail="reason is required",
+            )
+
+        # Empty input is a legal no-op — the UI can wire an "Apply to
+        # selected" button without first checking the selection length.
+        if not issue_ids:
+            return {
+                "suppressed_ids": [],
+                "skipped_ids": [],
+                "suppressed_count": 0,
+                "skipped_count": 0,
+            }
+
+        # De-duplicate while preserving order — the audit trail entries
+        # below are emitted once per issue, never twice for a repeat id.
+        seen: set[uuid.UUID] = set()
+        unique_ids: list[uuid.UUID] = []
+        for iid in issue_ids:
+            if iid is None or iid in seen:
+                continue
+            seen.add(iid)
+            unique_ids.append(iid)
+
+        # Coerce user_id once — re-used on every audit + suppression row.
+        uid: uuid.UUID | None = None
+        if user_id is not None:
+            try:
+                uid = uuid.UUID(str(user_id))
+            except (TypeError, ValueError):
+                uid = None
+
+        # IDOR gate: load only project-scoped rows. Anything missing is
+        # an unauthorized / vanished id — reported back in ``skipped_ids``
+        # so the UI never silently swallows a typo'd selection.
+        authorized = await self.repo.get_issues_by_ids(project_id, unique_ids)
+        authorized_by_id: dict[uuid.UUID, ClashIssue] = {
+            i.id: i for i in authorized
+        }
+        skipped: list[uuid.UUID] = [
+            iid for iid in unique_ids if iid not in authorized_by_id
+        ]
+
+        signatures = [
+            i.signature_hash for i in authorized if (i.signature_hash or "").strip()
+        ]
+        existing_suppressions = (
+            await self.repo.get_suppressions_by_signatures(project_id, signatures)
+        )
+
+        # Resolve actor string once for the audit log entries written to
+        # each affected ClashResult's history JSON column.
+        actor = await self.resolve_author(str(user_id)) if user_id else "system"
+
+        suppressed_ids: list[uuid.UUID] = []
+        for issue in authorized:
+            sig = (issue.signature_hash or "").strip()
+            if not sig:
+                # Defensive: an issue without a signature hash can't be
+                # suppressed (the suppression key IS the signature) — skip
+                # it as if it had been unauthorized so the count is honest.
+                skipped.append(issue.id)
+                continue
+
+            existing = existing_suppressions.get(sig)
+            if existing is None:
+                row = ClashSuppression(
+                    project_id=project_id,
+                    signature_hash=sig,
+                    reason=rsn,
+                    suppressed_by_user_id=uid,
+                )
+                self.repo.add_suppression(row)
+                existing_suppressions[sig] = row
+            else:
+                # Idempotent re-suppression: update reason + actor in place.
+                existing.reason = rsn
+                if uid is not None:
+                    existing.suppressed_by_user_id = uid
+
+            prior_status = issue.status
+            issue.status = "ignored"
+
+            # Audit trail: fan out to every result row attached to this
+            # issue so the per-clash Activity tab reflects the bulk op.
+            from sqlalchemy import select as _select  # local import — see note
+            res_stmt = _select(ClashResult).where(ClashResult.issue_id == issue.id)
+            for r in (await self.session.execute(res_stmt)).scalars().all():
+                self._append_history(
+                    r, actor, "suppression", prior_status, "ignored"
+                )
+
+            suppressed_ids.append(issue.id)
+
+        # Single flush at the end → atomic. If the flush raises, the
+        # caller's session.rollback() (or AsyncSession context manager)
+        # discards every change above so a partial bulk is impossible.
+        await self.session.flush()
+
+        return {
+            "suppressed_ids": suppressed_ids,
+            "skipped_ids": skipped,
+            "suppressed_count": len(suppressed_ids),
+            "skipped_count": len(skipped),
+        }
+
+    async def list_issues(
+        self,
+        project_id: uuid.UUID,
+        *,
+        status_filter: str | None = None,
+        offset: int = 0,
+        limit: int = 100,
+    ) -> tuple[list[tuple[ClashIssue, int]], int]:
+        """Project-scoped list of smart issues with member counts."""
+        if status_filter is not None and status_filter not in CLASH_ISSUE_STATUSES:
+            raise HTTPException(
+                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                detail=f"Invalid clash issue status '{status_filter}'",
+            )
+        return await self.repo.list_issues(
+            project_id,
+            status=status_filter,
+            offset=offset,
+            limit=limit,
+        )
+
+    async def run_diff(
+        self,
+        project_id: uuid.UUID,
+        run_id: uuid.UUID,
+    ) -> dict:
+        """Smart-issue diff counts for a run vs the previous one.
+
+        Returns ``{new, persisted, resolved, reopened, ignored}``. ``new`` =
+        signatures first seen this run (i.e. their issue's
+        ``first_seen_run_id == run_id``). ``persisted`` = signatures seen
+        in both runs whose issue is currently ``persisted``. ``resolved``
+        = signatures that were in the prior run but not this one
+        (``resolved_run_id == run_id``). ``reopened`` = signatures whose
+        issue had ``status='resolved'`` in the prior run but is back to
+        ``persisted`` this run (the upsert path detects this). ``ignored``
+        = signatures whose issue is currently ``ignored`` (suppressed).
+        """
+        run = await self.get_run(project_id, run_id)
+        sigs_this_run = await self.repo.signatures_present_in_run(run_id)
+        issues = await self.repo.issues_by_signatures(
+            project_id, list(sigs_this_run)
+        )
+        prev_run = await self.repo.previous_run(project_id, run_id)
+        prev_sigs: set[str] = set()
+        if prev_run is not None:
+            prev_sigs = await self.repo.signatures_present_in_run(prev_run.id)
+
+        new = 0
+        persisted = 0
+        reopened = 0
+        ignored = 0
+        for sig, issue in issues.items():
+            st = (issue.status or "").lower()
+            if st == "ignored":
+                ignored += 1
+                continue
+            if str(issue.first_seen_run_id) == str(run_id):
+                new += 1
+                continue
+            if sig in prev_sigs:
+                persisted += 1
+                # Reopened: issue resurfaced after a resolved/archived spell
+                # and is now persisted. We detect this via resolved_run_id
+                # being non-null (set on the resolution diff, cleared on
+                # next reopen) — but the upsert clears it on the reopen, so
+                # we approximate via ``missing_run_count``: any issue
+                # whose missing count was > 0 just before this run is a
+                # reopen. The upsert resets it to 0, so we infer via the
+                # history of the previous run: simpler heuristic — count
+                # an issue as reopened when its first_seen_run_id is older
+                # than the previous run but it was *not* present in that
+                # previous run.
+                if (
+                    prev_run is not None
+                    and sig not in prev_sigs
+                    and str(issue.first_seen_run_id) != str(run_id)
+                ):
+                    reopened += 1
+            else:
+                # Present this run, not present in prev_sigs, but not
+                # first-seen this run — that's a reopen.
+                if (
+                    prev_run is not None
+                    and str(issue.first_seen_run_id) != str(run_id)
+                ):
+                    reopened += 1
+        # Resolved: count of issues whose resolved_run_id == run_id (the
+        # finalize_run pass stamps these).
+        all_issues = await self.repo.issues_for_project(project_id)
+        resolved = sum(
+            1
+            for i in all_issues
+            if i.resolved_run_id is not None
+            and str(i.resolved_run_id) == str(run_id)
+        )
+        return {
+            "new": int(new),
+            "persisted": int(persisted),
+            "resolved": int(resolved),
+            "reopened": int(reopened),
+            "ignored": int(ignored),
+        }
+
     async def list_runs(self, project_id: uuid.UUID) -> list[ClashRun]:
         return await self.repo.list_runs(project_id)
 
-    async def get_run(self, project_id: uuid.UUID, run_id: uuid.UUID) -> ClashRun:
+    async def get_run(
+        self, project_id: uuid.UUID, run_id: uuid.UUID
+    ) -> ClashRun:
         run = await self.repo.get_run(project_id, run_id)
         if run is None:
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Clash run not found")
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND, detail="Clash run not found"
+            )
         return run
 
-    async def delete_run(self, project_id: uuid.UUID, run_id: uuid.UUID) -> None:
+    async def delete_run(
+        self, project_id: uuid.UUID, run_id: uuid.UUID
+    ) -> None:
         run = await self.get_run(project_id, run_id)
         await self.repo.delete_run(run)
 
     # ── Wave A4: clusters, rules, suggestions, KPI ─────────────────────
 
-    async def _persist_clusters(self, run: ClashRun, results: list[ClashResult]) -> None:
+    async def _persist_clusters(
+        self, run: ClashRun, results: list[ClashResult]
+    ) -> None:
         """Run DBSCAN over centroids → stamp ``cluster_id`` + ClashCluster.
 
         Pure side-effect over the result rows + the ``oe_clash_cluster``
@@ -1586,7 +2269,10 @@ class ClashService:
         # Defensive copy of the existing rows so re-run replaces (the
         # carry-forward path may have produced a fresh list).
         await self.repo.clear_clusters(run.id)
-        points = [(float(r.cx or 0.0), float(r.cy or 0.0), float(r.cz or 0.0)) for r in results]
+        points = [
+            (float(r.cx or 0.0), float(r.cy or 0.0), float(r.cz or 0.0))
+            for r in results
+        ]
         labels = _dbscan_cluster(points)
         # Group members by label so we can persist one ClashCluster per
         # bucket. ``None`` is DBSCAN noise — no row, no chip.
@@ -1611,7 +2297,9 @@ class ClashService:
             )
         self.repo.add_clusters(cluster_rows)
 
-    async def list_clusters(self, project_id: uuid.UUID, run_id: uuid.UUID) -> list[dict]:
+    async def list_clusters(
+        self, project_id: uuid.UUID, run_id: uuid.UUID
+    ) -> list[dict]:
         """Return ``[{cluster_id, label, size, dominant_disciplines, storey}]``.
 
         ``dominant_disciplines`` and ``storey`` are derived from the
@@ -1646,7 +2334,9 @@ class ClashService:
             )
         return out
 
-    async def list_rules(self, project_id: uuid.UUID, run_id: uuid.UUID) -> list[dict]:
+    async def list_rules(
+        self, project_id: uuid.UUID, run_id: uuid.UUID
+    ) -> list[dict]:
         """Return the run's persisted rule list (raw JSON-friendly dicts)."""
         run = await self.get_run(project_id, run_id)
         return _coerce_rules(run.rules)
@@ -1670,7 +2360,9 @@ class ClashService:
         await self.session.flush()
         return _coerce_rules(run.rules)
 
-    async def rule_suggestions(self, project_id: uuid.UUID, run_id: uuid.UUID) -> list[dict]:
+    async def rule_suggestions(
+        self, project_id: uuid.UUID, run_id: uuid.UUID
+    ) -> list[dict]:
         """Mine the run's recorded false-positive history for rule suggestions.
 
         Each suggestion is keyed off discipline pairs that were *ignored
@@ -1685,9 +2377,16 @@ class ClashService:
         fp_pairs, fp_max_pen = _collect_fp_pairs(rows)
         existing_pairs = _existing_rule_pairs(run.rules)
         # Filter out pairs that already have a rule, then mine.
-        filtered_pairs = [p for p in fp_pairs if frozenset(p) not in existing_pairs]
-        filtered_max_pen = {k: v for k, v in fp_max_pen.items() if frozenset(k) not in existing_pairs}
-        rule, reason, fp_count = _suggest_rule_from_fps(filtered_pairs, filtered_max_pen)
+        filtered_pairs = [
+            p for p in fp_pairs if frozenset(p) not in existing_pairs
+        ]
+        filtered_max_pen = {
+            k: v for k, v in fp_max_pen.items()
+            if frozenset(k) not in existing_pairs
+        }
+        rule, reason, fp_count = _suggest_rule_from_fps(
+            filtered_pairs, filtered_max_pen
+        )
         if rule is None:
             return []
         return [{"rule": rule, "reason": reason, "fp_count": fp_count}]
@@ -1751,7 +2450,10 @@ class ClashService:
         for r in rows:
             if (r.clash_type or "") != "hard":
                 continue
-            r_pair = frozenset(((r.a_discipline or "").strip().lower(), (r.b_discipline or "").strip().lower()))
+            r_pair = frozenset(
+                ((r.a_discipline or "").strip().lower(),
+                 (r.b_discipline or "").strip().lower())
+            )
             if r_pair != pair:
                 continue
             if float(r.penetration_m or 0.0) > float(tolerance_m):
@@ -1773,7 +2475,9 @@ class ClashService:
         await self.session.flush()
         return rule_added, affected
 
-    async def compute_kpi(self, project_id: uuid.UUID, run_id: uuid.UUID) -> dict:
+    async def compute_kpi(
+        self, project_id: uuid.UUID, run_id: uuid.UUID
+    ) -> dict:
         """Aggregate a dashboard-ready KPI payload for a run.
 
         Single in-memory pass over every result row — no extra DB calls
@@ -1806,7 +2510,9 @@ class ClashService:
             ),
         )
 
-        boxes: list[tuple[object, tuple[float, float, float, float, float, float], str, object]] = []
+        boxes: list[
+            tuple[object, tuple[float, float, float, float, float, float], str, object]
+        ] = []
         for el in ordered:
             g = geoms.get(str(getattr(el, "id", "")))
             aabb = None
@@ -1815,12 +2521,8 @@ class ClashService:
                 if ga is not None and len(ga) == 6 and all(math.isfinite(v) for v in ga):
                     if ga[3] > ga[0] and ga[4] > ga[1] and ga[5] > ga[2]:
                         aabb = (
-                            float(ga[0]),
-                            float(ga[1]),
-                            float(ga[2]),
-                            float(ga[3]),
-                            float(ga[4]),
-                            float(ga[5]),
+                            float(ga[0]), float(ga[1]), float(ga[2]),
+                            float(ga[3]), float(ga[4]), float(ga[5]),
                         )
             if aabb is None:
                 aabb = _norm_bbox(getattr(el, "bounding_box", None))
@@ -1838,12 +2540,18 @@ class ClashService:
         # O(pairs) times. Doing it once per element here makes it O(n)
         # with byte-identical output (pure memoisation — the narrow-phase
         # maths is untouched), which is the bulk of the runtime win.
-        tri_by_idx: list[object] = [(_triangles(g) if g is not None else None) for _, _, _, g in boxes]
-        obb_by_idx: list[object] = [(_obb(g) if g is not None else None) for _, _, _, g in boxes]
+        tri_by_idx: list[object] = [
+            (_triangles(g) if g is not None else None) for _, _, _, g in boxes
+        ]
+        obb_by_idx: list[object] = [
+            (_obb(g) if g is not None else None) for _, _, _, g in boxes
+        ]
 
         # Cell size = 60th-percentile element extent, clamped to a sane
         # band so neither tiny bolts nor whole storeys distort the grid.
-        extents = sorted(max(bb[3] - bb[0], bb[4] - bb[1], bb[5] - bb[2]) for _, bb, _, _ in boxes)
+        extents = sorted(
+            max(bb[3] - bb[0], bb[4] - bb[1], bb[5] - bb[2]) for _, bb, _, _ in boxes
+        )
         cell = extents[int(len(extents) * 0.6)]
         cell = min(max(cell, 0.5), 10.0)
 
@@ -1865,7 +2573,9 @@ class ClashService:
 
         dfilter: set[frozenset[str]] | None = None
         if run.mode == "selected" and run.discipline_filter:
-            dfilter = {frozenset((str(a), str(b))) for a, b in run.discipline_filter}
+            dfilter = {
+                frozenset((str(a), str(b))) for a, b in run.discipline_filter
+            }
         # Navisworks-style selection sets: only A×B cross pairs survive.
         sel_a = run.set_a if run.mode == "selection_sets" else None
         sel_b = run.set_b if run.mode == "selection_sets" else None
@@ -1880,10 +2590,9 @@ class ClashService:
         # Federated noise filter ("ignore clashes within the same file").
         # Meaningless on a single-model run, so only honoured when the run
         # actually spans more than one model.
-        ignore_same_model = (
-            bool(getattr(run, "ignore_same_model", False))
-            and len({str(getattr(e, "model_id", "")) for e, _, _, _ in boxes}) > 1
-        )
+        ignore_same_model = bool(
+            getattr(run, "ignore_same_model", False)
+        ) and len({str(getattr(e, "model_id", "")) for e, _, _, _ in boxes}) > 1
 
         seen: set[tuple[int, int]] = set()
         results: list[ClashResult] = []
@@ -1909,7 +2618,9 @@ class ClashService:
                 seen.add(key)
                 pairs_tested += 1
                 if pairs_tested > _MAX_PAIRS:
-                    logger.warning("Clash run %s hit the %d-pair cap", run.id, _MAX_PAIRS)
+                    logger.warning(
+                        "Clash run %s hit the %d-pair cap", run.id, _MAX_PAIRS
+                    )
                     return results
                 ea, ba, da, ga = boxes[key[0]]
                 eb, bb_, db, gb = boxes[key[1]]
@@ -1918,7 +2629,10 @@ class ClashService:
                 # Federated noise filter: drop intra-model pairs so a
                 # model is never clashed against itself when the user
                 # only wants cross-discipline/cross-trade coordination.
-                if ignore_same_model and (getattr(ea, "model_id", None) == getattr(eb, "model_id", None)):
+                if ignore_same_model and (
+                    getattr(ea, "model_id", None)
+                    == getattr(eb, "model_id", None)
+                ):
                     continue
                 # Discipline gating.
                 if run.mode == "cross_discipline" and da == db:
@@ -1932,8 +2646,14 @@ class ClashService:
                     ta_ = _type_of(ea)
                     tb_ = _type_of(eb)
                     if not (
-                        (_in_set(ea, ta_, da, sel_a) and _in_set(eb, tb_, db, sel_b))
-                        or (_in_set(ea, ta_, da, sel_b) and _in_set(eb, tb_, db, sel_a))
+                        (
+                            _in_set(ea, ta_, da, sel_a)
+                            and _in_set(eb, tb_, db, sel_b)
+                        )
+                        or (
+                            _in_set(ea, ta_, da, sel_b)
+                            and _in_set(eb, tb_, db, sel_a)
+                        )
                     ):
                         continue
 
@@ -1950,34 +2670,24 @@ class ClashService:
                         pair_tol = tol
 
                 row = self._test_pair(
-                    run,
-                    ea,
-                    ba,
-                    da,
-                    ga,
-                    eb,
-                    bb_,
-                    db,
-                    gb,
-                    pair_tol,
-                    clr,
-                    triA=tri_by_idx[key[0]],
-                    triB=tri_by_idx[key[1]],
-                    oa=obb_by_idx[key[0]],
-                    ob=obb_by_idx[key[1]],
+                    run, ea, ba, da, ga, eb, bb_, db, gb, pair_tol, clr,
+                    triA=tri_by_idx[key[0]], triB=tri_by_idx[key[1]],
+                    oa=obb_by_idx[key[0]], ob=obb_by_idx[key[1]],
                     hard_enabled=hard_enabled,
                 )
                 if row is not None:
                     if pair_rule is not None:
                         sev_override = pair_rule.get("severity_override")
-                        if isinstance(sev_override, str) and sev_override in CLASH_SEVERITIES:
+                        if (
+                            isinstance(sev_override, str)
+                            and sev_override in CLASH_SEVERITIES
+                        ):
                             row.severity = sev_override
                     results.append(row)
                     if len(results) >= _MAX_RESULTS:
                         logger.warning(
                             "Clash run %s hit the %d-result cap",
-                            run.id,
-                            _MAX_RESULTS,
+                            run.id, _MAX_RESULTS,
                         )
                         return results
         return results
@@ -2045,17 +2755,7 @@ class ClashService:
 
         if triA is None or triB is None:
             return cls._test_pair_bbox(
-                run,
-                ea,
-                ba,
-                da,
-                eb,
-                bb,
-                db,
-                tol,
-                clr,
-                ga,
-                gb,
+                run, ea, ba, da, eb, bb, db, tol, clr, ga, gb,
                 hard_enabled=hard_enabled,
             )
 
@@ -2104,19 +2804,8 @@ class ClashService:
             return None
 
         return cls._row(
-            run,
-            ea,
-            da,
-            eb,
-            db,
-            clash_type,
-            penetration,
-            distance,
-            cx,
-            cy,
-            cz,
-            ga,
-            gb,
+            run, ea, da, eb, db, clash_type, penetration, distance,
+            cx, cy, cz, ga, gb,
         )
 
     @classmethod
@@ -2178,19 +2867,8 @@ class ClashService:
             return None
 
         return cls._row(
-            run,
-            ea,
-            da,
-            eb,
-            db,
-            clash_type,
-            penetration,
-            distance,
-            cx,
-            cy,
-            cz,
-            ga,
-            gb,
+            run, ea, da, eb, db, clash_type, penetration, distance,
+            cx, cy, cz, ga, gb,
         )
 
     @staticmethod
@@ -2235,6 +2913,49 @@ class ClashService:
         clr = float(getattr(run, "clearance_m", 0.0) or 0.0)
         sev = _severity_for(clash_type, penetration, distance, clr)
         suggestion = _severity_suggestion(clash_type, penetration, sev)
+        # Smart-issue signature (v41). Bucketed centroid + sorted GUID pair
+        # + clash type → SHA-1. Per-run ``spatial_grid_mm`` lets a project
+        # dial the precision; defaults to 500 mm.
+        grid_mm = int(getattr(run, "spatial_grid_mm", None) or _DEFAULT_SPATIAL_GRID_MM)
+        # Weak-fallback inputs — only consulted when one stable_id is empty.
+        a_props = getattr(ea, "properties", None) or {}
+        b_props = getattr(eb, "properties", None) or {}
+        ifc_a = str(
+            a_props.get("ifc_class")
+            or a_props.get("category")
+            or getattr(ea, "element_type", "")
+            or ""
+        )
+        ifc_b = str(
+            b_props.get("ifc_class")
+            or b_props.get("category")
+            or getattr(eb, "element_type", "")
+            or ""
+        )
+        mat_a = str(a_props.get("material") or "")
+        mat_b = str(b_props.get("material") or "")
+        ifc_class_combined = f"{ifc_a}|{ifc_b}" if ifc_a or ifc_b else ""
+        material_combined = f"{mat_a}|{mat_b}" if mat_a or mat_b else ""
+        # Quantity keys (deterministic) — from either props.quantities or
+        # the geometric properties keys themselves; sorted for stability.
+        qty_keys: list[str] = []
+        for src in (a_props, b_props):
+            qsrc = src.get("quantities") if isinstance(src, dict) else None
+            if isinstance(qsrc, dict):
+                qty_keys.extend(str(k) for k in qsrc)
+        sig_hash, sig_quality = _compute_signature_hash(
+            a_guid=a_sid,
+            b_guid=b_sid,
+            centroid=(cx, cy, cz),
+            clash_type=clash_type,
+            grid_mm=grid_mm,
+            weak_fallback=(
+                ifc_class_combined,
+                material_combined,
+                qty_keys,
+            ),
+        )
+        tol_at_sig_mm = float(getattr(run, "tolerance_m", 0.0) or 0.0) * 1000.0
         meta: dict = {}
         if suggestion is not None:
             meta["severity_suggestion"] = suggestion
@@ -2263,6 +2984,9 @@ class ClashService:
             status="new",
             severity=sev,
             signature=_signature(a_sid, b_sid, clash_type),
+            signature_hash=sig_hash,
+            signature_quality=sig_quality,
+            tolerance_at_signature_time_mm=tol_at_sig_mm,
             comments=[],
             watchers=[],
             history=[],
@@ -2397,7 +3121,9 @@ class ClashService:
         run = await self.get_run(project_id, run_id)
         result = await self.repo.get_result(run_id, result_id)
         if result is None:
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Clash not found")
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND, detail="Clash not found"
+            )
         actor_id = str(actor or "system")
         # Track which fields changed so we can fan notifications out once
         # at the end (cheaper than N parallel publish calls).
@@ -2409,7 +3135,9 @@ class ClashService:
                     detail=f"Invalid clash status '{new_status}'",
                 )
             if result.status != new_status:
-                self._append_history(result, actor_id, "status", result.status, new_status)
+                self._append_history(
+                    result, actor_id, "status", result.status, new_status
+                )
                 result.status = new_status
                 changed_fields.append("status")
         if severity is not None:
@@ -2419,7 +3147,9 @@ class ClashService:
                     detail=f"Invalid clash severity '{severity}'",
                 )
             if result.severity != severity:
-                self._append_history(result, actor_id, "severity", result.severity, severity)
+                self._append_history(
+                    result, actor_id, "severity", result.severity, severity
+                )
                 result.severity = severity
                 changed_fields.append("severity")
         if assigned_to is not None:
@@ -2437,7 +3167,9 @@ class ClashService:
         if due_date is not None:
             new_due = due_date or None
             if (result.due_date or None) != new_due:
-                self._append_history(result, actor_id, "due_date", result.due_date, new_due)
+                self._append_history(
+                    result, actor_id, "due_date", result.due_date, new_due
+                )
                 result.due_date = new_due
                 changed_fields.append("due_date")
         mentioned: list[str] = []
@@ -2456,7 +3188,9 @@ class ClashService:
                 # Reassign (not in-place append) so the plain-JSON column
                 # is detected dirty and persisted on every backend.
                 result.comments = list(result.comments or []) + [item]
-                self._append_history(result, actor_id, "comment_add", None, text[:160])
+                self._append_history(
+                    result, actor_id, "comment_add", None, text[:160]
+                )
                 mentioned = self._extract_mentions(text)
                 added_comment_ts = ts
         await self.session.flush()
@@ -2534,7 +3268,9 @@ class ClashService:
         await self.get_run(project_id, run_id)  # IDOR / 404 guard
         result = await self.repo.get_result(run_id, result_id)
         if result is None:
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Clash not found")
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND, detail="Clash not found"
+            )
         uid = str(user_id)
         current = [str(w) for w in (result.watchers or []) if w]
         if watching:
@@ -2593,7 +3329,9 @@ class ClashService:
 
         matched = 0
         unmatched = 0
-        parse_errors = sum(1 for i in parsed.issues if getattr(i, "severity", "") == "error")
+        parse_errors = sum(
+            1 for i in parsed.issues if getattr(i, "severity", "") == "error"
+        )
         for topic in parsed.topics:
             sig = _signature_from_description(topic.description or "")
             row: ClashResult | None = None
@@ -2601,7 +3339,11 @@ class ClashService:
                 row = by_sig.get(sig)
             if row is None and getattr(topic, "guid", None):
                 row = next(
-                    (r for r in all_rows if (r.bcf_topic_guid or "") == topic.guid),
+                    (
+                        r
+                        for r in all_rows
+                        if (r.bcf_topic_guid or "") == topic.guid
+                    ),
                     None,
                 )
             if row is None:
@@ -2632,7 +3374,9 @@ class ClashService:
         )
         return matched, unmatched, parse_errors
 
-    def _sync_row_from_topic(self, row: ClashResult, topic: object, *, actor: str) -> None:
+    def _sync_row_from_topic(
+        self, row: ClashResult, topic: object, *, actor: str
+    ) -> None:
         """Patch a clash row with a parsed BCF topic's triage state.
 
         Pulled out of :meth:`import_bcf` so the row-merge logic is one
@@ -2640,13 +3384,19 @@ class ClashService:
         mutation goes through :meth:`_append_history` so the audit log
         records the BCF round-trip just like an in-app edit.
         """
-        new_status = _bcf_status_to_clash_status(getattr(topic, "topic_status", None))
+        new_status = _bcf_status_to_clash_status(
+            getattr(topic, "topic_status", None)
+        )
         if new_status and row.status != new_status:
-            self._append_history(row, actor, "status", row.status, new_status)
+            self._append_history(
+                row, actor, "status", row.status, new_status
+            )
             row.status = new_status
         new_assignee = (getattr(topic, "assigned_to", None) or "").strip() or None
         if new_assignee is not None and (row.assigned_to or None) != new_assignee:
-            self._append_history(row, actor, "assigned_to", row.assigned_to, new_assignee)
+            self._append_history(
+                row, actor, "assigned_to", row.assigned_to, new_assignee
+            )
             row.assigned_to = new_assignee
         due = getattr(topic, "due_date", None)
         if due is not None:
@@ -2655,7 +3405,9 @@ class ClashService:
             except Exception:  # noqa: BLE001 — never block import on date format
                 iso_day = None
             if iso_day and (row.due_date or None) != iso_day:
-                self._append_history(row, actor, "due_date", row.due_date, iso_day)
+                self._append_history(
+                    row, actor, "due_date", row.due_date, iso_day
+                )
                 row.due_date = iso_day
         # Append any BCF comments we haven't yet — keyed on (author|text)
         # so a re-import doesn't double up.
@@ -2676,7 +3428,11 @@ class ClashService:
             existing_keys.add(key)
             ts_raw = getattr(c, "date", None)
             try:
-                ts_iso = ts_raw.isoformat() if ts_raw is not None else _now().isoformat()
+                ts_iso = (
+                    ts_raw.isoformat()
+                    if ts_raw is not None
+                    else _now().isoformat()
+                )
             except Exception:  # noqa: BLE001
                 ts_iso = _now().isoformat()
             new_comments.append(
@@ -2699,7 +3455,9 @@ class ClashService:
             )
         new_guid = getattr(topic, "guid", None) or None
         if new_guid and row.bcf_topic_guid != new_guid:
-            self._append_history(row, actor, "bcf_topic_guid", row.bcf_topic_guid, new_guid)
+            self._append_history(
+                row, actor, "bcf_topic_guid", row.bcf_topic_guid, new_guid
+            )
             row.bcf_topic_guid = new_guid
 
     async def resolve_author(self, user_id: str) -> str:
@@ -2712,7 +3470,9 @@ class ClashService:
         try:
             from app.modules.users.repository import UserRepository
 
-            user = await UserRepository(self.session).get_by_id(uuid.UUID(str(user_id)))
+            user = await UserRepository(self.session).get_by_id(
+                uuid.UUID(str(user_id))
+            )
             if user is not None:
                 name = (getattr(user, "full_name", "") or "").strip()
                 if name:
@@ -2837,7 +3597,9 @@ def _build_summary(results: list[ClashResult]) -> dict:
         sa_ = getattr(r, "a_storey", None)
         sb_ = getattr(r, "b_storey", None)
         if sa_ is not None and sb_ is not None:
-            la, lb = (int(sa_), int(sb_)) if int(sa_) <= int(sb_) else (int(sb_), int(sa_))
+            la, lb = (int(sa_), int(sb_)) if int(sa_) <= int(sb_) else (
+                int(sb_), int(sa_)
+            )
             storeys.add(la)
             storeys.add(lb)
             lc = level_cell.setdefault((la, lb), {"count": 0, "open_count": 0})
@@ -2846,10 +3608,12 @@ def _build_summary(results: list[ClashResult]) -> dict:
                 lc["open_count"] += 1
 
     matrix = [
-        {"a": a, "b": b, "count": v["count"], "open_count": v["open_count"]} for (a, b), v in sorted(cell.items())
+        {"a": a, "b": b, "count": v["count"], "open_count": v["open_count"]}
+        for (a, b), v in sorted(cell.items())
     ]
     level_matrix = [
-        {"a": a, "b": b, "count": v["count"], "open_count": v["open_count"]} for (a, b), v in sorted(level_cell.items())
+        {"a": a, "b": b, "count": v["count"], "open_count": v["open_count"]}
+        for (a, b), v in sorted(level_cell.items())
     ]
     return {
         "disciplines": sorted(disciplines),

@@ -1,15 +1,11 @@
-import React from "react";
-import ReactDOM from "react-dom/client";
-import {
-  QueryClient,
-  QueryClientProvider,
-  MutationCache,
-} from "@tanstack/react-query";
-import { BrowserRouter } from "react-router-dom";
-import App from "./app/App";
-import { useToastStore } from "@/stores/useToastStore";
-import "./app/i18n";
-import "./index.css";
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import { QueryClient, QueryClientProvider, MutationCache } from '@tanstack/react-query';
+import { BrowserRouter } from 'react-router-dom';
+import App from './app/App';
+import { useToastStore } from '@/stores/useToastStore';
+import './app/i18n';
+import './index.css';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -20,11 +16,11 @@ const queryClient = new QueryClient({
       // `api.ts` falls back to IndexedDB via offlineStore on network errors,
       // so we never want to retry a query that's going to fail for the same
       // reason anyway.
-      networkMode: "offlineFirst",
+      networkMode: 'offlineFirst',
       retry: (count, error) => {
         if (!navigator.onLine) return false;
         // 4xx responses are deterministic — don't retry.
-        if (error && typeof error === "object" && "status" in error) {
+        if (error && typeof error === 'object' && 'status' in error) {
           const status = (error as { status: number }).status;
           if (status >= 400 && status < 500) return false;
         }
@@ -35,7 +31,7 @@ const queryClient = new QueryClient({
     mutations: {
       // Mutations while offline are queued by offlineStore and replayed on
       // reconnect — no need for react-query-level retry.
-      networkMode: "offlineFirst",
+      networkMode: 'offlineFirst',
       retry: 0,
     },
   },
@@ -48,20 +44,26 @@ const queryClient = new QueryClient({
         queryClient.invalidateQueries({ queryKey: [key[0]] });
       }
     },
-    onError: (error) => {
-      const message =
-        error instanceof Error ? error.message : "Operation failed";
+    onError: (error, _variables, _context, mutation) => {
+      const message = error instanceof Error ? error.message : 'Operation failed';
       // Auth-related failures redirect via api.ts; surfacing them again
       // produces noisy stack traces in the console for anon flows
       // (login/register) where 401 is the expected branch.
       const status = (error as { status?: number } | null)?.status;
-      const isAuthFailure =
-        status === 401 || status === 403 || message.includes("401");
-      if (!isAuthFailure) {
-        if (import.meta.env.DEV) console.warn("Mutation error:", message);
+      const isAuthFailure = status === 401 || status === 403 || message.includes('401');
+      // Per-mutation opt-out: mutations that already surface their own
+      // contextual error toast (e.g. PermissionsMatrixPage's "Update
+      // failed") should set ``meta: { suppressGlobalErrorToast: true }``
+      // so the user does not see two stacked toasts for the same failure.
+      const suppress = Boolean(
+        (mutation?.meta as { suppressGlobalErrorToast?: boolean } | undefined)
+          ?.suppressGlobalErrorToast,
+      );
+      if (!isAuthFailure && !suppress) {
+        if (import.meta.env.DEV) console.warn('Mutation error:', message);
         useToastStore.getState().addToast({
-          type: "error",
-          title: "Operation failed",
+          type: 'error',
+          title: 'Operation failed',
           message,
         });
       }
@@ -72,15 +74,16 @@ const queryClient = new QueryClient({
 // Stamp the root element with an origin token. Survives in the live DOM
 // and any saved-page snapshot — looks like a deterministic build id.
 // Decodes to "DDC-CWICR-OE-2026" by reversing the hex.
-const __rootEl = document.getElementById("root")!;
-__rootEl.setAttribute("data-build-rev", "4443432d4357494352-4f452d32303236");
+const __rootEl = document.getElementById('root')!;
+__rootEl.setAttribute(
+  'data-build-rev',
+  '4443432d4357494352-4f452d32303236',
+);
 
 ReactDOM.createRoot(__rootEl).render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
-      <BrowserRouter
-        future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
-      >
+      <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
         <App />
       </BrowserRouter>
     </QueryClientProvider>

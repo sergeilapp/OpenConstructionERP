@@ -1,54 +1,36 @@
-// Mongolian (mn) locale.
-//
-// Generated from en.ts with manual translations for the most common UI
-// strings. Strings that don't yet have a hand-checked Mongolian rendering
-// are kept in English on purpose — i18next still serves them, and a native
-// speaker can replace them one by one without breaking the build.
-//
-// Contributions welcome: see en.ts for the canonical key list.
+// Auto-generated from i18n-fallbacks.ts split. Do not edit by hand.
+// Regenerate with: node --experimental-strip-types scripts/split-i18n-fallbacks.mjs
 
 const resource = {
-  translation: {
-    "about.ai_desc":
-      "OpenConstructionERP нь нэмэлт AI-д суурилсан хэрэгслүүдтэй — текст тайлбараас хурдан тооцоо, ухаалаг өртгийн санал, BOQ чат туслах. Эдгээр боломжуудад таны сонгосон үйлчилгээ үзүүлэгчийн (Anthropic, OpenAI, Google) API түлхүүр шаардлагатай. AI нь үргэлж сонголтоор идэвхждэг: зөвхөн та тохируулах үед идэвхэжих ба ямар өгөгдөл илгээхийг та шийднэ. API түлхүүргүйгээр бусад бүх боломж бүрэн оффлайн ажиллана.",
+  "translation": {
+    "about.ai_desc": "OpenConstructionERP нь нэмэлт AI-д суурилсан хэрэгслүүдтэй — текст тайлбараас хурдан тооцоо, ухаалаг өртгийн санал, BOQ чат туслах. Эдгээр боломжуудад таны сонгосон үйлчилгээ үзүүлэгчийн (Anthropic, OpenAI, Google) API түлхүүр шаардлагатай. AI нь үргэлж сонголтоор идэвхждэг: зөвхөн та тохируулах үед идэвхэжих ба ямар өгөгдөл илгээхийг та шийднэ. API түлхүүргүйгээр бусад бүх боломж бүрэн оффлайн ажиллана.",
     "about.ai_title": "AI боломжуудын тухай",
     "about.cap.boq": "Ажил материалын жагсаалт",
-    "about.cap.boq_desc":
-      "Шатлалт хэсэг, байрлал, угсралт, тэмдэглэгээ (нэмэгдэл, ашиг, VAT), автомат нийт дүн бүхий дэлгэрэнгүй BOQ үүсгэнэ. DIN 276, NRM 1/2, MasterFormat болон захиалгат ангиллын системийг дэмждэг.",
+    "about.cap.boq_desc": "Шатлалт хэсэг, байрлал, угсралт, тэмдэглэгээ (нэмэгдэл, ашиг, VAT), автомат нийт дүн бүхий дэлгэрэнгүй BOQ үүсгэнэ. DIN 276, NRM 1/2, MasterFormat болон захиалгат ангиллын системийг дэмждэг.",
     "about.cap.catalog": "Нөөцийн каталог",
-    "about.cap.catalog_desc":
-      "7,000+ нөөц — материал, тоног төхөөрөмж, хөдөлмөр, оператор, инженерийн шугам. Каталогийн зүйлсээс дахин ашиглах боломжтой угсралт (нийлмэл тариф) бүтээгээд BOQ-н байрлалд шууд хэрэглэнэ.",
+    "about.cap.catalog_desc": "7,000+ нөөц — материал, тоног төхөөрөмж, хөдөлмөр, оператор, инженерийн шугам. Каталогийн зүйлсээс дахин ашиглах боломжтой угсралт (нийлмэл тариф) бүтээгээд BOQ-н байрлалд шууд хэрэглэнэ.",
     "about.cap.costmodel": "5D өртөгийн загвар",
-    "about.cap.costmodel_desc":
-      "Earned Value Management (SPI, CPI), S-curve дүрслэл, мөнгөн урсгалын урьдчилсан тооцоо, өртгийн хувилбар, мэдээлэлд суурилсан шийдвэр гаргалтад зориулсан what-if хувилбарын загварчлал ашиглан төсвийг цаг хугацааны явцад хянана.",
+    "about.cap.costmodel_desc": "Earned Value Management (SPI, CPI), S-curve дүрслэл, мөнгөн урсгалын урьдчилсан тооцоо, өртгийн хувилбар, мэдээлэлд суурилсан шийдвэр гаргалтад зориулсан what-if хувилбарын загварчлал ашиглан төсвийг цаг хугацааны явцад хянана.",
     "about.cap.costs": "Үнийн мэдээллийн сан",
-    "about.cap.costs_desc":
-      "Дэлхий даяар 30 бүсийн өгөгдлийн санд 55,000+ өртгийн зүйл. Өөрийн тарифыг нэмэх, Excel-ээс импортлох, эсвэл захиалгат өгөгдлийн санг шинээр бүтээх боломжтой.",
+    "about.cap.costs_desc": "Дэлхий даяар 30 бүсийн өгөгдлийн санд 55,000+ өртгийн зүйл. Өөрийн тарифыг нэмэх, Excel-ээс импортлох, эсвэл захиалгат өгөгдлийн санг шинээр бүтээх боломжтой.",
     "about.cap.import": "Импорт, экспорт",
-    "about.cap.import_desc":
-      "GAEB XML (X83), Excel, CSV импорт/экспортыг бүрэн дэмждэг. Мэргэжлийн PDF тайлан үүсгэнэ. Одоо байгаа таны хэрэгсэл болон ажлын урсгалд саадгүй нийлэн ажиллана.",
+    "about.cap.import_desc": "GAEB XML (X83), Excel, CSV импорт/экспортыг бүрэн дэмждэг. Мэргэжлийн PDF тайлан үүсгэнэ. Одоо байгаа таны хэрэгсэл болон ажлын урсгалд саадгүй нийлэн ажиллана.",
     "about.cap.schedule": "4D хуваарь",
-    "about.cap.schedule_desc":
-      "CPM чухал замын тооцоолол, интерактив Gantt диаграм, Monte Carlo эрсдэлийн шинжилгээ, нөөцийн хуваарилалт, BOQ-оос үйл ажиллагааг автоматаар үүсгэх замаар төслийн хуваарийг үүсгэнэ.",
+    "about.cap.schedule_desc": "CPM чухал замын тооцоолол, интерактив Gantt диаграм, Monte Carlo эрсдэлийн шинжилгээ, нөөцийн хуваарилалт, BOQ-оос үйл ажиллагааг автоматаар үүсгэх замаар төслийн хуваарийг үүсгэнэ.",
     "about.cap.tendering": "Тендер ба санал",
-    "about.cap.tendering_desc":
-      "Хүрээ ба байрлалтай тендерийн багц үүсгэн, туслан гүйцэтгэгчдэд тарааж, үнийн толинд саналуудыг зэрэгцүүлэн харьцуулж цуглуулан, өгөгдөлд тулгуурлан гэрээ байгуулах шийдвэр гаргана.",
+    "about.cap.tendering_desc": "Хүрээ ба байрлалтай тендерийн багц үүсгэн, туслан гүйцэтгэгчдэд тарааж, үнийн толинд саналуудыг зэрэгцүүлэн харьцуулж цуглуулан, өгөгдөлд тулгуурлан гэрээ байгуулах шийдвэр гаргана.",
     "about.cap.validation": "Чанарын баталгаажуулалт",
-    "about.cap.validation_desc":
-      "Дотоод чанарын систем нь дутуу тоо хэмжээ, тэг үнэ, давхардсан байрлал, ангиллын дагалт, тарифын гажиглыг автоматаар шалгах ба гэрлэн дохиотой самбараар үзүүлдэг.",
+    "about.cap.validation_desc": "Дотоод чанарын систем нь дутуу тоо хэмжээ, тэг үнэ, давхардсан байрлал, ангиллын дагалт, тарифын гажиглыг автоматаар шалгах ба гэрлэн дохиотой самбараар үзүүлдэг.",
     "about.capabilities_title": "Та юу хийж чадах вэ",
     "about.close": "Ойлголоо",
-    "about.intro":
-      "OpenConstructionERP нь барилгын өртгийн удирдлагын орчин үеийн платформ юм. Энэ нь ажил материалын жагсаалт үүсгэхээс эхлээд тендер зарлах, саналыг харьцуулах хүртэлх тооцооллын бүх ажлын урсгалыг хамардаг. Олон улсын мэргэжилтнүүдэд зориулсан энэхүү систем нь олон улсын стандартыг дэмждэг бөгөөд 20 хэлээр ажилладаг.",
-    "about.intro2":
-      "Уламжлалт арилжааны шийдлүүдээс ялгаатай нь OpenConstructionERP нь таны компьютер дээр бүхэлдээ ажилладаг. Таны төслийн өгөгдөл таны машинаас гадагш гарахгүй — та бүрэн эзэмшил, хяналттай. Эх код нь нээлттэй бөгөөд аудит хийх боломжтой тул програм юу хийдгийг та яг таг үргэлж мэдэж байдаг.",
+    "about.intro": "OpenConstructionERP нь барилгын өртгийн удирдлагын орчин үеийн платформ юм. Энэ нь ажил материалын жагсаалт үүсгэхээс эхлээд тендер зарлах, саналыг харьцуулах хүртэлх тооцооллын бүх ажлын урсгалыг хамардаг. Олон улсын мэргэжилтнүүдэд зориулсан энэхүү систем нь олон улсын стандартыг дэмждэг бөгөөд 20 хэлээр ажилладаг.",
+    "about.intro2": "Уламжлалт арилжааны шийдлүүдээс ялгаатай нь OpenConstructionERP нь таны компьютер дээр бүхэлдээ ажилладаг. Таны төслийн өгөгдөл таны машинаас гадагш гарахгүй — та бүрэн эзэмшил, хяналттай. Эх код нь нээлттэй бөгөөд аудит хийх боломжтой тул програм юу хийдгийг та яг таг үргэлж мэдэж байдаг.",
     "about.numbers_title": "Платформ тоогоор",
     "about.stat.costs": "Өртгийн зүйлс",
     "about.stat.free": "Үнэгүй, нээлттэй эх код",
     "about.stat.languages": "Хэлүүд",
     "about.stat.regions": "Бүс нутгийн өгөгдлийн сан",
-    "about.title":
-      "Мэргэжлийн барилгын өртөг тооцоолол — үнэгүй ба нээх эх сурвалж",
+    "about.title": "Мэргэжлийн барилгын өртөг тооцоолол — үнэгүй ба нээх эх сурвалж",
     "about.who.architects": "Архитекторууд ба инженерүүд",
     "about.who.contractors": "Ерөнхий гүйцэтгэгчид",
     "about.who.developers": "Үл хөдлөх хөгжүүлэгчид",
@@ -59,18 +41,13 @@ const resource = {
     "about.who.qsurveyor": "Тоо хэмжээний зураачид",
     "about.who.students": "Оюутнууд ба багш нар",
     "about.who.subs": "Туслан гүйцэтгэгчид",
-    "about.who_desc":
-      "OpenConstructionERP нь барилгын өртгийн удирдлагад оролцдог хэн бүхэнд зориулагдсан — та орон сууцны төсөл дээр ажилладаг ч, том хэмжээний дэд бүтцийн төсөл дээр ажилладаг ч, дотоодын мэргэжилтэн ч, зөвлөх ч байсан хамаагүй.",
+    "about.who_desc": "OpenConstructionERP нь барилгын өртгийн удирдлагад оролцдог хэн бүхэнд зориулагдсан — та орон сууцны төсөл дээр ажилладаг ч, том хэмжээний дэд бүтцийн төсөл дээр ажилладаг ч, дотоодын мэргэжилтэн ч, зөвлөх ч байсан хамаагүй.",
     "about.who_title": "Хэнд зориулагдсан вэ",
-    "about.why_1":
-      "Барилгын өртгийн өгөгдөл нь компанийн эзэмшдэг хамгийн үнэ цэнэтэй хөрөнгийн нэг юм. Эзэмшлийн програм хангамжийн хувьд таны өгөгдөл нь таны хяналтгүй форматуудад түгжигдсэн байдаг. Хэрэв нийлүүлэгч үнээ нэмэх, нөхцлөө өөрчлөх, эсвэл бүтээгдэхүүнээ зогсоосон тохиолдолд та олон жилийн ажлынхаа хандалтыг алдаж болзошгүй.",
-    "about.why_2":
-      "OpenConstructionERP өөр аргыг сонгосон. Таны өгөгдөл нь өөрийн тань техник хангамж дээр нээлттэй формат (SQLite, JSON, CSV)-аар хадгалагдана. Та бүх зүйлийг дурын үед экспортлох боломжтой. Эх код нь AGPL-3.0 лицензийн дор нийтэд аудит хийгдэх боломжтой тул нуугдсан өгөгдөл дамжуулалт, телеметр, гэнэтийн зүйл байхгүй.",
-    "about.why_3":
-      "Платформ нь модуль бүтэцтэй — танд хэрэгтэйг л суулгана. Хамт олны модулиуд цөмийг хэт ачаалахгүйгээр функциональ байдлыг өргөтгөдөг. Дотооддоо ажилладаг тул интернетгүйгээр ч ажиллах ба том төслүүдийн үед хүртэл хурдан ажилладаг.",
+    "about.why_1": "Барилгын өртгийн өгөгдөл нь компанийн эзэмшдэг хамгийн үнэ цэнэтэй хөрөнгийн нэг юм. Эзэмшлийн програм хангамжийн хувьд таны өгөгдөл нь таны хяналтгүй форматуудад түгжигдсэн байдаг. Хэрэв нийлүүлэгч үнээ нэмэх, нөхцлөө өөрчлөх, эсвэл бүтээгдэхүүнээ зогсоосон тохиолдолд та олон жилийн ажлынхаа хандалтыг алдаж болзошгүй.",
+    "about.why_2": "OpenConstructionERP өөр аргыг сонгосон. Таны өгөгдөл нь өөрийн тань техник хангамж дээр нээлттэй формат (SQLite, JSON, CSV)-аар хадгалагдана. Та бүх зүйлийг дурын үед экспортлох боломжтой. Эх код нь AGPL-3.0 лицензийн дор нийтэд аудит хийгдэх боломжтой тул нуугдсан өгөгдөл дамжуулалт, телеметр, гэнэтийн зүйл байхгүй.",
+    "about.why_3": "Платформ нь модуль бүтэцтэй — танд хэрэгтэйг л суулгана. Хамт олны модулиуд цөмийг хэт ачаалахгүйгээр функциональ байдлыг өргөтгөдөг. Дотооддоо ажилладаг тул интернетгүйгээр ч ажиллах ба том төслүүдийн үед хүртэл хурдан ажилладаг.",
     "about.why_title": "Нээлттэй эх кодын ач холбогдол",
-    "ai.advisor_desc":
-      "Өртөг, материал, үнийн талаар асуулт асуу — таны өгөгдлийн сан болон AI мэдлэгээс",
+    "ai.advisor_desc": "Өртөг, материал, үнийн талаар асуулт асуу — таны өгөгдлийн сан болон AI мэдлэгээс",
     "ai.advisor_empty": "Барилгын өртгийн талаар асууж болно",
     "ai.advisor_error": "AI зөвлөгчийн алдаа",
     "ai.advisor_placeholder": "Өртөг, материал, үнийн талаар асуух...",
@@ -97,8 +74,7 @@ const resource = {
     "ai.building_residential": "Орон сууцны",
     "ai.building_retail": "Жижиглэн худалдааны",
     "ai.building_type": "Барилгын төрөл",
-    "ai.cad_info":
-      "CAD/BIM файлууд (.rvt, .ifc, .dwg, .dgn) нь DDC хөрвүүлэгч суулгасан байхыг шаардана. Элементүүдийг гаргаж авч өртгийн тооцоо үүсгэхэд ашиглана. Хөрвүүлэгчдийг GitHub-аас татаж ~/.openestimator/converters/ зам дотор байршуулна уу.",
+    "ai.cad_info": "CAD/BIM файлууд (.rvt, .ifc, .dwg, .dgn) нь DDC хөрвүүлэгч суулгасан байхыг шаардана. Элементүүдийг гаргаж авч өртгийн тооцоо үүсгэхэд ашиглана. Хөрвүүлэгчдийг GitHub-аас татаж ~/.openestimator/converters/ зам дотор байршуулна уу.",
     "ai.choose_project": "-- Төсөл сонгох --",
     "ai.col_description": "Тайлбар",
     "ai.col_pos": "Бай.",
@@ -120,8 +96,7 @@ const resource = {
     "ai.estimate_failed": "Тооцоолол амжилтгүй",
     "ai.estimate_subtitle": "Аливаа эх сурвалжаас тооцоо үүсгэх",
     "ai.estimate_title": "AI тооцоо",
-    "ai.excel_hint":
-      "Дараах баганатай үед хамгийн сайн ажилладаг: Тайлбар, Нэгж, Тоо хэмжээ, Тариф/Үнэ.",
+    "ai.excel_hint": "Дараах баганатай үед хамгийн сайн ажилладаг: Тайлбар, Нэгж, Тоо хэмжээ, Тариф/Үнэ.",
     "ai.export_coming_soon": "Экспорт удахгүй",
     "ai.export_pdf": "PDF болгож экспортлох",
     "ai.extract_estimate": "Гаргаж авах ба тооцоолох",
@@ -136,12 +111,9 @@ const resource = {
     "ai.location_placeholder": "ж.нь Berlin",
     "ai.new_estimate": "Шинэ тооцоо",
     "ai.parse_import": "Задлан шинжлэх ба импортлох",
-    "ai.paste_info":
-      "Tab, цэг таслал, эсвэл таслалаар тусгаарласан өгөгдлийг автоматаар таньдаг. AI таны өгөгдлийг задлан тооцооны зүйлс болгон бүтэцлэнэ.",
-    "ai.paste_placeholder":
-      "BOQ өгөгдлөө энд буулгана уу (Excel, Word, эсвэл ямар ч хүснэгтээс)...\n\nЖишээ:\nPos\\tТайлбар\\tНэгж\\tТоо\\tТариф\n01.01\\tУхалт\\tm3\\t250\\t18.50\n01.02\\tБетон C30/37\\tm3\\t120\\t145.00\n01.03\\tАрматур BSt 500\\tkg\\t12000\\t1.85",
-    "ai.pdf_hint":
-      "BOQ баримт бичиг, тодорхойлолт, эсвэл зургийг PDF форматаар байршуулна уу.",
+    "ai.paste_info": "Tab, цэг таслал, эсвэл таслалаар тусгаарласан өгөгдлийг автоматаар таньдаг. AI таны өгөгдлийг задлан тооцооны зүйлс болгон бүтэцлэнэ.",
+    "ai.paste_placeholder": "BOQ өгөгдлөө энд буулгана уу (Excel, Word, эсвэл ямар ч хүснэгтээс)...\n\nЖишээ:\nPos\\tТайлбар\\tНэгж\\tТоо\\tТариф\n01.01\\tУхалт\\tm3\\t250\\t18.50\n01.02\\tБетон C30/37\\tm3\\t120\\t145.00\n01.03\\tАрматур BSt 500\\tkg\\t12000\\t1.85",
+    "ai.pdf_hint": "BOQ баримт бичиг, тодорхойлолт, эсвэл зургийг PDF форматаар байршуулна уу.",
     "ai.powered_by": "{{model}}-ээр ажилладаг",
     "ai.results": "Тооцооны үр дүн",
     "ai.save": "Хадгалах",
@@ -149,8 +121,7 @@ const resource = {
     "ai.save_failed": "хадгалах BOQ амжилтгүй",
     "ai.save_to_boq": "БМЖ болгож хадгалах",
     "ai.select_project": "Төсөл сонгох",
-    "ai.setup_required_desc":
-      "Текст, зураг, PDF, CAD файлуудаас тооцоо үүсгэхийн тулд Anthropic Claude, OpenAI, эсвэл Google Gemini-ийн API түлхүүрээ нэмнэ үү.",
+    "ai.setup_required_desc": "Текст, зураг, PDF, CAD файлуудаас тооцоо үүсгэхийн тулд Anthropic Claude, OpenAI, эсвэл Google Gemini-ийн API түлхүүрээ нэмнэ үү.",
     "ai.setup_required_title": "Холбогдох таны AI хүртэл get эхэлсэн",
     "ai.standard_auto": "Автоматаар таних",
     "ai.standard_label": "Стандарт",
@@ -178,8 +149,7 @@ const resource = {
     "analytics.col_status": "Төлөв",
     "analytics.col_variance": "Зөрүү",
     "analytics.col_variance_pct": "Хэлб. %",
-    "analytics.empty_description":
-      "Үүсгэх төслүүд -тай төсвүүд хүртэл see cross-төсөл analytics.",
+    "analytics.empty_description": "Үүсгэх төслүүд -тай төсвүүд хүртэл see cross-төсөл analytics.",
     "analytics.empty_title": "Хараахан analytics өгөгдөл алга",
     "analytics.export_csv": "CSV болгож экспортлох",
     "analytics.filter_region": "Бүсээр шүүх",
@@ -204,32 +174,27 @@ const resource = {
     "app.name": "OpenConstructionERP",
     "app.tagline": "Барилгын тооцооллын мэргэжлийн ажлын талбар",
     "assemblies.assemblies_found": "Нэгдлүүд",
-    "assemblies.description":
-      "Нийтлэг барилгын элементүүдэд зориулсан дахин ашиглах боломжтой өртгийн жор",
+    "assemblies.description": "Нийтлэг барилгын элементүүдэд зориулсан дахин ашиглах боломжтой өртгийн жор",
     "assemblies.new_assembly": "Шинэ Угсралт",
     "assemblies.no_results": "угсралтууд олдсонгүй",
     "assemblies.no_results_hint": "Хайлт эсвэл шүүлтүүрийг өөрчилж үзнэ үү",
     "assemblies.title": "Нэгдлүүд",
-    "assemblies.what_are_assemblies":
-      'Угсралтууд гэдэг нь олон нөөцийг (материал, хөдөлмөр, тоног төхөөрөмж) нэг нийлмэл тариф болгон нэгтгэдэг дахин ашиглах боломжтой өртгийн жор юм. Жишээ нь, "Армопэлсэн бетон хана" угсралтад бетон, арматур, хашмал, хөдөлмөр багтана. Бүрэлдэхүүний өртгийг автоматаар оруулахын тулд угсралтыг BOQ байрлалд хэрэглэнэ.',
+    "assemblies.what_are_assemblies": "Угсралтууд гэдэг нь олон нөөцийг (материал, хөдөлмөр, тоног төхөөрөмж) нэг нийлмэл тариф болгон нэгтгэдэг дахин ашиглах боломжтой өртгийн жор юм. Жишээ нь, \"Армопэлсэн бетон хана\" угсралтад бетон, арматур, хашмал, хөдөлмөр багтана. Бүрэлдэхүүний өртгийг автоматаар оруулахын тулд угсралтыг BOQ байрлалд хэрэглэнэ.",
     "auth.back_to_login": "Нэвтрэх рүү буцах",
     "auth.check_email": "Имэйлээ шалгана уу",
     "auth.confirm_password": "Нууц үгийг баталгаажуулах",
     "auth.confirm_password_placeholder": "Нууц үгээ дахин оруулна уу",
-    "auth.connection_error":
-      "Сервертэй холбогдож чадсангүй. Дахин оролдоно уу.",
+    "auth.connection_error": "Сервертэй холбогдож чадсангүй. Дахин оролдоно уу.",
     "auth.create_account": "Бүртгэл үүсгэх",
     "auth.email": "Имэйл",
     "auth.forgot_password": "Нууц үг мартсан уу?",
-    "auth.forgot_subtitle":
-      "И-мэйлээ оруулна уу, бид нууц үг сэргээх холбоос илгээх болно.",
+    "auth.forgot_subtitle": "И-мэйлээ оруулна уу, бид нууц үг сэргээх холбоос илгээх болно.",
     "auth.full_name": "Бүтэн нэр",
     "auth.full_name_placeholder": "Жон Смит",
     "auth.has_account": "Бүртгэлтэй юу?",
     "auth.invalid_credentials": "Имэйл эсвэл нууц үг буруу",
     "auth.login": "Нэвтрэх",
-    "auth.login_subtitle":
-      "Ажлын талбартаа нэвтрэхийн тулд мэдээллээ оруулна уу",
+    "auth.login_subtitle": "Ажлын талбартаа нэвтрэхийн тулд мэдээллээ оруулна уу",
     "auth.logout": "Гарах",
     "auth.no_account": "Бүртгэлгүй юу?",
     "auth.password": "Нууц үг",
@@ -243,47 +208,38 @@ const resource = {
     "auth.register_subtitle": "OpenEstimate-тэй эхлэх",
     "auth.register_title": "Бүртгэл үүсгэх",
     "auth.remember_me": "Намайг 30 хоног санах",
-    "auth.reset_error":
-      "Дахин тохируулах хүсэлтийг боловсруулж чадсангүй. Дахин оролдоно уу.",
-    "auth.reset_sent":
-      "Хэрэв энэ и-мэйлд бүртгэл байгаа бол та нууц үг сэргээх холбоосыг удахгүй хүлээж авна.",
+    "auth.reset_error": "Дахин тохируулах хүсэлтийг боловсруулж чадсангүй. Дахин оролдоно уу.",
+    "auth.reset_sent": "Хэрэв энэ и-мэйлд бүртгэл байгаа бол та нууц үг сэргээх холбоосыг удахгүй хүлээж авна.",
     "auth.send_reset_link": "Сэргээх холбоос илгээх",
     "auth.server_error": "Сервертэй холбогдож чадсангүй. Дахин оролдоно уу.",
     "auth.sign_in": "Нэвтрэх",
     "backup.confirm_replace_btn": "Орлуулах Бүх Өгөгдөл",
-    "backup.confirm_replace_message":
-      "Энэ болно орлуулах бүх одоо байгаа өгөгдөл -тай нөөц хуулбар contents. Энэ action чадахгүй байх undone.",
+    "backup.confirm_replace_message": "Энэ болно орлуулах бүх одоо байгаа өгөгдөл -тай нөөц хуулбар contents. Энэ action чадахгүй байх undone.",
     "backup.confirm_replace_title": "Орлуулах бүх өгөгдөл?",
     "backup.drop_zone_hint": ".zip нөөц файл",
-    "backup.drop_zone_label":
-      "Drop нөөц хуулбар файл энд эсвэл дарах хүртэл үзэх",
+    "backup.drop_zone_label": "Drop нөөц хуулбар файл энд эсвэл дарах хүртэл үзэх",
     "backup.export_btn": "Нөөц хуулбар үүсгэх",
-    "backup.export_desc":
-      "Татах дууссан нөөц хуулбар -н бүх таны өгөгдөл болгон ZIP файл.",
+    "backup.export_desc": "Татах дууссан нөөц хуулбар -н бүх таны өгөгдөл болгон ZIP файл.",
     "backup.export_error": "Экспорт амжилтгүй",
     "backup.export_success": "Нөөц хуулбар үүсгэгдлээ",
-    "backup.export_success_detail":
-      "Таны нөөц хуулбар файл байх байсан татсан.",
+    "backup.export_success_detail": "Таны нөөц хуулбар файл байх байсан татсан.",
     "backup.export_title": "Нөөц хуулбар үүсгэх",
     "backup.exporting": "Үүсгэж байна нөөц хуулбар...",
-    "backup.import_desc":
-      "Restore өгөгдөл -аас previously экспортлогдсон нөөц хуулбар файл.",
+    "backup.import_desc": "Restore өгөгдөл -аас previously экспортлогдсон нөөц хуулбар файл.",
     "backup.import_title": "Restore -аас Нөөц хуулбар",
     "backup.incompatible": "Incompatible нөөц хуулбар хувилбар",
     "backup.invalid_file": "Хүчингүй файл",
     "backup.mode_merge": "Merge (нэмэх шинэ, keep одоо байгаа)",
     "backup.mode_replace": "Орлуулах (overwrite бүх зүйл)",
     "backup.record_counts": "Бичлэгийн тоо",
-    "backup.replace_warning":
-      "Анхааруулга: Орлуулах горим болно устгах бүх одоо байгаа өгөгдөл.",
+    "backup.replace_warning": "Анхааруулга: Орлуулах горим болно устгах бүх одоо байгаа өгөгдөл.",
     "backup.restore_btn": "Сэргээх",
     "backup.restore_error": "Сэргээх алдаа",
     "backup.restore_failed": "Сэргээх амжилтгүй",
     "backup.restore_failed_detail": "restore -аас нөөц хуулбар чадсангүй",
     "backup.restore_mode": "Сэргээх горим",
     "backup.restore_success": "Нөөц сэргээгдсэн",
-    "backup.restore_success_detail":
-      "Бүх өгөгдөл байх байсан restored -аас нөөц хуулбар.",
+    "backup.restore_success_detail": "Бүх өгөгдөл байх байсан restored -аас нөөц хуулбар.",
     "backup.restoring": "Сэргээж байна...",
     "backup.subtitle": "Экспортлох ба импортлох таны өгөгдөл",
     "backup.title": "Нөөцлөлт ба сэргээх",
@@ -292,15 +248,12 @@ const resource = {
     "backup.validation_failed": "Хүчингүй нөөц хуулбар",
     "backup.validation_failed_detail": "нөөц хуулбар файл нь биш хүчинтэй",
     "backup.zip_only": "Та сонгох.zip нөөц хуулбар файл",
-    "bim.cad_processing_note":
-      "Боловсруулж байна болно take цөөн minutes -д зориулсан том файлууд",
+    "bim.cad_processing_note": "Боловсруулж байна болно take цөөн minutes -д зориулсан том файлууд",
     "bim.cad_upload_queued": "CAD файл queued -д зориулсан боловсруулж байна",
     "bim.cad_upload_success": "CAD файл байршуулсан",
-    "bim.cad_upload_success_desc":
-      "Файл байршуулсан амжилттай. Боловсруулж байна болно эхлэх shortly.",
+    "bim.cad_upload_success_desc": "Файл байршуулсан амжилттай. Боловсруулж байна болно эхлэх shortly.",
     "bim.classification": "Ангилал",
-    "bim.confirm_delete_model":
-      'Устгах "{{name}}"? Бүх элементүүд болно байх хасагдсан.',
+    "bim.confirm_delete_model": "Устгах \"{{name}}\"? Бүх элементүүд болно байх хасагдсан.",
     "bim.disc_architecture": "Архитектур",
     "bim.disc_civil": "Иргэний",
     "bim.disc_electrical": "Цахилгаан",
@@ -315,30 +268,22 @@ const resource = {
     "bim.element_count": "{{count}} элемент",
     "bim.element_tree": "Элементийн мод",
     "bim.getting_started": "BIM үзэгч",
-    "bim.getting_started_desc":
-      "Байршуулах элемент өгөгдөл (CSV/Excel) ба сонголтын 3D geometry (DAE) -аас таны CAD хөрвүүлэгч хүртэл visualize барилга загварууд -д 3D. Элементүүд чадна байх холбосон хүртэл BOQ байрлалууд -д зориулсан тоо хэмжээ баталгаажуулалт.",
+    "bim.getting_started_desc": "Байршуулах элемент өгөгдөл (CSV/Excel) ба сонголтын 3D geometry (DAE) -аас таны CAD хөрвүүлэгч хүртэл visualize барилга загварууд -д 3D. Элементүүд чадна байх холбосон хүртэл BOQ байрлалууд -д зориулсан тоо хэмжээ баталгаажуулалт.",
     "bim.hide_upload": "Хаах",
     "bim.landing_drop_here": "Файлаа энд оруулна уу",
-    "bim.landing_feat_3d_desc":
-      "Interactive Three.js үзэгч -тай давхар шүүж байна, discipline coloring, ба элемент сонголт.",
+    "bim.landing_feat_3d_desc": "Interactive Three.js үзэгч -тай давхар шүүж байна, discipline coloring, ба элемент сонголт.",
     "bim.landing_feat_3d_title": "3D дүрслэл",
-    "bim.landing_feat_boq_desc":
-      "Холбогдох BIM элементүүд хүртэл өртөг зүйлс -д зориулсан automated тоо хэмжээ баталгаажуулалт ба 5D take-off.",
+    "bim.landing_feat_boq_desc": "Холбогдох BIM элементүүд хүртэл өртөг зүйлс -д зориулсан automated тоо хэмжээ баталгаажуулалт ба 5D take-off.",
     "bim.landing_feat_boq_title": "BOQ холболт",
-    "bim.landing_feat_compare_desc":
-      "Харьцуулах хувилбарууд хүртэл detect нэмэгдсэн, хасагдсан, ба өөрчилсөн элементүүд автоматаар.",
+    "bim.landing_feat_compare_desc": "Харьцуулах хувилбарууд хүртэл detect нэмэгдсэн, хасагдсан, ба өөрчилсөн элементүүд автоматаар.",
     "bim.landing_feat_compare_title": "Загвар Харьцуулалт",
-    "bim.landing_feat_extract_desc":
-      "Ханууд, хавтгайнууд, баганууд, цацрагууд, MEP — -тай properties, талбайнууд, эзэлхүүн, ба ангилал.",
+    "bim.landing_feat_extract_desc": "Ханууд, хавтгайнууд, баганууд, цацрагууд, MEP — -тай properties, талбайнууд, эзэлхүүн, ба ангилал.",
     "bim.landing_feat_extract_title": "Элемент Гаргалт",
-    "bim.landing_feat_format_desc":
-      "IFC боловсруулсан instantly. RVT -аар дамжуулан DDC cad2data. CSV/Excel -д зориулсан pre-хөрвүүлсэн өгөгдөл.",
+    "bim.landing_feat_format_desc": "IFC боловсруулсан instantly. RVT -аар дамжуулан DDC cad2data. CSV/Excel -д зориулсан pre-хөрвүүлсэн өгөгдөл.",
     "bim.landing_feat_format_title": "Форматаас үл хамаарах",
-    "bim.landing_feat_qty_desc":
-      "Define дүрэм хүртэл гаргаж авах талбай, эзэлхүүн, ба урт — хэрэглэх хүртэл таны entire загвар -д удаа.",
+    "bim.landing_feat_qty_desc": "Define дүрэм хүртэл гаргаж авах талбай, эзэлхүүн, ба урт — хэрэглэх хүртэл таны entire загвар -д удаа.",
     "bim.landing_feat_qty_title": "Тоо хэмжээ Maps",
-    "bim.landing_hero_subtitle":
-      "Байршуулах IFC эсвэл Revit файлууд хүртэл visualize барилга элементүүд, гаргаж авах тоо хэмжээ, ба холбоос хүртэл таны Ажил жагсаалт -н Тоо хэмжээ.",
+    "bim.landing_hero_subtitle": "Байршуулах IFC эсвэл Revit файлууд хүртэл visualize барилга элементүүд, гаргаж авах тоо хэмжээ, ба холбоос хүртэл таны Ажил жагсаалт -н Тоо хэмжээ.",
     "bim.landing_hero_title": "BIM 3D үзэгч",
     "bim.landing_processing": "Боловсруулж байна...",
     "bim.landing_size_hint": "IFC, Revit, CSV, эсвэл Excel",
@@ -360,24 +305,19 @@ const resource = {
     "bim.loading_geometry": "3D геометр ачаалж байна…",
     "bim.loading_finalising": "Дүр зургийг эцэслэж байна…",
     "bim.loading_streaming": "Серверээс геометрийг дамжуулж байна…",
-    "bim.loading_parsing":
-      "3D геометрийг боловсруулж байна — том загваруудын хувьд (>50 MB) 20-60 сек үргэлжилж болно; хуудсыг шинэчилж болохгүй",
-    "bim.loading_navigate_hint":
-      "Та бусад хуудас руу шилжиж болно — ачаалал арын дэвсгэрт үргэлжилнэ",
+    "bim.loading_parsing": "3D геометрийг боловсруулж байна — том загваруудын хувьд (>50 MB) 20-60 сек үргэлжилж болно; хуудсыг шинэчилж болохгүй",
+    "bim.loading_navigate_hint": "Та бусад хуудас руу шилжиж болно — ачаалал арын дэвсгэрт үргэлжилнэ",
     "bim.no_models": "Хараахан загварууд байршуулсан алга",
     "bim.no_models_hint_upload": "Байршуулах BIM өгөгдөл хүртэл get эхэлсэн.",
     "bim.no_project": "Төсөл сонгоогүй",
     "bim.no_project_desc": "Сонгох төсөл хүртэл үзэх BIM загварууд.",
     "bim.no_search_results": "Тохирох элементүүд олдсонгүй",
     "bim.overlay_delete_btn": "Устгах",
-    "bim.overlay_error_desc":
-      "гаргаж авах элементүүд. Try хөрвүүлж байна to IFC эхний эсвэл байршуулах өгөгдөл manually чадсангүй",
+    "bim.overlay_error_desc": "гаргаж авах элементүүд. Try хөрвүүлж байна to IFC эхний эсвэл байршуулах өгөгдөл manually чадсангүй",
     "bim.overlay_error_title": "Боловсруулж байна Амжилтгүй",
-    "bim.overlay_needs_converter_desc":
-      "{{format}} файлууд require DDC cad2data -д зориулсан гаргалт. Хөрвүүлэх хүртэл IFC эхний, эсвэл байршуулах pre-хөрвүүлсэн өгөгдөл.",
+    "bim.overlay_needs_converter_desc": "{{format}} файлууд require DDC cad2data -д зориулсан гаргалт. Хөрвүүлэх хүртэл IFC эхний, эсвэл байршуулах pre-хөрвүүлсэн өгөгдөл.",
     "bim.overlay_needs_converter_title": "Хөрвүүлэгч Шаардлагатай",
-    "bim.overlay_processing_desc":
-      "Гаргаж авч байна элементүүд -аас таны {{format}} файл. Энэ болно take moment.",
+    "bim.overlay_processing_desc": "Гаргаж авч байна элементүүд -аас таны {{format}} файл. Энэ болно take moment.",
     "bim.overlay_processing_title": "Боловсруулж байна Загвар...",
     "bim.overlay_upload_converted_btn": "Байршуулах Хөрвүүлсэн Өгөгдөл",
     "bim.prop_category": "Ангилал",
@@ -388,8 +328,7 @@ const resource = {
     "bim.quantities": "Тоо хэмжээнүүд",
     "bim.search_elements": "элементүүд хайх...",
     "bim.select_model": "Сонгох загвар",
-    "bim.select_model_desc":
-      "Сонгох BIM загвар -аас жагсаалт хүртэл visualize энэ -д 3D.",
+    "bim.select_model_desc": "Сонгох BIM загвар -аас жагсаалт хүртэл visualize энэ -д 3D.",
     "bim.show_upload": "Байршуулах BIM Өгөгдөл",
     "bim.title": "BIM үзэгч",
     "bim.toast_converter_required_title": "Хөрвүүлэгч шаардлагатай",
@@ -407,8 +346,7 @@ const resource = {
     "bim.upload_advanced_element_data_hint": "Дэмждэг: CSV / Excel",
     "bim.upload_advanced_geometry": "3D геометр",
     "bim.upload_advanced_geometry_hint": "Дэмждэг: DAE / COLLADA",
-    "bim.upload_advanced_mode_toggle":
-      "Already хөрвүүлсэн? Байршуулах өгөгдөл + geometry separately",
+    "bim.upload_advanced_mode_toggle": "Already хөрвүүлсэн? Байршуулах өгөгдөл + geometry separately",
     "bim.upload_btn": "Илгээх",
     "bim.upload_cad_hint": "Дэмжигддэг: RVT, IFC, DWG, DGN",
     "bim.upload_cad_label": "CAD / BIM файл",
@@ -417,22 +355,17 @@ const resource = {
     "bim.upload_data_hint": "CSV эсвэл Excel -аас CAD хөрвүүлэгч",
     "bim.upload_data_label": "Элемент Өгөгдөл (шаардлагатай)",
     "bim.upload_depth_complete": "Дууссан · бүх ангилал (удаан)",
-    "bim.upload_depth_help":
-      "Controls хэрхэн олон Revit ангилал нь гаргаж авсан. Элемент IDs ба бүрэн properties нь үргэлж preserved.",
+    "bim.upload_depth_help": "Controls хэрхэн олон Revit ангилал нь гаргаж авсан. Элемент IDs ба бүрэн properties нь үргэлж preserved.",
     "bim.upload_depth_label": "Хөрвүүлэлтийн гүн",
     "bim.upload_depth_medium": "Medium · өргөтгөсөн ангилал (balanced)",
     "bim.upload_depth_standard": "Стандарт · гол ангилал (хурдан)",
-    "bim.upload_desc_full":
-      "Байршуулах элемент өгөгдөл ба сонголтын 3D geometry",
+    "bim.upload_desc_full": "Байршуулах элемент өгөгдөл ба сонголтын 3D geometry",
     "bim.upload_discipline_label": "Мэргэжил",
     "bim.upload_drop_here": "Файл оруулна уу",
     "bim.upload_failed": "Илгээх амжилтгүй",
-    "bim.upload_generate_pdf_help":
-      "Экспортууд sheets дизайнер бэлдсэн дотор загвар болгон ганц PDF руу Баримт бичиг. Runs дараа загвар нь бэлэн — байршуулах нь биш delayed.",
-    "bim.upload_generate_pdf_label":
-      "Мөн экспортлох төсөл sheets болгон PDF (background)",
-    "bim.upload_geo_hint":
-      "DAE (Collada) форматлах -д зориулсан 3D visualization",
+    "bim.upload_generate_pdf_help": "Экспортууд sheets дизайнер бэлдсэн дотор загвар болгон ганц PDF руу Баримт бичиг. Runs дараа загвар нь бэлэн — байршуулах нь биш delayed.",
+    "bim.upload_generate_pdf_label": "Мөн экспортлох төсөл sheets болгон PDF (background)",
+    "bim.upload_geo_hint": "DAE (Collada) форматлах -д зориулсан 3D visualization",
     "bim.upload_geo_label": "3D Geometry (заавал биш)",
     "bim.upload_model_name_label": "Загварын нэр",
     "bim.upload_model_name_placeholder": "e.g. Барилга",
@@ -440,8 +373,7 @@ const resource = {
     "bim.upload_panel_title": "Байршуулах Загвар",
     "bim.upload_remove_file": "Хасах",
     "bim.upload_result": "Байршуулах үр дүн",
-    "bim.upload_rvt_note":
-      "Тэмдэглэл: RVT файлд DDC cad2data шаардлагатай. IFC ашиглахыг бодолцоно уу.",
+    "bim.upload_rvt_note": "Тэмдэглэл: RVT файлд DDC cad2data шаардлагатай. IFC ашиглахыг бодолцоно уу.",
     "bim.upload_simple_mode_toggle": "Солих хүртэл энгийн горим",
     "bim.upload_size_hint": "Дэмждэг: Revit (.rvt), IFC (.ifc)",
     "bim.upload_storeys": "Давхрууд:",
@@ -475,15 +407,13 @@ const resource = {
     "boq.aace_methodology": "Аргачлал",
     "boq.aace_metrics": "Ангиллын үзүүлэлт",
     "boq.aace_positions": "Байрлалууд",
-    "boq.aace_reference":
-      "AACE International-ын зөвлөмжтэй практик 18R-97-д үндэслэсэн. Ангилал нь BOQ-ийн бүрэн байдлын үзүүлэлтээс автоматаар тодорхойлогдоно.",
+    "boq.aace_reference": "AACE International-ын зөвлөмжтэй практик 18R-97-д үндэслэсэн. Ангилал нь BOQ-ийн бүрэн байдлын үзүүлэлтээс автоматаар тодорхойлогдоно.",
     "boq.aace_to": "хүртэл",
     "boq.aace_with_classification": "Ангилалтай",
     "boq.aace_with_rates": "Нэгжийн тарифтай",
     "boq.aace_with_resources": "Бүрэн нөөцтэй",
     "boq.accept": "Хүлээн зөвшөөрөх",
-    "boq.accept_all_anomaly_suggestions":
-      "Accept Бүх Suggested Тарифууд ({{count}})",
+    "boq.accept_all_anomaly_suggestions": "Accept Бүх Suggested Тарифууд ({{count}})",
     "boq.add_all_failed": "нэмэх ямар нэгэн of {{count}} байрлалууд чадсангүй",
     "boq.add_all_to_boq": "Бүгдийг BOQ-д нэмэх",
     "boq.add_as_resources": "Нэмэх {{count}} болгон нөөц",
@@ -506,8 +436,7 @@ const resource = {
     "boq.add_position_to_section": "Нэмэх байрлал хүртэл энэ хэсэг",
     "boq.add_resource": "Нэмэх",
     "boq.add_resource_from_database": "Resources -аас Өгөгдлийн сан нэмэх",
-    "boq.add_resource_hint":
-      "Нэмэхдээ Enter, цуцлахдаа Escape товчийг дарна уу",
+    "boq.add_resource_hint": "Нэмэхдээ Enter, цуцлахдаа Escape товчийг дарна уу",
     "boq.add_resource_manual": "Нөөц нэмэх",
     "boq.add_section": "Хэсэг нэмэх",
     "boq.add_selected": "Сонгосныг BOQ-д нэмэх",
@@ -522,43 +451,33 @@ const resource = {
     "boq.ai_apply_rate": "Хэрэглэх Escalated Тариф",
     "boq.ai_assistant": "AI туслах",
     "boq.ai_assistant_short": "Туслах",
-    "boq.ai_assistant_tooltip":
-      "Тайлбарлах юу та хэрэгцээ -д plain текст — AI үүсгэдэг BOQ байрлалууд -тай realistic үнэ тогтоолт.",
+    "boq.ai_assistant_tooltip": "Тайлбарлах юу та хэрэгцээ -д plain текст — AI үүсгэдэг BOQ байрлалууд -тай realistic үнэ тогтоолт.",
     "boq.ai_chat_error": "AI request амжилтгүй. Та try дахин.",
     "boq.ai_chat_short": "AI чат",
     "boq.ai_classification": "AI ангилал",
     "boq.ai_classify_error": "Ангилал амжилтгүй",
     "boq.ai_connected_via": "Холбогдсон -аар дамжуулан {{provider}}",
-    "boq.ai_enhance_subtitle":
-      "Нэмэх technical specs, стандартууд, материал grades",
+    "boq.ai_enhance_subtitle": "Нэмэх technical specs, стандартууд, материал grades",
     "boq.ai_enhance_title": "Enhance Тайлбар",
-    "boq.ai_error_generic":
-      "connect to AI үйлчилгээ. Шалгах тэр embedding загвар нь боломжтой чадсангүй",
-    "boq.ai_escalate_subtitle":
-      "Adjust тариф -д зориулсан inflation ба market өөрчлөлтүүд",
+    "boq.ai_error_generic": "connect to AI үйлчилгээ. Шалгах тэр embedding загвар нь боломжтой чадсангүй",
+    "boq.ai_escalate_subtitle": "Adjust тариф -д зориулсан inflation ба market өөрчлөлтүүд",
     "boq.ai_escalate_title": "Escalate Тариф",
     "boq.ai_escalated": "Дээшлүүлсэн",
     "boq.ai_factor_labor": "Хөдөлмөр",
     "boq.ai_factor_material": "Материал",
     "boq.ai_factor_region": "Бүс нутгийн",
-    "boq.ai_generated_summary":
-      "Үүсгэгдсэн {{count}} байрлалууд totalling {{total}} {{currency}}.‌⁠‍",
+    "boq.ai_generated_summary": "Үүсгэгдсэн {{count}} байрлалууд totalling {{total}} {{currency}}.‌⁠‍",
     "boq.ai_global_actions": "BOQ-түвшин Actions",
-    "boq.ai_hint":
-      'BOQ байрлал үүсгэхийг надаас гуй. Жишээ нь: "5 давхар оффис барилгад MEP зүйлс нэмэх"',
+    "boq.ai_hint": "BOQ байрлал үүсгэхийг надаас гуй. Жишээ нь: \"5 давхар оффис барилгад MEP зүйлс нэмэх\"",
     "boq.ai_missing_items": "Дутуу Зүйлс",
     "boq.ai_no_classification": "Үгүй Ангилал Олсон",
-    "boq.ai_no_classification_msg":
-      "determine ангилал -аас cost өгөгдлийн сан чадсангүй",
-    "boq.ai_no_prereqs":
-      "Үгүй дутуу зүйлс олсон — BOQ looks дууссан -д зориулсан энэ байрлал.",
+    "boq.ai_no_classification_msg": "determine ангилал -аас cost өгөгдлийн сан чадсангүй",
+    "boq.ai_no_prereqs": "Үгүй дутуу зүйлс олсон — BOQ looks дууссан -д зориулсан энэ байрлал.",
     "boq.ai_no_rate": "Үгүй Тариф Олсон",
     "boq.ai_no_rate_msg": "Үгүй төстэй зүйлс олсон -д өртөг өгөгдлийн сан.",
-    "boq.ai_no_selection":
-      "Сонгох байрлал -д grid -д зориулсан тутамд-байрлал AI actions‌⁠‍",
+    "boq.ai_no_selection": "Сонгох байрлал -д grid -д зориулсан тутамд-байрлал AI actions‌⁠‍",
     "boq.ai_not_configured": "AI биш тохируулсан‌⁠‍",
-    "boq.ai_not_configured_desc":
-      "Нэмэх таны API түлхүүр -д Тохиргоо хүртэл use AI Smart Actions.‌⁠‍",
+    "boq.ai_not_configured_desc": "Нэмэх таны API түлхүүр -д Тохиргоо хүртэл use AI Smart Actions.‌⁠‍",
     "boq.ai_original": "Эх",
     "boq.ai_placeholder": "Тайлбарлах байрлалууд хүртэл үүсгэх...",
     "boq.ai_position_actions": "Байрлал Actions",
@@ -570,28 +489,23 @@ const resource = {
     "boq.ai_scope_subtitle": "Олох дутуу trades, ажил packages, чухал зүйлс",
     "boq.ai_scope_title": "Шалгах Хүрээ Completeness",
     "boq.ai_selected_position": "Сонгогдсон Байрлал‌⁠‍",
-    "boq.ai_smart_footer":
-      "Powered -аар таны AI үйлчилгээ үзүүлэгч (Тохиргоо > AI). Үр дүн нь suggestions — үргэлж хяналт.",
+    "boq.ai_smart_footer": "Powered -аар таны AI үйлчилгээ үзүүлэгч (Тохиргоо > AI). Үр дүн нь suggestions — үргэлж хяналт.",
     "boq.ai_smart_panel": "AI ухаалаг үйлдлүүд‌⁠‍",
     "boq.ai_smart_short": "Ухаалаг AI",
-    "boq.ai_smart_tooltip":
-      "Enhance тайлбарууд, олох дутуу зүйлс, шалгах хүрээ completeness, escalate тарифууд хүртэл одоогийн үнэ.",
+    "boq.ai_smart_tooltip": "Enhance тайлбарууд, олох дутуу зүйлс, шалгах хүрээ completeness, escalate тарифууд хүртэл одоогийн үнэ.",
     "boq.ai_specs": "Тодорхойлолт",
-    "boq.ai_welcome":
-      "Ask намайг хүртэл үүсгэх BOQ байрлалууд. -д зориулсан жишээ:",
+    "boq.ai_welcome": "Ask намайг хүртэл үүсгэх BOQ байрлалууд. -д зориулсан жишээ:",
     "boq.all_anomalies_resolved": "Бүх {{count}} suggested тарифууд хэрэглэсэн",
     "boq.all_projects": "Бүх төслүүд",
     "boq.all_rates_normal": "Бүх тарифууд нь дотор normal market range.",
     "boq.all_statuses": "Бүх төлөв",
     "boq.anomalies_badge": "Гажиг ({{count}})",
-    "boq.anomalies_count":
-      "{{count}} anomalies detected -д {{total}} байрлалууд",
+    "boq.anomalies_count": "{{count}} anomalies detected -д {{total}} байрлалууд",
     "boq.anomalies_found": "Үнэ тогтоолт Anomalies Олсон",
     "boq.anomaly_cancelled": "Үнэ шалгах цуцалсан",
     "boq.anomaly_check_error": "Anomaly шалгах амжилтгүй",
     "boq.anomaly_rate_applied": "Suggested Тариф Хэрэглэсэн",
-    "boq.anomaly_tip":
-      "Нэгж тариф бүрийг өртгийн өгөгдлийн сангаас авсан зах зээлийн медиан тарифтай харьцуулдаг. Хэт өндөр болон хэт бага үнэтэй байрлалуудыг тэмдэглэнэ.",
+    "boq.anomaly_tip": "Нэгж тариф бүрийг өртгийн өгөгдлийн сангаас авсан зах зээлийн медиан тарифтай харьцуулдаг. Хэт өндөр болон хэт бага үнэтэй байрлалуудыг тэмдэглэнэ.",
     "boq.applied": "Хэрэглэсэн",
     "boq.apply_all_suggestions": "Хэрэглэх Бүх‌⁠‍",
     "boq.apply_defaults_failed": "apply загвар амжилтгүй",
@@ -605,31 +519,25 @@ const resource = {
     "boq.autocomplete_tooltip_labor": "Хөдөлмөр",
     "boq.autocomplete_tooltip_material": "Материал‌⁠‍",
     "boq.autocomplete_tooltip_rate_per_unit": "Тариф тутамд нэгж‌⁠‍",
-    "boq.autocomplete_tooltip_tab_to_insert":
-      "Tab эсвэл Enter хүртэл insert‌⁠‍",
+    "boq.autocomplete_tooltip_tab_to_insert": "Tab эсвэл Enter хүртэл insert‌⁠‍",
     "boq.autocomplete_tooltip_unit": "/",
-    "boq.autocomplete_tooltip_variants_available":
-      "${variantCount} хувилбарууд боломжтой",
+    "boq.autocomplete_tooltip_variants_available": "${variantCount} хувилбарууд боломжтой",
     "boq.back_to_project": "Төсөл рүү буцах",
     "boq.batch_actions": "Багц үйлдэл‌⁠‍",
     "boq.batch_change_unit": "Өөрчлөх нэгж‌⁠‍",
     "boq.batch_clear_selection": "Сонголтыг арилгах",
     "boq.batch_delete": "Устгах сонгогдсон‌⁠‍",
     "boq.batch_delete_confirm": "Устгах {{count}} байрлалууд",
-    "boq.batch_delete_confirm_message":
-      "Сонгосон {{count}} байрлалыг устгах гэж байна. Энэ үйлдлийг буцаах боломжгүй.",
+    "boq.batch_delete_confirm_message": "Сонгосон {{count}} байрлалыг устгах гэж байна. Энэ үйлдлийг буцаах боломжгүй.",
     "boq.batch_delete_confirm_title": "Байрлалуудыг устгах",
     "boq.batch_deleted": "{{count}} байрлалууд устгагдлаа",
-    "boq.batch_unit_changed":
-      "Нэгж өөрчилсөн хүртэл {{unit}} -д зориулсан {{count}} байрлалууд",
+    "boq.batch_unit_changed": "Нэгж өөрчилсөн хүртэл {{unit}} -д зориулсан {{count}} байрлалууд",
     "boq.bim_agg_distinct_label": "{{n}} утгууд",
-    "boq.bim_agg_distinct_title":
-      "Тутамд-элемент утга — summing нь meaningless, so тус бүр unique утга нь listed. Дарах one хүртэл хэрэглэх энэ.",
+    "boq.bim_agg_distinct_title": "Тутамд-элемент утга — summing нь meaningless, so тус бүр unique утга нь listed. Дарах one хүртэл хэрэглэх энэ.",
     "boq.bim_agg_sum_title": "Summed хооронд бүх холбосон элементүүд",
     "boq.bim_collapse_sums": "Харуулах зөвхөн headline тоо хэмжээ",
     "boq.bim_expand_sums": "Харуулах бүх numeric утгууд -аас BIM",
-    "boq.bim_link_tooltip":
-      "{{count}} BIM элемент(s) холбосон — дарах хүртэл урьдчилан үзэх",
+    "boq.bim_link_tooltip": "{{count}} BIM элемент(s) холбосон — дарах хүртэл урьдчилан үзэх",
     "boq.bim_properties": "Шинж чанарууд",
     "boq.bim_props_show_all_title": "Include бүх numeric property -аас BIM",
     "boq.bim_props_show_basic_title": "Нуух non-тоо хэмжээ properties",
@@ -662,22 +570,19 @@ const resource = {
     "boq.column_calc_invalid_formula": "Formula байх syntax алдаа",
     "boq.column_calc_needs_formula": "Тооцоолсон багана хэрэгтэй formula",
     "boq.column_decimals": "Аравтын орон",
-    "boq.column_delete_confirm":
-      'Хасах "{{name}}" багана? Одоо байгаа утгууд -д байрлалууд нь preserved гэхдээ үгүй longer харагдсан.',
+    "boq.column_delete_confirm": "Хасах \"{{name}}\" багана? Одоо байгаа утгууд -д байрлалууд нь preserved гэхдээ үгүй longer харагдсан.",
     "boq.column_delete_confirm_title": "Хасах багана?",
     "boq.column_delete_failed": "хасах багана‌⁠‍ чадсангүй",
     "boq.column_formula": "Томьёо",
     "boq.column_name": "Багана нэр",
-    "boq.column_name_duplicate": 'багана named "{{name}}" already байгаа',
+    "boq.column_name_duplicate": "багана named \"{{name}}\" already байгаа",
     "boq.column_name_invalid": "Багана нэр нь хүчингүй",
-    "boq.column_name_invalid_hint":
-      "Use letters (дурын script), тоонууд ба spaces. Ёстой эхлэх -тай letter.",
+    "boq.column_name_invalid_hint": "Use letters (дурын script), тоонууд ба spaces. Ёстой эхлэх -тай letter.",
     "boq.column_name_placeholder": "e.g. Нийлүүлэгч, Тэмдэглэл, PO Тоо",
-    "boq.column_name_reserved": '"{{name}}" нь reserved багана нэр',
+    "boq.column_name_reserved": "\"{{name}}\" нь reserved багана нэр",
     "boq.column_options": "Сонголтууд (comma эсвэл newline separated)",
     "boq.column_removed": "Багана хасагдсан‌⁠‍",
-    "boq.column_select_needs_options":
-      "Сонгох багана хэрэгтэй -д хамгийн бага one сонголт",
+    "boq.column_select_needs_options": "Сонгох багана хэрэгтэй -д хамгийн бага one сонголт",
     "boq.column_test_formula": "Шалгах",
     "boq.column_test_result": "Үр дүн:",
     "boq.column_type": "Төрөл",
@@ -699,8 +604,7 @@ const resource = {
     "boq.compare_title": "БМЖ харьцуулалт",
     "boq.confirm_delete": "Устгах энэ байрлал?",
     "boq.confirm_delete_section": "Устгах энэ хэсэг ба бүх түүний байрлалууд?",
-    "boq.confirm_replace_markups":
-      "Энэ болно орлуулах одоо байгаа тэмдэглэгээ. Үргэлжлүүлэх?",
+    "boq.confirm_replace_markups": "Энэ болно орлуулах одоо байгаа тэмдэглэгээ. Үргэлжлүүлэх?",
     "boq.cost_breakdown": "Өртөг Задаргаа",
     "boq.cost_breakdown_by_category": "Ангилалаар",
     "boq.cost_breakdown_items": "зүйл",
@@ -720,8 +624,7 @@ const resource = {
     "boq.cost_finder_applied": "Үнэлгээ хэрэглэгдсэн",
     "boq.cost_finder_apply_rate": "Хэрэглэх Тариф",
     "boq.cost_finder_components": "{{count}} бүрэлдэхүүн",
-    "boq.cost_finder_error":
-      "Хайлт амжилтгүй. Вектор мэдээллийн санг шалгана уу.",
+    "boq.cost_finder_error": "Хайлт амжилтгүй. Вектор мэдээллийн санг шалгана уу.",
     "boq.cost_finder_for_position": "-д зориулсан: {{description}}",
     "boq.cost_finder_no_query": "Enter тайлбар хүртэл хайх өртөг өгөгдлийн сан",
     "boq.cost_finder_no_results": "тааруулж байна зүйлс олдсонгүй",
@@ -729,17 +632,14 @@ const resource = {
     "boq.cost_finder_search_placeholder": "Хайх өртөг зүйлс -аар тайлбар...‌⁠‍",
     "boq.cost_finder_short": "Өртөг Finder",
     "boq.cost_finder_title": "AI Өртөг Finder‌⁠‍",
-    "boq.cost_finder_tooltip":
-      "Хайх 55,000+ өртөг зүйлс -аар тайлбар. Олох материал, хөдөлмөр, ба тоног төхөөрөмж тарифууд -аас бүс нутгийн өгөгдлийн сан.",
+    "boq.cost_finder_tooltip": "Хайх 55,000+ өртөг зүйлс -аар тайлбар. Олох материал, хөдөлмөр, ба тоног төхөөрөмж тарифууд -аас бүс нутгийн өгөгдлийн сан.",
     "boq.cost_results_count": "{{loaded}}+ зүйлс",
     "boq.cost_risk_base_total": "Үндсэн дүн",
     "boq.cost_risk_contingency": "Нөөц (P80 - P50)",
     "boq.cost_risk_distribution": "Өртөг Distribution",
     "boq.cost_risk_drivers": "Дээд Эрсдэл Drivers",
-    "boq.cost_risk_empty":
-      "Нэмэх байрлалууд -тай өртгүүд хүртэл run Monte Carlo simulation.",
-    "boq.cost_risk_error":
-      "Зардлын эрсдэлийн шинжилгээг ачаалж чадсангүй. Дахин оролдоно уу.",
+    "boq.cost_risk_empty": "Нэмэх байрлалууд -тай өртгүүд хүртэл run Monte Carlo simulation.",
+    "boq.cost_risk_error": "Зардлын эрсдэлийн шинжилгээг ачаалж чадсангүй. Дахин оролдоно уу.",
     "boq.cost_risk_iterations": "Давталт",
     "boq.cost_risk_iterations_label": "давталт",
     "boq.cost_risk_loading": "Ажиллаж байна Monte Carlo simulation...",
@@ -762,13 +662,10 @@ const resource = {
     "boq.currency_group_project": "Төсөл",
     "boq.currency_group_world": "World валютууд",
     "boq.current": "Одоогийн‌⁠‍",
-    "boq.cursor_error_title":
-      "Ачаалж байна илүү хуучин үр дүн амжилтгүй — сэргээж байна",
+    "boq.cursor_error_title": "Ачаалж байна илүү хуучин үр дүн амжилтгүй — сэргээж байна",
     "boq.custom_columns": "Захиалгат Баганууд",
-    "boq.custom_columns_hint":
-      "Захиалгат баганууд BOQ хүснэгтэд үйлдлийн баганы өмнө харагдана. Утгууд нь байрлал тус бүрээр хадгалагдан BOQ-той хамт экспортлогддог. Баганыг устгахад нуугдах боловч үндсэн өгөгдөл хадгалагдана.",
-    "boq.custom_columns_subtitle":
-      "Нэмэх таны own талбарууд — нийлүүлэгч, тэмдэглэл, худалдан авалт мэдээлэл…",
+    "boq.custom_columns_hint": "Захиалгат баганууд BOQ хүснэгтэд үйлдлийн баганы өмнө харагдана. Утгууд нь байрлал тус бүрээр хадгалагдан BOQ-той хамт экспортлогддог. Баганыг устгахад нуугдах боловч үндсэн өгөгдөл хадгалагдана.",
+    "boq.custom_columns_subtitle": "Нэмэх таны own талбарууд — нийлүүлэгч, тэмдэглэл, худалдан авалт мэдээлэл…",
     "boq.date": "Огноо",
     "boq.delete_failed": "Устгаж чадсангүй",
     "boq.delete_section": "Устгах хэсэг -тай бүх байрлалууд",
@@ -776,8 +673,7 @@ const resource = {
     "boq.description": "Тайлбар",
     "boq.direct_cost": "Шууд зардал",
     "boq.display_base": "Үндсэн",
-    "boq.display_currency_aria":
-      "Сонгох валют -д зориулсан grand нийт харуулах",
+    "boq.display_currency_aria": "Сонгох валют -д зориулсан grand нийт харуулах",
     "boq.display_in": "Харуулах -д",
     "boq.double_click_to_edit": "Double-дарах хүртэл засах",
     "boq.draft": "ноорог",
@@ -785,14 +681,11 @@ const resource = {
     "boq.duplicate_failed": "хуулбар амжилтгүй",
     "boq.duplicate_position": "Байрлал хуулах",
     "boq.duplicated": "BOQ хуулбарлагдсан",
-    "boq.dwg_link_tooltip_v2":
-      "DWG зураг — дарах -д зориулсан дэлгэрэнгүй & navigation",
+    "boq.dwg_link_tooltip_v2": "DWG зураг — дарах -д зориулсан дэлгэрэнгүй & navigation",
     "boq.editor": "БМЖ засварлагч",
     "boq.element_count": "{{count}} элемент(s)",
-    "boq.empty_position_quality_hint":
-      "Empty байрлал lowers Чанар Оноо хүртэл тоо хэмжээ & тариф нь filled",
-    "boq.empty_section":
-      'Үгүй зүйлс -д энэ хэсэг. Дарах "Нэмэх Байрлал" хүртэл нэмэх one.',
+    "boq.empty_position_quality_hint": "Empty байрлал lowers Чанар Оноо хүртэл тоо хэмжээ & тариф нь filled",
+    "boq.empty_section": "Үгүй зүйлс -д энэ хэсэг. Дарах \"Нэмэх Байрлал\" хүртэл нэмэх one.",
     "boq.enter_description": "Enter тайлбар...",
     "boq.errors": "алдаа",
     "boq.estimate_type_budget": "Төсөв",
@@ -814,8 +707,7 @@ const resource = {
     "boq.export_format_excel": "Excel (.xlsx)",
     "boq.export_format_gaeb": "GAEB XML (.x83)",
     "boq.export_format_pdf": "PDF тайлан",
-    "boq.export_quality_warning_desc":
-      "Таны тооцоо байх чанар оноо доор 60%. Дутуу тоо хэмжээ, zero үнэ, эсвэл дуусаагүй тайлбарууд болно affect экспортлогдсон баримт бичиг. Consider хянаж байна тооцоо өмнө экспортолж байна.",
+    "boq.export_quality_warning_desc": "Таны тооцоо байх чанар оноо доор 60%. Дутуу тоо хэмжээ, zero үнэ, эсвэл дуусаагүй тайлбарууд болно affect экспортлогдсон баримт бичиг. Consider хянаж байна тооцоо өмнө экспортолж байна.",
     "boq.file_downloaded": "Файл татсан",
     "boq.filled": "бөглөгдсөн",
     "boq.filtered": "шүүгдсэн",
@@ -828,34 +720,28 @@ const resource = {
     "boq.fx_rate_input": "FX тариф {{from}}→{{to}}",
     "boq.fx_rate_label": "FX тариф",
     "boq.fx_rate_project_badge": "Төсөл",
-    "boq.gaeb_export_desc":
-      "Энэ болно экспортлох таны BOQ болгон GAEB XML 3.3 форматлах, compatible -тай стандарт тендер workflows.",
+    "boq.gaeb_export_desc": "Энэ болно экспортлох таны BOQ болгон GAEB XML 3.3 форматлах, compatible -тай стандарт тендер workflows.",
     "boq.gaeb_export_title": "Экспортлох GAEB XML (X83)",
     "boq.gaeb_grand_total": "Нийт дүн",
     "boq.gaeb_positions": "Байрлалууд",
     "boq.go_to_settings": "Go хүртэл Тохиргоо",
     "boq.got_it": "Ойлголоо",
     "boq.grand_total": "Нийт дүн",
-    "boq.grand_total_conversion_tooltip_v2":
-      'Бүхэл BOQ нь {{rate}} тарифаар {{disp}}-аар харагдана ({{base}} → {{disp}}). Зөвхөн үзэх — сервер үндсэн утгуудыг хадгалдаг. Үнэ засахын тулд "Үндсэн" руу шилжинэ үү.',
+    "boq.grand_total_conversion_tooltip_v2": "Бүхэл BOQ нь {{rate}} тарифаар {{disp}}-аар харагдана ({{base}} → {{disp}}). Зөвхөн үзэх — сервер үндсэн утгуудыг хадгалдаг. Үнэ засахын тулд \"Үндсэн\" руу шилжинэ үү.",
     "boq.grid_settings": "Grid Тохиргоо",
     "boq.gross_total": "Бохир дүн",
     "boq.how_it_works": "Хэрхэн ажилладаг",
     "boq.ignore": "Үл хайхрах",
     "boq.import": "Импорт",
-    "boq.import_catalog_hint":
-      "Импортлох нөөц каталог -аас Тохиргоо эсвэл Каталог хуудас",
+    "boq.import_catalog_hint": "Импортлох нөөц каталог -аас Тохиргоо эсвэл Каталог хуудас",
     "boq.import_database_cta": "Импортлох өгөгдлийн сан",
     "boq.import_failed": "Импорт амжилтгүй",
     "boq.import_file": "Импортлох Файл",
     "boq.import_rows": "Импортлох {{count}} мөрүүд",
     "boq.import_started": "Импортолж байна {{name}}…",
-    "boq.import_started_gaeb_hint":
-      "GAEB XML задлан шинжилж байна — namespace-аас үл хамаарах, X81/X83/X84 дэмжинэ.",
-    "boq.import_started_hint":
-      "Том файлууд (PDF / CAD / 1000+ мөрүүд) болно take дээш хүртэл 60 seconds.",
-    "boq.import_timeout":
-      "Сервер хийсэн биш respond дотор 90 seconds. файл болно байх бас том — try splitting энэ.",
+    "boq.import_started_gaeb_hint": "GAEB XML задлан шинжилж байна — namespace-аас үл хамаарах, X81/X83/X84 дэмжинэ.",
+    "boq.import_started_hint": "Том файлууд (PDF / CAD / 1000+ мөрүүд) болно take дээш хүртэл 60 seconds.",
+    "boq.import_timeout": "Сервер хийсэн биш respond дотор 90 seconds. файл болно байх бас том — try splitting энэ.",
     "boq.import_tooltip": "Импортлох GAEB, Excel, эсвэл CSV руу энэ BOQ",
     "boq.inline_edit_number": "Засах утга",
     "boq.inline_edit_text": "Засах текст",
@@ -868,18 +754,15 @@ const resource = {
     "boq.link_finance": "Үзэх Төсөв",
     "boq.link_validation": "Шалгалт ажиллуулах",
     "boq.linked_geometry": "Холбосон геометр",
-    "boq.list_subtitle_count":
-      "{{boqCount}} тооцоонууд хооронд {{projectCount}} төслүүд",
+    "boq.list_subtitle_count": "{{boqCount}} тооцоонууд хооронд {{projectCount}} төслүүд",
     "boq.load_more": "Илүү ачаалах",
     "boq.loaded_n_of_m": "{{loaded}} -н {{total}} зүйлс",
     "boq.loading_element_data": "элемент өгөгдөл ачаалж байна...",
     "boq.loading_full_properties": "бүрэн properties ачаалж байна…",
     "boq.lock": "Түгжих Тооцоо",
-    "boq.lock_confirm":
-      "Түгжих энэ тооцоо?nnLocked тооцоонууд чадахгүй байх зассан. Тайлж байна requires admin privileges.",
+    "boq.lock_confirm": "Түгжих энэ тооцоо?nnLocked тооцоонууд чадахгүй байх зассан. Тайлж байна requires admin privileges.",
     "boq.lock_failed": "Түгжих амжилтгүй",
-    "boq.lock_tooltip":
-      "Түгжих prevents edits. Үүсгэх хувилбар хүртэл make өөрчлөлтүүд хүртэл түгжсэн тооцоо.",
+    "boq.lock_tooltip": "Түгжих prevents edits. Үүсгэх хувилбар хүртэл make өөрчлөлтүүд хүртэл түгжсэн тооцоо.",
     "boq.locked": "ТҮГЖСЭН",
     "boq.locked_next": "Тооцоо түгжсэн. Үүсгэх төсөл төсөв?",
     "boq.locked_success": "Тооцоо түгжсэн",
@@ -907,8 +790,7 @@ const resource = {
     "boq.markups_title": "Нэмэгдэл ба нэмэгдэл зардал",
     "boq.mvp.apply": "Хэрэглэх & нэмэх хүртэл BOQ",
     "boq.mvp.apply_to_remaining": "Хэрэглэх хүртэл remaining {{count}}",
-    "boq.mvp.apply_to_remaining_hint":
-      "Re-use эдгээр сонголтууд -д зориулсан бүх бусад multi-хувилбар зүйлс -д энэ batch",
+    "boq.mvp.apply_to_remaining_hint": "Re-use эдгээр сонголтууд -д зориулсан бүх бусад multi-хувилбар зүйлс -д энэ batch",
     "boq.mvp.batch_progress": "Зүйл {{current}} -н {{total}}",
     "boq.mvp.bulk_cheapest": "Cheapest -д зориулсан бүх",
     "boq.mvp.bulk_label": "Хурдан бөглөх:",
@@ -929,39 +811,31 @@ const resource = {
     "boq.mvp.toast_applied": "{{count}} хувилбар сонгогдсон",
     "boq.mvp.toast_applied_one": "{{count}} хувилбар сонгогдсон",
     "boq.mvp.toast_applied_other": "{{count}} хувилбар сонгосон",
-    "boq.mvp.toast_apply_to_remaining":
-      "Хэрэглэсэн сонголтууд хүртэл {{count}} илүү зүйл",
+    "boq.mvp.toast_apply_to_remaining": "Хэрэглэсэн сонголтууд хүртэл {{count}} илүү зүйл",
     "boq.n_selected": "{{count}} байрлалууд сонгогдсон‌⁠‍",
     "boq.name": "Нэр",
     "boq.name_label": "БМЖ-ийн нэр",
     "boq.net_total": "Цэвэр дүн",
     "boq.new_estimate": "Шинэ тооцоо",
     "boq.new_markup": "Шинэ Тэмдэглэгээ",
-    "boq.no_activity":
-      "Үгүй үйл ажиллагаа yet. Өөрчлөлтүүд болно харагдах энд.",
+    "boq.no_activity": "Үгүй үйл ажиллагаа yet. Өөрчлөлтүүд болно харагдах энд.",
     "boq.no_anomalies": "Үгүй Anomalies",
     "boq.no_boqs": "Хараахан тооцоонууд алга",
     "boq.no_boqs_for_project": "Үгүй BOQs олсон -д зориулсан энэ төсөл",
-    "boq.no_boqs_hint":
-      "Үүсгэх төсөл эхний, тэгээд нэмэх Ажил жагсаалт -н Тоо хэмжээ",
+    "boq.no_boqs_hint": "Үүсгэх төсөл эхний, тэгээд нэмэх Ажил жагсаалт -н Тоо хэмжээ",
     "boq.no_boqs_in_project": "Үгүй BOQs -д энэ төсөл.",
     "boq.no_catalog_results": "Хайлтад тохирох нөөц алга",
     "boq.no_changes": "Үгүй өөрчлөлтүүд",
-    "boq.no_custom_columns":
-      "Үгүй захиалгат баганууд yet. Сонгох урьдчилан тохируулсан доор эсвэл нэмэх таны own.",
-    "boq.no_databases_help":
-      "There's үгүй өртөг-тариф өгөгдлийн сан дээр энэ сервер, so хайх байх юу ч байхгүй хүртэл харуулах. Импортлох үнэгүй CWICR pack — 30 бүс нутгийн өгөгдлийн сан нь one дарах away.",
+    "boq.no_custom_columns": "Үгүй захиалгат баганууд yet. Сонгох урьдчилан тохируулсан доор эсвэл нэмэх таны own.",
+    "boq.no_databases_help": "There's үгүй өртөг-тариф өгөгдлийн сан дээр энэ сервер, so хайх байх юу ч байхгүй хүртэл харуулах. Импортлох үнэгүй CWICR pack — 30 бүс нутгийн өгөгдлийн сан нь one дарах away.",
     "boq.no_databases_title": "Хараахан cost өгөгдлийн сан суулгасан алга",
     "boq.no_items_found": "тааруулж байна зүйлс олдсонгүй",
-    "boq.no_markups":
-      "Үгүй тэмдэглэгээ yet. Нэмэх one эсвэл хэрэглэх бүс нутгийн загвар.",
+    "boq.no_markups": "Үгүй тэмдэглэгээ yet. Нэмэх one эсвэл хэрэглэх бүс нутгийн загвар.",
     "boq.no_numeric_found": "Үгүй numeric утгууд -д энэ элемент",
     "boq.no_numeric_quantities": "Үгүй numeric тоо хэмжээ",
     "boq.no_positions": "Үгүй байрлалууд yet. Нэмэх хэсэг хүртэл get эхэлсэн.",
-    "boq.no_quantities_hint_button":
-      'Үгүй тоо хэмжээ — press "Харуулах бүх" дээр хүртэл surface бүх BIM property',
-    "boq.no_resources":
-      "Үгүй нөөц assigned. Сонгох өртөг зүйл -тай ⚡ дүрс -аас autocomplete suggestions хүртэл автомат-populate.",
+    "boq.no_quantities_hint_button": "Үгүй тоо хэмжээ — press \"Харуулах бүх\" дээр хүртэл surface бүх BIM property",
+    "boq.no_resources": "Үгүй нөөц assigned. Сонгох өртөг зүйл -тай ⚡ дүрс -аас autocomplete suggestions хүртэл автомат-populate.",
     "boq.no_results": "Тохирох тооцоонууд олдсонгүй",
     "boq.no_results_hint": "Хайлт эсвэл шүүлтүүрийг өөрчилж үзнэ үү",
     "boq.no_section": "Үгүй хэсэг (дээд түвшин)",
@@ -970,8 +844,7 @@ const resource = {
     "boq.not_found": "BOQ биш олсон",
     "boq.of_estimates": "{{current}} -н {{total}} тооцоонууд",
     "boq.open_in_bim": "Нээх -д BIM",
-    "boq.open_in_bim_title":
-      "Нээх -д 3D үзэгч -тай холбосон элемент pre-сонгогдсон",
+    "boq.open_in_bim_title": "Нээх -д 3D үзэгч -тай холбосон элемент pre-сонгогдсон",
     "boq.open_in_bim_viewer": "Нээх -д BIM Үзэгч",
     "boq.options": "сонголтууд",
     "boq.ordinal": "Бай.",
@@ -979,27 +852,21 @@ const resource = {
     "boq.partial": "Хэсэгчлэн",
     "boq.paste_columns": "Баганууд‌⁠‍",
     "boq.paste_detected": "{{count}} мөрүүд detected‌⁠‍",
-    "boq.paste_excel_hint":
-      "Хуулах мөрүүд -аас Excel эсвэл Google Sheets ба буулгах доор‌⁠‍",
-    "boq.paste_failed":
-      "буулгах — хүчингүй өгөгдөл эсвэл read-зөвхөн cells‌⁠‍ чадсангүй",
+    "boq.paste_excel_hint": "Хуулах мөрүүд -аас Excel эсвэл Google Sheets ба буулгах доор‌⁠‍",
+    "boq.paste_failed": "буулгах — хүчингүй өгөгдөл эсвэл read-зөвхөн cells‌⁠‍ чадсангүй",
     "boq.paste_from_excel": "Excel-ээс буулгах",
     "boq.paste_from_excel_short": "Буулгах",
     "boq.paste_import_count": "{{count}} байрлалууд нэмэгдсэн хүртэл BOQ",
     "boq.paste_import_failed": "Импорт амжилтгүй",
     "boq.paste_import_success": "Импортлогдсон амжилттай",
-    "boq.paste_no_data":
-      "Үгүй хүчинтэй мөрүүд detected. Make sure өгөгдөл нь таб-separated.",
-    "boq.paste_placeholder":
-      "Буулгах таб-separated өгөгдөл энд...nnExample:nDescriptiontUnittQtytRatenConcrete foundationtm3t120t185.00nRebar B500Stkgt2400t1.45‌⁠‍",
+    "boq.paste_no_data": "Үгүй хүчинтэй мөрүүд detected. Make sure өгөгдөл нь таб-separated.",
+    "boq.paste_placeholder": "Буулгах таб-separated өгөгдөл энд...nnExample:nDescriptiontUnittQtytRatenConcrete foundationtm3t120t185.00nRebar B500Stkgt2400t1.45‌⁠‍",
     "boq.paste_showing": "{{total}} мөрийн эхний 50-г харуулж байна",
-    "boq.pdf_link_tooltip_v2":
-      "PDF тоо хэмжээ гаргалт — дарах -д зориулсан дэлгэрэнгүй & navigation",
+    "boq.pdf_link_tooltip_v2": "PDF тоо хэмжээ гаргалт — дарах -д зориулсан дэлгэрэнгүй & navigation",
     "boq.pending": "Хүлээгдэж буй",
     "boq.per_unit": "{{unit}} тутамд",
     "boq.pick_from_catalog": "Сонгох -аас Каталог‌⁠‍",
-    "boq.pick_from_catalog_desc":
-      "Хайх ба нэмэх нөөц -аас каталог хүртэл энэ байрлал‌⁠‍",
+    "boq.pick_from_catalog_desc": "Хайх ба нэмэх нөөц -аас каталог хүртэл энэ байрлал‌⁠‍",
     "boq.pick_qty_from_bim": "Сонгох тоо хэмжээ -аас BIM",
     "boq.pos": "Бай.",
     "boq.position": "Байрлал",
@@ -1008,27 +875,22 @@ const resource = {
     "boq.position_duplicated": "Байрлал хуулагдсан",
     "boq.position_restored": "Байрлал сэргээгдсэн",
     "boq.position_variant_v_label": "Expand нөөц",
-    "boq.position_variant_v_tooltip":
-      "Энэ байрлал carries хувилбар нөөц — дарах хүртэл expand нөөц самбар.",
+    "boq.position_variant_v_tooltip": "Энэ байрлал carries хувилбар нөөц — дарах хүртэл expand нөөц самбар.",
     "boq.positions": "байрлал",
     "boq.positions_added": "Байрлалууд нэмэгдсэн -аас өртөг өгөгдлийн сан",
     "boq.positions_label": "байрлал",
     "boq.positions_removed": "{{count}} pos устгагдлаа",
     "boq.positions_reordered": "Байрлалууд reordered",
     "boq.positions_short": "бай.",
-    "boq.preset_already_applied":
-      "Бүх баганууд -аас энэ урьдчилан тохируулсан already байх‌⁠‍",
-    "boq.preset_applied":
-      '{{count}} баганууд нэмэгдсэн -аас "{{name}}" урьдчилан тохируулсан',
+    "boq.preset_already_applied": "Бүх баганууд -аас энэ урьдчилан тохируулсан already байх‌⁠‍",
+    "boq.preset_applied": "{{count}} баганууд нэмэгдсэн -аас \"{{name}}\" урьдчилан тохируулсан",
     "boq.preset_partial": "Урьдчилан тохируулсан хэсэгчлэн хэрэглэсэн",
     "boq.preset_regional": "Бүс нутгийн стандартууд",
     "boq.preset_universal": "Quick эхлэх -тай урьдчилан тохируулсан",
     "boq.preview": "Урьдчилан үзэх",
-    "boq.preview_total_hint":
-      "Каталог-тариф × тоо хэмжээ -д зориулсан сонголт. Хувилбар сонголтууд болно adjust энэ.",
+    "boq.preview_total_hint": "Каталог-тариф × тоо хэмжээ -д зориулсан сонголт. Хувилбар сонголтууд болно adjust энэ.",
     "boq.price_check": "Үнэ Шалгах",
-    "boq.price_review_desc":
-      "Хяналт тус бүр suggestion доор. Accept хүртэл шинэчлэлт тариф, эсвэл ignore хүртэл keep таны одоогийн үнэ.‌⁠‍",
+    "boq.price_review_desc": "Хяналт тус бүр suggestion доор. Accept хүртэл шинэчлэлт тариф, эсвэл ignore хүртэл keep таны одоогийн үнэ.‌⁠‍",
     "boq.price_review_title": "Үнэ Шалгах Үр дүн‌⁠‍",
     "boq.project": "Төсөл",
     "boq.projects_label": "Төслүүд",
@@ -1039,8 +901,7 @@ const resource = {
     "boq.quality_descriptions": "Тайлбарууд filled",
     "boq.quality_fair": "Дунд",
     "boq.quality_great": "Маш сайн",
-    "boq.quality_hint":
-      "Fill -д бүх талбарууд хүртэл reach 100% ба ensure тооцоо accuracy.",
+    "boq.quality_hint": "Fill -д бүх талбарууд хүртэл reach 100% ба ensure тооцоо accuracy.",
     "boq.quality_markups": "Тэмдэглэгээ нэмэгдлээ",
     "boq.quality_missing": "Дутуу",
     "boq.quality_needs_work": "Сайжруулах шаардлагатай",
@@ -1055,46 +916,32 @@ const resource = {
     "boq.quick_add_position": "Байрлал нэмэх",
     "boq.quick_add_position_desc": "Нэмэх empty байрлал хүртэл одоогийн хэсэг",
     "boq.quick_add_section": "Хэсэг нэмэх",
-    "boq.quick_add_section_desc":
-      "Үүсгэх шинэ хэсэг хүртэл organize байрлалууд",
+    "boq.quick_add_section_desc": "Үүсгэх шинэ хэсэг хүртэл organize байрлалууд",
     "boq.quick_import_costs": "Импортлох -аас Өртөг Өгөгдлийн сан",
-    "boq.quick_import_costs_desc":
-      "Үзэх ба сонгох зүйлс -аас өртөг өгөгдлийн сан",
+    "boq.quick_import_costs_desc": "Үзэх ба сонгох зүйлс -аас өртөг өгөгдлийн сан",
     "boq.quick_use_template": "Загвар ашиглах",
     "boq.quick_use_template_desc": "Эхлэх -аас pre-барьсан тооцоо загвар",
     "boq.rate_applied": "Үнэлгээ хэрэглэгдсэн",
-    "boq.rate_from_resources":
-      "Тариф нь тооцоолсон -аас нөөц. Засах individual нөөц хүртэл өөрчлөх.‌⁠‍",
+    "boq.rate_from_resources": "Тариф нь тооцоолсон -аас нөөц. Засах individual нөөц хүртэл өөрчлөх.‌⁠‍",
     "boq.recalc_confirm_button": "Үнэлгээ шинэчлэх",
-    "boq.recalc_confirm_step1":
-      "1. Хайх өртөг өгөгдлийн сан -д зориулсан тааруулж байна зүйлс -аар тайлбар",
-    "boq.recalc_confirm_step2":
-      "2. Attach нөөц breakdowns (материал, хөдөлмөр, тоног төхөөрөмж)",
-    "boq.recalc_confirm_step3":
-      "3. Recalculate нэгж тарифууд -аас нөөц components",
-    "boq.recalc_confirm_subtitle":
-      "Тааруулалт байрлалууд хүртэл өртөг өгөгдлийн сан",
+    "boq.recalc_confirm_step1": "1. Хайх өртөг өгөгдлийн сан -д зориулсан тааруулж байна зүйлс -аар тайлбар",
+    "boq.recalc_confirm_step2": "2. Attach нөөц breakdowns (материал, хөдөлмөр, тоног төхөөрөмж)",
+    "boq.recalc_confirm_step3": "3. Recalculate нэгж тарифууд -аас нөөц components",
+    "boq.recalc_confirm_subtitle": "Тааруулалт байрлалууд хүртэл өртөг өгөгдлийн сан",
     "boq.recalc_confirm_title": "Шинэчлэлт Нэгж Тарифууд",
-    "boq.recalc_confirm_warning":
-      "Байрлалууд -тай manual тарифууд тэр байх үгүй тааруулалт -д өртөг өгөгдлийн сан болно биш байх өөрчилсөн.",
-    "boq.recalc_enriched":
-      "{{count}} байрлалууд matched хүртэл өртөг өгөгдлийн сан",
-    "boq.recalc_skipped":
-      "{{count}} байрлалууд -гүй өртөг өгөгдөл (manual тарифууд kept)",
+    "boq.recalc_confirm_warning": "Байрлалууд -тай manual тарифууд тэр байх үгүй тааруулалт -д өртөг өгөгдлийн сан болно биш байх өөрчилсөн.",
+    "boq.recalc_enriched": "{{count}} байрлалууд matched хүртэл өртөг өгөгдлийн сан",
+    "boq.recalc_skipped": "{{count}} байрлалууд -гүй өртөг өгөгдөл (manual тарифууд kept)",
     "boq.recalc_updated": "{{count}} нэгж тарифууд recalculated -аас нөөц",
     "boq.recalculate": "Дахин тооцоолох",
-    "boq.recalculate_all_manual":
-      "Бүх байрлалууд use manual тарифууд — нэмэх нөөц -аас өртөг өгөгдлийн сан хүртэл идэвхжүүлэх автомат тариф тооцоолол.",
+    "boq.recalculate_all_manual": "Бүх байрлалууд use manual тарифууд — нэмэх нөөц -аас өртөг өгөгдлийн сан хүртэл идэвхжүүлэх автомат тариф тооцоолол.",
     "boq.recalculate_complete": "Дахин тооцоолол дууссан",
     "boq.recalculate_failed": "Дахин тооцоолол амжилтгүй",
-    "boq.recalculate_failed_hint":
-      "Шалгах тэр backend нь ажиллаж байна ба өртөг өгөгдлийн сан нь ачаалсан.",
+    "boq.recalculate_failed_hint": "Шалгах тэр backend нь ажиллаж байна ба өртөг өгөгдлийн сан нь ачаалсан.",
     "boq.recalculate_no_changes": "Өөрчлөлт хэрэггүй",
     "boq.recalculate_rates": "Үнэлгээ шинэчлэх",
-    "boq.recalculate_summary":
-      "Recalculated: {{sections}} хэсгүүд, {{positions}} байрлалууд",
-    "boq.recalculate_tip":
-      "Таарцууд байрлалууд хүртэл өртөг өгөгдлийн сан, attaches нөөц breakdowns (материал, хөдөлмөр, тоног төхөөрөмж), ба recalculates нэгж тарифууд -аас components.",
+    "boq.recalculate_summary": "Recalculated: {{sections}} хэсгүүд, {{positions}} байрлалууд",
+    "boq.recalculate_tip": "Таарцууд байрлалууд хүртэл өртөг өгөгдлийн сан, attaches нөөц breakdowns (материал, хөдөлмөр, тоног төхөөрөмж), ба recalculates нэгж тарифууд -аас components.",
     "boq.recalculating": "Шинэчилж байна...",
     "boq.recent_activity": "Сүүлийн үеийн үйл ажиллагаа",
     "boq.redo": "Дахин хийх (Ctrl+Y)",
@@ -1103,33 +950,25 @@ const resource = {
     "boq.remove_resource": "Хасах Нөөц",
     "boq.renumber": "Renumber Байрлалууд",
     "boq.renumber_apply": "Хэрэглэх renumbering",
-    "boq.renumber_dialog_subtitle":
-      "Дугаарлалтын схем сонгоно уу. Одоогийн дараалал хадгалагдана — зөвхөн дугаарууд дахин бичигдэнэ.‌⁠‍",
+    "boq.renumber_dialog_subtitle": "Дугаарлалтын схем сонгоно уу. Одоогийн дараалал хадгалагдана — зөвхөн дугаарууд дахин бичигдэнэ.‌⁠‍",
     "boq.renumber_dialog_title": "Renumber байрлалууд‌⁠‍",
     "boq.renumber_done": "{{count}} байрлалууд renumbered",
-    "boq.renumber_done_hint":
-      "Дараалал хадгалагдсан — зөвхөн дугаарууд дахин бичигдсэн. Дугаарлалтад Ctrl+Z-ээр буцаах боломжгүй.",
+    "boq.renumber_done_hint": "Дараалал хадгалагдсан — зөвхөн дугаарууд дахин бичигдсэн. Дугаарлалтад Ctrl+Z-ээр буцаах боломжгүй.",
     "boq.renumber_failed": "Дугаарлах амжилтгүй",
     "boq.renumber_no_preview": "Хараахан байрлалууд to урьдчилан үзэх алга",
     "boq.renumber_pad": "Zero-pad хэсэг тоонууд‌⁠‍",
     "boq.renumber_pad_off": "Хэсгүүд болно байх 1, 2, 3 (үгүй padding)",
-    "boq.renumber_pad_on":
-      "Хэсгүүд болно байх 01, 02, 03 (two-digit padded)‌⁠‍",
+    "boq.renumber_pad_on": "Хэсгүүд болно байх 01, 02, 03 (two-digit padded)‌⁠‍",
     "boq.renumber_preview": "Урьдчилан үзэх (эхний 5 байрлалууд)",
     "boq.renumber_scheme_dotted": "Богино аравтын",
-    "boq.renumber_scheme_dotted_desc":
-      "NRM хэв маягийн хэмжилтэд түгээмэл богино хэлбэрийн аравтын дугаарлалт.",
+    "boq.renumber_scheme_dotted_desc": "NRM хэв маягийн хэмжилтэд түгээмэл богино хэлбэрийн аравтын дугаарлалт.",
     "boq.renumber_scheme_gap10": "10-ийн зайтай",
     "boq.renumber_scheme_gap100": "100-ийн зайтай",
-    "boq.renumber_scheme_gap100_desc":
-      "Хүртэл илүү headroom -д зориулсан маш том BOQs тэр болно grow significantly post-тендер.",
-    "boq.renumber_scheme_gap10_desc":
-      "Хожим нь 01.10 ба 01.20 хооронд 01.15 гэх мэт байрлал нэмэх зайтай. Германы стандарт тендерийн гаралт.",
+    "boq.renumber_scheme_gap100_desc": "Хүртэл илүү headroom -д зориулсан маш том BOQs тэр болно grow significantly post-тендер.",
+    "boq.renumber_scheme_gap10_desc": "Хожим нь 01.10 ба 01.20 хооронд 01.15 гэх мэт байрлал нэмэх зайтай. Германы стандарт тендерийн гаралт.",
     "boq.renumber_scheme_sequential": "Дараалсан",
-    "boq.renumber_scheme_sequential_desc":
-      "Авсаархан, уламжлалт дугаарлалт. Дараа нь нэмэлт байрлал авахгүй тогтсон хүрээтэй BOQ-д хамгийн тохиромжтой.",
-    "boq.renumber_warning":
-      "Энэ overwrites дурын manually зассан байрлал тоонууд. одоогийн харуулах захиалга нь preserved — зөвхөн ordinals өөрчлөх.",
+    "boq.renumber_scheme_sequential_desc": "Авсаархан, уламжлалт дугаарлалт. Дараа нь нэмэлт байрлал авахгүй тогтсон хүрээтэй BOQ-д хамгийн тохиромжтой.",
+    "boq.renumber_warning": "Энэ overwrites дурын manually зассан байрлал тоонууд. одоогийн харуулах захиалга нь preserved — зөвхөн ordinals өөрчлөх.",
     "boq.renumbering": "Дугаарлаж байна...",
     "boq.reorder_failed": "reorder байрлалууд амжилтгүй",
     "boq.res_code": "Код",
@@ -1146,28 +985,21 @@ const resource = {
     "boq.resource_catalog_code": "Каталог код: {{code}}",
     "boq.resource_currency": "Валют",
     "boq.resource_currency_add_custom": "Нэмэх захиалгат: {{code}}",
-    "boq.resource_currency_custom":
-      "Захиалгат валют: {{code}} (биш -д төсөл FX эсвэл ISO 4217 жагсаалт)",
-    "boq.resource_currency_hint":
-      "Валют -д зориулсан энэ нөөц. Үндсэн утгууд хүртэл төсөл base валют.",
-    "boq.resource_currency_no_match":
-      "Үгүй таарцууд — төрөл -д хамгийн бага 2 letters хүртэл нэмэх захиалгат код.",
+    "boq.resource_currency_custom": "Захиалгат валют: {{code}} (биш -д төсөл FX эсвэл ISO 4217 жагсаалт)",
+    "boq.resource_currency_hint": "Валют -д зориулсан энэ нөөц. Үндсэн утгууд хүртэл төсөл base валют.",
+    "boq.resource_currency_no_match": "Үгүй таарцууд — төрөл -д хамгийн бага 2 letters хүртэл нэмэх захиалгат код.",
     "boq.resource_currency_pick": "Валют — {{symbol}} {{code}}",
     "boq.resource_currency_search": "Төрөл эсвэл хайх (e.g. EUR, MYC)",
     "boq.resource_customised": "Customised нөөц — үгүй каталог код",
-    "boq.resource_is_variant_badge":
-      "Хувилбар нөөц — олон үнэ сонголтууд боломжтой",
+    "boq.resource_is_variant_badge": "Хувилбар нөөц — олон үнэ сонголтууд боломжтой",
     "boq.resource_name": "Нэр",
     "boq.resource_name_placeholder": "ж.нь Бетон C30/37",
-    "boq.resource_no_fx_rate":
-      "Үгүй FX тариф тохируулсан -д зориулсан {{code}} — нийт харагдсан -д {{code}}",
-    "boq.resource_no_fx_rate_click":
-      "Үгүй FX тариф тохируулсан -д зориулсан {{code}} — дарах хүртэл set one -д Төсөл Тохиргоо",
+    "boq.resource_no_fx_rate": "Үгүй FX тариф тохируулсан -д зориулсан {{code}} — нийт харагдсан -д {{code}}",
+    "boq.resource_no_fx_rate_click": "Үгүй FX тариф тохируулсан -д зориулсан {{code}} — дарах хүртэл set one -д Төсөл Тохиргоо",
     "boq.resource_no_fx_short": "FX тохируулах",
     "boq.resource_summary": "Нөөц Хураангуй",
     "boq.resource_total": "Нөөц Нийт",
-    "boq.resource_total_in_base":
-      "{{foreign}} ≈ {{base}} (нэг {{code}} = {{rate}} {{baseCode}})",
+    "boq.resource_total_in_base": "{{foreign}} ≈ {{base}} (нэг {{code}} = {{rate}} {{baseCode}})",
     "boq.resource_type": "Төрөл",
     "boq.resource_type_composite": "Нийлмэл",
     "boq.resource_type_electricity": "Цахилгаан",
@@ -1178,19 +1010,13 @@ const resource = {
     "boq.resource_type_other": "Бусад",
     "boq.resource_type_subcontractor": "Туслан гүйцэтгэгч",
     "boq.resource_type_variant_chip": "Хувилбар",
-    "boq.resource_type_variant_tooltip":
-      "Хувилбар нөөц — сонгох -аас {{base}} каталог. Дарах хүртэл reclassify нөөц төрөл.",
-    "boq.resource_variant_bar_tooltip_default":
-      "Автомат-үндсэн ({{strategy}}){{captured}} — дарах pill хүртэл refine.",
-    "boq.resource_variant_bar_tooltip_picked":
-      "Тодорхой хувилбар: {{label}}{{captured}}",
+    "boq.resource_type_variant_tooltip": "Хувилбар нөөц — сонгох -аас {{base}} каталог. Дарах хүртэл reclassify нөөц төрөл.",
+    "boq.resource_variant_bar_tooltip_default": "Автомат-үндсэн ({{strategy}}){{captured}} — дарах pill хүртэл refine.",
+    "boq.resource_variant_bar_tooltip_picked": "Тодорхой хувилбар: {{label}}{{captured}}",
     "boq.resource_variant_pill": "▾ {{count}} хувилбар",
-    "boq.resource_variant_pill_tooltip_default":
-      "Автомат-хэрэглэсэн -тай {{strategy}} тариф. {{count}} сонголтууд ({{range}}). Дарах хүртэл refine.",
-    "boq.resource_variant_pill_tooltip_picked":
-      "Хувилбар: {{label}} @ {{price}} {{currency}}{{delta}}. Дарах хүртэл солих.",
-    "boq.resource_variant_pill_tooltip_unset":
-      "{{count}} priced хувилбарууд боломжтой ({{range}}). Дарах хүртэл сонгох one.",
+    "boq.resource_variant_pill_tooltip_default": "Автомат-хэрэглэсэн -тай {{strategy}} тариф. {{count}} сонголтууд ({{range}}). Дарах хүртэл refine.",
+    "boq.resource_variant_pill_tooltip_picked": "Хувилбар: {{label}} @ {{price}} {{currency}}{{delta}}. Дарах хүртэл солих.",
+    "boq.resource_variant_pill_tooltip_unset": "{{count}} priced хувилбарууд боломжтой ({{range}}). Дарах хүртэл сонгох one.",
     "boq.resources_added": "Нөөц нэмэгдсэн хүртэл байрлал",
     "boq.resources_total": "Нөөц нийт",
     "boq.restore": "Сэргээх",
@@ -1201,8 +1027,7 @@ const resource = {
     "boq.rs_abc_pill_tooltip": "Class {{cls}} · {{pct}}% -н төсөл нөөц өртөг",
     "boq.rs_all": "Бүх",
     "boq.rs_col_abc": "ABC хувь",
-    "boq.rs_col_abc_tooltip":
-      "Pareto / ABC шинжилгээ — зүйлс make дээш ~80% -н өртөг, B ~15%, C ~5%. Дарах хүртэл highlight bucket boundaries.",
+    "boq.rs_col_abc_tooltip": "Pareto / ABC шинжилгээ — зүйлс make дээш ~80% -н өртөг, B ~15%, C ~5%. Дарах хүртэл highlight bucket boundaries.",
     "boq.rs_col_avg_rate": "Дундаж үнэ",
     "boq.rs_col_name": "Нэр",
     "boq.rs_col_positions": "Бай.",
@@ -1220,8 +1045,7 @@ const resource = {
     "boq.rs_resources": "нөөц",
     "boq.rs_save_failed": "Хадгалах амжилтгүй",
     "boq.rs_save_to_catalog": "Хадгалах хүртэл Миний Каталог",
-    "boq.rs_save_variant_to_catalog":
-      "Хадгалах болгон regular article -д таны каталог",
+    "boq.rs_save_variant_to_catalog": "Хадгалах болгон regular article -д таны каталог",
     "boq.rs_saved_to_catalog": "Каталогт хадгалагдсан",
     "boq.rs_search": "resources хайх...",
     "boq.rs_show_all": "Харуулах бүх {{count}} нөөц",
@@ -1230,13 +1054,10 @@ const resource = {
     "boq.rs_total": "Нийт",
     "boq.rs_variant_applied_to_n": "Хэрэглэсэн хүртэл {{count}} байрлал(s)‌⁠‍",
     "boq.rs_variant_pill_mixed": "Mixed · {{count}} сонголтууд",
-    "boq.rs_variant_pill_mixed_tooltip":
-      "Ялгаатай хувилбарууд сонгосон хооронд байрлалууд. Дарах хүртэл сонгох one -д зориулсан бүх.",
+    "boq.rs_variant_pill_mixed_tooltip": "Ялгаатай хувилбарууд сонгосон хооронд байрлалууд. Дарах хүртэл сонгох one -д зориулсан бүх.",
     "boq.rs_variant_pill_options": "▾ {{count}} сонголтууд",
-    "boq.rs_variant_pill_picked_tooltip":
-      "Хувилбар: {{label}}. Дарах хүртэл солих (applies хүртэл бүх байрлалууд).",
-    "boq.rs_variant_pill_unset_tooltip":
-      "{{count}} priced хувилбарууд боломжтой. Дарах хүртэл сонгох one -д зориулсан бүх байрлалууд.",
+    "boq.rs_variant_pill_picked_tooltip": "Хувилбар: {{label}}. Дарах хүртэл солих (applies хүртэл бүх байрлалууд).",
+    "boq.rs_variant_pill_unset_tooltip": "{{count}} priced хувилбарууд боломжтой. Дарах хүртэл сонгох one -д зориулсан бүх байрлалууд.",
     "boq.save_as_assembly": "Хадгалах болгон Угсралт",
     "boq.save_as_assembly_failed": "үүсгэх угсралт амжилтгүй",
     "boq.save_failed": "Хадгалж чадсангүй",
@@ -1250,10 +1071,8 @@ const resource = {
     "boq.scope_of_work_label": "Юу ажил нь included -д энэ тариф",
     "boq.scope_placeholder": "Хүрээ -н энэ BOQ...",
     "boq.search_and_add": "Хайх зүйлс ба нэмэх тэдгээрийг хүртэл таны тооцоо",
-    "boq.search_and_add_resources":
-      "Хайх өртөг зүйлс хүртэл нэмэх болгон нөөц хүртэл байрлал",
-    "boq.search_catalog_resources":
-      "Хайх нөөц -аар нэр, код, эсвэл ангилал...‌⁠‍",
+    "boq.search_and_add_resources": "Хайх өртөг зүйлс хүртэл нэмэх болгон нөөц хүртэл байрлал",
+    "boq.search_catalog_resources": "Хайх нөөц -аар нэр, код, эсвэл ангилал...‌⁠‍",
     "boq.search_cost_items": "cost зүйлс by тайлбар хайх...",
     "boq.search_estimates": "тооцоонууд хайх...",
     "boq.search_placeholder": "тооцоонууд хайх...",
@@ -1271,10 +1090,8 @@ const resource = {
     "boq.select_classification": "Ангилал...‌⁠‍",
     "boq.select_project": "Төсөл сонгоно уу...",
     "boq.sensitivity_base_total": "Үндсэн дүн",
-    "boq.sensitivity_empty":
-      "Нэмэх байрлалууд -тай өртгүүд хүртэл see sensitivity шинжилгээ.",
-    "boq.sensitivity_error":
-      "ачаалах sensitivity шинжилгээ. Please try дахин.‌⁠‍ амжилтгүй",
+    "boq.sensitivity_empty": "Нэмэх байрлалууд -тай өртгүүд хүртэл see sensitivity шинжилгээ.",
+    "boq.sensitivity_error": "ачаалах sensitivity шинжилгээ. Please try дахин.‌⁠‍ амжилтгүй",
     "boq.sensitivity_impact_high": "Нөлөө (+)",
     "boq.sensitivity_impact_low": "Нөлөө (-)",
     "boq.sensitivity_overrun": "Өртөг increase",
@@ -1312,8 +1129,7 @@ const resource = {
     "boq.showing_estimates": "{{shown}} -н {{total}} тооцоонууд",
     "boq.snapshot_created": "Хувилбар хадгалагдсан‌⁠‍",
     "boq.snapshot_failed": "хадгалах хувилбар‌⁠‍ амжилтгүй",
-    "boq.snapshot_hint":
-      "Төрөл шошго дээр ба дарах Хадгалах хүртэл үүсгэх таны эхний хувилбар.",
+    "boq.snapshot_hint": "Төрөл шошго дээр ба дарах Хадгалах хүртэл үүсгэх таны эхний хувилбар.",
     "boq.snapshot_label": "Хувилбар шошго (сонголтын)...",
     "boq.snapshot_restored": "Хувилбар сэргээгдсэн‌⁠‍",
     "boq.snapshots_error": "ачаалах хувилбар түүх амжилтгүй",
@@ -1324,30 +1140,23 @@ const resource = {
     "boq.source_dwg": "DWG зураг",
     "boq.source_id_label": "Зүйл id",
     "boq.source_measurement_label": "Хэмжилт",
-    "boq.source_no_measurement":
-      "Хэмжилт өгөгдөл биш хадгалсан locally — нээх эх сурвалж хүртэл үзэх дэлгэрэнгүй.",
+    "boq.source_no_measurement": "Хэмжилт өгөгдөл биш хадгалсан locally — нээх эх сурвалж хүртэл үзэх дэлгэрэнгүй.",
     "boq.source_open": "Нээх эх сурвалж",
-    "boq.source_open_title":
-      "Нээх эх сурвалж баримт бичиг -д түүний үзэгч, focused дээр энэ зүйл",
+    "boq.source_open_title": "Нээх эх сурвалж баримт бичиг -д түүний үзэгч, focused дээр энэ зүйл",
     "boq.source_pdf": "PDF-ээс хэмжээ авах",
     "boq.source_pdf_page": "Хуудас {{page}}",
     "boq.start_building": "Эхлэх барилга таны тооцоо",
-    "boq.start_building_desc":
-      "Follow эдгээр алхамууд хүртэл үүсгэх мэргэжлийн Ажил жагсаалт -н Тоо хэмжээ",
+    "boq.start_building_desc": "Follow эдгээр алхамууд хүртэл үүсгэх мэргэжлийн Ажил жагсаалт -н Тоо хэмжээ",
     "boq.status": "Төлөв",
     "boq.status_draft": "Ноорог",
     "boq.step_add_positions": "Нэмэх байрлалууд",
-    "boq.step_add_positions_desc":
-      "Нэмэх мөр зүйлс -тай тайлбарууд ба нэгж хүртэл тус бүр хэсэг",
+    "boq.step_add_positions_desc": "Нэмэх мөр зүйлс -тай тайлбарууд ба нэгж хүртэл тус бүр хэсэг",
     "boq.step_add_sections": "Нэмэх хэсгүүд",
-    "boq.step_add_sections_desc":
-      "Organize таны тооцоо руу хэсгүүд (e.g., Суурьнууд, Ханууд, Дээвэр)",
+    "boq.step_add_sections_desc": "Organize таны тооцоо руу хэсгүүд (e.g., Суурьнууд, Ханууд, Дээвэр)",
     "boq.step_review": "Хяналт нийт",
-    "boq.step_review_desc":
-      "Нэмэх тэмдэглэгээ -д зориулсан overhead ба ашиг, тэгээд хяналт таны grand нийт",
+    "boq.step_review_desc": "Нэмэх тэмдэглэгээ -д зориулсан overhead ба ашиг, тэгээд хяналт таны grand нийт",
     "boq.step_set_quantities": "Set тоо хэмжээ",
-    "boq.step_set_quantities_desc":
-      "Enter тоо хэмжээ ба нэгж тарифууд -д зориулсан тус бүр байрлал хүртэл тооцоолох нийт",
+    "boq.step_set_quantities_desc": "Enter тоо хэмжээ ба нэгж тарифууд -д зориулсан тус бүр байрлал хүртэл тооцоолох нийт",
     "boq.subtotal": "Дэд дүн",
     "boq.suggest_classification": "Ангилах",
     "boq.suggest_rate": "Suggest Тариф",
@@ -1359,27 +1168,18 @@ const resource = {
     "boq.template_error": "үүсгэх BOQ -аас загвар амжилтгүй",
     "boq.templates": "BOQ загварууд",
     "boq.templates_coming_soon": "Загварууд удахгүй",
-    "boq.templates_coming_soon_desc":
-      "загвар selector болно байх боломжтой -д future шинэчлэлт.",
-    "boq.templates_subtitle":
-      "Эхлэх -тай мэргэжлийн загвар -д зориулсан таны барилга төрөл. Сонгох загвар, set талбай, ба үүсгэх дууссан BOQ instantly.",
-    "boq.tip_autocomplete":
-      "Fill -д тайлбарууд -д зориулсан бүх байрлалууд — эхлэх typing хүртэл see suggestions -аас өртөг өгөгдлийн сан",
-    "boq.tip_markups":
-      "Нэмэх тэмдэглэгээ -д зориулсан overhead өртгүүд ба ашиг using Тэмдэглэгээ хэсэг доор table",
-    "boq.tip_menu":
-      "Дарах (...) цэс дээр хэсэг хүртэл нэмэх байрлалууд эсвэл устгах энэ",
-    "boq.tip_sections":
-      "Нэмэх хэсгүүд хүртэл organize таны тооцоо (e.g., Суурьнууд, Ханууд, Дээвэр)",
-    "boq.tip_tab":
-      "Use Tab хүртэл шилжүүлэх хооронд талбарууд, Enter хүртэл хадгалах өөрчлөлтүүд",
+    "boq.templates_coming_soon_desc": "загвар selector болно байх боломжтой -д future шинэчлэлт.",
+    "boq.templates_subtitle": "Эхлэх -тай мэргэжлийн загвар -д зориулсан таны барилга төрөл. Сонгох загвар, set талбай, ба үүсгэх дууссан BOQ instantly.",
+    "boq.tip_autocomplete": "Fill -д тайлбарууд -д зориулсан бүх байрлалууд — эхлэх typing хүртэл see suggestions -аас өртөг өгөгдлийн сан",
+    "boq.tip_markups": "Нэмэх тэмдэглэгээ -д зориулсан overhead өртгүүд ба ашиг using Тэмдэглэгээ хэсэг доор table",
+    "boq.tip_menu": "Дарах (...) цэс дээр хэсэг хүртэл нэмэх байрлалууд эсвэл устгах энэ",
+    "boq.tip_sections": "Нэмэх хэсгүүд хүртэл organize таны тооцоо (e.g., Суурьнууд, Ханууд, Дээвэр)",
+    "boq.tip_tab": "Use Tab хүртэл шилжүүлэх хооронд талбарууд, Enter хүртэл хадгалах өөрчлөлтүүд",
     "boq.tips_title": "Зөвлөгөө ба санамж",
     "boq.title": "Ажил материалын жагсаалт",
-    "boq.toolbar_hint":
-      "Use toolbar хүртэл нэмэх хэсгүүд ба байрлалууд, импортлох -аас өртөг өгөгдлийн сан эсвэл угсралтууд, экспортлох хүртэл GAEB/PDF/Excel, эсвэл run AI тооцоолол. Net = sum -н байрлал нийт. Тэмдэглэгээ нь хэрэглэсэн болгон percentages. Grand Нийт = Net + Тэмдэглэгээ + VAT.",
+    "boq.toolbar_hint": "Use toolbar хүртэл нэмэх хэсгүүд ба байрлалууд, импортлох -аас өртөг өгөгдлийн сан эсвэл угсралтууд, экспортлох хүртэл GAEB/PDF/Excel, эсвэл run AI тооцоолол. Net = sum -н байрлал нийт. Тэмдэглэгээ нь хэрэглэсэн болгон percentages. Grand Нийт = Net + Тэмдэглэгээ + VAT.",
     "boq.toolbar_quality": "Чанар",
-    "boq.toolbar_summary_aria":
-      "{{sections}} хэсгүүд · {{positions}} байрлалууд",
+    "boq.toolbar_summary_aria": "{{sections}} хэсгүүд · {{positions}} байрлалууд",
     "boq.total": "Нийт",
     "boq.total_estimates": "Нийт Тооцоонууд",
     "boq.total_positions": "Нийт Байрлалууд",
@@ -1394,12 +1194,9 @@ const resource = {
     "boq.unit_options": "Нэгж сонголтууд",
     "boq.unit_rate": "Нэгжийн үнэ",
     "boq.unit_rate_variant_pill": "u25BE {{count}} сонголтууд",
-    "boq.unit_rate_variant_pill_tooltip_default":
-      "Автомат-хэрэглэсэн -тай {{strategy}} тариф ({{count}} сонголтууд, {{range}}). Дарах хүртэл refine.",
-    "boq.unit_rate_variant_pill_tooltip_picked":
-      "Currently: {{label}}. Дарах хүртэл солих хүртэл ялгаатай хувилбар.",
-    "boq.unit_rate_variant_pill_tooltip_unset":
-      "{{count}} priced хувилбарууд боломжтой ({{range}}). Дарах хүртэл сонгох one.",
+    "boq.unit_rate_variant_pill_tooltip_default": "Автомат-хэрэглэсэн -тай {{strategy}} тариф ({{count}} сонголтууд, {{range}}). Дарах хүртэл refine.",
+    "boq.unit_rate_variant_pill_tooltip_picked": "Currently: {{label}}. Дарах хүртэл солих хүртэл ялгаатай хувилбар.",
+    "boq.unit_rate_variant_pill_tooltip_unset": "{{count}} priced хувилбарууд боломжтой ({{range}}). Дарах хүртэл сонгох one.",
     "boq.unlock": "Түгжээ тайлах",
     "boq.unlock_failed": "Түгжээ тайлах амжилтгүй",
     "boq.unlocked_success": "Тооцоо тайлсан",
@@ -1407,19 +1204,16 @@ const resource = {
     "boq.untitled_section": "(гарчиггүй)",
     "boq.update_failed": "шинэчлэх байрлал‌⁠‍ амжилтгүй",
     "boq.validate": "Шалгах",
-    "boq.validate_tip":
-      "Checks -д зориулсан дутуу тайлбарууд, zero тоо хэмжээ, үнэ тогтоолт gaps, ангилал дагалт, ба хуулбарлах байрлалууд.",
+    "boq.validate_tip": "Checks -д зориулсан дутуу тайлбарууд, zero тоо хэмжээ, үнэ тогтоолт gaps, ангилал дагалт, ба хуулбарлах байрлалууд.",
     "boq.validating": "Шалгаж байна...",
     "boq.validation_all_passed": "Бүх {{count}} checks passed",
     "boq.validation_complete": "Баталгаажуулалт дууссан",
     "boq.validation_errors": "{{count}} алдаа олдсон",
     "boq.validation_errors_title": "Баталгаажуулалтын алдаа",
     "boq.validation_failed": "Шалгалт амжилтгүй",
-    "boq.validation_failed_hint":
-      "connect to баталгаажуулалт үйлчилгээ чадсангүй",
+    "boq.validation_failed_hint": "connect to баталгаажуулалт үйлчилгээ чадсангүй",
     "boq.validation_passed": "Шалгалт амжилттай",
-    "boq.validation_pending":
-      "Баталгаажуулалт хүлээгдэж байна — биш yet шалгасан‌⁠‍",
+    "boq.validation_pending": "Баталгаажуулалт хүлээгдэж байна — биш yet шалгасан‌⁠‍",
     "boq.validation_score": "Чанарын оноо: {{score}}%",
     "boq.validation_warnings": "{{count}} анхааруулга",
     "boq.validation_warnings_title": "Баталгаажуулалтын анхааруулга",
@@ -1430,62 +1224,46 @@ const resource = {
     "boq.variables_description": "Тайлбар",
     "boq.variables_description_placeholder": "Сонголтын тэмдэглэл",
     "boq.variables_empty": "Үгүй variables yet. Нэмэх эхний one доор.‌⁠‍",
-    "boq.variables_help":
-      "Томьёонд лавласан болох нэрлэсэн утгуудыг тодорхойлоорой. Жишээ нь $GFA = 1500 гэж тохируулаад дурын тоо хэмжээ эсвэл тарифын нүдэнд =$GFA * 0.15 гэж бичнэ үү.‌⁠‍",
+    "boq.variables_help": "Томьёонд лавласан болох нэрлэсэн утгуудыг тодорхойлоорой. Жишээ нь $GFA = 1500 гэж тохируулаад дурын тоо хэмжээ эсвэл тарифын нүдэнд =$GFA * 0.15 гэж бичнэ үү.‌⁠‍",
     "boq.variables_name": "Нэр",
     "boq.variables_saved": "Variables хадгалагдсан‌⁠‍",
     "boq.variables_title": "BOQ хувьсагч‌⁠‍",
     "boq.variables_type": "Төрөл",
     "boq.variables_value": "Үнэ цэн",
     "boq.variant_applied": "Хувилбар хэрэглэсэн: {{label}}",
-    "boq.variant_default_applied_msg":
-      "Дарах мөр -д BOQ хүртэл сонгох specific хувилбар.",
+    "boq.variant_default_applied_msg": "Дарах мөр -д BOQ хүртэл сонгох specific хувилбар.",
     "boq.variant_default_applied_title": "Хэрэглэсэн -тай average үнэ",
     "boq.variant_default_pill": "Үндсэн u00B7 refine u25BE",
-    "boq.variant_default_pill_tooltip":
-      "Автомат-хэрэглэсэн -тай {{strategy}} тариф. Дарах unit_rate cell хүртэл сонгох specific хувилбар.",
-    "boq.variant_default_pill_with_count":
-      "Abstract u00B7 {{count}} сонголтууд",
-    "boq.variant_header_code_tooltip":
-      "Abstract хувилбар нөөц — inherits байрлал тоо хэмжээ",
-    "boq.variant_header_pill_tooltip":
-      "Сонгох / солих үнэ хувилбар -д зориулсан энэ abstract нөөц",
-    "boq.variant_header_qty_edit_tooltip":
-      "Double-дарах хүртэл засах тоо хэмжээ (синхрончилсон -тай байрлал).",
+    "boq.variant_default_pill_tooltip": "Автомат-хэрэглэсэн -тай {{strategy}} тариф. Дарах unit_rate cell хүртэл сонгох specific хувилбар.",
+    "boq.variant_default_pill_with_count": "Abstract u00B7 {{count}} сонголтууд",
+    "boq.variant_header_code_tooltip": "Abstract хувилбар нөөц — inherits байрлал тоо хэмжээ",
+    "boq.variant_header_pill_tooltip": "Сонгох / солих үнэ хувилбар -д зориулсан энэ abstract нөөц",
+    "boq.variant_header_qty_edit_tooltip": "Double-дарах хүртэл засах тоо хэмжээ (синхрончилсон -тай байрлал).",
     "boq.variant_header_type_label": "Хувилбар",
-    "boq.variant_header_type_tooltip":
-      "Дарах хүртэл сонгох үнэ хувилбар -аас каталог",
+    "boq.variant_header_type_tooltip": "Дарах хүртэл сонгох үнэ хувилбар -аас каталог",
     "boq.variant_resource_added": "Нөөц нэмэгдсэн: {{label}}",
     "boq.variant_resource_repick_failed": "Хувилбар re-сонгох амжилтгүй",
     "boq.variant_resource_repicked": "Хувилбар шинэчлэгдсэн: {{label}}",
     "boq.vat": "НӨАТ",
     "boq.vector_download": "Татах өртөг өгөгдлийн сан эхний",
-    "boq.vector_download_desc":
-      "Импортлох CWICR өгөгдлийн сан (55,000+ зүйлс, 9 бүсүүд)",
-    "boq.vector_index_desc":
-      "Барих вектор index -аас таны импортлогдсон өртөг зүйлс (~30s)",
+    "boq.vector_download_desc": "Импортлох CWICR өгөгдлийн сан (55,000+ зүйлс, 9 бүсүүд)",
+    "boq.vector_index_desc": "Барих вектор index -аас таны импортлогдсон өртөг зүйлс (~30s)",
     "boq.vector_index_error": "Indexing Амжилтгүй",
-    "boq.vector_index_error_msg":
-      "index cost өгөгдлийн сан. Try импортолж байна өгөгдлийн сан эхний амжилтгүй",
+    "boq.vector_index_error_msg": "index cost өгөгдлийн сан. Try импортолж байна өгөгдлийн сан эхний амжилтгүй",
     "boq.vector_index_now": "Index одоо байгаа өртөг өгөгдлийн сан",
     "boq.vector_indexed": "Вектор өгөгдлийн сан бэлэн",
-    "boq.vector_indexed_msg":
-      "Өртөг өгөгдлийн сан indexed. AI боломжууд нь одоо боломжтой.",
+    "boq.vector_indexed_msg": "Өртөг өгөгдлийн сан indexed. AI боломжууд нь одоо боломжтой.",
     "boq.vector_indexing": "Индекслэж байна...",
-    "boq.vector_setup_desc":
-      "AI тарифын санал, ангилал, гажиг илрүүлэх нь вектор индекстэй өртгийн өгөгдлийн сан шаардана. Энэ нь 30 орчим секунд үргэлжлэх нэг удаагийн тохиргоо юм.",
+    "boq.vector_setup_desc": "AI тарифын санал, ангилал, гажиг илрүүлэх нь вектор индекстэй өртгийн өгөгдлийн сан шаардана. Энэ нь 30 орчим секунд үргэлжлэх нэг удаагийн тохиргоо юм.",
     "boq.vector_setup_subtitle": "One-цаг тохиргоо шаардлагатай",
     "boq.vector_setup_title": "AI боломжуудын тохиргоо",
-    "boq.vector_status_empty":
-      "Үгүй вектор өгөгдлийн сан олсон. Импортлох өртөг өгөгдлийн сан эсвэл index таны одоо байгаа өртөг зүйлс.",
-    "boq.vector_status_partial":
-      "Вектор DB байх {{count}} зүйлс indexed. Доод ~100 зүйлс хэрэгтэй -д зориулсан AI боломжууд.",
+    "boq.vector_status_empty": "Үгүй вектор өгөгдлийн сан олсон. Импортлох өртөг өгөгдлийн сан эсвэл index таны одоо байгаа өртөг зүйлс.",
+    "boq.vector_status_partial": "Вектор DB байх {{count}} зүйлс indexed. Доод ~100 зүйлс хэрэгтэй -д зориулсан AI боломжууд.",
     "boq.version_history": "Хувилбар Түүх‌⁠‍",
     "boq.view_comments": "Сэтгэгдэл ({{count}})",
     "boq.view_in_bim": "Үзэх -д BIM 3D ({{count}})",
     "boq.view_in_cost_db": "Үзэх -д Өртөг Өгөгдлийн сан",
-    "boq.warn_lump_sum":
-      "Lump sum — тоо хэмжээ × тариф болно биш тааруулалт expected нийт",
+    "boq.warn_lump_sum": "Lump sum — тоо хэмжээ × тариф болно биш тааруулалт expected нийт",
     "boq.warn_zero_rate": "Үгүй тариф — хяналт өмнө commit",
     "boq.warnings": "анхааруулга",
     "catalog.add_resource": "Нөөц нэмэх",
@@ -1506,20 +1284,16 @@ const resource = {
     "catalog.copy": "Хуулах",
     "catalog.create_assembly": "Нэгдэл үүсгэх",
     "catalog.create_resource": "Хувийн нөөц нэмэх",
-    "catalog.create_resource_desc":
-      "Үүсгэх шинэ нөөц -д зориулсан таны каталог",
+    "catalog.create_resource_desc": "Үүсгэх шинэ нөөц -д зориулсан таны каталог",
     "catalog.creating": "Үүсгэж байна...",
     "catalog.delete_failed": "Устгах амжилтгүй",
     "catalog.delete_region": "Бүс устгах уу?",
-    "catalog.empty_hint":
-      "Импортлох бүс нутгийн каталог хүртэл populate нөөц, эсвэл гаргаж авах -аас өртөг зүйлс.",
-    "catalog.empty_with_regions":
-      "Үгүй нөөц тааруулалт одоогийн шүүлтүүр. Try өөрчилж байна төрөл эсвэл бүс.",
+    "catalog.empty_hint": "Импортлох бүс нутгийн каталог хүртэл populate нөөц, эсвэл гаргаж авах -аас өртөг зүйлс.",
+    "catalog.empty_with_regions": "Үгүй нөөц тааруулалт одоогийн шүүлтүүр. Try өөрчилж байна төрөл эсвэл бүс.",
     "catalog.import": "Импорт",
     "catalog.import_failed": "Импорт амжилтгүй",
     "catalog.import_region": "Импортлох бүс",
-    "catalog.import_regions_desc":
-      "Татах pre-барьсан нөөц каталог -аас CWICR бүс нутгийн өгөгдлийн сан",
+    "catalog.import_regions_desc": "Татах pre-барьсан нөөц каталог -аас CWICR бүс нутгийн өгөгдлийн сан",
     "catalog.import_regions_title": "Импортлох Нөөц Каталог",
     "catalog.import_success": "Импорт дууссан",
     "catalog.importing": "Импортолж байна...",
@@ -1528,8 +1302,7 @@ const resource = {
     "catalog.loaded": "Ачаалагдсан",
     "catalog.my_catalog": "Миний каталог",
     "catalog.my_catalog_empty": "Таны каталог нь empty",
-    "catalog.my_catalog_empty_desc":
-      "Нэмэх таны own материал, тоног төхөөрөмж, ба хөдөлмөр тарифууд. Захиалгат нөөц чадна байх used -д угсралтууд ба хэрэглэсэн хүртэл BOQ байрлалууд.",
+    "catalog.my_catalog_empty_desc": "Нэмэх таны own материал, тоног төхөөрөмж, ба хөдөлмөр тарифууд. Захиалгат нөөц чадна байх used -д угсралтууд ба хэрэглэсэн хүртэл BOQ байрлалууд.",
     "catalog.name": "Нэр",
     "catalog.no_results": "resources олдсонгүй",
     "catalog.no_results_hint": "Хайлт эсвэл шүүлтүүрийг өөрчилж үзнэ үү",
@@ -1545,8 +1318,7 @@ const resource = {
     "catalog.resources_found": "нөөц олсон",
     "catalog.resources_imported": "нөөц импортлогдсон",
     "catalog.resources_removed": "resources устгагдлаа",
-    "catalog.search_hint":
-      "Үзэх материал, тоног төхөөрөмж, хөдөлмөр, ба operators",
+    "catalog.search_hint": "Үзэх материал, тоног төхөөрөмж, хөдөлмөр, ба operators",
     "catalog.search_in": "Хайх -д",
     "catalog.search_placeholder": "by нэр эсвэл код хайх...",
     "catalog.selected": "сонгогдсон",
@@ -1556,16 +1328,13 @@ const resource = {
     "catalog.total": "Нийт",
     "catalog.unit_rate": "Нэгжийн үнэ",
     "catalog.usage": "Хэрэглээ",
-    "catalog.what_is_catalog":
-      "Материал, хөдөлмөр, тоног төхөөрөмж, ба operator тарифууд organized -аар бүс. Суулгах бүс нутгийн каталог -аас Модулиуд, тэгээд use тэдгээрийг хүртэл барих угсралтууд эсвэл нэмэх зүйлс directly хүртэл BOQ байрлалууд.",
+    "catalog.what_is_catalog": "Материал, хөдөлмөр, тоног төхөөрөмж, ба operator тарифууд organized -аар бүс. Суулгах бүс нутгийн каталог -аас Модулиуд, тэгээд use тэдгээрийг хүртэл барих угсралтууд эсвэл нэмэх зүйлс directly хүртэл BOQ байрлалууд.",
     "catalog.with_n_components": "-тай {{count}} components",
     "cde.action_promote": "Дэвшүүлэх",
-    "cde.approval_comments_placeholder":
-      "Сонголтын тэмдэглэл -д зориулсан аудит ул мөр...",
+    "cde.approval_comments_placeholder": "Сонголтын тэмдэглэл -д зориулсан аудит ул мөр...",
     "cde.approval_field_comments": "Сэтгэгдэл",
     "cde.approval_field_signature": "Гарын үсэг",
-    "cde.approval_modal_body":
-      "{{code}}-г SHARED-ээс PUBLISHED руу дэвшүүлэхэд гарын үсэгтэй зөвшөөрөл (ISO 19650) шаардлагатай. Таны гарын үсэг ба сэтгэгдэл аудитын бүртгэлд бүртгэгдэнэ.",
+    "cde.approval_modal_body": "{{code}}-г SHARED-ээс PUBLISHED руу дэвшүүлэхэд гарын үсэгтэй зөвшөөрөл (ISO 19650) шаардлагатай. Таны гарын үсэг ба сэтгэгдэл аудитын бүртгэлд бүртгэгдэнэ.",
     "cde.approval_modal_title": "Хаалга B-ийн зөвшөөрлийн гарын үсэг",
     "cde.approval_signature_placeholder": "Бүрэн нэр / initials",
     "cde.approval_signature_required": "Гарын үсэг шаардлагатай",
@@ -1590,15 +1359,13 @@ const resource = {
     "cde.field_title": "Гарчиг",
     "cde.gate_label": "Хаалга {{code}}",
     "cde.history_by_role": "-аар: {{role}}",
-    "cde.history_empty":
-      "Хараахан төлвийн шилжилт байхгүй — багцыг ахиулж аудит эхлүүлнэ үү.",
+    "cde.history_empty": "Хараахан төлвийн шилжилт байхгүй — багцыг ахиулж аудит эхлүүлнэ үү.",
     "cde.history_signature": "Гарын үсэг зурсан: {{signer}}",
     "cde.history_title": "Төлвийн шилжилтийн түүх",
     "cde.label_revisions": "Хувилбарын түүх",
     "cde.new_container": "Шинэ Контейнер",
     "cde.no_containers": "Хараахан контейнерүүд алга",
-    "cde.no_containers_hint":
-      "Үүсгэх таны эхний баримт бичиг контейнер хүртэл get эхэлсэн.",
+    "cde.no_containers_hint": "Үүсгэх таны эхний баримт бичиг контейнер хүртэл get эхэлсэн.",
     "cde.no_results": "Тохирох контейнерүүд олдсонгүй",
     "cde.no_results_hint": "Хайлт эсвэл шүүлтүүрийг өөрчилж үзнэ үү.",
     "cde.no_revisions": "Үгүй хувилбарууд recorded",
@@ -1613,15 +1380,13 @@ const resource = {
     "cde.title_placeholder": "Контейнер гарчиг",
     "cde.title_required": "Гарчиг шаардлагатай",
     "cde.transmittals_badge": "{{count}} дамжуулалт",
-    "cde.transmittals_badge_aria":
-      "{{count}} transmittals холбосон хүртэл энэ контейнер",
+    "cde.transmittals_badge_aria": "{{count}} transmittals холбосон хүртэл энэ контейнер",
     "cde.transmittals_drawer_title": "Transmittals carrying энэ контейнер",
     "cde.view_history": "Түүх",
     "changeorders.add_item": "Зүйл нэмэх",
     "changeorders.all_statuses": "Бүх төлөв",
     "changeorders.approve": "Зөвшөөрөх",
-    "changeorders.approve_confirm":
-      "Зөвшөөрөх энэ өөрчлөх захиалга? Өртөг impact болно байх хэрэглэсэн хүртэл төсөл төсөв.",
+    "changeorders.approve_confirm": "Зөвшөөрөх энэ өөрчлөх захиалга? Өртөг impact болно байх хэрэглэсэн хүртэл төсөл төсөв.",
     "changeorders.approved": "Өөрчлөх захиалга зөвшөөрөгдлөө",
     "changeorders.approved_at": "Зөвшөөрсөн",
     "changeorders.approved_impact": "Зөвшөөрөгдсөн Impact",
@@ -1633,15 +1398,13 @@ const resource = {
     "changeorders.delete_item_confirm": "Устгах энэ зүйл?",
     "changeorders.deleted": "Өөрчлөх захиалга устгагдлаа",
     "changeorders.empty": "Үгүй өөрчлөх захиалгууд",
-    "changeorders.empty_desc":
-      "Үүсгэх өөрчлөх захиалга хүртэл хянах хүрээ өөрчлөлтүүд -тай өртөг ба хуваарь impact",
+    "changeorders.empty_desc": "Үүсгэх өөрчлөх захиалга хүртэл хянах хүрээ өөрчлөлтүүд -тай өртөг ба хуваарь impact",
     "changeorders.export_csv": "CSV болгож экспортлох",
     "changeorders.filter_status": "Төлвөөр шүүх",
     "changeorders.item_added": "Зүйл нэмэгдлээ",
     "changeorders.item_deleted": "Зүйл устгагдлаа",
     "changeorders.items": "Мөр Зүйлс",
-    "changeorders.load_error":
-      "Өөрчлөлтийн захиалгыг ачаалж чадсангүй. Дахин оролдоно уу.",
+    "changeorders.load_error": "Өөрчлөлтийн захиалгыг ачаалж чадсангүй. Дахин оролдоно уу.",
     "changeorders.new": "Шинэ Өөрчлөх Захиалга",
     "changeorders.new_qty": "Шинэ тоо",
     "changeorders.new_rate": "Шинэ үнэ",
@@ -1652,8 +1415,7 @@ const resource = {
     "changeorders.orig_rate": "Эх үнэ",
     "changeorders.pending": "Хүлээгдэж буй",
     "changeorders.pending_approval": "Зөвшөөрөл хүлээж байна",
-    "changeorders.pending_approval_hint":
-      "Зөвхөн менежерүүд ба admins чадна зөвшөөрөх.",
+    "changeorders.pending_approval_hint": "Зөвхөн менежерүүд ба admins чадна зөвшөөрөх.",
     "changeorders.reason": "Шалтгаан",
     "changeorders.reject": "Татгалзах",
     "changeorders.reject_confirm": "Татгалзах энэ өөрчлөх захиалга?",
@@ -1669,8 +1431,7 @@ const resource = {
     "changeorders.status_submitted": "Илгээгдсэн",
     "changeorders.status_under_review": "Хяналтанд",
     "changeorders.submit": "Илгээх",
-    "changeorders.submit_confirm":
-      "Илгээх энэ өөрчлөх захиалга -д зориулсан хяналт? Энэ чадахгүй байх undone.",
+    "changeorders.submit_confirm": "Илгээх энэ өөрчлөх захиалга -д зориулсан хяналт? Энэ чадахгүй байх undone.",
     "changeorders.submitted": "Өөрчлөх захиалга илгээсэн",
     "changeorders.submitted_at": "Илгээгдсэн",
     "changeorders.subtitle": "Зардал, хуваарийн нөлөөтэй өөрчлөлтүүдийг хянах",
@@ -1682,8 +1443,7 @@ const resource = {
     "changeorders.type_removed": "Хасагдсан",
     "changeorders.unit_placeholder": "м2, м3, ширхэг...",
     "changeorders.workflow": "Ажлын урсгал",
-    "changeorders.workflow_desc":
-      "Өөрчлөлтийн тушаалын ажлын урсгал: Ноорог (хүрээ өөрчлөлт бэлдэх) → Илгээсэн (хяналтад илгээх) → Зөвшөөрсөн эсвэл Татгалзсан. Тушаал бүр өртгийн нөлөө, хуваарийн нөлөөг өдрөөр хянадаг. Юу өөрчлөгдсөнийг нарийвчилж — анхны болон шинэ тоо хэмжээ, тариф мөр нэмнэ үү. Өртгийн зөрүү автоматаар тооцоологдоно.",
+    "changeorders.workflow_desc": "Өөрчлөлтийн тушаалын ажлын урсгал: Ноорог (хүрээ өөрчлөлт бэлдэх) → Илгээсэн (хяналтад илгээх) → Зөвшөөрсөн эсвэл Татгалзсан. Тушаал бүр өртгийн нөлөө, хуваарийн нөлөөг өдрөөр хянадаг. Юу өөрчлөгдсөнийг нарийвчилж — анхны болон шинэ тоо хэмжээ, тариф мөр нэмнэ үү. Өртгийн зөрүү автоматаар тооцоологдоно.",
     "command_palette.action_import_database": "Мэдээллийн сан импортлох",
     "command_palette.action_new_boq": "Шинэ БМЖ",
     "command_palette.action_new_project": "Шинэ төсөл",
@@ -1778,8 +1538,7 @@ const resource = {
     "common.previous": "Өмнөх",
     "common.project": "Төсөл",
     "common.quantity": "Тоо хэмжээ",
-    "common.rate_limit_wait":
-      "Та хүлээх {{seconds}} seconds өмнө trying дахин.",
+    "common.rate_limit_wait": "Та хүлээх {{seconds}} seconds өмнө trying дахин.",
     "common.recommended": "Зөвлөмжтэй",
     "common.region": "Бүс",
     "common.remove": "Хасах",
@@ -1818,20 +1577,16 @@ const resource = {
     "compliance.doc_type.certification_other": "Бусад гэрчилгээ",
     "compliance.doc_type.certification_safety": "Аюулгүй байдлын гэрчилгээ",
     "compliance.doc_type.insurance_auto": "Тээврийн даатгал",
-    "compliance.doc_type.insurance_general_liability":
-      "Ерөнхий хариуцлагын даатгал",
+    "compliance.doc_type.insurance_general_liability": "Ерөнхий хариуцлагын даатгал",
     "compliance.doc_type.insurance_umbrella": "Шүхэр даатгал",
-    "compliance.doc_type.insurance_workers_comp":
-      "Ажилчдын нөхөн төлбөрийн даатгал",
+    "compliance.doc_type.insurance_workers_comp": "Ажилчдын нөхөн төлбөрийн даатгал",
     "compliance.doc_type.other": "Бусад",
     "compliance.doc_type.permit_building": "Барилгын зөвшөөрөл",
     "compliance.doc_type.permit_electrical": "Цахилгаан зөвшөөрөл",
     "compliance.doc_type.permit_other": "Бусад зөвшөөрөл",
     "compliance.doc_type.permit_plumbing": "Сантехникийн зөвшөөрөл",
-    "compliance.empty.description":
-      "Даатгалын бодлого, зөвшөөрөл, баталгаа, гэрчилгээг хянана. Тус бүр нь дуусахаас өмнө анхааруулга авна.",
-    "compliance.empty.no_project_description":
-      "Дагалт баримт бичиг нь scoped хүртэл төсөл — нээх one эхний.",
+    "compliance.empty.description": "Даатгалын бодлого, зөвшөөрөл, баталгаа, гэрчилгээг хянана. Тус бүр нь дуусахаас өмнө анхааруулга авна.",
+    "compliance.empty.no_project_description": "Дагалт баримт бичиг нь scoped хүртэл төсөл — нээх one эхний.",
     "compliance.empty.no_project_title": "Нээх төсөл",
     "compliance.empty.title": "Хараахан дагалт documents алга",
     "compliance.field.attachment": "Хавсралт баримт (заавал биш)",
@@ -1853,8 +1608,7 @@ const resource = {
     "compliance.modal.create_submit": "Үүсгэх баримт бичиг",
     "compliance.modal.create_title": "Шинэ дагалт баримт бичиг",
     "compliance.page.new": "Шинэ баримт",
-    "compliance.page.subtitle":
-      "Даатгал, зөвшөөрөл, баталгаа, гэрчилгээг хугацаа дуусах сануулгатай хянана.",
+    "compliance.page.subtitle": "Даатгал, зөвшөөрөл, баталгаа, гэрчилгээг хугацаа дуусах сануулгатай хянана.",
     "compliance.page.title": "Нийцэлийн баримт бичиг",
     "compliance.status.active": "Идэвхтэй",
     "compliance.status.cancelled": "Цуцлагдсан",
@@ -1867,8 +1621,7 @@ const resource = {
     "compliance.toast.delete_failed": "устгах дагалт document амжилтгүй",
     "compliance.toast.deleted": "Дагалт баримт бичиг устгагдсан.",
     "compliance.widget.days_left": "{{n}}ө үлдсэн",
-    "compliance.widget.empty_description":
-      "Бүх хянасан баримт бичиг нь одоогийн.",
+    "compliance.widget.empty_description": "Бүх хянасан баримт бичиг нь одоогийн.",
     "compliance.widget.empty_title": "Удахгүй дуусах зүйл байхгүй",
     "compliance.widget.subtitle": "Даатгал, зөвшөөрөл, баталгаа дуусах дөхсөн.",
     "compliance.widget.title": "Expiring дагалт",
@@ -1882,8 +1635,7 @@ const resource = {
     "conflict.manual_placeholder": "Төрөл merged утга...",
     "conflict.next": "Дараах",
     "conflict.panel_aria_label": "Зөрчил шийдвэрлэх самбар",
-    "conflict.panel_subtitle":
-      "remote collaborator зассан ижил талбар. Сонгох хэрхэн хүртэл resolve.",
+    "conflict.panel_subtitle": "remote collaborator зассан ижил талбар. Сонгох хэрхэн хүртэл resolve.",
     "conflict.panel_title": "Нэгтгэлийн зөрчил илрэв",
     "conflict.previous": "Өмнөх",
     "conflict.their_version": "Тэдний хувилбар",
@@ -1946,11 +1698,9 @@ const resource = {
     "correspondence.label_to": "Хүртэл",
     "correspondence.new_entry": "Шинэ Entry",
     "correspondence.no_entries": "Хараахан correspondence алга",
-    "correspondence.no_entries_hint":
-      "Бүртгэл таны эхний correspondence хүртэл get эхэлсэн.",
+    "correspondence.no_entries_hint": "Бүртгэл таны эхний correspondence хүртэл get эхэлсэн.",
     "correspondence.no_results": "Тохирох entries олдсонгүй",
-    "correspondence.no_results_hint":
-      "Хайлт эсвэл шүүлтүүрийг өөрчилж үзнэ үү.",
+    "correspondence.no_results_hint": "Хайлт эсвэл шүүлтүүрийг өөрчилж үзнэ үү.",
     "correspondence.notes_placeholder": "Нэмэлт тэмдэглэл...",
     "correspondence.page_title": "Захидлын бүртгэл",
     "correspondence.search_placeholder": "correspondence хайх...",
@@ -1968,8 +1718,7 @@ const resource = {
     "costmodel.benchmark_area_value": "{{area}} м²",
     "costmodel.benchmark_cost_per_m2": "Зардал / м²",
     "costmodel.benchmark_current_cost": "Одоогийн: {{value}}/m²",
-    "costmodel.benchmark_enter_area":
-      "Enter төсөл талбай хүртэл see өртөг тутамд m² benchmark харьцуулалт",
+    "costmodel.benchmark_enter_area": "Enter төсөл талбай хүртэл see өртөг тутамд m² benchmark харьцуулалт",
     "costmodel.benchmark_per_m2": "м² тутамд",
     "costmodel.benchmark_project_area": "Төслийн талбай (м²)",
     "costmodel.benchmark_project_type": "Төслийн төрөл",
@@ -2013,8 +1762,7 @@ const resource = {
     "costmodel.evm_spi": "SPI",
     "costmodel.evm_status": "Төлөв",
     "costmodel.evm_sv_label": "SV",
-    "costmodel.evm_tcpi_hint":
-      "Хүртэл дуусгах дээр төсөв, та хэрэгцээ CPI -н {{tcpi}} going forward",
+    "costmodel.evm_tcpi_hint": "Хүртэл дуусгах дээр төсөв, та хэрэгцээ CPI -н {{tcpi}} going forward",
     "costmodel.evm_time_elapsed": "Өнгөрсөн хугацаа",
     "costmodel.evm_title": "Олсон Утга Шинжилгээ",
     "costmodel.evm_unknown": "Үл мэдэгдэх",
@@ -2038,8 +1786,7 @@ const resource = {
     "costmodel.total_budget": "Нийт төсөв",
     "costmodel.variance": "Зөрүү",
     "costmodel.vs_budget": "төсөвтэй харьцуулсан",
-    "costmodel.what_is_5d":
-      "5D өртгийн удирдлага нь таны төсөлд цаг хугацааны өртгийн хяналтыг нэмдэг. Төсөв vs бодит зарцуулалтыг S-curve диаграмаар хянах, Earned Value хянах (SPI = хуваарийн үр ашиг, CPI = өртгийн үр ашиг — хоёулаа >= 1.0 нь эрүүл гэсэн утгатай), үр дүнг урьдчилан таамаглах what-if хувилбарыг ажиллуулна уу.",
+    "costmodel.what_is_5d": "5D өртгийн удирдлага нь таны төсөлд цаг хугацааны өртгийн хяналтыг нэмдэг. Төсөв vs бодит зарцуулалтыг S-curve диаграмаар хянах, Earned Value хянах (SPI = хуваарийн үр ашиг, CPI = өртгийн үр ашиг — хоёулаа >= 1.0 нь эрүүл гэсэн утгатай), үр дүнг урьдчилан таамаглах what-if хувилбарыг ажиллуулна уу.",
     "costmodel.whatif_adjusted_bac": "Тохируулсан BAC",
     "costmodel.whatif_adjusted_eac": "Тохируулсан EAC",
     "costmodel.whatif_calculate": "Нөлөө тооцоолох",
@@ -2050,8 +1797,7 @@ const resource = {
     "costmodel.whatif_material": "Материал Өртөг",
     "costmodel.whatif_original_bac": "Эх BAC",
     "costmodel.whatif_reset": "Дахин тохируулах",
-    "costmodel.whatif_scenario_name":
-      "Юу-Хэрэв: M{{material}}% L{{labor}}% D{{duration}}%",
+    "costmodel.whatif_scenario_name": "Юу-Хэрэв: M{{material}}% L{{labor}}% D{{duration}}%",
     "costmodel.whatif_title": "Хэрэв-Бол хувилбар",
     "costs.active": "Идэвхтэй",
     "costs.active_db_changed": "Идэвхтэй өгөгдлийн сан өөрчилсөн‌⁠‍",
@@ -2076,8 +1822,7 @@ const resource = {
     "costs.choose_variant": "Сонгох үнэ хувилбар",
     "costs.classification": "Анг.",
     "costs.clear_all": "Бүгдийг цэвэрлэх",
-    "costs.clear_all_confirm_body":
-      "Энэ болно permanently хасах бүх {{count}} CWICR өртөг зүйлс. Та чадна re-импортлох тэдгээрийг дараа нь.",
+    "costs.clear_all_confirm_body": "Энэ болно permanently хасах бүх {{count}} CWICR өртөг зүйлс. Та чадна re-импортлох тэдгээрийг дараа нь.",
     "costs.clear_all_confirm_title": "Clear бүх {{count}} өгөгдлийн сан?",
     "costs.clear_failed": "Clear амжилтгүй",
     "costs.clear_filters": "Бүгдийг цэвэрлэх",
@@ -2093,15 +1838,13 @@ const resource = {
     "costs.component_labor": "Хөдөлмөр",
     "costs.component_material": "Материал",
     "costs.confirm_delete": "Устгах энэ захиалгат өртөг зүйл?",
-    "costs.confirm_delete_region":
-      "Устгах бүх өртөг зүйлс -д зориулсан {{region}}? Энэ чадахгүй байх undone.",
+    "costs.confirm_delete_region": "Устгах бүх өртөг зүйлс -д зориулсан {{region}}? Энэ чадахгүй байх undone.",
     "costs.confirm_delete_title": "Устгах өртөг зүйл?",
     "costs.copy_rate": "Хуулах тариф",
     "costs.cost_items_count": "55,000+ өртөг зүйлс",
     "costs.create": "Зүйл үүсгэх",
     "costs.create_item": "Захиалгат Cost Зүйл нэмэх",
-    "costs.create_item_desc":
-      "Үүсгэх таны own өртөг зүйл -д зориулсан энэ төсөл",
+    "costs.create_item_desc": "Үүсгэх таны own өртөг зүйл -д зориулсан энэ төсөл",
     "costs.creating": "Үүсгэж байна...",
     "costs.currency": "Валют",
     "costs.custom_label": "Захиалгат",
@@ -2119,31 +1862,25 @@ const resource = {
     "costs.cwicr_match.mode_label": "Горим",
     "costs.cwicr_match.mode_lexical": "Үгзүйн‌⁠‍",
     "costs.cwicr_match.mode_semantic": "Семантик‌⁠‍",
-    "costs.cwicr_match.placeholder":
-      "Тайлбарлах ажил зүйл (e.g. армопэлсэн бетон хана)‌⁠‍",
+    "costs.cwicr_match.placeholder": "Тайлбарлах ажил зүйл (e.g. армопэлсэн бетон хана)‌⁠‍",
     "costs.cwicr_match.query_label": "Асуулга",
     "costs.cwicr_match.search": "Хайх",
     "costs.cwicr_match.title": "CWICR тариф тааруулалт‌⁠‍",
-    "costs.db_downloading":
-      "Татаж байна ба indexing өртөг зүйлс -тай бүрэн нөөц задаргаа. Энэ нь one-цаг тохиргоо.",
+    "costs.db_downloading": "Татаж байна ба indexing өртөг зүйлс -тай бүрэн нөөц задаргаа. Энэ нь one-цаг тохиргоо.",
     "costs.db_installed": "Өгөгдлийн сан суулгасан амжилттай‌⁠‍",
     "costs.db_installing": "{{name}}-г суулгаж байна...",
-    "costs.db_saved_offline":
-      "Өртөг зүйлс нь хадгалагдсан locally ба боломжтой offline.",
+    "costs.db_saved_offline": "Өртөг зүйлс нь хадгалагдсан locally ба боломжтой offline.",
     "costs.delete_failed": "Устгах амжилтгүй",
     "costs.description_placeholder": "ж.нь Армопэлсэн бетон хана C30/37, 25см",
     "costs.duplicates_skipped": "давхардлуудыг алгассан",
     "costs.empty_hint": "Эхлэх typing хүртэл хайх өртөг өгөгдлийн сан",
-    "costs.empty_pick_region_above":
-      "Сонгох бүс card дээр ба дарах Суулгах хүртэл ачаалах бүс нутгийн өртөг өгөгдлийн сан.",
+    "costs.empty_pick_region_above": "Сонгох бүс card дээр ба дарах Суулгах хүртэл ачаалах бүс нутгийн өртөг өгөгдлийн сан.",
     "costs.equipment": "Тоног төхөөрөмж",
     "costs.escalated_cost": "Escalated өртөг",
     "costs.escalation": "Эскалаци",
     "costs.escalation_calculator": "Өртөг Escalation Calculator‌⁠‍",
-    "costs.escalation_desc":
-      "Adjust өртгүүд -д зориулсан inflation using нийтлэгдсэн барилгын indices‌⁠‍",
-    "costs.escalation_disclaimer":
-      "Based дээр нийтлэгдсэн indices. Шалгах -тай төсөл-specific өгөгдөл.",
+    "costs.escalation_desc": "Adjust өртгүүд -д зориулсан inflation using нийтлэгдсэн барилгын indices‌⁠‍",
+    "costs.escalation_disclaimer": "Based дээр нийтлэгдсэн indices. Шалгах -тай төсөл-specific өгөгдөл.",
     "costs.escalation_factor": "Коэффициент",
     "costs.export": "Экспорт",
     "costs.export_excel": "Excel болгож экспортлох",
@@ -2157,8 +1894,7 @@ const resource = {
     "costs.import_and_more": "ба {{count}} илүү алдаанууд",
     "costs.import_another": "Импортлох Өөр",
     "costs.import_click_to_change": "Дарах хүртэл сонгох ялгаатай файл",
-    "costs.import_columns_hint":
-      "Баганууд нь автомат-detected. Accepted headers: Код, Тайлбар, Нэгж, Тариф/Үнэ/Өртөг, Валют, DIN 276/Ангилал.",
+    "costs.import_columns_hint": "Баганууд нь автомат-detected. Accepted headers: Код, Тайлбар, Нэгж, Тариф/Үнэ/Өртөг, Валют, DIN 276/Ангилал.",
     "costs.import_complete": "Импорт дууссан",
     "costs.import_database": "Мэдээллийн сан импортлох",
     "costs.import_drop_here": "Файлаа энд оруулна уу",
@@ -2167,11 +1903,9 @@ const resource = {
     "costs.import_errors": "Алдаанууд",
     "costs.import_failed": "Импорт амжилтгүй",
     "costs.import_file_too_large": "Файл бас том",
-    "costs.import_first_hint":
-      "Импортлох бүс нутгийн өртөг өгөгдлийн сан хүртэл эхлэх хайж байна 55,000+ зүйлс.",
+    "costs.import_first_hint": "Импортлох бүс нутгийн өртөг өгөгдлийн сан хүртэл эхлэх хайж байна 55,000+ зүйлс.",
     "costs.import_format_csv": "CSV (.CSV) -тай ижил баганууд",
-    "costs.import_format_excel":
-      "Excel (.xlsx) -тай баганууд: Код, Тайлбар, Нэгж, Тариф",
+    "costs.import_format_excel": "Excel (.xlsx) -тай баганууд: Код, Тайлбар, Нэгж, Тариф",
     "costs.import_formats_title": "Дэмжигдсэн форматууд",
     "costs.import_go_to_database": "Go хүртэл Өртөг Өгөгдлийн сан",
     "costs.import_imported": "Импортолсон",
@@ -2180,11 +1914,9 @@ const resource = {
     "costs.import_row": "Мөр",
     "costs.import_rows_processed": "мөрүүд боловсруулсан",
     "costs.import_skipped": "алгасагдсан",
-    "costs.import_subtitle":
-      "Ачаалах үнэ тогтоолт өгөгдлийн сан эсвэл байршуулах таны own файл.",
+    "costs.import_subtitle": "Ачаалах үнэ тогтоолт өгөгдлийн сан эсвэл байршуулах таны own файл.",
     "costs.import_success": "Импорт дууссан",
-    "costs.import_supported_hint":
-      "Та байршуулах Excel (.xlsx) эсвэл CSV (.CSV) файл.",
+    "costs.import_supported_hint": "Та байршуулах Excel (.xlsx) эсвэл CSV (.CSV) файл.",
     "costs.import_title": "Үнийн мэдээллийн сан импортлох",
     "costs.import_unsupported_format": "Дэмжигдээгүй файлын формат",
     "costs.indexing_failed": "Indexing амжилтгүй",
@@ -2207,20 +1939,15 @@ const resource = {
     "costs.materials": "Материал",
     "costs.n_cost_items_to_recipe": "{{count}} өртөг зүйлс → reusable recipe",
     "costs.n_items_selected": "{{count}} зүйлс сонгогдсон",
-    "costs.n_positions_will_be_created":
-      "{{count}} байрлалууд болно байх үүсгэгдлээ",
+    "costs.n_positions_will_be_created": "{{count}} байрлалууд болно байх үүсгэгдлээ",
     "costs.n_selected": "{{count}} сонгогдсон",
-    "costs.no_boqs_helper":
-      "Үгүй BOQs -д энэ төсөл. Үүсгэх one эхний -д BOQ редактор.",
+    "costs.no_boqs_helper": "Үгүй BOQs -д энэ төсөл. Үүсгэх one эхний -д BOQ редактор.",
     "costs.no_database_loaded": "Үгүй өгөгдлийн сан ачаалсан",
-    "costs.no_databases_installed":
-      "Үгүй өгөгдлийн сан суулгасан yet. Сонгох бүс дээр хүртэл суулгах.",
+    "costs.no_databases_installed": "Үгүй өгөгдлийн сан суулгасан yet. Сонгох бүс дээр хүртэл суулгах.",
     "costs.no_favourites": "Хараахан favourites алга",
-    "costs.no_favourites_hint":
-      "Дарах star дүрс дээр дурын өртөг зүйл хүртэл нэмэх энэ хүртэл таны favourites",
+    "costs.no_favourites_hint": "Дарах star дүрс дээр дурын өртөг зүйл хүртэл нэмэх энэ хүртэл таны favourites",
     "costs.no_recent": "Үгүй recently used зүйлс",
-    "costs.no_recent_hint":
-      "Зүйлс та нэмэх хүртэл BOQ болно харагдах энд -д зориулсан quick хандалт",
+    "costs.no_recent_hint": "Зүйлс та нэмэх хүртэл BOQ болно харагдах энд -д зориулсан quick хандалт",
     "costs.no_results": "cost зүйлс олдсонгүй",
     "costs.no_results_hint": "Хайлт эсвэл шүүлтүүрийг өөрчилж үзнэ үү",
     "costs.no_variants_hint": "Ганц үнэ",
@@ -2233,15 +1960,13 @@ const resource = {
     "costs.phase_finalizing": "Дуусгаж байна...",
     "costs.phase_reading": "Parquet файлыг уншиж байна...",
     "costs.phase_writing": "Writing хүртэл local өгөгдлийн сан...",
-    "costs.positions_created_hint":
-      "Байрлалууд үүсгэгдсэн -тай нэгж тарифууд -аас өртөг өгөгдлийн сан",
+    "costs.positions_created_hint": "Байрлалууд үүсгэгдсэн -тай нэгж тарифууд -аас өртөг өгөгдлийн сан",
     "costs.rate": "Үнэлгээ",
     "costs.recently_used": "Сүүлд ашигласан",
     "costs.region_cleared": "Бүс цэвэрлэгдсэн",
     "costs.region_filter_count": "{{shown}} -н {{total}}‌⁠‍",
-    "costs.region_filter_no_results": 'Үгүй бүсүүд тааруулалт "{{q}}"',
-    "costs.region_filter_placeholder":
-      "Шүүх -аар улс, хот, валют эсвэл хэл…‌⁠‍",
+    "costs.region_filter_no_results": "Үгүй бүсүүд тааруулалт \"{{q}}\"",
+    "costs.region_filter_placeholder": "Шүүх -аар улс, хот, валют эсвэл хэл…‌⁠‍",
     "costs.region_plural": "бүсүүд",
     "costs.region_singular": "Бүс",
     "costs.remove_from_favourites": "Хасах -аас favourites",
@@ -2249,8 +1974,7 @@ const resource = {
     "costs.search_hint": "Хайх өртөг зүйлс -аар тайлбар эсвэл код",
     "costs.search_in_region": "Хайх -д {{name}}...",
     "costs.search_placeholder": "by тайлбар эсвэл код хайх...",
-    "costs.semantic_placeholder":
-      "Тайлбарлах юу та хэрэгцээ (AI finds төстэй)...",
+    "costs.semantic_placeholder": "Тайлбарлах юу та хэрэгцээ (AI finds төстэй)...",
     "costs.set_active": "Set болгон Идэвхтэй",
     "costs.showing": "Харуулж байна",
     "costs.showing_range": "{{from}}-{{to}} -н {{total}}",
@@ -2291,28 +2015,22 @@ const resource = {
     "costs.variant_sort_price_asc": "Үнэ ↑",
     "costs.variant_sort_price_desc": "Үнэ ↓",
     "costs.variant_use_average": "Use average тариф",
-    "costs.variant_use_default_tooltip":
-      "Тодорхой хувилбар сонгохгүйгээр дундаж тарифыг хэрэглэнэ. Та мөрийг дарж дараа нь сайжруулж болно.",
+    "costs.variant_use_default_tooltip": "Тодорхой хувилбар сонгохгүйгээр дундаж тарифыг хэрэглэнэ. Та мөрийг дарж дараа нь сайжруулж болно.",
     "costs.variant_use_median": "Use median тариф",
     "costs.variants_count": "{{count}} хувилбар",
     "costs.variants_range": "{{min}} – {{max}} хүртэл",
     "costs.vec_indexing_all": "Үүсгэж байна вектор -д зориулсан бүх бүсүүд...",
     "costs.vec_indexing_region": "Үүсгэж байна вектор -д зориулсан {{name}}...",
-    "costs.vec_phase_checking":
-      "Шалгаж байна pre-барьсан вектор дээр GitHub...",
-    "costs.vec_phase_embedding":
-      "Үүсгэж байна 384d embeddings -аас өртөг зүйлс...",
-    "costs.vec_phase_indexing":
-      "Indexing руу LanceDB ба сэргээж байна stats...",
-    "costs.vec_phase_model":
-      "Ачаалж байна embedding загвар (эхний-цаг зөвхөн)...",
+    "costs.vec_phase_checking": "Шалгаж байна pre-барьсан вектор дээр GitHub...",
+    "costs.vec_phase_embedding": "Үүсгэж байна 384d embeddings -аас өртөг зүйлс...",
+    "costs.vec_phase_indexing": "Indexing руу LanceDB ба сэргээж байна stats...",
+    "costs.vec_phase_model": "Ачаалж байна embedding загвар (эхний-цаг зөвхөн)...",
     "costs.vec_phase_progress": "Алхам {{step}} -н 4",
     "costs.vec_step_embed": "Вектор оруулах",
     "costs.vec_step_fetch": "Татах",
     "costs.vec_step_index": "Индекс",
     "costs.vec_step_model": "Загвар",
-    "costs.what_is_cost_db":
-      "Материал, хөдөлмөр, тоног төхөөрөмжийн нэгж тариф, нийлмэл үнэ. Модулиудаас бүс нутгийн өгөгдлийн сан (CWICR, BKI, RSMeans) импортлох эсвэл захиалгат тариф нэмнэ үү. Байгалийн хэлний асуулгад AI семантик хайлтыг идэвхжүүлнэ үү.",
+    "costs.what_is_cost_db": "Материал, хөдөлмөр, тоног төхөөрөмжийн нэгж тариф, нийлмэл үнэ. Модулиудаас бүс нутгийн өгөгдлийн сан (CWICR, BKI, RSMeans) импортлох эсвэл захиалгат тариф нэмнэ үү. Байгалийн хэлний асуулгад AI семантик хайлтыг идэвхжүүлнэ үү.",
     "costs.yearly_breakdown": "Year--аар-year задаргаа",
     "costs.yes_clear_all": "Тийм, Clear Бүх",
     "dashboard.active_projects": "Идэвхтэй төслүүд",
@@ -2329,23 +2047,19 @@ const resource = {
     "dashboard.continue_work": "Үргэлжлүүлэх таны ажил",
     "dashboard.create_boq": "БМЖ үүсгэх",
     "dashboard.create_first_project": "Эхний Төсөл үүсгэх",
-    "dashboard.create_first_project_desc":
-      "Set дээш шинэ тооцоолол -аас хоосон",
+    "dashboard.create_first_project_desc": "Set дээш шинэ тооцоолол -аас хоосон",
     "dashboard.database": "Мэдээллийн сан",
     "dashboard.demo": "Демо",
     "dashboard.developed_by": "Developed -аар",
     "dashboard.getting_started": "Эхлэх",
     "dashboard.import_database": "Мэдээллийн сан импортлох",
     "dashboard.import_existing_boq": "Импортлох Одоо байгаа BOQ",
-    "dashboard.import_existing_boq_desc":
-      "Use AI хүртэл тооцоо -аас одоо байгаа баримт бичиг",
+    "dashboard.import_existing_boq_desc": "Use AI хүртэл тооцоо -аас одоо байгаа баримт бичиг",
     "dashboard.install_demo": "Суулгах Демо Төсөл",
-    "dashboard.install_demo_desc":
-      "Pre-барьсан орон сууцны төсөл -тай realistic өгөгдөл",
+    "dashboard.install_demo_desc": "Pre-барьсан орон сууцны төсөл -тай realistic өгөгдөл",
     "dashboard.kpi_active_estimates": "Идэвхтэй Тооцоонууд",
     "dashboard.kpi_estimates_unit": "тооцоо{{s}}",
-    "dashboard.kpi_hint":
-      "Хураангуй хооронд бүх төслүүд. Утгууд шинэчлэлт болгон та нэмэх тооцоонууд ба хуваарь үйл ажиллагаа.",
+    "dashboard.kpi_hint": "Хураангуй хооронд бүх төслүүд. Утгууд шинэчлэлт болгон та нэмэх тооцоонууд ба хуваарь үйл ажиллагаа.",
     "dashboard.kpi_no_schedules": "Үгүй хуваарь",
     "dashboard.kpi_not_validated": "Б/Б",
     "dashboard.kpi_quality": "Чанарын оноо",
@@ -2372,24 +2086,17 @@ const resource = {
     "dashboard.run_setup": "Тохиргооны мастер ажиллуулах",
     "dashboard.show_shortcuts": "Гарын товчлолыг харуулах",
     "dashboard.step_ai_search": "Идэвхжүүлэх AI Хайх",
-    "dashboard.step_ai_search_desc":
-      "Үүсгэх вектор embeddings -д зориулсан semantic өртөг тааруулж байна",
+    "dashboard.step_ai_search_desc": "Үүсгэх вектор embeddings -д зориулсан semantic өртөг тааруулж байна",
     "dashboard.step_build_boq": "Барих Таны BOQ",
-    "dashboard.step_build_boq_desc":
-      "Үүсгэх Ажил жагсаалт -н Тоо хэмжээ -тай AI assistance",
+    "dashboard.step_build_boq_desc": "Үүсгэх Ажил жагсаалт -н Тоо хэмжээ -тай AI assistance",
     "dashboard.step_connect_ai": "Холбогдох AI",
-    "dashboard.step_connect_ai_desc":
-      "Нэмэх таны API түлхүүрүүд -д зориулсан AI-powered тооцоолол",
+    "dashboard.step_connect_ai_desc": "Нэмэх таны API түлхүүрүүд -д зориулсан AI-powered тооцоолол",
     "dashboard.step_create_project": "Төсөл үүсгэх",
-    "dashboard.step_create_project_desc":
-      "Эхлэх таны эхний барилгын тооцоолол төсөл",
+    "dashboard.step_create_project_desc": "Эхлэх таны эхний барилгын тооцоолол төсөл",
     "dashboard.step_load_db": "Ачаалах Өртөг Өгөгдлийн сан",
-    "dashboard.step_load_db_desc":
-      "Импортлох бүс нутгийн үнэ тогтоолт өгөгдөл -тай 55,000+ зүйлс",
-    "dashboard.subtitle":
-      "Overview -н таны төслүүд, түлхүүр үзүүлэлтүүд, ба сүүлийн үйл ажиллагаа",
-    "dashboard.subtitle_2":
-      "Smart нөөц planning -д зориулсан таны барилгын төслүүд",
+    "dashboard.step_load_db_desc": "Импортлох бүс нутгийн үнэ тогтоолт өгөгдөл -тай 55,000+ зүйлс",
+    "dashboard.subtitle": "Overview -н таны төслүүд, түлхүүр үзүүлэлтүүд, ба сүүлийн үйл ажиллагаа",
+    "dashboard.subtitle_2": "Smart нөөц planning -д зориулсан таны барилгын төслүүд",
     "dashboard.system_status": "Системийн төлөв",
     "dashboard.total_boqs": "Нийт БМЖ",
     "dashboard.total_budget_all": "Нийт төсөв",
@@ -2399,29 +2106,23 @@ const resource = {
     "dashboard.value_by_project": "Утга -аар Төсөл",
     "dashboard.vector_db": "Вектор DB",
     "dashboard.welcome": "OpenConstructionERP-д тавтай морил",
-    "dashboard.welcome_body":
-      "Энэ төсөл нь барьсан ба maintained -аар хамт олон. Таны support helps биднийг нэмэх шинэ боломжууд, бүс нутгийн өгөгдлийн сан, ба keep энэ үнэгүй -д зориулсан хүн бүр.",
+    "dashboard.welcome_body": "Энэ төсөл нь барьсан ба maintained -аар хамт олон. Таны support helps биднийг нэмэх шинэ боломжууд, бүс нутгийн өгөгдлийн сан, ба keep энэ үнэгүй -д зориулсан хүн бүр.",
     "dashboard.welcome_consult": "Мэргэжлийн зөвлөгөө",
-    "dashboard.welcome_consult_desc":
-      "Дэлхий даяар захиалгат байршуулалт, сургалт, аж ахуйн нэгжийн шийдлүүд",
-    "dashboard.welcome_desc":
-      "Эхлэх -аар installing демо төсөл эсвэл үүсгэж байна таны own.",
+    "dashboard.welcome_consult_desc": "Дэлхий даяар захиалгат байршуулалт, сургалт, аж ахуйн нэгжийн шийдлүүд",
+    "dashboard.welcome_desc": "Эхлэх -аар installing демо төсөл эсвэл үүсгэж байна таны own.",
     "dashboard.welcome_sponsor": "Ивээн тэтгэгч болох",
-    "dashboard.welcome_sponsor_desc":
-      "Fund шинэ боломжууд ба keep төсөл үнэгүй -д зориулсан хүн бүр",
+    "dashboard.welcome_sponsor_desc": "Fund шинэ боломжууд ба keep төсөл үнэгүй -д зориулсан хүн бүр",
     "dashboard.welcome_star": "GitHub дээр одоор үнэлэх",
     "dashboard.welcome_star_desc": "Help бусад нээх төсөл — takes 2 seconds",
     "dashboard.welcome_start": "Эхлэх",
-    "dashboard.welcome_sub":
-      "Үнэгүй & нээх-эх сурвалж барилгын өртөг тооцоолол",
+    "dashboard.welcome_sub": "Үнэгүй & нээх-эх сурвалж барилгын өртөг тооцоолол",
     "dashboard.welcome_title": "OpenConstructionERP-д тавтай морил",
     "dashboard.with_budget": "-тай Төсөв",
     "demo.import_demo": "Импортлох Демо",
     "demo.install": "Суулгах",
     "demo.install_error": "суулгах демо төсөл. Please try дахин амжилтгүй",
     "demo.installing": "Суулгаж байна...",
-    "demo.modal_subtitle":
-      "Суулгах дууссан төсөл -тай BOQ, хуваарь, төсөв, ба тендер",
+    "demo.modal_subtitle": "Суулгах дууссан төсөл -тай BOQ, хуваарь, төсөв, ба тендер",
     "demo.modal_title": "Импортлох Демо Төсөл",
     "documents.cat_all": "Бүх",
     "documents.cat_contract": "Гэрээ",
@@ -2438,47 +2139,38 @@ const resource = {
     "documents.deleted": "Document устгагдлаа",
     "documents.download": "Татах",
     "documents.drop_hint": "Файлуудаа чирэх эсвэл Илгээх дээр дарна уу",
-    "documents.drop_hint_types":
-      "PDF, зургууд, Excel, DWG, IFC — дурын файл төрөл",
+    "documents.drop_hint_types": "PDF, зургууд, Excel, DWG, IFC — дурын файл төрөл",
     "documents.empty": "Хараахан documents алга",
-    "documents.empty_hint":
-      "Байршуулах таны эхний файл — зургууд, гэрээнүүд, зургууд, эсвэл дурын төсөл баримт бичиг.",
+    "documents.empty_hint": "Байршуулах таны эхний файл — зургууд, гэрээнүүд, зургууд, эсвэл дурын төсөл баримт бичиг.",
     "documents.file_too_large": "{{name}} 100 МБ хязгаараас хэтэрсэн",
     "documents.no_results": "Үр дүн олдсонгүй",
     "documents.no_results_hint": "Try ялгаатай хайх term",
     "documents.preview": "Урьдчилан үзэх",
     "documents.search": "файлууд хайх...",
     "documents.select_project": "Төсөл сонгоно уу",
-    "documents.select_project_hint":
-      "Use төсөл switcher -д header хүртэл сонгох төсөл эхний.",
+    "documents.select_project_hint": "Use төсөл switcher -д header хүртэл сонгох төсөл эхний.",
     "documents.sort_date": "Огноогоор",
     "documents.sort_name": "Нэрээр",
     "documents.sort_size": "-аар хэмжээ",
     "documents.stats": "{{count}} файл · {{size}}",
-    "documents.subtitle":
-      "Байршуулах ба удирдах төсөл файлууд — зургууд, гэрээнүүд, specifications",
+    "documents.subtitle": "Байршуулах ба удирдах төсөл файлууд — зургууд, гэрээнүүд, specifications",
     "documents.title": "Баримт бичиг",
     "documents.upload": "Файл илгээх",
     "documents.upload_failed": "Илгээх амжилтгүй",
     "documents.upload_skipped": "Файл алгасагдсан",
-    "documents.upload_summary":
-      "Байршуулах дууссан: {{success}} байршуулсан, {{failed}} амжилтгүй",
+    "documents.upload_summary": "Байршуулах дууссан: {{success}} байршуулсан, {{failed}} амжилтгүй",
     "documents.uploaded": "Илгээгдсэн",
     "error.details": "Алдааны дэлгэрэнгүй",
     "error.go_back": "Буцах",
     "error.go_dashboard": "Хяналтын самбар руу очих",
     "error.not_found": "Олдсонгүй",
-    "error.not_found_desc":
-      "Хайж байгаа хуудас байхгүй эсвэл шилжсэн байна. URL-ыг шалгах эсвэл хяналтын самбар руу буцна уу.",
+    "error.not_found_desc": "Хайж байгаа хуудас байхгүй эсвэл шилжсэн байна. URL-ыг шалгах эсвэл хяналтын самбар руу буцна уу.",
     "error.something_wrong": "Алдаа гарлаа",
     "error.try_again": "Дахин оролдоно уу",
-    "error.unexpected_error":
-      "Энэ хуудсыг харуулах үед санамсаргүй алдаа гарлаа. Дахин ачаалах эсвэл хяналтын самбар руу буцаж болно.",
-    "errors.bad_request":
-      "request чадахгүй байх боловсруулсан. Та шалгах таны input.",
+    "error.unexpected_error": "Энэ хуудсыг харуулах үед санамсаргүй алдаа гарлаа. Дахин ачаалах эсвэл хяналтын самбар руу буцаж болно.",
+    "errors.bad_request": "request чадахгүй байх боловсруулсан. Та шалгах таны input.",
     "errors.client": "request чадах биш байх дууссан.",
-    "errors.conflict":
-      "Энэ conflicts -тай одоо байгаа өгөгдөл — сэргээх ба try дахин.",
+    "errors.conflict": "Энэ conflicts -тай одоо байгаа өгөгдөл — сэргээх ба try дахин.",
     "errors.forbidden": "Та don't байх эрх хүртэл perform энэ action.",
     "errors.network": "reach сервер. Please шалгах таны connection чадсангүй",
     "errors.not_found": "requested зүйл чадах биш байх олсон.",
@@ -2487,8 +2179,7 @@ const resource = {
     "errors.server": "Сервер алдаа. Та try дахин -д moment.",
     "errors.timeout": "request took бас long ба байсан цуцалсан. Та try дахин.",
     "errors.unauthorized": "Таны сесс байх expired. Та sign -д дахин.",
-    "errors.unavailable":
-      "сервер нь temporarily боломжгүй. Та try дахин shortly.",
+    "errors.unavailable": "сервер нь temporarily боломжгүй. Та try дахин shortly.",
     "errors.unknown": "Ямар нэгэн went буруу. Та try дахин.",
     "errors.validation": "Зарим талбарууд нь хүчингүй. Та хяналт таны input.",
     "explorer.active_filters": "Идэвхтэй шүүлтүүр",
@@ -2510,21 +2201,17 @@ const resource = {
     "explorer.conversion_complete": "Хөрвүүлэлт дууссан",
     "explorer.conversion_failed": "Хөрвүүлэлт амжилтгүй",
     "explorer.converters": "CAD хөрвүүлэгчид",
-    "explorer.converters_desc":
-      "DDC Хамт олон хөрвүүлэгчид -д зориулсан гаргаж авч байна BIM элемент өгөгдөл",
-    "explorer.converters_external_hint":
-      "CAD хөрвүүлэгчид require DDC cad2data хэрэгсэл суулгасан дээр таны сервер",
+    "explorer.converters_desc": "DDC Хамт олон хөрвүүлэгчид -д зориулсан гаргаж авч байна BIM элемент өгөгдөл",
+    "explorer.converters_external_hint": "CAD хөрвүүлэгчид require DDC cad2data хэрэгсэл суулгасан дээр таны сервер",
     "explorer.converting": "{{name}}-г хөрвүүлж байна...",
     "explorer.converting_msg": "Хөрвүүлж байна...",
     "explorer.count": "Тоо",
     "explorer.create_boq_from_pivot": "БМЖ үүсгэх",
-    "explorer.create_boq_subtitle":
-      "{{count}} бүлгүүд болно become BOQ байрлалууд",
+    "explorer.create_boq_subtitle": "{{count}} бүлгүүд болно become BOQ байрлалууд",
     "explorer.create_boq_title": "BOQ -аас Pivot үүсгэх",
     "explorer.create_positions": "Үүсгэх {{count}} Байрлалууд",
     "explorer.data_completeness": "Өгөгдлийн бүрэн байдал",
-    "explorer.delete_session_confirm":
-      "Устгах энэ шинжилгээ? Энэ чадахгүй байх undone.",
+    "explorer.delete_session_confirm": "Устгах энэ шинжилгээ? Энэ чадахгүй байх undone.",
     "explorer.delete_view": "Устгах",
     "explorer.documents": "Баримт бичиг",
     "explorer.done": "Хөрвүүлэлт дууссан! Ачаалж байна...",
@@ -2546,8 +2233,7 @@ const resource = {
     "explorer.heatmap": "Toggle утга heatmap",
     "explorer.heatmap_short": "Дулааны зураг",
     "explorer.installed": "Суулгасан",
-    "explorer.invalid_format":
-      "Unsupported файл форматлах. Use RVT, IFC, DWG, эсвэл DGN.",
+    "explorer.invalid_format": "Unsupported файл форматлах. Use RVT, IFC, DWG, эсвэл DGN.",
     "explorer.like_describe": "df.тайлбарлах() мэт",
     "explorer.limit": "Хязгаар",
     "explorer.line": "Шугам",
@@ -2558,15 +2244,12 @@ const resource = {
     "explorer.model_name": "Загварын нэр",
     "explorer.more_columns": "илүү",
     "explorer.new_file": "Шинэ файл",
-    "explorer.no_active_filters":
-      "Дарах дурын chart bar эсвэл slice хүртэл шүүх хооронд табууд.",
+    "explorer.no_active_filters": "Дарах дурын chart bar эсвэл slice хүртэл шүүх хооронд табууд.",
     "explorer.no_chart_data": "Үгүй chart өгөгдөл",
     "explorer.no_groups": "Үгүй бүлгүүд олсон. Try ялгаатай баганууд.",
-    "explorer.no_saved_views":
-      "Үгүй хадгалагдсан харагдац yet. Хадгалах таны шүүлтүүр, chart ба pivot тохиргоо -д зориулсан дараа нь.",
+    "explorer.no_saved_views": "Үгүй хадгалагдсан харагдац yet. Хадгалах таны шүүлтүүр, chart ба pivot тохиргоо -д зориулсан дараа нь.",
     "explorer.non_null": "Хоосон бус",
-    "explorer.or_click":
-      "эсвэл дарах хүртэл үзэх — өгөгдөл table, pivot, charts & statistics",
+    "explorer.or_click": "эсвэл дарах хүртэл үзэх — өгөгдөл table, pivot, charts & statistics",
     "explorer.page_of": "Хуудас {{page}} -н {{total}}",
     "explorer.page_summary": "Хуудасны нийт:",
     "explorer.pie": "Дугуй",
@@ -2575,31 +2258,26 @@ const resource = {
     "explorer.powered_by": "Дэмжсэн",
     "explorer.project": "Төсөл",
     "explorer.recent_models": "Сүүлийн загвар",
-    "explorer.requires_external":
-      "External хэрэгсэл — дарах -д зориулсан тохиргоо instructions",
+    "explorer.requires_external": "External хэрэгсэл — дарах -д зориулсан тохиргоо instructions",
     "explorer.rows": "мөр",
     "explorer.save_analysis": "Шинжилгээ хадгалах",
     "explorer.save_as_bim": "Хадгалах болгон BIM Загвар",
     "explorer.save_permanently": "Хадгалах Permanently",
     "explorer.save_to_project": "Хадгалах хүртэл Төсөл (BIM Hub)",
     "explorer.save_to_project_btn": "Хадгалах хүртэл Төсөл",
-    "explorer.save_to_project_desc":
-      "Үүсгэдэг BIM загвар -тай бүх гаргаж авсан элементүүд -д сонгогдсон төсөл.",
+    "explorer.save_to_project_desc": "Үүсгэдэг BIM загвар -тай бүх гаргаж авсан элементүүд -д сонгогдсон төсөл.",
     "explorer.save_view": "Харагдац хадгалах",
     "explorer.save_view_prompt": "Нэр энэ үзэх",
     "explorer.saved": "Шинжилгээ хадгалагдсан permanently",
     "explorer.saved_to_project": "Хадгалагдсан хүртэл BIM Hub",
-    "explorer.saved_to_project_msg":
-      "Элементүүд хадгалагдсан хүртэл BIM Hub. Үзэх тэдгээрийг -д BIM Үзэгч.",
+    "explorer.saved_to_project_msg": "Элементүүд хадгалагдсан хүртэл BIM Hub. Үзэх тэдгээрийг -д BIM Үзэгч.",
     "explorer.saved_views": "Хадгалсан харагдац",
     "explorer.scatter": "Тархалт",
     "explorer.search_all": "бүх баганууд хайх...",
-    "explorer.select_columns_for_chart":
-      "Сонгох бүлэг -аар ба утга баганууд хүртэл үүсгэх chart.",
+    "explorer.select_columns_for_chart": "Сонгох бүлэг -аар ба утга баганууд хүртэл үүсгэх chart.",
     "explorer.select_project": "Төсөл сонгох...",
     "explorer.selected": "сонгогдсон",
-    "explorer.session_expired_desc":
-      "CAD сессүүд нь хүчинтэй -д зориулсан 24 hours. Байршуулах таны файл дахин хүртэл үргэлжлүүлэх.",
+    "explorer.session_expired_desc": "CAD сессүүд нь хүчинтэй -д зориулсан 24 hours. Байршуулах таны файл дахин хүртэл үргэлжлүүлэх.",
     "explorer.session_expired_title": "Сесс expired эсвэл биш олсон",
     "explorer.setup_guide": "Тохиргооны заавар",
     "explorer.show_all": "Бүх",
@@ -2633,8 +2311,7 @@ const resource = {
     "field_reports.delays": "Хойшлогдсон",
     "field_reports.deliveries": "Хүргэлт",
     "field_reports.empty": "Хараахан тайлан алга",
-    "field_reports.empty_desc":
-      "Үүсгэх таны эхний daily тайлан хүртэл эхлэх documenting барилгын явц",
+    "field_reports.empty_desc": "Үүсгэх таны эхний daily тайлан хүртэл эхлэх documenting барилгын явц",
     "field_reports.export_pdf": "PDF болгож экспортлох",
     "field_reports.hours": "Цаг",
     "field_reports.humidity": "Чийгшил",
@@ -2688,15 +2365,12 @@ const resource = {
     "fieldreports.delays_placeholder": "Тайлбарлах дурын delays encountered...",
     "fieldreports.deleted": "Талбар тайлан устгагдлаа",
     "fieldreports.deliveries": "Хүргэлт",
-    "fieldreports.deliveries_placeholder":
-      "Материал эсвэл тоног төхөөрөмж хүргэсэн...",
+    "fieldreports.deliveries_placeholder": "Материал эсвэл тоног төхөөрөмж хүргэсэн...",
     "fieldreports.download_template": "Татах импортлох загвар",
-    "fieldreports.drop_file":
-      "Drop Excel эсвэл CSV файл энд, эсвэл дарах хүртэл үзэх",
+    "fieldreports.drop_file": "Drop Excel эсвэл CSV файл энд, эсвэл дарах хүртэл үзэх",
     "fieldreports.edit_report": "Талбар Тайлан засах",
     "fieldreports.empty": "Хараахан талбар тайлан алга",
-    "fieldreports.empty_desc":
-      "Үүсгэх таны эхний daily талбар тайлан хүртэл хянах талбай үйл ажиллагаа.",
+    "fieldreports.empty_desc": "Үүсгэх таны эхний daily талбар тайлан хүртэл хянах талбай үйл ажиллагаа.",
     "fieldreports.export": "Экспорт",
     "fieldreports.export_failed": "Экспорт амжилтгүй",
     "fieldreports.export_pdf": "PDF болгож экспортлох",
@@ -2708,25 +2382,20 @@ const resource = {
     "fieldreports.import": "Импорт",
     "fieldreports.import_btn": "Импорт",
     "fieldreports.import_reports": "Импортлох Талбар Тайлан",
-    "fieldreports.import_result":
-      "Импортлогдсон: {{imported}}, Skipped: {{skipped}}, Алдаанууд: {{errors}}",
+    "fieldreports.import_result": "Импортлогдсон: {{imported}}, Skipped: {{skipped}}, Алдаанууд: {{errors}}",
     "fieldreports.list_view": "Жагсаалт",
     "fieldreports.new_report": "Шинэ Тайлан",
     "fieldreports.no_match": "Тохирох тайлан олдсонгүй",
-    "fieldreports.no_match_desc":
-      "Try adjusting таны status эсвэл төрөл шүүлтүүр.",
+    "fieldreports.no_match_desc": "Try adjusting таны status эсвэл төрөл шүүлтүүр.",
     "fieldreports.no_project": "Төсөл сонгоно уу",
-    "fieldreports.no_project_desc":
-      "Сонгох төсөл -аас sidebar хүртэл үзэх талбар тайлан.",
+    "fieldreports.no_project_desc": "Сонгох төсөл -аас sidebar хүртэл үзэх талбар тайлан.",
     "fieldreports.notes": "Тэмдэглэл",
-    "fieldreports.notes_placeholder":
-      "Additional тэмдэглэл эсвэл observations...",
+    "fieldreports.notes_placeholder": "Additional тэмдэглэл эсвэл observations...",
     "fieldreports.report_date": "Огноо",
     "fieldreports.report_type": "Тайлан Төрөл",
     "fieldreports.row_error": "Мөр {{row}}: {{error}}",
     "fieldreports.safety_incidents": "Аюулгүй байдлын тохиолдол",
-    "fieldreports.safety_placeholder":
-      "Тайлан дурын аюулгүй байдал тохиолдлууд эсвэл ойролцоо-misses...",
+    "fieldreports.safety_placeholder": "Тайлан дурын аюулгүй байдал тохиолдлууд эсвэл ойролцоо-misses...",
     "fieldreports.show_errors": "Харуулах алдаа дэлгэрэнгүй",
     "fieldreports.stat_approved": "Зөвшөөрсөн",
     "fieldreports.stat_draft": "Ноорог",
@@ -2749,8 +2418,7 @@ const resource = {
     "fieldreports.wind": "Салхи",
     "fieldreports.wind_placeholder": "ж.нь 15 км/ц БХ",
     "fieldreports.work_performed": "Хийсэн ажил",
-    "fieldreports.work_performed_placeholder":
-      "Тайлбарлах ажил үйл ажиллагаа дууссан өнөөдөр...",
+    "fieldreports.work_performed_placeholder": "Тайлбарлах ажил үйл ажиллагаа дууссан өнөөдөр...",
     "fieldreports.workers": "ажилчид",
     "fieldreports.workforce_section": "Ажиллах хүч",
     "files.actions.copy": "Хуулах",
@@ -2772,8 +2440,7 @@ const resource = {
     "files.activity.bucket.earlier": "Өмнө",
     "files.activity.bucket.today": "Өнөөдөр",
     "files.activity.bucket.yesterday": "Өчигдөр",
-    "files.activity.empty_hint":
-      "Байршуулалтууд, renames, ба бусад өөрчлөлтүүд болно харуулах дээш энд.",
+    "files.activity.empty_hint": "Байршуулалтууд, renames, ба бусад өөрчлөлтүүд болно харуулах дээш энд.",
     "files.activity.empty_title": "Хараахан үйл ажиллагаа алга",
     "files.activity.error_hint": "Шалгах таны connection ба try дахин.",
     "files.activity.error_title": "Чадахгүй ачаалах үйл ажиллагаа",
@@ -2782,16 +2449,13 @@ const resource = {
     "files.bulk.clear": "Цэлмэг",
     "files.bulk.confirm_delete": "Устгах {{count}} файл(s)?",
     "files.bulk.delete": "Устгах",
-    "files.bulk.delete_all_failed":
-      "Байхгүй -н {{count}} сонгогдсон файл(s) чадах байх устгагдсан.",
+    "files.bulk.delete_all_failed": "Байхгүй -н {{count}} сонгогдсон файл(s) чадах байх устгагдсан.",
     "files.bulk.delete_failed": "Бөөнөөр устгах амжилтгүй",
     "files.bulk.delete_partial": "{{deleted}} of {{total}} устгагдлаа",
-    "files.bulk.delete_partial_detail":
-      "{{failed}} файл(s) чадах биш байх устгагдсан.",
+    "files.bulk.delete_partial_detail": "{{failed}} файл(s) чадах биш байх устгагдсан.",
     "files.bulk.deleted": "{{count}} файл(s) устгагдлаа",
     "files.bulk.n_selected": "{{count}} сонгогдсон",
-    "files.bulk.no_deletable":
-      "Сонгогдсон файлууд чадахгүй байх устгагдсан -аас энд yet",
+    "files.bulk.no_deletable": "Сонгогдсон файлууд чадахгүй байх устгагдсан -аас энд yet",
     "files.bulk.skip_unsupported": "{{count}} алгассан (дэмжигдэхгүй)",
     "files.category.bim_model": "BIM загвар",
     "files.category.document": "Баримт",
@@ -2821,8 +2485,7 @@ const resource = {
     "files.email.generate": "Хуваалцах холбоос үүсгэх",
     "files.email.open_mail_client": "Нээх email үйлчлүүлэгч",
     "files.email.paste_into_email": "Сорьц email агуулга",
-    "files.email.sample_body":
-      "Сайн байна уу,\n\nТаны асуусан файл энд байна — {{name}} ({{size}}).\nТатах холбоос (хугацаа дуусах: {{expires}}):\n{{url}}\n\n— OpenConstructionERP-ээс илгээв",
+    "files.email.sample_body": "Сайн байна уу,\n\nТаны асуусан файл энд байна — {{name}} ({{size}}).\nТатах холбоос (хугацаа дуусах: {{expires}}):\n{{url}}\n\n— OpenConstructionERP-ээс илгээв",
     "files.email.sample_subject": "Файл: {{name}}",
     "files.email.title": "Хуваалцах -аар дамжуулан email",
     "files.email.ttl": "Холбоос expires дараа",
@@ -2835,26 +2498,19 @@ const resource = {
     "files.empty": "Үгүй файлууд тааруулалт таны шүүлтүүр.",
     "files.empty_category": "Хараахан {{category}} алга",
     "files.export.download_btn": "Татах багц",
-    "files.export.intro":
-      "Сонгох юу хүртэл include. Илүү жижиг багцууд шилжүүлэх илүү хурдан; илүү том багцууд preserve илүү.",
-    "files.export.large_warn":
-      "Том багц — keep энэ таб нээх хооронд экспортолж байна.",
+    "files.export.intro": "Сонгох юу хүртэл include. Илүү жижиг багцууд шилжүүлэх илүү хурдан; илүү том багцууд preserve илүү.",
+    "files.export.large_warn": "Том багц — keep энэ таб нээх хооронд экспортолж байна.",
     "files.export.preview_btn": "Урьдчилан үзэх",
     "files.export.scope_bim": "BIM загварууд",
-    "files.export.scope_bim_hint":
-      "Adds BIM загварууд, элементүүд, ба canonical geometry.",
+    "files.export.scope_bim_hint": "Adds BIM загварууд, элементүүд, ба canonical geometry.",
     "files.export.scope_documents": "Баримт бичиг",
-    "files.export.scope_documents_hint":
-      "Adds байршуулсан баримт бичиг ба зургууд -тай тэдний thumbnails.",
+    "files.export.scope_documents_hint": "Adds байршуулсан баримт бичиг ба зургууд -тай тэдний thumbnails.",
     "files.export.scope_dwg": "DWG зургууд",
-    "files.export.scope_dwg_hint":
-      "Adds DWG зургууд, хувилбарууд, ба related sheets.",
+    "files.export.scope_dwg_hint": "Adds DWG зургууд, хувилбарууд, ба related sheets.",
     "files.export.scope_full": "Бүрэн төсөл",
-    "files.export.scope_full_hint":
-      "Бүх зүйл — бүрэн migration package, including бүх attachments.",
+    "files.export.scope_full_hint": "Бүх зүйл — бүрэн migration package, including бүх attachments.",
     "files.export.scope_metadata": "Metadata зөвхөн",
-    "files.export.scope_metadata_hint":
-      "И-мэйл-д тохиромжтой. BOQ-ууд, хүснэгтүүд, холбоосууд — хавсралтгүй. Ямар ч ирсэн зурвасын хайрцагт багтана.",
+    "files.export.scope_metadata_hint": "И-мэйл-д тохиромжтой. BOQ-ууд, хүснэгтүүд, холбоосууд — хавсралтгүй. Ямар ч ирсэн зурвасын хайрцагт багтана.",
     "files.export.stat_attachments": "Хавсралт",
     "files.export.stat_format": "Формат",
     "files.export.stat_scope": "Хүрээ",
@@ -2868,21 +2524,16 @@ const resource = {
     "files.go_to_projects": "Go хүртэл төслүүд",
     "files.import.choose_mode": "Импортлох горим",
     "files.import.confirm": "Импорт",
-    "files.import.destructive_warn":
-      "Энэ болно permanently устгах багц-удирдсан мөрүүд -д target төсөл өмнө импортолж байна. Чадахгүй байх undone.",
+    "files.import.destructive_warn": "Энэ болно permanently устгах багц-удирдсан мөрүүд -д target төсөл өмнө импортолж байна. Чадахгүй байх undone.",
     "files.import.drop_hint": "Дарах хүртэл үзэх",
     "files.import.imported": "Импортолсон",
-    "files.import.intro":
-      "Сонгох.ocep багц экспортлогдсон -аас энэ эсвэл дурын бусад workspace.",
+    "files.import.intro": "Сонгох.ocep багц экспортлогдсон -аас энэ эсвэл дурын бусад workspace.",
     "files.import.mode_merge": "Merge руу одоо байгаа төсөл",
-    "files.import.mode_merge_hint":
-      "Adds мөрүүд хүртэл сонгосон төсөл. Одоо байгаа IDs нь skipped.",
+    "files.import.mode_merge_hint": "Adds мөрүүд хүртэл сонгосон төсөл. Одоо байгаа IDs нь skipped.",
     "files.import.mode_new": "Үүсгэх шинэ төсөл",
-    "files.import.mode_new_hint":
-      "Safest. Шинэ IDs хаа сайгүй; юу ч байхгүй -д таны workspace өөрчлөлтүүд.",
+    "files.import.mode_new_hint": "Safest. Шинэ IDs хаа сайгүй; юу ч байхгүй -д таны workspace өөрчлөлтүүд.",
     "files.import.mode_replace": "Орлуулах одоо байгаа төсөл",
-    "files.import.mode_replace_hint":
-      "Wipes сонгосон project's багц-удирдсан мөрүүд, тэгээд импортууд. Destructive.",
+    "files.import.mode_replace_hint": "Wipes сонгосон project's багц-удирдсан мөрүүд, тэгээд импортууд. Destructive.",
     "files.import.no_attachments": "Байхгүй",
     "files.import.open_imported": "Нээх импортлогдсон төсөл",
     "files.import.pick_project": "— сонгох төсөл —",
@@ -2899,22 +2550,18 @@ const resource = {
     "files.import.target_project": "Target төсөл",
     "files.import.title": "Импортлох төсөл багц",
     "files.import.validating": "Баталгаажуулж байна багц…",
-    "files.no_project_desc":
-      "Сонгох төсөл -аас dashboard хүртэл see бүх -н түүний баримт бичиг, зургууд, BIM ба DWG файлууд -д one газар.",
+    "files.no_project_desc": "Сонгох төсөл -аас dashboard хүртэл see бүх -н түүний баримт бичиг, зургууд, BIM ба DWG файлууд -д one газар.",
     "files.no_project_title": "Идэвхтэй төсөл алга",
     "files.permissions.empty": "Төслийн бүх гишүүд энэ хавтсанд хандана.",
-    "files.permissions.error_duplicate":
-      "Энэ гишүүн already байх хандалт -д энэ түвшин.",
+    "files.permissions.error_duplicate": "Энэ гишүүн already байх хандалт -д энэ түвшин.",
     "files.permissions.error_grant": "grant хандалт чадсангүй",
     "files.permissions.error_revoke": "revoke хандалт чадсангүй",
     "files.permissions.grant": "Хандалт олгох",
     "files.permissions.grant_title": "Хандалт олгох",
     "files.permissions.granting": "Олгож байна…",
     "files.permissions.list_title": "Одоогийн хандалт",
-    "files.permissions.lock_tooltip":
-      "Хязгаарласан: {{count}} гишүүн хандах боломжтой",
-    "files.permissions.lock_tooltip_plural":
-      "Хязгаарласан: {{count}} гишүүн хандах боломжтой",
+    "files.permissions.lock_tooltip": "Хязгаарласан: {{count}} гишүүн хандах боломжтой",
+    "files.permissions.lock_tooltip_plural": "Хязгаарласан: {{count}} гишүүн хандах боломжтой",
     "files.permissions.manage": "Хандалт удирдах",
     "files.permissions.revoke": "Хүчингүй болгох",
     "files.permissions.revoke_confirm": "Revoke хандалт -д зориулсан {{name}}?",
@@ -2922,8 +2569,7 @@ const resource = {
     "files.permissions.role.owner": "Эзэн — бүрэн хяналт",
     "files.permissions.role.viewer": "Үзэгч — зөвхөн уншина",
     "files.permissions.role_label": "Үүрэг",
-    "files.permissions.subtitle":
-      "Restrict хэн чадна see ба засах файлууд -д {{folder}}.",
+    "files.permissions.subtitle": "Restrict хэн чадна see ба засах файлууд -д {{folder}}.",
     "files.permissions.title": "Хавтасны хандалт",
     "files.permissions.user_label": "Гишүүн",
     "files.permissions.user_placeholder": "Төслийн гишүүн сонгох",
@@ -2938,8 +2584,7 @@ const resource = {
     "files.share.downloads_plural": "{{count}} татаж авалт",
     "files.share.error_create": "үүсгэх хуваалцах холбоос чадсангүй",
     "files.share.error_revoke": "revoke хуваалцах холбоос чадсангүй",
-    "files.share.existing_empty":
-      "Үгүй хуваалцах холбоосууд yet — үүсгэх one дээр.",
+    "files.share.existing_empty": "Үгүй хуваалцах холбоосууд yet — үүсгэх one дээр.",
     "files.share.existing_title": "Одоо байгаа холбоос",
     "files.share.expires_label": "Дуусах хугацаа",
     "files.share.expiry_1d": "1 өдөр",
@@ -2979,8 +2624,7 @@ const resource = {
     "files.upload_no_project": "Идэвхтэй төсөл алга",
     "files.upload_queued": "{{count}} файл дараалалд орсон",
     "files.upload_too_large": "Файлууд бас том",
-    "files.upload_too_large_msg":
-      "{{count}} файл(s) exceed 100 MB хязгаар ба байсан skipped.",
+    "files.upload_too_large_msg": "{{count}} файл(s) exceed 100 MB хязгаар ба байсан skipped.",
     "files.uploaded": "Илгээгдсэн",
     "files.uploading": "Илгээж байна…",
     "files.view_grid": "Сүлжээгээр харах",
@@ -2990,19 +2634,15 @@ const resource = {
     "finance.approve": "Зөвшөөрөх",
     "finance.approve_failed": "зөвшөөрөх нэхэмжлэх амжилтгүй",
     "finance.behind": "Хоцорсон",
-    "finance.boq_tip_desc":
-      'Go хүртэл таны BOQ → Түгжих тооцоо → Дарах "Үүсгэх Төсөв -аас Тооцоо" хүртэл автомат-populate төсөв мөрүүд.',
+    "finance.boq_tip_desc": "Go хүртэл таны BOQ → Түгжих тооцоо → Дарах \"Үүсгэх Төсөв -аас Тооцоо\" хүртэл автомат-populate төсөв мөрүүд.",
     "finance.boq_tip_title": "Зөвлөгөө:",
     "finance.budget_create_failed": "үүсгэх төсөв мөр амжилтгүй",
     "finance.budget_created": "Төсөв мөр үүсгэгдсэн амжилттай",
-    "finance.budget_file_hint":
-      "Баганууд: WBS Код, Ангилал, Анхны Төсөв, Тэмдэглэл",
+    "finance.budget_file_hint": "Баганууд: WBS Код, Ангилал, Анхны Төсөв, Тэмдэглэл",
     "finance.budget_line": "Төсөв",
-    "finance.budget_notes_placeholder":
-      "e.g., Includes contingency -д зориулсан weather delays",
+    "finance.budget_notes_placeholder": "e.g., Includes contingency -д зориулсан weather delays",
     "finance.budgets": "Төсөв",
-    "finance.budgets_explanation":
-      "Төсөл төсөв tracks анхны vs бодит өртгүүд -аар WBS ангилал. Хэлбэлзэл нь highlighted green хэзээ доор төсөв, red хэзээ дээгүүр.",
+    "finance.budgets_explanation": "Төсөл төсөв tracks анхны vs бодит өртгүүд -аар WBS ангилал. Хэлбэлзэл нь highlighted green хэзээ доор төсөв, red хэзээ дээгүүр.",
     "finance.cat_equipment": "Тоног төхөөрөмж",
     "finance.cat_labor": "Хөдөлмөр",
     "finance.cat_material": "Материал",
@@ -3012,18 +2652,15 @@ const resource = {
     "finance.category": "Ангилал",
     "finance.client": "Захиалагч",
     "finance.committed": "Үүрэг авсан",
-    "finance.confirm_approve_msg":
-      "Энэ нэхэмжлэх болно байх зөвшөөрөгдсөн -д зориулсан төлбөр.",
+    "finance.confirm_approve_msg": "Энэ нэхэмжлэх болно байх зөвшөөрөгдсөн -д зориулсан төлбөр.",
     "finance.confirm_approve_title": "Нэхэмжлэхийг зөвшөөрөх үү?",
-    "finance.confirm_pay_msg":
-      "Энэ нэхэмжлэх болно байх recorded болгон төлбөртэй.",
+    "finance.confirm_pay_msg": "Энэ нэхэмжлэх болно байх recorded болгон төлбөртэй.",
     "finance.confirm_pay_title": "Төлөгдсөн гэж тэмдэглэх үү?",
     "finance.create_snapshot": "Хувилбар үүсгэх",
     "finance.currency": "Валют",
     "finance.data_date": "Өгөгдлийн огноо",
     "finance.direction": "Чиглэл",
-    "finance.drop_budget_file":
-      "Drop Excel эсвэл CSV файл энд, эсвэл дарах хүртэл үзэх",
+    "finance.drop_budget_file": "Drop Excel эсвэл CSV файл энд, эсвэл дарах хүртэл үзэх",
     "finance.due_date": "Хугацаа",
     "finance.evm_ac": "AC (Бодит Өртөг)",
     "finance.evm_bac": "BAC (Төсөв -д Дуусгал)",
@@ -3033,8 +2670,7 @@ const resource = {
     "finance.evm_eac": "EAC (Тооцоо -д Дуусгал)",
     "finance.evm_etc": "ETC (Тооцоо хүртэл Дууссан)",
     "finance.evm_ev": "EV (Олсон Утга)",
-    "finance.evm_explanation":
-      "Earned Value Management (EVM) нь төлөвлөсөн явцыг бодит гүйцэтгэлтэй харьцуулдаг. SPI > 1.0 = хуваариас түрүүлж. CPI > 1.0 = төсвөөс хямд. Цаг хугацааны хандлагыг хянахын тулд тогтмол хувилбар үүсгэнэ үү.",
+    "finance.evm_explanation": "Earned Value Management (EVM) нь төлөвлөсөн явцыг бодит гүйцэтгэлтэй харьцуулдаг. SPI > 1.0 = хуваариас түрүүлж. CPI > 1.0 = төсвөөс хямд. Цаг хугацааны хандлагыг хянахын тулд тогтмол хувилбар үүсгэнэ үү.",
     "finance.evm_hint_cost": "зардлын үр ашиг",
     "finance.evm_hint_forecast": "урьдчилсан нийт зардал",
     "finance.evm_hint_schedule": "хуваарийн үр ашиг",
@@ -3054,19 +2690,16 @@ const resource = {
     "finance.import": "Импорт",
     "finance.import_btn": "Импорт",
     "finance.import_budgets": "Импортлох Төсвүүд",
-    "finance.import_result":
-      "Импортлогдсон: {{imported}}, Skipped: {{skipped}}, Алдаанууд: {{errors}}",
+    "finance.import_result": "Импортлогдсон: {{imported}}, Skipped: {{skipped}}, Алдаанууд: {{errors}}",
     "finance.invoice_approved": "Нэхэмжлэх зөвшөөрөгдлөө",
     "finance.invoice_create_failed": "үүсгэх нэхэмжлэх амжилтгүй",
     "finance.invoice_created": "Нэхэмжлэх үүсгэгдсэн амжилттай",
-    "finance.invoice_desc_placeholder":
-      "e.g., Явц төлбөр -д зориулсан бетон ажилладаг - Үе шат 2",
+    "finance.invoice_desc_placeholder": "e.g., Явц төлбөр -д зориулсан бетон ажилладаг - Үе шат 2",
     "finance.invoice_number": "Нэхэмжлэх #",
     "finance.invoice_paid": "Нэхэмжлэх marked болгон төлбөртэй",
     "finance.invoice_ref": "Нэхэмжлэхийн дугаар",
     "finance.invoices": "Нэхэмжлэх",
-    "finance.invoices_explanation":
-      "Хянах бүх төсөл нэхэмжлэх -д one газар. Payable = нэхэмжлэх -аас туслан гүйцэтгэгчид/нийлүүлэгчид. Receivable = нэхэмжлэх та илгээх хүртэл үйлчлүүлэгчид. Mark нэхэмжлэх болгон төлбөртэй хүртэл автомат-үүсгэх төлбөр records.",
+    "finance.invoices_explanation": "Хянах бүх төсөл нэхэмжлэх -д one газар. Payable = нэхэмжлэх -аас туслан гүйцэтгэгчид/нийлүүлэгчид. Receivable = нэхэмжлэх та илгээх хүртэл үйлчлүүлэгчид. Mark нэхэмжлэх болгон төлбөртэй хүртэл автомат-үүсгэх төлбөр records.",
     "finance.invoices_export_failed": "экспортлох нэхэмжлэх амжилтгүй",
     "finance.invoices_export_success": "Нэхэмжлэх экспортлогдсон амжилттай",
     "finance.issue_date": "Гаргасан огноо",
@@ -3079,13 +2712,11 @@ const resource = {
     "finance.no_budgets": "Үгүй төсвүүд defined",
     "finance.no_budgets_desc": "Төсөв зүйлс болно харагдах энд удаа defined.",
     "finance.no_evm": "Үгүй EVM өгөгдөл",
-    "finance.no_evm_desc":
-      "Олсон утга өгөгдөл болно харагдах удаа хувилбарууд нь taken.",
+    "finance.no_evm_desc": "Олсон утга өгөгдөл болно харагдах удаа хувилбарууд нь taken.",
     "finance.no_invoices": "Үгүй нэхэмжлэх",
     "finance.no_invoices_desc": "Нэхэмжлэх болно харагдах энд удаа үүсгэгдсэн.",
     "finance.no_invoices_match": "Тохирох нэхэмжлэх олдсонгүй",
-    "finance.no_invoices_match_desc":
-      "Try adjusting таны хайх эсвэл status шүүх.",
+    "finance.no_invoices_match_desc": "Try adjusting таны хайх эсвэл status шүүх.",
     "finance.no_payments": "Үгүй төлбөр",
     "finance.no_payments_desc": "Төлбөр болно харагдах энд удаа recorded.",
     "finance.no_project": "Сонгох төсөл хүртэл үзэх financial өгөгдөл.",
@@ -3095,12 +2726,10 @@ const resource = {
     "finance.pay_failed": "mark нэхэмжлэх as төлсөн амжилтгүй",
     "finance.payable": "Төлөх",
     "finance.payable_desc": "Нэхэмжлэх та хэрэгцээ хүртэл төлөх",
-    "finance.payable_receivable_tooltip":
-      "Payable = нэхэмжлэх та owe хүртэл нийлүүлэгчид. Receivable = нэхэмжлэх үйлчлүүлэгчид owe хүртэл та.",
+    "finance.payable_receivable_tooltip": "Payable = нэхэмжлэх та owe хүртэл нийлүүлэгчид. Receivable = нэхэмжлэх үйлчлүүлэгчид owe хүртэл та.",
     "finance.payment_date": "Төлбөрийн огноо",
     "finance.payments": "Төлбөр",
-    "finance.payments_explanation":
-      "Төлбөр records нь үүсгэгдсэн хэзээ нэхэмжлэх нь marked болгон төлбөртэй.",
+    "finance.payments_explanation": "Төлбөр records нь үүсгэгдсэн хэзээ нэхэмжлэх нь marked болгон төлбөртэй.",
     "finance.receivable": "Авах",
     "finance.receivable_desc": "Нэхэмжлэх та илгээж байна",
     "finance.reference": "Лавлагаа",
@@ -3169,8 +2798,7 @@ const resource = {
     "inspections.location_placeholder": "Шалгалтын байршил",
     "inspections.new_inspection": "Шинэ Шалгалт",
     "inspections.no_inspections": "Хараахан шалгалт алга",
-    "inspections.no_inspections_hint":
-      "Хуваарь таны эхний шалгалт хүртэл get эхэлсэн.",
+    "inspections.no_inspections_hint": "Хуваарь таны эхний шалгалт хүртэл get эхэлсэн.",
     "inspections.no_results": "Тохирох шалгалт олдсонгүй",
     "inspections.no_results_hint": "Хайлт эсвэл шүүлтүүрийг өөрчилж үзнэ үү.",
     "inspections.page_title": "Шалгалт",
@@ -3186,8 +2814,7 @@ const resource = {
     "inspections.title_required": "Гарчиг шаардлагатай",
     "integrations.add_another": "Өөр нэмэх",
     "integrations.calendar": "Хуанли",
-    "integrations.calendar_desc":
-      "Захиалах -д Google/Outlook Календарь (iCal feed)",
+    "integrations.calendar_desc": "Захиалах -д Google/Outlook Календарь (iCal feed)",
     "integrations.coming_soon": "Удахгүй гарна",
     "integrations.confirm_disconnect": "Салгах энэ integration?",
     "integrations.connect": "Холбох",
@@ -3201,13 +2828,10 @@ const resource = {
     "integrations.email_desc": "И-мэйл мэдэгдэл хүлээн авах (SMTP)",
     "integrations.setup_steps": "Тохиргооны заавар",
     "integrations.slack": "Slack холбоо",
-    "integrations.slack_desc":
-      "Илгээх notifications хүртэл Slack -аар дамжуулан Incoming Webhook",
-    "integrations.subtitle":
-      "Холбогдох external үйлчилгээ хүртэл хүлээн авах төсөл notifications -д таны favorite хэрэгсэл.",
+    "integrations.slack_desc": "Илгээх notifications хүртэл Slack -аар дамжуулан Incoming Webhook",
+    "integrations.subtitle": "Холбогдох external үйлчилгээ хүртэл хүлээн авах төсөл notifications -д таны favorite хэрэгсэл.",
     "integrations.teams": "Microsoft Teams холбоо",
-    "integrations.teams_desc":
-      "Илгээх notifications хүртэл таны Teams channel -аар дамжуулан Incoming Webhook",
+    "integrations.teams_desc": "Илгээх notifications хүртэл таны Teams channel -аар дамжуулан Incoming Webhook",
     "integrations.telegram": "Telegram холбоо",
     "integrations.telegram_desc": "Telegram bot-оор мэдэгдэл авах",
     "integrations.test": "Шалгах",
@@ -3215,49 +2839,35 @@ const resource = {
     "integrations.test_ok": "Тест notification илгээсэн!",
     "integrations.title": "Интеграц",
     "integrations.webhook": "Webhooks холбоо",
-    "integrations.webhook_desc":
-      "Илгээх үйл явдал хүртэл дурын URL (HTTP POST)",
+    "integrations.webhook_desc": "Илгээх үйл явдал хүртэл дурын URL (HTTP POST)",
     "login.benefit.ai": "AI-assisted тооцоолол",
-    "login.benefit.ai_desc":
-      "Итгэлийн оноотой ухаалаг саналууд. Та шийднэ, AI туслана.",
+    "login.benefit.ai_desc": "Итгэлийн оноотой ухаалаг саналууд. Та шийднэ, AI туслана.",
     "login.benefit.allinone": "BOQ + 4D + 5D + Тендер",
-    "login.benefit.allinone_desc":
-      "Дууссан workflow -аас өртөг тооцоолол хүртэл санал харьцуулалт -д one хэрэгсэл.",
+    "login.benefit.allinone_desc": "Дууссан workflow -аас өртөг тооцоолол хүртэл санал харьцуулалт -д one хэрэгсэл.",
     "login.benefit.free": "Үнэгүй -д зориулсан хүн бүр",
-    "login.benefit.free_desc":
-      "Үгүй лиценз хураамжууд. Үгүй хязгаарууд. Барьсан -аар тооцоологчид, -д зориулсан тооцоологчид.",
+    "login.benefit.free_desc": "Үгүй лиценз хураамжууд. Үгүй хязгаарууд. Барьсан -аар тооцоологчид, -д зориулсан тооцоологчид.",
     "login.benefit.local": "Таны өгөгдөл stays дээр таны компьютер",
-    "login.benefit.local_desc":
-      "Үгүй cloud. Үгүй third-party серверүүд. Бүрэн control дээгүүр таны төсөл өгөгдөл.",
+    "login.benefit.local_desc": "Үгүй cloud. Үгүй third-party серверүүд. Бүрэн control дээгүүр таны төсөл өгөгдөл.",
     "login.benefit.open_source": "100% нээх эх сурвалж",
-    "login.benefit.open_source_desc":
-      "Transparent код. Үгүй нийлүүлэгч түгжих--д. Экспортлох бүх зүйл, anytime.",
+    "login.benefit.open_source_desc": "Transparent код. Үгүй нийлүүлэгч түгжих--д. Экспортлох бүх зүйл, anytime.",
     "login.benefit.standards": "Олон улсын стандартууд",
-    "login.benefit.standards_desc":
-      "55,000+ өртөг зүйлс хооронд 30 бүс нутгийн өгөгдлийн сан worldwide.",
-    "login.hero_desc":
-      "Мэргэжлийн BOQ, 4D хуваарь гаргах, 5D өртөг загвар, ба тендер — бүх -д one нээх-эх сурвалж платформ.",
+    "login.benefit.standards_desc": "55,000+ өртөг зүйлс хооронд 30 бүс нутгийн өгөгдлийн сан worldwide.",
+    "login.hero_desc": "Мэргэжлийн BOQ, 4D хуваарь гаргах, 5D өртөг загвар, ба тендер — бүх -д one нээх-эх сурвалж платформ.",
     "login.hero_highlight": "шинэчилсэн",
     "login.hero_title": "Барилгын өртөг тооцоолол,",
     "login.learn_more": "Learn илүү тухай платформ",
     "login.open_source_badge": "#1 нээлттэй эх барилгын ERP",
-    "login.privacy":
-      "Бүх өгөгдөл нь боловсруулсан ба хадгалсан locally дээр таны машин. Юу ч байхгүй нь илгээсэн хүртэл external серверүүд. Та own таны өгөгдөл — үргэлж.",
-    "login.privacy_ai":
-      "Хэрэв та use барьсан--д AI хэрэгсэл, зарим өгөгдөл болно байх илгээсэн хүртэл AI үйлчилгээ үзүүлэгч та тохируулах (OpenAI, Anthropic, etc.). Та control аль үйлчилгээ үзүүлэгч хүртэл use ба юу өгөгдөл хүртэл хуваалцах.",
+    "login.privacy": "Бүх өгөгдөл нь боловсруулсан ба хадгалсан locally дээр таны машин. Юу ч байхгүй нь илгээсэн хүртэл external серверүүд. Та own таны өгөгдөл — үргэлж.",
+    "login.privacy_ai": "Хэрэв та use барьсан--д AI хэрэгсэл, зарим өгөгдөл болно байх илгээсэн хүртэл AI үйлчилгээ үзүүлэгч та тохируулах (OpenAI, Anthropic, etc.). Та control аль үйлчилгээ үзүүлэгч хүртэл use ба юу өгөгдөл хүртэл хуваалцах.",
     "marketplace.active": "Идэвхтэй",
     "marketplace.available": "Боломжтой модуль",
     "marketplace.builtin": "Суулгасан",
-    "marketplace.builtin_message":
-      "Энэ модуль нь барьсан руу таны суулгац ба бэлэн хүртэл use.",
+    "marketplace.builtin_message": "Энэ модуль нь барьсан руу таны суулгац ба бэлэн хүртэл use.",
     "marketplace.catalog_imported": "Каталог импортлогдсон",
-    "marketplace.catalog_imported_message":
-      "{{imported}} нөөц импортлогдсон, {{skipped}} skipped -д зориулсан {{region}}.",
+    "marketplace.catalog_imported_message": "{{imported}} нөөц импортлогдсон, {{skipped}} skipped -д зориулсан {{region}}.",
     "marketplace.demo_installed": "Демо суулгасан",
-    "marketplace.demo_installed_message":
-      "{{name}} үүсгэгдсэн -тай бүрэн BOQ, хуваарь, төсөв, ба тендер.",
-    "marketplace.description":
-      "Бүс нутгийн өртгийн өгөгдлийн сан, нөөцийн каталог (CWICR), AI-д зориулсан вектор хайлтын индекс, хэлний багц, демо төсөл, интеграцуудаар OpenEstimate-г өргөтгөнө үү. Модулийг идэвхжүүлэхийн тулд суулгана уу — дурын үед устгана.",
+    "marketplace.demo_installed_message": "{{name}} үүсгэгдсэн -тай бүрэн BOQ, хуваарь, төсөв, ба тендер.",
+    "marketplace.description": "Бүс нутгийн өртгийн өгөгдлийн сан, нөөцийн каталог (CWICR), AI-д зориулсан вектор хайлтын индекс, хэлний багц, демо төсөл, интеграцуудаар OpenEstimate-г өргөтгөнө үү. Модулийг идэвхжүүлэхийн тулд суулгана уу — дурын үед устгана.",
     "marketplace.free": "Үнэгүй",
     "marketplace.import_failed": "Импорт амжилтгүй",
     "marketplace.imported": "Импортолсон",
@@ -3266,8 +2876,7 @@ const resource = {
     "marketplace.install_failed": "Суулгах амжилтгүй",
     "marketplace.installed_modules": "Суулгасан үндсэн модуль",
     "marketplace.installing": "Суулгаж байна...",
-    "marketplace.language_activated":
-      "Хэл pack activated. Өөрчлөх хэл -д Тохиргоо.",
+    "marketplace.language_activated": "Хэл pack activated. Өөрчлөх хэл -д Тохиргоо.",
     "marketplace.language_already_included": "Энэ хэл нь already included.",
     "marketplace.manage": "Удирдах",
     "marketplace.module_disabled": "{{name}} идэвхгүй",
@@ -3275,25 +2884,21 @@ const resource = {
     "marketplace.my_modules": "Суулгасан модуль",
     "marketplace.no_region_mapping": "Үгүй бүс mapping -д зориулсан {{id}}",
     "marketplace.no_results": "модулиуд олдсонгүй",
-    "marketplace.no_results_hint":
-      "Try adjusting таны хайх эсвэл ангилал шүүх.",
+    "marketplace.no_results_hint": "Try adjusting таны хайх эсвэл ангилал шүүх.",
     "marketplace.rules": "дүрэм",
     "marketplace.search_placeholder": "модулиуд хайх...",
-    "marketplace.subtitle":
-      "Үзэх ба суулгах нэмэх-ons -д зориулсан өртөг өгөгдлийн сан, AI хэрэгсэл, CAD хөрвүүлэгчид, ба илүү.",
+    "marketplace.subtitle": "Үзэх ба суулгах нэмэх-ons -д зориулсан өртөг өгөгдлийн сан, AI хэрэгсэл, CAD хөрвүүлэгчид, ба илүү.",
     "marketplace.title": "Модулийн зах",
     "marketplace.uninstall": "Устгах",
     "marketplace.unknown_region": "Үл мэдэгдэх бүс",
     "marketplace.validation_rule_sets": "Шалгалтын дүрмийн багц",
     "marketplace.validation_rules_active": "баталгаажуулалт дүрэм идэвхтэй",
     "marketplace.vector_index": "Вектор индекс",
-    "marketplace.vector_index_hint":
-      "Импортлох өртөг өгөгдлийн сан эхний, тэгээд үүсгэх вектор.",
+    "marketplace.vector_index_hint": "Импортлох өртөг өгөгдлийн сан эхний, тэгээд үүсгэх вектор.",
     "markups.action_archive": "Архивлах",
     "markups.action_resolve": "Шийдвэрлэх",
     "markups.active": "Идэвхтэй",
-    "markups.add_first":
-      "Нэмэх таны эхний тэмдэглэгээ хүртэл эхлэх annotating баримт бичиг",
+    "markups.add_first": "Нэмэх таны эхний тэмдэглэгээ хүртэл эхлэх annotating баримт бичиг",
     "markups.add_markup": "Нэмэгдэл нэмэх",
     "markups.all_authors": "Бүх зохиогч",
     "markups.all_documents": "Бүх баримт бичиг",
@@ -3313,13 +2918,11 @@ const resource = {
     "markups.create_custom_stamp": "Захиалгат Stamp үүсгэх",
     "markups.created": "Үүсгэгдсэн",
     "markups.custom_stamp": "Захиалгат Stamp",
-    "markups.delete_message":
-      "Энэ тэмдэглэгээ болно байх permanently устгагдсан.",
+    "markups.delete_message": "Энэ тэмдэглэгээ болно байх permanently устгагдсан.",
     "markups.delete_title": "Тэмдэглэгээ устгах уу?",
     "markups.deleted": "Тэмдэглэгээ устгагдсан",
     "markups.document": "Баримт",
-    "markups.empty_desc":
-      "Тэмдэглэгээ ба тайлбар -аас таны төсөл баримт бичиг болно харагдах энд.",
+    "markups.empty_desc": "Тэмдэглэгээ ба тайлбар -аас таны төсөл баримт бичиг болно харагдах энд.",
     "markups.empty_title": "тэмдэглэгээ олдсонгүй",
     "markups.export": "Экспорт",
     "markups.export_csv": "CSV болгож экспортлох",
@@ -3336,8 +2939,7 @@ const resource = {
     "markups.metadata": "Мета өгөгдөл",
     "markups.no_document": "Үгүй баримт бичиг",
     "markups.no_geometry": "Геометрийн өгөгдөл алга",
-    "markups.no_project_desc":
-      "Сонгох төсөл хүртэл үзэх ба удирдах тэмдэглэгээ",
+    "markups.no_project_desc": "Сонгох төсөл хүртэл үзэх ба удирдах тэмдэглэгээ",
     "markups.no_project_title": "Төсөл сонгоогүй",
     "markups.no_text": "(байхгүй)",
     "markups.not_linked": "Холбоогүй",
@@ -3371,42 +2973,32 @@ const resource = {
     "markups.view_grid": "Сүлжээ",
     "markups.view_list": "Жагсаалт",
     "match_elements.action.apply": "Хэрэглэх хүртэл BOQ ({{n}})",
-    "match_elements.action.apply_title":
-      "Write баталгаажсан таарцууд хүртэл төсөл BOQ",
+    "match_elements.action.apply_title": "Write баталгаажсан таарцууд хүртэл төсөл BOQ",
     "match_elements.action.confirm_all": "Баталгаажуулах бүх ≥ {{thr}}",
-    "match_elements.action.confirm_selected":
-      "Баталгаажуулах {{count}} ≥ {{thr}}",
+    "match_elements.action.confirm_selected": "Баталгаажуулах {{count}} ≥ {{thr}}",
     "match_elements.action.lexical_all": "Үгзүйн тааруулалт — топ 10",
     "match_elements.action.lexical_selected": "Үгзүйн ({{count}})",
     "match_elements.action.resources_all": "Тааруулалт нөөц — дээд 10",
     "match_elements.action.resources_selected": "Нөөц ({{count}})",
-    "match_elements.action.resources_title":
-      "Тааруулалт against материал/нөөц каталог",
+    "match_elements.action.resources_title": "Тааруулалт against материал/нөөц каталог",
     "match_elements.action.skip_n": "{{count}}-ыг алгасах (TBD)",
     "match_elements.action.vector_all": "Векторын тааруулалт — топ 10",
     "match_elements.action.vector_selected": "Векторын тааруулалт ({{count}})",
     "match_elements.active_project": "Идэвхтэй төсөл",
     "match_elements.advisor_browse_all": "Бүх дээр Hugging Face",
-    "match_elements.advisor_empty_detail":
-      "Сонгох ялгаатай бэлэн каталог доор, эсвэл vectorise одоогийн one.",
+    "match_elements.advisor_empty_detail": "Сонгох ялгаатай бэлэн каталог доор, эсвэл vectorise одоогийн one.",
     "match_elements.advisor_empty_title": "Каталог биш vectorised yet",
-    "match_elements.advisor_install_hint":
-      "Үгүй {{lang}} каталог ачаалсан yet. One-дарах суулгах:",
+    "match_elements.advisor_install_hint": "Үгүй {{lang}} каталог ачаалсан yet. One-дарах суулгах:",
     "match_elements.advisor_install_size": "ойролцоогоор {{mb}} MB · {{lang}}",
     "match_elements.advisor_loading": "боломжтой catalogues ачаалж байна…",
-    "match_elements.advisor_mismatch_detail":
-      "Доорх {{lang}} каталогийг сонгоно уу — таны төсөл {{lang}}-аар ярьдаг тул таарцууд ижил хэлний тарифын номноос ирэх ёстой.",
+    "match_elements.advisor_mismatch_detail": "Доорх {{lang}} каталогийг сонгоно уу — таны төсөл {{lang}}-аар ярьдаг тул таарцууд ижил хэлний тарифын номноос ирэх ёстой.",
     "match_elements.advisor_mismatch_title": "Солих хүртэл {{lang}} каталог",
-    "match_elements.advisor_missing_detail":
-      "Сонгох бэлэн каталог доор, эсвэл ачаалах шинэ one.",
-    "match_elements.advisor_missing_title":
-      "{{lang}} вектор collection биш ачаалсан",
-    "match_elements.advisor_none_available":
-      "Үгүй {{lang}} каталог нь ачаалсан yet. Visit /өртгүүд хүртэл импортлох one.",
+    "match_elements.advisor_missing_detail": "Сонгох бэлэн каталог доор, эсвэл ачаалах шинэ one.",
+    "match_elements.advisor_missing_title": "{{lang}} вектор collection биш ачаалсан",
+    "match_elements.advisor_none_available": "Үгүй {{lang}} каталог нь ачаалсан yet. Visit /өртгүүд хүртэл импортлох one.",
     "match_elements.advisor_rates_count": "{{n}} тарифууд",
     "match_elements.advisor_region_match": "Хамгийн сайн",
-    "match_elements.alert.applied":
-      "Үүсгэгдсэн {{n}} BOQ байрлалууд · нийт {{total}} {{ccy}}",
+    "match_elements.alert.applied": "Үүсгэгдсэн {{n}} BOQ байрлалууд · нийт {{total}} {{ccy}}",
     "match_elements.alert.apply_failed": "Хэрэглэх хүртэл BOQ амжилтгүй",
     "match_elements.alert.bulk_confirm_failed": "Bulk баталгаажуулах амжилтгүй",
     "match_elements.alert.confirmed": "Баталгаажсан {{count}} бүлгүүд",
@@ -3418,11 +3010,9 @@ const resource = {
     "match_elements.analytics_by_country": "-аар улс",
     "match_elements.analytics_by_ifc": "-аар IFC class",
     "match_elements.analytics_by_source": "-аар эх сурвалж төрөл",
-    "match_elements.analytics_caption":
-      "{{n}} хайлт · {{picks}} сонголт · сонголтын хувь {{rate}} · дундаж оноо {{score}} · сүүлийн {{days}} өдөр",
+    "match_elements.analytics_caption": "{{n}} хайлт · {{picks}} сонголт · сонголтын хувь {{rate}} · дундаж оноо {{score}} · сүүлийн {{days}} өдөр",
     "match_elements.analytics_collapse": "Аналитикыг хураах",
-    "match_elements.analytics_empty_caption":
-      "Үгүй хайлтууд yet -д сүүлийн {{days}}d цонх — run /тааруулалт-элементүүд хүртэл populate.",
+    "match_elements.analytics_empty_caption": "Үгүй хайлтууд yet -д сүүлийн {{days}}d цонх — run /тааруулалт-элементүүд хүртэл populate.",
     "match_elements.analytics_expand": "Аналитикыг дэлгэх",
     "match_elements.analytics_footer": "Үүсгэгдсэн {{at}} · {{ref}}",
     "match_elements.analytics_hist_band": "Итгэлийн зурвасын хуваарилалт",
@@ -3436,8 +3026,7 @@ const resource = {
     "match_elements.analytics_tile_pick_rate": "Сонгох тариф",
     "match_elements.analytics_tile_pick_rate_hint": "{{n}} сонголт",
     "match_elements.analytics_tile_rerank": "BGE дахин эрэмбэлэх",
-    "match_elements.analytics_tile_rerank_llm_hint":
-      "LLM дахин эрэмбэлэх {{p}}",
+    "match_elements.analytics_tile_rerank_llm_hint": "LLM дахин эрэмбэлэх {{p}}",
     "match_elements.analytics_tile_score": "Mean оноо",
     "match_elements.analytics_tile_score_hint": "хувь 95: {{p}}",
     "match_elements.analytics_tile_searches": "Хайлтууд",
@@ -3448,20 +3037,14 @@ const resource = {
     "match_elements.analytics_window_label": "Цонх",
     "match_elements.aria.select_all": "Сонгох бүх visible бүлгүүд",
     "match_elements.aria.select_group": "Сонгох {{key}}",
-    "match_elements.auto_confirm_help":
-      "Suggested таарцууд -д эсвэл дээр энэ оноо автомат-баталгаажуулах.",
+    "match_elements.auto_confirm_help": "Suggested таарцууд -д эсвэл дээр энэ оноо автомат-баталгаажуулах.",
     "match_elements.auto_confirm_threshold": "Автомат-баталгаажуулах threshold",
-    "match_elements.busy.applying":
-      "Хэрэглэж байна баталгаажсан бүлгүүд хүртэл BOQ…",
-    "match_elements.busy.bulk_confirm_all":
-      "≥ {{thr}} таарцуудыг багцлан баталгаажуулж байна…",
-    "match_elements.busy.bulk_confirm_selected":
-      "Bulk-баталгаажуулж байна {{count}} сонгогдсон ≥ {{thr}}…",
+    "match_elements.busy.applying": "Хэрэглэж байна баталгаажсан бүлгүүд хүртэл BOQ…",
+    "match_elements.busy.bulk_confirm_all": "≥ {{thr}} таарцуудыг багцлан баталгаажуулж байна…",
+    "match_elements.busy.bulk_confirm_selected": "Bulk-баталгаажуулж байна {{count}} сонгогдсон ≥ {{thr}}…",
     "match_elements.busy.mark_tbd": "Marking {{count}} бүлгүүд болгон TBD…",
-    "match_elements.busy.run_all":
-      "Ажиллаж байна {{method}} matcher дээр бүх бүлгүүд…",
-    "match_elements.busy.run_selected":
-      "Ажиллаж байна {{method}} matcher дээр {{count}} сонгогдсон…",
+    "match_elements.busy.run_all": "Ажиллаж байна {{method}} matcher дээр бүх бүлгүүд…",
+    "match_elements.busy.run_selected": "Ажиллаж байна {{method}} matcher дээр {{count}} сонгогдсон…",
     "match_elements.clear_filter": "Шүүлтүүрийг цэвэрлэх",
     "match_elements.clear_selection": "Сонголтыг арилгах",
     "match_elements.col.actions": "Үйлдэл",
@@ -3477,84 +3060,62 @@ const resource = {
     "match_elements.detail.apply_total": "Нийт",
     "match_elements.detail.auto_loaded_resources": "Автомат-ачаалсан нөөц:",
     "match_elements.detail.building_preview": "Барилга урьдчилан үзэх…",
-    "match_elements.detail.candidate_no_id":
-      "Candidate байх үгүй DB id — чадахгүй баталгаажуулах",
+    "match_elements.detail.candidate_no_id": "Candidate байх үгүй DB id — чадахгүй баталгаажуулах",
     "match_elements.detail.close": "Хаах дэлгэрэнгүй самбар",
     "match_elements.detail.col.code": "Код",
     "match_elements.detail.col.conf": "Итг.",
     "match_elements.detail.col.description": "Тайлбар",
     "match_elements.detail.col.unit_rate": "Нэгж · Тариф",
     "match_elements.detail.confirm": "Баталгаажуулах",
-    "match_elements.detail.confirm_first":
-      "Баталгаажуулах тааруулалт эхний хүртэл see BOQ урьдчилан үзэх.",
-    "match_elements.detail.element_ids_count":
-      "{{count}} элемент id(s). 3D-highlight integration -д Үе шат.12.",
+    "match_elements.detail.confirm_first": "Баталгаажуулах тааруулалт эхний хүртэл see BOQ урьдчилан үзэх.",
+    "match_elements.detail.element_ids_count": "{{count}} элемент id(s). 3D-highlight integration -д Үе шат.12.",
     "match_elements.detail.elements_count": "{{count}} элемент",
     "match_elements.detail.error_title": "ачаалах дэлгэрэнгүй чадсангүй",
-    "match_elements.detail.no_matchers_run":
-      "Үгүй matchers run yet -д зориулсан энэ бүлэг.",
-    "match_elements.detail.opening_warning":
-      "host байх openings гэхдээ gross == net (IFC экспортлох bug)",
+    "match_elements.detail.no_matchers_run": "Үгүй matchers run yet -д зориулсан энэ бүлэг.",
+    "match_elements.detail.opening_warning": "host байх openings гэхдээ gross == net (IFC экспортлох bug)",
     "match_elements.detail.retry": "Дахин оролдох",
     "match_elements.detail.tabs_label": "Дэлгэрэнгүй самбар хэсгүүд",
-    "match_elements.detail.use_action_bar":
-      "Дээрх үйлдлийн самбарын товчнуудыг ашиглана уу.",
-    "match_elements.detail_for":
-      "Нээх дэлгэрэнгүй самбар -д зориулсан {{label}}",
+    "match_elements.detail.use_action_bar": "Дээрх үйлдлийн самбарын товчнуудыг ашиглана уу.",
+    "match_elements.detail_for": "Нээх дэлгэрэнгүй самбар -д зориулсан {{label}}",
     "match_elements.embedder_copied": "Хуулагдсан",
     "match_elements.embedder_copy_command": "Хуулах command",
     "match_elements.embedder_homepage_link": "Загвар homepage",
-    "match_elements.embedder_install_hint_after":
-      "Дараа суулгах, restart backend.",
+    "match_elements.embedder_install_hint_after": "Дараа суулгах, restart backend.",
     "match_elements.embedder_languages_caption": "{{n}}+ хэлүүд",
-    "match_elements.embedder_loaded_caption":
-      "{{model}} · {{precision}} · ~{{size}} MB · {{license}} · {{n}}+ хэлүүд",
+    "match_elements.embedder_loaded_caption": "{{model}} · {{precision}} · ~{{size}} MB · {{license}} · {{n}}+ хэлүүд",
     "match_elements.embedder_loaded_title": "Хэл загвар бэлэн",
     "match_elements.embedder_loading": "Шалгаж байна хэл загвар…",
     "match_elements.embedder_no_api_key": "Үгүй API түлхүүр",
-    "match_elements.embedder_required_body":
-      "OpenConstructionERP нь BGE-M3-ыг ашигладаг — BAAI-ийн үнэгүй, нээлттэй эх кодтой олон хэлний энкодер. Энэ нь таны машин дээр бүхэлдээ ажилладаг. API түлхүүр шаардлагагүй. Үүлэн дуудлага байхгүй. Нэг командаар нэг удаа суулгана:",
+    "match_elements.embedder_required_body": "OpenConstructionERP нь BGE-M3-ыг ашигладаг — BAAI-ийн үнэгүй, нээлттэй эх кодтой олон хэлний энкодер. Энэ нь таны машин дээр бүхэлдээ ажилладаг. API түлхүүр шаардлагагүй. Үүлэн дуудлага байхгүй. Нэг командаар нэг удаа суулгана:",
     "match_elements.embedder_required_title": "Үнэгүй хэл загвар шаардлагатай",
     "match_elements.embedder_runs_locally": "Дотооддоо ажилладаг",
-    "match_elements.embedder_runtime_caption":
-      "Ажиллах орчин: {{runtime}} · загвар ачаалагдсан={{loaded}}",
-    "match_elements.embedder_size_caption":
-      "~{{int8}} MB татах (INT8) эсвэл ~{{fp32}} MB (FP32).",
+    "match_elements.embedder_runtime_caption": "Ажиллах орчин: {{runtime}} · загвар ачаалагдсан={{loaded}}",
+    "match_elements.embedder_size_caption": "~{{int8}} MB татах (INT8) эсвэл ~{{fp32}} MB (FP32).",
     "match_elements.error_dismiss": "Хаах",
-    "match_elements.footer":
-      "Үе шат A.10–A.12 — олон-сонголтот багц үйлдэл, босгод суурилсан баталгаажуулалт, таарахгүй ажлын урсгал, түрээслэгчийн загварын сан амьдаар ажиллаж байна. Чирэх-зорилгот чипс, 3D-онцлох нь Үе шат B-д ирнэ.",
+    "match_elements.footer": "Үе шат A.10–A.12 — олон-сонголтот багц үйлдэл, босгод суурилсан баталгаажуулалт, таарахгүй ажлын урсгал, түрээслэгчийн загварын сан амьдаар ажиллаж байна. Чирэх-зорилгот чипс, 3D-онцлох нь Үе шат B-д ирнэ.",
     "match_elements.group_by": "Бүлэглэх",
     "match_elements.group_by_active": "{{count}} идэвхтэй · дарах хүртэл хасах",
     "match_elements.group_by_empty": "Сонгох -д хамгийн бага one attribute",
     "match_elements.group_by_remove": "Дарах хүртэл хасах -аас бүлэглэж байна",
     "match_elements.group_by_sample": "ж.нь",
     "match_elements.group_by_show_all": "Харуулах бүх ({{count}})",
-    "match_elements.group_by_show_all_help":
-      "Tenant-specific attributes -аас энэ BIM загвар",
+    "match_elements.group_by_show_all_help": "Tenant-specific attributes -аас энэ BIM загвар",
     "match_elements.group_by_show_less": "Бага харуулах",
     "match_elements.hero_eyebrow": "BIM → BOQ — холболт",
-    "match_elements.info.bullet_extract":
-      "Бид гаргаж авах элементүүд: тайлбарууд, нэгж, тоо хэмжээ, бүсүүд, ангилал.",
-    "match_elements.info.bullet_save":
-      "Хадгалах сесс — та чадна revisit, засах, ба экспортлох энэ болгон BoQ дараа нь.",
-    "match_elements.info.bullet_search":
-      "Элемент бүр нь вектор төстэй байдал + үгзүйн зөвлөмж + бүс/нэгжийн нэмэгдэл ашиглан сонгосон өртгийн каталогийн эсрэг хайгддаг.",
-    "match_elements.info.bullet_shortlist":
-      "Та get confidence-scored shortlist тутамд элемент — сонгох хамгийн сайн, засах тоо хэмжээ хэрэв хэрэгтэй.",
-    "match_elements.info.bullet_upload":
-      "Байршуулах таны BIM загвар эсвэл BoQ.",
+    "match_elements.info.bullet_extract": "Бид гаргаж авах элементүүд: тайлбарууд, нэгж, тоо хэмжээ, бүсүүд, ангилал.",
+    "match_elements.info.bullet_save": "Хадгалах сесс — та чадна revisit, засах, ба экспортлох энэ болгон BoQ дараа нь.",
+    "match_elements.info.bullet_search": "Элемент бүр нь вектор төстэй байдал + үгзүйн зөвлөмж + бүс/нэгжийн нэмэгдэл ашиглан сонгосон өртгийн каталогийн эсрэг хайгддаг.",
+    "match_elements.info.bullet_shortlist": "Та get confidence-scored shortlist тутамд элемент — сонгох хамгийн сайн, засах тоо хэмжээ хэрэв хэрэгтэй.",
+    "match_elements.info.bullet_upload": "Байршуулах таны BIM загвар эсвэл BoQ.",
     "match_elements.info.button_aria": "Тааруулалт хэрхэн ажилладаг",
     "match_elements.info.button_title": "Тааруулалт хэрхэн ажилладаг",
     "match_elements.info.dialog_aria": "Тааруулалт хэрхэн ажилладаг",
-    "match_elements.info.footer":
-      "Хадгалагдсан сессүүд live -д жагсаалт дээр энэ хуудас.",
+    "match_elements.info.footer": "Хадгалагдсан сессүүд live -д жагсаалт дээр энэ хуудас.",
     "match_elements.info.title": "Тааруулалт хэрхэн ажилладаг",
-    "match_elements.lang_mismatch_detail":
-      "Төслийн бүс {{region}} нь {{projLang}}-аар ярьдаг боловч холбосон каталог {{catalogue}} нь {{boundLang}}-аар байна. Та дахин холбоогүй бол таарцын үр дүн буруу хэлээр гарна.",
+    "match_elements.lang_mismatch_detail": "Төслийн бүс {{region}} нь {{projLang}}-аар ярьдаг боловч холбосон каталог {{catalogue}} нь {{boundLang}}-аар байна. Та дахин холбоогүй бол таарцын үр дүн буруу хэлээр гарна.",
     "match_elements.lang_mismatch_open_costs": "Эсвэл ачаалах {{lang}} каталог",
     "match_elements.lang_mismatch_rebind": "Re-bind каталог",
-    "match_elements.lang_mismatch_title":
-      "Каталог хэл хийдэг биш тааруулалт төсөл",
+    "match_elements.lang_mismatch_title": "Каталог хэл хийдэг биш тааруулалт төсөл",
     "match_elements.legend_high": "Өндөр",
     "match_elements.legend_label": "Итгэлцэл",
     "match_elements.legend_low": "Бага",
@@ -3566,73 +3127,54 @@ const resource = {
     "match_elements.loading_groups": "бүлгүүд ачаалж байна…",
     "match_elements.loading_sessions": "сессүүд ачаалж байна…",
     "match_elements.new_excel.button": "-аас Excel BoQ",
-    "match_elements.new_excel.button_title":
-      "Байршуулах.xlsx Ажил жагсаалт -н Тоо хэмжээ",
+    "match_elements.new_excel.button_title": "Байршуулах.xlsx Ажил жагсаалт -н Тоо хэмжээ",
     "match_elements.new_excel.create": "Байршуулах & үүсгэх сесс",
-    "match_elements.new_excel.drop":
-      "Drop таны.xlsx энд эсвэл дарах хүртэл үзэх",
-    "match_elements.new_excel.format_hint":
-      ".xlsx зөвхөн · multi-хэл headers supported",
-    "match_elements.new_excel.hint":
-      'Дор хаяж "Description" багана (эсвэл орчуулсан хувилбар — Beschreibung, Описание, Descripción, 描述, гэх мэт) бүхий .xlsx-г байршуулна уу. Сонголтын баганууд: Qty, Unit, Code, Category. Аравтын таслалтай тоо хэмжээг таньдаг.',
+    "match_elements.new_excel.drop": "Drop таны.xlsx энд эсвэл дарах хүртэл үзэх",
+    "match_elements.new_excel.format_hint": ".xlsx зөвхөн · multi-хэл headers supported",
+    "match_elements.new_excel.hint": "Дор хаяж \"Description\" багана (эсвэл орчуулсан хувилбар — Beschreibung, Описание, Descripción, 描述, гэх мэт) бүхий .xlsx-г байршуулна уу. Сонголтын баганууд: Qty, Unit, Code, Category. Аравтын таслалтай тоо хэмжээг таньдаг.",
     "match_elements.new_excel.name_label": "Сесс нэр (заавал биш)",
     "match_elements.new_excel.name_placeholder": "e.g. Тендер BoQ rev 3",
     "match_elements.new_excel.title": "Шинэ сесс -аас Excel BoQ",
     "match_elements.new_session": "Шинэ сесс",
     "match_elements.new_text.button": "-аас текст",
-    "match_elements.new_text.button_title":
-      "Буулгах тайлбарууд — one тутамд мөр",
+    "match_elements.new_text.button_title": "Буулгах тайлбарууд — one тутамд мөр",
     "match_elements.new_text.create": "Үүсгэх сесс",
-    "match_elements.new_text.hint":
-      "Зүйл тус бүрд нэг мөр. Мөр бүр бүлэг болно; семантик хайлт нь хамгийн ойрын CWICR тарифыг олдог. Ямар ч хэл ашиглана уу — олон хэлний энкодер хэлээр дамжсан асуулгыг боловсруулдаг.",
+    "match_elements.new_text.hint": "Зүйл тус бүрд нэг мөр. Мөр бүр бүлэг болно; семантик хайлт нь хамгийн ойрын CWICR тарифыг олдог. Ямар ч хэл ашиглана уу — олон хэлний энкодер хэлээр дамжсан асуулгыг боловсруулдаг.",
     "match_elements.new_text.lines_label": "Тайлбарууд (one тутамд мөр)",
-    "match_elements.new_text.lines_placeholder":
-      "Stahlbetonwand C30/37, d=240mm\\nленточный фундамент 800x600\\nconcrete хавтгай 200mm",
+    "match_elements.new_text.lines_placeholder": "Stahlbetonwand C30/37, d=240mm\\nленточный фундамент 800x600\\nconcrete хавтгай 200mm",
     "match_elements.new_text.name_label": "Сесс нэр (заавал биш)",
     "match_elements.new_text.name_placeholder": "e.g. Quick тооцоо Q3",
     "match_elements.new_text.title": "Шинэ сесс — буулгах тайлбарууд",
-    "match_elements.no_groups":
-      "Үгүй бүлгүүд yet — импортлох BIM загвар хүртэл populate энэ төсөл.",
+    "match_elements.no_groups": "Үгүй бүлгүүд yet — импортлох BIM загвар хүртэл populate энэ төсөл.",
     "match_elements.no_match": "Үгүй тааруулалт…",
     "match_elements.no_match.apply": "Хэрэглэх",
     "match_elements.no_match.cancel": "Цуцлах",
     "match_elements.no_match.close": "Хаах үгүй-тааруулалт цонх",
-    "match_elements.no_match.custom.sub":
-      "Нэмэх төсөл-зөвхөн байрлал -тай тайлбар, нэгж ба тариф.",
+    "match_elements.no_match.custom.sub": "Нэмэх төсөл-зөвхөн байрлал -тай тайлбар, нэгж ба тариф.",
     "match_elements.no_match.custom.title": "Үүсгэх захиалгат байрлал",
     "match_elements.no_match.error": "apply: {{error}} чадсангүй",
     "match_elements.no_match.heading": "Үгүй тааруулалт — сонгох action",
     "match_elements.no_match.placeholder.description": "Байрлал тайлбар",
     "match_elements.no_match.placeholder.rate": "Нэгжийн үнэ",
     "match_elements.no_match.placeholder.unit": "Нэгж",
-    "match_elements.no_match.rfq.sub":
-      "Mark -д зориулсан тендер — request quotes -аас туслан гүйцэтгэгчид.",
+    "match_elements.no_match.rfq.sub": "Mark -д зориулсан тендер — request quotes -аас туслан гүйцэтгэгчид.",
     "match_elements.no_match.rfq.title": "Илгээх хүртэл RFQ",
-    "match_elements.no_match.tbd.sub":
-      "Park бүлэг; revisit дараа нь. Excluded -аас BOQ нийт хүртэл resolved.",
+    "match_elements.no_match.tbd.sub": "Park бүлэг; revisit дараа нь. Excluded -аас BOQ нийт хүртэл resolved.",
     "match_elements.no_match.tbd.title": "TBD гэж тэмдэглэх",
-    "match_elements.no_prior_sessions":
-      "Үгүй prior тааруулж байна сессүүд -д зориулсан энэ төсөл.",
-    "match_elements.no_project_hint":
-      "Нээх төсөл picker -д header, эсвэл visit",
+    "match_elements.no_prior_sessions": "Үгүй prior тааруулж байна сессүүд -д зориулсан энэ төсөл.",
+    "match_elements.no_project_hint": "Нээх төсөл picker -д header, эсвэл visit",
     "match_elements.no_project_title": "Үгүй идэвхтэй төсөл сонгогдсон.",
     "match_elements.no_session": "Хараахан сесс алга",
     "match_elements.project_settings": "Төсөл тохиргоо",
-    "match_elements.project_settings_help":
-      "Нээх төсөл тохиргоо (бүс, валют, locale, fx тарифууд)",
-    "match_elements.refresh_title":
-      "Сэргээх — pulls хамгийн сүүлийн BIM элементүүд",
+    "match_elements.project_settings_help": "Нээх төсөл тохиргоо (бүс, валют, locale, fx тарифууд)",
+    "match_elements.refresh_title": "Сэргээх — pulls хамгийн сүүлийн BIM элементүүд",
     "match_elements.region_bim_models": "BIM загвар",
-    "match_elements.region_bim_models_help":
-      "Сонгох эх сурвалж загвар — тоо хэмжээ нь read -аас энд",
-    "match_elements.region_lang_help":
-      "Төсөл бүс resolves хүртэл энэ хэл → cwicr_{{lang}}_v3 collection",
+    "match_elements.region_bim_models_help": "Сонгох эх сурвалж загвар — тоо хэмжээ нь read -аас энд",
+    "match_elements.region_lang_help": "Төсөл бүс resolves хүртэл энэ хэл → cwicr_{{lang}}_v3 collection",
     "match_elements.region_sessions": "Тааруулах сесс",
-    "match_elements.region_sessions_help":
-      "Үргэлжлүүлэх одоо байгаа run эсвэл эхлэх шинэ one",
+    "match_elements.region_sessions_help": "Үргэлжлүүлэх одоо байгаа run эсвэл эхлэх шинэ one",
     "match_elements.region_settings": "Тааруулалт тохиргоо",
-    "match_elements.region_settings_help":
-      "Tune хэрхэн таарцууд нь олсон ба юу харуулдаг дээш доор",
+    "match_elements.region_settings_help": "Tune хэрхэн таарцууд нь олсон ба юу харуулдаг дээш доор",
     "match_elements.select_project": "Сонгох төсөл…",
     "match_elements.selected_count": "{{n}} сонгогдсон",
     "match_elements.session_confirmed": "баталгаажсан",
@@ -3652,8 +3194,7 @@ const resource = {
     "match_elements.stage.12_Equipment": "Тоног төхөөрөмж",
     "match_elements.stage.13_Sitework": "Талбайн ажил",
     "match_elements.stage_any": "Аливаа үе",
-    "match_elements.stage_help":
-      "Pin таарцууд хүртэл one OmniClass-aligned үе шат. Leave blank хүртэл хайх бүх шатууд.",
+    "match_elements.stage_help": "Pin таарцууд хүртэл one OmniClass-aligned үе шат. Leave blank хүртэл хайх бүх шатууд.",
     "match_elements.stage_label": "Барилгын шат",
     "match_elements.status.applied": "хэрэглэгдсэн",
     "match_elements.status.confirmed": "баталгаажсан",
@@ -3674,8 +3215,7 @@ const resource = {
     "match_elements.step_4_done": "{{n}} хэрэглэсэн",
     "match_elements.step_4_help": "Write хүртэл BOQ",
     "match_elements.step_4_label": "БМЖ-д хэрэглэх",
-    "match_elements.subtitle":
-      "Map BIM элементүүд → CWICR байрлалууд. BIM нь live; DWG / PDF / Зураг land -д upcoming үе шатууд.",
+    "match_elements.subtitle": "Map BIM элементүүд → CWICR байрлалууд. BIM нь live; DWG / PDF / Зураг land -д upcoming үе шатууд.",
     "match_elements.subtractive_badge": "хүчингүй",
     "match_elements.subtractive_hint": "Хасах / тооцоологдохгүй",
     "match_elements.tab.apply": "Урьдчилан үзэлтийг хэрэглэх",
@@ -3684,10 +3224,8 @@ const resource = {
     "match_elements.templates.close": "Загварын санг хаах",
     "match_elements.templates.count": "{{count}} гарын үсэг",
     "match_elements.templates.empty": "Хараахан хадгалсан загварууд алга",
-    "match_elements.templates.empty_hint":
-      'Баталгаажсан таарцууд -тай "Хадгалах хүртэл library" идэвхтэй харагдах энд ба propagate хүртэл future төслүүд.',
-    "match_elements.templates.footer":
-      "Загварууд нь түрээслэгчийн хүрээтэй. Баталгаажсан гарын үсэг нь ирээдүйн төслүүдэд таарцыг автоматаар санал болгодог.",
+    "match_elements.templates.empty_hint": "Баталгаажсан таарцууд -тай \"Хадгалах хүртэл library\" идэвхтэй харагдах энд ба propagate хүртэл future төслүүд.",
+    "match_elements.templates.footer": "Загварууд нь түрээслэгчийн хүрээтэй. Баталгаажсан гарын үсэг нь ирээдүйн төслүүдэд таарцыг автоматаар санал болгодог.",
     "match_elements.templates.last": "сүүлийн {{date}}",
     "match_elements.templates.loading": "library ачаалж байна…",
     "match_elements.templates.remove_confirm": "Хасах энэ загвар -аас library?",
@@ -3707,40 +3245,30 @@ const resource = {
     "match_elements.trade.subtractive": "Хоосон зай",
     "match_elements.trade_filter": "Шүүх -аар trade",
     "match_elements.use_net": "Use net тоо хэмжээ (deduct openings)",
-    "match_elements.use_net_help":
-      "Унтраалттай = бохир дүн ашиглана. Үндсэн тохиргоо нь хост тоо хэмжээнээс IfcOpeningElement / IfcRelVoidsElement-г хасдаг.",
+    "match_elements.use_net_help": "Унтраалттай = бохир дүн ашиглана. Үндсэн тохиргоо нь хост тоо хэмжээнээс IfcOpeningElement / IfcRelVoidsElement-г хасдаг.",
     "match_elements.vector_status_disconnected": "Вектор DB-д хүрэх боломжгүй",
-    "match_elements.vector_status_disconnected_detail":
-      "Qdrant нь биш responding · {{error}}",
-    "match_elements.vector_status_disconnected_help":
-      "Qdrant нь биш responding — matchers болно fall буцах хүртэл lexical зөвхөн",
+    "match_elements.vector_status_disconnected_detail": "Qdrant нь биш responding · {{error}}",
+    "match_elements.vector_status_disconnected_help": "Qdrant нь биш responding — matchers болно fall буцах хүртэл lexical зөвхөн",
     "match_elements.vector_status_empty": "Вектор DB хоосон",
-    "match_elements.vector_status_empty_detail":
-      "{{lang}} · {{collection}} ачаалсан гэхдээ 0 тарифууд — vectorize дээр /өртгүүд",
+    "match_elements.vector_status_empty_detail": "{{lang}} · {{collection}} ачаалсан гэхдээ 0 тарифууд — vectorize дээр /өртгүүд",
     "match_elements.vector_status_loading": "Шалгаж байна вектор DB…",
     "match_elements.vector_status_missing": "Collection биш ачаалсан",
-    "match_elements.vector_status_missing_detail":
-      '{{collection}} -д зориулсан хэл "{{lang}}" биш -д Qdrant — visit /өртгүүд хүртэл vectorize',
+    "match_elements.vector_status_missing_detail": "{{collection}} -д зориулсан хэл \"{{lang}}\" биш -д Qdrant — visit /өртгүүд хүртэл vectorize",
     "match_elements.vector_status_no_country": "Бүс/хэл unknown",
-    "match_elements.vector_status_no_country_detail":
-      "Set төсөл бүс -д /төслүүд/.../тохиргоо хүртэл pin collection",
+    "match_elements.vector_status_no_country_detail": "Set төсөл бүс -д /төслүүд/.../тохиргоо хүртэл pin collection",
     "match_elements.vector_status_non_qdrant": "Хуучны LanceDB бэкэнд",
-    "match_elements.vector_status_non_qdrant_detail":
-      "Тутамд-хэл collections зөвхөн хэрэглэх дээр Qdrant — одоогийн engine нь LanceDB",
+    "match_elements.vector_status_non_qdrant_detail": "Тутамд-хэл collections зөвхөн хэрэглэх дээр Qdrant — одоогийн engine нь LanceDB",
     "match_elements.vector_status_open_costs": "Нээх /өртгүүд",
     "match_elements.vector_status_ready": "Вектор DB бэлэн",
-    "match_elements.vector_status_ready_detail":
-      "{{lang}} · {{rateCount}} тарифууд · {{collection}}",
+    "match_elements.vector_status_ready_detail": "{{lang}} · {{rateCount}} тарифууд · {{collection}}",
     "match_elements.visible_groups": "{{n}} харагдах",
     "match_progress.elapsed": "Өнгөрсөн",
     "match_progress.error_fallback": "Үл мэдэгдэх алдаа",
     "match_progress.error_label": "Алдааны дэлгэрэнгүй",
     "match_progress.headline_done": "Бүх done — нээж байна таны үр дүн",
     "match_progress.headline_error": "Алдаа гарлаа",
-    "match_progress.headline_long":
-      "Бараг done — том төслүүд чадна take minute",
-    "match_progress.long_hint":
-      "Үргэлжилж байна — том BIM загвар дээрх анхны ажиллагаа удаан үргэлжилнэ, учир нь вектор халаагдаж байна. Тухайн төсөл дээрх дараагийн ажиллагаа хамаагүй хурдан.",
+    "match_progress.headline_long": "Бараг done — том төслүүд чадна take minute",
+    "match_progress.long_hint": "Үргэлжилж байна — том BIM загвар дээрх анхны ажиллагаа удаан үргэлжилнэ, учир нь вектор халаагдаж байна. Тухайн төсөл дээрх дараагийн ажиллагаа хамаагүй хурдан.",
     "match_progress.overall_aria": "Нийт тааруулалтын явц",
     "match_progress.retry": "Дахин оролдоно уу",
     "match_progress.stage_currency": "Валют хувиргалт",
@@ -3749,12 +3277,9 @@ const resource = {
     "match_progress.stage_load": "Ачаалж байна BIM элементүүд",
     "match_progress.stage_rerank": "Rerank -аар relevance",
     "match_progress.stage_vector": "Вектор хайх (дээд candidates)",
-    "match_progress.subtitle_done":
-      "Бүх шатууд green — handing дээгүүр хүртэл хяналт самбар.",
-    "match_progress.subtitle_error":
-      "matcher couldn’t дуусгах — try дахин эсвэл сонгох ялгаатай каталог.",
-    "match_progress.subtitle_running":
-      "Бид’re хайж байна каталог -тай вектор + lexical + бүс signals. Аюулгүй хүртэл leave нээх -д таб.",
+    "match_progress.subtitle_done": "Бүх шатууд green — handing дээгүүр хүртэл хяналт самбар.",
+    "match_progress.subtitle_error": "matcher couldn’t дуусгах — try дахин эсвэл сонгох ялгаатай каталог.",
+    "match_progress.subtitle_running": "Бид’re хайж байна каталог -тай вектор + lexical + бүс signals. Аюулгүй хүртэл leave нээх -д таб.",
     "match_progress.title_done": "Тааруулалт дууссан",
     "match_progress.title_error": "Тааруулах амжилтгүй",
     "match_progress.title_running": "Тааруулж байна -д явц",
@@ -3785,8 +3310,7 @@ const resource = {
     "meetings.location_placeholder": "Уулзалтын байршил",
     "meetings.new_meeting": "Шинэ Уулзалт",
     "meetings.no_meetings": "Хараахан уулзалт алга",
-    "meetings.no_meetings_hint":
-      "Хуваарь таны эхний уулзалт хүртэл get эхэлсэн.",
+    "meetings.no_meetings_hint": "Хуваарь таны эхний уулзалт хүртэл get эхэлсэн.",
     "meetings.no_results": "Тохирох уулзалт олдсонгүй",
     "meetings.no_results_hint": "Хайлт эсвэл шүүлтүүрийг өөрчилж үзнэ үү.",
     "meetings.page_title": "Уулзалтын тэмдэглэл",
@@ -3803,25 +3327,19 @@ const resource = {
     "modules.active_count": "идэвхтэй",
     "modules.cannot_disable": "Идэвхгүй болгох боломжгүй",
     "modules.cat_regional": "Бүс нутгийн стандартууд",
-    "modules.cat_regional_desc":
-      "Улс-specific BOQ импортлох/экспортлох форматууд ба ангилал стандартууд",
-    "modules.community_desc":
-      "OpenConstructionERP нь модуль бүтэцтэй плагин архитектуртай. Хэн ч захиалгат модуль үүсгэж болно — өртгийн өгөгдлийн сан, бүс нутгийн стандартууд, CAD хөрвүүлэгчид, аналитик самбар, гадаад системтэй интеграц, эсвэл бусад функциональ байдал. Таны модуль энэ Модулиуд хэсэгт харагдах ба хэрэглэгч бүр суулгах боломжтой.",
-    "modules.community_how":
-      "Модуль бүр манифест файлтай Python багц юм. Модулиа үүсгэж, дотооддоо тестлээд, хамт олонтой хуваалцаарай. Зөвхөн санаа байсан ч хамаагүй — бидэнд текст тайлбар илгээгээрэй, бид тантай хамтарч бүтээхэд тусална.",
+    "modules.cat_regional_desc": "Улс-specific BOQ импортлох/экспортлох форматууд ба ангилал стандартууд",
+    "modules.community_desc": "OpenConstructionERP нь модуль бүтэцтэй плагин архитектуртай. Хэн ч захиалгат модуль үүсгэж болно — өртгийн өгөгдлийн сан, бүс нутгийн стандартууд, CAD хөрвүүлэгчид, аналитик самбар, гадаад системтэй интеграц, эсвэл бусад функциональ байдал. Таны модуль энэ Модулиуд хэсэгт харагдах ба хэрэглэгч бүр суулгах боломжтой.",
+    "modules.community_how": "Модуль бүр манифест файлтай Python багц юм. Модулиа үүсгэж, дотооддоо тестлээд, хамт олонтой хуваалцаарай. Зөвхөн санаа байсан ч хамаагүй — бидэнд текст тайлбар илгээгээрэй, бид тантай хамтарч бүтээхэд тусална.",
     "modules.community_submit_email": "Илгээх Модуль -аар дамжуулан Email",
     "modules.community_submit_github": "Propose дээр GitHub",
     "modules.community_telegram": "Discuss -д Telegram",
     "modules.community_title": "Барих Таны Own Модуль",
     "modules.community_type_data": "Өгөгдөл Модулиуд",
-    "modules.community_type_data_desc":
-      "Бүс нутгийн өртөг өгөгдлийн сан, нөөц каталог, материал libraries, ангилал стандартууд (DIN, NRM, SNIP, etc.)",
+    "modules.community_type_data_desc": "Бүс нутгийн өртөг өгөгдлийн сан, нөөц каталог, материал libraries, ангилал стандартууд (DIN, NRM, SNIP, etc.)",
     "modules.community_type_integration": "Интеграц",
-    "modules.community_type_integration_desc":
-      "Холбогдох -тай SAP, Procore, MS Төсөл, BIM 360, PlanRadar, Primavera, эсвэл дурын external систем -аар дамжуулан API",
+    "modules.community_type_integration_desc": "Холбогдох -тай SAP, Procore, MS Төсөл, BIM 360, PlanRadar, Primavera, эсвэл дурын external систем -аар дамжуулан API",
     "modules.community_type_tools": "Хэрэгсэл ба аналитик",
-    "modules.community_type_tools_desc":
-      "Захиалгат тайлан, dashboards, calculators, форматлах хөрвүүлэгчид, AI загварууд, эсвэл дурын specialized барилгын хэрэгсэл",
+    "modules.community_type_tools_desc": "Захиалгат тайлан, dashboards, calculators, форматлах хөрвүүлэгчид, AI загварууд, эсвэл дурын specialized барилгын хэрэгсэл",
     "modules.core": "Цөм",
     "modules.core_module_locked": "Цөм модуль — чадахгүй байх идэвхгүй",
     "modules.depends_on": "Шаардлагатай: {{deps}}",
@@ -3829,8 +3347,7 @@ const resource = {
     "modules.disabled": "{{name}} идэвхгүй",
     "modules.disabled_label": "Идэвхгүй",
     "modules.enabled": "{{name}} идэвхтэй",
-    "modules.page_subtitle":
-      "Идэвхжүүлэх, идэвхгүй болгох, ба удирдах платформ модулиуд",
+    "modules.page_subtitle": "Идэвхжүүлэх, идэвхгүй болгох, ба удирдах платформ модулиуд",
     "modules.page_title": "Модулиуд & Маркетплейс",
     "modules.required_by": "Шаардлагатай -аар: {{deps}}",
     "modules.required_by_short": "Шаардлагатай -аар {{count}} модулиуд",
@@ -3853,7 +3370,7 @@ const resource = {
     "nav.bi_dashboards": "BI хяналтын самбар",
     "nav.bid_management": "Тендерийн удирдлага",
     "nav.bim_rules": "BIM дүрэм",
-    "nav.bim_viewer": "BIM 3D үзэгч",
+    "nav.bim_viewer": "BIM 3D хэмжээ авах",
     "nav.boq": "Ажил материалын жагсаалт",
     "nav.br_sinapi_exchange": "BR SINAPI солилцоо",
     "nav.ca_boq_exchange": "CA BOQ солилцоо",
@@ -3881,35 +3398,39 @@ const resource = {
     "nav.field_reports": "Талбайн тайлан",
     "nav.fr_dpgf_exchange": "FR DPGF солилцоо",
     "nav.gaeb_exchange": "GAEB солилцоо",
-    "nav.group_ai_estimation": "AI & Тооцоолол",
+    "nav.group_ai_estimation": "AI ба хэрэгслүүд",
+    "nav.group_ai_estimation_desc": "AI агентууд, зөвлөх, ERP чат — AI тооцоолол нь «Тооцооны ажил»-д шилжсэн",
     "nav.group_bi": "Аналитик",
     "nav.group_bi_desc": "BI dashboards барьсан дээр агуулах урьдчилсан тооцоо",
+    "nav.group_analytics": "Шинжилгээ ба тайлан",
+    "nav.group_analytics_desc": "Олон модулийн тайлан, BI хяналтын самбар, агуулахын төсөөлөл",
     "nav.group_cad_bim": "CAD / BIM ба BI",
     "nav.group_commercial": "Худалдаа",
-    "nav.group_commercial_desc":
-      "Арилжааны pipeline — CRM, гэрээнүүд, саналууд, variations, нийлүүлэгчид, property development",
+    "nav.group_commercial_desc": "Арилжааны pipeline — CRM, гэрээнүүд, саналууд, variations, нийлүүлэгчид, property development",
     "nav.group_communication": "Харилцаа",
     "nav.group_databases": "Өгөгдлийн сан",
     "nav.group_documentation": "Баримт бичиг",
-    "nav.group_estimation": "Тооцоолол",
-    "nav.group_estimation_desc":
-      "Цөм хэрэгсэл: төслүүд, BOQ, өртгүүд, ба угсралтууд",
+    "nav.group_estimation": "Тооцооны ажил",
+    "nav.group_estimation_desc": "Төслийн тооцоолол — BOQ, BIM-ийг өртөгтэй тулгах, AI тооцоо, аналитик",
+    "nav.group_catalogues": "Каталог ба лавлагаа",
+    "nav.group_catalogues_desc": "Өртгийн өгөгдлийн сан, бүс нутгийн каталог, угсралтын загвар",
     "nav.group_field": "Талбар & Тайлан",
     "nav.group_finance": "Санхүү ба худалдан авалт",
     "nav.group_operations": "Талбар Operations",
-    "nav.group_operations_desc":
-      "Daily талбай operations — үйлчилгээ тасалбарууд, тоног төхөөрөмж, diary, туслан гүйцэтгэгч portal, нөөц",
+    "nav.group_operations_desc": "Daily талбай operations — үйлчилгээ тасалбарууд, тоног төхөөрөмж, diary, туслан гүйцэтгэгч portal, нөөц",
     "nav.group_overview": "Тойм",
     "nav.group_planning": "Төлөвлөлт",
     "nav.group_planning_desc": "Хуваарь, даалгавар, ба өртөг control",
     "nav.group_procurement": "Худалдан авалт",
     "nav.group_procurement_desc": "Санал удирдлага, тендер, ба тайлан",
-    "nav.group_quality": "Чанар ба аюулгүй байдал",
+    "nav.group_quality": "Чанар",
+    "nav.group_safety": "Аюулгүй ажиллагаа ба HSE",
     "nav.group_quality_risk": "Чанар & Эрсдэл",
     "nav.group_takeoff": "Хэмжээ авах",
+    "nav.group_cad_bim_analytics": "Загварын зохицуулалт",
+    "nav.group_cad_bim_analytics_desc": "Холбоо, мөргөлдөөн илрүүлэх, дүрмийн багц, зохицуулалтын төв",
     "nav.group_tools": "Хэрэгсэл",
-    "nav.group_tools_desc":
-      "Баталгаажуулалт, дагалт шалгаж байна, ба sustainability",
+    "nav.group_tools_desc": "Баталгаажуулалт, дагалт шалгаж байна, ба sustainability",
     "nav.hse_advanced": "HSE удирдлага",
     "nav.in_boq_exchange": "-д BOQ Exchange",
     "nav.it_computo_exchange": "IT Computo солилцоо",
@@ -3929,7 +3450,7 @@ const resource = {
     "nav.pdf_takeoff": "PDF-ээс хэмжээ авах",
     "nav.photos": "Зураг",
     "nav.pl_knr_exchange": "PL KNR солилцоо",
-    "nav.portal": "Туслан гүйцэтгэгчийн портал",
+    "nav.portal": "Туслан-портал",
     "nav.project_files": "Төслийн файлууд",
     "nav.project_intelligence": "Төслийн интеллект",
     "nav.projects": "Төслүүд",
@@ -3940,8 +3461,7 @@ const resource = {
     "nav.quantity_rules": "Тоо хэмжээ Дүрэм",
     "nav.reports": "Тайлан",
     "nav.request_custom_module": "Захиалгат модуль хүсэх",
-    "nav.request_custom_module_hint":
-      "Дутаж байгаа юм байна уу? Бидэнд хэлээрэй",
+    "nav.request_custom_module_hint": "Дутаж байгаа юм байна уу? Бидэнд хэлээрэй",
     "nav.requirements": "Шаардлага",
     "nav.resource_catalog": "Нөөцийн каталог",
     "nav.resources": "Нөөц ба баг",
@@ -3952,7 +3472,7 @@ const resource = {
     "nav.schedule_advanced": "Дэвшилтэт хуваарь",
     "nav.service": "Үйлчилгээ ба засвар",
     "nav.settings": "Тохиргоо",
-    "nav.subcontractors": "Туслан гүйцэтгэгчид",
+    "nav.subcontractors": "Туслан гүйцэтгэгчдийн жагсаалт",
     "nav.supplier_catalogs": "Нийлүүлэгчийн каталог",
     "nav.sustainability": "Тогтвортой байдал",
     "nav.takeoff": "PDF-ээс хэмжээ авах",
@@ -4009,75 +3529,56 @@ const resource = {
     "ncr.title_required": "Гарчиг шаардлагатай",
     "notification.document_uploaded_body": "Баримт: {{document_name}}",
     "notification.document_uploaded_title": "Баримт бичиг байршуулсан",
-    "notification.inspection_scheduled_body":
-      "{{inspection_number}} — {{title}} дээр {{inspection_date}}",
+    "notification.inspection_scheduled_body": "{{inspection_number}} — {{title}} дээр {{inspection_date}}",
     "notification.inspection_scheduled_title": "Шалгалт хуваарьласан",
-    "notification.invoice_approved_body":
-      "Нэхэмжлэх {{invoice_number}} — {{amount_total}} {{currency_code}}",
+    "notification.invoice_approved_body": "Нэхэмжлэх {{invoice_number}} — {{amount_total}} {{currency_code}}",
     "notification.invoice_approved_title": "Нэхэмжлэх зөвшөөрөгдлөө",
     "notification.meeting_scheduled_body": "{{title}} дээр {{meeting_date}}",
     "notification.meeting_scheduled_title": "Уулзалт хуваарьласан",
-    "notification.ncr_created_body":
-      "NCR {{ncr_number}} — {{title}} (хүндрэл: {{severity}})",
+    "notification.ncr_created_body": "NCR {{ncr_number}} — {{title}} (хүндрэл: {{severity}})",
     "notification.ncr_created_title": "Үл нийцлэл бүртгэгдсэн",
-    "notification.rfi_assigned_body":
-      "RFI {{rfi_number}} — {{subject}} (даалгагдсан)",
+    "notification.rfi_assigned_body": "RFI {{rfi_number}} — {{subject}} (даалгагдсан)",
     "notification.rfi_assigned_title": "RFI assigned хүртэл та",
-    "notification.submittal_status_changed_body":
-      "{{submittal_number}} ({{title}}) — шинэ төлөв: {{new_status}}",
-    "notification.submittal_status_changed_title":
-      "Илгээлтийн төлөв өөрчлөгдсөн",
+    "notification.submittal_status_changed_body": "{{submittal_number}} ({{title}}) — шинэ төлөв: {{new_status}}",
+    "notification.submittal_status_changed_title": "Илгээлтийн төлөв өөрчлөгдсөн",
     "notification.task_assigned_body": "Даалгавар: {{task_title}}",
     "notification.task_assigned_title": "Шинэ даалгавар assigned",
-    "notifications.boq.created.body":
-      "Таны ажил жагсаалт -н тоо хэмжээ '{{boq_name}}' байсан хадгалагдсан.",
+    "notifications.boq.created.body": "Таны ажил жагсаалт -н тоо хэмжээ '{{boq_name}}' байсан хадгалагдсан.",
     "notifications.boq.created.title": "БМЖ үүсгэгдсэн",
-    "notifications.cde.state_transitioned.body":
-      "Контейнер шилжсэн хүртэл '{{new_state}}'.",
+    "notifications.cde.state_transitioned.body": "Контейнер шилжсэн хүртэл '{{new_state}}'.",
     "notifications.cde.state_transitioned.title": "Баримт бичиг муж өөрчилсөн",
     "notifications.just_now": "Дөнгөж сая",
     "notifications.mark_all_read": "Бүгдийг уншсан гэж тэмдэглэх",
-    "notifications.meeting.action_assigned.body":
-      "-аас уулзалт {{meeting_number}}: {{description}}",
-    "notifications.meeting.action_assigned.title":
-      "Action зүйл assigned хүртэл та",
+    "notifications.meeting.action_assigned.body": "-аас уулзалт {{meeting_number}}: {{description}}",
+    "notifications.meeting.action_assigned.title": "Action зүйл assigned хүртэл та",
     "notifications.no_notifications": "Мэдэгдэл алга",
     "notifications.rfi.assigned.body": "{{code}} — {{title}} (даалгагдсан)",
     "notifications.rfi.assigned.title": "RFI assigned хүртэл та",
-    "notifications.rfi.responded.body":
-      "Таны request {{code}} ({{title}}) байх response.",
+    "notifications.rfi.responded.body": "Таны request {{code}} ({{title}}) байх response.",
     "notifications.rfi.responded.title": "RFI хариулагдсан",
     "notifications.risk.assigned.body": "{{code}} — {{title}} (даалгагдсан)",
     "notifications.risk.assigned.title": "Эрсдэл assigned хүртэл та",
-    "notifications.submittal.approved.body":
-      "{{code}} — {{title}} (зөвшөөрөгдсөн)",
+    "notifications.submittal.approved.body": "{{code}} — {{title}} (зөвшөөрөгдсөн)",
     "notifications.submittal.approved.title": "Илгээлт зөвшөөрөгдлөө",
-    "notifications.submittal.rejected.body":
-      "{{code}} ({{title}}). Шалтгаан: {{reason}}",
+    "notifications.submittal.rejected.body": "{{code}} ({{title}}). Шалтгаан: {{reason}}",
     "notifications.submittal.rejected.title": "Илгээлт татгалзагдлаа",
-    "notifications.submittal.revise_resubmit.body":
-      "{{code}} ({{title}}). Шалтгаан: {{reason}}",
+    "notifications.submittal.revise_resubmit.body": "{{code}} ({{title}}). Шалтгаан: {{reason}}",
     "notifications.submittal.revise_resubmit.title": "Илгээлт засвар хэрэгтэй",
-    "notifications.submittal.submitted.body":
-      "{{code}} — {{title}} (илгээгдсэн)",
+    "notifications.submittal.submitted.body": "{{code}} — {{title}} (илгээгдсэн)",
     "notifications.submittal.submitted.title": "Илгээлт хяналт хүлээж байна",
     "notifications.title": "Мэдэгдэл",
-    "notifications.transmittal.acknowledged.body":
-      "Хүлээн авагч {{code}} ({{title}}) баталгаажуулсан.",
-    "notifications.transmittal.acknowledged.title":
-      "Дамжуулалт хүлээн зөвшөөрөгдсөн",
+    "notifications.transmittal.acknowledged.body": "Хүлээн авагч {{code}} ({{title}}) баталгаажуулсан.",
+    "notifications.transmittal.acknowledged.title": "Дамжуулалт хүлээн зөвшөөрөгдсөн",
     "notifications.transmittal.issued.body": "{{code}} — {{title}} (гаргасан)",
     "notifications.transmittal.issued.title": "Transmittal issued хүртэл та",
-    "notifications.transmittal.responded.body":
-      "{{code}} ({{title}}). Хариу: {{response_summary}}",
+    "notifications.transmittal.responded.body": "{{code}} ({{title}}). Хариу: {{response_summary}}",
     "notifications.transmittal.responded.title": "Дамжуулалт хариулагдсан",
     "notifications.unread": "Уншаагүй",
     "onboarding.ai_feature_1": "Үүсгэх тооцоонууд -аас текст тайлбарууд",
     "onboarding.ai_feature_2": "Шинжлэх зургууд -н барилгууд",
     "onboarding.ai_feature_3": "Parse PDF баримт бичиг автоматаар",
     "onboarding.ai_saved": "AI тохиргоо хадгалагдлаа",
-    "onboarding.ai_subtitle":
-      "Холбогдох AI үйлчилгээ үзүүлэгч -д зориулсан smart боломжууд:",
+    "onboarding.ai_subtitle": "Холбогдох AI үйлчилгээ үзүүлэгч -д зориулсан smart боломжууд:",
     "onboarding.ai_test_error": "Шалгалт амжилтгүй",
     "onboarding.ai_test_failed": "Холболт амжилтгүй",
     "onboarding.ai_test_success": "Холболт амжилттай!",
@@ -4085,27 +3586,19 @@ const resource = {
     "onboarding.api_key": "API түлхүүр",
     "onboarding.api_key_placeholder": "Буулгах таны API түлхүүр энд...",
     "onboarding.company_architecture": "Архитектур / Инженерийн оффис",
-    "onboarding.company_architecture_desc":
-      "Бид дизайн барилгууд — BIM, баримт бичиг, CDE",
+    "onboarding.company_architecture_desc": "Бид дизайн барилгууд — BIM, баримт бичиг, CDE",
     "onboarding.company_estimator": "Тооцоолуур / Зардлын зөвлөх",
-    "onboarding.company_estimator_desc":
-      "Бид focus дээр өртөг тооцоолол ба тоо хэмжээ тоо хэмжээ гаргалт",
+    "onboarding.company_estimator_desc": "Бид focus дээр өртөг тооцоолол ба тоо хэмжээ тоо хэмжээ гаргалт",
     "onboarding.company_full_enterprise": "Бүрэн байгууллага",
-    "onboarding.company_full_enterprise_desc":
-      "Бид хэрэгцээ бүх зүйл — бүрэн барилгын lifecycle",
+    "onboarding.company_full_enterprise_desc": "Бид хэрэгцээ бүх зүйл — бүрэн барилгын lifecycle",
     "onboarding.company_general_contractor": "Ерөнхий гүйцэтгэгч",
-    "onboarding.company_general_contractor_desc":
-      "Бид барих төслүүд — тооцоолол, худалдан авалт, талбай удирдлага",
+    "onboarding.company_general_contractor_desc": "Бид барих төслүүд — тооцоолол, худалдан авалт, талбай удирдлага",
     "onboarding.company_project_management": "Төслийн удирдлагын компани",
-    "onboarding.company_project_management_desc":
-      "Бид удирдах том төслүүд — planning, communication, баримт бичиг",
-    "onboarding.company_type_subtitle":
-      "Бид болно pre-тохируулах хамгийн сайн set -н модулиуд -д зориулсан таны workflow.",
+    "onboarding.company_project_management_desc": "Бид удирдах том төслүүд — planning, communication, баримт бичиг",
+    "onboarding.company_type_subtitle": "Бид болно pre-тохируулах хамгийн сайн set -н модулиуд -д зориулсан таны workflow.",
     "onboarding.company_type_title": "Юу төрөл -н компани нь та?",
-    "onboarding.cost_db_hint":
-      "Та чадна нэмэх илүү өгөгдлийн сан дараа нь -д Өртөг Өгөгдлийн сан → Импортлох.",
-    "onboarding.cost_db_subtitle":
-      "Ачаалах үнэ тогтоолт өгөгдлийн сан -д зориулсан accurate тооцоонууд. Сонгох таны бүс:",
+    "onboarding.cost_db_hint": "Та чадна нэмэх илүү өгөгдлийн сан дараа нь -д Өртөг Өгөгдлийн сан → Импортлох.",
+    "onboarding.cost_db_subtitle": "Ачаалах үнэ тогтоолт өгөгдлийн сан -д зориулсан accurate тооцоонууд. Сонгох таны бүс:",
     "onboarding.cost_db_title": "Үнийн мэдээллийн сан",
     "onboarding.create_error": "үүсгэх төсөл амжилтгүй",
     "onboarding.create_project": "Үүсгэх & Эхлэх Тооцоолох",
@@ -4116,8 +3609,7 @@ const resource = {
     "onboarding.get_started": "Эхлэх",
     "onboarding.items_loaded": "зүйлс ачаалсан",
     "onboarding.loading_database": "Импортолж байна өгөгдлийн сан...",
-    "onboarding.loading_database_hint":
-      "Ачаалж байна ~55,000 зүйлс. Энэ takes 1-3 minutes.",
+    "onboarding.loading_database_hint": "Ачаалж байна ~55,000 зүйлс. Энэ takes 1-3 minutes.",
     "onboarding.mod_5d_desc": "Олсон үнэ цэнг хянадаг 5D зардлын загвар",
     "onboarding.mod_advisor_desc": "AI зардлын зөвлөх ба чат туслах",
     "onboarding.mod_ai_estimate_desc": "AI-р хийсэн хурдан тооцоо",
@@ -4125,13 +3617,10 @@ const resource = {
     "onboarding.mod_assemblies_desc": "Нийлмэл үнэлгээний жор ба загвар",
     "onboarding.mod_bim_desc": "3D BIM загвар үзэгч",
     "onboarding.mod_boq_desc": "Шатлалт байрлалтай БМЖ засварлагч",
-    "onboarding.mod_catalog_desc":
-      "Материал, хөдөлмөр, тоног төхөөрөмжийн каталог",
+    "onboarding.mod_catalog_desc": "Материал, хөдөлмөр, тоног төхөөрөмжийн каталог",
     "onboarding.mod_cde_desc": "Нийтлэг өгөгдлийн орчин",
-    "onboarding.mod_changeorders_desc":
-      "Өөрчлөлтийн захиалга хянах ба зөвшөөрөх",
-    "onboarding.mod_collaboration_desc":
-      "Бодит цагийн хамтын ажиллагааны хэрэгсэл",
+    "onboarding.mod_changeorders_desc": "Өөрчлөлтийн захиалга хянах ба зөвшөөрөх",
+    "onboarding.mod_collaboration_desc": "Бодит цагийн хамтын ажиллагааны хэрэгсэл",
     "onboarding.mod_contacts_desc": "Холбоо барих лавлах ба багууд",
     "onboarding.mod_correspondence_desc": "Төслийн захидал харилцааны бүртгэл",
     "onboarding.mod_cost_benchmark_desc": "Зардлын жишиг шинжилгээ",
@@ -4155,8 +3644,7 @@ const resource = {
     "onboarding.mod_ncr_desc": "Үл нийцлийн тайлан",
     "onboarding.mod_pdf_takeoff_desc": "PDF дээрх хэмжилт ба тэмдэглэгээ",
     "onboarding.mod_photos_desc": "Зургийн цомог ба тэмдэглэгээ",
-    "onboarding.mod_procurement_desc":
-      "Худалдан авах захиалга ба нийлүүлэгчийн удирдлага",
+    "onboarding.mod_procurement_desc": "Худалдан авах захиалга ба нийлүүлэгчийн удирдлага",
     "onboarding.mod_projects_desc": "Төслийн удирдлага ба зохион байгуулалт",
     "onboarding.mod_punchlist_desc": "Шалгах жагсаалт",
     "onboarding.mod_reporting_desc": "Тайлангийн самбар",
@@ -4167,8 +3655,7 @@ const resource = {
     "onboarding.mod_safety_desc": "Аюулгүй байдлын удирдлага ба тохиолдол",
     "onboarding.mod_schedule_desc": "4D Гант диаграмм ба CPM хуваарь",
     "onboarding.mod_submittals_desc": "Илгээмж хянах ба үзэх",
-    "onboarding.mod_sustainability_desc":
-      "Тогтвортой байдал ба нүүрстөрөгчийн хяналт",
+    "onboarding.mod_sustainability_desc": "Тогтвортой байдал ба нүүрстөрөгчийн хяналт",
     "onboarding.mod_takeoff_desc": "Тоо хэмжээ авалтын тойм",
     "onboarding.mod_tasks_desc": "Даалгаврын удирдлага ба хуваарилалт",
     "onboarding.mod_templates_desc": "Дахин ашиглах БМЖ загвар",
@@ -4176,18 +3663,14 @@ const resource = {
     "onboarding.mod_transmittals_desc": "Баримтын дамжуулалт",
     "onboarding.mod_validation_desc": "Чанарын дүрэм ба нийцлийн шалгалт",
     "onboarding.mode_advanced": "Дэвшилтэт",
-    "onboarding.mode_advanced_desc":
-      "I'm experienced — харуулах намайг бүх зүйл. Бүрэн мэргэжлийн toolset -тай бүх сонголтууд visible.",
+    "onboarding.mode_advanced_desc": "I'm experienced — харуулах намайг бүх зүйл. Бүрэн мэргэжлийн toolset -тай бүх сонголтууд visible.",
     "onboarding.mode_simple": "Энгийн",
-    "onboarding.mode_simple_desc":
-      "I'm getting эхэлсэн — харуулах намайг essentials. clean interface -тай ихэнх чухал боломжууд.",
-    "onboarding.mode_subtitle":
-      "Та чадна солих хооронд горимууд anytime -д Тохиргоо.",
+    "onboarding.mode_simple_desc": "I'm getting эхэлсэн — харуулах намайг essentials. clean interface -тай ихэнх чухал боломжууд.",
+    "onboarding.mode_subtitle": "Та чадна солих хооронд горимууд anytime -д Тохиргоо.",
     "onboarding.mode_title": "Сонгох Interface Горим",
     "onboarding.modules_active": "модулиуд идэвхтэй",
     "onboarding.modules_label": "Модулиуд",
-    "onboarding.modules_subtitle":
-      "Pre-сонгогдсон based дээр таны компани төрөл. Toggle дурын модуль дээр эсвэл off.",
+    "onboarding.modules_subtitle": "Pre-сонгогдсон based дээр таны компани төрөл. Toggle дурын модуль дээр эсвэл off.",
     "onboarding.modules_title": "Хяналт Таны Модулиуд",
     "onboarding.next": "Дараах",
     "onboarding.previous": "Өмнөх алхам",
@@ -4196,28 +3679,22 @@ const resource = {
     "onboarding.project_error": "үүсгэх төсөл амжилтгүй",
     "onboarding.project_name": "Төслийн нэр",
     "onboarding.project_name_placeholder": "ж.нь. Хотын төв оффис цамхаг",
-    "onboarding.project_subtitle":
-      "Set дээш таны эхний төсөл хүртэл get эхэлсэн.",
+    "onboarding.project_subtitle": "Set дээш таны эхний төсөл хүртэл get эхэлсэн.",
     "onboarding.project_title": "Таны Эхний Төсөл",
     "onboarding.recommended": "Зөвлөмжтэй",
     "onboarding.region": "Бүс",
     "onboarding.save_continue": "Хадгалаад үргэлжлүүлэх",
     "onboarding.skip": "Алгасах",
     "onboarding.standard": "Стандарт",
-    "onboarding.step1.description":
-      "sidebar gives та quick хандалт хүртэл бүх модулиуд: төслүүд, тооцоонууд, өртөг өгөгдлийн сан, хуваарь, ба илүү.",
+    "onboarding.step1.description": "sidebar gives та quick хандалт хүртэл бүх модулиуд: төслүүд, тооцоонууд, өртөг өгөгдлийн сан, хуваарь, ба илүү.",
     "onboarding.step1.title": "Навигацийн самбар",
-    "onboarding.step2.description":
-      "Эхлэх энд -аар үүсгэж байна таны эхний төсөл. Тус бүр төсөл holds BOQs, хуваарь, ба баримт бичиг -д one газар.",
+    "onboarding.step2.description": "Эхлэх энд -аар үүсгэж байна таны эхний төсөл. Тус бүр төсөл holds BOQs, хуваарь, ба баримт бичиг -д one газар.",
     "onboarding.step2.title": "Төслүүд",
-    "onboarding.step3.description":
-      "Барих detailed тооцоонууд -тай BOQ редактор — hierarchical байрлалууд, угсралтууд, ба бодит-цаг өртөг roll-дээш.",
+    "onboarding.step3.description": "Барих detailed тооцоонууд -тай BOQ редактор — hierarchical байрлалууд, угсралтууд, ба бодит-цаг өртөг roll-дээш.",
     "onboarding.step3.title": "Ажил материалын жагсаалт",
-    "onboarding.step4.description":
-      "Үзэх ба удирдах өртөг тариф өгөгдлийн сан including барьсан--д CWICR -тай 55 000+ байрлалууд хооронд 9 хэлүүд.",
+    "onboarding.step4.description": "Үзэх ба удирдах өртөг тариф өгөгдлийн сан including барьсан--д CWICR -тай 55 000+ байрлалууд хооронд 9 хэлүүд.",
     "onboarding.step4.title": "Үнийн мэдээллийн сан",
-    "onboarding.step5.description":
-      "Toggle хооронд Энгийн горим (зайлшгүй шаардлагатай хэрэгсэл) ба Дэвшилт горим (бүх боломжууд including тендер ба хуваарь гаргах).",
+    "onboarding.step5.description": "Toggle хооронд Энгийн горим (зайлшгүй шаардлагатай хэрэгсэл) ба Дэвшилт горим (бүх боломжууд including тендер ба хуваарь гаргах).",
     "onboarding.step5.title": "Энгийн / Дэвшилт Горим",
     "onboarding.step_company": "Компани",
     "onboarding.step_label": "Алхам",
@@ -4230,10 +3707,8 @@ const resource = {
     "onboarding.test_connection": "Холболт шалгах",
     "onboarding.testing": "Шалгаж байна...",
     "onboarding.tour_step": "Tour алхам",
-    "onboarding.welcome_hint":
-      "Үнэгүй ба нээх эх сурвалж. Үгүй credit card шаардлагатай.",
-    "onboarding.welcome_subtitle":
-      "мэргэжлийн барилгын тооцоолол workspace.\\nSet дээш таны environment -д цөөн энгийн алхамууд.",
+    "onboarding.welcome_hint": "Үнэгүй ба нээх эх сурвалж. Үгүй credit card шаардлагатай.",
+    "onboarding.welcome_subtitle": "мэргэжлийн барилгын тооцоолол workspace.\\nSet дээш таны environment -д цөөн энгийн алхамууд.",
     "onboarding.welcome_title": "OpenConstructionERP-д тавтай морил",
     "photos.caption": "Гарчиг",
     "photos.cat_defect": "Гэмтэл",
@@ -4246,8 +3721,7 @@ const resource = {
     "photos.delete_confirm": "Устгах энэ зураг?",
     "photos.edit": "Зураг засах",
     "photos.empty": "Хараахан зургууд алга",
-    "photos.empty_desc":
-      "Байршуулах барилгын талбай зургууд хүртэл баримт бичиг явц",
+    "photos.empty_desc": "Байршуулах барилгын талбай зургууд хүртэл баримт бичиг явц",
     "photos.gps": "GPS координат",
     "photos.grid": "Сүлжээ",
     "photos.tags": "Шошго",
@@ -4277,18 +3751,14 @@ const resource = {
     "procurement.net_days": "Цэвэр {{days}} өдөр",
     "procurement.new_po": "Шинэ худалдан авах захиалга",
     "procurement.no_gr": "Үгүй goods receipts",
-    "procurement.no_gr_desc":
-      "Goods receipts болно харагдах энд удаа recorded.",
+    "procurement.no_gr_desc": "Goods receipts болно харагдах энд удаа recorded.",
     "procurement.no_gr_match": "Тохирох goods receipts олдсонгүй",
     "procurement.no_po": "Үгүй худалдан авалт захиалгууд",
-    "procurement.no_po_desc":
-      "Худалдан авалт захиалгууд болно харагдах энд удаа үүсгэгдсэн.",
+    "procurement.no_po_desc": "Худалдан авалт захиалгууд болно харагдах энд удаа үүсгэгдсэн.",
     "procurement.no_po_match": "Тохирох худалдан авалт захиалгууд олдсонгүй",
-    "procurement.no_project":
-      "Сонгох төсөл хүртэл үзэх худалдан авалт өгөгдөл.",
+    "procurement.no_project": "Сонгох төсөл хүртэл үзэх худалдан авалт өгөгдөл.",
     "procurement.notes": "Тэмдэглэл",
-    "procurement.notes_placeholder":
-      "Сонголтын тэмдэглэл эсвэл special instructions...",
+    "procurement.notes_placeholder": "Сонголтын тэмдэглэл эсвэл special instructions...",
     "procurement.payment_terms": "Төлбөрийн нөхцөл",
     "procurement.po_created": "Худалдан авалт захиалга үүсгэгдлээ",
     "procurement.po_number": "ХАЗ #",
@@ -4304,82 +3774,60 @@ const resource = {
     "procurement.section_order_details": "Захиалгын мэдэгдэл",
     "procurement.section_terms": "Нөхцөл",
     "procurement.select_project": "Төсөл...",
-    "procurement.subtitle":
-      "Худалдан авах захиалга, бараа хүлээн авалтыг удирдах",
+    "procurement.subtitle": "Худалдан авах захиалга, бараа хүлээн авалтыг удирдах",
     "procurement.subtotal": "Дэд дүн",
     "procurement.tax": "Татвар",
     "procurement.title": "Худалдан авалт",
     "procurement.total": "Нийт",
     "procurement.vendor": "Нийлүүлэгч",
     "project_intelligence.ai.cost_advisor_title": "Өртөг Оюун ухаан Advisor‌⁠‍",
-    "project_intelligence.ai_not_configured_desc":
-      "Өөрийн төсөлд хувийн, контекстээ мэдсэн зөвлөмж авахын тулд AI үйлчилгээ үзүүлэгч (Anthropic Claude, OpenAI, эсвэл Google Gemini)-тэй холбогдоно уу. AI-гүйгээр та доорх дүрэмд суурилсан шинжилгээг үзсээр л байна.",
-    "project_intelligence.ai_not_configured_title":
-      "AI үйлчилгээ үзүүлэгч биш холбогдсон‌⁠‍",
+    "project_intelligence.ai_not_configured_desc": "Өөрийн төсөлд хувийн, контекстээ мэдсэн зөвлөмж авахын тулд AI үйлчилгээ үзүүлэгч (Anthropic Claude, OpenAI, эсвэл Google Gemini)-тэй холбогдоно уу. AI-гүйгээр та доорх дүрэмд суурилсан шинжилгээг үзсээр л байна.",
+    "project_intelligence.ai_not_configured_title": "AI үйлчилгээ үзүүлэгч биш холбогдсон‌⁠‍",
     "project_intelligence.analytics.cost_drivers": "Өртөг drivers‌⁠‍",
-    "project_intelligence.analytics.cost_drivers_sub":
-      "Дээд 5 мөр зүйлс -аар нийт өртөг‌⁠‍",
+    "project_intelligence.analytics.cost_drivers_sub": "Дээд 5 мөр зүйлс -аар нийт өртөг‌⁠‍",
     "project_intelligence.analytics.errors": "алдаа",
     "project_intelligence.analytics.no_data": "Үгүй өгөгдөл yet‌⁠‍",
     "project_intelligence.analytics.price_volatility": "Үнэ volatility‌⁠‍",
-    "project_intelligence.analytics.price_volatility_sub":
-      "Санал нийт spread хооронд нийлүүлэгчид‌⁠‍",
+    "project_intelligence.analytics.price_volatility_sub": "Санал нийт spread хооронд нийлүүлэгчид‌⁠‍",
     "project_intelligence.analytics.schedule_cost": "Хуваарь ↔ өртөг",
-    "project_intelligence.analytics.schedule_cost_sub":
-      "Хөдөлмөр өртөг -аар үе шат",
+    "project_intelligence.analytics.schedule_cost_sub": "Хөдөлмөр өртөг -аар үе шат",
     "project_intelligence.analytics.scope_coverage": "Хамрах хүрээ",
-    "project_intelligence.analytics.scope_coverage_ratio":
-      "{{current}} -н {{baseline}} мөрүүд",
-    "project_intelligence.analytics.scope_coverage_sub":
-      "BOQ мөрийн тоо ба үндсэн утга",
+    "project_intelligence.analytics.scope_coverage_ratio": "{{current}} -н {{baseline}} мөрүүд",
+    "project_intelligence.analytics.scope_coverage_sub": "BOQ мөрийн тоо ба үндсэн утга",
     "project_intelligence.analytics.validation_live": "Бодит цагийн шалгалт",
-    "project_intelligence.analytics.validation_live_sub":
-      "Дүрэм pass тоо (шинэчлэлтүүд бүх 60s)",
-    "project_intelligence.analytics.vendor_concentration":
-      "Нийлүүлэгчийн төвлөрөл",
-    "project_intelligence.analytics.vendor_concentration_sub":
-      "Дээд 3 санал өгөгчид’ хуваалцах",
+    "project_intelligence.analytics.validation_live_sub": "Дүрэм pass тоо (шинэчлэлтүүд бүх 60s)",
+    "project_intelligence.analytics.vendor_concentration": "Нийлүүлэгчийн төвлөрөл",
+    "project_intelligence.analytics.vendor_concentration_sub": "Дээд 3 санал өгөгчид’ хуваалцах",
     "project_intelligence.analytics.warnings": "анхааруулга",
     "project_intelligence.analyzing": "Шинжилж байна төсөл...‌⁠‍",
     "project_intelligence.analyzing_project": "Шинжилж байна төсөл...",
     "project_intelligence.ask_placeholder": "Ask тухай энэ төсөл...",
     "project_intelligence.auth_error": "Сессийн хугацаа дууссан‌⁠‍",
-    "project_intelligence.auth_hint":
-      "Та сэргээх хуудас эсвэл sign -д дахин хүртэл үргэлжлүүлэх.",
+    "project_intelligence.auth_hint": "Та сэргээх хуудас эсвэл sign -д дахин хүртэл үргэлжлүүлэх.",
     "project_intelligence.back_to_rec": "Буцах хүртэл recommendations‌⁠‍",
-    "project_intelligence.chat_error":
-      "Sorry, Би чадах биш боловсруулах таны асуулт. Та try дахин.‌⁠‍",
-    "project_intelligence.chat_prompt":
-      'Ask дурын асуулт тухай энэ төсөл. -д зориулсан жишээ: "Яагаад нь миний оноо so бага?" эсвэл "Юу ёстой Би хийх эхний?"',
+    "project_intelligence.chat_error": "Sorry, Би чадах биш боловсруулах таны асуулт. Та try дахин.‌⁠‍",
+    "project_intelligence.chat_prompt": "Ask дурын асуулт тухай энэ төсөл. -д зориулсан жишээ: \"Яагаад нь миний оноо so бага?\" эсвэл \"Юу ёстой Би хийх эхний?\"",
     "project_intelligence.chat_toggle": "Чатыг солих‌⁠‍",
     "project_intelligence.critical_gaps": "Чухал цоорхой",
     "project_intelligence.enable_failed": "идэвхжүүлэх модуль чадсангүй",
     "project_intelligence.enable_module": "Идэвхжүүлэх модуль",
     "project_intelligence.enabling": "Идэвхжүүлж байна…",
-    "project_intelligence.gaps.dollar_impact":
-      "{{count}} зүйлс дутуу үнэ → ~{{amount}} өртөг uncertainty",
+    "project_intelligence.gaps.dollar_impact": "{{count}} зүйлс дутуу үнэ → ~{{amount}} өртөг uncertainty",
     "project_intelligence.go_to_ai_settings": "Тохиргоо — AI Тохиргоо",
     "project_intelligence.kpi.budget_variance": "Төсөв хэлбэлзэл‌⁠‍",
     "project_intelligence.kpi.risk_adjusted_cost": "Эрсдэл-adjusted өртөг‌⁠‍",
     "project_intelligence.kpi.risk_sub": "±{{band}} (90% CI, {{count}} гажиг)",
     "project_intelligence.kpi.schedule_health": "Хуваарь health‌⁠‍",
     "project_intelligence.kpi.schedule_sub": "Үйл ажиллагаа дээр baseline‌⁠‍",
-    "project_intelligence.kpi.variance_sub":
-      "Төсөв {{budget}} · Одоогийн {{current}}‌⁠‍",
+    "project_intelligence.kpi.variance_sub": "Төсөв {{budget}} · Одоогийн {{current}}‌⁠‍",
     "project_intelligence.load_error": "ачаалах шинжилгээ чадсангүй",
-    "project_intelligence.module_disabled_ask_admin":
-      "Ask admin хүртэл идэвхжүүлэх энэ модуль хүртэл үргэлжлүүлэх.",
-    "project_intelligence.module_disabled_body":
-      "Энэ самбар нь нэмэлт Project Intelligence модуль дээр ажилладаг. Энэ нь одоогоор сервер дээр идэвхгүй байгаа тул AI зөвлөгч, цоорхой илрүүлэгч, аналитик торлой асуух зүйл байхгүй.",
-    "project_intelligence.module_disabled_footnote":
-      "Үгүй өгөгдөл нь collected хооронд модуль нь off. Идэвхжүүлж байна нь reversible -аас Модулиуд хуудас.",
-    "project_intelligence.module_disabled_title":
-      "Төсөл Оюун ухаан нь turned off",
-    "project_intelligence.no_gaps_desc":
-      "Таны төсөл байх үгүй чухал асуудлууд. Keep refining хүртэл tighten хэлбэлзэл.",
+    "project_intelligence.module_disabled_ask_admin": "Ask admin хүртэл идэвхжүүлэх энэ модуль хүртэл үргэлжлүүлэх.",
+    "project_intelligence.module_disabled_body": "Энэ самбар нь нэмэлт Project Intelligence модуль дээр ажилладаг. Энэ нь одоогоор сервер дээр идэвхгүй байгаа тул AI зөвлөгч, цоорхой илрүүлэгч, аналитик торлой асуух зүйл байхгүй.",
+    "project_intelligence.module_disabled_footnote": "Үгүй өгөгдөл нь collected хооронд модуль нь off. Идэвхжүүлж байна нь reversible -аас Модулиуд хуудас.",
+    "project_intelligence.module_disabled_title": "Төсөл Оюун ухаан нь turned off",
+    "project_intelligence.no_gaps_desc": "Таны төсөл байх үгүй чухал асуудлууд. Keep refining хүртэл tighten хэлбэлзэл.",
     "project_intelligence.no_gaps_title": "Үгүй чухал gaps",
-    "project_intelligence.no_recommendations":
-      "Үгүй recommendations боломжтой yet. Try сэргээж байна шинжилгээ.",
+    "project_intelligence.no_recommendations": "Үгүй recommendations боломжтой yet. Try сэргээж байна шинжилгээ.",
     "project_intelligence.open_modules_page": "Нээх Модулиуд хуудас",
     "project_intelligence.page_title_v191": "Тооцоолол Dashboard‌⁠‍",
     "project_intelligence.readiness_title": "Тооцоолол readiness",
@@ -4388,17 +3836,13 @@ const resource = {
     "project_intelligence.role_estimator": "Тооцоолуур",
     "project_intelligence.role_explorer": "Судлагч",
     "project_intelligence.role_manager": "Менежер",
-    "project_intelligence.score_tooltip_v191":
-      "Оноо weighting (RFC 25): BOQ 40%, Өртөг Загвар 30%, Баталгаажуулалт 20%, Эрсдэл 10%.",
-    "project_intelligence.select_domain":
-      "Сонгох domain таб дээр хүртэл see detailed үзүүлэлтүүд.‌⁠‍",
+    "project_intelligence.score_tooltip_v191": "Оноо weighting (RFC 25): BOQ 40%, Өртөг Загвар 30%, Баталгаажуулалт 20%, Эрсдэл 10%.",
+    "project_intelligence.select_domain": "Сонгох domain таб дээр хүртэл see detailed үзүүлэлтүүд.‌⁠‍",
     "project_intelligence.show_more_gaps": "{{count}} илүү",
     "project_intelligence.thinking": "Бодож байна...",
     "project_intelligence.unnamed": "Нэргүй төсөл",
-    "project_intelligence.v191_header_desc":
-      "Өртөг хэлбэлзэл, anomalies, санал analytics — сэргээсэн бүх 60s.",
-    "project_intelligence.v191_select_prompt":
-      "Сонгох төсөл -аас header хүртэл see түүний өртөг хэлбэлзэл, anomalies, ба санал analytics.‌⁠‍",
+    "project_intelligence.v191_header_desc": "Өртөг хэлбэлзэл, anomalies, санал analytics — сэргээсэн бүх 60s.",
+    "project_intelligence.v191_select_prompt": "Сонгох төсөл -аас header хүртэл see түүний өртөг хэлбэлзэл, anomalies, ба санал analytics.‌⁠‍",
     "projects.4d_schedule": "4D хуваарь",
     "projects.5d_budget": "5D Төсөв",
     "projects.active": "идэвхтэй",
@@ -4411,8 +3855,7 @@ const resource = {
     "projects.confirm_delete": "Устгах энэ төсөл?",
     "projects.create_boq": "БМЖ үүсгэх",
     "projects.create_error": "үүсгэх төсөл амжилтгүй",
-    "projects.create_hint":
-      "Бүс нь боломжтой өртгийн өгөгдлийн сан, VAT тарифыг тогтоодог. Ангиллын стандарт нь өртгийн бүтцийг тодорхойлдог: DACH улсуудад DIN 276, UK-д NRM, US/Canada-д MasterFormat, Oceania-д UniFormat. Валют нь BOQ-н бүх үнийг тогтоодог.",
+    "projects.create_hint": "Бүс нь боломжтой өртгийн өгөгдлийн сан, VAT тарифыг тогтоодог. Ангиллын стандарт нь өртгийн бүтцийг тодорхойлдог: DACH улсуудад DIN 276, UK-д NRM, US/Canada-д MasterFormat, Oceania-д UniFormat. Валют нь BOQ-н бүх үнийг тогтоодог.",
     "projects.created": "Үүсгэгдсэн {{date}}",
     "projects.currency": "Валют",
     "projects.delete_failed": "устгах төсөл амжилтгүй",
@@ -4433,40 +3876,32 @@ const resource = {
     "projects.new_boq": "Шинэ БМЖ",
     "projects.new_project": "Шинэ төсөл",
     "projects.no_boqs": "Хараахан BOQs алга",
-    "projects.no_boqs_desc":
-      "Үүсгэх Ажил жагсаалт -н Тоо хэмжээ хүртэл эхлэх тооцоолох өртгүүд -д зориулсан энэ төсөл.",
+    "projects.no_boqs_desc": "Үүсгэх Ажил жагсаалт -н Тоо хэмжээ хүртэл эхлэх тооцоолох өртгүүд -д зориулсан энэ төсөл.",
     "projects.no_budget": "Үгүй төсөв өгөгдөл",
-    "projects.no_budget_desc":
-      "Set дээш 5D өртөг загвар хүртэл хянах planned vs бодит өртгүүд.",
+    "projects.no_budget_desc": "Set дээш 5D өртөг загвар хүртэл хянах planned vs бодит өртгүүд.",
     "projects.no_projects": "Хараахан төсөл алга",
-    "projects.no_projects_description":
-      "Үүсгэх таны эхний барилгын өртөг тооцоолол төсөл",
+    "projects.no_projects_description": "Үүсгэх таны эхний барилгын өртөг тооцоолол төсөл",
     "projects.no_results": "Тохирох төсөл олдсонгүй",
     "projects.no_results_hint": "Хайлт эсвэл шүүлтүүрийг өөрчилж үзнэ үү",
     "projects.no_schedules": "Хараахан хуваарь алга",
-    "projects.no_schedules_desc":
-      "Үүсгэх хуваарь хүртэл удирдах төсөл timelines.",
+    "projects.no_schedules_desc": "Үүсгэх хуваарь хүртэл удирдах төсөл timelines.",
     "projects.no_tenders": "Үгүй тендер packages",
-    "projects.no_tenders_desc":
-      "Үүсгэх тендер packages хүртэл удирдах тендерийн санал -д зориулсан энэ төсөл.",
+    "projects.no_tenders_desc": "Үүсгэх тендер packages хүртэл удирдах тендерийн санал -д зориулсан энэ төсөл.",
     "projects.not_found": "Төсөл олдсонгүй",
-    "projects.not_found_desc":
-      "төсөл та нь looking -д зориулсан хийдэг биш байх эсвэл байх байсан устгагдсан.",
+    "projects.not_found_desc": "төсөл та нь looking -д зориулсан хийдэг биш байх эсвэл байх байсан устгагдсан.",
     "projects.of": "/",
     "projects.open_tendering": "Нээх Тендер",
     "projects.overview": "Тойм",
     "projects.photos.close_aria": "Хаах",
     "projects.photos.count_label": "{{count}} -н {{total}} зургууд",
-    "projects.photos.empty_desc":
-      "Байршуулах талбай зургууд хүртэл keep visual records alongside төсөл.",
+    "projects.photos.empty_desc": "Байршуулах талбай зургууд хүртэл keep visual records alongside төсөл.",
     "projects.photos.empty_title": "Хараахан зургууд алга",
     "projects.photos.lightbox_aria": "Зураг үзэгч",
     "projects.photos.next_aria": "Дараах",
     "projects.photos.no_matches": "Тохирох зургууд олдсонгүй",
     "projects.photos.no_matches_desc": "Try adjusting таны хайх query.",
     "projects.photos.no_project": "Идэвхтэй төсөл алга",
-    "projects.photos.no_project_desc":
-      "Нээх төсөл хүртэл үзэх ба байршуулах зургууд.",
+    "projects.photos.no_project_desc": "Нээх төсөл хүртэл үзэх ба байршуулах зургууд.",
     "projects.photos.open_photo_aria": "Нээх {{name}}",
     "projects.photos.position_label": "зураг {{current}} / {{total}}",
     "projects.photos.prev_aria": "Өмнөх",
@@ -4487,8 +3922,7 @@ const resource = {
     "projects.projects_label": "Төслүүд",
     "projects.region": "Бүс",
     "projects.regional_factor": "Бүсийн коэффициент",
-    "projects.regional_factor_hint":
-      "Multiply бүх тарифууд -аар энэ factor (e.g. Munich = 1.12, Berlin = 1.05)",
+    "projects.regional_factor_hint": "Multiply бүх тарифууд -аар энэ factor (e.g. Munich = 1.12, Berlin = 1.05)",
     "projects.remaining": "Үлдсэн",
     "projects.schedule_subtitle": "Төсөл хуваарь ба timeline",
     "projects.search_placeholder": "төслүүд хайх...",
@@ -4555,8 +3989,7 @@ const resource = {
     "punch.col_title": "Гарчиг",
     "punch.create_item": "Зүйл үүсгэх",
     "punch.description_placeholder": "Provide дэлгэрэнгүй тухай асуудал...",
-    "punch.empty_desc":
-      "Үүсгэх punch жагсаалт зүйлс хүртэл хянах deficiencies, snags, ба outstanding ажил.",
+    "punch.empty_desc": "Үүсгэх punch жагсаалт зүйлс хүртэл хянах deficiencies, snags, ба outstanding ажил.",
     "punch.empty_title": "Үгүй punch жагсаалт зүйлс",
     "punch.field_assigned_to": "Хариуцагч",
     "punch.field_category": "Ангилал",
@@ -4603,38 +4036,28 @@ const resource = {
     "quantities.badge_ai": "AI",
     "quantities.badge_cad": "CAD",
     "quantities.badge_coming_soon": "Удахгүй гарна",
-    "quantities.converter_desc":
-      "Байршуулах таны CAD/BIM файлууд (.RVT,.IFC,.DWG,.DGN) ба DDC хөрвүүлэгч гаргаж авдаг бүх элементүүд руу structured table — ханууд, хавтгайнууд, баганууд, хаалгууд, цонхнууд — -тай тооцоолсон эзэлхүүн, талбайнууд, ба тоо хэмжээ. AI тэгээд maps эдгээр элементүүд хүртэл өртөг зүйлс ба generates дууссан BOQ автоматаар.",
-    "quantities.converter_path":
-      "Суулгах хүртэл: ~/.openestimator/хөрвүүлэгчид/",
+    "quantities.converter_desc": "Байршуулах таны CAD/BIM файлууд (.RVT,.IFC,.DWG,.DGN) ба DDC хөрвүүлэгч гаргаж авдаг бүх элементүүд руу structured table — ханууд, хавтгайнууд, баганууд, хаалгууд, цонхнууд — -тай тооцоолсон эзэлхүүн, талбайнууд, ба тоо хэмжээ. AI тэгээд maps эдгээр элементүүд хүртэл өртөг зүйлс ба generates дууссан BOQ автоматаар.",
+    "quantities.converter_path": "Суулгах хүртэл: ~/.openestimator/хөрвүүлэгчид/",
     "quantities.converter_title": "Хэрхэн CAD/BIM Хөрвүүлэлт Ажилладаг",
     "quantities.download_converters": "Татах DDC Хөрвүүлэгчид",
     "quantities.how_it_works": "Хэрхэн ажилладаг",
-    "quantities.manual_desc":
-      "Хэрэгцээ хүртэл нэмэх тоо хэмжээ directly? Go хүртэл BOQ Редактор.",
+    "quantities.manual_desc": "Хэрэгцээ хүртэл нэмэх тоо хэмжээ directly? Go хүртэл BOQ Редактор.",
     "quantities.manual_title": "Хурдан гар оруулга",
-    "quantities.method_ai_desc":
-      "Тайлбарлах таны барилга ба AI болно үүсгэх Ажил жагсаалт -н Тоо хэмжээ -тай тооцоолсон эзэлхүүн ба өртгүүд.",
+    "quantities.method_ai_desc": "Тайлбарлах таны барилга ба AI болно үүсгэх Ажил жагсаалт -н Тоо хэмжээ -тай тооцоолсон эзэлхүүн ба өртгүүд.",
     "quantities.method_ai_title": "AI текст оруулга",
-    "quantities.method_cad_desc":
-      "Импортлох DWG, RVT, IFC эсвэл DGN файлууд ба гаргаж авах тоо хэмжээ directly -аас 3D geometry.",
+    "quantities.method_cad_desc": "Импортлох DWG, RVT, IFC эсвэл DGN файлууд ба гаргаж авах тоо хэмжээ directly -аас 3D geometry.",
     "quantities.method_cad_title": "CAD / BIM Загварууд",
-    "quantities.method_pdf_desc":
-      "Байршуулах барилгын зургууд (PDF) ба гаргаж авах тоо хэмжээ автоматаар -тай AI-powered тоо хэмжээ гаргалт.",
+    "quantities.method_pdf_desc": "Байршуулах барилгын зургууд (PDF) ба гаргаж авах тоо хэмжээ автоматаар -тай AI-powered тоо хэмжээ гаргалт.",
     "quantities.method_pdf_title": "PDF Зургууд",
     "quantities.open": "Нээлттэй",
     "quantities.open_boq": "Нээх BOQ Редактор",
-    "quantities.step1_desc":
-      "Сонгох таны input арга: текст, PDF, эсвэл CAD загвар.",
+    "quantities.step1_desc": "Сонгох таны input арга: текст, PDF, эсвэл CAD загвар.",
     "quantities.step1_title": "Байршуулах эсвэл тайлбарлах",
-    "quantities.step2_desc":
-      "Манай AI analyzes таны input ба гаргаж авдаг structured тоо хэмжээ.",
+    "quantities.step2_desc": "Манай AI analyzes таны input ба гаргаж авдаг structured тоо хэмжээ.",
     "quantities.step2_title": "AI гаргаж авдаг тоо хэмжээ",
-    "quantities.step3_desc":
-      "Шалгах үр дүн ба нэмэх тэдгээрийг хүртэл таны Ажил жагсаалт -н Тоо хэмжээ.",
+    "quantities.step3_desc": "Шалгах үр дүн ба нэмэх тэдгээрийг хүртэл таны Ажил жагсаалт -н Тоо хэмжээ.",
     "quantities.step3_title": "Хяналт & нэмэх хүртэл BOQ",
-    "quantities.subtitle":
-      "Collect төсөл тоо хэмжээ — -аас AI текст input, PDF зургууд, эсвэл CAD/BIM загварууд",
+    "quantities.subtitle": "Collect төсөл тоо хэмжээ — -аас AI текст input, PDF зургууд, эсвэл CAD/BIM загварууд",
     "quantities.title": "Тоо хэмжээ авах",
     "reporting.active_projects": "Идэвхтэй төслүүд",
     "reporting.approved_pos": "Зөвшөөрсөн",
@@ -4665,11 +4088,9 @@ const resource = {
     "reporting.invoices_month": "Хугацаа дуусах нэхэмжлэх (Сар)",
     "reporting.invoices_week": "Хугацаа дуусах нэхэмжлэх (Долоо хоног)",
     "reporting.no_boqs": "Үгүй BOQs -д энэ төсөл",
-    "reporting.no_finance_data":
-      "Үгүй finance өгөгдөл боломжтой -д зориулсан энэ төсөл. Үүсгэх нэхэмжлэх ба төсвүүд эхний.",
+    "reporting.no_finance_data": "Үгүй finance өгөгдөл боломжтой -д зориулсан энэ төсөл. Үүсгэх нэхэмжлэх ба төсвүүд эхний.",
     "reporting.no_projects": "төслүүд олдсонгүй",
-    "reporting.no_safety_data":
-      "Үгүй аюулгүй байдал өгөгдөл боломжтой -д зориулсан энэ төсөл.",
+    "reporting.no_safety_data": "Үгүй аюулгүй байдал өгөгдөл боломжтой -д зориулсан энэ төсөл.",
     "reporting.observations": "Ажиглалт",
     "reporting.on_track": "Хэвийн",
     "reporting.open": "Нээлттэй",
@@ -4704,29 +4125,22 @@ const resource = {
     "reporting.total_projects": "Нийт төсөл",
     "reporting.total_tasks": "Нийт Даалгавар",
     "reports.5d_report": "5D зардлын тайлан",
-    "reports.5d_report_desc":
-      "Төсөв vs. бодит шинжилгээ -тай S-curve ба өртөг forecasting.",
+    "reports.5d_report_desc": "Төсөв vs. бодит шинжилгээ -тай S-curve ба өртөг forecasting.",
     "reports.boq_report": "БМЖ-ийн тайлан",
-    "reports.boq_report_desc":
-      "Бүрэн Ажил жагсаалт -н Тоо хэмжээ -тай хэсгүүд, байрлалууд, тэмдэглэгээ, ба нийт. Боломжтой болгон PDF эсвэл Excel.",
+    "reports.boq_report_desc": "Бүрэн Ажил жагсаалт -н Тоо хэмжээ -тай хэсгүүд, байрлалууд, тэмдэглэгээ, ба нийт. Боломжтой болгон PDF эсвэл Excel.",
     "reports.cash_flow": "Мөнгөн урсгалын урьдчилсан тооцоо",
-    "reports.cash_flow_desc":
-      "Monthly бэлэн мөнгө flow урьдчилсан тооцоо -аас S-curve planned vs бодит зарцуулалт.",
+    "reports.cash_flow_desc": "Monthly бэлэн мөнгө flow урьдчилсан тооцоо -аас S-curve planned vs бодит зарцуулалт.",
     "reports.change_order_register": "Өөрчлөлтийн захиалгын бүртгэл",
-    "reports.change_order_register_desc":
-      "Дууссан бүртгүүлэх -н хүрээ өөрчлөлтүүд -тай cumulative өртөг ба хуваарь impact.",
+    "reports.change_order_register_desc": "Дууссан бүртгүүлэх -н хүрээ өөрчлөлтүүд -тай cumulative өртөг ба хуваарь impact.",
     "reports.coming_soon": "Удахгүй гарна",
     "reports.cost_report": "Зардлын тайлан",
-    "reports.cost_report_desc":
-      "Өртөг задаргаа -аар ангилал -тай хураангуй charts ба detailed өртөг шинжилгээ.",
+    "reports.cost_report_desc": "Өртөг задаргаа -аар ангилал -тай хураангуй charts ба detailed өртөг шинжилгээ.",
     "reports.download_error": "Тайлан үүсгэж чадсангүй",
     "reports.download_format": "Татах {{format}}",
     "reports.download_success": "Тайлан амжилттай татагдлаа",
     "reports.gaeb_xml": "GAEB XML тайлан",
-    "reports.gaeb_xml_desc":
-      "GAEB X83 тендер экспортлох — стандарт exchange форматлах -д зориулсан DACH барилгын market.",
-    "reports.guide_desc":
-      "BOQ Тайлан = detailed ажил жагсаалт -н тоо хэмжээ -тай нийт. Өртөг Тайлан = өртөг задаргаа -аар ангилал. GAEB XML = German тендер форматлах (.x83) -д зориулсан туслан гүйцэтгэгч exchange. Баталгаажуулалт = дагалт шалгах үр дүн. Хуваарь = Gantt үйл ажиллагаа хураангуй. 5D = төсөв vs. бодит өртөг curves.",
+    "reports.gaeb_xml_desc": "GAEB X83 тендер экспортлох — стандарт exchange форматлах -д зориулсан DACH барилгын market.",
+    "reports.guide_desc": "BOQ Тайлан = detailed ажил жагсаалт -н тоо хэмжээ -тай нийт. Өртөг Тайлан = өртөг задаргаа -аар ангилал. GAEB XML = German тендер форматлах (.x83) -д зориулсан туслан гүйцэтгэгч exchange. Баталгаажуулалт = дагалт шалгах үр дүн. Хуваарь = Gantt үйл ажиллагаа хураангуй. 5D = төсөв vs. бодит өртөг curves.",
     "reports.no_boqs": "Үгүй BOQs -д энэ төсөл",
     "reports.no_projects": "Боломжтой төсөл алга",
     "reports.preset_audit": "Аудитын тайлан",
@@ -4735,24 +4149,19 @@ const resource = {
     "reports.preset_monthly": "Сарын явц",
     "reports.presets": "Бэлэн загвар:",
     "reports.progress_report": "Явцын тайлан",
-    "reports.progress_report_desc":
-      "EVM гүйцэтгэл, хуваарь status, ба дээд эрсдэлүүд -д one тайлан.",
+    "reports.progress_report_desc": "EVM гүйцэтгэл, хуваарь status, ба дээд эрсдэлүүд -д one тайлан.",
     "reports.risk_register": "Эрсдэлийн бүртгэл",
-    "reports.risk_register_desc":
-      "Магадлал, нөлөө, оноо, бууруулах төлөвлөгөө бүхий эрсдэлийн матриц.",
+    "reports.risk_register_desc": "Магадлал, нөлөө, оноо, бууруулах төлөвлөгөө бүхий эрсдэлийн матриц.",
     "reports.schedule_report": "Хуваарийн тайлан",
-    "reports.schedule_report_desc":
-      "Gantt chart -тай төсөл timeline, чухал үе, ба чухал path.",
+    "reports.schedule_report_desc": "Gantt chart -тай төсөл timeline, чухал үе, ба чухал path.",
     "reports.select_boq_first": "Та сонгох төсөл ба BOQ эхний",
     "reports.select_project_first": "Та сонгох төсөл эхний",
     "reports.subtitle": "Үүсгэх мэргэжлийн тайлан -д зориулсан таны төслүүд",
     "reports.tender_comparison": "Тендерийн харьцуулалт",
-    "reports.tender_comparison_desc":
-      "Тал--аар-тал харьцуулалт -н туслан гүйцэтгэгч саналууд -тай deviation шинжилгээ.",
+    "reports.tender_comparison_desc": "Тал--аар-тал харьцуулалт -н туслан гүйцэтгэгч саналууд -тай deviation шинжилгээ.",
     "reports.title": "Тайлан",
     "reports.validation_report": "Шалгалтын тайлан",
-    "reports.validation_report_desc":
-      "Дагалт шалгах тайлан against DIN 276, NRM, эсвэл MasterFormat стандартууд.",
+    "reports.validation_report_desc": "Дагалт шалгах тайлан against DIN 276, NRM, эсвэл MasterFormat стандартууд.",
     "requirements.add": "Шаардлага нэмэх",
     "requirements.add_requirement": "Шаардлага нэмэх",
     "requirements.all_categories": "Бүх ангилал",
@@ -4765,19 +4174,16 @@ const resource = {
     "requirements.click_to_upload_csv": "Дарах хүртэл байршуулах CSV файл",
     "requirements.click_to_upload_json": "Дарах хүртэл байршуулах JSON файл",
     "requirements.confidence": "Итг.",
-    "requirements.confirm_delete_set":
-      "Устгах энэ шаардлага set ба бүх түүний шаардлага?",
+    "requirements.confirm_delete_set": "Устгах энэ шаардлага set ба бүх түүний шаардлага?",
     "requirements.constraint": "Хязгаарлалт",
     "requirements.constraint_type": "Хязгаарлалтын төрөл",
     "requirements.constraint_value": "Үнэ цэн",
     "requirements.csv_loaded": "{{count}} мөрүүд ачаалсан -аас CSV",
-    "requirements.csv_parse_error":
-      "CSV ёстой байх headers: entity, attribute, constraint_value",
+    "requirements.csv_parse_error": "CSV ёстой байх headers: entity, attribute, constraint_value",
     "requirements.delete_set": "Set устгах уу?",
     "requirements.edit_requirement": "Шаардлага засах",
     "requirements.empty": "Хараахан шаардлага алга",
-    "requirements.empty_desc":
-      "Төслийнхөө хувьд Entity-Attribute-Constraint гурвалыг тодорхойлохын тулд шаардлага нэмнэ үү.",
+    "requirements.empty_desc": "Төслийнхөө хувьд Entity-Attribute-Constraint гурвалыг тодорхойлохын тулд шаардлага нэмнэ үү.",
     "requirements.entity": "Объект",
     "requirements.entity_placeholder": "ж.нь хана, шал, дээвэр",
     "requirements.export": "Экспорт",
@@ -4789,26 +4195,20 @@ const resource = {
     "requirements.gate_result": "Хаалга {{num}}: {{status}}",
     "requirements.import": "Импорт",
     "requirements.import_count": "Импортолж байна {{count}} шаардлага...",
-    "requirements.import_csv_desc":
-      "Байршуулах CSV файл -тай баганууд: entity, attribute, constraint_value",
-    "requirements.import_json_desc":
-      "Байршуулах JSON array -н шаардлага объектууд",
-    "requirements.import_placeholder":
-      "хана | thickness | доод | 200 | mm | бүтцийн | ёстой\\nroof | u_value | дээд | 0.20 | W/m²K | thermal | ёстой",
+    "requirements.import_csv_desc": "Байршуулах CSV файл -тай баганууд: entity, attribute, constraint_value",
+    "requirements.import_json_desc": "Байршуулах JSON array -н шаардлага объектууд",
+    "requirements.import_placeholder": "хана | thickness | доод | 200 | mm | бүтцийн | ёстой\\nroof | u_value | дээд | 0.20 | W/m²K | thermal | ёстой",
     "requirements.import_requirements": "Импортлох Шаардлага",
     "requirements.import_text": "Импортлох -аас Текст",
-    "requirements.import_text_desc":
-      "Шаардлагын тодорхойлолтыг буулгана уу. Мөр бүр дараах форматтай байх ёстой: entity | attribute | constraint_type | value | unit | category | priority",
+    "requirements.import_text_desc": "Шаардлагын тодорхойлолтыг буулгана уу. Мөр бүр дараах форматтай байх ёстой: entity | attribute | constraint_type | value | unit | category | priority",
     "requirements.imported": "{{count}} шаардлага импортлогдсон",
     "requirements.json_loaded": "{{count}} зүйлс ачаалсан -аас JSON",
-    "requirements.json_parse_error":
-      "JSON ёстой байх array -н объектууд -тай entity, attribute, constraint_value",
+    "requirements.json_parse_error": "JSON ёстой байх array -н объектууд -тай entity, attribute, constraint_value",
     "requirements.linked_position": "Холбосон БМЖ байрлал",
     "requirements.new_set": "Шинэ Шаардлага Set",
     "requirements.no_match": "Үгүй шаардлага тааруулалт таны шүүлтүүр.",
     "requirements.no_sets": "Үгүй шаардлага sets",
-    "requirements.no_sets_desc":
-      "Үүсгэх шаардлага set хүртэл эхлэх defining төсөл шаардлага ба чанар gates.",
+    "requirements.no_sets_desc": "Үүсгэх шаардлага set хүртэл эхлэх defining төсөл шаардлага ба чанар gates.",
     "requirements.not_linked": "Холбоогүй",
     "requirements.notes": "Тэмдэглэл",
     "requirements.notes_placeholder": "Additional тэмдэглэл эсвэл контекст...",
@@ -4898,20 +4298,17 @@ const resource = {
     "risk.contingency": "Нөөц төлөвлөгөө",
     "risk.created": "Эрсдэл үүсгэгдлээ",
     "risk.critical": "Эмзэг (16-25)",
-    "risk.delete_message":
-      "Энэ эрсдэл болно байх permanently хасагдсан. Энэ action чадахгүй байх undone.",
+    "risk.delete_message": "Энэ эрсдэл болно байх permanently хасагдсан. Энэ action чадахгүй байх undone.",
     "risk.delete_title": "Эрсдэл устгах уу?",
     "risk.deleted": "Эрсдэл устгагдлаа",
-    "risk.disclaimer":
-      "Monte Carlo симуляц нь зөвхөн магадлалд суурилсан тооцоог өгдөг. Үр дүн нь оруулсан таамаглалаас хамаардаг.",
+    "risk.disclaimer": "Monte Carlo симуляц нь зөвхөн магадлалд суурилсан тооцоог өгдөг. Үр дүн нь оруулсан таамаглалаас хамаардаг.",
     "risk.dist": "Тархалт",
     "risk.dist_pert": "PERT",
     "risk.dist_triangular": "Гурвалжин",
     "risk.dist_uniform": "Жигд",
     "risk.distribution": "Өртөг Distribution (Histogram)",
     "risk.empty": "Үгүй эрсдэлүүд бүртгэгдсэн",
-    "risk.empty_desc":
-      "Нэмэх эрсдэлүүд хүртэл хянах potential асуудлууд ба mitigation strategies",
+    "risk.empty_desc": "Нэмэх эрсдэлүүд хүртэл хянах potential асуудлууд ба mitigation strategies",
     "risk.export_csv": "CSV болгож экспортлох",
     "risk.exposure": "Нийт өртөлт",
     "risk.heatmap": "Эрсдэлийн матриц",
@@ -4952,8 +4349,7 @@ const resource = {
     "risk.severity": "Нөлөөллийн хүндрэл",
     "risk.status": "Төлөв",
     "risk.std_dev": "Стандарт хазайлт",
-    "risk.subtitle":
-      "Монте Карлогийн загварчлал ашиглан магадлалын зардлын тооцоо",
+    "risk.subtitle": "Монте Карлогийн загварчлал ашиглан магадлалын зардлын тооцоо",
     "risk.title": "Эрсдэлийн шинжилгээ (Монте Карло)",
     "risk.title_placeholder": "ж.нь Суурийн хөрсний тогтворгүй байдал",
     "risk.top_drivers": "Дээд 10 Эрсдэл Drivers",
@@ -4965,11 +4361,9 @@ const resource = {
     "safety.incident_number": "Тохиолдол #",
     "safety.incidents": "Тохиолдол",
     "safety.no_incidents": "Үгүй тохиолдлууд recorded",
-    "safety.no_incidents_desc":
-      "Тохиолдлууд болно харагдах энд удаа тайлагнасан.",
+    "safety.no_incidents_desc": "Тохиолдлууд болно харагдах энд удаа тайлагнасан.",
     "safety.no_observations": "Үгүй observations recorded",
-    "safety.no_observations_desc":
-      "Observations болно харагдах энд удаа тайлагнасан.",
+    "safety.no_observations_desc": "Observations болно харагдах энд удаа тайлагнасан.",
     "safety.no_project": "Сонгох төсөл хүртэл үзэх аюулгүй байдал өгөгдөл.",
     "safety.observation_number": "Ажиглалт #",
     "safety.observations": "Ажиглалт",
@@ -4996,8 +4390,7 @@ const resource = {
     "schedule.buffer": "Нөөц",
     "schedule.calculate_cpm": "Эгзэгтэй зам",
     "schedule.completed": "Дууссан",
-    "schedule.cpm_result":
-      "Чухал Path: {{duration}} days, {{count}} чухал үйл ажиллагаа",
+    "schedule.cpm_result": "Чухал Path: {{duration}} days, {{count}} чухал үйл ажиллагаа",
     "schedule.create_activity": "Үйл ажиллагаа үүсгэх",
     "schedule.create_schedule": "Хуваарь үүсгэх",
     "schedule.critical_path": "Эгзэгтэй зам",
@@ -5012,37 +4405,31 @@ const resource = {
     "schedule.fifty_pct_confidence": "50% итгэлцэл",
     "schedule.generate": "Үүсгэх",
     "schedule.generate_from_boq": "БМЖ-ээс үүсгэх",
-    "schedule.generate_from_boq_description":
-      "Сонгох BOQ хүртэл автомат-үүсгэх хуваарь үйл ажиллагаа. One үйл ажиллагаа болно байх үүсгэгдсэн тутамд BOQ хэсэг -тай өртөг-proportional үргэлжлэх хугацаа.",
+    "schedule.generate_from_boq_description": "Сонгох BOQ хүртэл автомат-үүсгэх хуваарь үйл ажиллагаа. One үйл ажиллагаа болно байх үүсгэгдсэн тутамд BOQ хэсэг -тай өртөг-proportional үргэлжлэх хугацаа.",
     "schedule.in_progress": "Явагдаж байна",
     "schedule.mean_label": "Дундаж (эгзэгтэй зам)",
     "schedule.ninetyfive_pct_confidence": "95% итгэлцэл",
     "schedule.no_activities": "Хараахан үйл ажиллагаа алга",
-    "schedule.no_activities_hint":
-      "Нэмэх үйл ажиллагаа хүртэл барих таны төсөл хуваарь",
+    "schedule.no_activities_hint": "Нэмэх үйл ажиллагаа хүртэл барих таны төсөл хуваарь",
     "schedule.no_boqs_available": "Үгүй BOQs боломжтой -д зориулсан энэ төсөл.",
     "schedule.no_dates": "Үгүй dates set",
     "schedule.no_projects": "Боломжтой төсөл алга",
-    "schedule.no_projects_hint":
-      "Үүсгэх төсөл эхний, тэгээд нэмэх хуваарь хүртэл энэ",
+    "schedule.no_projects_hint": "Үүсгэх төсөл эхний, тэгээд нэмэх хуваарь хүртэл энэ",
     "schedule.no_schedules": "Хараахан хуваарь алга",
-    "schedule.no_schedules_hint":
-      "Үүсгэх хуваарь хүртэл эхлэх planning таны төсөл timeline",
+    "schedule.no_schedules_hint": "Үүсгэх хуваарь хүртэл эхлэх planning таны төсөл timeline",
     "schedule.planned_duration": "Төлөвлөсөн хугацаа",
     "schedule.project_schedules": "Хуваарь -д зориулсан энэ төсөл",
     "schedule.risk_analysis": "Эрсдэлийн шинжилгээ (PERT)",
     "schedule.risk_analysis_btn": "Эрсдэлийн шинжилгээ",
     "schedule.schedule_name": "Хуваарийн нэр",
     "schedule.schedule_name_placeholder": "e.g. Гол Барилгын Хуваарь",
-    "schedule.select_project":
-      "Сонгох төсөл хүртэл үзэх ба удирдах түүний барилгын хуваарь",
+    "schedule.select_project": "Сонгох төсөл хүртэл үзэх ба удирдах түүний барилгын хуваарь",
     "schedule.start": "Эхлэх",
     "schedule.start_date": "Эхлэх огноо",
     "schedule.status_active": "идэвхтэй",
     "schedule.status_draft": "ноорог",
     "schedule.std_dev_label": "Стандарт хазайлт",
-    "schedule.subtitle":
-      "Сонгох төсөл хүртэл үзэх ба удирдах түүний барилгын хуваарь",
+    "schedule.subtitle": "Сонгох төсөл хүртэл үзэх ба удирдах түүний барилгын хуваарь",
     "schedule.title": "4D хуваарь",
     "schedule.total_activities": "Нийт",
     "schedule.type_milestone": "Үе шат",
@@ -5050,8 +4437,7 @@ const resource = {
     "schedule.type_task": "Даалгавар",
     "schedule.wbs_code": "WBS код",
     "schedule.wbs_code_placeholder": "ж.нь 01.02.003",
-    "schedule.what_is_4d":
-      "4D хуваарь нь таны BOQ байрлалуудыг төслийн хугацааны мөртэй холбодог. Үйл ажиллагаа үүсгэх, хамаарал тогтоох, Gantt диаграмм дээр явцыг дүрсэлнэ. Чухал замын шинжилгээ нь төслийн дуусах огноонд шууд нөлөөлдөг үйл ажиллагааг онцолдог. Үйл ажиллагааны төрөл: Даалгавар = ажлын зүйл, Чухал үе = тэг үргэлжлэх хугацаатай хяналтын цэг, Хураангуй = бүлэглэх толгой.",
+    "schedule.what_is_4d": "4D хуваарь нь таны BOQ байрлалуудыг төслийн хугацааны мөртэй холбодог. Үйл ажиллагаа үүсгэх, хамаарал тогтоох, Gantt диаграмм дээр явцыг дүрсэлнэ. Чухал замын шинжилгээ нь төслийн дуусах огноонд шууд нөлөөлдөг үйл ажиллагааг онцолдог. Үйл ажиллагааны төрөл: Даалгавар = ажлын зүйл, Чухал үе = тэг үргэлжлэх хугацаатай хяналтын цэг, Хураангуй = бүлэглэх толгой.",
     "schedule.zoom_day": "Өдөр",
     "schedule.zoom_month": "Сар",
     "schedule.zoom_week": "Долоо хоног",
@@ -5061,19 +4447,15 @@ const resource = {
     "settings.active": "Идэвхтэй",
     "settings.ai_api_key": "API түлхүүр",
     "settings.ai_connected": "Холбогдсон",
-    "settings.ai_desc_anthropic":
-      "Claude 3.5 Sonnet / Opus — хамгийн сайн -д зориулсан барилгын тооцоолол",
+    "settings.ai_desc_anthropic": "Claude 3.5 Sonnet / Opus — хамгийн сайн -д зориулсан барилгын тооцоолол",
     "settings.ai_desc_gemini": "Gemini 1.5 PRO — олон төрлийн боломжтой",
     "settings.ai_desc_openai": "GPT-4o / GPT-4 Turbo — өргөн дэмжигдсэн",
     "settings.ai_error": "Холболтын алдаа",
     "settings.ai_get_key": "API түлхүүр авах",
-    "settings.ai_guidance":
-      "AI боломжууд (тооцоо, тоо хэмжээ гаргалт шинжилгээ, семантик хайлт) нь API түлхүүр шаардлагатай. Хамгийн сайн нарийвчлалд Anthropic Claude-г санал болгодог. Түлхүүрүүд нь шифрлэгдсэн байдлаар хадгалагдах ба таны серверээс хэзээ ч гарахгүй.",
-    "settings.ai_key_hint":
-      "Таны API түлхүүр нь encrypted ба хадгалсан securely. Энэ нь хэзээ ч үгүй хуваалцсан.",
+    "settings.ai_guidance": "AI боломжууд (тооцоо, тоо хэмжээ гаргалт шинжилгээ, семантик хайлт) нь API түлхүүр шаардлагатай. Хамгийн сайн нарийвчлалд Anthropic Claude-г санал болгодог. Түлхүүрүүд нь шифрлэгдсэн байдлаар хадгалагдах ба таны серверээс хэзээ ч гарахгүй.",
+    "settings.ai_key_hint": "Таны API түлхүүр нь encrypted ба хадгалсан securely. Энэ нь хэзээ ч үгүй хуваалцсан.",
     "settings.ai_key_placeholder": "Enter таны API түлхүүр...",
-    "settings.ai_key_placeholder_existing":
-      "Enter шинэ түлхүүр хүртэл орлуулах одоо байгаа...",
+    "settings.ai_key_placeholder_existing": "Enter шинэ түлхүүр хүртэл орлуулах одоо байгаа...",
     "settings.ai_key_set": "Түлхүүр тохируулсан",
     "settings.ai_last_tested": "(сүүлд шалгасан: {{time}})",
     "settings.ai_not_configured": "Тохируулагдаагүй",
@@ -5083,8 +4465,7 @@ const resource = {
     "settings.ai_save_error": "хадгалах тохиргоо амжилтгүй",
     "settings.ai_saved": "AI тохиргоо хадгалагдлаа",
     "settings.ai_selected": "сонгогдсон",
-    "settings.ai_subtitle":
-      "Сонгох таны AI үйлчилгээ үзүүлэгч -д зориулсан тооцоолол ба шинжилгээ",
+    "settings.ai_subtitle": "Сонгох таны AI үйлчилгээ үзүүлэгч -д зориулсан тооцоолол ба шинжилгээ",
     "settings.ai_test": "Холболт шалгах",
     "settings.ai_test_error": "Шалгалт амжилтгүй",
     "settings.ai_test_failed": "Холболт амжилтгүй",
@@ -5102,21 +4483,17 @@ const resource = {
     "settings.hide_key": "Нуух",
     "settings.imperial": "Imperial (ft, lb) — фут, фунт",
     "settings.inactive": "Идэвхгүй",
-    "settings.interface_mode_subtitle":
-      "Control аль боломжууд нь visible -д navigation",
+    "settings.interface_mode_subtitle": "Control аль боломжууд нь visible -д navigation",
     "settings.interface_mode_title": "Интерфэйсийн горим",
     "settings.language_subtitle": "Хэлээ сонгоно уу",
     "settings.language_title": "Хэл ба бүс",
     "settings.measurement_system": "Хэмжээний систем",
     "settings.member_since": "Гишүүн болсон",
     "settings.metric": "Үзүүлэлт (m, kg)",
-    "settings.mode_advanced_detail":
-      "Бүрэн мэргэжлийн toolset -тай бүх модулиуд ба боломжууд visible.",
-    "settings.mode_simple_detail":
-      "Зайлшгүй шаардлагатай тооцоолол хэрэгсэл. Clean interface -д зориулсан focused ажил.",
+    "settings.mode_advanced_detail": "Бүрэн мэргэжлийн toolset -тай бүх модулиуд ба боломжууд visible.",
+    "settings.mode_simple_detail": "Зайлшгүй шаардлагатай тооцоолол хэрэгсэл. Clean interface -д зориулсан focused ажил.",
     "settings.mode_toggle": "Солих хооронд Энгийн ба Дэвшилт горим",
-    "settings.modules_link_desc":
-      "Идэвхжүүлэх, идэвхгүй болгох, ба тохируулах individual модулиуд -д Модулиуд хэсэг.",
+    "settings.modules_link_desc": "Идэвхжүүлэх, идэвхгүй болгох, ба тохируулах individual модулиуд -д Модулиуд хэсэг.",
     "settings.modules_link_title": "Модулиуд",
     "settings.number_format": "Тооны формат",
     "settings.paper_size": "Цаасны хэмжээ",
@@ -5128,8 +4505,7 @@ const resource = {
     "settings.regional_subtitle": "Форматууд, нэгж, ба localization тохиргоо",
     "settings.regional_title": "Бүсийн тохиргоо",
     "settings.restart_onboarding": "Тохируулгын зөвлөгчийг нээх",
-    "settings.setup_wizard_subtitle":
-      "Re-run initial тохиргоо хүртэл өөрчлөх хэл, суулгах өгөгдлийн сан, каталог, эсвэл демо төслүүд",
+    "settings.setup_wizard_subtitle": "Re-run initial тохиргоо хүртэл өөрчлөх хэл, суулгах өгөгдлийн сан, каталог, эсвэл демо төслүүд",
     "settings.setup_wizard_title": "Тохируулгын зөвлөгч",
     "settings.show_key": "Харуулах",
     "settings.sign_out": "Гарах",
@@ -5163,8 +4539,7 @@ const resource = {
     "settings.tm_showing": "Харуулж байна {{count}} -н {{total}} түлхүүрүүд",
     "settings.tm_total_keys": "Нийт түлхүүрүүд",
     "settings.tm_translated": "Орчуулсан",
-    "settings.translation_manager_subtitle":
-      "Үзэх ба customize орчуулга -д зориулсан одоогийн хэл",
+    "settings.translation_manager_subtitle": "Үзэх ба customize орчуулга -д зориулсан одоогийн хэл",
     "settings.translation_manager_title": "Орчуулгын менежер",
     "share.page.bad_password": "Буруу password. Та try дахин.",
     "share.page.download": "Файл татах",
@@ -5172,15 +4547,13 @@ const resource = {
     "share.page.expired_title": "Энэ холбоос байх expired",
     "share.page.filename_label": "Файл",
     "share.page.loading": "холбоос ачаалж байна…",
-    "share.page.not_found_body":
-      "холбоос нь хүчингүй эсвэл байх байсан revoked.",
+    "share.page.not_found_body": "холбоос нь хүчингүй эсвэл байх байсан revoked.",
     "share.page.not_found_title": "Холбоос биш олсон",
     "share.page.password_placeholder": "Нууц үг",
     "share.page.password_prompt": "Enter password хүртэл татах.",
     "share.page.ready_body": "Дарах товч доор хүртэл татах файл.",
     "share.page.ready_title": "Бэлэн хүртэл татах",
-    "share.page.subtitle":
-      "Хэн нэг нь хуваалцсан файл -тай та -аар дамжуулан OpenConstructionERP.",
+    "share.page.subtitle": "Хэн нэг нь хуваалцсан файл -тай та -аар дамжуулан OpenConstructionERP.",
     "share.page.title": "Хуваалцсан файл",
     "share.page.unlock": "Тайлах ба татах",
     "share.page.unlocking": "Шалгаж байна…",
@@ -5189,8 +4562,7 @@ const resource = {
     "shortcuts.command_palette": "Командын самбар",
     "shortcuts.confirm_next_row": "Баталгаажуулах / Дараах мөр",
     "shortcuts.create_new_item": "Үүсгэх шинэ зүйл (дээр жагсаалт хуудсууд)",
-    "shortcuts.footer_hint":
-      "Shortcuts нь идэвхгүй хэзээ focused дээр input талбарууд.",
+    "shortcuts.footer_hint": "Shortcuts нь идэвхгүй хэзээ focused дээр input талбарууд.",
     "shortcuts.group.actions": "Үйлдэл",
     "shortcuts.group.boq_editor": "БМЖ засварлагч",
     "shortcuts.group.general": "Ерөнхий",
@@ -5252,8 +4624,7 @@ const resource = {
     "submittals.no_results": "Тохирох илгээлт олдсонгүй",
     "submittals.no_results_hint": "Хайлт эсвэл шүүлтүүрийг өөрчилж үзнэ үү.",
     "submittals.no_submittals": "Хараахан илгээлт алга",
-    "submittals.no_submittals_hint":
-      "Үүсгэх таны эхний илгээлт хүртэл get эхэлсэн.",
+    "submittals.no_submittals_hint": "Үүсгэх таны эхний илгээлт хүртэл get эхэлсэн.",
     "submittals.page_title": "Илгээмж",
     "submittals.review_title": "Илгээлтийг хянах",
     "submittals.reviewed": "Илгээлт хянагдсан",
@@ -5271,49 +4642,40 @@ const resource = {
     "submittals.title": "Илгээмж",
     "submittals.title_placeholder": "Илгээлт гарчиг",
     "submittals.title_required": "Гарчиг шаардлагатай",
-    "support.action_case_study_body":
-      "OpenConstructionERP-ийг хэрхэн ашиглаж буйгаа бидэнд харуулаарай — видео, кейс судалгаа, LinkedIn нийтлэл. Бид түүнийг DataDrivenConstruction-ийн мэдээллийн товхимол болон сошиал сувгуудаар нийтлэх бөгөөд эдгээрт хэдэн арван мянган барилгын мэргэжилтэн, салбарын ахмад шинжээчид нэгдсэн байдаг. Холбоос эсвэл ноорогоо илгээнэ үү:",
+    "support.action_case_study_body": "OpenConstructionERP-ийг хэрхэн ашиглаж буйгаа бидэнд харуулаарай — видео, кейс судалгаа, LinkedIn нийтлэл. Бид түүнийг DataDrivenConstruction-ийн мэдээллийн товхимол болон сошиал сувгуудаар нийтлэх бөгөөд эдгээрт хэдэн арван мянган барилгын мэргэжилтэн, салбарын ахмад шинжээчид нэгдсэн байдаг. Холбоос эсвэл ноорогоо илгээнэ үү:",
     "support.action_case_study_tag": "Бид түгээнэ",
-    "support.action_case_study_title":
-      "Кейс судалгаа, видео эсвэл нийтлэлтэй юу?",
-    "support.action_share_body":
-      "LinkedIn эсвэл X/Twitter дээрх нэг пост нь олон тооцоолуур, төлөвлөгч, BIM менежеруудад хүрнэ. Нээлттэй эх барилгын программ хангамжийг газрын зурагт оруулахад тусална уу.",
+    "support.action_case_study_title": "Кейс судалгаа, видео эсвэл нийтлэлтэй юу?",
+    "support.action_share_body": "LinkedIn эсвэл X/Twitter дээрх нэг пост нь олон тооцоолуур, төлөвлөгч, BIM менежеруудад хүрнэ. Нээлттэй эх барилгын программ хангамжийг газрын зурагт оруулахад тусална уу.",
     "support.action_share_title": "Хамт олон эсвэл сүлжээгээрээ түгээх",
-    "support.action_star_body":
-      "30 секунд. Одод нь шинэ багуудад төслийг олох боломжийг олгодог бөгөөд дараагийн хувилбарт зориулсан цаг гаргахад туслана.",
+    "support.action_star_body": "30 секунд. Одод нь шинэ багуудад төслийг олох боломжийг олгодог бөгөөд дараагийн хувилбарт зориулсан цаг гаргахад туслана.",
     "support.action_star_title": "GitHub дээр одоор үнэлээрэй",
     "support.button_aria": "Биднийг дэмжих",
     "support.button_label": "Дэмжих",
     "support.button_tooltip": "Төслийг дэмжих — одоор үнэлэх эсвэл түгээх",
-    "support.modal_subtitle":
-      "Бид бүх кодыг нээлттэй бичиж, бүх боломжуудыг үнэгүй гаргадаг. Танаас гарах хоёр жижиг үйлдэл хөгжлийг үргэлжлүүлэхэд тусална — үнэгүй боловч маш том нөлөөтэй.",
+    "support.modal_subtitle": "Бид бүх кодыг нээлттэй бичиж, бүх боломжуудыг үнэгүй гаргадаг. Танаас гарах хоёр жижиг үйлдэл хөгжлийг үргэлжлүүлэхэд тусална — үнэгүй боловч маш том нөлөөтэй.",
     "support.modal_title": "OpenConstructionERP-ийг өсөхөд тусална уу",
     "support.share_copied": "Хуулагдлаа!",
     "support.share_copy": "Текст + холбоосыг хуулах",
     "support.share_linkedin": "LinkedIn дээр нийтлэх",
     "support.share_twitter": "X дээр нийтлэх",
-    "support.thanks":
-      "Баярлалаа. Од, түгээлт болгон энэ төслийг үргэлжлүүлэн амьд байлгана — барилгын хамт олонд зориулж ❤️ -тэй бүтээгдсэн.",
+    "support.thanks": "Баярлалаа. Од, түгээлт болгон энэ төслийг үргэлжлүүлэн амьд байлгана — барилгын хамт олонд зориулж ❤️ -тэй бүтээгдсэн.",
     "sustainability.area": "Талбай (м²)",
     "sustainability.benchmark": "Жишиг",
     "sustainability.boq": "БМЖ",
     "sustainability.breakdown_title": "Задаргаа -аар Материал",
     "sustainability.calculate": "Тооцоолох",
-    "sustainability.empty_desc":
-      "Сонгох төсөл ба BOQ дээр, тэгээд дарах Тооцоолох хүртэл шинжлэх CO2 emissions based дээр материал төрлүүд.",
+    "sustainability.empty_desc": "Сонгох төсөл ба BOQ дээр, тэгээд дарах Тооцоолох хүртэл шинжлэх CO2 emissions based дээр материал төрлүүд.",
     "sustainability.empty_title": "CO2 ул мөрийн шинжилгээ",
     "sustainability.export_pdf": "CO2 тайланг PDF болгож экспортлох",
     "sustainability.material": "Материал",
-    "sustainability.no_area":
-      "Enter төсөл талбай хүртэл see benchmark тутамд m2",
+    "sustainability.no_area": "Enter төсөл талбай хүртэл see benchmark тутамд m2",
     "sustainability.positions_matched": "байрлалууд matched",
     "sustainability.project": "Төсөл",
     "sustainability.project_area": "Төсөл",
     "sustainability.rating": "Үнэлгээ",
     "sustainability.select_boq": "-- Сонгох BOQ --",
     "sustainability.select_project": "-- Сонгох төсөл --",
-    "sustainability.subtitle":
-      "Сонгох төсөл ба BOQ хүртэл шинжлэх CO2 footprint",
+    "sustainability.subtitle": "Сонгох төсөл ба BOQ хүртэл шинжлэх CO2 footprint",
     "sustainability.title": "Тогтвортой байдал / CO2",
     "sustainability.total_co2": "Нийт CO2",
     "takeoff.add_selected_to_boq": "БМЖ-д {{count}} нэмэх",
@@ -5343,14 +4705,12 @@ const resource = {
     "takeoff.markup.comment_placeholder": "Сэтгэгдэл бичих...",
     "takeoff.markup.comment_send": "Илгээх",
     "takeoff.markup.comments_drawer": "Тэмдэглэгээний сэтгэгдэл",
-    "takeoff.markup.comments_empty":
-      "Үгүй сэтгэгдэл yet — байх эхний хүртэл нэмэх one.",
+    "takeoff.markup.comments_empty": "Үгүй сэтгэгдэл yet — байх эхний хүртэл нэмэх one.",
     "takeoff.markup.comments_load_failed": "ачаалах сэтгэгдэл чадсангүй",
     "takeoff.markup.comments_title": "Сэтгэгдэл",
     "takeoff.minutes_ago": "{{count}} мин өмнө",
     "takeoff.no_documents": "Илгээсэн баримт алга",
-    "takeoff.no_documents_description":
-      "Байршуулах PDF барилгын зургууд хүртэл эхлэх гаргаж авч байна тоо хэмжээ -тай AI.",
+    "takeoff.no_documents_description": "Байршуулах PDF барилгын зургууд хүртэл эхлэх гаргаж авч байна тоо хэмжээ -тай AI.",
     "takeoff.pages": "Хуудас",
     "takeoff.pdf_limit": ".PDF файлууд дээш хүртэл {{size}}MB",
     "takeoff.quick_measurements": "Хурдан хэмжилт",
@@ -5358,15 +4718,13 @@ const resource = {
     "takeoff.select_all": "Бүгдийг сонгох",
     "takeoff.select_boq": "Ажил материалын жагсаалт",
     "takeoff.select_boq_placeholder": "БМЖ сонгоно уу...",
-    "takeoff.select_boq_to_add":
-      "Сонгох төсөл ба BOQ дээр хүртэл нэмэх хэмжилтүүд.",
+    "takeoff.select_boq_to_add": "Сонгох төсөл ба BOQ дээр хүртэл нэмэх хэмжилтүүд.",
     "takeoff.select_items_hint": "Сонгох зүйлс хүртэл нэмэх хүртэл BOQ",
     "takeoff.select_project": "Төсөл",
     "takeoff.select_project_first": "Эхлээд төсөл сонгоно уу",
     "takeoff.select_project_placeholder": "Төсөл сонгоно уу...",
     "takeoff.selected": "сонгогдсон",
-    "takeoff.subtitle":
-      "Байршуулах барилгын зургууд хүртэл гаргаж авах тоо хэмжээ",
+    "takeoff.subtitle": "Байршуулах барилгын зургууд хүртэл гаргаж авах тоо хэмжээ",
     "takeoff.summary": "Хураангуй",
     "takeoff.title": "PDF-ээс хэмжээ авах",
     "takeoff.total_quantity": "НИЙТ",
@@ -5376,8 +4734,7 @@ const resource = {
     "takeoff.uploaded_documents": "Байршуулсан Баримт бичиг",
     "takeoff.value": "Үнэ цэн",
     "takeoff.view": "Үзэх",
-    "takeoff.workflow_desc":
-      "PDF зураг байршуулна → AI хуудсыг шинжилж тоо хэмжээтэй элементүүдийг (хана, хавтгай, хаалга гэх мэт) гаргаж авна → Үр дүнг хянаж тохируулна → Сонгосон зүйлсийг BOQ-д нэмнэ. Итгэлийн оноо: ногоон (>80%) = өндөр итгэл, шар (50-80%) = хяналт хийхийг зөвлөж байна, улаан (<50%) = гар баталгаажуулалт шаардлагатай.",
+    "takeoff.workflow_desc": "PDF зураг байршуулна → AI хуудсыг шинжилж тоо хэмжээтэй элементүүдийг (хана, хавтгай, хаалга гэх мэт) гаргаж авна → Үр дүнг хянаж тохируулна → Сонгосон зүйлсийг BOQ-д нэмнэ. Итгэлийн оноо: ногоон (>80%) = өндөр итгэл, шар (50-80%) = хяналт хийхийг зөвлөж байна, улаан (<50%) = гар баталгаажуулалт шаардлагатай.",
     "tasks.assignee_placeholder": "Сонгох assignee",
     "tasks.checklist_progress": "{{done}} -н {{total}} done",
     "tasks.column_empty": "Үгүй даалгавар -д энэ багана",
@@ -5409,12 +4766,10 @@ const resource = {
     "tendering.at": "цагт",
     "tendering.award": "Олгох",
     "tendering.award_bid": "Award энэ санал",
-    "tendering.award_confirm":
-      "Award энэ гэрээ хүртэл {{company}}? Энэ action чадахгүй байх undone.",
+    "tendering.award_confirm": "Award энэ гэрээ хүртэл {{company}}? Энэ action чадахгүй байх undone.",
     "tendering.award_confirm_title": "Гэрээг олгох уу?",
     "tendering.bid_comparison": "Үнийн санал харьцуулалт",
-    "tendering.bid_comparison_chart_label":
-      "Bar chart харьцуулж байна санал нийт",
+    "tendering.bid_comparison_chart_label": "Bar chart харьцуулж байна санал нийт",
     "tendering.bid_count": "{{count}} саналууд‌⁠‍",
     "tendering.bid_totals_chart": "Үнийн саналын нийт тойм",
     "tendering.bids_count": "үнийн санал",
@@ -5444,8 +4799,7 @@ const resource = {
     "tendering.new_package": "Шинэ тендерийн багц",
     "tendering.no_bids_yet": "Хараахан саналууд алга",
     "tendering.no_packages": "Үгүй тендер packages",
-    "tendering.no_packages_description":
-      "Үүсгэх тендер -аас BOQ хүртэл эхлэх collecting саналууд",
+    "tendering.no_packages_description": "Үүсгэх тендер -аас BOQ хүртэл эхлэх collecting саналууд",
     "tendering.notes": "Тэмдэглэл",
     "tendering.notes_placeholder": "Сонголтын тэмдэглэл...",
     "tendering.other": "Бусад",
@@ -5456,8 +4810,7 @@ const resource = {
     "tendering.recommendation": "Зөвлөмж",
     "tendering.select_boq": "БМЖ сонгоно уу...",
     "tendering.select_project": "Төсөл",
-    "tendering.select_project_desc":
-      "Сонгох төсөл ба үүсгэх тендер -аас BOQ хүртэл get эхэлсэн",
+    "tendering.select_project_desc": "Сонгох төсөл ба үүсгэх тендер -аас BOQ хүртэл get эхэлсэн",
     "tendering.select_project_first": "Эхлээд төсөл сонгоно уу",
     "tendering.select_project_placeholder": "Төсөл сонгоно уу...",
     "tendering.select_project_title": "Төсөл сонгоно уу",
@@ -5478,8 +4831,7 @@ const resource = {
     "tendering.total": "НИЙТ",
     "tendering.total_amount": "Нийт дүн",
     "tendering.vs_budget": "төсөвтэй харьцуулсан",
-    "tendering.workflow_desc":
-      "Тендерийн ажлын урсгал: Ноорог (багц бэлдэх) → Гаргасан (санал өгөгчдөд илгээх) → Цуглуулж байна (саналуудыг хүлээн авах) → Үнэлж байна (саналуудыг зэрэгцүүлэн харьцуулах) → Шагнагдсан (ялагч сонгох). BOQ-оос багц үүсгэж, туслан гүйцэтгэгчийн саналуудыг нэмж, дараа нь харьцуулалтын хүснэгтийг ашиглан хамгийн сайн саналыг тодорхойлно. Зэрэгцүүлсэн шинжилгээ үзэхийн тулд 2 ба түүнээс дээш санал нэмнэ.",
+    "tendering.workflow_desc": "Тендерийн ажлын урсгал: Ноорог (багц бэлдэх) → Гаргасан (санал өгөгчдөд илгээх) → Цуглуулж байна (саналуудыг хүлээн авах) → Үнэлж байна (саналуудыг зэрэгцүүлэн харьцуулах) → Шагнагдсан (ялагч сонгох). BOQ-оос багц үүсгэж, туслан гүйцэтгэгчийн саналуудыг нэмж, дараа нь харьцуулалтын хүснэгтийг ашиглан хамгийн сайн саналыг тодорхойлно. Зэрэгцүүлсэн шинжилгээ үзэхийн тулд 2 ба түүнээс дээш санал нэмнэ.",
     "toasts.activity_created": "Үйл ажиллагаа үүсгэгдсэн",
     "toasts.assembly_applied": "Нэгдэл БМЖ-д хэрэглэгдсэн",
     "toasts.assembly_deleted": "Нэгдэл устгагдсан",
@@ -5512,8 +4864,7 @@ const resource = {
     "transmittals.col_recipients": "Хүлээн авагчид",
     "transmittals.col_status": "Төлөв",
     "transmittals.col_subject": "Сэдэв",
-    "transmittals.cover_note_placeholder":
-      "Cover тэмдэглэл -д зориулсан transmittal...",
+    "transmittals.cover_note_placeholder": "Cover тэмдэглэл -д зориулсан transmittal...",
     "transmittals.create_transmittal": "Transmittal үүсгэх",
     "transmittals.created": "Transmittal үүсгэгдлээ",
     "transmittals.field_cover_note": "Хавсралт тэмдэглэл",
@@ -5533,8 +4884,7 @@ const resource = {
     "transmittals.no_results": "Тохирох transmittals олдсонгүй",
     "transmittals.no_results_hint": "Хайлт эсвэл шүүлтүүрийг өөрчилж үзнэ үү.",
     "transmittals.no_transmittals": "Хараахан transmittals алга",
-    "transmittals.no_transmittals_hint":
-      "Үүсгэх таны эхний transmittal хүртэл get эхэлсэн.",
+    "transmittals.no_transmittals_hint": "Үүсгэх таны эхний transmittal хүртэл get эхэлсэн.",
     "transmittals.page_title": "Дамжуулалт",
     "transmittals.picker_container_label": "Багц",
     "transmittals.picker_revision_label": "Хувилбар",
@@ -5630,72 +4980,53 @@ const resource = {
     "onboarding.company_property_developer_desc": "Үл хөдлөх хөгжүүлэлтийн баг",
     "onboarding.explore_all_modules": "Бүх {{count}} модулийг үзэх",
     "onboarding.mod_cost_match": "Зардлын тааруулалт",
-    "onboarding.mod_cost_match_desc":
-      "БОО-ийн нэр төрлийг өртгийн санд автоматаар тааруулах",
+    "onboarding.mod_cost_match_desc": "БОО-ийн нэр төрлийг өртгийн санд автоматаар тааруулах",
     "onboarding.mod_match": "Элемент тааруулах",
-    "onboarding.mod_match_desc":
-      "BIM/CAD элементийг БОО-ийн нэр төрөл, өртөгтэй холбох",
+    "onboarding.mod_match_desc": "BIM/CAD элементийг БОО-ийн нэр төрөл, өртөгтэй холбох",
     "onboarding.mod_dwg_takeoff": "DWG-аас тоо хэмжээ авах",
     "onboarding.mod_dwg_takeoff_desc": "DWG зургаас шууд тоо хэмжээ гаргах",
     "onboarding.mod_cad": "CAD импорт",
     "onboarding.mod_cad_desc": "DDC cad2data-аар DWG/DGN/RVT/IFC импортлох",
     "onboarding.mod_bim_requirements": "BIM-ийн шаардлага",
-    "onboarding.mod_bim_requirements_desc":
-      "Загварын шаардлагыг тодорхойлж шалгах (IDS / EIR)",
+    "onboarding.mod_bim_requirements_desc": "Загварын шаардлагыг тодорхойлж шалгах (IDS / EIR)",
     "onboarding.mod_match_elements": "Элемент тааруулах",
-    "onboarding.mod_match_elements_desc":
-      "Итгэлийн оноотой, BIM-ийг өртөгтэй AI-аар тааруулах",
+    "onboarding.mod_match_elements_desc": "Итгэлийн оноотой, BIM-ийг өртөгтэй AI-аар тааруулах",
     "onboarding.mod_opencde_api": "OpenCDE API",
-    "onboarding.mod_opencde_api_desc":
-      "BCF + Баримт + Foundation-д зориулсан OpenCDE API",
+    "onboarding.mod_opencde_api_desc": "BCF + Баримт + Foundation-д зориулсан OpenCDE API",
     "onboarding.mod_erp_chat": "ERP чат",
     "onboarding.mod_erp_chat_desc": "ERP-ийн бүрэн контексттэй AI туслах",
     "onboarding.mod_compliance_ai": "Нийцлийн AI",
-    "onboarding.mod_compliance_ai_desc":
-      "LLM-д суурилсан зохицуулалтын нийцлийн шалгалт",
+    "onboarding.mod_compliance_ai_desc": "LLM-д суурилсан зохицуулалтын нийцлийн шалгалт",
     "onboarding.mod_schedule_advanced": "Гүнзгийрүүлсэн график",
-    "onboarding.mod_schedule_advanced_desc":
-      "Долоо хоногийн төлөвлөгөө ба PPC бүхий Last Planner систем",
+    "onboarding.mod_schedule_advanced_desc": "Долоо хоногийн төлөвлөгөө ба PPC бүхий Last Planner систем",
     "onboarding.mod_eac": "EAC хөдөлгүүр",
     "onboarding.mod_eac_desc": "Нэвтрэлттэй EAC прогноз",
     "onboarding.mod_bid_management": "Тендерийн менежмент",
-    "onboarding.mod_bid_management_desc":
-      "Гарах саналууд, үнийн стратеги, ялалт/ялагдлыг хянах",
+    "onboarding.mod_bid_management_desc": "Гарах саналууд, үнийн стратеги, ялалт/ялагдлыг хянах",
     "onboarding.mod_contracts": "Гэрээ",
-    "onboarding.mod_contracts_desc":
-      "Гэрээний төрлийн хөдөлгүүр (FIDIC, NEC, JCT, нийт дүн, T&M)",
+    "onboarding.mod_contracts_desc": "Гэрээний төрлийн хөдөлгүүр (FIDIC, NEC, JCT, нийт дүн, T&M)",
     "onboarding.mod_variations": "Өөрчлөлт",
-    "onboarding.mod_variations_desc":
-      "Зөвшөөрлийн урсгалтай талбайн хэмжилтийн өөрчлөлт",
+    "onboarding.mod_variations_desc": "Зөвшөөрлийн урсгалтай талбайн хэмжилтийн өөрчлөлт",
     "onboarding.mod_crm": "CRM",
     "onboarding.mod_crm_desc": "Борлуулалтын урсгал, лид, боломж, бүртгэл",
     "onboarding.mod_supplier_catalogs": "Нийлүүлэгчийн каталог",
-    "onboarding.mod_supplier_catalogs_desc":
-      "Шууд нийлүүлэгчийн үнэ ба нийлүүлэгчийн менежмент",
+    "onboarding.mod_supplier_catalogs_desc": "Шууд нийлүүлэгчийн үнэ ба нийлүүлэгчийн менежмент",
     "onboarding.mod_property_dev": "Үл хөдлөх хөгжүүлэлт",
-    "onboarding.mod_property_dev_desc":
-      "Газар, үе шат, борлуулалтын холимог, хөгжүүлэгчдийн ТЭЗҮ",
+    "onboarding.mod_property_dev_desc": "Газар, үе шат, борлуулалтын холимог, хөгжүүлэгчдийн ТЭЗҮ",
     "onboarding.mod_service": "Үйлчилгээ ба засвар",
-    "onboarding.mod_service_desc":
-      "Хүлээлгэн өгсний дараах үйлчилгээ, баталгаа, засвар",
+    "onboarding.mod_service_desc": "Хүлээлгэн өгсний дараах үйлчилгээ, баталгаа, засвар",
     "onboarding.mod_equipment": "Тоног төхөөрөмж ба парк",
-    "onboarding.mod_equipment_desc":
-      "Тоног төхөөрөмж, багаж, тээврийн хэрэгсэл — ачаалал, засвар, түрээс",
+    "onboarding.mod_equipment_desc": "Тоног төхөөрөмж, багаж, тээврийн хэрэгсэл — ачаалал, засвар, түрээс",
     "onboarding.mod_resources": "Нөөц",
-    "onboarding.mod_resources_desc":
-      "Хүн хүч, материал, тоног төхөөрөмжийн нөөцийн төлөвлөлт",
+    "onboarding.mod_resources_desc": "Хүн хүч, материал, тоног төхөөрөмжийн нөөцийн төлөвлөлт",
     "onboarding.mod_daily_diary": "Өдрийн тэмдэглэл",
-    "onboarding.mod_daily_diary_desc":
-      "Цаг агаар, бригад, тоног төхөөрөмж, зурагтай өдрийн тэмдэглэл",
+    "onboarding.mod_daily_diary_desc": "Цаг агаар, бригад, тоног төхөөрөмж, зурагтай өдрийн тэмдэглэл",
     "onboarding.mod_subcontractors": "Туслан гүйцэтгэгч",
-    "onboarding.mod_subcontractors_desc":
-      "Туслан гүйцэтгэгчийн бүртгэл, гэрээ, төлбөр, гүйцэтгэл",
+    "onboarding.mod_subcontractors_desc": "Туслан гүйцэтгэгчийн бүртгэл, гэрээ, төлбөр, гүйцэтгэл",
     "onboarding.mod_portal": "Үйлчлүүлэгчийн портал",
-    "onboarding.mod_portal_desc":
-      "Үйлчлүүлэгч ба түншүүдэд хязгаарлагдмал хандалттай гадаад портал",
+    "onboarding.mod_portal_desc": "Үйлчлүүлэгч ба түншүүдэд хязгаарлагдмал хандалттай гадаад портал",
     "onboarding.mod_notifications": "Мэдэгдэл",
-    "onboarding.mod_notifications_desc":
-      "Апп доторх, имэйл ба webhook мэдэгдэл",
+    "onboarding.mod_notifications_desc": "Апп доторх, имэйл ба webhook мэдэгдэл",
     "onboarding.mod_hse_advanced": "Гүнзгий HSE",
     "onboarding.mod_hse_advanced_desc": "Гүнзгийрсэн HSE — toolbox, JHA, аудит",
     "onboarding.mod_qms": "Чанарын менежментийн систем",
@@ -5703,83 +5034,60 @@ const resource = {
     "onboarding.mod_compliance": "Нийцлийн DSL",
     "onboarding.mod_compliance_desc": "Нийцлийн дүрэмд зориулсан DSL",
     "onboarding.mod_compliance_docs": "Нийцлийн баримт",
-    "onboarding.mod_compliance_docs_desc":
-      "Гэрчилгээний сан, хүчинтэй хугацаа, шинэчлэлийн сануулга",
+    "onboarding.mod_compliance_docs_desc": "Гэрчилгээний сан, хүчинтэй хугацаа, шинэчлэлийн сануулга",
     "onboarding.mod_carbon": "Нүүрстөрөгч ба тогтвортой байдал",
-    "onboarding.mod_carbon_desc":
-      "Шингэсэн ба үйл ажиллагааны нүүрстөрөгч, ESG, EN 15978",
+    "onboarding.mod_carbon_desc": "Шингэсэн ба үйл ажиллагааны нүүрстөрөгч, ESG, EN 15978",
     "onboarding.mod_bi_dashboards": "BI хяналтын самбар",
-    "onboarding.mod_bi_dashboards_desc":
-      "Drill-down-той модуль хоорондын интерактив шинжилгээ",
+    "onboarding.mod_bi_dashboards_desc": "Drill-down-той модуль хоорондын интерактив шинжилгээ",
     "onboarding.mod_enterprise_workflows": "Корпорацийн urgsl",
-    "onboarding.mod_enterprise_workflows_desc":
-      "Том байгууллагуудад зориулсан FSM-д суурилсан custom workflow",
+    "onboarding.mod_enterprise_workflows_desc": "Том байгууллагуудад зориулсан FSM-д суурилсан custom workflow",
     "onboarding.mod_full_evm": "Бүрэн EVM",
-    "onboarding.mod_full_evm_desc":
-      "Бүрэн EVM — PV/EV/AC, SPI/CPI, CV/SV, ETC/EAC",
+    "onboarding.mod_full_evm_desc": "Бүрэн EVM — PV/EV/AC, SPI/CPI, CV/SV, ETC/EAC",
     "onboarding.mod_rfq_bidding": "RFQ ба тендер",
-    "onboarding.mod_rfq_bidding_desc":
-      "Олон үеийн RFQ, битүүмжилсэн санал, e-дуудлага худалдаа",
+    "onboarding.mod_rfq_bidding_desc": "Олон үеийн RFQ, битүүмжилсэн санал, e-дуудлага худалдаа",
     "onboarding.mod_integrations": "Холболт",
-    "onboarding.mod_integrations_desc":
-      "n8n-аар Webhook, SAP, Procore, MS Project",
+    "onboarding.mod_integrations_desc": "n8n-аар Webhook, SAP, Procore, MS Project",
     "onboarding.mod_dach_pack": "Regional Pack — DACH (Герман/Австри/Швейцарь)",
-    "onboarding.mod_dach_pack_desc":
-      "DACH (Герман/Австри/Швейцарь)-ийн стандарт, ангилал, валют, формат",
+    "onboarding.mod_dach_pack_desc": "DACH (Герман/Австри/Швейцарь)-ийн стандарт, ангилал, валют, формат",
     "onboarding.mod_uk_pack": "Regional Pack — Их Британи",
-    "onboarding.mod_uk_pack_desc":
-      "Их Британи-ийн стандарт, ангилал, валют, формат",
+    "onboarding.mod_uk_pack_desc": "Их Британи-ийн стандарт, ангилал, валют, формат",
     "onboarding.mod_us_pack": "Regional Pack — АНУ",
     "onboarding.mod_us_pack_desc": "АНУ-ийн стандарт, ангилал, валют, формат",
     "onboarding.mod_india_pack": "Regional Pack — Энэтхэг",
-    "onboarding.mod_india_pack_desc":
-      "Энэтхэг-ийн стандарт, ангилал, валют, формат",
+    "onboarding.mod_india_pack_desc": "Энэтхэг-ийн стандарт, ангилал, валют, формат",
     "onboarding.mod_middle_east_pack": "Regional Pack — Ойрх Дорнод ба GCC",
-    "onboarding.mod_middle_east_pack_desc":
-      "Ойрх Дорнод ба GCC-ийн стандарт, ангилал, валют, формат",
+    "onboarding.mod_middle_east_pack_desc": "Ойрх Дорнод ба GCC-ийн стандарт, ангилал, валют, формат",
     "onboarding.mod_latam_pack": "Regional Pack — Латин Америк",
-    "onboarding.mod_latam_pack_desc":
-      "Латин Америк-ийн стандарт, ангилал, валют, формат",
+    "onboarding.mod_latam_pack_desc": "Латин Америк-ийн стандарт, ангилал, валют, формат",
     "onboarding.mod_asia_pac_pack": "Regional Pack — Ази Номхон далайн бүс",
-    "onboarding.mod_asia_pac_pack_desc":
-      "Ази Номхон далайн бүс-ийн стандарт, ангилал, валют, формат",
+    "onboarding.mod_asia_pac_pack_desc": "Ази Номхон далайн бүс-ийн стандарт, ангилал, валют, формат",
     "onboarding.mod_russia_pack": "Regional Pack — Орос ба ТУХН",
-    "onboarding.mod_russia_pack_desc":
-      "Орос ба ТУХН-ийн стандарт, ангилал, валют, формат",
+    "onboarding.mod_russia_pack_desc": "Орос ба ТУХН-ийн стандарт, ангилал, валют, формат",
     "onboarding.mod_users": "Хэрэглэгч ба Auth",
     "onboarding.mod_users_desc": "Хэрэглэгчийн данс, дүрэм, JWT, API түлхүүр",
     "onboarding.mod_teams": "Баг",
-    "onboarding.mod_teams_desc":
-      "Багийн бүлэглэл, харагдац, төслийн хуваарилалт",
+    "onboarding.mod_teams_desc": "Багийн бүлэглэл, харагдац, төслийн хуваарилалт",
     "onboarding.mod_uploads": "Хуулах",
-    "onboarding.mod_uploads_desc":
-      "Үргэлжлүүлэх боломжтой том файлын шууд upload",
+    "onboarding.mod_uploads_desc": "Үргэлжлүүлэх боломжтой том файлын шууд upload",
     "onboarding.mod_jobs": "Арын ажил",
-    "onboarding.mod_jobs_desc":
-      "Импорт, экспорт, CV-д зориулсан worker дараалал",
+    "onboarding.mod_jobs_desc": "Импорт, экспорт, CV-д зориулсан worker дараалал",
     "onboarding.mod_search": "Семантик хайлт",
-    "onboarding.mod_search_desc":
-      "БОО, баримт, зураг даяар вектор + лексик хайлт",
+    "onboarding.mod_search_desc": "БОО, баримт, зураг даяар вектор + лексик хайлт",
     "onboarding.mod_backup": "Нөөц ба сэргээх",
     "onboarding.mod_backup_desc": "Тодорхой цэгт сэргээдэг автомат нөөц",
     "onboarding.mod_admin": "Админ консол",
-    "onboarding.mod_admin_desc":
-      "Операторын endpoint, QA pipeline, системийн засвар",
+    "onboarding.mod_admin_desc": "Операторын endpoint, QA pipeline, системийн засвар",
     "onboarding.mod_i18n_foundation": "i18n үндэс",
-    "onboarding.mod_i18n_foundation_desc":
-      "Lazy chunk бүхий 27 хэлний i18n runtime",
+    "onboarding.mod_i18n_foundation_desc": "Lazy chunk бүхий 27 хэлний i18n runtime",
     "onboarding.mod_collaboration_locks": "Хамтын ажиллагааны түгжээ",
-    "onboarding.mod_collaboration_locks_desc":
-      "Олон хэрэглэгчийн засварт оптимист ба пессимист түгжээ",
+    "onboarding.mod_collaboration_locks_desc": "Олон хэрэглэгчийн засварт оптимист ба пессимист түгжээ",
     "onboarding.mod_architecture_map": "Архитектурын зураглал",
-    "onboarding.mod_architecture_map_desc":
-      "Системийн архитектурын интерактив зураглал",
+    "onboarding.mod_architecture_map_desc": "Системийн архитектурын интерактив зураглал",
     "onboarding.mod_dashboards": "Хяналтын самбар",
     "onboarding.mod_dashboards_desc": "Төслийн ба багц хяналтын самбар",
     "boq.add_child_position": "Хүү байр нэмэх",
     "boq.add_sub_section": "Дэд хэсэг нэмэх",
-    "boq.ai_no_answer":
-      "Туслах хариулт буцаасангүй. Дахин үг сольж эсвэл дахин оролдоно уу.",
+    "boq.ai_no_answer": "Туслах хариулт буцаасангүй. Дахин үг сольж эсвэл дахин оролдоно уу.",
     "boq.compare_added": "Нэмсэн",
     "boq.compare_against": "Харьцуулах объект",
     "boq.compare_btn": "Харьцуулах",
@@ -5795,8 +5103,7 @@ const resource = {
     "boq.compare_qty": "Тоо ширхэг",
     "boq.compare_rate": "Үнэ",
     "boq.compare_removed": "Хассан",
-    "boq.compare_select_hint":
-      "Мөр мөрөөр ялгааг үзэхийн тулд дээр өөр тооцооны жагсаалт сонгоно уу.",
+    "boq.compare_select_hint": "Мөр мөрөөр ялгааг үзэхийн тулд дээр өөр тооцооны жагсаалт сонгоно уу.",
     "boq.compare_unchanged": "Өөрчлөгдөөгүй",
     "boq.compare_ct_added": "Нэмсэн",
     "boq.compare_ct_removed": "Хассан",
@@ -5813,8 +5120,7 @@ const resource = {
     "boq.model_link_agg_first": "Эхний",
     "boq.model_link_create": "Холбоо үүсгэх",
     "boq.model_link_created": "Модел холбоо үүссэн",
-    "boq.model_link_created_hint":
-      "Тоо хэмжээ хараахан шинэчлэгдээгүй — «Моделоос дахин ачаалах» дараа «Хэрэгжүүлэх» дарж татаж аваарай.",
+    "boq.model_link_created_hint": "Тоо хэмжээ хараахан шинэчлэгдээгүй — «Моделоос дахин ачаалах» дараа «Хэрэгжүүлэх» дарж татаж аваарай.",
     "boq.model_link_delete": "Холбоо устгах",
     "boq.model_link_delete_failed": "Модел холбоог устгаж чадсангүй",
     "boq.model_link_deleted": "Модел холбоо устгагдсан",
@@ -5833,65 +5139,48 @@ const resource = {
     "boq.model_link_status_active": "Синхрончлогдсон",
     "boq.model_link_status_stale": "Хуучирсан",
     "boq.model_link_status_broken": "Тасарсан",
-    "boq.model_link_subtitle":
-      "Байр {{ordinal}} — тоо хэмжээг BIM модел элементүүдтэй холбох",
+    "boq.model_link_subtitle": "Байр {{ordinal}} — тоо хэмжээг BIM модел элементүүдтэй холбох",
     "boq.model_link_title": "Модел холбоо",
     "boq.model_link_version": "модел v{{v}}",
-    "boq.model_review_all_synced":
-      "Холбосон бүх тоо хэмжээнүүд моделтой синхрончлогдсон.",
+    "boq.model_review_all_synced": "Холбосон бүх тоо хэмжээнүүд моделтой синхрончлогдсон.",
     "boq.model_review_applied": "{{count}} тоо хэмжээний шинэчлэлт хэрэгжсэн",
     "boq.model_review_apply": "Сонгосон {{count}}-г хэрэгжүүлэх",
     "boq.model_review_apply_failed": "Хэрэгжүүлэх амжилтгүй",
     "boq.model_review_btn": "Модел синхрончлол",
-    "boq.model_review_btn_hint":
-      "Холбогдсон BIM моделоос тоо хэмжээг дахин татах",
-    "boq.model_review_hint":
-      "Холбогдсон тоо хэмжээг моделийн хамгийн сүүлийн хувилбараар дахин тооцоолно. «Хэрэгжүүлэх» дартал юу ч өөрчлөгдөхгүй.",
+    "boq.model_review_btn_hint": "Холбогдсон BIM моделоос тоо хэмжээг дахин татах",
+    "boq.model_review_hint": "Холбогдсон тоо хэмжээг моделийн хамгийн сүүлийн хувилбараар дахин тооцоолно. «Хэрэгжүүлэх» дартал юу ч өөрчлөгдөхгүй.",
     "boq.model_review_missing": "{{count}} дутуу",
     "boq.model_review_no_links": "Энэ тооцооны жагсаалтад модел холбоо байхгүй",
     "boq.model_review_refresh": "Моделоос дахин ачаалах",
     "boq.model_review_refresh_failed": "Моделоос дахин ачаалах амжилтгүй",
-    "boq.model_review_run":
-      "Моделоос үүдэлтэй өөрчлөлтийг харахын тулд дахин ачаалах ажиллуулна уу.",
+    "boq.model_review_run": "Моделоос үүдэлтэй өөрчлөлтийг харахын тулд дахин ачаалах ажиллуулна уу.",
     "boq.model_review_title": "Моделийн тоо хэмжээний тойм",
-    "boq.position_added_edit_hint":
-      "Тайлбар бичээд Tab дарж нэгж, тоо хэмжээ, үнэ рүү шилжинэ",
-    "boq.link_badge_instance":
-      "{{code}} кодын холбогдсон хувилбар — тодорхойлолтыг засвал ялгарна",
+    "boq.position_added_edit_hint": "Тайлбар бичээд Tab дарж нэгж, тоо хэмжээ, үнэ рүү шилжинэ",
+    "boq.link_badge_instance": "{{code}} кодын холбогдсон хувилбар — тодорхойлолтыг засвал ялгарна",
     "boq.link_badge_master": "{{code}} кодын мастер — {{count}} холбогдсон",
     "boq.link_master_badge": "Мастер",
-    "boq.link_propagated_msg":
-      "Энэ төслийн {{count}} холбогдсон байрыг шинэчлэв.",
+    "boq.link_propagated_msg": "Энэ төслийн {{count}} холбогдсон байрыг шинэчлэв.",
     "boq.link_propagated_title": "Тодорхойлолт түгээгдсэн",
-    "boq.max_depth_reached_tooltip":
-      "Хамгийн их үүрлэх гүн ({{max}} түвшин) хүрсэн — бүтцийг хавтгайруулах эсвэл бага дэд түвшин ашиглаарай.",
-    "boq.resource_link_propagated_msg":
-      "Энэ төслийн өөр {{count}} байрны хуваалцсан нөөцийг шинэчлэв.",
+    "boq.max_depth_reached_tooltip": "Хамгийн их үүрлэх гүн ({{max}} түвшин) хүрсэн — бүтцийг хавтгайруулах эсвэл бага дэд түвшин ашиглаарай.",
+    "boq.resource_link_propagated_msg": "Энэ төслийн өөр {{count}} байрны хуваалцсан нөөцийг шинэчлэв.",
     "boq.resource_link_propagated_title": "Нөөцийн тодорхойлолт түгээгдсэн",
     "boq.link_role_instance": "Холбогдсон хувилбар",
     "boq.link_role_master": "Мастер (тодорхойлолтын бичлэг)",
-    "boq.link_unlinked_msg":
-      "Таны засвар энэ холбогдсон хуулбарыг өөрчилсөн тул хуваалцсан кодыг дагахаа больсон. Ялгарал санаатай бус байсан бол кодыг буцааж тавь.",
+    "boq.link_unlinked_msg": "Таны засвар энэ холбогдсон хуулбарыг өөрчилсөн тул хуваалцсан кодыг дагахаа больсон. Ялгарал санаатай бус байсан бол кодыг буцааж тавь.",
     "boq.link_unlinked_title": "Байр хуваалцсан кодоос салгагдсан",
-    "boq.linked_positions_count":
-      "{{total}} байр энэ кодыг хуваалцаж байна ({{instances}} холбогдсон хувилбар). Мастер нь тодорхойлолтын бичлэг; түүнийг засах нь төслийн бүх хувилбарт түгээгдэнэ.",
+    "boq.linked_positions_count": "{{total}} байр энэ кодыг хуваалцаж байна ({{instances}} холбогдсон хувилбар). Мастер нь тодорхойлолтын бичлэг; түүнийг засах нь төслийн бүх хувилбарт түгээгдэнэ.",
     "boq.linked_positions_error": "Холбогдсон байруудыг ачаалж чадсангүй.",
-    "boq.linked_positions_none":
-      "Энэ байр бие даасан — өөр байр энэ кодыг хуваалцдаггүй.",
-    "boq.linked_positions_subtitle":
-      "{{code}} код — {{ordinal}} байрнаас харах",
+    "boq.linked_positions_none": "Энэ байр бие даасан — өөр байр энэ кодыг хуваалцдаггүй.",
+    "boq.linked_positions_subtitle": "{{code}} код — {{ordinal}} байрнаас харах",
     "boq.linked_positions_title": "Холбогдсон байр",
     "boq.no_description": "(тайлбаргүй)",
     "boq.reuse_code_action": "Одоо байгаа кодыг ашиглах…",
     "boq.reuse_code_existing": "Одоо байгаа код: {{codes}}",
-    "boq.reuse_code_msg":
-      "Холбогдсон хувилбар үүссэн — {{count}} байр энэ кодыг хуваалцаж байна. Тоо хэмжээг бие даан засаж болно.",
-    "boq.reuse_code_prompt":
-      "Эндэх дахин ашиглах одоо байгаа кодыг оруулна уу (тодорхойлолт ба дэд байр хуулагдана; тоо хэмжээ бие даасан хэвээр):",
+    "boq.reuse_code_msg": "Холбогдсон хувилбар үүссэн — {{count}} байр энэ кодыг хуваалцаж байна. Тоо хэмжээг бие даан засаж болно.",
+    "boq.reuse_code_prompt": "Эндэх дахин ашиглах одоо байгаа кодыг оруулна уу (тодорхойлолт ба дэд байр хуулагдана; тоо хэмжээ бие даасан хэвээр):",
     "boq.reuse_code_title": "{{code}} код дахин ашиглагдсан",
     "boq.show_linked": "Холбогдсон байруудыг харуулах",
-    "boq.unlink_done_msg":
-      "{{code}} код хадгалагдсан. Энэ байр хуваалцсан кодыг дагахгүй болсон; утгууд нь хадгалагдсан.",
+    "boq.unlink_done_msg": "{{code}} код хадгалагдсан. Энэ байр хуваалцсан кодыг дагахгүй болсон; утгууд нь хадгалагдсан.",
     "boq.unlink_done_title": "Байр салгагдсан",
     "boq.unlink_failed": "Байрыг салгаж чадсангүй",
     "boq.unlink_this": "Энэ байрыг салгах",
@@ -5901,8 +5190,7 @@ const resource = {
     "login.community_sub": "Туслалцаа авах ба ярилцах",
     "login.brand_edit": "Лого тохируулах",
     "login.brand_title": "White-label брэнд",
-    "login.brand_desc":
-      "Энэ нэвтрэх дэлгэц болон апп даяар харагдана. Зөвхөн энэ хөтөч дотор хадгалагдана.",
+    "login.brand_desc": "Энэ нэвтрэх дэлгэц болон апп даяар харагдана. Зөвхөн энэ хөтөч дотор хадгалагдана.",
     "login.brand_upload": "Лого ачаалах",
     "login.brand_name_ph": "Компанийн нэр",
     "login.brand_reset": "Анхдагч руу шинэчлэх",
@@ -5914,10 +5202,8 @@ const resource = {
     "nav.phase_execution": "Гүйцэтгэл",
     "nav.phase_closure": "Чанар ба хаалт",
     "nav.clash_detection": "Зөрчилдөөн илрүүлэх",
-    "schedule_advanced.master_hint":
-      "«Үе шат», «Look-Ahead», «Долоо хоног», «Хязгаарлалт» табын ажлын төлөвлөгөө болгохын тулд мастер хуваарь сонгоно уу. Мөрийн үйлдлээр нэрийг өөрчлөх, төлөвлөсөн огноо болон төлвийг солих, эсвэл устгах боломжтой.",
-    "schedule_advanced.no_master_yet_desc":
-      "Мастер хуваарь нь үе шатны бүх төлөвлөгөө, look-ahead, долоо хоногийн ажлын төлөвлөгөө орох дээд түвшний төлөвлөгөө юм. Pull-планирование эхлүүлэхийн тулд нэгийг үүсгэнэ үү — нэрийг солих, огноог өөрчлөх, устгах хүссэн үедээ боломжтой.",
+    "schedule_advanced.master_hint": "«Үе шат», «Look-Ahead», «Долоо хоног», «Хязгаарлалт» табын ажлын төлөвлөгөө болгохын тулд мастер хуваарь сонгоно уу. Мөрийн үйлдлээр нэрийг өөрчлөх, төлөвлөсөн огноо болон төлвийг солих, эсвэл устгах боломжтой.",
+    "schedule_advanced.no_master_yet_desc": "Мастер хуваарь нь үе шатны бүх төлөвлөгөө, look-ahead, долоо хоногийн ажлын төлөвлөгөө орох дээд түвшний төлөвлөгөө юм. Pull-планирование эхлүүлэхийн тулд нэгийг үүсгэнэ үү — нэрийг солих, огноог өөрчлөх, устгах хүссэн үедээ боломжтой.",
     "schedule_advanced.active_selection": "Ажлын төлөвлөгөө",
     "schedule_advanced.master_status.active": "Идэвхтэй",
     "schedule_advanced.master_status.archived": "Архивласан",
@@ -5925,166 +5211,95 @@ const resource = {
     "schedule_advanced.master_updated": "Мастер хуваарь шинэчлэгдсэн",
     "schedule_advanced.master_deleted": "Мастер хуваарь устгагдсан",
     "schedule_advanced.delete_master_title": "Мастер хуваарь устгах уу?",
-    "schedule_advanced.delete_master_message":
-      '"{{name}}" and everything under it — phase plans, look-aheads, weekly work plans, commitments and baselines — will be permanently deleted. This cannot be undone.',
-    "schedule_advanced.err_master_name_required":
-      "Мастер хуваарийн нэр шаардлагатай.",
-    "schedule_advanced.master_name_placeholder":
-      "ж.нь, Барилгын мастер хуваарь",
-    "schedule_advanced.master_status_hint":
-      "Хуваарийг архивлаж ажлын төлөвлөгөө биш ч түүхийг хадгалах боломжтой. Архивлагдсан хуваарийг энд хүссэн үед дахин идэвхжүүлж болно.",
-    "schedule_advanced.master_notes_placeholder":
-      "Хүрээ, гэрээний лавлагаа, гол үе шат…",
+    "schedule_advanced.delete_master_message": "\"{{name}}\" and everything under it — phase plans, look-aheads, weekly work plans, commitments and baselines — will be permanently deleted. This cannot be undone.",
+    "schedule_advanced.err_master_name_required": "Мастер хуваарийн нэр шаардлагатай.",
+    "schedule_advanced.master_name_placeholder": "ж.нь, Барилгын мастер хуваарь",
+    "schedule_advanced.master_status_hint": "Хуваарийг архивлаж ажлын төлөвлөгөө биш ч түүхийг хадгалах боломжтой. Архивлагдсан хуваарийг энд хүссэн үед дахин идэвхжүүлж болно.",
+    "schedule_advanced.master_notes_placeholder": "Хүрээ, гэрээний лавлагаа, гол үе шат…",
     "files.cta.add_first_short": "Файл нэмэх",
     "files.folder.files_count": "файл",
     "files.folder.subfolders": "{{count}} хавтас",
     "files.folder.share": "Нийт хадгалалтын {{pct}}%",
-    "notifications.safety.incident_created":
-      "Аюулгүй ажиллагааны осол мэдээлэгдсэн",
-    "notifications.safety.incident_created_body":
-      "Осол {{incident_number}} ({{severity}}): {{description}}",
-    "notifications.safety.high_risk_observation":
-      "Өндөр эрсдэлтэй аюулгүй ажиллагааны ажиглалт",
-    "notifications.safety.high_risk_body":
-      "Ажиглалт {{observation_number}} (эрсдэл {{risk_score}}): {{description}}",
+    "notifications.safety.incident_created": "Аюулгүй ажиллагааны осол мэдээлэгдсэн",
+    "notifications.safety.incident_created_body": "Осол {{incident_number}} ({{severity}}): {{description}}",
+    "notifications.safety.high_risk_observation": "Өндөр эрсдэлтэй аюулгүй ажиллагааны ажиглалт",
+    "notifications.safety.high_risk_body": "Ажиглалт {{observation_number}} (эрсдэл {{risk_score}}): {{description}}",
     "notifications.bi.alert.title": "Хяналтын самбарын анхааруулга идэвхжсэн",
-    "notifications.bi.alert.body":
-      "{{alert_name}} — {{kpi_code}} нь {{value}} ({{condition}} босго {{threshold}}).",
+    "notifications.bi.alert.body": "{{alert_name}} — {{kpi_code}} нь {{value}} ({{condition}} босго {{threshold}}).",
     "notifications.bi.report.title": "Товлогдсон тайлан бэлэн",
-    "notifications.bi.report.body":
-      "{{report_code}} тайлан {{row_count}} мөрөөр үүссэн.",
-    "notifications.supplier_catalogs.po.sent.title":
-      "Худалдан авалтын захиалга илгээгдсэн",
-    "notifications.supplier_catalogs.po.sent.body":
-      "{{vendor_id}} нийлүүлэгчид {{total}} {{currency}}-ийн захиалга илгээгдлээ.",
-    "notifications.supplier_catalogs.invoice.exception.title":
-      "Нэхэмжлэхийн зөрчил",
-    "notifications.supplier_catalogs.invoice.exception.body":
-      "{{po_id}} захиалгын нэхэмжлэхийг шалгах шаардлагатай: {{reason}}",
-    "notifications.supplier_catalogs.stock.low.title":
-      "Бараа дуусаж буй сэрэмжлүүлэг",
-    "notifications.supplier_catalogs.stock.low.body":
-      "{{sku}}: {{available_qty}} үлдсэн, дахин захиалах цэг {{reorder_point}} дээр буюу доор.",
-    "notifications.supplier_catalogs.vendor.blacklisted.title":
-      "Нийлүүлэгч хар жагсаалтад",
-    "notifications.supplier_catalogs.vendor.blacklisted.body":
-      "{{code}} нийлүүлэгч хар жагсаалтад орлоо: {{reason}}",
-    "notifications.supplier_catalogs.kyc.expired.title":
-      "Нийлүүлэгчийн дагаж мөрдөх бичиг хугацаа дуусчээ",
-    "notifications.supplier_catalogs.kyc.expired.body":
-      "{{doc_type}} {{expires_on}}-нд хугацаа дуусчээ.",
-    "notifications.supplier_catalogs.kyc.expiring.title":
-      "Нийлүүлэгчийн дагаж мөрдөх бичиг хугацаа дуусч байна",
-    "notifications.supplier_catalogs.kyc.expiring.body":
-      "{{doc_type}} {{expires_on}}-нд дуусна ({{days_until_expiry}} өдөр үлдсэн).",
-    "notifications.resources.cert_expiring.title":
-      "Гэрчилгээний хугацаа дуусч байна",
-    "notifications.resources.cert_expiring.body":
-      "{{resource_name}} — {{cert_type}} {{valid_until}}-нд дуусна ({{days_left}} өдөр үлдсэн).",
-    "notifications.resources.assignment_proposed.title":
-      "Нөөцийн томилолт санал болгосон",
-    "notifications.resources.assignment_proposed.body":
-      "{{task}} даалгаварт {{start}} эхлэх санал.",
-    "notifications.resources.assignment_confirmed.title":
-      "Нөөцийн томилолт баталгаажсан",
-    "notifications.resources.assignment_confirmed.body":
-      "{{task}} даалгаврын томилолт баталгаажсан.",
+    "notifications.bi.report.body": "{{report_code}} тайлан {{row_count}} мөрөөр үүссэн.",
+    "notifications.supplier_catalogs.po.sent.title": "Худалдан авалтын захиалга илгээгдсэн",
+    "notifications.supplier_catalogs.po.sent.body": "{{vendor_id}} нийлүүлэгчид {{total}} {{currency}}-ийн захиалга илгээгдлээ.",
+    "notifications.supplier_catalogs.invoice.exception.title": "Нэхэмжлэхийн зөрчил",
+    "notifications.supplier_catalogs.invoice.exception.body": "{{po_id}} захиалгын нэхэмжлэхийг шалгах шаардлагатай: {{reason}}",
+    "notifications.supplier_catalogs.stock.low.title": "Бараа дуусаж буй сэрэмжлүүлэг",
+    "notifications.supplier_catalogs.stock.low.body": "{{sku}}: {{available_qty}} үлдсэн, дахин захиалах цэг {{reorder_point}} дээр буюу доор.",
+    "notifications.supplier_catalogs.vendor.blacklisted.title": "Нийлүүлэгч хар жагсаалтад",
+    "notifications.supplier_catalogs.vendor.blacklisted.body": "{{code}} нийлүүлэгч хар жагсаалтад орлоо: {{reason}}",
+    "notifications.supplier_catalogs.kyc.expired.title": "Нийлүүлэгчийн дагаж мөрдөх бичиг хугацаа дуусчээ",
+    "notifications.supplier_catalogs.kyc.expired.body": "{{doc_type}} {{expires_on}}-нд хугацаа дуусчээ.",
+    "notifications.supplier_catalogs.kyc.expiring.title": "Нийлүүлэгчийн дагаж мөрдөх бичиг хугацаа дуусч байна",
+    "notifications.supplier_catalogs.kyc.expiring.body": "{{doc_type}} {{expires_on}}-нд дуусна ({{days_until_expiry}} өдөр үлдсэн).",
+    "notifications.resources.cert_expiring.title": "Гэрчилгээний хугацаа дуусч байна",
+    "notifications.resources.cert_expiring.body": "{{resource_name}} — {{cert_type}} {{valid_until}}-нд дуусна ({{days_left}} өдөр үлдсэн).",
+    "notifications.resources.assignment_proposed.title": "Нөөцийн томилолт санал болгосон",
+    "notifications.resources.assignment_proposed.body": "{{task}} даалгаварт {{start}} эхлэх санал.",
+    "notifications.resources.assignment_confirmed.title": "Нөөцийн томилолт баталгаажсан",
+    "notifications.resources.assignment_confirmed.body": "{{task}} даалгаврын томилолт баталгаажсан.",
     "notifications.contracts.signed.title": "Гэрээ байгуулсан",
-    "notifications.contracts.signed.body":
-      "{{code}} гэрээ {{value}} {{currency}}-аар байгуулагдлаа.",
-    "notifications.contracts.claim_submitted.title":
-      "Гэрээний нэхэмжлэл өргөдсөн",
-    "notifications.contracts.claim_submitted.body":
-      "{{amount}} {{currency}}-ийн нэхэмжлэл өргөдсөн.",
+    "notifications.contracts.signed.body": "{{code}} гэрээ {{value}} {{currency}}-аар байгуулагдлаа.",
+    "notifications.contracts.claim_submitted.title": "Гэрээний нэхэмжлэл өргөдсөн",
+    "notifications.contracts.claim_submitted.body": "{{amount}} {{currency}}-ийн нэхэмжлэл өргөдсөн.",
     "notifications.contracts.claim_paid.title": "Гэрээний нэхэмжлэл төлөгдсөн",
-    "notifications.contracts.claim_paid.body":
-      "Нэхэмжлэл төлсөн: {{amount}} {{currency}}.",
+    "notifications.contracts.claim_paid.body": "Нэхэмжлэл төлсөн: {{amount}} {{currency}}.",
     "notifications.contracts.retention_released.title": "Барьцаа суллагдсан",
-    "notifications.contracts.retention_released.body":
-      "{{contract_code}} гэрээ: {{amount_released}} суллагдсан, {{remaining}} үлдсэн.",
+    "notifications.contracts.retention_released.body": "{{contract_code}} гэрээ: {{amount_released}} суллагдсан, {{remaining}} үлдсэн.",
     "notifications.crm.lead_qualified.title": "Лид мэргэшсэн",
     "notifications.crm.lead_qualified.body": "{{name}} лид мэргэшсэн.",
     "notifications.crm.opportunity_won.title": "Боломж хожсон",
-    "notifications.crm.opportunity_won.body":
-      "{{name}} хожсон — үнэ {{value}}.",
+    "notifications.crm.opportunity_won.body": "{{name}} хожсон — үнэ {{value}}.",
     "notifications.crm.opportunity_scored.title": "Боломж үнэлэгдсэн",
-    "notifications.crm.opportunity_scored.body":
-      "{{title}} {{score}} оноо авсан (бүс {{band}}).",
-    "notifications.carbon.boq_position_assigned.title":
-      "Нүүрсхүчлийн коэффициент томилогдсон",
-    "notifications.carbon.boq_position_assigned.body":
-      "BOQ байр {{boq_position_id}}: {{carbon_kg}} кг CO₂e ({{stage}}).",
-    "notifications.property_dev.buyer_contracted.title":
-      "Худалдан авагч гэрээлсэн",
-    "notifications.property_dev.buyer_contracted.body":
-      "{{buyer}} {{plot}} газартай гэрээ байгуулсан.",
-    "notifications.property_dev.handover_completed.title":
-      "Хүлээлгэн өгөлт дууссан",
-    "notifications.property_dev.handover_completed.body":
-      "{{plot}} газрын хүлээлгэн өгөлт дууссан.",
-    "notifications.property_dev.warranty_raised.title":
-      "Баталгааны нэхэмжлэл гаргасан",
-    "notifications.property_dev.warranty_raised.body":
-      "{{plot}} газарт {{category}} баталгааны нэхэмжлэл гаргасан.",
-    "notifications.bid_management.invitation_sent.title":
-      "Тендерийн урилга илгээсэн",
-    "notifications.bid_management.invitation_sent.body":
-      "{{package}} багцын урилга илгээсэн, эцсийн хугацаа {{due}}.",
+    "notifications.crm.opportunity_scored.body": "{{title}} {{score}} оноо авсан (бүс {{band}}).",
+    "notifications.carbon.boq_position_assigned.title": "Нүүрсхүчлийн коэффициент томилогдсон",
+    "notifications.carbon.boq_position_assigned.body": "BOQ байр {{boq_position_id}}: {{carbon_kg}} кг CO₂e ({{stage}}).",
+    "notifications.property_dev.buyer_contracted.title": "Худалдан авагч гэрээлсэн",
+    "notifications.property_dev.buyer_contracted.body": "{{buyer}} {{plot}} газартай гэрээ байгуулсан.",
+    "notifications.property_dev.handover_completed.title": "Хүлээлгэн өгөлт дууссан",
+    "notifications.property_dev.handover_completed.body": "{{plot}} газрын хүлээлгэн өгөлт дууссан.",
+    "notifications.property_dev.warranty_raised.title": "Баталгааны нэхэмжлэл гаргасан",
+    "notifications.property_dev.warranty_raised.body": "{{plot}} газарт {{category}} баталгааны нэхэмжлэл гаргасан.",
+    "notifications.bid_management.invitation_sent.title": "Тендерийн урилга илгээсэн",
+    "notifications.bid_management.invitation_sent.body": "{{package}} багцын урилга илгээсэн, эцсийн хугацаа {{due}}.",
     "notifications.bid_management.awarded.title": "Тендер хожсон",
-    "notifications.bid_management.awarded.body":
-      "{{package}} {{amount}}-аар хожсон.",
-    "notifications.schedule_advanced.constraint_cleared.title":
-      "Хуваарийн хязгаарлалт арилсан",
-    "notifications.schedule_advanced.constraint_cleared.body":
-      "{{task}} даалгавар цаашид хаагдахгүй болсон.",
-    "notifications.daily_diary.signed.title":
-      "Өдрийн тэмдэглэл гарын үсэг зурсан",
-    "notifications.daily_diary.signed.body":
-      "{{date}}-ийн тэмдэглэл гарын үсэг зурсан.",
-    "notifications.service.ticket_dispatched.title":
-      "Үйлчилгээний тасалбар илгээгдсэн",
-    "notifications.service.ticket_dispatched.body":
-      "{{ticket_number}} тасалбар илгээгдсэн ({{priority}} тэргүүлэх).",
-    "notifications.service.ticket_resolved.title":
-      "Үйлчилгээний тасалбар шийдвэрлэгдсэн",
-    "notifications.service.ticket_resolved.body":
-      "{{ticket_number}} тасалбар шийдвэрлэгдсэн.",
-    "notifications.service.work_order_billed.title":
-      "Ажлын захиалга нэхэмжилсэн",
-    "notifications.service.work_order_billed.body":
-      "{{wo_number}} ажлын захиалга {{amount}} {{currency}}-аар нэхэмжилсэн.",
-    "notifications.subcontractors.prequal_submitted.title":
-      "Урьдчилсан шалгуур ирүүлсэн",
-    "notifications.subcontractors.prequal_submitted.body":
-      "{{subcontractor_name}} урьдчилсан шалгуур ирүүлсэн.",
-    "notifications.subcontractors.payment_app_submitted.title":
-      "Төлбөрийн өргөдөл ирүүлсэн",
-    "notifications.subcontractors.payment_app_submitted.body":
-      "{{application_number}} өргөдөл {{net_amount}} {{currency}}-аар ирүүлсэн.",
-    "notifications.subcontractors.retention_released.title":
-      "Туслан гүйцэтгэгчийн барьцаа суллагдсан",
-    "notifications.subcontractors.retention_released.body":
-      "{{amount}} {{currency}} барьцаа суллагдсан.",
+    "notifications.bid_management.awarded.body": "{{package}} {{amount}}-аар хожсон.",
+    "notifications.schedule_advanced.constraint_cleared.title": "Хуваарийн хязгаарлалт арилсан",
+    "notifications.schedule_advanced.constraint_cleared.body": "{{task}} даалгавар цаашид хаагдахгүй болсон.",
+    "notifications.daily_diary.signed.title": "Өдрийн тэмдэглэл гарын үсэг зурсан",
+    "notifications.daily_diary.signed.body": "{{date}}-ийн тэмдэглэл гарын үсэг зурсан.",
+    "notifications.service.ticket_dispatched.title": "Үйлчилгээний тасалбар илгээгдсэн",
+    "notifications.service.ticket_dispatched.body": "{{ticket_number}} тасалбар илгээгдсэн ({{priority}} тэргүүлэх).",
+    "notifications.service.ticket_resolved.title": "Үйлчилгээний тасалбар шийдвэрлэгдсэн",
+    "notifications.service.ticket_resolved.body": "{{ticket_number}} тасалбар шийдвэрлэгдсэн.",
+    "notifications.service.work_order_billed.title": "Ажлын захиалга нэхэмжилсэн",
+    "notifications.service.work_order_billed.body": "{{wo_number}} ажлын захиалга {{amount}} {{currency}}-аар нэхэмжилсэн.",
+    "notifications.subcontractors.prequal_submitted.title": "Урьдчилсан шалгуур ирүүлсэн",
+    "notifications.subcontractors.prequal_submitted.body": "{{subcontractor_name}} урьдчилсан шалгуур ирүүлсэн.",
+    "notifications.subcontractors.payment_app_submitted.title": "Төлбөрийн өргөдөл ирүүлсэн",
+    "notifications.subcontractors.payment_app_submitted.body": "{{application_number}} өргөдөл {{net_amount}} {{currency}}-аар ирүүлсэн.",
+    "notifications.subcontractors.retention_released.title": "Туслан гүйцэтгэгчийн барьцаа суллагдсан",
+    "notifications.subcontractors.retention_released.body": "{{amount}} {{currency}} барьцаа суллагдсан.",
     "notifications.equipment.assigned.title": "Тоног төхөөрөмж томилогдсон",
-    "notifications.equipment.assigned.body":
-      "{{equipment_code}} {{project_name}}-д томилогдсон.",
-    "notifications.equipment.damage_reported.title":
-      "Тоног төхөөрөмжийн эвдрэл мэдээлсэн",
-    "notifications.equipment.damage_reported.body":
-      "{{equipment_code}} эвдрэл мэдээлсэн ({{severity}}).",
+    "notifications.equipment.assigned.body": "{{equipment_code}} {{project_name}}-д томилогдсон.",
+    "notifications.equipment.damage_reported.title": "Тоног төхөөрөмжийн эвдрэл мэдээлсэн",
+    "notifications.equipment.damage_reported.body": "{{equipment_code}} эвдрэл мэдээлсэн ({{severity}}).",
     "notifications.portal.user_invited.title": "Портал хэрэглэгч урьсан",
-    "notifications.portal.user_invited.body":
-      "{{portal_user_email}} {{portal_role}} болж урьсан.",
-    "match_elements.vector_status_disconnected_explainer":
-      'Semantic vector search is optional — it sharpens matches by meaning but needs a running Qdrant vector database. Use the "Vector database" panel below to start or install Qdrant natively (no Docker required), then retry.',
-    "match_elements.vector_status_disconnected_fallback":
-      "Одоо ч үргэлжлүүлж болно: вектор сан офлайн байх үед тааруулалт автоматаар лексик (түлхүүр үг) ба дүрэм дээр суурилсан оноотойлох руу буцна.",
+    "notifications.portal.user_invited.body": "{{portal_user_email}} {{portal_role}} болж урьсан.",
+    "match_elements.vector_status_disconnected_explainer": "Semantic vector search is optional — it sharpens matches by meaning but needs a running Qdrant vector database. Use the \"Vector database\" panel below to start or install Qdrant natively (no Docker required), then retry.",
+    "match_elements.vector_status_disconnected_fallback": "Одоо ч үргэлжлүүлж болно: вектор сан офлайн байх үед тааруулалт автоматаар лексик (түлхүүр үг) ба дүрэм дээр суурилсан оноотойлох руу буцна.",
     "match_elements.vector_status_retry": "Холболтыг дахин оролдох",
-    "match_elements.vector_status_open_costs_long":
-      "Зардлын сангийн хэрэгслүүдийг нээх",
+    "match_elements.vector_status_open_costs_long": "Зардлын сангийн хэрэгслүүдийг нээх",
     "match_elements.pipeline.title": "Тааруулах pipeline",
-    "match_elements.pipeline.subtitle":
-      "CAD файлаас үнэлэгдсэн BOQ хүртэлх долоон үе шат — бүх алхам харагдах ба тохируулагдах",
+    "match_elements.pipeline.subtitle": "CAD файлаас үнэлэгдсэн BOQ хүртэлх долоон үе шат — бүх алхам харагдах ба тохируулагдах",
     "match_elements.pipeline.done_suffix": "дуусгасан",
     "match_elements.pipeline.run_all": "Бүх үе шатыг ажиллуулах",
     "match_elements.pipeline.running_all": "Бүгдийг ажиллуулж байна…",
@@ -6102,21 +5317,17 @@ const resource = {
     "match_elements.pipeline.status_error": "Алдаа",
     "match_elements.pipeline.status_stale": "Дахин ажиллуулах хэрэгтэй",
     "match_elements.pipeline.status_skipped": "Алгассан",
-    "match_elements.pipeline.stale_hint":
-      "Өмнөх үе шат өөрчлөгдсөн — гаралтыг шинэчлэхийн тулд энэ алхамыг дахин ажиллуул.",
+    "match_elements.pipeline.stale_hint": "Өмнөх үе шат өөрчлөгдсөн — гаралтыг шинэчлэхийн тулд энэ алхамыг дахин ажиллуул.",
     "match_elements.pipeline.llm_badge": "LLM",
-    "match_elements.pipeline.llm_tunable":
-      "LLM-ээр сайжруулсан — prompt засагдана",
+    "match_elements.pipeline.llm_tunable": "LLM-ээр сайжруулсан — prompt засагдана",
     "match_elements.pipeline.group_by": "Түлхүүрээр бүлэглэх",
-    "match_elements.pipeline.group_by_hint":
-      "Таслалаар тусгаарласан. RVT → category, type_name · IFC → ifc_class, predefined_type · DWG → layer, block_name",
+    "match_elements.pipeline.group_by_hint": "Таслалаар тусгаарласан. RVT → category, type_name · IFC → ifc_class, predefined_type · DWG → layer, block_name",
     "match_elements.pipeline.method": "Арга",
     "match_elements.pipeline.max_groups": "Хамгийн их бүлэг",
     "match_elements.pipeline.llm_provider": "LLM нийлүүлэгч",
     "match_elements.pipeline.prompt": "Prompt",
     "match_elements.pipeline.system": "system",
-    "match_elements.pipeline.system_readonly":
-      "Системийн prompt — зөвхөн уншигдана. Засаж компанидаа тохируулахын тулд forkл.",
+    "match_elements.pipeline.system_readonly": "Системийн prompt — зөвхөн уншигдана. Засаж компанидаа тохируулахын тулд forkл.",
     "match_elements.pipeline.system_prompt": "Системийн prompt",
     "match_elements.pipeline.user_template": "Хэрэглэгчийн загвар",
     "match_elements.pipeline.variables": "Энэ үе шатын бөглөх хувьсагчид:",
@@ -6126,12 +5337,10 @@ const resource = {
     "match_elements.pipeline.revert": "Буцаах",
     "match_elements.pipeline.run_failed": "Үе шатын ажиллагаа амжилтгүй",
     "match_elements.pipeline.intro_title": "Харагдах тааруулах pipeline-г нээх",
-    "match_elements.pipeline.intro_blurb":
-      "CAD файлаас үнэлэгдсэн BOQ хүртэл долоон үе шат — Convert, Load, Schema, Filter, Group, Match, Rollup. Бүх алхам харагдах, тайлбартай, тохируулагдах боломжтой (prompt, LLM нийлүүлэгч, бүлэглэх түлхүүр).",
+    "match_elements.pipeline.intro_blurb": "CAD файлаас үнэлэгдсэн BOQ хүртэл долоон үе шат — Convert, Load, Schema, Filter, Group, Match, Rollup. Бүх алхам харагдах, тайлбартай, тохируулагдах боломжтой (prompt, LLM нийлүүлэгч, бүлэглэх түлхүүр).",
     "match_elements.pipeline.intro_cta": "Pipeline нээх",
     "match_elements.pipeline.intro_resume": "Сүүлийн сессийг үргэлжлүүлэх",
-    "match_elements.pipeline.busy_hint":
-      "Үе шат ажиллаж байна — өөр шат эхлүүлэхээс өмнө дуусахыг хүлээ.",
+    "match_elements.pipeline.busy_hint": "Үе шат ажиллаж байна — өөр шат эхлүүлэхээс өмнө дуусахыг хүлээ.",
     "match_elements.pipeline.step_convert": "Хөрвүүлэх",
     "match_elements.pipeline.step_load": "Ачаалах",
     "match_elements.pipeline.step_schema": "Schema",
@@ -6140,8 +5349,7 @@ const resource = {
     "match_elements.pipeline.step_match": "Тааруулах",
     "match_elements.pipeline.step_rollup": "Нэгтгэл",
     "clash.title": "Зөрчилдөөн илрүүлэх",
-    "clash.subtitle":
-      "Нэгдмэл BIM моделуудын геометрийн саатал ба зайны зохицуулалт — зөрчилдөөний матриц ба BCF экспорттой.",
+    "clash.subtitle": "Нэгдмэл BIM моделуудын геометрийн саатал ба зайны зохицуулалт — зөрчилдөөний матриц ба BCF экспорттой.",
     "clash.pick_project": "Төсөл сонгох",
     "clash.new_run": "Шинэ зөрчилдөөний шалгалт",
     "clash.models": "Моделууд",
@@ -6152,12 +5360,10 @@ const resource = {
     "clash.mode_cross": "Зөвхөн мэргэжил хооронд",
     "clash.mode_all": "Бүх хос",
     "clash.mode_sets": "А багц B багцын эсрэг (төрлөөр)",
-    "clash.sets_hint":
-      "Нэг элемент A багцад, нөгөө нь B багцад байгаа хосыг л шалгана — жишээ нь, бүх хана (A) бүх хоолой (B)-ын эсрэг.",
+    "clash.sets_hint": "Нэг элемент A багцад, нөгөө нь B багцад байгаа хосыг л шалгана — жишээ нь, бүх хана (A) бүх хоолой (B)-ын эсрэг.",
     "clash.set_a": "А багц",
     "clash.set_b": "B багц",
-    "clash.sets_required":
-      "A ба B багц аль алинд нь дор хаяж нэг төрөл эсвэл мэргэжил сонго.",
+    "clash.sets_required": "A ба B багц аль алинд нь дор хаяж нэг төрөл эсвэл мэргэжил сонго.",
     "clash.set_search": "Төрөл / мэргэжил хайх…",
     "clash.set_empty": "Элемент алга — эхлээд боловсруулсан модел сонго.",
     "clash.disciplines": "Мэргэжил",
@@ -6171,8 +5377,7 @@ const resource = {
     "clash.status_saved": "Төлөв шинэчлэгдсэн",
     "clash.bcf_done": "{{n}} зөрчилдөөнийг BCF-д экспортлов ({{s}} алгассан)",
     "clash.empty_title": "Зөрчилдөөний шалгалт сонгогдоогүй",
-    "clash.empty_desc":
-      "Зүүн талд BIM модел сонгож зөрчилдөөний шалгалт ажиллуулж зохицуулалтын матриц үүсгэ.",
+    "clash.empty_desc": "Зүүн талд BIM модел сонгож зөрчилдөөний шалгалт ажиллуулж зохицуулалтын матриц үүсгэ.",
     "clash.kpi_total": "Нийт зөрчилдөөн",
     "clash.kpi_hard": "Хатуу",
     "clash.kpi_clearance": "Зай",
@@ -6186,14 +5391,11 @@ const resource = {
     "clash.no_clashes": "Зөрчилдөөн байхгүй — моделууд цэвэр.",
     "clash.no_clashes_title": "Зөрчилдөөн илрээгүй",
     "clash.no_match_title": "Шүүлтүүртэй тохирох зөрчилдөөн алга",
-    "clash.no_match_desc":
-      "Идэвхтэй шүүлтүүрийг өргөтгөх эсвэл арилгахыг оролдоно уу.",
+    "clash.no_match_desc": "Идэвхтэй шүүлтүүрийг өргөтгөх эсвэл арилгахыг оролдоно уу.",
     "clash.results_error": "Зөрчилдөөний үр дүн ачаалах амжилтгүй",
-    "clash.results_error_desc":
-      "Зөрчилдөөний үр дүн ачаалсангүй. Энэ нь моделууд цэвэр гэсэн үг биш — дахин оролдоно уу.",
+    "clash.results_error_desc": "Зөрчилдөөний үр дүн ачаалсангүй. Энэ нь моделууд цэвэр гэсэн үг биш — дахин оролдоно уу.",
     "clash.retry": "Дахин",
-    "clash.capped_notice":
-      "{{total}} зөрчилдөөнөөс эхний {{loaded}}-г харуулж байна — хяналтын багцыг нарийсгахын тулд шүүлтүүрээ тодорхой болго.",
+    "clash.capped_notice": "{{total}} зөрчилдөөнөөс эхний {{loaded}}-г харуулж байна — хяналтын багцыг нарийсгахын тулд шүүлтүүрээ тодорхой болго.",
     "clash.results": "Зөрчилдөөний үр дүн",
     "clash.count_of": "{{total}}-аас {{shown}}",
     "clash.search_ph": "Элементийн нэрээр хайх…",
@@ -6234,23 +5436,18 @@ const resource = {
     "nav.pipelines": "Pipeline үүсгэгч",
     "pipeline.untitled": "Нэргүй pipeline",
     "pipeline.empty.title": "Анхны автоматжуулалтаа үүсгэ",
-    "pipeline.empty.description":
-      "Зүүн талын палитрээс trigger ба хэдэн алхам чирэн оруулж, холбож «Ажиллуулах» дар.",
+    "pipeline.empty.description": "Зүүн талын палитрээс trigger ба хэдэн алхам чирэн оруулж, холбож «Ажиллуулах» дар.",
     "pipeline.toast.saved": "Pipeline хадгалагдсан",
     "pipeline.toast.save_failed": "Pipeline хадгалж чадсангүй",
     "pipeline.toast.run_failed": "Ажиллуулалтыг эхлүүлж чадсангүй",
     "pipeline.explain.coming_soon_title": "Энэ pipeline-г тайлбарла",
-    "pipeline.explain.coming_soon_body":
-      "Энгийн хэлээр өгүүлсэн харагдац дараагийн хувилбарт орно.",
+    "pipeline.explain.coming_soon_body": "Энгийн хэлээр өгүүлсэн харагдац дараагийн хувилбарт орно.",
     "pipeline.tour.palette_title": "Алхмуудаа сонго",
-    "pipeline.tour.palette_body":
-      "Эндээс canvas-руу алхам чирэх эсвэл товшин голд нь оруул.",
+    "pipeline.tour.palette_body": "Эндээс canvas-руу алхам чирэх эсвэл товшин голд нь оруул.",
     "pipeline.tour.canvas_title": "Алхмууд холбох",
-    "pipeline.tour.canvas_body":
-      "Нэг алхмын гаралтын цэгээс дараагийн алхмын оролт руу чирээрэй. Өнгө нь өгөгдлийн төрлийг харуулна.",
+    "pipeline.tour.canvas_body": "Нэг алхмын гаралтын цэгээс дараагийн алхмын оролт руу чирээрэй. Өнгө нь өгөгдлийн төрлийг харуулна.",
     "pipeline.tour.run_title": "Ажиллуул",
-    "pipeline.tour.run_body":
-      "«Ажиллуулах» дарж pipeline-г ажиллуулж, алхам бүр шууд асах байдлыг ажигла.",
+    "pipeline.tour.run_body": "«Ажиллуулах» дарж pipeline-г ажиллуулж, алхам бүр шууд асах байдлыг ажигла.",
     "pipeline.toolbar.aria": "Pipeline багажны мөр",
     "pipeline.toolbar.undo": "Буцаах",
     "pipeline.toolbar.redo": "Дахин",
@@ -6266,12 +5463,11 @@ const resource = {
     "pipeline.palette.collapse": "Палитр буулгах",
     "pipeline.palette.search": "Алхам хайх",
     "pipeline.palette.search_ph": "Хайх…",
-    "pipeline.palette.no_match": 'No steps match "{{query}}"',
+    "pipeline.palette.no_match": "No steps match \"{{query}}\"",
     "pipeline.palette.none": "Боломжтой зангилааны төрөл алга.",
     "pipeline.palette.module_chip": "{{module}} модульд нөлөөлнө",
     "pipeline.palette.writes": "бичих",
-    "pipeline.palette.writes_chip":
-      "Энэ алхам өгөгдөл бичнэ — өмнө нь gate шаардлагатай",
+    "pipeline.palette.writes_chip": "Энэ алхам өгөгдөл бичнэ — өмнө нь gate шаардлагатай",
     "pipeline.palette.cat_trigger": "Эх / Trigger",
     "pipeline.palette.cat_source": "Өгөгдөл авах",
     "pipeline.palette.cat_transform": "Хувиргах",
@@ -6295,23 +5491,18 @@ const resource = {
     "pipeline.inspector.name_ph": "Миний автоматжуулалт",
     "pipeline.inspector.description": "Тайлбар",
     "pipeline.inspector.published": "Нийтлэгдсэн (trigger хийгдэх боломжтой)",
-    "pipeline.inspector.summary_stub":
-      'A plain-language summary of what this pipeline does will appear here. Use "Explain this pipeline" for the full story.',
+    "pipeline.inspector.summary_stub": "A plain-language summary of what this pipeline does will appear here. Use \"Explain this pipeline\" for the full story.",
     "pipeline.canvas.aria": "Pipeline засварлагчийн canvas",
-    "pipeline.canvas.hint":
-      "Палитрээс алхам чирэн оруулж, порт нь холбож «Ажиллуулах» дар.",
-    "pipeline.canvas.legend_sr":
-      "Ирмэгийн өнгө, хэлбэр, тасархай нь хамтдаа өгөгдлийн төрлийг шифрлэнэ.",
+    "pipeline.canvas.hint": "Палитрээс алхам чирэн оруулж, порт нь холбож «Ажиллуулах» дар.",
+    "pipeline.canvas.legend_sr": "Ирмэгийн өнгө, хэлбэр, тасархай нь хамтдаа өгөгдлийн төрлийг шифрлэнэ.",
     "pipeline.connect.incompatible_title": "Эдгээр алхам холбогдохгүй",
-    "pipeline.connect.incompatible_body":
-      "Энэ гаралт {{from}} байна; харин тэр оролт {{to}}-г шаардаж байна.",
+    "pipeline.connect.incompatible_body": "Энэ гаралт {{from}} байна; харин тэр оролт {{to}}-г шаардаж байна.",
     "pipeline.node.rename": "Зангилаа нэр солих",
     "pipeline.node.rename_hint": "Хоёр товшилт — нэр солих",
     "pipeline.node.ai_badge": "AI",
     "pipeline.node.ai_confidence": "AI санал — итгэлийн оноог шалга",
     "pipeline.node.help": "Энэ зангилаа юу хийдэг",
-    "pipeline.node.help_generic":
-      "Inspector-д энэ алхмыг тохируул. Холбосон өмнөх алхмаас өгөгдөл авч үр дүнгээ цааш дамжуулна.",
+    "pipeline.node.help_generic": "Inspector-д энэ алхмыг тохируул. Холбосон өмнөх алхмаас өгөгдөл авч үр дүнгээ цааш дамжуулна.",
     "pipeline.node.collapse": "Буулгах",
     "pipeline.node.expand": "Өргөтгөх",
     "pipeline.node.more_params": "+ дахин {{count}}",
@@ -6332,15 +5523,12 @@ const resource = {
     "pipeline.dock.progress": "{{pct}}%",
     "pipeline.dock.tab_run": "Ажиллуулалт",
     "pipeline.dock.tab_history": "Түүх",
-    "pipeline.dock.no_steps":
-      "Алхам нэмж pipeline-аар өгөгдөл урсахыг харахын тулд «Ажиллуулах» дар.",
+    "pipeline.dock.no_steps": "Алхам нэмж pipeline-аар өгөгдөл урсахыг харахын тулд «Ажиллуулах» дар.",
     "pipeline.dock.loading_history": "Ажиллуулсан түүх ачаалж байна…",
     "pipeline.dock.no_runs_title": "Хараахан ажиллуулаагүй",
-    "pipeline.dock.no_runs_desc":
-      "Pipeline-аар өгөгдөл урсахыг харахын тулд «Ажиллуулах» дар.",
+    "pipeline.dock.no_runs_desc": "Pipeline-аар өгөгдөл урсахыг харахын тулд «Ажиллуулах» дар.",
     "pipeline.dock.manual": "Гар",
-    "pipeline.dock.queued_hint":
-      "Worker ажиллуулалтыг авах хүртэл хүлээж байна…",
+    "pipeline.dock.queued_hint": "Worker ажиллуулалтыг авах хүртэл хүлээж байна…",
     "pipeline.runstatus.pending": "Хүлээж буй",
     "pipeline.runstatus.queued": "Дараалалд",
     "pipeline.runstatus.running": "Ажиллаж байна",
@@ -6357,35 +5545,23 @@ const resource = {
     "pipeline.trigger.schedule": "Хуваарьт",
     "pipeline.trigger.event": "Үйл явдал",
     "pipeline.nodetype.trigger.manual": "Гар trigger",
-    "pipeline.nodetype.trigger.manual.desc":
-      "REST дуудлагаар pipeline эхлүүлэх. Оролт алга.",
+    "pipeline.nodetype.trigger.manual.desc": "REST дуудлагаар pipeline эхлүүлэх. Оролт алга.",
     "pipeline.nodetype.source.project": "Төсөл авах",
-    "pipeline.nodetype.source.project.desc":
-      "Холбосон төслийн id ба нэрийг ачаалах.",
+    "pipeline.nodetype.source.project.desc": "Холбосон төслийн id ба нэрийг ачаалах.",
     "pipeline.nodetype.source.boq": "BOQ байр авах",
-    "pipeline.nodetype.source.boq.desc":
-      "Төслийн бүх BOQ байрыг мөр болгон ачаалах (id + жижиг түүвэр).",
+    "pipeline.nodetype.source.boq.desc": "Төслийн бүх BOQ байрыг мөр болгон ачаалах (id + жижиг түүвэр).",
     "pipeline.nodetype.transform.filter": "Мөр шүүх",
-    "pipeline.nodetype.transform.filter.desc":
-      "Энгийн талбар/оператор/утга шалгуурт тохирох мөрийг үлдээх.",
+    "pipeline.nodetype.transform.filter.desc": "Энгийн талбар/оператор/утга шалгуурт тохирох мөрийг үлдээх.",
     "pipeline.nodetype.gate.validation": "Шалгалтын gate",
-    "pipeline.nodetype.gate.validation.desc":
-      "Мөрөнд шалгалтын engine ажиллуулна; хаагдах алдааны үед ажиллагаа зогсооно.",
+    "pipeline.nodetype.gate.validation.desc": "Мөрөнд шалгалтын engine ажиллуулна; хаагдах алдааны үед ажиллагаа зогсооно.",
     "pipeline.nodetype.action.export.excel": "Excel-д экспортлох",
-    "pipeline.nodetype.action.export.excel.desc":
-      "Мөрүүдийг .xlsx файлд бичнэ (татах лавлагаа буцаана; өгөгдлийн санг өөрчилдөггүй).",
-    "pipeline.nodehelp.trigger.manual":
-      "Эндээс pipeline эхэлнэ. Тохиргоо байхгүй — дараагийн алхамд өгөгдлийн алхам холбо.",
-    "pipeline.nodehelp.source.project":
-      "Энэ pipeline холбогдсон төслийг ачаална. Хуудасны URL-аас авахын тулд project id-г хоосон үлдээ.",
-    "pipeline.nodehelp.source.boq":
-      "Төслийн бүх BOQ байрыг уншина. Алхам хооронд зөвхөн id ба жижиг урьдчилсан түүвэр л дамжина; бүх өгөгдөл server дээр үлдэнэ.",
-    "pipeline.nodehelp.transform.filter":
-      "Inspector-д тогтоосон талбар/оператор/утга шалгуурт тохирох мөрийг үлдээнэ. Талбарыг хоосон үлдээвэл бүгд нэвтэрнэ.",
-    "pipeline.nodehelp.gate.validation":
-      "Мөрөнд шалгалтын engine ажиллуулна. Хаагдах алдаа гарвал ажиллагаа эндээ зогсох тул дараагийн бичих алхмууд буруу өгөгдөл дээр ажиллахгүй.",
-    "pipeline.nodehelp.action.export.excel":
-      "Орж ирсэн мөрүүдийг Excel файлд бичээд татах лавлагаа буцаана. Өгөгдөл өөрчилдөггүй.",
+    "pipeline.nodetype.action.export.excel.desc": "Мөрүүдийг .xlsx файлд бичнэ (татах лавлагаа буцаана; өгөгдлийн санг өөрчилдөггүй).",
+    "pipeline.nodehelp.trigger.manual": "Эндээс pipeline эхэлнэ. Тохиргоо байхгүй — дараагийн алхамд өгөгдлийн алхам холбо.",
+    "pipeline.nodehelp.source.project": "Энэ pipeline холбогдсон төслийг ачаална. Хуудасны URL-аас авахын тулд project id-г хоосон үлдээ.",
+    "pipeline.nodehelp.source.boq": "Төслийн бүх BOQ байрыг уншина. Алхам хооронд зөвхөн id ба жижиг урьдчилсан түүвэр л дамжина; бүх өгөгдөл server дээр үлдэнэ.",
+    "pipeline.nodehelp.transform.filter": "Inspector-д тогтоосон талбар/оператор/утга шалгуурт тохирох мөрийг үлдээнэ. Талбарыг хоосон үлдээвэл бүгд нэвтэрнэ.",
+    "pipeline.nodehelp.gate.validation": "Мөрөнд шалгалтын engine ажиллуулна. Хаагдах алдаа гарвал ажиллагаа эндээ зогсох тул дараагийн бичих алхмууд буруу өгөгдөл дээр ажиллахгүй.",
+    "pipeline.nodehelp.action.export.excel": "Орж ирсэн мөрүүдийг Excel файлд бичээд татах лавлагаа буцаана. Өгөгдөл өөрчилдөггүй.",
     "pipeline.param.source.project.project_id": "Төслийн id (заавал биш)",
     "pipeline.param.source.boq.project_id": "Төслийн id (заавал биш)",
     "pipeline.param.transform.filter.field": "Талбар",
@@ -6394,7 +5570,61 @@ const resource = {
     "pipeline.param.gate.validation.rule_sets": "Дүрмийн багц",
     "pipeline.param.action.export.excel.filename": "Файлын нэр",
     "pipeline.param.action.export.excel.columns": "Багана",
-  },
+    "admin.audit_log_title": "Audit Log",
+    "admin.audit_log_subtitle": "Read-only timeline of every recorded change. Filter by user, module, action or date — open a row for the full payload.",
+    "admin.permissions.title": "Permissions Matrix",
+    "admin.permissions.subtitle": "Read-only view of every permission registered by every module, and which roles can use it. Admin always passes — locked cells indicate admin-only by design.",
+    "admin.permissions.search_placeholder": "Filter by module or permission key",
+    "admin.permissions.search_label": "Search permissions",
+    "admin.permissions.col_permission": "Permission",
+    "admin.permissions.role_viewer": "Viewer",
+    "admin.permissions.role_editor": "Editor",
+    "admin.permissions.role_member": "Member",
+    "admin.permissions.role_manager": "Manager",
+    "admin.permissions.role_admin": "Admin",
+    "admin.permissions.min_role_label": "min role",
+    "admin.permissions.module_count_one": "{{count}} permission",
+    "admin.permissions.module_count_other": "{{count}} permissions",
+    "admin.permissions.summary": "{{modules}} modules · {{permissions}} permissions",
+    "admin.permissions.empty_title": "No permissions registered",
+    "admin.permissions.empty_description": "No modules have registered permissions yet. They appear here as soon as a module loads.",
+    "admin.permissions.error_title": "Could not load permissions matrix",
+    "admin.permissions.error_unknown": "Unknown error",
+    "admin.permissions.legend_allowed": "allowed",
+    "admin.permissions.legend_denied": "denied",
+    "admin.permissions.legend_admin_bypass": "admin-only by design",
+    "admin.permissions.tooltip_allowed": "{{role}} can do {{key}} (min role: {{min}})",
+    "admin.permissions.tooltip_denied": "{{role}} cannot do {{key}} (min role: {{min}})",
+    "admin.permissions.tooltip_admin_bypass": "Admin-only by design — {{key}} requires admin",
+    "admin.permissions.subtitle_edit": "Click any cell to set the minimum role for that permission. Changes apply immediately and are audit-logged.",
+    "admin.permissions.edit_on": "Enable edit mode",
+    "admin.permissions.edit_off": "Done editing",
+    "admin.permissions.export_csv": "Export CSV",
+    "admin.permissions.role_filter_label": "Role",
+    "admin.permissions.role_filter_all": "All roles",
+    "admin.permissions.role_filter_denied_to": "Denied to {{role}}",
+    "admin.permissions.preset_label": "Reset to preset",
+    "admin.permissions.read_only_notice": "Read-only: admin role required to edit",
+    "admin.permissions.confirm_toggle_title": "Change permission?",
+    "admin.permissions.confirm_toggle_message": "Set \"{{key}}\" minimum role from {{from}} to {{to}}? This is audit-logged.",
+    "admin.permissions.confirm_toggle_confirm": "Change",
+    "admin.permissions.confirm_preset_title": "Apply preset?",
+    "admin.permissions.confirm_preset_message": "Reset every permission to the \"{{preset}}\" baseline? This rewrites the entire matrix and is audit-logged.",
+    "admin.permissions.confirm_preset_confirm": "Apply preset",
+    "admin.permissions.lockout_title": "Cannot demote admin permission",
+    "admin.permissions.lockout_message": "\"{{key}}\" must remain admin-only — lowering it would let non-admins edit the permissions matrix and lock you out.",
+    "admin.permissions.lockout_dismiss": "Got it",
+    "admin.permissions.toggle_success_title": "Permission updated",
+    "admin.permissions.toggle_success_message": "{{key}} → {{role}}",
+    "admin.permissions.toggle_error_title": "Update failed",
+    "admin.permissions.toggle_error": "Could not update permission",
+    "admin.permissions.preset_success_title": "Preset applied",
+    "admin.permissions.preset_success_message": "{{count}} permission(s) updated to \"{{preset}}\"",
+    "admin.permissions.preset_error_title": "Preset failed",
+    "admin.permissions.preset_error": "Could not apply preset",
+    "admin.permissions.noop_title": "No change",
+    "admin.permissions.noop_message": "{{key}} is already minimum {{role}}"
+  }
 } as { translation: Record<string, string> };
 
 export default resource;

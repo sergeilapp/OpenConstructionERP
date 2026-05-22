@@ -2,40 +2,29 @@
 // Regenerate with: node --experimental-strip-types scripts/split-i18n-fallbacks.mjs
 
 const resource = {
-  translation: {
-    "about.ai_desc":
-      "OpenConstructionERP에는 선택적 AI 도구가 포함되어 있습니다 — 텍스트 설명으로부터의 빠른 적산, 스마트 단가 제안, BOQ 채팅 어시스턴트. 이 기능들은 선택한 공급자(Anthropic, OpenAI, Google)의 API 키가 필요합니다. AI는 항상 선택 사항입니다: 설정할 때만 활성화되며, 어떤 데이터를 전송할지 사용자가 결정합니다. API 키 없이도 다른 모든 기능은 완전히 오프라인으로 작동합니다.",
+  "translation": {
+    "about.ai_desc": "OpenConstructionERP에는 선택적 AI 도구가 포함되어 있습니다 — 텍스트 설명으로부터의 빠른 적산, 스마트 단가 제안, BOQ 채팅 어시스턴트. 이 기능들은 선택한 공급자(Anthropic, OpenAI, Google)의 API 키가 필요합니다. AI는 항상 선택 사항입니다: 설정할 때만 활성화되며, 어떤 데이터를 전송할지 사용자가 결정합니다. API 키 없이도 다른 모든 기능은 완전히 오프라인으로 작동합니다.",
     "about.ai_title": "AI 기능 소개",
     "about.cap.boq": "내역서 (BOQ)",
-    "about.cap.boq_desc":
-      "계층적 섹션, 항목, 일위대가, 제경비율(간접비, 이윤, 부가가치세), 자동 합계가 포함된 상세 내역서를 작성합니다. DIN 276, NRM 1/2, MasterFormat 및 사용자 정의 분류 체계를 지원합니다.",
+    "about.cap.boq_desc": "계층적 섹션, 항목, 일위대가, 제경비율(간접비, 이윤, 부가가치세), 자동 합계가 포함된 상세 내역서를 작성합니다. DIN 276, NRM 1/2, MasterFormat 및 사용자 정의 분류 체계를 지원합니다.",
     "about.cap.catalog": "자원 카탈로그",
-    "about.cap.catalog_desc":
-      "7,000개 이상의 자원 — 자재, 장비, 노무, 운전원, 유틸리티. 카탈로그 항목으로 재사용 가능한 일위대가(복합단가)를 구성하고 내역서 항목에 직접 적용합니다.",
+    "about.cap.catalog_desc": "7,000개 이상의 자원 — 자재, 장비, 노무, 운전원, 유틸리티. 카탈로그 항목으로 재사용 가능한 일위대가(복합단가)를 구성하고 내역서 항목에 직접 적용합니다.",
     "about.cap.costmodel": "5D 원가 모델",
-    "about.cap.costmodel_desc":
-      "EVM(SPI, CPI)으로 시간 경과에 따른 예산을 추적하고, S-커브 시각화, 현금흐름 예측, 원가 스냅샷, 가정 시나리오 모델링으로 의사결정을 지원합니다.",
+    "about.cap.costmodel_desc": "EVM(SPI, CPI)으로 시간 경과에 따른 예산을 추적하고, S-커브 시각화, 현금흐름 예측, 원가 스냅샷, 가정 시나리오 모델링으로 의사결정을 지원합니다.",
     "about.cap.costs": "단가 데이터베이스",
-    "about.cap.costs_desc":
-      "DACH, 영국, 북미, 중동 등 11개 지역 데이터베이스에 걸쳐 55,000개 이상의 단가 항목이 있습니다. 자체 단가를 추가하거나, Excel에서 가져오거나, 처음부터 사용자 정의 데이터베이스를 구축합니다.",
+    "about.cap.costs_desc": "DACH, 영국, 북미, 중동 등 11개 지역 데이터베이스에 걸쳐 55,000개 이상의 단가 항목이 있습니다. 자체 단가를 추가하거나, Excel에서 가져오거나, 처음부터 사용자 정의 데이터베이스를 구축합니다.",
     "about.cap.import": "가져오기 및 내보내기",
-    "about.cap.import_desc":
-      "GAEB XML (X83), Excel, CSV 가져오기/내보내기를 완벽 지원합니다. 전문적인 PDF 보고서를 생성합니다. 기존 도구 및 워크플로와 원활하게 통합됩니다.",
+    "about.cap.import_desc": "GAEB XML (X83), Excel, CSV 가져오기/내보내기를 완벽 지원합니다. 전문적인 PDF 보고서를 생성합니다. 기존 도구 및 워크플로와 원활하게 통합됩니다.",
     "about.cap.schedule": "4D 공정관리",
-    "about.cap.schedule_desc":
-      "CPM 주공정 계산, 대화형 간트 차트, 몬테카를로 리스크 분석, 자원 배정, 내역서로부터의 공정 자동 생성으로 프로젝트 공정표를 작성합니다.",
+    "about.cap.schedule_desc": "CPM 주공정 계산, 대화형 간트 차트, 몬테카를로 리스크 분석, 자원 배정, 내역서로부터의 공정 자동 생성으로 프로젝트 공정표를 작성합니다.",
     "about.cap.tendering": "입찰 및 견적",
-    "about.cap.tendering_desc":
-      "범위와 항목이 포함된 입찰 패키지를 작성하고, 하도급업체에 배포하고, 가격 비교표에서 입찰가를 나란히 비교하며, 데이터 기반으로 낙찰을 결정합니다.",
+    "about.cap.tendering_desc": "범위와 항목이 포함된 입찰 패키지를 작성하고, 하도급업체에 배포하고, 가격 비교표에서 입찰가를 나란히 비교하며, 데이터 기반으로 낙찰을 결정합니다.",
     "about.cap.validation": "품질 검증",
-    "about.cap.validation_desc":
-      "내장 품질 엔진이 누락된 수량, 영가 항목, 중복 항목, 분류 준수, 단가 이상을 자동으로 검사합니다 — 신호등 대시보드와 함께.",
+    "about.cap.validation_desc": "내장 품질 엔진이 누락된 수량, 영가 항목, 중복 항목, 분류 준수, 단가 이상을 자동으로 검사합니다 — 신호등 대시보드와 함께.",
     "about.capabilities_title": "주요 기능",
     "about.close": "확인",
-    "about.intro":
-      "OpenConstructionERP는 건설 원가관리를 위한 최신 플랫폼입니다. 내역서 작성부터 입찰 및 견적 비교까지 전체 적산 워크플로를 지원합니다. 전 세계 전문가를 위해 설계되었으며, 국제 표준을 지원하고 20개 언어로 작동합니다.",
-    "about.intro2":
-      "기존 상용 솔루션과 달리, OpenConstructionERP는 완전히 사용자의 컴퓨터에서 실행됩니다. 프로젝트 데이터는 절대 사용자의 컴퓨터를 떠나지 않으며 — 완전한 소유권과 통제권을 가집니다. 소스 코드는 공개되어 감사 가능하므로, 소프트웨어가 정확히 무엇을 하는지 항상 알 수 있습니다.",
+    "about.intro": "OpenConstructionERP는 건설 원가관리를 위한 최신 플랫폼입니다. 내역서 작성부터 입찰 및 견적 비교까지 전체 적산 워크플로를 지원합니다. 전 세계 전문가를 위해 설계되었으며, 국제 표준을 지원하고 20개 언어로 작동합니다.",
+    "about.intro2": "기존 상용 솔루션과 달리, OpenConstructionERP는 완전히 사용자의 컴퓨터에서 실행됩니다. 프로젝트 데이터는 절대 사용자의 컴퓨터를 떠나지 않으며 — 완전한 소유권과 통제권을 가집니다. 소스 코드는 공개되어 감사 가능하므로, 소프트웨어가 정확히 무엇을 하는지 항상 알 수 있습니다.",
     "about.numbers_title": "플랫폼 수치",
     "about.stat.costs": "단가 항목",
     "about.stat.free": "무료 및 오픈 소스",
@@ -52,15 +41,11 @@ const resource = {
     "about.who.qsurveyor": "물량산출사",
     "about.who.students": "학생 및 교육자",
     "about.who.subs": "하도급업체",
-    "about.who_desc":
-      "OpenConstructionERP는 건설 원가관리에 관련된 모든 분들을 위해 설계되었습니다 — 주거 프로젝트든 대규모 인프라든, 사내 근무든 컨설턴트로 일하든 상관없이.",
+    "about.who_desc": "OpenConstructionERP는 건설 원가관리에 관련된 모든 분들을 위해 설계되었습니다 — 주거 프로젝트든 대규모 인프라든, 사내 근무든 컨설턴트로 일하든 상관없이.",
     "about.who_title": "대상 사용자",
-    "about.why_1":
-      "건설 원가 데이터는 회사가 보유한 가장 가치 있는 자산 중 하나입니다. 독점 소프트웨어를 사용하면 데이터가 통제할 수 없는 형식에 갇히는 경우가 많습니다. 공급업체가 가격을 올리거나, 조건을 변경하거나, 제품을 중단하면 — 수년간의 작업에 대한 접근을 잃을 수 있습니다.",
-    "about.why_2":
-      "OpenConstructionERP는 다른 접근 방식을 취합니다. 데이터는 개방형 형식(SQLite, JSON, CSV)으로 사용자 자체 하드웨어에 저장됩니다. 언제든지 모든 것을 내보낼 수 있습니다. 소스 코드는 AGPL-3.0으로 공개 감사 가능하므로, 숨겨진 데이터 전송, 텔레메트리, 예상치 못한 일이 없습니다.",
-    "about.why_3":
-      "플랫폼은 모듈식입니다 — 필요한 것만 설치하세요. 커뮤니티 모듈이 핵심을 비대하게 만들지 않고 기능을 확장합니다. 그리고 로컬에서 실행되므로, 오프라인에서도 작동하며 대규모 프로젝트에서도 빠르게 수행됩니다.",
+    "about.why_1": "건설 원가 데이터는 회사가 보유한 가장 가치 있는 자산 중 하나입니다. 독점 소프트웨어를 사용하면 데이터가 통제할 수 없는 형식에 갇히는 경우가 많습니다. 공급업체가 가격을 올리거나, 조건을 변경하거나, 제품을 중단하면 — 수년간의 작업에 대한 접근을 잃을 수 있습니다.",
+    "about.why_2": "OpenConstructionERP는 다른 접근 방식을 취합니다. 데이터는 개방형 형식(SQLite, JSON, CSV)으로 사용자 자체 하드웨어에 저장됩니다. 언제든지 모든 것을 내보낼 수 있습니다. 소스 코드는 AGPL-3.0으로 공개 감사 가능하므로, 숨겨진 데이터 전송, 텔레메트리, 예상치 못한 일이 없습니다.",
+    "about.why_3": "플랫폼은 모듈식입니다 — 필요한 것만 설치하세요. 커뮤니티 모듈이 핵심을 비대하게 만들지 않고 기능을 확장합니다. 그리고 로컬에서 실행되므로, 오프라인에서도 작동하며 대규모 프로젝트에서도 빠르게 수행됩니다.",
     "about.why_title": "오픈 소스가 중요한 이유",
     "ai.analyze_photo": "사진 분석",
     "ai.area": "면적 (m²)",
@@ -68,8 +53,7 @@ const resource = {
     "ai.boq_name_placeholder": "이 내역서의 이름...",
     "ai.boq_saved": "내역서가 저장되었습니다",
     "ai.building_type": "건물 유형",
-    "ai.cad_info":
-      "CAD/BIM 파일(.rvt, .ifc, .dwg, .dgn)은 DDC 변환기 설치가 필요합니다. 요소가 추출되어 적산에 사용됩니다. GitHub에서 변환기를 다운로드하여 ~/.openestimator/converters/에 배치하세요.",
+    "ai.cad_info": "CAD/BIM 파일(.rvt, .ifc, .dwg, .dgn)은 DDC 변환기 설치가 필요합니다. 요소가 추출되어 적산에 사용됩니다. GitHub에서 변환기를 다운로드하여 ~/.openestimator/converters/에 배치하세요.",
     "ai.choose_project": "-- 프로젝트 선택 --",
     "ai.col_description": "설명",
     "ai.col_pos": "항번",
@@ -90,8 +74,7 @@ const resource = {
     "ai.estimate_failed": "적산 실패",
     "ai.estimate_subtitle": "모든 소스에서 적산 생성",
     "ai.estimate_title": "AI 적산",
-    "ai.excel_hint":
-      "설명, 단위, 수량, 단가/가격 열이 있으면 가장 잘 작동합니다.",
+    "ai.excel_hint": "설명, 단위, 수량, 단가/가격 열이 있으면 가장 잘 작동합니다.",
     "ai.export_coming_soon": "내보내기 기능 준비 중",
     "ai.export_pdf": "PDF 내보내기",
     "ai.extract_estimate": "추출 및 적산",
@@ -106,10 +89,8 @@ const resource = {
     "ai.location_placeholder": "예: 서울",
     "ai.new_estimate": "새 적산",
     "ai.parse_import": "분석 및 가져오기",
-    "ai.paste_info":
-      "탭 구분, 세미콜론 또는 쉼표 구분 데이터를 자동 감지합니다. AI가 데이터를 분석하여 적산 항목으로 구조화합니다.",
-    "ai.paste_placeholder":
-      "내역서 데이터를 여기에 붙여넣기 (Excel, Word 또는 테이블에서)...\n\n예시:\n항번\\t설명\\t단위\\t수량\\t단가\n01.01\\t터파기\\tm3\\t250\\t18.50\n01.02\\t콘크리트 C30/37\\tm3\\t120\\t145.00\n01.03\\t철근 BSt 500\\tkg\\t12000\\t1.85",
+    "ai.paste_info": "탭 구분, 세미콜론 또는 쉼표 구분 데이터를 자동 감지합니다. AI가 데이터를 분석하여 적산 항목으로 구조화합니다.",
+    "ai.paste_placeholder": "내역서 데이터를 여기에 붙여넣기 (Excel, Word 또는 테이블에서)...\n\n예시:\n항번\\t설명\\t단위\\t수량\\t단가\n01.01\\t터파기\\tm3\\t250\\t18.50\n01.02\\t콘크리트 C30/37\\tm3\\t120\\t145.00\n01.03\\t철근 BSt 500\\tkg\\t12000\\t1.85",
     "ai.pdf_hint": "PDF 형식의 내역서 문서, 시방서 또는 도면을 업로드합니다.",
     "ai.powered_by": "{{model}} 제공",
     "ai.results": "적산 결과",
@@ -118,15 +99,13 @@ const resource = {
     "ai.save_failed": "내역서 저장 실패",
     "ai.save_to_boq": "내역서로 저장",
     "ai.select_project": "프로젝트 선택",
-    "ai.setup_required_desc":
-      "Anthropic Claude, OpenAI 또는 Google Gemini의 API 키를 추가하여 텍스트, 사진, PDF, CAD 파일에서 적산을 생성합니다.",
+    "ai.setup_required_desc": "Anthropic Claude, OpenAI 또는 Google Gemini의 API 키를 추가하여 텍스트, 사진, PDF, CAD 파일에서 적산을 생성합니다.",
     "ai.setup_required_title": "AI를 연결하여 시작하세요",
     "ai.standard_label": "기준",
     "ai.supported_formats": "지원 형식: {{formats}}",
     "ai.try_again": "다시 시도하거나 AI 설정을 확인하세요.",
     "ai.advisor_title": "AI 비용 어드바이저",
-    "ai.advisor_desc":
-      "비용, 자재, 가격에 대해 질문하세요 — 데이터베이스와 AI 지식에서",
+    "ai.advisor_desc": "비용, 자재, 가격에 대해 질문하세요 — 데이터베이스와 AI 지식에서",
     "ai.advisor_empty": "건설 비용에 대해 무엇이든 물어보세요",
     "ai.advisor_placeholder": "비용, 자재, 가격에 대해 질문...",
     "ai.advisor_sources": "출처:",
@@ -139,10 +118,8 @@ const resource = {
     "app.name": "OpenConstructionERP",
     "app.tagline": "전문 건설 적산 플랫폼",
     "assemblies.assemblies_found": "일위대가",
-    "assemblies.description":
-      "일반적인 건설 요소를 위한 재사용 가능한 원가 구성",
-    "assemblies.what_are_assemblies":
-      '일위대가는 여러 자원(자재, 노무, 장비)을 하나의 복합단가로 결합하는 재사용 가능한 원가 구성입니다. 예를 들어, "철근콘크리트 벽" 일위대가에는 콘크리트, 철근, 거푸집, 노무가 포함됩니다. 내역서 항목에 일위대가를 적용하면 구성 원가가 자동으로 채워집니다.',
+    "assemblies.description": "일반적인 건설 요소를 위한 재사용 가능한 원가 구성",
+    "assemblies.what_are_assemblies": "일위대가는 여러 자원(자재, 노무, 장비)을 하나의 복합단가로 결합하는 재사용 가능한 원가 구성입니다. 예를 들어, \"철근콘크리트 벽\" 일위대가에는 콘크리트, 철근, 거푸집, 노무가 포함됩니다. 내역서 항목에 일위대가를 적용하면 구성 원가가 자동으로 채워집니다.",
     "assemblies.new_assembly": "새 일위대가",
     "assemblies.no_results": "일위대가를 찾을 수 없습니다",
     "assemblies.no_results_hint": "검색어나 필터를 조정해 보세요",
@@ -176,8 +153,7 @@ const resource = {
     "auth.register_title": "계정 만들기",
     "auth.remember_me": "30일간 로그인 유지",
     "auth.reset_error": "재설정 요청을 처리할 수 없습니다. 다시 시도하세요.",
-    "auth.reset_sent":
-      "해당 이메일로 계정이 존재하면 비밀번호 재설정 링크가 발송됩니다.",
+    "auth.reset_sent": "해당 이메일로 계정이 존재하면 비밀번호 재설정 링크가 발송됩니다.",
     "auth.send_reset_link": "재설정 링크 보내기",
     "auth.server_error": "서버에 연결할 수 없습니다. 다시 시도하세요.",
     "auth.sign_in": "로그인",
@@ -189,8 +165,7 @@ const resource = {
     "boq.aace_methodology": "방법론",
     "boq.aace_metrics": "분류 지표",
     "boq.aace_positions": "항목",
-    "boq.aace_reference":
-      "AACE International Recommended Practice 18R-97 기반. 분류는 내역서 완성도 지표에서 자동 감지됩니다.",
+    "boq.aace_reference": "AACE International Recommended Practice 18R-97 기반. 분류는 내역서 완성도 지표에서 자동 감지됩니다.",
     "boq.aace_to": "~",
     "boq.aace_with_classification": "분류 포함",
     "boq.aace_with_rates": "단가 포함",
@@ -209,16 +184,14 @@ const resource = {
     "boq.adding": "추가 중...",
     "boq.ai_assistant": "AI 어시스턴트",
     "boq.ai_chat_error": "AI 요청 실패. 다시 시도하세요.",
-    "boq.ai_hint":
-      '내역서 항목 생성을 요청하세요. 예: "5층 사무실 건물의 기계설비 항목 추가"',
+    "boq.ai_hint": "내역서 항목 생성을 요청하세요. 예: \"5층 사무실 건물의 기계설비 항목 추가\"",
     "boq.ai_placeholder": "생성할 항목을 설명하세요...",
     "boq.ai_welcome": "내역서 항목 생성을 요청하세요. 예: ",
     "boq.all_projects": "전체 프로젝트",
     "boq.all_statuses": "전체 상태",
     "boq.area_m2": "면적 (m²)",
     "boq.back_to_project": "프로젝트로 돌아가기",
-    "boq.toolbar_hint":
-      "도구 모음을 사용하여 섹션과 항목을 추가하고, 단가 데이터베이스 또는 일위대가에서 가져오고, GAEB/PDF/Excel로 내보내거나 AI 적산을 실행합니다. 순액 = 항목 합계의 합. 제경비율은 백분율로 적용됩니다. 총합계 = 순액 + 제경비 + 부가가치세.",
+    "boq.toolbar_hint": "도구 모음을 사용하여 섹션과 항목을 추가하고, 단가 데이터베이스 또는 일위대가에서 가져오고, GAEB/PDF/Excel로 내보내거나 AI 적산을 실행합니다. 순액 = 항목 합계의 합. 제경비율은 백분율로 적용됩니다. 총합계 = 순액 + 제경비 + 부가가치세.",
     "boq.boq_created": "내역서 생성됨",
     "boq.boq_name": "내역서 이름",
     "boq.cancel_compare": "비교 취소",
@@ -251,8 +224,7 @@ const resource = {
     "boq.cost_risk_contingency": "예비비 (P80 - P50)",
     "boq.cost_risk_distribution": "원가 분포",
     "boq.cost_risk_drivers": "주요 리스크 요인",
-    "boq.cost_risk_empty":
-      "몬테카를로 시뮬레이션을 실행하려면 원가가 포함된 항목을 추가하세요.",
+    "boq.cost_risk_empty": "몬테카를로 시뮬레이션을 실행하려면 원가가 포함된 항목을 추가하세요.",
     "boq.cost_risk_iterations": "반복 횟수",
     "boq.cost_risk_iterations_label": "회",
     "boq.cost_risk_loading": "몬테카를로 시뮬레이션 실행 중...",
@@ -278,8 +250,7 @@ const resource = {
     "boq.markup_bond": "보증",
     "boq.markup_other": "기타",
     "boq.template_applied": "지역 템플릿이 적용되었습니다",
-    "boq.confirm_replace_markups":
-      "기존 마크업이 대체됩니다. 계속하시겠습니까?",
+    "boq.confirm_replace_markups": "기존 마크업이 대체됩니다. 계속하시겠습니까?",
     "boq.no_markups": "마크업 없음. 추가하거나 템플릿을 적용하세요.",
     "boq.new_markup": "새 마크업",
     "boq.markup_added": "마크업 추가됨",
@@ -293,8 +264,7 @@ const resource = {
     "boq.duplicate_failed": "복제 실패",
     "boq.duplicated": "내역서 복제됨",
     "boq.editor": "내역서 편집기",
-    "boq.empty_section":
-      '이 섹션에 항목이 없습니다. "항목 추가"를 클릭하여 추가하세요.',
+    "boq.empty_section": "이 섹션에 항목이 없습니다. \"항목 추가\"를 클릭하여 추가하세요.",
     "boq.enter_description": "설명 입력...",
     "boq.estimated_total": "추정 합계",
     "boq.estimates": "적산",
@@ -328,8 +298,7 @@ const resource = {
     "boq.no_boqs_hint": "먼저 프로젝트를 만든 다음 내역서를 추가하세요",
     "boq.no_items_found": "일치하는 항목이 없습니다",
     "boq.no_positions": "아직 항목이 없습니다. 섹션을 추가하여 시작하세요.",
-    "boq.no_resources":
-      "할당된 자원이 없습니다. 자동완성 제안에서 ⚡ 아이콘이 있는 단가 항목을 선택하면 자동으로 채워집니다.",
+    "boq.no_resources": "할당된 자원이 없습니다. 자동완성 제안에서 ⚡ 아이콘이 있는 단가 항목을 선택하면 자동으로 채워집니다.",
     "boq.no_results": "일치하는 적산이 없습니다",
     "boq.no_results_hint": "검색어나 필터를 조정해 보세요",
     "boq.no_section": "섹션 없음 (최상위)",
@@ -350,8 +319,7 @@ const resource = {
     "boq.quality_descriptions": "설명 작성됨",
     "boq.quality_fair": "보통",
     "boq.quality_great": "우수",
-    "boq.quality_hint":
-      "모든 필드를 채워 100%에 도달하고 적산 정확도를 확보하세요.",
+    "boq.quality_hint": "모든 필드를 채워 100%에 도달하고 적산 정확도를 확보하세요.",
     "boq.quality_markups": "제경비 추가됨",
     "boq.quality_missing": "누락",
     "boq.quality_needs_work": "개선 필요",
@@ -364,15 +332,13 @@ const resource = {
     "boq.quick_add_section": "섹션 추가",
     "boq.quick_add_section_desc": "항목을 정리할 새 섹션을 만듭니다",
     "boq.quick_import_costs": "단가 데이터베이스에서 가져오기",
-    "boq.quick_import_costs_desc":
-      "단가 데이터베이스에서 항목을 검색하고 선택합니다",
+    "boq.quick_import_costs_desc": "단가 데이터베이스에서 항목을 검색하고 선택합니다",
     "boq.quick_use_template": "템플릿 사용",
     "boq.quick_use_template_desc": "미리 만들어진 적산 템플릿으로 시작합니다",
     "boq.recalculate": "재계산",
     "boq.recalculate_complete": "재계산 완료",
     "boq.recalculate_failed": "재계산 실패",
-    "boq.recalculate_summary":
-      "재계산 완료: {{sections}}개 섹션, {{positions}}개 항목",
+    "boq.recalculate_summary": "재계산 완료: {{sections}}개 섹션, {{positions}}개 항목",
     "boq.recent_activity": "최근 활동",
     "boq.redo": "다시 실행 (Ctrl+Y)",
     "boq.redone": "다시 실행됨",
@@ -432,8 +398,7 @@ const resource = {
     "boq.sections": "섹션",
     "boq.select_project": "프로젝트 선택...",
     "boq.sensitivity_base_total": "기본 합계",
-    "boq.sensitivity_empty":
-      "민감도 분석을 보려면 원가가 포함된 항목을 추가하세요.",
+    "boq.sensitivity_empty": "민감도 분석을 보려면 원가가 포함된 항목을 추가하세요.",
     "boq.sensitivity_impact_high": "영향 (+)",
     "boq.sensitivity_impact_low": "영향 (-)",
     "boq.sensitivity_overrun": "원가 증가",
@@ -444,21 +409,16 @@ const resource = {
     "boq.show_all_activity": "전체 활동 보기...",
     "boq.showing_estimates": "{{total}}개 중 {{shown}}개 적산",
     "boq.start_building": "적산 작성 시작",
-    "boq.start_building_desc":
-      "전문적인 내역서를 작성하려면 다음 단계를 따르세요",
+    "boq.start_building_desc": "전문적인 내역서를 작성하려면 다음 단계를 따르세요",
     "boq.status": "상태",
     "boq.step_add_positions": "항목 추가",
-    "boq.step_add_positions_desc":
-      "각 섹션에 설명과 단위가 포함된 세부 항목을 추가합니다",
+    "boq.step_add_positions_desc": "각 섹션에 설명과 단위가 포함된 세부 항목을 추가합니다",
     "boq.step_add_sections": "섹션 추가",
-    "boq.step_add_sections_desc":
-      "적산을 섹션으로 구성합니다 (예: 기초, 벽체, 지붕)",
+    "boq.step_add_sections_desc": "적산을 섹션으로 구성합니다 (예: 기초, 벽체, 지붕)",
     "boq.step_review": "합계 검토",
-    "boq.step_review_desc":
-      "간접비 및 이윤에 대한 제경비를 추가한 후 총합계를 검토합니다",
+    "boq.step_review_desc": "간접비 및 이윤에 대한 제경비를 추가한 후 총합계를 검토합니다",
     "boq.step_set_quantities": "수량 설정",
-    "boq.step_set_quantities_desc":
-      "각 항목에 수량과 단가를 입력하여 금액을 산출합니다",
+    "boq.step_set_quantities_desc": "각 항목에 수량과 단가를 입력하여 금액을 산출합니다",
     "boq.subtotal": "소계",
     "boq.sync_rate": "단가 동기화",
     "boq.table_label": "내역서 항목",
@@ -466,17 +426,12 @@ const resource = {
     "boq.template_error": "템플릿에서 내역서 생성 실패",
     "boq.templates": "내역서 템플릿",
     "boq.templates_coming_soon": "템플릿 준비 중",
-    "boq.templates_coming_soon_desc":
-      "템플릿 선택기는 향후 업데이트에서 사용할 수 있습니다.",
-    "boq.templates_subtitle":
-      "건물 유형에 맞는 전문 템플릿으로 시작하세요. 템플릿을 선택하고 면적을 설정하면 즉시 완전한 내역서가 생성됩니다.",
-    "boq.tip_autocomplete":
-      "모든 항목에 설명을 입력하세요 — 입력을 시작하면 단가 데이터베이스에서 제안을 볼 수 있습니다",
-    "boq.tip_markups":
-      "표 아래 제경비 섹션을 사용하여 간접비 및 이윤을 위한 제경비를 추가합니다",
+    "boq.templates_coming_soon_desc": "템플릿 선택기는 향후 업데이트에서 사용할 수 있습니다.",
+    "boq.templates_subtitle": "건물 유형에 맞는 전문 템플릿으로 시작하세요. 템플릿을 선택하고 면적을 설정하면 즉시 완전한 내역서가 생성됩니다.",
+    "boq.tip_autocomplete": "모든 항목에 설명을 입력하세요 — 입력을 시작하면 단가 데이터베이스에서 제안을 볼 수 있습니다",
+    "boq.tip_markups": "표 아래 제경비 섹션을 사용하여 간접비 및 이윤을 위한 제경비를 추가합니다",
     "boq.tip_menu": "섹션의 (...) 메뉴를 클릭하여 항목을 추가하거나 삭제합니다",
-    "boq.tip_sections":
-      "적산을 구성할 섹션을 추가합니다 (예: 기초, 벽체, 지붕)",
+    "boq.tip_sections": "적산을 구성할 섹션을 추가합니다 (예: 기초, 벽체, 지붕)",
     "boq.tip_tab": "Tab으로 필드 간 이동, Enter로 변경 사항 저장",
     "boq.tips_title": "도움말",
     "boq.mvp.title": "자재 선택",
@@ -544,15 +499,12 @@ const resource = {
     "catalog.creating": "생성 중...",
     "catalog.delete_failed": "삭제 실패",
     "catalog.delete_region": "지역 삭제",
-    "catalog.empty_hint":
-      "지역 카탈로그를 가져와 자원을 채우거나, 단가 항목에서 추출합니다.",
-    "catalog.empty_with_regions":
-      "현재 필터와 일치하는 자원이 없습니다. 유형이나 지역을 변경해 보세요.",
+    "catalog.empty_hint": "지역 카탈로그를 가져와 자원을 채우거나, 단가 항목에서 추출합니다.",
+    "catalog.empty_with_regions": "현재 필터와 일치하는 자원이 없습니다. 유형이나 지역을 변경해 보세요.",
     "catalog.import": "가져오기",
     "catalog.import_failed": "가져오기 실패",
     "catalog.import_region": "지역 가져오기",
-    "catalog.import_regions_desc":
-      "CWICR 지역 데이터베이스에서 미리 구축된 자원 카탈로그를 다운로드합니다",
+    "catalog.import_regions_desc": "CWICR 지역 데이터베이스에서 미리 구축된 자원 카탈로그를 다운로드합니다",
     "catalog.import_regions_title": "자원 카탈로그 가져오기",
     "catalog.import_success": "가져오기 완료",
     "catalog.importing": "가져오는 중...",
@@ -561,8 +513,7 @@ const resource = {
     "catalog.loaded": "로드됨",
     "catalog.my_catalog": "내 카탈로그",
     "catalog.my_catalog_empty": "내 카탈로그가 비어 있습니다",
-    "catalog.my_catalog_empty_desc":
-      "자체 자재, 장비, 노무 단가를 추가하세요. 사용자 정의 자원은 일위대가에 사용하거나 내역서 항목에 직접 적용할 수 있습니다.",
+    "catalog.my_catalog_empty_desc": "자체 자재, 장비, 노무 단가를 추가하세요. 사용자 정의 자원은 일위대가에 사용하거나 내역서 항목에 직접 적용할 수 있습니다.",
     "catalog.name": "이름",
     "catalog.no_results": "자원을 찾을 수 없습니다",
     "catalog.no_results_hint": "검색어나 필터를 조정해 보세요",
@@ -579,8 +530,7 @@ const resource = {
     "catalog.resources_imported": "자원 가져옴",
     "catalog.resources_removed": "자원 제거됨",
     "catalog.search_hint": "자재, 장비, 노무, 운전원을 검색합니다",
-    "catalog.what_is_catalog":
-      "지역별로 구성된 자재, 노무, 장비, 운전원 단가입니다. 모듈에서 지역 카탈로그를 설치한 다음 일위대가를 구성하거나 내역서 항목에 직접 추가하는 데 사용합니다.",
+    "catalog.what_is_catalog": "지역별로 구성된 자재, 노무, 장비, 운전원 단가입니다. 모듈에서 지역 카탈로그를 설치한 다음 일위대가를 구성하거나 내역서 항목에 직접 추가하는 데 사용합니다.",
     "catalog.search_in": "검색 대상",
     "catalog.search_placeholder": "이름 또는 코드로 검색...",
     "catalog.selected": "선택됨",
@@ -605,14 +555,12 @@ const resource = {
     "command_palette.action_run_validation": "검증 실행",
     "command_palette.action_import_database": "데이터베이스 가져오기",
     "error.something_wrong": "오류가 발생했습니다",
-    "error.unexpected_error":
-      "이 페이지를 렌더링하는 중 예기치 않은 오류가 발생했습니다. 새로고침하거나 대시보드로 돌아가 보세요.",
+    "error.unexpected_error": "이 페이지를 렌더링하는 중 예기치 않은 오류가 발생했습니다. 새로고침하거나 대시보드로 돌아가 보세요.",
     "error.details": "오류 상세",
     "error.try_again": "다시 시도",
     "error.go_dashboard": "대시보드로 이동",
     "error.not_found": "페이지를 찾을 수 없습니다",
-    "error.not_found_desc":
-      "찾고 있는 페이지가 존재하지 않거나 이동되었습니다. URL을 확인하거나 대시보드로 돌아가세요.",
+    "error.not_found_desc": "찾고 있는 페이지가 존재하지 않거나 이동되었습니다. URL을 확인하거나 대시보드로 돌아가세요.",
     "error.go_back": "뒤로 가기",
     "common.archive": "보관",
     "common.back": "뒤로",
@@ -649,8 +597,7 @@ const resource = {
     "costmodel.benchmark_area_value": "{{area}} m²",
     "costmodel.benchmark_cost_per_m2": "원가 / m²",
     "costmodel.benchmark_current_cost": "현재: {{value}}/m²",
-    "costmodel.benchmark_enter_area":
-      "프로젝트 면적을 입력하면 m²당 원가 벤치마크 비교를 볼 수 있습니다",
+    "costmodel.benchmark_enter_area": "프로젝트 면적을 입력하면 m²당 원가 벤치마크 비교를 볼 수 있습니다",
     "costmodel.benchmark_per_m2": "/m²",
     "costmodel.benchmark_project_area": "프로젝트 면적 (m²)",
     "costmodel.benchmark_project_type": "프로젝트 유형",
@@ -694,8 +641,7 @@ const resource = {
     "costmodel.evm_spi": "SPI",
     "costmodel.evm_status": "상태",
     "costmodel.evm_sv_label": "SV",
-    "costmodel.evm_tcpi_hint":
-      "예산 내 완료를 위해 앞으로 CPI {{tcpi}}이(가) 필요합니다",
+    "costmodel.evm_tcpi_hint": "예산 내 완료를 위해 앞으로 CPI {{tcpi}}이(가) 필요합니다",
     "costmodel.evm_time_elapsed": "경과 시간",
     "costmodel.evm_title": "획득가치 분석",
     "costmodel.evm_unknown": "알 수 없음",
@@ -715,8 +661,7 @@ const resource = {
     "costmodel.s_curve": "S-커브 (EVM)",
     "costmodel.s_curve_chart": "S-커브 차트",
     "costmodel.title": "5D 원가 모델",
-    "costmodel.what_is_5d":
-      "5D 원가관리는 프로젝트에 시간 경과에 따른 원가 추적을 추가합니다. S-커브 차트로 예산 대비 실적을 모니터링하고, 획득가치(SPI = 공정 효율, CPI = 원가 효율 — 둘 다 1.0 이상이면 정상)를 추적하며, 가정 시나리오를 실행하여 결과를 예측합니다.",
+    "costmodel.what_is_5d": "5D 원가관리는 프로젝트에 시간 경과에 따른 원가 추적을 추가합니다. S-커브 차트로 예산 대비 실적을 모니터링하고, 획득가치(SPI = 공정 효율, CPI = 원가 효율 — 둘 다 1.0 이상이면 정상)를 추적하며, 가정 시나리오를 실행하여 결과를 예측합니다.",
     "costmodel.total": "합계",
     "costmodel.total_budget": "총 예산",
     "costmodel.variance": "차이",
@@ -731,8 +676,7 @@ const resource = {
     "costmodel.whatif_material": "자재비",
     "costmodel.whatif_original_bac": "원래 BAC",
     "costmodel.whatif_reset": "초기화",
-    "costmodel.whatif_scenario_name":
-      "가정: 자재{{material}}% 노무{{labor}}% 공기{{duration}}%",
+    "costmodel.whatif_scenario_name": "가정: 자재{{material}}% 노무{{labor}}% 공기{{duration}}%",
     "costmodel.whatif_title": "가정 시나리오",
     "costs.add_database": "가져오기",
     "costs.add_item": "항목 추가",
@@ -770,8 +714,7 @@ const resource = {
     "costs.import_and_more": "외 {{count}}개 오류",
     "costs.import_another": "다른 파일 가져오기",
     "costs.import_click_to_change": "다른 파일을 선택하려면 클릭",
-    "costs.import_columns_hint":
-      "열이 자동 감지됩니다. 허용되는 헤더: Code, Description, Unit, Rate/Price/Cost, Currency, DIN 276/Classification.",
+    "costs.import_columns_hint": "열이 자동 감지됩니다. 허용되는 헤더: Code, Description, Unit, Rate/Price/Cost, Currency, DIN 276/Classification.",
     "costs.import_complete": "가져오기 완료",
     "costs.import_database": "데이터베이스 가져오기",
     "costs.import_drop_here": "파일을 여기에 놓으세요",
@@ -780,11 +723,9 @@ const resource = {
     "costs.import_errors": "오류",
     "costs.import_failed": "가져오기 실패",
     "costs.import_file_too_large": "파일이 너무 큽니다",
-    "costs.import_first_hint":
-      "55,000개 이상의 항목을 검색하려면 지역 단가 데이터베이스를 가져오세요.",
+    "costs.import_first_hint": "55,000개 이상의 항목을 검색하려면 지역 단가 데이터베이스를 가져오세요.",
     "costs.import_format_csv": "동일한 열이 포함된 CSV (.csv)",
-    "costs.import_format_excel":
-      "Code, Description, Unit, Rate 열이 포함된 Excel (.xlsx)",
+    "costs.import_format_excel": "Code, Description, Unit, Rate 열이 포함된 Excel (.xlsx)",
     "costs.import_formats_title": "지원되는 형식",
     "costs.import_go_to_database": "단가 데이터베이스로 이동",
     "costs.import_imported": "가져옴",
@@ -793,11 +734,9 @@ const resource = {
     "costs.import_row": "행",
     "costs.import_rows_processed": "행 처리됨",
     "costs.import_skipped": "건너뜀",
-    "costs.import_subtitle":
-      "단가 데이터베이스를 로드하거나 자체 파일을 업로드하세요.",
+    "costs.import_subtitle": "단가 데이터베이스를 로드하거나 자체 파일을 업로드하세요.",
     "costs.import_success": "가져오기 완료",
-    "costs.import_supported_hint":
-      "Excel (.xlsx) 또는 CSV (.csv) 파일을 업로드하세요.",
+    "costs.import_supported_hint": "Excel (.xlsx) 또는 CSV (.csv) 파일을 업로드하세요.",
     "costs.import_title": "단가 데이터베이스 가져오기",
     "costs.import_unsupported_format": "지원되지 않는 파일 형식",
     "costs.indexing_failed": "인덱싱 실패",
@@ -806,8 +745,7 @@ const resource = {
     "costs.items_copied": "{{count}}개 항목이 클립보드에 복사됨",
     "costs.load_more": "더 보기",
     "costs.loaded_databases": "로드된 데이터베이스",
-    "costs.no_boqs_helper":
-      "이 프로젝트에 내역서가 없습니다. 먼저 내역서 편집기에서 생성하세요.",
+    "costs.no_boqs_helper": "이 프로젝트에 내역서가 없습니다. 먼저 내역서 편집기에서 생성하세요.",
     "costs.no_database_loaded": "로드된 데이터베이스 없음",
     "costs.no_results": "단가 항목을 찾을 수 없습니다",
     "costs.no_results_hint": "검색어나 필터를 조정해 보세요",
@@ -819,19 +757,16 @@ const resource = {
     "costs.region_cleared": "지역 초기화됨",
     "costs.results_found": "결과 검색됨",
     "costs.search_hint": "설명 또는 코드로 단가 항목 검색",
-    "costs.what_is_cost_db":
-      "자재, 노무, 장비에 대한 단가 및 복합단가입니다. 모듈에서 지역 데이터베이스(CWICR, BKI, RSMeans)를 가져오거나 사용자 정의 단가를 추가합니다. AI 시맨틱 검색을 활성화하면 자연어 질의가 가능합니다.",
+    "costs.what_is_cost_db": "자재, 노무, 장비에 대한 단가 및 복합단가입니다. 모듈에서 지역 데이터베이스(CWICR, BKI, RSMeans)를 가져오거나 사용자 정의 단가를 추가합니다. AI 시맨틱 검색을 활성화하면 자연어 질의가 가능합니다.",
     "costs.search_placeholder": "설명 또는 코드로 검색...",
-    "costs.semantic_placeholder":
-      "필요한 것을 설명하세요 (AI가 유사 항목 검색)...",
+    "costs.semantic_placeholder": "필요한 것을 설명하세요 (AI가 유사 항목 검색)...",
     "costs.showing": "표시 중",
     "costs.title": "단가 데이터베이스",
     "costs.yes_clear_all": "예, 전체 삭제",
     "dashboard.add_api_keys": "API 키 추가",
     "dashboard.ai_providers": "AI 제공자",
     "dashboard.analytics": "분석",
-    "dashboard.kpi_hint":
-      "전체 프로젝트의 요약입니다. 적산 및 공정 활동을 추가하면 값이 업데이트됩니다.",
+    "dashboard.kpi_hint": "전체 프로젝트의 요약입니다. 적산 및 공정 활동을 추가하면 값이 업데이트됩니다.",
     "dashboard.api_server": "API 서버",
     "dashboard.boq_status": "내역서 상태",
     "dashboard.completed": "완료",
@@ -870,8 +805,7 @@ const resource = {
     "dashboard.step_create_project": "프로젝트 생성",
     "dashboard.step_create_project_desc": "첫 번째 건설 적산 프로젝트 시작",
     "dashboard.step_load_db": "단가 데이터베이스 로드",
-    "dashboard.step_load_db_desc":
-      "55,000개 이상의 항목이 포함된 지역 단가 데이터 가져오기",
+    "dashboard.step_load_db_desc": "55,000개 이상의 항목이 포함된 지역 단가 데이터 가져오기",
     "dashboard.subtitle": "건설 적산 워크스페이스",
     "dashboard.subtitle_2": "건설 프로젝트를 위한 스마트 자원 계획",
     "dashboard.system_status": "시스템 상태",
@@ -886,8 +820,7 @@ const resource = {
     "demo.install": "설치",
     "demo.install_error": "데모 프로젝트 설치 실패. 다시 시도하세요.",
     "demo.installing": "설치 중...",
-    "demo.modal_subtitle":
-      "내역서, 공정표, 예산, 입찰이 포함된 완전한 프로젝트를 설치합니다",
+    "demo.modal_subtitle": "내역서, 공정표, 예산, 입찰이 포함된 완전한 프로젝트를 설치합니다",
     "demo.modal_title": "데모 프로젝트 가져오기",
     "documents.title": "문서",
     "documents.subtitle": "프로젝트 파일 업로드 및 관리 — 도면, 계약서, 사양서",
@@ -896,8 +829,7 @@ const resource = {
     "documents.upload_failed": "업로드 실패",
     "documents.upload_skipped": "파일 건너뜀",
     "documents.file_too_large": "{{name}}이(가) 100MB 제한을 초과합니다",
-    "documents.upload_summary":
-      "업로드 완료: {{success}}개 업로드, {{failed}}개 실패",
+    "documents.upload_summary": "업로드 완료: {{success}}개 업로드, {{failed}}개 실패",
     "documents.delete_failed": "삭제 실패",
     "documents.deleted": "문서가 삭제되었습니다",
     "documents.download": "다운로드",
@@ -908,16 +840,12 @@ const resource = {
     "documents.no_results": "결과 없음",
     "documents.no_results_hint": "다른 검색어를 시도해보세요",
     "documents.clear_search": "검색 지우기",
-    "documents.drop_hint":
-      "여기에 파일을 드래그 앤 드롭하거나 업로드를 클릭하세요",
-    "documents.drop_hint_types":
-      "PDF, 이미지, Excel, DWG, IFC — 모든 파일 유형",
+    "documents.drop_hint": "여기에 파일을 드래그 앤 드롭하거나 업로드를 클릭하세요",
+    "documents.drop_hint_types": "PDF, 이미지, Excel, DWG, IFC — 모든 파일 유형",
     "documents.empty": "아직 문서가 없습니다",
-    "documents.empty_hint":
-      "첫 번째 파일을 업로드하세요 — 도면, 계약서, 사진 또는 프로젝트 문서.",
+    "documents.empty_hint": "첫 번째 파일을 업로드하세요 — 도면, 계약서, 사진 또는 프로젝트 문서.",
     "documents.select_project": "프로젝트를 선택하세요",
-    "documents.select_project_hint":
-      "헤더의 프로젝트 전환기를 사용하여 먼저 프로젝트를 선택하세요.",
+    "documents.select_project_hint": "헤더의 프로젝트 전환기를 사용하여 먼저 프로젝트를 선택하세요.",
     "documents.sort_date": "날짜순",
     "documents.sort_name": "이름순",
     "documents.sort_size": "크기순",
@@ -931,45 +859,33 @@ const resource = {
     "documents.cat_correspondence": "서신",
     "documents.cat_other": "기타",
     "login.benefit.ai": "AI 지원 적산",
-    "login.benefit.ai_desc":
-      "신뢰도 점수와 함께 스마트 제안. 사용자가 결정하고 AI가 보조합니다.",
+    "login.benefit.ai_desc": "신뢰도 점수와 함께 스마트 제안. 사용자가 결정하고 AI가 보조합니다.",
     "login.benefit.allinone": "내역서 + 4D + 5D + 입찰",
-    "login.benefit.allinone_desc":
-      "적산부터 견적 비교까지 하나의 도구로 완전한 워크플로를 제공합니다.",
+    "login.benefit.allinone_desc": "적산부터 견적 비교까지 하나의 도구로 완전한 워크플로를 제공합니다.",
     "login.benefit.free": "모두에게 무료",
-    "login.benefit.free_desc":
-      "라이선스 비용 없음. 제한 없음. 적산사가 만들고, 적산사를 위해 만들었습니다.",
+    "login.benefit.free_desc": "라이선스 비용 없음. 제한 없음. 적산사가 만들고, 적산사를 위해 만들었습니다.",
     "login.benefit.local": "데이터는 사용자의 컴퓨터에 보관됩니다",
-    "login.benefit.local_desc":
-      "클라우드 없음. 타사 서버 없음. 프로젝트 데이터에 대한 완전한 통제.",
+    "login.benefit.local_desc": "클라우드 없음. 타사 서버 없음. 프로젝트 데이터에 대한 완전한 통제.",
     "login.benefit.open_source": "100% 오픈 소스",
-    "login.benefit.open_source_desc":
-      "투명한 코드. 공급업체 종속 없음. 언제든지 모든 것을 내보낼 수 있습니다.",
+    "login.benefit.open_source_desc": "투명한 코드. 공급업체 종속 없음. 언제든지 모든 것을 내보낼 수 있습니다.",
     "login.benefit.standards": "국제 표준",
-    "login.benefit.standards_desc":
-      "전 세계 11개 지역 데이터베이스에 55,000개 이상의 비용 항목.",
-    "login.hero_desc":
-      "전문 내역서, 4D 공정관리, 5D 원가 모델, 입찰 — 하나의 오픈 소스 플랫폼에 모두 담았습니다.",
+    "login.benefit.standards_desc": "전 세계 11개 지역 데이터베이스에 55,000개 이상의 비용 항목.",
+    "login.hero_desc": "전문 내역서, 4D 공정관리, 5D 원가 모델, 입찰 — 하나의 오픈 소스 플랫폼에 모두 담았습니다.",
     "login.hero_highlight": "재창조된",
     "login.hero_title": "건설 적산,",
     "login.open_source_badge": "최초의 오픈소스 건설 ERP",
     "dashboard.open_source_badge": "최초의 오픈소스 건설 ERP",
     "login.learn_more": "플랫폼에 대해 더 알아보기",
-    "login.privacy":
-      "모든 데이터는 사용자의 컴퓨터에서 로컬로 처리 및 저장됩니다. 외부 서버로 전송되는 것은 없습니다. 데이터의 소유권은 항상 사용자에게 있습니다.",
-    "login.privacy_ai":
-      "내장 AI 도구를 사용하는 경우, 설정한 AI 제공자(OpenAI, Anthropic 등)에게 일부 데이터가 전송될 수 있습니다. 어떤 제공자를 사용할지, 어떤 데이터를 공유할지 사용자가 직접 통제합니다.",
+    "login.privacy": "모든 데이터는 사용자의 컴퓨터에서 로컬로 처리 및 저장됩니다. 외부 서버로 전송되는 것은 없습니다. 데이터의 소유권은 항상 사용자에게 있습니다.",
+    "login.privacy_ai": "내장 AI 도구를 사용하는 경우, 설정한 AI 제공자(OpenAI, Anthropic 등)에게 일부 데이터가 전송될 수 있습니다. 어떤 제공자를 사용할지, 어떤 데이터를 공유할지 사용자가 직접 통제합니다.",
     "marketplace.active": "활성",
     "marketplace.available": "사용 가능한 모듈",
     "marketplace.builtin": "내장",
-    "marketplace.builtin_message":
-      "이 모듈은 설치에 내장되어 있으며 바로 사용할 수 있습니다.",
+    "marketplace.builtin_message": "이 모듈은 설치에 내장되어 있으며 바로 사용할 수 있습니다.",
     "marketplace.catalog_imported": "카탈로그 가져옴",
-    "marketplace.catalog_imported_message":
-      "{{region}}에 대해 {{imported}}개 자원 가져옴, {{skipped}}개 건너뜀.",
+    "marketplace.catalog_imported_message": "{{region}}에 대해 {{imported}}개 자원 가져옴, {{skipped}}개 건너뜀.",
     "marketplace.demo_installed": "데모 설치됨",
-    "marketplace.demo_installed_message":
-      "완전한 내역서, 공정표, 예산, 입찰이 포함된 {{name}}이(가) 생성되었습니다.",
+    "marketplace.demo_installed_message": "완전한 내역서, 공정표, 예산, 입찰이 포함된 {{name}}이(가) 생성되었습니다.",
     "marketplace.free": "무료",
     "marketplace.import_failed": "가져오기 실패",
     "marketplace.imported": "가져옴",
@@ -978,10 +894,8 @@ const resource = {
     "marketplace.install_failed": "설치 실패",
     "marketplace.installed_modules": "설치된 핵심 모듈",
     "marketplace.installing": "설치 중...",
-    "marketplace.language_activated":
-      "언어 팩이 활성화되었습니다. 설정에서 언어를 변경하세요.",
-    "marketplace.language_already_included":
-      "이 언어는 이미 포함되어 있습니다.",
+    "marketplace.language_activated": "언어 팩이 활성화되었습니다. 설정에서 언어를 변경하세요.",
+    "marketplace.language_already_included": "이 언어는 이미 포함되어 있습니다.",
     "marketplace.manage": "관리",
     "marketplace.module_disabled": "{{name}} 비활성화됨",
     "marketplace.modules_loaded": "모듈 로드됨",
@@ -991,18 +905,15 @@ const resource = {
     "marketplace.no_results_hint": "검색어나 분류 필터를 조정해 보세요.",
     "marketplace.rules": "규칙",
     "marketplace.search_placeholder": "모듈 검색...",
-    "marketplace.subtitle":
-      "단가 데이터베이스, AI 도구, CAD 변환기 등의 확장 기능을 찾아보고 설치하세요.",
-    "marketplace.description":
-      "지역 단가 데이터베이스, 자원 카탈로그(CWICR), AI용 벡터 검색 인덱스, 언어 팩, 데모 프로젝트, 통합 기능으로 OpenEstimate를 확장합니다. 모듈을 설치하여 활성화하고 — 언제든지 제거할 수 있습니다.",
+    "marketplace.subtitle": "단가 데이터베이스, AI 도구, CAD 변환기 등의 확장 기능을 찾아보고 설치하세요.",
+    "marketplace.description": "지역 단가 데이터베이스, 자원 카탈로그(CWICR), AI용 벡터 검색 인덱스, 언어 팩, 데모 프로젝트, 통합 기능으로 OpenEstimate를 확장합니다. 모듈을 설치하여 활성화하고 — 언제든지 제거할 수 있습니다.",
     "marketplace.title": "모듈 마켓플레이스",
     "marketplace.uninstall": "제거",
     "marketplace.unknown_region": "알 수 없는 지역",
     "marketplace.validation_rule_sets": "검증 규칙 세트",
     "marketplace.validation_rules_active": "검증 규칙 활성화됨",
     "marketplace.vector_index": "벡터 인덱스",
-    "marketplace.vector_index_hint":
-      "먼저 단가 데이터베이스를 가져온 다음 벡터를 생성하세요.",
+    "marketplace.vector_index_hint": "먼저 단가 데이터베이스를 가져온 다음 벡터를 생성하세요.",
     "modules.title": "모듈",
     "files.title": "프로젝트 파일",
     "files.empty": "필터에 맞는 파일이 없습니다.",
@@ -1051,26 +962,20 @@ const resource = {
     "files.toast.copied": "복사됨",
     "files.toast.copy_failed": "복사할 수 없습니다",
     "files.no_project_title": "활성 프로젝트 없음",
-    "files.no_project_desc":
-      "대시보드에서 프로젝트를 선택하면 모든 문서, 사진, BIM 및 DWG 파일을 한 곳에서 볼 수 있습니다.",
+    "files.no_project_desc": "대시보드에서 프로젝트를 선택하면 모든 문서, 사진, BIM 및 DWG 파일을 한 곳에서 볼 수 있습니다.",
     "files.go_to_projects": "프로젝트로 이동",
     "files.export.title": "프로젝트 번들 내보내기",
-    "files.export.intro":
-      "포함할 항목을 선택하세요. 작은 번들은 더 빠르게 전송되고, 큰 번들은 더 많이 보존합니다.",
+    "files.export.intro": "포함할 항목을 선택하세요. 작은 번들은 더 빠르게 전송되고, 큰 번들은 더 많이 보존합니다.",
     "files.export.scope_metadata": "메타데이터만",
-    "files.export.scope_metadata_hint":
-      "이메일에 적합. BOQ, 표 및 링크 — 첨부 없음.",
+    "files.export.scope_metadata_hint": "이메일에 적합. BOQ, 표 및 링크 — 첨부 없음.",
     "files.export.scope_documents": "문서",
-    "files.export.scope_documents_hint":
-      "업로드된 문서와 사진을 썸네일과 함께 추가합니다.",
+    "files.export.scope_documents_hint": "업로드된 문서와 사진을 썸네일과 함께 추가합니다.",
     "files.export.scope_bim": "BIM 모델",
-    "files.export.scope_bim_hint":
-      "BIM 모델, 요소, 표준 지오메트리를 추가합니다.",
+    "files.export.scope_bim_hint": "BIM 모델, 요소, 표준 지오메트리를 추가합니다.",
     "files.export.scope_dwg": "DWG 도면",
     "files.export.scope_dwg_hint": "DWG 도면, 버전 및 관련 시트를 추가합니다.",
     "files.export.scope_full": "전체 프로젝트",
-    "files.export.scope_full_hint":
-      "전부 — 모든 첨부 파일을 포함한 완전한 마이그레이션 패키지.",
+    "files.export.scope_full_hint": "전부 — 모든 첨부 파일을 포함한 완전한 마이그레이션 패키지.",
     "files.export.stat_scope": "범위",
     "files.export.stat_attachments": "첨부 파일",
     "files.export.stat_size": "예상 크기",
@@ -1081,8 +986,7 @@ const resource = {
     "files.export.large_warn": "큰 번들 — 내보내는 동안 이 탭을 열어두세요.",
     "files.export.success_title": "번들이 다운로드되었습니다",
     "files.import.title": "프로젝트 번들 가져오기",
-    "files.import.intro":
-      "이 작업 공간 또는 다른 작업 공간에서 내보낸 .ocep 번들을 선택하세요.",
+    "files.import.intro": "이 작업 공간 또는 다른 작업 공간에서 내보낸 .ocep 번들을 선택하세요.",
     "files.import.select_file": ".ocep 파일 선택",
     "files.import.drop_hint": "클릭하여 찾아보기",
     "files.import.validating": "번들 검증 중…",
@@ -1094,19 +998,15 @@ const resource = {
     "files.import.stat_format": "형식",
     "files.import.choose_mode": "가져오기 모드",
     "files.import.mode_new": "새 프로젝트 만들기",
-    "files.import.mode_new_hint":
-      "가장 안전. 모든 곳에 새 ID; 작업 공간은 변경되지 않습니다.",
+    "files.import.mode_new_hint": "가장 안전. 모든 곳에 새 ID; 작업 공간은 변경되지 않습니다.",
     "files.import.mode_merge": "기존 프로젝트에 병합",
-    "files.import.mode_merge_hint":
-      "선택한 프로젝트에 행을 추가합니다. 기존 ID는 건너뜁니다.",
+    "files.import.mode_merge_hint": "선택한 프로젝트에 행을 추가합니다. 기존 ID는 건너뜁니다.",
     "files.import.mode_replace": "기존 프로젝트 교체",
-    "files.import.mode_replace_hint":
-      "선택한 프로젝트의 번들 관리 행을 지우고 가져옵니다. 파괴적입니다.",
+    "files.import.mode_replace_hint": "선택한 프로젝트의 번들 관리 행을 지우고 가져옵니다. 파괴적입니다.",
     "files.import.rename": "새 프로젝트 이름 (선택)",
     "files.import.target_project": "대상 프로젝트",
     "files.import.pick_project": "— 프로젝트 선택 —",
-    "files.import.destructive_warn":
-      "가져오기 전에 대상 프로젝트의 번들 관리 행을 영구적으로 삭제합니다. 되돌릴 수 없습니다.",
+    "files.import.destructive_warn": "가져오기 전에 대상 프로젝트의 번들 관리 행을 영구적으로 삭제합니다. 되돌릴 수 없습니다.",
     "files.import.confirm": "가져오기",
     "files.import.result_done": "가져오기 완료",
     "files.import.imported": "가져옴",
@@ -1126,8 +1026,7 @@ const resource = {
     "files.email.paste_into_email": "샘플 이메일 본문",
     "files.email.open_mail_client": "이메일 클라이언트 열기",
     "files.email.sample_subject": "파일: {{name}}",
-    "files.email.sample_body":
-      "안녕하세요,\n\n요청하신 파일입니다 — {{name}} ({{size}}).\n다운로드 링크 ({{expires}} 만료):\n{{url}}\n\n— OpenConstructionERP에서 발송",
+    "files.email.sample_body": "안녕하세요,\n\n요청하신 파일입니다 — {{name}} ({{size}}).\n다운로드 링크 ({{expires}} 만료):\n{{url}}\n\n— OpenConstructionERP에서 발송",
     "files.title_all": "모든 파일",
     "files.empty_category": "아직 {{category}} 없음",
     "files.cta.add_first": "첫 번째 {{category}} 추가",
@@ -1141,8 +1040,7 @@ const resource = {
     "files.upload_browse": "파일 찾아보기",
     "files.upload_no_project": "활성 프로젝트 없음",
     "files.upload_too_large": "파일이 너무 큽니다",
-    "files.upload_too_large_msg":
-      "{{count}}개 파일이 100 MB 한도를 초과하여 건너뛰었습니다.",
+    "files.upload_too_large_msg": "{{count}}개 파일이 100 MB 한도를 초과하여 건너뛰었습니다.",
     "files.upload_queued": "{{count}}개 파일 대기 중",
     "files.uploading": "업로드 중…",
     "files.uploaded": "업로드됨",
@@ -1166,8 +1064,7 @@ const resource = {
     "files.share.downloads_plural": "{{count}}회 다운로드",
     "files.share.error_create": "공유 링크를 생성할 수 없습니다.",
     "files.share.error_revoke": "링크를 취소할 수 없습니다.",
-    "files.share.existing_empty":
-      "아직 공유 링크가 없습니다 — 위에서 생성하세요.",
+    "files.share.existing_empty": "아직 공유 링크가 없습니다 — 위에서 생성하세요.",
     "files.share.existing_title": "기존 링크",
     "files.share.expires_label": "만료",
     "files.share.expiry_1d": "1일",
@@ -1195,10 +1092,10 @@ const resource = {
     "nav.equipment": "장비 및 차량",
     "nav.resources": "리소스 및 인력",
     "nav.service": "서비스 및 유지보수",
-    "nav.portal": "협력업체 포털",
+    "nav.portal": "협력사 포털",
     "nav.crm": "CRM (고객 관리)",
     "nav.contracts": "계약",
-    "nav.subcontractors": "협력업체",
+    "nav.subcontractors": "협력업체 디렉터리",
     "nav.bid_management": "입찰 관리",
     "nav.variations": "변경 지시",
     "nav.supplier_catalogs": "공급업체 카탈로그",
@@ -1210,17 +1107,21 @@ const resource = {
     "nav.bi_dashboards": "BI 대시보드",
     "nav.match_elements": "요소 매칭 → 비용",
     "nav.group_operations": "현장 운영",
-    "nav.group_operations_desc":
-      "현장 일일 운영 — 서비스, 장비, 일지, 협력업체 포털, 리소스",
+    "nav.group_operations_desc": "현장 일일 운영 — 서비스, 장비, 일지, 협력업체 포털, 리소스",
     "nav.group_commercial": "상업",
-    "nav.group_commercial_desc":
-      "상업 파이프라인 — CRM, 계약, 입찰, 변경, 공급업체, 부동산 개발",
+    "nav.group_commercial_desc": "상업 파이프라인 — CRM, 계약, 입찰, 변경, 공급업체, 부동산 개발",
     "nav.group_bi": "분석",
     "nav.group_bi_desc": "데이터 웨어하우스 프로젝션 기반 BI 대시보드",
-    "nav.group_estimation": "적산",
-    "nav.group_estimation_desc": "핵심 도구: 프로젝트, 내역서, 단가, 일위대가",
+    "nav.group_analytics": "분석 및 보고서",
+    "nav.group_analytics_desc": "모듈 간 리포트, BI 대시보드, 데이터 웨어하우스 프로젝션",
+    "nav.group_estimation": "견적 작업",
+    "nav.group_estimation_desc": "프로젝트 견적 — 내역서, BIM과 단가 매칭, AI 견적, 분석",
+    "nav.group_catalogues": "카탈로그 및 참조",
+    "nav.group_catalogues_desc": "단가 데이터베이스, 지역별 카탈로그, 일위대가 템플릿",
     "nav.group_databases": "데이터베이스",
     "nav.group_takeoff": "물량산출",
+    "nav.group_cad_bim_analytics": "모델 코디네이션",
+    "nav.group_cad_bim_analytics_desc": "페더레이션, 간섭 검사, 규칙 팩, 코디네이션 허브",
     "nav.group_cad_bim": "CAD / BIM & BI",
     "nav.takeoff_overview": "개요",
     "nav.pdf_takeoff": "PDF 물량산출",
@@ -1281,10 +1182,8 @@ const resource = {
     "requirements.notes": "메모",
     "requirements.notes_placeholder": "추가 메모 또는 문맥...",
     "requirements.import_text": "텍스트에서 가져오기",
-    "requirements.import_text_desc":
-      "요구사항 사양을 붙여넣으세요. 각 행 형식: 객체 | 속성 | 제약_유형 | 값 | 단위 | 카테고리 | 우선순위",
-    "requirements.import_placeholder":
-      "벽 | 두께 | min | 200 | mm | 구조 | 필수\n지붕 | U값 | max | 0.20 | W/m²K | 단열 | 필수",
+    "requirements.import_text_desc": "요구사항 사양을 붙여넣으세요. 각 행 형식: 객체 | 속성 | 제약_유형 | 값 | 단위 | 카테고리 | 우선순위",
+    "requirements.import_placeholder": "벽 | 두께 | min | 200 | mm | 구조 | 필수\n지붕 | U값 | max | 0.20 | W/m²K | 단열 | 필수",
     "requirements.set_created": "요구사항 세트가 생성되었습니다",
     "requirements.new_set": "새 요구사항 세트",
     "requirements.set_name_placeholder": "예: 구조 요구사항 1단계",
@@ -1303,39 +1202,33 @@ const resource = {
     "requirements.all_priorities": "모든 우선순위",
     "requirements.all_statuses": "모든 상태",
     "requirements.no_sets": "요구사항 세트 없음",
-    "requirements.no_sets_desc":
-      "프로젝트 요구사항과 품질 게이트를 정의하려면 요구사항 세트를 생성하세요.",
+    "requirements.no_sets_desc": "프로젝트 요구사항과 품질 게이트를 정의하려면 요구사항 세트를 생성하세요.",
     "requirements.empty": "아직 요구사항이 없습니다",
-    "requirements.empty_desc":
-      "프로젝트의 객체-속성-제약 세 쌍을 정의하려면 요구사항을 추가하세요.",
+    "requirements.empty_desc": "프로젝트의 객체-속성-제약 세 쌍을 정의하려면 요구사항을 추가하세요.",
     "requirements.no_match": "필터와 일치하는 요구사항이 없습니다.",
     "requirements.constraint": "제약",
     "requirements.confidence": "신뢰도",
     "requirements.source": "출처",
     "requirements.showing": "{{count}}개 요구사항",
     "requirements.of_total": "총 {{total}}개 중",
-    "requirements.confirm_delete_set":
-      "이 요구사항 세트와 모든 요구사항을 삭제하시겠습니까?",
+    "requirements.confirm_delete_set": "이 요구사항 세트와 모든 요구사항을 삭제하시겠습니까?",
     "requirements.delete_set": "세트 삭제",
     "requirements.and_more": "외 {{count}}개...",
     "requirements.click_to_upload_csv": "CSV 파일을 업로드하려면 클릭",
     "requirements.click_to_upload_json": "JSON 파일을 업로드하려면 클릭",
     "requirements.csv_loaded": "CSV에서 {{count}}행 로드됨",
-    "requirements.csv_parse_error":
-      "CSV에는 헤더가 필요합니다: entity, attribute, constraint_value",
+    "requirements.csv_parse_error": "CSV에는 헤더가 필요합니다: entity, attribute, constraint_value",
     "requirements.export": "내보내기",
     "requirements.export_csv": "CSV 내보내기",
     "requirements.export_excel": "Excel 내보내기",
     "requirements.export_json": "JSON 내보내기",
     "requirements.exported": "요구사항이 내보내졌습니다",
     "requirements.import_count": "{{count}}개 요구사항 가져오는 중...",
-    "requirements.import_csv_desc":
-      "다음 열이 있는 CSV 파일을 업로드: entity, attribute, constraint_value",
+    "requirements.import_csv_desc": "다음 열이 있는 CSV 파일을 업로드: entity, attribute, constraint_value",
     "requirements.import_json_desc": "요구사항 객체의 JSON 배열을 업로드",
     "requirements.import_requirements": "요구사항 가져오기",
     "requirements.json_loaded": "JSON에서 {{count}}개 항목 로드됨",
-    "requirements.json_parse_error":
-      "JSON은 entity, attribute, constraint_value를 포함하는 객체 배열이어야 합니다",
+    "requirements.json_parse_error": "JSON은 entity, attribute, constraint_value를 포함하는 객체 배열이어야 합니다",
     "requirements.preview": "미리보기",
     "requirements.regex_hint": "정규 표현식 패턴을 입력하세요, 예: ^F[0-9]+$",
     "requirements.regex_invalid": "잘못된 패턴",
@@ -1470,8 +1363,7 @@ const resource = {
     "punch.all_assignees": "모든 담당자",
     "punch.kanban_empty": "항목 없음",
     "punch.empty_title": "펀치 항목이 없습니다",
-    "punch.empty_desc":
-      "결함, 불량 및 미완료 작업을 추적하기 위한 펀치 항목을 생성하세요.",
+    "punch.empty_desc": "결함, 불량 및 미완료 작업을 추적하기 위한 펀치 항목을 생성하세요.",
     "punch.col_title": "제목",
     "punch.col_priority": "우선순위",
     "punch.col_status": "상태",
@@ -1537,8 +1429,7 @@ const resource = {
     "field_reports.total": "총 보고서",
     "field_reports.workforce_hours": "작업 시간",
     "field_reports.empty": "아직 보고서가 없습니다",
-    "field_reports.empty_desc":
-      "첫 번째 일일 보고서를 작성하여 건설 진행 상황을 기록하세요",
+    "field_reports.empty_desc": "첫 번째 일일 보고서를 작성하여 건설 진행 상황을 기록하세요",
     "nav.photos": "프로젝트 사진",
     "photos.title": "프로젝트 사진",
     "photos.upload": "사진 업로드",
@@ -1571,10 +1462,8 @@ const resource = {
     "onboarding.ai_title": "AI 제공자 (선택 사항)",
     "onboarding.api_key": "API 키",
     "onboarding.api_key_placeholder": "여기에 API 키를 붙여넣기...",
-    "onboarding.cost_db_hint":
-      "나중에 단가 데이터베이스 → 가져오기에서 더 많은 데이터베이스를 추가할 수 있습니다.",
-    "onboarding.cost_db_subtitle":
-      "정확한 적산을 위해 단가 데이터베이스를 로드하세요. 지역을 선택하세요:",
+    "onboarding.cost_db_hint": "나중에 단가 데이터베이스 → 가져오기에서 더 많은 데이터베이스를 추가할 수 있습니다.",
+    "onboarding.cost_db_subtitle": "정확한 적산을 위해 단가 데이터베이스를 로드하세요. 지역을 선택하세요:",
     "onboarding.cost_db_title": "단가 데이터베이스",
     "onboarding.create_error": "프로젝트 생성 실패",
     "onboarding.create_project": "생성 및 적산 시작",
@@ -1584,8 +1473,7 @@ const resource = {
     "onboarding.get_started": "시작하기",
     "onboarding.items_loaded": "항목 로드됨",
     "onboarding.loading_database": "데이터베이스 가져오는 중...",
-    "onboarding.loading_database_hint":
-      "약 55,000개 항목을 로드 중입니다. 1~3분 소요됩니다.",
+    "onboarding.loading_database_hint": "약 55,000개 항목을 로드 중입니다. 1~3분 소요됩니다.",
     "onboarding.project_created": "프로젝트 생성됨!",
     "onboarding.project_created_msg": "워크스페이스가 준비되었습니다.",
     "onboarding.project_error": "프로젝트 생성 실패",
@@ -1601,8 +1489,7 @@ const resource = {
     "onboarding.test_connection": "연결 테스트",
     "onboarding.testing": "테스트 중...",
     "onboarding.welcome_hint": "무료 오픈 소스. 신용카드 불필요.",
-    "onboarding.welcome_subtitle":
-      "전문 건설 적산 플랫폼.\n몇 가지 간단한 단계로 워크스페이스를 설정하세요.",
+    "onboarding.welcome_subtitle": "전문 건설 적산 플랫폼.\n몇 가지 간단한 단계로 워크스페이스를 설정하세요.",
     "onboarding.welcome_title": "OpenConstructionERP에 오신 것을 환영합니다",
     "onboarding.tour_step": "투어 단계",
     "onboarding.step_label": "단계",
@@ -1611,20 +1498,15 @@ const resource = {
     "onboarding.next": "다음",
     "onboarding.finish": "완료",
     "onboarding.step1.title": "내비게이션 사이드바",
-    "onboarding.step1.description":
-      "사이드바에서 모든 모듈에 빠르게 접근할 수 있습니다: 프로젝트, 적산, 단가 데이터베이스, 공정표 등.",
+    "onboarding.step1.description": "사이드바에서 모든 모듈에 빠르게 접근할 수 있습니다: 프로젝트, 적산, 단가 데이터베이스, 공정표 등.",
     "onboarding.step2.title": "프로젝트",
-    "onboarding.step2.description":
-      "여기서 첫 번째 프로젝트를 만들어 시작합니다. 각 프로젝트는 내역서, 공정표, 문서를 한 곳에 보관합니다.",
+    "onboarding.step2.description": "여기서 첫 번째 프로젝트를 만들어 시작합니다. 각 프로젝트는 내역서, 공정표, 문서를 한 곳에 보관합니다.",
     "onboarding.step3.title": "내역서 (BOQ)",
-    "onboarding.step3.description":
-      "내역서 편집기로 상세 적산을 작성합니다 — 계층적 항목, 일위대가, 실시간 원가 집계.",
+    "onboarding.step3.description": "내역서 편집기로 상세 적산을 작성합니다 — 계층적 항목, 일위대가, 실시간 원가 집계.",
     "onboarding.step4.title": "단가 데이터베이스",
-    "onboarding.step4.description":
-      "내장된 CWICR(55,000개 이상의 항목, 9개 언어)을 포함한 단가 데이터베이스를 검색하고 관리합니다.",
+    "onboarding.step4.description": "내장된 CWICR(55,000개 이상의 항목, 9개 언어)을 포함한 단가 데이터베이스를 검색하고 관리합니다.",
     "onboarding.step5.title": "기본 / 고급 모드",
-    "onboarding.step5.description":
-      "기본 모드(필수 도구)와 고급 모드(입찰 및 공정관리를 포함한 전체 기능) 간에 전환합니다.",
+    "onboarding.step5.description": "기본 모드(필수 도구)와 고급 모드(입찰 및 공정관리를 포함한 전체 기능) 간에 전환합니다.",
     "projects.4d_schedule": "4D 공정표",
     "projects.5d_budget": "5D 예산",
     "projects.active": "진행 중",
@@ -1656,27 +1538,21 @@ const resource = {
     "projects.name_placeholder": "예: 도심 오피스 타워",
     "projects.new_boq": "새 내역서",
     "projects.new_project": "새 프로젝트",
-    "projects.create_hint":
-      "지역에 따라 사용 가능한 단가 데이터베이스와 부가가치세율이 결정됩니다. 분류 기준은 원가 구조를 정의합니다: DACH 국가는 DIN 276, 영국은 NRM, 미국/캐나다는 MasterFormat, 오세아니아는 UniFormat. 통화는 내역서의 모든 가격을 설정합니다.",
+    "projects.create_hint": "지역에 따라 사용 가능한 단가 데이터베이스와 부가가치세율이 결정됩니다. 분류 기준은 원가 구조를 정의합니다: DACH 국가는 DIN 276, 영국은 NRM, 미국/캐나다는 MasterFormat, 오세아니아는 UniFormat. 통화는 내역서의 모든 가격을 설정합니다.",
     "projects.no_boqs": "아직 내역서가 없습니다",
-    "projects.no_boqs_desc":
-      "이 프로젝트의 원가 적산을 시작하려면 내역서를 작성하세요.",
+    "projects.no_boqs_desc": "이 프로젝트의 원가 적산을 시작하려면 내역서를 작성하세요.",
     "projects.no_budget": "예산 데이터 없음",
-    "projects.no_budget_desc":
-      "계획 대비 실제 원가를 추적하려면 5D 원가 모델을 설정하세요.",
+    "projects.no_budget_desc": "계획 대비 실제 원가를 추적하려면 5D 원가 모델을 설정하세요.",
     "projects.no_projects": "아직 프로젝트가 없습니다",
     "projects.no_projects_description": "첫 번째 건설 적산 프로젝트를 만드세요",
     "projects.no_results": "일치하는 프로젝트 없음",
     "projects.no_results_hint": "검색어나 필터를 조정해 보세요",
     "projects.no_schedules": "아직 공정표가 없습니다",
-    "projects.no_schedules_desc":
-      "프로젝트 일정을 관리하려면 공정표를 만드세요.",
+    "projects.no_schedules_desc": "프로젝트 일정을 관리하려면 공정표를 만드세요.",
     "projects.no_tenders": "입찰 패키지 없음",
-    "projects.no_tenders_desc":
-      "이 프로젝트의 입찰을 관리하려면 입찰 패키지를 만드세요.",
+    "projects.no_tenders_desc": "이 프로젝트의 입찰을 관리하려면 입찰 패키지를 만드세요.",
     "projects.not_found": "프로젝트를 찾을 수 없습니다",
-    "projects.not_found_desc":
-      "찾고 있는 프로젝트가 존재하지 않거나 삭제되었습니다.",
+    "projects.not_found_desc": "찾고 있는 프로젝트가 존재하지 않거나 삭제되었습니다.",
     "projects.of": "/",
     "projects.open_tendering": "입찰 열기",
     "projects.overview": "개요",
@@ -1689,8 +1565,7 @@ const resource = {
     "projects.projects_label": "프로젝트",
     "projects.region": "지역",
     "projects.regional_factor": "지역 계수",
-    "projects.regional_factor_hint":
-      "모든 단가에 이 계수를 곱합니다 (예: 서울 = 1.12, 부산 = 1.05)",
+    "projects.regional_factor_hint": "모든 단가에 이 계수를 곱합니다 (예: 서울 = 1.12, 부산 = 1.05)",
     "projects.remaining": "잔여",
     "projects.schedule_subtitle": "프로젝트 공정표 및 일정",
     "projects.search_placeholder": "프로젝트 검색...",
@@ -1717,65 +1592,51 @@ const resource = {
     "quantities.badge_cad": "CAD",
     "quantities.badge_coming_soon": "준비 중",
     "quantities.how_it_works": "작동 방식",
-    "quantities.manual_desc":
-      "수량을 직접 추가하려면 내역서 편집기로 이동하세요.",
+    "quantities.manual_desc": "수량을 직접 추가하려면 내역서 편집기로 이동하세요.",
     "quantities.manual_title": "빠른 수동 입력",
-    "quantities.method_ai_desc":
-      "건물을 설명하면 AI가 추정 물량과 원가가 포함된 내역서를 생성합니다.",
+    "quantities.method_ai_desc": "건물을 설명하면 AI가 추정 물량과 원가가 포함된 내역서를 생성합니다.",
     "quantities.method_ai_title": "AI 텍스트 입력",
-    "quantities.method_cad_desc":
-      "DWG, RVT, IFC 또는 DGN 파일을 가져와 3D 형상에서 직접 물량을 추출합니다.",
+    "quantities.method_cad_desc": "DWG, RVT, IFC 또는 DGN 파일을 가져와 3D 형상에서 직접 물량을 추출합니다.",
     "quantities.method_cad_title": "CAD / BIM 모델",
-    "quantities.method_pdf_desc":
-      "건설 도면(PDF)을 업로드하면 AI 기반 물량산출로 자동으로 수량을 추출합니다.",
+    "quantities.method_pdf_desc": "건설 도면(PDF)을 업로드하면 AI 기반 물량산출로 자동으로 수량을 추출합니다.",
     "quantities.method_pdf_title": "PDF 도면",
     "quantities.open": "열기",
     "quantities.open_boq": "내역서 편집기 열기",
-    "quantities.step1_desc":
-      "입력 방법을 선택합니다: 텍스트, PDF 또는 CAD 모델.",
+    "quantities.step1_desc": "입력 방법을 선택합니다: 텍스트, PDF 또는 CAD 모델.",
     "quantities.step1_title": "업로드 또는 설명",
     "quantities.step2_desc": "AI가 입력을 분석하여 구조화된 물량을 추출합니다.",
     "quantities.step2_title": "AI 물량 추출",
     "quantities.step3_desc": "결과를 확인하고 내역서에 추가합니다.",
     "quantities.step3_title": "검토 및 내역서에 추가",
-    "quantities.subtitle":
-      "프로젝트 물량 수집 — AI 텍스트 입력, PDF 도면 또는 CAD/BIM 모델에서",
+    "quantities.subtitle": "프로젝트 물량 수집 — AI 텍스트 입력, PDF 도면 또는 CAD/BIM 모델에서",
     "quantities.converter_title": "CAD/BIM 변환 작동 방식",
-    "quantities.converter_desc":
-      "CAD/BIM 파일(.rvt, .ifc, .dwg, .dgn)을 업로드하면 DDC 변환기가 모든 요소를 구조화된 표로 추출합니다 — 벽, 슬래브, 기둥, 문, 창 — 계산된 체적, 면적, 수량 포함. 그런 다음 AI가 이 요소들을 단가 항목에 매핑하고 완전한 내역서를 자동으로 생성합니다.",
+    "quantities.converter_desc": "CAD/BIM 파일(.rvt, .ifc, .dwg, .dgn)을 업로드하면 DDC 변환기가 모든 요소를 구조화된 표로 추출합니다 — 벽, 슬래브, 기둥, 문, 창 — 계산된 체적, 면적, 수량 포함. 그런 다음 AI가 이 요소들을 단가 항목에 매핑하고 완전한 내역서를 자동으로 생성합니다.",
     "quantities.download_converters": "DDC 변환기 다운로드",
     "quantities.converter_path": "설치 경로: ~/.openestimator/converters/",
     "quantities.title": "물량산출",
     "reports.5d_report": "5D 원가 보고서",
-    "reports.5d_report_desc":
-      "S-커브와 원가 예측이 포함된 예산 대비 실적 분석.",
+    "reports.5d_report_desc": "S-커브와 원가 예측이 포함된 예산 대비 실적 분석.",
     "reports.boq_report": "내역서 보고서",
-    "reports.boq_report_desc":
-      "섹션, 항목, 제경비, 합계가 포함된 전체 내역서. PDF 또는 Excel로 제공.",
+    "reports.boq_report_desc": "섹션, 항목, 제경비, 합계가 포함된 전체 내역서. PDF 또는 Excel로 제공.",
     "reports.coming_soon": "준비 중",
     "reports.cost_report": "원가 보고서",
-    "reports.cost_report_desc":
-      "요약 차트 및 상세 원가 분석이 포함된 분류별 원가 분석.",
+    "reports.cost_report_desc": "요약 차트 및 상세 원가 분석이 포함된 분류별 원가 분석.",
     "reports.download_error": "보고서 생성 실패",
     "reports.download_format": "{{format}} 다운로드",
     "reports.download_success": "보고서 다운로드 성공",
     "reports.gaeb_xml": "GAEB XML",
-    "reports.gaeb_xml_desc":
-      "GAEB X83 입찰 내보내기 — DACH 건설 시장의 표준 교환 형식.",
+    "reports.gaeb_xml_desc": "GAEB X83 입찰 내보내기 — DACH 건설 시장의 표준 교환 형식.",
     "reports.no_boqs": "이 프로젝트에 내역서 없음",
     "reports.no_projects": "사용 가능한 프로젝트 없음",
     "reports.schedule_report": "공정 보고서",
-    "reports.schedule_report_desc":
-      "프로젝트 일정, 마일스톤, 주공정이 포함된 간트 차트.",
+    "reports.schedule_report_desc": "프로젝트 일정, 마일스톤, 주공정이 포함된 간트 차트.",
     "reports.select_boq_first": "먼저 프로젝트와 내역서를 선택하세요",
     "reports.select_project_first": "먼저 프로젝트를 선택하세요",
     "reports.subtitle": "프로젝트의 전문 보고서를 생성합니다",
-    "reports.guide_desc":
-      "내역서 보고서 = 합계가 포함된 상세 내역서. 원가 보고서 = 분류별 원가 분석. GAEB XML = 하도급업체 교환용 독일 입찰 형식(.x83). 검증 = 준수 확인 결과. 공정 = 간트 활동 요약. 5D = 예산 대비 실적 원가 곡선.",
+    "reports.guide_desc": "내역서 보고서 = 합계가 포함된 상세 내역서. 원가 보고서 = 분류별 원가 분석. GAEB XML = 하도급업체 교환용 독일 입찰 형식(.x83). 검증 = 준수 확인 결과. 공정 = 간트 활동 요약. 5D = 예산 대비 실적 원가 곡선.",
     "reports.title": "보고서",
     "reports.validation_report": "검증 보고서",
-    "reports.validation_report_desc":
-      "DIN 276, NRM 또는 MasterFormat 기준에 대한 준수 확인 보고서.",
+    "reports.validation_report_desc": "DIN 276, NRM 또는 MasterFormat 기준에 대한 준수 확인 보고서.",
     "schedule.activity": "활동",
     "schedule.activity_name": "활동 이름",
     "schedule.activity_name_placeholder": "예: 기초 공사",
@@ -1801,39 +1662,32 @@ const resource = {
     "schedule.fifty_pct_confidence": "50% 신뢰도",
     "schedule.generate": "생성",
     "schedule.generate_from_boq": "내역서에서 생성",
-    "schedule.generate_from_boq_description":
-      "내역서를 선택하여 공정 활동을 자동 생성합니다. 내역서 섹션당 하나의 활동이 원가 비례 공기로 생성됩니다.",
+    "schedule.generate_from_boq_description": "내역서를 선택하여 공정 활동을 자동 생성합니다. 내역서 섹션당 하나의 활동이 원가 비례 공기로 생성됩니다.",
     "schedule.in_progress": "진행 중",
     "schedule.mean_label": "평균 (주공정)",
     "schedule.ninetyfive_pct_confidence": "95% 신뢰도",
     "schedule.no_activities": "아직 활동이 없습니다",
-    "schedule.no_activities_hint":
-      "프로젝트 공정표를 작성하려면 활동을 추가하세요",
-    "schedule.no_boqs_available":
-      "이 프로젝트에 사용 가능한 내역서가 없습니다.",
+    "schedule.no_activities_hint": "프로젝트 공정표를 작성하려면 활동을 추가하세요",
+    "schedule.no_boqs_available": "이 프로젝트에 사용 가능한 내역서가 없습니다.",
     "schedule.no_dates": "날짜 미설정",
     "schedule.no_projects": "사용 가능한 프로젝트 없음",
-    "schedule.no_projects_hint":
-      "먼저 프로젝트를 만든 다음 공정표를 추가하세요",
+    "schedule.no_projects_hint": "먼저 프로젝트를 만든 다음 공정표를 추가하세요",
     "schedule.no_schedules": "아직 공정표가 없습니다",
-    "schedule.no_schedules_hint":
-      "프로젝트 일정 계획을 시작하려면 공정표를 만드세요",
+    "schedule.no_schedules_hint": "프로젝트 일정 계획을 시작하려면 공정표를 만드세요",
     "schedule.planned_duration": "계획 공기",
     "schedule.project_schedules": "이 프로젝트의 공정표",
     "schedule.risk_analysis": "리스크 분석 (PERT)",
     "schedule.risk_analysis_btn": "리스크 분석",
     "schedule.schedule_name": "공정표 이름",
     "schedule.schedule_name_placeholder": "예: 주요 시공 공정표",
-    "schedule.select_project":
-      "건설 공정표를 보고 관리할 프로젝트를 선택하세요",
+    "schedule.select_project": "건설 공정표를 보고 관리할 프로젝트를 선택하세요",
     "schedule.start": "시작",
     "schedule.start_date": "시작일",
     "schedule.status_active": "진행 중",
     "schedule.status_draft": "초안",
     "schedule.std_dev_label": "표준 편차",
     "schedule.subtitle": "건설 공정표를 보고 관리할 프로젝트를 선택하세요",
-    "schedule.what_is_4d":
-      "4D 공정관리는 내역서 항목을 프로젝트 일정에 연결합니다. 활동을 생성하고, 선후행 관계를 설정하고, 간트 차트에서 진행 상황을 시각화합니다. 주공정 분석은 프로젝트 종료일에 직접 영향을 미치는 활동을 강조합니다. 활동 유형: 작업 = 작업 항목, 마일스톤 = 공기가 없는 점검 지점, 요약 = 그룹 헤더.",
+    "schedule.what_is_4d": "4D 공정관리는 내역서 항목을 프로젝트 일정에 연결합니다. 활동을 생성하고, 선후행 관계를 설정하고, 간트 차트에서 진행 상황을 시각화합니다. 주공정 분석은 프로젝트 종료일에 직접 영향을 미치는 활동을 강조합니다. 활동 유형: 작업 = 작업 항목, 마일스톤 = 공기가 없는 점검 지점, 요약 = 그룹 헤더.",
     "schedule.title": "4D 공정표",
     "schedule.total_activities": "전체",
     "schedule.type_milestone": "마일스톤",
@@ -1854,11 +1708,9 @@ const resource = {
     "settings.ai_desc_openai": "GPT-4o / GPT-4 Turbo — 폭넓은 지원",
     "settings.ai_error": "연결 오류",
     "settings.ai_get_key": "API 키 받기",
-    "settings.ai_key_hint":
-      "API 키는 암호화되어 안전하게 저장됩니다. 절대 공유되지 않습니다.",
+    "settings.ai_key_hint": "API 키는 암호화되어 안전하게 저장됩니다. 절대 공유되지 않습니다.",
     "settings.ai_key_placeholder": "API 키를 입력하세요...",
-    "settings.ai_key_placeholder_existing":
-      "기존 키를 교체하려면 새 키를 입력하세요...",
+    "settings.ai_key_placeholder_existing": "기존 키를 교체하려면 새 키를 입력하세요...",
     "settings.ai_key_set": "키 설정됨",
     "settings.ai_last_tested": "(마지막 테스트: {{time}})",
     "settings.ai_not_configured": "설정되지 않음",
@@ -1889,8 +1741,7 @@ const resource = {
     "settings.sign_out": "로그아웃",
     "settings.status": "상태",
     "settings.subtitle": "계정 및 환경설정 관리",
-    "settings.ai_guidance":
-      "AI 기능(적산, 물량산출 분석, 시맨틱 검색)에는 API 키가 필요합니다. Anthropic Claude가 최고의 정확도를 위해 권장됩니다. 키는 암호화되어 저장되며 서버를 떠나지 않습니다.",
+    "settings.ai_guidance": "AI 기능(적산, 물량산출 분석, 시맨틱 검색)에는 API 키가 필요합니다. Anthropic Claude가 최고의 정확도를 위해 권장됩니다. 키는 암호화되어 저장되며 서버를 떠나지 않습니다.",
     "settings.theme_dark": "다크",
     "settings.theme_light": "라이트",
     "settings.theme_system": "시스템",
@@ -1899,8 +1750,7 @@ const resource = {
     "shortcuts.cancel_editing": "편집 취소",
     "shortcuts.command_palette": "명령 팔레트",
     "shortcuts.confirm_next_row": "확인 / 다음 행",
-    "shortcuts.footer_hint":
-      "입력 필드에 포커스가 있을 때 단축키가 비활성화됩니다.",
+    "shortcuts.footer_hint": "입력 필드에 포커스가 있을 때 단축키가 비활성화됩니다.",
     "shortcuts.group.actions": "작업",
     "shortcuts.group.boq_editor": "내역서 편집기",
     "shortcuts.group.general": "일반",
@@ -1930,15 +1780,12 @@ const resource = {
     "errors.unauthorized": "세션이 만료되었습니다. 다시 로그인하세요.",
     "errors.forbidden": "이 작업을 수행할 권한이 없습니다.",
     "errors.not_found": "요청한 항목을 찾을 수 없습니다.",
-    "errors.conflict":
-      "기존 데이터와 충돌합니다. 새로 고침 후 다시 시도하세요.",
-    "errors.payload_too_large":
-      "파일이 너무 큽니다. 더 작은 파일을 시도하세요.",
+    "errors.conflict": "기존 데이터와 충돌합니다. 새로 고침 후 다시 시도하세요.",
+    "errors.payload_too_large": "파일이 너무 큽니다. 더 작은 파일을 시도하세요.",
     "errors.validation": "일부 필드가 잘못되었습니다. 입력을 확인하세요.",
     "errors.rate_limit": "요청이 너무 많습니다. 잠시 기다려 주세요.",
     "errors.server": "서버 오류입니다. 잠시 후 다시 시도하세요.",
-    "errors.unavailable":
-      "서버를 일시적으로 사용할 수 없습니다. 잠시 후 다시 시도하세요.",
+    "errors.unavailable": "서버를 일시적으로 사용할 수 없습니다. 잠시 후 다시 시도하세요.",
     "errors.client": "요청을 완료할 수 없습니다.",
     "errors.unknown": "문제가 발생했습니다. 다시 시도하세요.",
     "errors.network": "서버에 연결할 수 없습니다. 연결을 확인하세요.",
@@ -1949,21 +1796,18 @@ const resource = {
     "sustainability.boq": "내역서",
     "sustainability.breakdown_title": "자재별 분석",
     "sustainability.calculate": "계산",
-    "sustainability.empty_desc":
-      "위에서 프로젝트와 내역서를 선택한 후 계산을 클릭하여 자재 유형별 CO2 배출량을 분석합니다.",
+    "sustainability.empty_desc": "위에서 프로젝트와 내역서를 선택한 후 계산을 클릭하여 자재 유형별 CO2 배출량을 분석합니다.",
     "sustainability.empty_title": "CO2 발자국 분석",
     "sustainability.export_pdf": "CO2 보고서 PDF 내보내기",
     "sustainability.material": "자재",
-    "sustainability.no_area":
-      "m2당 벤치마크를 보려면 프로젝트 면적을 입력하세요",
+    "sustainability.no_area": "m2당 벤치마크를 보려면 프로젝트 면적을 입력하세요",
     "sustainability.positions_matched": "항목 매칭됨",
     "sustainability.project": "프로젝트",
     "sustainability.project_area": "프로젝트",
     "sustainability.rating": "등급",
     "sustainability.select_boq": "-- 내역서 선택 --",
     "sustainability.select_project": "-- 프로젝트 선택 --",
-    "sustainability.subtitle":
-      "CO2 발자국 분석을 위해 프로젝트와 내역서를 선택하세요",
+    "sustainability.subtitle": "CO2 발자국 분석을 위해 프로젝트와 내역서를 선택하세요",
     "sustainability.title": "지속가능성 / CO2",
     "sustainability.total_co2": "총 CO2",
     "takeoff.add_selected_to_boq": "{{count}}개 내역서에 추가",
@@ -1985,8 +1829,7 @@ const resource = {
     "takeoff.just_now": "방금 전",
     "takeoff.minutes_ago": "{{count}}분 전",
     "takeoff.no_documents": "업로드된 문서 없음",
-    "takeoff.no_documents_description":
-      "AI로 물량을 추출하려면 PDF 건설 도면을 업로드하세요.",
+    "takeoff.no_documents_description": "AI로 물량을 추출하려면 PDF 건설 도면을 업로드하세요.",
     "takeoff.pages": "페이지",
     "takeoff.pdf_limit": "최대 {{size}}MB .pdf 파일",
     "takeoff.quick_measurements": "빠른 측정",
@@ -1994,16 +1837,14 @@ const resource = {
     "takeoff.select_all": "전체 선택",
     "takeoff.select_boq": "내역서",
     "takeoff.select_boq_placeholder": "내역서 선택...",
-    "takeoff.select_boq_to_add":
-      "측정값을 추가하려면 위에서 프로젝트와 내역서를 선택하세요.",
+    "takeoff.select_boq_to_add": "측정값을 추가하려면 위에서 프로젝트와 내역서를 선택하세요.",
     "takeoff.select_items_hint": "내역서에 추가할 항목을 선택하세요",
     "takeoff.select_project": "프로젝트",
     "takeoff.select_project_first": "먼저 프로젝트를 선택하세요",
     "takeoff.select_project_placeholder": "프로젝트 선택...",
     "takeoff.selected": "선택됨",
     "takeoff.subtitle": "건설 도면을 업로드하여 물량을 추출합니다",
-    "takeoff.workflow_desc":
-      "PDF 도면 업로드 → AI가 페이지를 분석하고 요소(벽, 슬래브, 문 등)와 물량을 추출 → 결과를 검토하고 조정 → 선택한 항목을 내역서에 추가. 신뢰도 점수: 녹색(>80%) = 높은 신뢰도, 노란색(50-80%) = 검토 권장, 빨간색(<50%) = 수동 확인 필요.",
+    "takeoff.workflow_desc": "PDF 도면 업로드 → AI가 페이지를 분석하고 요소(벽, 슬래브, 문 등)와 물량을 추출 → 결과를 검토하고 조정 → 선택한 항목을 내역서에 추가. 신뢰도 점수: 녹색(>80%) = 높은 신뢰도, 노란색(50-80%) = 검토 권장, 빨간색(<50%) = 수동 확인 필요.",
     "takeoff.summary": "요약",
     "takeoff.title": "PDF 물량산출",
     "takeoff.total_quantity": "합계",
@@ -2054,8 +1895,7 @@ const resource = {
     "tendering.source_boq": "원본 내역서",
     "tendering.submit_bid": "입찰 제출",
     "tendering.title": "입찰",
-    "tendering.workflow_desc":
-      "입찰 워크플로: 초안 (패키지 준비) → 발행 (입찰자에게 전송) → 수집 (입찰가 수신) → 평가 (제안서 나란히 비교) → 낙찰 (낙찰자 선정). 내역서에서 패키지를 만들고, 하도급업체 입찰가를 추가한 후, 비교표를 사용하여 최적의 제안을 식별합니다. 나란히 분석을 보려면 2개 이상의 입찰가를 추가하세요.",
+    "tendering.workflow_desc": "입찰 워크플로: 초안 (패키지 준비) → 발행 (입찰자에게 전송) → 수집 (입찰가 수신) → 평가 (제안서 나란히 비교) → 낙찰 (낙찰자 선정). 내역서에서 패키지를 만들고, 하도급업체 입찰가를 추가한 후, 비교표를 사용하여 최적의 제안을 식별합니다. 나란히 분석을 보려면 2개 이상의 입찰가를 추가하세요.",
     "tendering.total": "합계",
     "tendering.total_amount": "총액",
     "tendering.vs_budget": "예산 대비",
@@ -2409,19 +2249,15 @@ const resource = {
     "notifications.title": "알림",
     "notifications.unread": "Unread",
     "notifications.boq.created.title": "BOQ 생성됨",
-    "notifications.boq.created.body":
-      "수량 명세서 '{{boq_name}}'가 저장되었습니다.",
+    "notifications.boq.created.body": "수량 명세서 '{{boq_name}}'가 저장되었습니다.",
     "notifications.meeting.action_assigned.title": "조치 항목이 할당되었습니다",
-    "notifications.meeting.action_assigned.body":
-      "회의 {{meeting_number}}에서: {{description}}",
+    "notifications.meeting.action_assigned.body": "회의 {{meeting_number}}에서: {{description}}",
     "notifications.cde.state_transitioned.title": "문서 상태가 변경되었습니다",
-    "notifications.cde.state_transitioned.body":
-      "컨테이너가 '{{new_state}}'(으)로 이동했습니다.",
+    "notifications.cde.state_transitioned.body": "컨테이너가 '{{new_state}}'(으)로 이동했습니다.",
     "notifications.rfi.assigned.title": "RFI가 할당되었습니다",
     "notifications.rfi.assigned.body": "{{code}} — {{title}}",
     "notifications.rfi.responded.title": "RFI에 응답이 있습니다",
-    "notifications.rfi.responded.body":
-      "요청 {{code}} ({{title}})에 응답이 있습니다.",
+    "notifications.rfi.responded.body": "요청 {{code}} ({{title}})에 응답이 있습니다.",
     "notifications.risk.assigned.title": "위험이 할당되었습니다",
     "notifications.risk.assigned.body": "{{code}} — {{title}}",
     "notifications.submittal.submitted.title": "제출물 검토 대기 중",
@@ -2429,19 +2265,15 @@ const resource = {
     "notifications.submittal.approved.title": "제출물 승인됨",
     "notifications.submittal.approved.body": "{{code}} — {{title}}",
     "notifications.submittal.rejected.title": "제출물 거부됨",
-    "notifications.submittal.rejected.body":
-      "{{code}} ({{title}}). 사유: {{reason}}",
+    "notifications.submittal.rejected.body": "{{code}} ({{title}}). 사유: {{reason}}",
     "notifications.submittal.revise_resubmit.title": "제출물 수정 필요",
-    "notifications.submittal.revise_resubmit.body":
-      "{{code}} ({{title}}). 사유: {{reason}}",
+    "notifications.submittal.revise_resubmit.body": "{{code}} ({{title}}). 사유: {{reason}}",
     "notifications.transmittal.issued.title": "송부서가 발급되었습니다",
     "notifications.transmittal.issued.body": "{{code}} — {{title}}",
     "notifications.transmittal.acknowledged.title": "송부서가 확인되었습니다",
-    "notifications.transmittal.acknowledged.body":
-      "수신자가 {{code}} ({{title}})을(를) 확인했습니다.",
+    "notifications.transmittal.acknowledged.body": "수신자가 {{code}} ({{title}})을(를) 확인했습니다.",
     "notifications.transmittal.responded.title": "송부서에 응답이 있습니다",
-    "notifications.transmittal.responded.body":
-      "{{code}} ({{title}}). {{response_summary}}",
+    "notifications.transmittal.responded.body": "{{code}} ({{title}}). {{response_summary}}",
     "procurement.amount": "Amount",
     "procurement.delivery_date": "납품일",
     "procurement.goods_receipts": "입고 검수",
@@ -2544,12 +2376,9 @@ const resource = {
     "settings.interface_mode_title": "인터페이스 모드",
     "settings.measurement_system": "측정 시스템",
     "settings.metric": "미터법 (m, kg)",
-    "settings.mode_advanced_detail":
-      "모든 모듈과 기능이 표시되는 완전한 전문가 도구 세트.",
-    "settings.mode_simple_detail":
-      "집중적인 작업을 위한 깔끔한 인터페이스와 기본 견적 도구.",
-    "settings.modules_link_desc":
-      "모듈 섹션에서 개별 모듈을 활성화, 비활성화 및 구성할 수 있습니다.",
+    "settings.mode_advanced_detail": "모든 모듈과 기능이 표시되는 완전한 전문가 도구 세트.",
+    "settings.mode_simple_detail": "집중적인 작업을 위한 깔끔한 인터페이스와 기본 견적 도구.",
+    "settings.modules_link_desc": "모듈 섹션에서 개별 모듈을 활성화, 비활성화 및 구성할 수 있습니다.",
     "settings.modules_link_title": "Modules",
     "settings.number_format": "숫자 형식",
     "settings.paper_size": "용지 크기",
@@ -2558,8 +2387,7 @@ const resource = {
     "settings.regional_subtitle": "형식, 단위, 현지화 환경설정",
     "settings.regional_title": "지역 설정",
     "settings.restart_onboarding": "설정 마법사 열기",
-    "settings.setup_wizard_subtitle":
-      "언어 변경, 데이터베이스, 카탈로그 또는 데모 프로젝트 설치를 위해 초기 설정을 다시 실행합니다",
+    "settings.setup_wizard_subtitle": "언어 변경, 데이터베이스, 카탈로그 또는 데모 프로젝트 설치를 위해 초기 설정을 다시 실행합니다",
     "settings.setup_wizard_title": "설정 마법사",
     "settings.time_days_ago": "{{count}}d ago",
     "settings.time_hours_ago": "{{count}}h ago",
@@ -2584,8 +2412,7 @@ const resource = {
     "settings.tm_show_more": "더 보기 ({{remaining}}개 남음)",
     "settings.tm_total_keys": "전체 키",
     "settings.tm_translated": "Translated",
-    "settings.translation_manager_subtitle":
-      "현재 언어의 번역 보기 및 커스터마이즈",
+    "settings.translation_manager_subtitle": "현재 언어의 번역 보기 및 커스터마이즈",
     "settings.translation_manager_title": "번역 관리자",
     "submittals.action_review": "Review",
     "submittals.action_submit": "Submit",
@@ -2687,8 +2514,7 @@ const resource = {
     "transmittals.no_results": "일치하는 발송 전표가 없습니다",
     "transmittals.no_results_hint": "검색 또는 필터를 조정해 보세요.",
     "transmittals.no_transmittals": "발송 전표가 아직 없습니다",
-    "transmittals.no_transmittals_hint":
-      "시작하려면 첫 번째 발송 전표를 만드세요.",
+    "transmittals.no_transmittals_hint": "시작하려면 첫 번째 발송 전표를 만드세요.",
     "transmittals.page_title": "Transmittals",
     "transmittals.recipients_placeholder": "수신자 이름 입력...",
     "transmittals.search_placeholder": "발송 전표 검색...",
@@ -2751,27 +2577,21 @@ const resource = {
     "costs.variant_per_unit": "단가",
     "dashboard.activity": "최근 활동",
     "modules.cat_regional": "지역 표준",
-    "modules.cat_regional_desc":
-      "국가별 BOQ 가져오기/내보내기 형식 및 분류 표준",
+    "modules.cat_regional_desc": "국가별 BOQ 가져오기/내보내기 형식 및 분류 표준",
     "modules.community_title": "나만의 모듈 만들기",
-    "modules.community_desc":
-      "OpenConstructionERP는 모듈식 플러그인 아키텍처를 갖추고 있습니다. 누구든지 커스텀 모듈을 만들 수 있습니다 — 비용 데이터베이스, 지역 표준, CAD 변환기, 분석 대시보드, 외부 시스템 연동 또는 기타 기능. 만든 모듈은 이 모듈 섹션에 표시되며 모든 사용자가 설치할 수 있습니다.",
+    "modules.community_desc": "OpenConstructionERP는 모듈식 플러그인 아키텍처를 갖추고 있습니다. 누구든지 커스텀 모듈을 만들 수 있습니다 — 비용 데이터베이스, 지역 표준, CAD 변환기, 분석 대시보드, 외부 시스템 연동 또는 기타 기능. 만든 모듈은 이 모듈 섹션에 표시되며 모든 사용자가 설치할 수 있습니다.",
     "modules.community_type_data": "데이터 모듈",
-    "modules.community_type_data_desc":
-      "지역 비용 데이터베이스, 리소스 카탈로그, 자재 라이브러리, 분류 표준 (DIN, NRM, SNIP 등)",
+    "modules.community_type_data_desc": "지역 비용 데이터베이스, 리소스 카탈로그, 자재 라이브러리, 분류 표준 (DIN, NRM, SNIP 등)",
     "modules.community_type_integration": "통합",
-    "modules.community_type_integration_desc":
-      "SAP, Procore, MS Project, BIM 360, PlanRadar, Primavera 또는 API를 통한 모든 외부 시스템 연결",
+    "modules.community_type_integration_desc": "SAP, Procore, MS Project, BIM 360, PlanRadar, Primavera 또는 API를 통한 모든 외부 시스템 연결",
     "modules.community_type_tools": "도구 & 분석",
-    "modules.community_type_tools_desc":
-      "커스텀 보고서, 대시보드, 계산기, 형식 변환기, AI 모델 또는 전문 건설 도구",
-    "modules.community_how":
-      "각 모듈은 manifest.py 파일이 있는 Python 패키지입니다. 모듈을 만들고, 로컬에서 테스트하고, 커뮤니티와 공유하세요. 아이디어만 있어도 됩니다 — 텍스트로 설명을 보내주시면 만드는 데 도움을 드리겠습니다.",
+    "modules.community_type_tools_desc": "커스텀 보고서, 대시보드, 계산기, 형식 변환기, AI 모델 또는 전문 건설 도구",
+    "modules.community_how": "각 모듈은 manifest.py 파일이 있는 Python 패키지입니다. 모듈을 만들고, 로컬에서 테스트하고, 커뮤니티와 공유하세요. 아이디어만 있어도 됩니다 — 텍스트로 설명을 보내주시면 만드는 데 도움을 드리겠습니다.",
     "modules.community_submit_email": "이메일로 모듈 제출",
     "modules.community_submit_github": "GitHub에 제안",
     "modules.community_telegram": "Telegram에서 논의",
     "nav.cad_bim_explorer": "CAD-BIM BI 탐색기",
-    "nav.bim_viewer": "BIM 3D 뷰어",
+    "nav.bim_viewer": "BIM 3D 물량산출",
     "nav.bim_rules": "BIM 규칙",
     "nav.quantity_rules": "수량 규칙",
     "nav.assets": "자산 등록",
@@ -2788,10 +2608,8 @@ const resource = {
     "bim.loading_geometry": "3D 지오메트리 로드 중…",
     "bim.loading_finalising": "장면 마무리 중…",
     "bim.loading_streaming": "서버에서 지오메트리 스트리밍 중…",
-    "bim.loading_parsing":
-      "3D 지오메트리 파싱 중 — 대용량 모델(>50 MB)의 경우 20-60초가 걸릴 수 있습니다. 새로 고치지 마세요",
-    "bim.loading_navigate_hint":
-      "다른 페이지로 이동할 수 있습니다 — 로드는 백그라운드에서 계속됩니다",
+    "bim.loading_parsing": "3D 지오메트리 파싱 중 — 대용량 모델(>50 MB)의 경우 20-60초가 걸릴 수 있습니다. 새로 고치지 마세요",
+    "bim.loading_navigate_hint": "다른 페이지로 이동할 수 있습니다 — 로드는 백그라운드에서 계속됩니다",
     "bim.no_models": "아직 업로드된 모델이 없습니다",
     "bim.no_project": "프로젝트가 선택되지 않았습니다",
     "bim.no_project_desc": "BIM 모델을 보려면 프로젝트를 선택하세요.",
@@ -2818,11 +2636,13 @@ const resource = {
     "bim.properties": "속성",
     "bim.disciplines": "분야",
     "nav.group_overview": "개요",
-    "nav.group_ai_estimation": "AI & 견적",
+    "nav.group_ai_estimation": "AI 및 도구",
+    "nav.group_ai_estimation_desc": "AI 에이전트, 어드바이저, ERP 채팅 — AI 견적은 견적 작업으로 이동됨",
     "nav.group_finance": "재무 & 조달",
     "nav.group_communication": "커뮤니케이션",
     "nav.group_documentation": "문서",
-    "nav.group_quality": "품질 및 안전",
+    "nav.group_quality": "품질",
+    "nav.group_safety": "안전 및 HSE",
     "nav.group_field": "현장 & 보고서",
     "nav.group_quality_risk": "품질 & 위험",
     "nav.about": "소개",
@@ -2864,27 +2684,20 @@ const resource = {
     "onboarding.step_modules": "모듈",
     "onboarding.step_mode": "모드",
     "onboarding.company_type_title": "귀사의 유형은 무엇입니까?",
-    "onboarding.company_type_subtitle":
-      "업무 흐름에 가장 적합한 모듈 세트를 사전 구성하겠습니다.",
+    "onboarding.company_type_subtitle": "업무 흐름에 가장 적합한 모듈 세트를 사전 구성하겠습니다.",
     "onboarding.company_general_contractor": "종합건설업체",
-    "onboarding.company_general_contractor_desc":
-      "프로젝트를 시공합니다 — 견적, 조달, 현장 관리",
+    "onboarding.company_general_contractor_desc": "프로젝트를 시공합니다 — 견적, 조달, 현장 관리",
     "onboarding.company_estimator": "견적사 / 비용 컨설턴트",
-    "onboarding.company_estimator_desc":
-      "비용 견적과 수량 산출을 전문으로 합니다",
+    "onboarding.company_estimator_desc": "비용 견적과 수량 산출을 전문으로 합니다",
     "onboarding.company_project_management": "프로젝트 관리 회사",
-    "onboarding.company_project_management_desc":
-      "대규모 프로젝트를 관리합니다 — 계획, 커뮤니케이션, 문서",
+    "onboarding.company_project_management_desc": "대규모 프로젝트를 관리합니다 — 계획, 커뮤니케이션, 문서",
     "onboarding.company_architecture": "설계 / 엔지니어링 사무소",
-    "onboarding.company_architecture_desc":
-      "건물을 설계합니다 — BIM, 문서, CDE",
+    "onboarding.company_architecture_desc": "건물을 설계합니다 — BIM, 문서, CDE",
     "onboarding.company_full_enterprise": "풀 엔터프라이즈",
-    "onboarding.company_full_enterprise_desc":
-      "모든 것이 필요합니다 — 전체 건설 생애주기",
+    "onboarding.company_full_enterprise_desc": "모든 것이 필요합니다 — 전체 건설 생애주기",
     "onboarding.modules_label": "모듈",
     "onboarding.modules_title": "모듈 검토",
-    "onboarding.modules_subtitle":
-      "회사 유형에 따라 사전 선택되었습니다. 모듈을 자유롭게 켜고 끌 수 있습니다.",
+    "onboarding.modules_subtitle": "회사 유형에 따라 사전 선택되었습니다. 모듈을 자유롭게 켜고 끌 수 있습니다.",
     "onboarding.modules_active": "모듈 활성",
     "onboarding.mod_group_core": "기본 견적",
     "onboarding.mod_group_takeoff": "수량 산출 & AI",
@@ -2939,29 +2752,22 @@ const resource = {
     "onboarding.mod_cost_benchmark_desc": "비용 벤치마크 분석",
     "onboarding.mod_collaboration_desc": "실시간 협업 도구",
     "support.button_label": "응원하기",
-    "support.button_tooltip":
-      "프로젝트 응원 — 별 주기, 공유 또는 사례 연구 보내기",
+    "support.button_tooltip": "프로젝트 응원 — 별 주기, 공유 또는 사례 연구 보내기",
     "support.button_aria": "응원하기",
     "support.modal_title": "OpenConstructionERP의 성장을 도와주세요",
-    "support.modal_subtitle":
-      "저희는 오픈소스로 개발하며 모든 기능을 무료로 제공합니다. 여러분의 작은 행동이 개발을 지속시킵니다 — 비용은 들지 않지만 큰 차이를 만듭니다.",
+    "support.modal_subtitle": "저희는 오픈소스로 개발하며 모든 기능을 무료로 제공합니다. 여러분의 작은 행동이 개발을 지속시킵니다 — 비용은 들지 않지만 큰 차이를 만듭니다.",
     "support.action_star_title": "GitHub에서 별 주기",
-    "support.action_star_body":
-      "30초. 별표는 새로운 건설 팀이 프로젝트를 발견하는 방법이며, 다음 릴리스를 위한 시간을 확보하는 방법입니다.",
+    "support.action_star_body": "30초. 별표는 새로운 건설 팀이 프로젝트를 발견하는 방법이며, 다음 릴리스를 위한 시간을 확보하는 방법입니다.",
     "support.action_share_title": "팀이나 네트워크와 공유하기",
-    "support.action_share_body":
-      "LinkedIn 또는 X / Twitter의 게시물 하나가 수십 명의 견적사, 계획가, BIM 매니저에게 닿습니다. 오픈소스 건설 소프트웨어를 알리는 데 도움을 주세요.",
+    "support.action_share_body": "LinkedIn 또는 X / Twitter의 게시물 하나가 수십 명의 견적사, 계획가, BIM 매니저에게 닿습니다. 오픈소스 건설 소프트웨어를 알리는 데 도움을 주세요.",
     "support.share_twitter": "X에 게시",
     "support.share_linkedin": "LinkedIn에 게시",
     "support.share_copy": "텍스트 + 링크 복사",
     "support.share_copied": "복사됨!",
-    "support.action_case_study_title":
-      "사례 연구, 동영상 또는 기사가 있으신가요?",
+    "support.action_case_study_title": "사례 연구, 동영상 또는 기사가 있으신가요?",
     "support.action_case_study_tag": "저희가 확산해 드립니다",
-    "support.action_case_study_body":
-      "OpenConstructionERP를 어떻게 사용하시는지 보여주세요 — 동영상, 사례 연구, LinkedIn 글. 링크를 직접 보내주시거나, 게시물에서 @DataDrivenConstruction을 태그해 주세요 — 저희가 발견해 뉴스레터와 소셜 채널을 통해 다시 공유하겠습니다. 수만 명의 건설 전문가와 시니어 산업 전문가가 저희 작업을 따르고 있습니다. 링크용 이메일: ",
-    "support.thanks":
-      "감사합니다. 모든 별, 공유, 이야기가 진정으로 이 프로젝트를 살아 있게 합니다 — 건설 커뮤니티를 위해 ❤️로 만들었습니다.",
+    "support.action_case_study_body": "OpenConstructionERP를 어떻게 사용하시는지 보여주세요 — 동영상, 사례 연구, LinkedIn 글. 링크를 직접 보내주시거나, 게시물에서 @DataDrivenConstruction을 태그해 주세요 — 저희가 발견해 뉴스레터와 소셜 채널을 통해 다시 공유하겠습니다. 수만 명의 건설 전문가와 시니어 산업 전문가가 저희 작업을 따르고 있습니다. 링크용 이메일: ",
+    "support.thanks": "감사합니다. 모든 별, 공유, 이야기가 진정으로 이 프로젝트를 살아 있게 합니다 — 건설 커뮤니티를 위해 ❤️로 만들었습니다.",
     "onboarding.mod_group_estimation": "견적",
     "onboarding.mod_group_ai": "AI",
     "onboarding.mod_group_bim_advanced": "BIM 및 3D",
@@ -2974,94 +2780,73 @@ const resource = {
     "onboarding.mod_group_regional": "지역 팩",
     "onboarding.mod_group_platform": "플랫폼",
     "onboarding.mod_cost_match": "원가 매칭",
-    "onboarding.mod_cost_match_desc":
-      "BOQ 항목을 원가 데이터베이스 항목에 자동 매칭",
+    "onboarding.mod_cost_match_desc": "BOQ 항목을 원가 데이터베이스 항목에 자동 매칭",
     "onboarding.mod_match": "요소 매칭",
     "onboarding.mod_match_desc": "BIM/CAD 요소를 BOQ 항목 및 단가와 연결",
     "onboarding.mod_dwg_takeoff": "DWG 물량 산출",
     "onboarding.mod_dwg_takeoff_desc": "DWG 도면에서 직접 물량 산출",
     "onboarding.mod_cad": "CAD 가져오기",
-    "onboarding.mod_cad_desc":
-      "DDC cad2data 파이프라인을 통해 DWG/DGN/RVT/IFC 가져오기",
+    "onboarding.mod_cad_desc": "DDC cad2data 파이프라인을 통해 DWG/DGN/RVT/IFC 가져오기",
     "onboarding.mod_bim_requirements": "BIM 요구사항",
-    "onboarding.mod_bim_requirements_desc":
-      "모델 요구사항 정의 및 검증 (IDS / EIR)",
+    "onboarding.mod_bim_requirements_desc": "모델 요구사항 정의 및 검증 (IDS / EIR)",
     "onboarding.mod_match_elements": "요소 매칭",
-    "onboarding.mod_match_elements_desc":
-      "신뢰도 점수가 있는 AI 지원 BIM-원가 요소 매칭",
+    "onboarding.mod_match_elements_desc": "신뢰도 점수가 있는 AI 지원 BIM-원가 요소 매칭",
     "onboarding.mod_opencde_api": "OpenCDE API",
-    "onboarding.mod_opencde_api_desc":
-      "BCF + 문서 + Foundation을 위한 OpenCDE 호환 API",
+    "onboarding.mod_opencde_api_desc": "BCF + 문서 + Foundation을 위한 OpenCDE 호환 API",
     "onboarding.mod_erp_chat": "ERP 채팅",
-    "onboarding.mod_erp_chat_desc":
-      "완전한 ERP 컨텍스트를 갖춘 인앱 AI 채팅 어시스턴트",
+    "onboarding.mod_erp_chat_desc": "완전한 ERP 컨텍스트를 갖춘 인앱 AI 채팅 어시스턴트",
     "onboarding.mod_compliance_ai": "컴플라이언스 AI",
     "onboarding.mod_compliance_ai_desc": "LLM 기반 규제 컴플라이언스 검사",
     "onboarding.mod_schedule_advanced": "고급 일정",
-    "onboarding.mod_schedule_advanced_desc":
-      "주간 룩어헤드와 PPC가 포함된 Last Planner System",
+    "onboarding.mod_schedule_advanced_desc": "주간 룩어헤드와 PPC가 포함된 Last Planner System",
     "onboarding.mod_eac": "EAC 엔진",
     "onboarding.mod_eac_desc": "롤링 예측을 통한 완공 시 예상치",
     "onboarding.mod_bid_management": "입찰 관리",
-    "onboarding.mod_bid_management_desc":
-      "외부 입찰, 가격 전략, 수주/실주 추적 관리",
+    "onboarding.mod_bid_management_desc": "외부 입찰, 가격 전략, 수주/실주 추적 관리",
     "onboarding.mod_contracts": "계약",
-    "onboarding.mod_contracts_desc":
-      "계약 유형 엔진 (FIDIC, NEC, JCT, 일괄, T&M)",
+    "onboarding.mod_contracts_desc": "계약 유형 엔진 (FIDIC, NEC, JCT, 일괄, T&M)",
     "onboarding.mod_variations": "변경",
     "onboarding.mod_variations_desc": "현장 측정 변경과 워크플로 승인",
     "onboarding.mod_crm": "CRM",
     "onboarding.mod_crm_desc": "영업 파이프라인, 리드, 기회, 계정",
     "onboarding.mod_supplier_catalogs": "공급업체 카탈로그",
-    "onboarding.mod_supplier_catalogs_desc":
-      "실시간 공급업체 가격 피드 및 공급업체 관리",
+    "onboarding.mod_supplier_catalogs_desc": "실시간 공급업체 가격 피드 및 공급업체 관리",
     "onboarding.mod_property_dev": "부동산 개발",
-    "onboarding.mod_property_dev_desc":
-      "토지, 단계, 판매 믹스, 디벨로퍼용 타당성",
+    "onboarding.mod_property_dev_desc": "토지, 단계, 판매 믹스, 디벨로퍼용 타당성",
     "onboarding.mod_service": "서비스 및 유지보수",
     "onboarding.mod_service_desc": "인도 후 서비스 요청, 보증, 유지보수",
     "onboarding.mod_equipment": "장비 및 차량",
-    "onboarding.mod_equipment_desc":
-      "장비, 공구, 차량 — 가동률, 유지보수, 임대 요율",
+    "onboarding.mod_equipment_desc": "장비, 공구, 차량 — 가동률, 유지보수, 임대 요율",
     "onboarding.mod_resources": "리소스",
     "onboarding.mod_resources_desc": "인력, 자재, 장비 리소스 계획",
     "onboarding.mod_daily_diary": "공사일지",
-    "onboarding.mod_daily_diary_desc":
-      "날씨, 작업조, 장비, 사진이 포함된 일일 현장 일지",
+    "onboarding.mod_daily_diary_desc": "날씨, 작업조, 장비, 사진이 포함된 일일 현장 일지",
     "onboarding.mod_subcontractors": "하도급",
     "onboarding.mod_subcontractors_desc": "하도급 온보딩, 계약, 결제, 성과",
     "onboarding.mod_portal": "고객 포털",
-    "onboarding.mod_portal_desc":
-      "제한적 접근이 가능한 고객 및 파트너용 외부 포털",
+    "onboarding.mod_portal_desc": "제한적 접근이 가능한 고객 및 파트너용 외부 포털",
     "onboarding.mod_notifications": "알림",
     "onboarding.mod_notifications_desc": "인앱, 이메일 및 웹훅 알림",
     "onboarding.mod_hse_advanced": "고급 HSE",
-    "onboarding.mod_hse_advanced_desc":
-      "고급 보건, 안전, 환경 — 툴박스 토크, JHA, 감사",
+    "onboarding.mod_hse_advanced_desc": "고급 보건, 안전, 환경 — 툴박스 토크, JHA, 감사",
     "onboarding.mod_qms": "품질경영시스템",
     "onboarding.mod_qms_desc": "ISO 9001 기반 QMS — 절차, 감사, KPI",
     "onboarding.mod_compliance": "컴플라이언스 DSL",
-    "onboarding.mod_compliance_desc":
-      "컴플라이언스를 위한 code-as-rules 도메인 특화 언어",
+    "onboarding.mod_compliance_desc": "컴플라이언스를 위한 code-as-rules 도메인 특화 언어",
     "onboarding.mod_compliance_docs": "컴플라이언스 문서",
-    "onboarding.mod_compliance_docs_desc":
-      "인증서 라이브러리, 유효기간 추적, 갱신 알림",
+    "onboarding.mod_compliance_docs_desc": "인증서 라이브러리, 유효기간 추적, 갱신 알림",
     "onboarding.mod_carbon": "탄소 및 ESG",
     "onboarding.mod_carbon_desc": "내재 + 운영 탄소, ESG 보고, EN 15978",
     "onboarding.mod_bi_dashboards": "BI 대시보드",
-    "onboarding.mod_bi_dashboards_desc":
-      "드릴다운이 가능한 모듈 간 대화형 분석",
+    "onboarding.mod_bi_dashboards_desc": "드릴다운이 가능한 모듈 간 대화형 분석",
     "onboarding.mod_enterprise_workflows": "엔터프라이즈 워크플로",
-    "onboarding.mod_enterprise_workflows_desc":
-      "대규모 조직을 위한 FSM 기반 맞춤형 승인 워크플로",
+    "onboarding.mod_enterprise_workflows_desc": "대규모 조직을 위한 FSM 기반 맞춤형 승인 워크플로",
     "onboarding.mod_full_evm": "완전 EVM",
-    "onboarding.mod_full_evm_desc":
-      "완전 EVM — PV/EV/AC, SPI/CPI, CV/SV, ETC/EAC",
+    "onboarding.mod_full_evm_desc": "완전 EVM — PV/EV/AC, SPI/CPI, CV/SV, ETC/EAC",
     "onboarding.mod_rfq_bidding": "RFQ 및 입찰",
     "onboarding.mod_rfq_bidding_desc": "다단계 RFQ 워크플로, 봉인 입찰, e경매",
     "onboarding.mod_integrations": "통합",
-    "onboarding.mod_integrations_desc":
-      "n8n을 통해 웹훅, SAP, Procore, MS Project 통합",
+    "onboarding.mod_integrations_desc": "n8n을 통해 웹훅, SAP, Procore, MS Project 통합",
     "onboarding.mod_dach_pack": "지역 팩 — DACH (DE/AT/CH)",
     "onboarding.mod_dach_pack_desc": "DACH (DE/AT/CH)용 표준, 분류, 통화, 포맷",
     "onboarding.mod_uk_pack": "지역 팩 — 영국",
@@ -3071,13 +2856,11 @@ const resource = {
     "onboarding.mod_india_pack": "지역 팩 — 인도",
     "onboarding.mod_india_pack_desc": "인도용 표준, 분류, 통화, 포맷",
     "onboarding.mod_middle_east_pack": "지역 팩 — 중동 및 GCC",
-    "onboarding.mod_middle_east_pack_desc":
-      "중동 및 GCC용 표준, 분류, 통화, 포맷",
+    "onboarding.mod_middle_east_pack_desc": "중동 및 GCC용 표준, 분류, 통화, 포맷",
     "onboarding.mod_latam_pack": "지역 팩 — 라틴아메리카",
     "onboarding.mod_latam_pack_desc": "라틴아메리카용 표준, 분류, 통화, 포맷",
     "onboarding.mod_asia_pac_pack": "지역 팩 — 아시아 태평양",
-    "onboarding.mod_asia_pac_pack_desc":
-      "아시아 태평양용 표준, 분류, 통화, 포맷",
+    "onboarding.mod_asia_pac_pack_desc": "아시아 태평양용 표준, 분류, 통화, 포맷",
     "onboarding.mod_russia_pack": "지역 팩 — 러시아 및 CIS",
     "onboarding.mod_russia_pack_desc": "러시아 및 CIS용 표준, 분류, 통화, 포맷",
     "onboarding.mod_users": "사용자 및 Auth",
@@ -3093,17 +2876,13 @@ const resource = {
     "onboarding.mod_backup": "백업 및 복원",
     "onboarding.mod_backup_desc": "특정 시점 복원이 가능한 자동 백업",
     "onboarding.mod_admin": "관리 콘솔",
-    "onboarding.mod_admin_desc":
-      "운영자 엔드포인트, QA 파이프라인, 시스템 유지보수",
+    "onboarding.mod_admin_desc": "운영자 엔드포인트, QA 파이프라인, 시스템 유지보수",
     "onboarding.mod_i18n_foundation": "i18n 기반",
-    "onboarding.mod_i18n_foundation_desc":
-      "지연 로드되는 로케일 청크를 사용한 27개 언어 i18n 런타임",
+    "onboarding.mod_i18n_foundation_desc": "지연 로드되는 로케일 청크를 사용한 27개 언어 i18n 런타임",
     "onboarding.mod_collaboration_locks": "협업 잠금",
-    "onboarding.mod_collaboration_locks_desc":
-      "멀티유저 편집을 위한 낙관적 및 비관적 잠금",
+    "onboarding.mod_collaboration_locks_desc": "멀티유저 편집을 위한 낙관적 및 비관적 잠금",
     "onboarding.mod_architecture_map": "아키텍처 맵",
-    "onboarding.mod_architecture_map_desc":
-      "시스템 아키텍처의 대화형 시각적 맵",
+    "onboarding.mod_architecture_map_desc": "시스템 아키텍처의 대화형 시각적 맵",
     "onboarding.mod_dashboards": "대시보드",
     "onboarding.mod_dashboards_desc": "프로젝트별 및 포트폴리오 대시보드",
     "onboarding.mode_title": "인터페이스 모드 선택",
@@ -3114,20 +2893,15 @@ const resource = {
     "onboarding.summary_modules": "활성 모듈",
     "onboarding.summary_mode": "인터페이스 모드",
     "reports.cash_flow": "현금 흐름 예측",
-    "reports.cash_flow_desc":
-      "S-곡선 계획 대 실적 지출 기반 월별 현금 흐름 예측.",
+    "reports.cash_flow_desc": "S-곡선 계획 대 실적 지출 기반 월별 현금 흐름 예측.",
     "reports.change_order_register": "변경 지시서 등록부",
-    "reports.change_order_register_desc":
-      "누적 비용 및 일정 영향을 포함한 범위 변경의 완전한 등록부.",
+    "reports.change_order_register_desc": "누적 비용 및 일정 영향을 포함한 범위 변경의 완전한 등록부.",
     "reports.tender_comparison": "입찰 비교",
-    "reports.tender_comparison_desc":
-      "편차 분석이 포함된 하도급업체 입찰의 나란히 비교.",
+    "reports.tender_comparison_desc": "편차 분석이 포함된 하도급업체 입찰의 나란히 비교.",
     "reports.risk_register": "위험 등록부",
-    "reports.risk_register_desc":
-      "확률, 영향, 점수, 저감 계획이 있는 위험 매트릭스.",
+    "reports.risk_register_desc": "확률, 영향, 점수, 저감 계획이 있는 위험 매트릭스.",
     "reports.progress_report": "진행 보고서",
-    "reports.progress_report_desc":
-      "하나의 보고서에 EVM 성과, 일정 현황, 상위 위험 요소 포함.",
+    "reports.progress_report_desc": "하나의 보고서에 EVM 성과, 일정 현황, 상위 위험 요소 포함.",
     "reports.preset_monthly": "월간 진행",
     "reports.preset_client": "고객 발표",
     "reports.preset_audit": "감사 보고서",
@@ -3144,8 +2918,7 @@ const resource = {
     "cde.suitability_none": "— 없음 —",
     "cde.view_history": "이력",
     "cde.history_title": "상태 전환 이력",
-    "cde.history_empty":
-      "아직 상태 전환이 없습니다 — 감사 추적을 시작하려면 컨테이너를 승격하세요.",
+    "cde.history_empty": "아직 상태 전환이 없습니다 — 감사 추적을 시작하려면 컨테이너를 승격하세요.",
     "cde.history_by_role": "담당: {{role}}",
     "cde.history_signature": "서명: {{signer}}",
     "cde.gate_label": "게이트 {{code}}",
@@ -3153,8 +2926,7 @@ const resource = {
     "cde.transmittals_badge_aria": "이 컨테이너에 연결된 {{count}}개 발송 전표",
     "cde.transmittals_drawer_title": "이 컨테이너를 포함한 발송 전표",
     "cde.approval_modal_title": "게이트 B 승인 서명",
-    "cde.approval_modal_body":
-      "{{code}}를 SHARED에서 PUBLISHED로 승격하려면 서명된 승인이 필요합니다 (ISO 19650). 서명과 의견은 감사 로그에 기록됩니다.",
+    "cde.approval_modal_body": "{{code}}를 SHARED에서 PUBLISHED로 승격하려면 서명된 승인이 필요합니다 (ISO 19650). 서명과 의견은 감사 로그에 기록됩니다.",
     "cde.approval_field_signature": "서명",
     "cde.approval_field_comments": "의견",
     "cde.approval_signature_placeholder": "성명 / 이니셜",
@@ -3211,8 +2983,7 @@ const resource = {
     "integrations.setup_steps": "설정 안내",
     "integrations.slack": "Slack",
     "integrations.slack_desc": "수신 웹훅을 통해 Slack에 알림 전송",
-    "integrations.subtitle":
-      "즐겨 사용하는 도구에서 프로젝트 알림을 받으려면 외부 서비스에 연결하세요.",
+    "integrations.subtitle": "즐겨 사용하는 도구에서 프로젝트 알림을 받으려면 외부 서비스에 연결하세요.",
     "integrations.teams": "Microsoft Teams",
     "integrations.teams_desc": "수신 웹훅을 통해 Teams 채널에 알림 전송",
     "integrations.telegram": "Telegram",
@@ -3291,8 +3062,7 @@ const resource = {
     "dashboard.import_existing_boq": "기존 BOQ 가져오기",
     "dashboard.import_existing_boq_desc": "기존 문서에서 AI로 견적",
     "dashboard.install_demo": "데모 프로젝트 설치",
-    "dashboard.install_demo_desc":
-      "실제적인 데이터가 있는 사전 구성된 주거 프로젝트",
+    "dashboard.install_demo_desc": "실제적인 데이터가 있는 사전 구성된 주거 프로젝트",
     "dashboard.kpi_not_validated": "N/A",
     "dashboard.kpi_run_validation": "검증 실행",
     "dashboard.over_budget": "예산 초과",
@@ -3301,19 +3071,14 @@ const resource = {
     "dashboard.quick_start": "빠른 견적 시작",
     "dashboard.run_setup": "설정 마법사 실행",
     "dashboard.total_budget_all": "전체 예산",
-    "dashboard.welcome_body":
-      "이 프로젝트는 커뮤니티에 의해 구축 및 유지됩니다. 여러분의 지원으로 새로운 기능 추가, 지역 데이터베이스 확충, 모두를 위한 무료 서비스 유지가 가능합니다.",
+    "dashboard.welcome_body": "이 프로젝트는 커뮤니티에 의해 구축 및 유지됩니다. 여러분의 지원으로 새로운 기능 추가, 지역 데이터베이스 확충, 모두를 위한 무료 서비스 유지가 가능합니다.",
     "dashboard.welcome_consult": "전문 컨설팅",
-    "dashboard.welcome_consult_desc":
-      "전 세계 맞춤형 배포, 교육, 엔터프라이즈 솔루션",
-    "dashboard.welcome_desc":
-      "데모 프로젝트를 설치하거나 직접 만들어 시작하세요.",
+    "dashboard.welcome_consult_desc": "전 세계 맞춤형 배포, 교육, 엔터프라이즈 솔루션",
+    "dashboard.welcome_desc": "데모 프로젝트를 설치하거나 직접 만들어 시작하세요.",
     "dashboard.welcome_sponsor": "스폰서 되기",
-    "dashboard.welcome_sponsor_desc":
-      "새 기능에 자금을 지원하고 프로젝트를 모두를 위해 무료로 유지",
+    "dashboard.welcome_sponsor_desc": "새 기능에 자금을 지원하고 프로젝트를 모두를 위해 무료로 유지",
     "dashboard.welcome_star": "GitHub에서 스타 달기",
-    "dashboard.welcome_star_desc":
-      "다른 사람들이 프로젝트를 발견할 수 있도록 — 2초면 됩니다",
+    "dashboard.welcome_star_desc": "다른 사람들이 프로젝트를 발견할 수 있도록 — 2초면 됩니다",
     "dashboard.welcome_start": "시작하기",
     "dashboard.welcome_sub": "무료 & 오픈소스 건설 비용 견적 플랫폼",
     "dashboard.welcome_title": "OpenConstructionERP에 오신 것을 환영합니다",
@@ -3334,8 +3099,7 @@ const resource = {
     "analytics.col_status": "상태",
     "analytics.col_variance": "편차",
     "analytics.col_variance_pct": "편차%",
-    "analytics.empty_description":
-      "프로젝트 간 분석을 보려면 예산이 있는 프로젝트를 만드세요.",
+    "analytics.empty_description": "프로젝트 간 분석을 보려면 예산이 있는 프로젝트를 만드세요.",
     "analytics.empty_title": "분석 데이터가 아직 없습니다",
     "analytics.export_csv": "CSV 내보내기",
     "analytics.filter_region": "지역별 필터",
@@ -3358,8 +3122,7 @@ const resource = {
     "analytics.total_projects": "전체 프로젝트",
     "analytics.with_budget": "{{count}}개 예산 있음",
     "backup.confirm_replace_btn": "모든 데이터 교체",
-    "backup.confirm_replace_message":
-      "이 작업은 기존의 모든 데이터를 백업 내용으로 교체합니다. 이 작업은 취소할 수 없습니다.",
+    "backup.confirm_replace_message": "이 작업은 기존의 모든 데이터를 백업 내용으로 교체합니다. 이 작업은 취소할 수 없습니다.",
     "backup.confirm_replace_title": "모든 데이터를 교체하시겠습니까?",
     "backup.drop_zone_hint": ".zip 백업 파일",
     "backup.drop_zone_label": "백업 파일을 여기에 놓거나 클릭하여 찾아보기",
@@ -3377,8 +3140,7 @@ const resource = {
     "backup.mode_merge": "병합 (새 항목 추가, 기존 항목 유지)",
     "backup.mode_replace": "교체 (모든 항목 덮어쓰기)",
     "backup.record_counts": "레코드 수",
-    "backup.replace_warning":
-      "경고: 교체 모드는 기존의 모든 데이터를 삭제합니다.",
+    "backup.replace_warning": "경고: 교체 모드는 기존의 모든 데이터를 삭제합니다.",
     "backup.restore_btn": "복원",
     "backup.restore_error": "복원 오류",
     "backup.restore_failed": "복원 실패",
@@ -3397,8 +3159,7 @@ const resource = {
     "changeorders.add_item": "항목 추가",
     "changeorders.all_statuses": "전체 상태",
     "changeorders.approve": "승인",
-    "changeorders.approve_confirm":
-      "이 변경 지시서를 승인하시겠습니까? 비용 영향이 프로젝트 예산에 적용됩니다.",
+    "changeorders.approve_confirm": "이 변경 지시서를 승인하시겠습니까? 비용 영향이 프로젝트 예산에 적용됩니다.",
     "changeorders.approved": "변경 지시서를 승인했습니다",
     "changeorders.approved_at": "승인일",
     "changeorders.approved_impact": "승인된 영향",
@@ -3410,28 +3171,24 @@ const resource = {
     "changeorders.delete_item_confirm": "이 항목을 삭제하시겠습니까?",
     "changeorders.deleted": "변경 지시서를 삭제했습니다",
     "changeorders.empty": "변경 지시서가 없습니다",
-    "changeorders.empty_desc":
-      "비용 및 일정 영향이 있는 범위 변경을 추적하려면 변경 지시서를 만드세요",
+    "changeorders.empty_desc": "비용 및 일정 영향이 있는 범위 변경을 추적하려면 변경 지시서를 만드세요",
     "changeorders.export_csv": "CSV 내보내기",
     "changeorders.filter_status": "상태별 필터",
     "changeorders.item_added": "항목을 추가했습니다",
     "changeorders.item_deleted": "항목을 삭제했습니다",
     "changeorders.items": "명세 항목",
-    "changeorders.load_error":
-      "변경 지시서를 불러오는 데 실패했습니다. 다시 시도하세요.",
+    "changeorders.load_error": "변경 지시서를 불러오는 데 실패했습니다. 다시 시도하세요.",
     "changeorders.new": "새 변경 지시서",
     "changeorders.new_qty": "새 수량",
     "changeorders.new_rate": "새 단가",
     "changeorders.no_items": "항목이 아직 없습니다",
-    "changeorders.no_items_desc":
-      "범위 변경을 정의하려면 명세 항목을 추가하세요",
+    "changeorders.no_items_desc": "범위 변경을 정의하려면 명세 항목을 추가하세요",
     "changeorders.of_total": "/",
     "changeorders.orig_qty": "원래 수량",
     "changeorders.orig_rate": "원래 단가",
     "changeorders.pending": "대기 중",
     "changeorders.pending_approval": "승인 대기 중",
-    "changeorders.pending_approval_hint":
-      "매니저와 관리자만 승인할 수 있습니다.",
+    "changeorders.pending_approval_hint": "매니저와 관리자만 승인할 수 있습니다.",
     "changeorders.reason": "이유",
     "changeorders.reject": "거부",
     "changeorders.reject_confirm": "이 변경 지시서를 거부하시겠습니까?",
@@ -3447,8 +3204,7 @@ const resource = {
     "changeorders.status_submitted": "제출됨",
     "changeorders.status_under_review": "검토 중",
     "changeorders.submit": "제출",
-    "changeorders.submit_confirm":
-      "이 변경 지시서를 검토를 위해 제출하시겠습니까? 이 작업은 취소할 수 없습니다.",
+    "changeorders.submit_confirm": "이 변경 지시서를 검토를 위해 제출하시겠습니까? 이 작업은 취소할 수 없습니다.",
     "changeorders.submitted": "변경 지시서를 제출했습니다",
     "changeorders.submitted_at": "제출일",
     "changeorders.subtitle": "비용 및 일정 영향이 있는 범위 변경 추적",
@@ -3460,8 +3216,7 @@ const resource = {
     "changeorders.type_removed": "제거됨",
     "changeorders.unit_placeholder": "m2, m3, 개...",
     "changeorders.workflow": "워크플로",
-    "changeorders.workflow_desc":
-      "변경 지시서 워크플로: 초안 (범위 변경 준비) → 제출됨 (검토를 위해 전송) → 승인 또는 거부. 각 지시서는 비용 영향과 일정 영향을 일수로 추적합니다. 무엇이 변경되었는지 — 원래 수량과 새 수량 및 단가 — 를 상세히 기록하려면 명세 항목을 추가하세요. 비용 차이는 자동으로 계산됩니다.",
+    "changeorders.workflow_desc": "변경 지시서 워크플로: 초안 (범위 변경 준비) → 제출됨 (검토를 위해 전송) → 승인 또는 거부. 각 지시서는 비용 영향과 일정 영향을 일수로 추적합니다. 무엇이 변경되었는지 — 원래 수량과 새 수량 및 단가 — 를 상세히 기록하려면 명세 항목을 추가하세요. 비용 차이는 자동으로 계산됩니다.",
     "explorer.analysis_name": "이름",
     "explorer.apply_pivot": "적용",
     "explorer.bar": "막대 그래프",
@@ -3477,10 +3232,8 @@ const resource = {
     "explorer.conversion_complete": "변환 완료",
     "explorer.conversion_failed": "변환 실패",
     "explorer.converters": "CAD 변환기",
-    "explorer.converters_desc":
-      "BIM 요소 데이터 추출을 위한 DDC Community 변환기",
-    "explorer.converters_external_hint":
-      "CAD 변환기는 서버에 DDC cad2data 도구가 설치되어 있어야 합니다",
+    "explorer.converters_desc": "BIM 요소 데이터 추출을 위한 DDC Community 변환기",
+    "explorer.converters_external_hint": "CAD 변환기는 서버에 DDC cad2data 도구가 설치되어 있어야 합니다",
     "explorer.converting": "{{name}} 변환 중...",
     "explorer.converting_msg": "변환 중...",
     "explorer.count": "개수",
@@ -3489,8 +3242,7 @@ const resource = {
     "explorer.create_boq_title": "피벗에서 BOQ 만들기",
     "explorer.create_positions": "{{count}}개 항목 만들기",
     "explorer.data_completeness": "데이터 완전성",
-    "explorer.delete_session_confirm":
-      "이 분석을 삭제하시겠습니까? 이 작업은 취소할 수 없습니다.",
+    "explorer.delete_session_confirm": "이 분석을 삭제하시겠습니까? 이 작업은 취소할 수 없습니다.",
     "explorer.documents": "문서",
     "explorer.done": "변환 완료! 로딩 중...",
     "explorer.drop_cad": "CAD/BIM 파일을 놓아 탐색",
@@ -3505,8 +3257,7 @@ const resource = {
     "explorer.heatmap": "히트맵 전환",
     "explorer.heatmap_short": "히트맵",
     "explorer.installed": "설치됨",
-    "explorer.invalid_format":
-      "지원되지 않는 파일 형식입니다. RVT, IFC, DWG 또는 DGN을 사용하세요.",
+    "explorer.invalid_format": "지원되지 않는 파일 형식입니다. RVT, IFC, DWG 또는 DGN을 사용하세요.",
     "explorer.like_describe": "df.describe() 처럼",
     "explorer.max": "최댓값",
     "explorer.mean": "평균",
@@ -3517,8 +3268,7 @@ const resource = {
     "explorer.no_chart_data": "차트 데이터가 없습니다",
     "explorer.no_groups": "그룹을 찾을 수 없습니다. 다른 열을 시도하세요.",
     "explorer.non_null": "값 있음",
-    "explorer.or_click":
-      "또는 클릭하여 찾아보기 — 데이터 테이블, 피벗, 차트 & 통계",
+    "explorer.or_click": "또는 클릭하여 찾아보기 — 데이터 테이블, 피벗, 차트 & 통계",
     "explorer.page_of": "{{total}}페이지 중 {{page}}페이지",
     "explorer.page_summary": "페이지 합계:",
     "explorer.pie": "원형 그래프",
@@ -3534,19 +3284,15 @@ const resource = {
     "explorer.save_permanently": "영구 저장",
     "explorer.save_to_project": "프로젝트에 저장 (BIM Hub)",
     "explorer.save_to_project_btn": "프로젝트에 저장",
-    "explorer.save_to_project_desc":
-      "선택한 프로젝트에 추출된 모든 요소가 있는 BIM 모델을 만듭니다.",
+    "explorer.save_to_project_desc": "선택한 프로젝트에 추출된 모든 요소가 있는 BIM 모델을 만듭니다.",
     "explorer.saved": "분석을 영구 저장했습니다",
     "explorer.saved_to_project": "BIM Hub에 저장됨",
-    "explorer.saved_to_project_msg":
-      "요소를 BIM Hub에 저장했습니다. BIM 뷰어에서 확인하세요.",
+    "explorer.saved_to_project_msg": "요소를 BIM Hub에 저장했습니다. BIM 뷰어에서 확인하세요.",
     "explorer.search_all": "모든 열 검색...",
-    "explorer.select_columns_for_chart":
-      "차트를 생성하려면 그룹화 및 값 열을 선택하세요.",
+    "explorer.select_columns_for_chart": "차트를 생성하려면 그룹화 및 값 열을 선택하세요.",
     "explorer.select_project": "프로젝트 선택...",
     "explorer.selected": "선택됨",
-    "explorer.session_expired_desc":
-      "CAD 세션은 24시간 동안 유효합니다. 계속하려면 파일을 다시 업로드하세요.",
+    "explorer.session_expired_desc": "CAD 세션은 24시간 동안 유효합니다. 계속하려면 파일을 다시 업로드하세요.",
     "explorer.session_expired_title": "세션이 만료되었거나 찾을 수 없습니다",
     "explorer.setup_guide": "설정 가이드",
     "explorer.sparse_columns": "희소 (<10%)",
@@ -3566,8 +3312,7 @@ const resource = {
     "explorer.visible_columns": "표시 열",
     "explorer.active_filters": "활성 필터",
     "explorer.clear_all_filters": "모두 지우기",
-    "explorer.no_active_filters":
-      "탭 간 필터링을 위해 차트의 막대 또는 조각을 클릭하세요.",
+    "explorer.no_active_filters": "탭 간 필터링을 위해 차트의 막대 또는 조각을 클릭하세요.",
     "explorer.line": "선 그래프",
     "explorer.scatter": "산점도",
     "explorer.format": "형식",
@@ -3582,8 +3327,7 @@ const resource = {
     "explorer.save_view": "뷰 저장",
     "explorer.save_view_prompt": "이 뷰 이름 지정",
     "explorer.saved_views": "저장된 뷰",
-    "explorer.no_saved_views":
-      "저장된 뷰가 아직 없습니다. 필터, 차트 및 피벗 구성을 나중에 사용할 수 있도록 저장하세요.",
+    "explorer.no_saved_views": "저장된 뷰가 아직 없습니다. 필터, 차트 및 피벗 구성을 나중에 사용할 수 있도록 저장하세요.",
     "explorer.load_view": "불러오기",
     "explorer.delete_view": "삭제",
     "explorer.view_saved": "뷰를 저장했습니다",
@@ -3592,8 +3336,7 @@ const resource = {
     "explorer.drill_down_empty": "이 조각과 일치하는 행이 없습니다.",
     "explorer.close": "닫기",
     "explorer.showing_rows": "{{count}}개 행 표시 중",
-    "explorer.chart_click_hint":
-      "교차 필터링을 위해 막대 / 조각 / 점을 클릭하세요",
+    "explorer.chart_click_hint": "교차 필터링을 위해 막대 / 조각 / 점을 클릭하세요",
     "fieldreports.add_trade": "공종 추가",
     "fieldreports.all_statuses": "전체 상태",
     "fieldreports.all_types": "전체 유형",
@@ -3618,12 +3361,10 @@ const resource = {
     "fieldreports.deliveries": "납품",
     "fieldreports.deliveries_placeholder": "납품된 자재 또는 장비...",
     "fieldreports.download_template": "가져오기 템플릿 다운로드",
-    "fieldreports.drop_file":
-      "Excel 또는 CSV 파일을 여기에 놓거나 클릭하여 찾아보기",
+    "fieldreports.drop_file": "Excel 또는 CSV 파일을 여기에 놓거나 클릭하여 찾아보기",
     "fieldreports.edit_report": "현장 보고서 편집",
     "fieldreports.empty": "현장 보고서가 아직 없습니다",
-    "fieldreports.empty_desc":
-      "현장 활동을 추적하려면 첫 번째 일일 현장 보고서를 만드세요.",
+    "fieldreports.empty_desc": "현장 활동을 추적하려면 첫 번째 일일 현장 보고서를 만드세요.",
     "fieldreports.export": "내보내기",
     "fieldreports.export_failed": "내보내기 실패",
     "fieldreports.export_pdf": "PDF 내보내기",
@@ -3635,23 +3376,20 @@ const resource = {
     "fieldreports.import": "가져오기",
     "fieldreports.import_btn": "가져오기",
     "fieldreports.import_reports": "현장 보고서 가져오기",
-    "fieldreports.import_result":
-      "가져옴: {{imported}}개, 건너뜀: {{skipped}}개, 오류: {{errors}}개",
+    "fieldreports.import_result": "가져옴: {{imported}}개, 건너뜀: {{skipped}}개, 오류: {{errors}}개",
     "fieldreports.list_view": "목록",
     "fieldreports.new_report": "새 보고서",
     "fieldreports.no_match": "일치하는 보고서가 없습니다",
     "fieldreports.no_match_desc": "상태 또는 유형 필터를 조정해 보세요.",
     "fieldreports.no_project": "프로젝트 선택",
-    "fieldreports.no_project_desc":
-      "현장 보고서를 보려면 사이드바에서 프로젝트를 선택하세요.",
+    "fieldreports.no_project_desc": "현장 보고서를 보려면 사이드바에서 프로젝트를 선택하세요.",
     "fieldreports.notes": "메모",
     "fieldreports.notes_placeholder": "추가 메모 또는 관찰...",
     "fieldreports.report_date": "날짜",
     "fieldreports.report_type": "보고서 유형",
     "fieldreports.row_error": "행 {{row}}: {{error}}",
     "fieldreports.safety_incidents": "안전 사고",
-    "fieldreports.safety_placeholder":
-      "안전 사고 또는 아차사고를 보고하세요...",
+    "fieldreports.safety_placeholder": "안전 사고 또는 아차사고를 보고하세요...",
     "fieldreports.show_errors": "오류 세부사항 표시",
     "fieldreports.stat_approved": "승인됨",
     "fieldreports.stat_draft": "초안",
@@ -3674,8 +3412,7 @@ const resource = {
     "fieldreports.wind": "바람",
     "fieldreports.wind_placeholder": "예: 15 km/h 북서",
     "fieldreports.work_performed": "수행한 작업",
-    "fieldreports.work_performed_placeholder":
-      "오늘 완료된 작업 활동을 설명하세요...",
+    "fieldreports.work_performed_placeholder": "오늘 완료된 작업 활동을 설명하세요...",
     "fieldreports.workers": "작업원",
     "fieldreports.workforce_section": "인력",
     "risk.all_categories": "전체 카테고리",
@@ -3687,12 +3424,10 @@ const resource = {
     "risk.contingency": "비상 대책",
     "risk.created": "위험을 만들었습니다",
     "risk.critical": "치명적 (16-25)",
-    "risk.delete_message":
-      "이 위험은 영구적으로 제거됩니다. 이 작업은 취소할 수 없습니다.",
+    "risk.delete_message": "이 위험은 영구적으로 제거됩니다. 이 작업은 취소할 수 없습니다.",
     "risk.delete_title": "위험 삭제",
     "risk.deleted": "위험을 삭제했습니다",
-    "risk.disclaimer":
-      "몬테카를로 시뮬레이션은 확률적 추정값만 제공합니다. 결과는 입력 가정에 따라 달라집니다.",
+    "risk.disclaimer": "몬테카를로 시뮬레이션은 확률적 추정값만 제공합니다. 결과는 입력 가정에 따라 달라집니다.",
     "risk.dist": "분포",
     "risk.dist_pert": "PERT",
     "risk.dist_triangular": "삼각 분포",
@@ -3775,10 +3510,8 @@ const resource = {
     "bim.cad_processing_note": "대용량 파일 처리에는 몇 분이 걸릴 수 있습니다",
     "bim.cad_upload_queued": "CAD 파일이 처리 대기열에 추가됐습니다",
     "bim.cad_upload_success": "CAD 파일을 업로드했습니다",
-    "bim.cad_upload_success_desc":
-      "파일이 성공적으로 업로드되었습니다. 곧 처리가 시작됩니다.",
-    "bim.confirm_delete_model":
-      '"{{name}}"을(를) 삭제하시겠습니까? 모든 요소가 제거됩니다.',
+    "bim.cad_upload_success_desc": "파일이 성공적으로 업로드되었습니다. 곧 처리가 시작됩니다.",
+    "bim.confirm_delete_model": "\"{{name}}\"을(를) 삭제하시겠습니까? 모든 요소가 제거됩니다.",
     "bim.disc_architecture": "건축",
     "bim.disc_civil": "토목",
     "bim.disc_electrical": "전기",
@@ -3790,30 +3523,22 @@ const resource = {
     "bim.disc_structural": "구조",
     "bim.discipline_label": "분야",
     "bim.getting_started": "BIM 뷰어",
-    "bim.getting_started_desc":
-      "3D 건물 모델을 시각화하려면 CAD 변환기에서 요소 데이터 (CSV/Excel)와 선택적 3D 지오메트리 (DAE)를 업로드하세요. 요소는 수량 검증을 위해 BOQ 항목에 연결할 수 있습니다.",
+    "bim.getting_started_desc": "3D 건물 모델을 시각화하려면 CAD 변환기에서 요소 데이터 (CSV/Excel)와 선택적 3D 지오메트리 (DAE)를 업로드하세요. 요소는 수량 검증을 위해 BOQ 항목에 연결할 수 있습니다.",
     "bim.hide_upload": "닫기",
     "bim.landing_drop_here": "여기에 파일 놓기",
-    "bim.landing_feat_3d_desc":
-      "층 필터링, 분야별 색상, 요소 선택 기능을 갖춘 대화형 Three.js 뷰어.",
+    "bim.landing_feat_3d_desc": "층 필터링, 분야별 색상, 요소 선택 기능을 갖춘 대화형 Three.js 뷰어.",
     "bim.landing_feat_3d_title": "3D 시각화",
-    "bim.landing_feat_boq_desc":
-      "자동 수량 검증 및 5D 수량 산출을 위해 BIM 요소를 비용 항목에 연결.",
+    "bim.landing_feat_boq_desc": "자동 수량 검증 및 5D 수량 산출을 위해 BIM 요소를 비용 항목에 연결.",
     "bim.landing_feat_boq_title": "BOQ 연결",
-    "bim.landing_feat_compare_desc":
-      "추가, 제거, 수정된 요소를 자동으로 감지하기 위해 버전 비교.",
+    "bim.landing_feat_compare_desc": "추가, 제거, 수정된 요소를 자동으로 감지하기 위해 버전 비교.",
     "bim.landing_feat_compare_title": "모델 비교",
-    "bim.landing_feat_extract_desc":
-      "벽, 슬래브, 기둥, 보, MEP — 속성, 면적, 체적, 분류 포함.",
+    "bim.landing_feat_extract_desc": "벽, 슬래브, 기둥, 보, MEP — 속성, 면적, 체적, 분류 포함.",
     "bim.landing_feat_extract_title": "요소 추출",
-    "bim.landing_feat_format_desc":
-      "IFC는 즉시 처리. RVT는 DDC cad2data를 통해. 사전 변환된 데이터는 CSV/Excel로.",
+    "bim.landing_feat_format_desc": "IFC는 즉시 처리. RVT는 DDC cad2data를 통해. 사전 변환된 데이터는 CSV/Excel로.",
     "bim.landing_feat_format_title": "형식 독립적",
-    "bim.landing_feat_qty_desc":
-      "면적, 체적, 길이를 추출하는 규칙 정의 — 전체 모델에 한 번에 적용.",
+    "bim.landing_feat_qty_desc": "면적, 체적, 길이를 추출하는 규칙 정의 — 전체 모델에 한 번에 적용.",
     "bim.landing_feat_qty_title": "수량 맵",
-    "bim.landing_hero_subtitle":
-      "건물 요소를 시각화하고, 수량을 추출하고, 물량 명세서에 연결하려면 IFC 또는 Revit 파일을 업로드하세요.",
+    "bim.landing_hero_subtitle": "건물 요소를 시각화하고, 수량을 추출하고, 물량 명세서에 연결하려면 IFC 또는 Revit 파일을 업로드하세요.",
     "bim.landing_hero_title": "BIM 3D 뷰어",
     "bim.landing_processing": "처리 중...",
     "bim.landing_size_hint": "IFC, Revit, CSV 또는 Excel · 최대 500MB",
@@ -3824,14 +3549,11 @@ const resource = {
     "bim.model_name_placeholder": "예: 건물 A — 건축",
     "bim.no_models_hint_upload": "시작하려면 BIM 데이터를 업로드하세요.",
     "bim.overlay_delete_btn": "삭제",
-    "bim.overlay_error_desc":
-      "요소를 추출할 수 없습니다. 먼저 IFC로 변환하거나 데이터를 수동으로 업로드하세요.",
+    "bim.overlay_error_desc": "요소를 추출할 수 없습니다. 먼저 IFC로 변환하거나 데이터를 수동으로 업로드하세요.",
     "bim.overlay_error_title": "처리 실패",
-    "bim.overlay_needs_converter_desc":
-      "{{format}} 파일 추출에는 DDC cad2data가 필요합니다. 먼저 IFC로 변환하거나 사전 변환된 데이터를 업로드하세요.",
+    "bim.overlay_needs_converter_desc": "{{format}} 파일 추출에는 DDC cad2data가 필요합니다. 먼저 IFC로 변환하거나 사전 변환된 데이터를 업로드하세요.",
     "bim.overlay_needs_converter_title": "변환기가 필요합니다",
-    "bim.overlay_processing_desc":
-      "{{format}} 파일에서 요소를 추출 중입니다. 잠시 기다려 주세요.",
+    "bim.overlay_processing_desc": "{{format}} 파일에서 요소를 추출 중입니다. 잠시 기다려 주세요.",
     "bim.overlay_processing_title": "모델 처리 중...",
     "bim.overlay_upload_converted_btn": "변환된 데이터 업로드",
     "bim.show_upload": "BIM 데이터 업로드",
@@ -3864,25 +3586,21 @@ const resource = {
     "bim.upload_advanced_element_data_hint": "CSV / Excel",
     "bim.upload_advanced_geometry": "3D 지오메트리",
     "bim.upload_advanced_geometry_hint": "DAE / COLLADA",
-    "bim.upload_advanced_mode_toggle":
-      "이미 변환하셨나요? 데이터 + 지오메트리를 별도로 업로드",
+    "bim.upload_advanced_mode_toggle": "이미 변환하셨나요? 데이터 + 지오메트리를 별도로 업로드",
     "bim.upload_depth_label": "변환 깊이",
     "bim.upload_depth_standard": "표준 · 주요 카테고리 (빠름)",
     "bim.upload_depth_medium": "중간 · 확장 카테고리 (균형)",
     "bim.upload_depth_complete": "완전 · 전체 카테고리 (느림)",
-    "bim.upload_depth_help":
-      "추출할 Revit 카테고리 수를 제어합니다. 요소 ID와 전체 속성은 항상 보존됩니다.",
+    "bim.upload_depth_help": "추출할 Revit 카테고리 수를 제어합니다. 요소 ID와 전체 속성은 항상 보존됩니다.",
     "bim.upload_discipline_label": "분야",
     "bim.upload_drop_here": "여기에 파일 놓기",
-    "bim.upload_generate_pdf_label":
-      "프로젝트 시트를 PDF로도 내보내기 (백그라운드)",
+    "bim.upload_generate_pdf_label": "프로젝트 시트를 PDF로도 내보내기 (백그라운드)",
     "bim.upload_model_name_label": "모델 이름",
     "bim.upload_model_name_placeholder": "예: 건물 A",
     "bim.upload_panel_subtitle": "IFC, RVT, CSV, Excel",
     "bim.upload_panel_title": "모델 업로드",
     "bim.upload_remove_file": "제거",
-    "bim.upload_rvt_note":
-      "참고: RVT 파일은 DDC cad2data가 필요합니다. IFC 사용을 고려하세요.",
+    "bim.upload_rvt_note": "참고: RVT 파일은 DDC cad2data가 필요합니다. IFC 사용을 고려하세요.",
     "bim.upload_simple_mode_toggle": "단순 모드로 전환",
     "bim.upload_size_hint": "Revit (.rvt), IFC (.ifc) · 최대 500MB",
     "bim.upload_success_desc": "모델을 성공적으로 업로드했습니다.",
@@ -3942,8 +3660,7 @@ const resource = {
     "reporting.invoices_month": "이달 청구서 기한",
     "reporting.invoices_week": "이번 주 청구서 기한",
     "reporting.no_boqs": "이 프로젝트에 BOQ가 없습니다",
-    "reporting.no_finance_data":
-      "이 프로젝트의 재무 데이터가 없습니다. 먼저 청구서와 예산을 만드세요.",
+    "reporting.no_finance_data": "이 프로젝트의 재무 데이터가 없습니다. 먼저 청구서와 예산을 만드세요.",
     "reporting.no_projects": "프로젝트를 찾을 수 없습니다",
     "reporting.no_safety_data": "이 프로젝트의 안전 데이터가 없습니다.",
     "reporting.observations": "관찰",
@@ -3969,8 +3686,7 @@ const resource = {
     "reporting.schedule_progress": "일정 진행률",
     "reporting.schedule_summary": "일정 요약",
     "reporting.select_project": "프로젝트",
-    "reporting.select_project_prompt":
-      "대시보드를 보려면 프로젝트를 선택하세요",
+    "reporting.select_project_prompt": "대시보드를 보려면 프로젝트를 선택하세요",
     "reporting.spi": "일정 SPI",
     "reporting.subtitle": "보고 대시보드",
     "reporting.today_activities": "전체 활동",
@@ -3985,8 +3701,7 @@ const resource = {
     "settings.tm_showing": "{{total}}개 중 {{count}}개 표시 중",
     "punch.stat_avg_close": "평균 완료 일수",
     "match_elements.title": "요소 매칭",
-    "match_elements.subtitle":
-      "BIM 요소 → CWICR 항목으로 매핑. BIM은 가동 중이며, DWG / PDF / 사진은 다음 단계에서 추가됩니다.",
+    "match_elements.subtitle": "BIM 요소 → CWICR 항목으로 매핑. BIM은 가동 중이며, DWG / PDF / 사진은 다음 단계에서 추가됩니다.",
     "match_elements.select_project": "프로젝트 선택…",
     "match_elements.source.bim_live": "BIM (가동 중)",
     "match_elements.library": "라이브러리",
@@ -3999,11 +3714,9 @@ const resource = {
     "match_elements.detail": "상세",
     "match_elements.no_match": "매치 없음…",
     "match_elements.loading_groups": "그룹 로딩 중…",
-    "match_elements.no_groups":
-      "아직 그룹이 없습니다 — BIM 모델을 가져와 이 프로젝트를 채우세요.",
+    "match_elements.no_groups": "아직 그룹이 없습니다 — BIM 모델을 가져와 이 프로젝트를 채우세요.",
     "match_elements.loading_detail": "상세 로딩 중…",
-    "match_elements.footer":
-      "단계 A.10–A.12 — 다중 선택 일괄 작업, 임계값 기반 확인, 매치 없음 흐름, 테넌트 템플릿 라이브러리가 가동 중입니다. 드래그 칩과 3D 하이라이트는 단계 B에 도착합니다.",
+    "match_elements.footer": "단계 A.10–A.12 — 다중 선택 일괄 작업, 임계값 기반 확인, 매치 없음 흐름, 테넌트 템플릿 라이브러리가 가동 중입니다. 드래그 칩과 3D 하이라이트는 단계 B에 도착합니다.",
     "match_elements.aria.select_all": "보이는 모든 그룹 선택",
     "match_elements.aria.select_group": "{{key}} 선택",
     "match_elements.col.group": "그룹",
@@ -4030,44 +3743,36 @@ const resource = {
     "match_elements.action.confirm_selected": "{{count}} 확인 ≥ {{thr}}",
     "match_elements.action.confirm_all": "모두 확인 ≥ {{thr}}",
     "match_elements.action.skip_n": "{{count}} 건너뛰기 (미정)",
-    "match_elements.busy.run_selected":
-      "선택된 {{count}}에 대해 {{method}} 매처 실행 중…",
+    "match_elements.busy.run_selected": "선택된 {{count}}에 대해 {{method}} 매처 실행 중…",
     "match_elements.busy.run_all": "모든 그룹에 대해 {{method}} 매처 실행 중…",
-    "match_elements.busy.bulk_confirm_selected":
-      "선택된 {{count}} 일괄 확인 ≥ {{thr}}…",
+    "match_elements.busy.bulk_confirm_selected": "선택된 {{count}} 일괄 확인 ≥ {{thr}}…",
     "match_elements.busy.bulk_confirm_all": "매치 일괄 확인 ≥ {{thr}}…",
     "match_elements.busy.mark_tbd": "{{count}} 그룹을 미정으로 표시 중…",
     "match_elements.alert.confirmed": "{{count}} 그룹 확인됨",
     "match_elements.alert.marked_tbd": "{{count}} 그룹이 미정으로 표시됨",
     "match_elements.detail.elements_count": "{{count}} 요소",
-    "match_elements.detail.no_matchers_run":
-      "이 그룹에 대해 아직 매처가 실행되지 않았습니다.",
+    "match_elements.detail.no_matchers_run": "이 그룹에 대해 아직 매처가 실행되지 않았습니다.",
     "match_elements.detail.use_action_bar": "위의 작업 바 버튼을 사용하세요.",
     "match_elements.detail.col.code": "코드",
     "match_elements.detail.col.description": "설명",
     "match_elements.detail.col.unit_rate": "단위 · 단가",
     "match_elements.detail.col.conf": "신뢰도",
     "match_elements.detail.confirm": "확인",
-    "match_elements.detail.element_ids_count":
-      "{{count}} 요소 ID. 3D 하이라이트는 단계 A.12에 도착합니다.",
+    "match_elements.detail.element_ids_count": "{{count}} 요소 ID. 3D 하이라이트는 단계 A.12에 도착합니다.",
     "match_elements.detail.and_more": "…및 {{count}} 더",
     "match_elements.detail.building_preview": "미리보기 구성 중…",
     "match_elements.detail.auto_loaded_resources": "자동 로드된 리소스:",
-    "match_elements.detail.confirm_first":
-      "BOQ 미리보기를 보려면 먼저 매치를 확인하세요.",
+    "match_elements.detail.confirm_first": "BOQ 미리보기를 보려면 먼저 매치를 확인하세요.",
     "match_elements.tab.methods": "매치 후보",
     "match_elements.tab.elements": "요소 ({{count}})",
     "match_elements.tab.apply": "적용 미리보기",
     "match_elements.no_match.heading": "매치 없음 — 작업 선택",
     "match_elements.no_match.custom.title": "사용자 지정 항목 만들기",
-    "match_elements.no_match.custom.sub":
-      "설명, 단위, 단가가 포함된 프로젝트 전용 항목을 추가하세요.",
+    "match_elements.no_match.custom.sub": "설명, 단위, 단가가 포함된 프로젝트 전용 항목을 추가하세요.",
     "match_elements.no_match.rfq.title": "RFQ로 보내기",
-    "match_elements.no_match.rfq.sub":
-      "입찰용으로 표시 — 하청업체에 견적 요청.",
+    "match_elements.no_match.rfq.sub": "입찰용으로 표시 — 하청업체에 견적 요청.",
     "match_elements.no_match.tbd.title": "미정으로 표시",
-    "match_elements.no_match.tbd.sub":
-      "그룹을 보류; 나중에 재검토. 해결될 때까지 BOQ 합계에서 제외됩니다.",
+    "match_elements.no_match.tbd.sub": "그룹을 보류; 나중에 재검토. 해결될 때까지 BOQ 합계에서 제외됩니다.",
     "match_elements.no_match.placeholder.description": "항목 설명",
     "match_elements.no_match.placeholder.unit": "단위",
     "match_elements.no_match.placeholder.rate": "단가",
@@ -4077,45 +3782,37 @@ const resource = {
     "match_elements.templates.count": "{{count}} 시그니처",
     "match_elements.templates.loading": "라이브러리 로딩 중…",
     "match_elements.templates.empty": "아직 저장된 템플릿이 없습니다.",
-    "match_elements.templates.empty_hint":
-      "'라이브러리에 저장'이 활성화된 확인된 매치가 여기에 표시되며 향후 프로젝트로 전파됩니다.",
+    "match_elements.templates.empty_hint": "'라이브러리에 저장'이 활성화된 확인된 매치가 여기에 표시되며 향후 프로젝트로 전파됩니다.",
     "match_elements.templates.unnamed": "(이름 없음)",
     "match_elements.templates.sig": "시그: {{prefix}}…",
     "match_elements.templates.used": "사용됨",
     "match_elements.templates.last": "마지막 사용 {{date}}",
-    "match_elements.templates.remove_confirm":
-      "이 템플릿을 라이브러리에서 제거하시겠습니까?",
+    "match_elements.templates.remove_confirm": "이 템플릿을 라이브러리에서 제거하시겠습니까?",
     "match_elements.templates.remove_title": "라이브러리에서 제거",
-    "match_elements.templates.footer":
-      "템플릿은 테넌트 범위입니다. 확인된 시그니처는 향후 프로젝트에서 매치를 자동 제안합니다.",
+    "match_elements.templates.footer": "템플릿은 테넌트 범위입니다. 확인된 시그니처는 향후 프로젝트에서 매치를 자동 제안합니다.",
     "match_elements.no_project_title": "활성 프로젝트가 선택되지 않았습니다.",
     "match_elements.no_project_hint": "헤더의 프로젝트 선택기를 열거나 방문",
     "match_elements.active_project": "활성 프로젝트",
     "match_elements.loading_sessions": "세션 로딩 중…",
-    "match_elements.no_prior_sessions":
-      "이 프로젝트에 대한 이전 매칭 세션이 없습니다.",
+    "match_elements.no_prior_sessions": "이 프로젝트에 대한 이전 매칭 세션이 없습니다.",
     "match_elements.session_default_name": "세션 {{id}}",
     "match_elements.new_session": "새 세션",
     "match_elements.new_text.button": "텍스트에서",
     "match_elements.new_text.button_title": "설명 붙여넣기 — 한 줄에 하나",
     "match_elements.new_text.title": "새 세션 — 설명 붙여넣기",
-    "match_elements.new_text.hint":
-      "한 줄에 한 항목. 각 줄이 그룹이 되며, 시맨틱 검색이 가장 가까운 CWICR 단가를 찾습니다. 어떤 언어든 가능 — 다국어 인코더가 언어 간 쿼리를 처리합니다.",
+    "match_elements.new_text.hint": "한 줄에 한 항목. 각 줄이 그룹이 되며, 시맨틱 검색이 가장 가까운 CWICR 단가를 찾습니다. 어떤 언어든 가능 — 다국어 인코더가 언어 간 쿼리를 처리합니다.",
     "match_elements.new_text.name_label": "세션 이름(선택)",
     "match_elements.new_text.name_placeholder": "예: 3분기 빠른 견적",
     "match_elements.new_text.lines_label": "설명(한 줄에 하나)",
-    "match_elements.new_text.lines_placeholder":
-      "Stahlbetonwand C30/37, d=240mm\nленточный фундамент 800x600\nconcrete slab 200mm",
+    "match_elements.new_text.lines_placeholder": "Stahlbetonwand C30/37, d=240mm\nленточный фундамент 800x600\nconcrete slab 200mm",
     "match_elements.new_text.create": "세션 만들기",
     "match_elements.new_excel.button": "Excel 내역서에서",
     "match_elements.new_excel.button_title": ".xlsx 내역서 업로드",
     "match_elements.new_excel.title": "Excel 내역서에서 새 세션",
-    "match_elements.new_excel.hint":
-      "최소 「설명」 열이 있는 .xlsx 파일 업로드(또는 지역화된 동등 이름 — Description, Beschreibung, Описание, Descripción, 描述 등). 선택 열: 수량, 단위, 코드, 카테고리. 소수점 쉼표 수량 인식됨.",
+    "match_elements.new_excel.hint": "최소 「설명」 열이 있는 .xlsx 파일 업로드(또는 지역화된 동등 이름 — Description, Beschreibung, Описание, Descripción, 描述 등). 선택 열: 수량, 단위, 코드, 카테고리. 소수점 쉼표 수량 인식됨.",
     "match_elements.new_excel.name_label": "세션 이름(선택)",
     "match_elements.new_excel.name_placeholder": "예: 입찰 내역서 rev 3",
-    "match_elements.new_excel.drop":
-      ".xlsx를 여기에 끌어다 놓거나 클릭하여 찾아보기",
+    "match_elements.new_excel.drop": ".xlsx를 여기에 끌어다 놓거나 클릭하여 찾아보기",
     "match_elements.new_excel.format_hint": ".xlsx만 · 다국어 헤더 지원",
     "match_elements.new_excel.create": "업로드하고 세션 만들기",
     "match_elements.legend_label": "신뢰도",
@@ -4124,21 +3821,16 @@ const resource = {
     "match_elements.legend_low": "낮음",
     "match_elements.col.suggested": "추천 비용",
     "match_elements.subtractive_hint": "차감 / 비청구",
-    "match_elements.detail.opening_warning":
-      "호스트에 개구부가 있지만 gross == net (IFC 내보내기 버그)",
-    "match_elements.detail.candidate_no_id":
-      "후보에 DB ID가 없습니다 — 확정할 수 없습니다",
+    "match_elements.detail.opening_warning": "호스트에 개구부가 있지만 gross == net (IFC 내보내기 버그)",
+    "match_elements.detail.candidate_no_id": "후보에 DB ID가 없습니다 — 확정할 수 없습니다",
     "match_elements.detail.apply_total": "합계",
     "match_elements.auto_confirm_threshold": "자동 확정 임계값",
-    "match_elements.auto_confirm_help":
-      "이 점수 이상의 추천은 자동 확정됩니다.",
+    "match_elements.auto_confirm_help": "이 점수 이상의 추천은 자동 확정됩니다.",
     "match_elements.use_net": "순 수량 사용 (개구부 차감)",
-    "match_elements.use_net_help":
-      "끄면 = 총량. 기본은 호스트 수량에서 IfcOpeningElement / IfcRelVoidsElement 차감.",
+    "match_elements.use_net_help": "끄면 = 총량. 기본은 호스트 수량에서 IfcOpeningElement / IfcRelVoidsElement 차감.",
     "match_elements.trade_filter": "공종으로 필터",
     "match_elements.stage_label": "시공 단계",
-    "match_elements.stage_help":
-      "일치 항목을 단일 OmniClass 단계에 고정합니다. 모든 단계를 검색하려면 비워 두세요.",
+    "match_elements.stage_help": "일치 항목을 단일 OmniClass 단계에 고정합니다. 모든 단계를 검색하려면 비워 두세요.",
     "match_elements.stage_any": "모든 단계",
     "match_elements.stage.02_Demolition": "철거",
     "match_elements.stage.03_Earthwork": "토공",
@@ -4161,8 +3853,7 @@ const resource = {
     "match_elements.action.apply": "BOQ에 적용 ({{n}})",
     "match_elements.action.apply_title": "확정된 매칭을 프로젝트 BOQ에 기록",
     "match_elements.busy.applying": "확정된 그룹을 BOQ에 적용 중…",
-    "match_elements.alert.applied":
-      "{{n}}개의 BOQ 항목 생성 · 합계 {{total}} {{ccy}}",
+    "match_elements.alert.applied": "{{n}}개의 BOQ 항목 생성 · 합계 {{total}} {{ccy}}",
     "match_elements.visible_groups": "{{n}}개 표시",
     "match_elements.selected_count": "{{n}}개 선택",
     "match_elements.trade.architectural": "건축",
@@ -4177,12 +3868,10 @@ const resource = {
     "nav.add_module": "모듈 추가",
     "nav.add_module_hint": "직접 만들기 · 개발자 가이드",
     "nav.request_custom_module": "맞춤형 모듈 요청",
-    "nav.request_custom_module_hint":
-      "찾는 것이 없나요? 필요한 것을 알려주세요",
+    "nav.request_custom_module_hint": "찾는 것이 없나요? 필요한 것을 알려주세요",
     "modules.dev_guide": "모듈 빌드하기 — 개발자 가이드",
     "boq.accept": "수락",
-    "boq.accept_all_anomaly_suggestions":
-      "Accept All Suggested Rates ({{count}})",
+    "boq.accept_all_anomaly_suggestions": "Accept All Suggested Rates ({{count}})",
     "boq.add_all_failed": "Could not add any of the {{count}} positions",
     "boq.add_as_resources": "Add {{count}} as resources",
     "boq.add_column_btn": "열 추가",
@@ -4204,68 +3893,54 @@ const resource = {
     "boq.ai_applied": "AI Suggestion Applied",
     "boq.ai_apply_description": "Apply Enhanced Description",
     "boq.ai_apply_rate": "Apply Escalated Rate",
-    "boq.ai_assistant_tooltip":
-      "Describe what you need in plain text — AI creates BOQ positions with realistic pricing.",
+    "boq.ai_assistant_tooltip": "Describe what you need in plain text — AI creates BOQ positions with realistic pricing.",
     "boq.ai_chat_short": "AI Chat",
     "boq.ai_classification": "AI Classification",
     "boq.ai_classify_error": "Classification failed",
     "boq.ai_connected_via": "Connected via {{provider}}",
-    "boq.ai_enhance_subtitle":
-      "Add technical specs, standards, material grades",
+    "boq.ai_enhance_subtitle": "Add technical specs, standards, material grades",
     "boq.ai_enhance_title": "Enhance Description",
-    "boq.ai_error_generic":
-      "Could not connect to AI service. Check that the embedding model is available.",
+    "boq.ai_error_generic": "Could not connect to AI service. Check that the embedding model is available.",
     "boq.ai_escalate_subtitle": "Adjust rate for inflation and market changes",
     "boq.ai_escalate_title": "Escalate Rate",
     "boq.ai_escalated": "Escalated",
     "boq.ai_factor_labor": "Labor",
     "boq.ai_factor_material": "Material",
     "boq.ai_factor_region": "Regional",
-    "boq.ai_generated_summary":
-      "Generated {{count}} positions totalling {{total}} {{currency}}.‌⁠‍",
+    "boq.ai_generated_summary": "Generated {{count}} positions totalling {{total}} {{currency}}.‌⁠‍",
     "boq.ai_global_actions": "BOQ-level Actions",
     "boq.ai_missing_items": "Missing Items",
     "boq.ai_no_classification": "No Classification Found",
-    "boq.ai_no_classification_msg":
-      "Could not determine classification from cost database.",
-    "boq.ai_no_prereqs":
-      "No missing items found — BOQ looks complete for this position.",
+    "boq.ai_no_classification_msg": "Could not determine classification from cost database.",
+    "boq.ai_no_prereqs": "No missing items found — BOQ looks complete for this position.",
     "boq.ai_no_rate": "No Rate Found",
     "boq.ai_no_rate_msg": "No similar items found in the cost database.",
-    "boq.ai_no_selection":
-      "Select a position in the grid for per-position AI actions‌⁠‍",
+    "boq.ai_no_selection": "Select a position in the grid for per-position AI actions‌⁠‍",
     "boq.ai_not_configured": "AI not configured‌⁠‍",
-    "boq.ai_not_configured_desc":
-      "Add your API key in Settings to use AI Smart Actions.‌⁠‍",
+    "boq.ai_not_configured_desc": "Add your API key in Settings to use AI Smart Actions.‌⁠‍",
     "boq.ai_original": "Original",
     "boq.ai_position_actions": "Position Actions",
-    "boq.ai_prereqs_subtitle":
-      "Find missing prerequisites, companions, successors",
+    "boq.ai_prereqs_subtitle": "Find missing prerequisites, companions, successors",
     "boq.ai_prereqs_title": "Suggest Related Items",
     "boq.ai_rate_error": "Rate suggestion failed",
     "boq.ai_rate_suggestion": "AI Rate Suggestion",
     "boq.ai_scope_score": "Completeness Score",
-    "boq.ai_scope_subtitle":
-      "Find missing trades, work packages, critical items",
+    "boq.ai_scope_subtitle": "Find missing trades, work packages, critical items",
     "boq.ai_scope_title": "Check Scope Completeness",
     "boq.ai_selected_position": "Selected Position‌⁠‍",
-    "boq.ai_smart_footer":
-      "Powered by your AI provider (Settings > AI). Results are suggestions — always review.",
+    "boq.ai_smart_footer": "Powered by your AI provider (Settings > AI). Results are suggestions — always review.",
     "boq.ai_smart_panel": "AI Smart Actions‌⁠‍",
-    "boq.ai_smart_tooltip":
-      "Enhance descriptions, find missing items, check scope completeness, escalate rates to current prices.",
+    "boq.ai_smart_tooltip": "Enhance descriptions, find missing items, check scope completeness, escalate rates to current prices.",
     "boq.ai_specs": "Specifications",
     "boq.all_anomalies_resolved": "All {{count}} suggested rates applied",
     "boq.all_rates_normal": "All rates are within normal market range.",
     "boq.anomalies_badge": "Anomalies ({{count}})",
-    "boq.anomalies_count":
-      "{{count}} anomalies detected in {{total}} positions",
+    "boq.anomalies_count": "{{count}} anomalies detected in {{total}} positions",
     "boq.anomalies_found": "Pricing Anomalies Found",
     "boq.anomaly_cancelled": "Price check cancelled",
     "boq.anomaly_check_error": "Anomaly check failed",
     "boq.anomaly_rate_applied": "Suggested Rate Applied",
-    "boq.anomaly_tip":
-      "Compares each unit rate against median market rates from the cost database. Flags overpriced and underpriced positions.",
+    "boq.anomaly_tip": "Compares each unit rate against median market rates from the cost database. Flags overpriced and underpriced positions.",
     "boq.applied": "Applied",
     "boq.apply_all_suggestions": "Apply All‌⁠‍",
     "boq.apply_defaults_failed": "Failed to apply template",
@@ -4279,27 +3954,22 @@ const resource = {
     "boq.autocomplete_tooltip_rate_per_unit": "Rate per unit‌⁠‍",
     "boq.autocomplete_tooltip_tab_to_insert": "Tab or Enter to insert‌⁠‍",
     "boq.autocomplete_tooltip_unit": "/",
-    "boq.autocomplete_tooltip_variants_available":
-      "${variantCount} variants available",
+    "boq.autocomplete_tooltip_variants_available": "${variantCount} variants available",
     "boq.batch_actions": "Batch actions‌⁠‍",
     "boq.batch_change_unit": "Change unit‌⁠‍",
     "boq.batch_clear_selection": "Clear selection",
     "boq.batch_delete": "Delete selected‌⁠‍",
     "boq.batch_delete_confirm": "Delete {{count}} positions",
-    "boq.batch_delete_confirm_message":
-      "Are you sure you want to delete {{count}} selected positions? This action cannot be undone.",
+    "boq.batch_delete_confirm_message": "Are you sure you want to delete {{count}} selected positions? This action cannot be undone.",
     "boq.batch_delete_confirm_title": "Delete positions",
     "boq.batch_deleted": "{{count}} positions deleted",
-    "boq.batch_unit_changed":
-      "Unit changed to {{unit}} for {{count}} positions",
+    "boq.batch_unit_changed": "Unit changed to {{unit}} for {{count}} positions",
     "boq.bim_agg_distinct_label": "{{n}} values",
-    "boq.bim_agg_distinct_title":
-      "Per-element value — summing is meaningless, so each unique value is listed. Click one to apply it.",
+    "boq.bim_agg_distinct_title": "Per-element value — summing is meaningless, so each unique value is listed. Click one to apply it.",
     "boq.bim_agg_sum_title": "Summed across all linked elements",
     "boq.bim_collapse_sums": "Show only headline quantities",
     "boq.bim_expand_sums": "Show all numeric values from BIM",
-    "boq.bim_link_tooltip":
-      "{{count}} BIM element(s) linked — click to preview",
+    "boq.bim_link_tooltip": "{{count}} BIM element(s) linked — click to preview",
     "boq.bim_properties": "Properties",
     "boq.bim_props_show_all_title": "Include every numeric property from BIM",
     "boq.bim_props_show_basic_title": "Hide non-quantity properties",
@@ -4326,22 +3996,19 @@ const resource = {
     "boq.column_calc_invalid_formula": "Formula has a syntax error",
     "boq.column_calc_needs_formula": "Calculated column needs a formula",
     "boq.column_decimals": "Decimals",
-    "boq.column_delete_confirm":
-      'Remove the "{{name}}" column? Existing values in positions are preserved but no longer shown.',
+    "boq.column_delete_confirm": "Remove the \"{{name}}\" column? Existing values in positions are preserved but no longer shown.",
     "boq.column_delete_confirm_title": "Remove column?",
     "boq.column_delete_failed": "Could not remove column‌⁠‍",
     "boq.column_formula": "Formula",
     "boq.column_name": "Column name",
-    "boq.column_name_duplicate": 'A column named "{{name}}" already exists',
+    "boq.column_name_duplicate": "A column named \"{{name}}\" already exists",
     "boq.column_name_invalid": "Column name is invalid",
-    "boq.column_name_invalid_hint":
-      "Use letters (any script), numbers and spaces. Must start with a letter.",
+    "boq.column_name_invalid_hint": "Use letters (any script), numbers and spaces. Must start with a letter.",
     "boq.column_name_placeholder": "e.g. Supplier, Notes, PO Number",
-    "boq.column_name_reserved": '"{{name}}" is a reserved column name',
+    "boq.column_name_reserved": "\"{{name}}\" is a reserved column name",
     "boq.column_options": "Options (comma or newline separated)",
     "boq.column_removed": "Column removed‌⁠‍",
-    "boq.column_select_needs_options":
-      "Select column needs at least one option",
+    "boq.column_select_needs_options": "Select column needs at least one option",
     "boq.column_test_formula": "Test",
     "boq.column_test_result": "Result:",
     "boq.column_type": "유형",
@@ -4361,17 +4028,13 @@ const resource = {
     "boq.cost_finder_components": "{{count}} components",
     "boq.cost_finder_error": "Search failed. Check vector database.",
     "boq.cost_finder_for_position": "For: {{description}}",
-    "boq.cost_finder_no_query":
-      "Enter a description to search the cost database",
+    "boq.cost_finder_no_query": "Enter a description to search the cost database",
     "boq.cost_finder_no_results": "No matching items found",
     "boq.cost_finder_results_count": "{{count}} results ({{ms}}ms)",
-    "boq.cost_finder_search_placeholder":
-      "Search cost items by description...‌⁠‍",
+    "boq.cost_finder_search_placeholder": "Search cost items by description...‌⁠‍",
     "boq.cost_finder_title": "AI Cost Finder‌⁠‍",
-    "boq.cost_finder_tooltip":
-      "Search 55,000+ cost items by description. Find materials, labor, and equipment rates from regional databases.",
-    "boq.cost_risk_error":
-      "Failed to load cost risk analysis. Please try again.",
+    "boq.cost_finder_tooltip": "Search 55,000+ cost items by description. Find materials, labor, and equipment rates from regional databases.",
+    "boq.cost_risk_error": "Failed to load cost risk analysis. Please try again.",
     "boq.create_budget": "Create Budget",
     "boq.create_failed": "Failed to create BOQ",
     "boq.create_revision": "Create Revision",
@@ -4381,10 +4044,8 @@ const resource = {
     "boq.currency_group_world": "World currencies",
     "boq.current": "Current‌⁠‍",
     "boq.custom_columns": "Custom Columns",
-    "boq.custom_columns_hint":
-      "Custom columns appear in the BOQ grid before the actions column. Values are stored per position and exported with the BOQ. Removing a column hides it but preserves the underlying data.",
-    "boq.custom_columns_subtitle":
-      "Add your own fields — supplier, notes, procurement info…",
+    "boq.custom_columns_hint": "Custom columns appear in the BOQ grid before the actions column. Values are stored per position and exported with the BOQ. Removing a column hides it but preserves the underlying data.",
+    "boq.custom_columns_subtitle": "Add your own fields — supplier, notes, procurement info…",
     "boq.delete_section": "Delete section with all positions",
     "boq.display_base": "Base",
     "boq.display_currency_aria": "Choose currency for grand total display",
@@ -4393,8 +4054,7 @@ const resource = {
     "boq.duplicate_position": "Duplicate Position",
     "boq.dwg_link_tooltip_v2": "DWG drawing — click for details & navigation",
     "boq.element_count": "{{count}} element(s)",
-    "boq.empty_position_quality_hint":
-      "Empty position lowers Quality Score until quantity & rate are filled",
+    "boq.empty_position_quality_hint": "Empty position lowers Quality Score until quantity & rate are filled",
     "boq.errors": "errors",
     "boq.estimate_type_budget": "예산",
     "boq.estimate_type_conceptual": "Conceptual",
@@ -4407,35 +4067,28 @@ const resource = {
     "boq.expand_resources": "Expand Resources",
     "boq.expand_section": "Expand Section",
     "boq.export_anyway": "Export Anyway",
-    "boq.export_quality_warning_desc":
-      "Your estimate has a quality score below 60%. Missing quantities, zero prices, or incomplete descriptions may affect the exported document. Consider reviewing the estimate before exporting.",
+    "boq.export_quality_warning_desc": "Your estimate has a quality score below 60%. Missing quantities, zero prices, or incomplete descriptions may affect the exported document. Consider reviewing the estimate before exporting.",
     "boq.filled": "filled",
     "boq.filtered_from": "filtered from {{total}}",
     "boq.fx_rate_global_badge": "GLOBAL",
     "boq.fx_rate_input": "FX rate {{from}}→{{to}}",
     "boq.fx_rate_label": "FX rate",
     "boq.fx_rate_project_badge": "PROJECT",
-    "boq.gaeb_export_desc":
-      "This will export your BOQ as GAEB XML 3.3 format, compatible with standard tender workflows.",
+    "boq.gaeb_export_desc": "This will export your BOQ as GAEB XML 3.3 format, compatible with standard tender workflows.",
     "boq.gaeb_export_title": "Export GAEB XML (X83)",
     "boq.gaeb_grand_total": "Grand Total",
     "boq.gaeb_positions": "Positions",
-    "boq.grand_total_conversion_tooltip_v2":
-      'Whole BOQ rendered in {{disp}} at rate {{rate}} ({{base}} → {{disp}}). View-only — server keeps base values. Switch to "Base" to edit prices.',
+    "boq.grand_total_conversion_tooltip_v2": "Whole BOQ rendered in {{disp}} at rate {{rate}} ({{base}} → {{disp}}). View-only — server keeps base values. Switch to \"Base\" to edit prices.",
     "boq.grid_settings": "Grid Settings",
     "boq.ignore": "Ignore",
-    "boq.import_catalog_hint":
-      "Import a resource catalog from Settings or the Catalog page",
+    "boq.import_catalog_hint": "Import a resource catalog from Settings or the Catalog page",
     "boq.import_database_cta": "Import a database",
     "boq.import_file": "Import File",
     "boq.import_rows": "Import {{count}} rows",
     "boq.import_started": "Importing {{name}}…",
-    "boq.import_started_gaeb_hint":
-      "Parsing GAEB XML — namespace-agnostic, X81/X83/X84 supported.",
-    "boq.import_started_hint":
-      "Large files (PDF / CAD / 1000+ rows) may take up to 60 seconds.",
-    "boq.import_timeout":
-      "Server did not respond within 90 seconds. The file may be too large — try splitting it.",
+    "boq.import_started_gaeb_hint": "Parsing GAEB XML — namespace-agnostic, X81/X83/X84 supported.",
+    "boq.import_started_hint": "Large files (PDF / CAD / 1000+ rows) may take up to 60 seconds.",
+    "boq.import_timeout": "Server did not respond within 90 seconds. The file may be too large — try splitting it.",
     "boq.import_tooltip": "Import GAEB, Excel, or CSV into this BOQ",
     "boq.inline_edit_number": "Edit value",
     "boq.inline_edit_text": "Edit text",
@@ -4446,16 +4099,13 @@ const resource = {
     "boq.link_finance": "View Budget",
     "boq.link_validation": "Run Validation",
     "boq.linked_geometry": "Linked Geometry",
-    "boq.list_subtitle_count":
-      "{{boqCount}} estimates across {{projectCount}} projects",
+    "boq.list_subtitle_count": "{{boqCount}} estimates across {{projectCount}} projects",
     "boq.loading_element_data": "Loading element data...",
     "boq.loading_full_properties": "Loading full properties…",
     "boq.lock": "Lock Estimate",
-    "boq.lock_confirm":
-      "Lock this estimate?nnLocked estimates cannot be edited. Unlocking requires admin privileges.",
+    "boq.lock_confirm": "Lock this estimate?nnLocked estimates cannot be edited. Unlocking requires admin privileges.",
     "boq.lock_failed": "Lock failed",
-    "boq.lock_tooltip":
-      "Lock prevents edits. Create a revision to make changes to a locked estimate.",
+    "boq.lock_tooltip": "Lock prevents edits. Create a revision to make changes to a locked estimate.",
     "boq.locked": "LOCKED",
     "boq.locked_next": "Estimate locked. Create project budget?",
     "boq.locked_success": "Estimate locked",
@@ -4466,8 +4116,7 @@ const resource = {
     "boq.markup_delete_failed": "Failed to delete markup‌⁠‍",
     "boq.markup_update_failed": "Failed to update markup‌⁠‍",
     "boq.mvp.apply_to_remaining": "Apply to remaining {{count}}",
-    "boq.mvp.apply_to_remaining_hint":
-      "Re-use these picks for all other multi-variant items in this batch",
+    "boq.mvp.apply_to_remaining_hint": "Re-use these picks for all other multi-variant items in this batch",
     "boq.mvp.subtitle": "{{count}} resource needs a choice‌⁠‍",
     "boq.mvp.toast_applied": "{{count}} variant chosen",
     "boq.mvp.toast_apply_to_remaining": "Applied picks to {{count}} more item",
@@ -4477,64 +4126,52 @@ const resource = {
     "boq.no_boqs_in_project": "No BOQs in this project.",
     "boq.no_catalog_results": "No resources match your search",
     "boq.no_changes": "No changes",
-    "boq.no_custom_columns":
-      "No custom columns yet. Pick a preset below or add your own.",
-    "boq.no_databases_help":
-      "There's no cost-rate database on this server, so search has nothing to show. Import a free CWICR pack — 30 regional databases are one click away.",
+    "boq.no_custom_columns": "No custom columns yet. Pick a preset below or add your own.",
+    "boq.no_databases_help": "There's no cost-rate database on this server, so search has nothing to show. Import a free CWICR pack — 30 regional databases are one click away.",
     "boq.no_databases_title": "No cost database installed yet",
     "boq.no_numeric_found": "No numeric values in this element",
     "boq.no_numeric_quantities": "No numeric quantities",
-    "boq.no_quantities_hint_button":
-      'No quantities — press "Show all" above to surface every BIM property',
+    "boq.no_quantities_hint_button": "No quantities — press \"Show all\" above to surface every BIM property",
     "boq.no_snapshots": "No snapshots yet",
     "boq.open_in_bim": "Open in BIM",
-    "boq.open_in_bim_title":
-      "Open in 3D viewer with the linked element pre-selected",
+    "boq.open_in_bim_title": "Open in 3D viewer with the linked element pre-selected",
     "boq.open_in_bim_viewer": "Open in BIM Viewer",
     "boq.options": "options",
     "boq.pagination_range": "{{from}}–{{to}} of {{total}} estimates",
     "boq.partial": "Partial",
     "boq.paste_columns": "Columns‌⁠‍",
     "boq.paste_detected": "{{count}} rows detected‌⁠‍",
-    "boq.paste_excel_hint":
-      "Copy rows from Excel or Google Sheets and paste below‌⁠‍",
+    "boq.paste_excel_hint": "Copy rows from Excel or Google Sheets and paste below‌⁠‍",
     "boq.paste_failed": "Could not paste — invalid data or read-only cells‌⁠‍",
     "boq.paste_from_excel": "Paste from Excel",
     "boq.paste_from_excel_short": "Paste",
     "boq.paste_import_count": "{{count}} positions added to BOQ",
     "boq.paste_import_failed": "Import failed",
     "boq.paste_import_success": "Imported successfully",
-    "boq.paste_no_data":
-      "No valid rows detected. Make sure data is tab-separated.",
-    "boq.paste_placeholder":
-      "Paste tab-separated data here...nnExample:nDescriptiontUnittQtytRatenConcrete foundationtm3t120t185.00nRebar B500Stkgt2400t1.45‌⁠‍",
+    "boq.paste_no_data": "No valid rows detected. Make sure data is tab-separated.",
+    "boq.paste_placeholder": "Paste tab-separated data here...nnExample:nDescriptiontUnittQtytRatenConcrete foundationtm3t120t185.00nRebar B500Stkgt2400t1.45‌⁠‍",
     "boq.paste_showing": "Showing first 50 of {{total}} rows",
     "boq.pdf_link_tooltip_v2": "PDF takeoff — click for details & navigation",
     "boq.per_unit": "per {{unit}}",
     "boq.pick_from_catalog": "Pick from Catalog‌⁠‍",
-    "boq.pick_from_catalog_desc":
-      "Search and add a resource from the catalog to this position‌⁠‍",
+    "boq.pick_from_catalog_desc": "Search and add a resource from the catalog to this position‌⁠‍",
     "boq.pick_qty_from_bim": "Pick quantity from BIM",
     "boq.pos": "Pos",
     "boq.position_deleted": "Position deleted",
     "boq.position_duplicated": "Position duplicated",
     "boq.position_restored": "Position restored",
     "boq.position_variant_v_label": "Expand resources",
-    "boq.position_variant_v_tooltip":
-      "This position carries a variant resource — click to expand the resource panel.",
+    "boq.position_variant_v_tooltip": "This position carries a variant resource — click to expand the resource panel.",
     "boq.positions_removed": "{{count}} pos removed",
     "boq.positions_reordered": "Positions reordered",
     "boq.positions_short": "pos.",
-    "boq.preset_already_applied":
-      "All columns from this preset already exist‌⁠‍",
-    "boq.preset_applied": '{{count}} columns added from "{{name}}" preset',
+    "boq.preset_already_applied": "All columns from this preset already exist‌⁠‍",
+    "boq.preset_applied": "{{count}} columns added from \"{{name}}\" preset",
     "boq.preset_partial": "Preset partially applied",
     "boq.preset_regional": "Regional standards",
     "boq.preset_universal": "Quick start with a preset",
-    "boq.preview_total_hint":
-      "Catalog-rate × quantity for the selection. Variant picks may adjust this.",
-    "boq.price_review_desc":
-      "Review each suggestion below. Accept to update the rate, or ignore to keep your current price.‌⁠‍",
+    "boq.preview_total_hint": "Catalog-rate × quantity for the selection. Variant picks may adjust this.",
+    "boq.price_review_desc": "Review each suggestion below. Accept to update the rate, or ignore to keep your current price.‌⁠‍",
     "boq.price_review_title": "Price Check Results‌⁠‍",
     "boq.quality_ai_menu": "Quality & AI",
     "boq.quality_ai_menu_tip": "All quality & AI tools",
@@ -4543,40 +4180,29 @@ const resource = {
     "boq.quantity_for_item": "Quantity for {{item}}",
     "boq.quantity_short": "Qty",
     "boq.rate_applied": "Rate Applied",
-    "boq.rate_from_resources":
-      "Rate is calculated from resources. Edit individual resources to change.‌⁠‍",
+    "boq.rate_from_resources": "Rate is calculated from resources. Edit individual resources to change.‌⁠‍",
     "boq.recalc_confirm_button": "Update Rates",
-    "boq.recalc_confirm_step1":
-      "1. Search cost database for matching items by description",
-    "boq.recalc_confirm_step2":
-      "2. Attach resource breakdowns (materials, labor, equipment)",
-    "boq.recalc_confirm_step3":
-      "3. Recalculate unit rates from resource components",
+    "boq.recalc_confirm_step1": "1. Search cost database for matching items by description",
+    "boq.recalc_confirm_step2": "2. Attach resource breakdowns (materials, labor, equipment)",
+    "boq.recalc_confirm_step3": "3. Recalculate unit rates from resource components",
     "boq.recalc_confirm_subtitle": "Match positions to cost database",
     "boq.recalc_confirm_title": "Update Unit Rates",
-    "boq.recalc_confirm_warning":
-      "Positions with manual rates that have no match in the cost database will not be changed.",
+    "boq.recalc_confirm_warning": "Positions with manual rates that have no match in the cost database will not be changed.",
     "boq.recalc_enriched": "{{count}} positions matched to cost database",
-    "boq.recalc_skipped":
-      "{{count}} positions without cost data (manual rates kept)",
+    "boq.recalc_skipped": "{{count}} positions without cost data (manual rates kept)",
     "boq.recalc_updated": "{{count}} unit rates recalculated from resources",
-    "boq.recalculate_all_manual":
-      "All positions use manual rates — add resources from cost database to enable automatic rate calculation.",
-    "boq.recalculate_failed_hint":
-      "Check that the backend is running and cost database is loaded.",
+    "boq.recalculate_all_manual": "All positions use manual rates — add resources from cost database to enable automatic rate calculation.",
+    "boq.recalculate_failed_hint": "Check that the backend is running and cost database is loaded.",
     "boq.recalculate_no_changes": "No changes needed",
-    "boq.recalculate_tip":
-      "Matches positions to cost database, attaches resource breakdowns (materials, labor, equipment), and recalculates unit rates from components.",
+    "boq.recalculate_tip": "Matches positions to cost database, attaches resource breakdowns (materials, labor, equipment), and recalculates unit rates from components.",
     "boq.recalculating": "Updating...",
     "boq.remove_resource": "Remove Resource",
     "boq.renumber": "Renumber Positions",
     "boq.renumber_apply": "Apply renumbering",
-    "boq.renumber_dialog_subtitle":
-      "Pick a numbering scheme. The current order is preserved — only ordinals are rewritten.‌⁠‍",
+    "boq.renumber_dialog_subtitle": "Pick a numbering scheme. The current order is preserved — only ordinals are rewritten.‌⁠‍",
     "boq.renumber_dialog_title": "Renumber positions‌⁠‍",
     "boq.renumber_done": "{{count}} positions renumbered",
-    "boq.renumber_done_hint":
-      "Order preserved — only ordinals were rewritten. Undo with Ctrl+Z is not supported for renumber.",
+    "boq.renumber_done_hint": "Order preserved — only ordinals were rewritten. Undo with Ctrl+Z is not supported for renumber.",
     "boq.renumber_failed": "Renumber failed",
     "boq.renumber_no_preview": "No positions to preview yet.",
     "boq.renumber_pad": "Zero-pad section numbers‌⁠‍",
@@ -4584,19 +4210,14 @@ const resource = {
     "boq.renumber_pad_on": "Sections will be 01, 02, 03 (two-digit padded)‌⁠‍",
     "boq.renumber_preview": "Preview (first 5 positions)",
     "boq.renumber_scheme_dotted": "Short decimal",
-    "boq.renumber_scheme_dotted_desc":
-      "Short-form decimal numbering common in NRM-style measurement.",
+    "boq.renumber_scheme_dotted_desc": "Short-form decimal numbering common in NRM-style measurement.",
     "boq.renumber_scheme_gap10": "Gap of 10",
-    "boq.renumber_scheme_gap10_desc":
-      "Leaves room to insert positions like 01.15 between 01.10 and 01.20 later. Standard German tender output.",
+    "boq.renumber_scheme_gap10_desc": "Leaves room to insert positions like 01.15 between 01.10 and 01.20 later. Standard German tender output.",
     "boq.renumber_scheme_gap100": "Gap of 100",
-    "boq.renumber_scheme_gap100_desc":
-      "Even more headroom for very large BOQs that may grow significantly post-tender.",
+    "boq.renumber_scheme_gap100_desc": "Even more headroom for very large BOQs that may grow significantly post-tender.",
     "boq.renumber_scheme_sequential": "Sequential",
-    "boq.renumber_scheme_sequential_desc":
-      "Compact, traditional numbering. Best for fixed-scope BOQs that won't get extra positions later.",
-    "boq.renumber_warning":
-      "This overwrites any manually edited position numbers. The current display order is preserved — only ordinals change.",
+    "boq.renumber_scheme_sequential_desc": "Compact, traditional numbering. Best for fixed-scope BOQs that won't get extra positions later.",
+    "boq.renumber_warning": "This overwrites any manually edited position numbers. The current display order is preserved — only ordinals change.",
     "boq.renumbering": "Renumbering...",
     "boq.reorder_failed": "Failed to reorder positions",
     "boq.resource_added": "Resource added",
@@ -4604,41 +4225,28 @@ const resource = {
     "boq.resource_catalog_code": "Catalogue code: {{code}}",
     "boq.resource_currency": "통화",
     "boq.resource_currency_add_custom": "Add custom: {{code}}",
-    "boq.resource_currency_custom":
-      "Custom currency: {{code}} (not in project FX or ISO 4217 list)",
-    "boq.resource_currency_hint":
-      "Currency for this resource. Defaults to project base currency.",
-    "boq.resource_currency_no_match":
-      "No matches — type at least 2 letters to add a custom code.",
+    "boq.resource_currency_custom": "Custom currency: {{code}} (not in project FX or ISO 4217 list)",
+    "boq.resource_currency_hint": "Currency for this resource. Defaults to project base currency.",
+    "boq.resource_currency_no_match": "No matches — type at least 2 letters to add a custom code.",
     "boq.resource_currency_pick": "Currency — {{symbol}} {{code}}",
     "boq.resource_currency_search": "Type or search (e.g. EUR, MYC)",
     "boq.resource_customised": "Customised resource — no catalogue code",
-    "boq.resource_is_variant_badge":
-      "Variant resource — multiple price options available",
+    "boq.resource_is_variant_badge": "Variant resource — multiple price options available",
     "boq.resource_name": "이름",
     "boq.resource_name_placeholder": "e.g. Concrete C30/37",
-    "boq.resource_no_fx_rate":
-      "No FX rate configured for {{code}} — total shown in {{code}}",
-    "boq.resource_no_fx_rate_click":
-      "No FX rate configured for {{code}} — click to set one in Project Settings",
+    "boq.resource_no_fx_rate": "No FX rate configured for {{code}} — total shown in {{code}}",
+    "boq.resource_no_fx_rate_click": "No FX rate configured for {{code}} — click to set one in Project Settings",
     "boq.resource_no_fx_short": "set FX",
-    "boq.resource_total_in_base":
-      "{{foreign}} ≈ {{base}} (1 {{code}} = {{rate}} {{baseCode}})",
+    "boq.resource_total_in_base": "{{foreign}} ≈ {{base}} (1 {{code}} = {{rate}} {{baseCode}})",
     "boq.resource_type": "유형",
     "boq.resource_type_variant_chip": "Variant",
-    "boq.resource_type_variant_tooltip":
-      "Variant resource — pick from {{base}} catalog. Click to reclassify resource type.",
-    "boq.resource_variant_bar_tooltip_default":
-      "Auto-default ({{strategy}}){{captured}} — click pill to refine.",
-    "boq.resource_variant_bar_tooltip_picked":
-      "Explicit variant: {{label}}{{captured}}",
+    "boq.resource_type_variant_tooltip": "Variant resource — pick from {{base}} catalog. Click to reclassify resource type.",
+    "boq.resource_variant_bar_tooltip_default": "Auto-default ({{strategy}}){{captured}} — click pill to refine.",
+    "boq.resource_variant_bar_tooltip_picked": "Explicit variant: {{label}}{{captured}}",
     "boq.resource_variant_pill": "▾ {{count}}",
-    "boq.resource_variant_pill_tooltip_default":
-      "Auto-applied with {{strategy}} rate. {{count}} options ({{range}}). Click to refine.",
-    "boq.resource_variant_pill_tooltip_picked":
-      "Variant: {{label}} @ {{price}} {{currency}}{{delta}}. Click to switch.",
-    "boq.resource_variant_pill_tooltip_unset":
-      "{{count}} priced variants available ({{range}}). Click to pick one.",
+    "boq.resource_variant_pill_tooltip_default": "Auto-applied with {{strategy}} rate. {{count}} options ({{range}}). Click to refine.",
+    "boq.resource_variant_pill_tooltip_picked": "Variant: {{label}} @ {{price}} {{currency}}{{delta}}. Click to switch.",
+    "boq.resource_variant_pill_tooltip_unset": "{{count}} priced variants available ({{range}}). Click to pick one.",
     "boq.resources_added": "Resources added to position",
     "boq.resources_total": "Resources total",
     "boq.restore": "Restore",
@@ -4646,25 +4254,19 @@ const resource = {
     "boq.restore_snapshot": "Restore this version",
     "boq.revision_created": "Revision created",
     "boq.revision_failed": "Create revision failed",
-    "boq.rs_abc_pill_tooltip":
-      "Class {{cls}} · {{pct}}% of project resource cost",
+    "boq.rs_abc_pill_tooltip": "Class {{cls}} · {{pct}}% of project resource cost",
     "boq.rs_col_abc": "ABC %",
-    "boq.rs_col_abc_tooltip":
-      "Pareto / ABC analysis — A items make up ~80% of cost, B ~15%, C ~5%. Click to highlight bucket boundaries.",
+    "boq.rs_col_abc_tooltip": "Pareto / ABC analysis — A items make up ~80% of cost, B ~15%, C ~5%. Click to highlight bucket boundaries.",
     "boq.rs_error": "Failed to load resource summary.",
-    "boq.rs_save_variant_to_catalog":
-      "Save as a regular article in your catalog",
+    "boq.rs_save_variant_to_catalog": "Save as a regular article in your catalog",
     "boq.rs_show_all": "Show all {{count}} resources",
     "boq.rs_show_less": "Show less",
     "boq.rs_variant_applied_to_n": "Applied to {{count}} position(s)‌⁠‍",
     "boq.rs_variant_pill_mixed": "Mixed · {{count}} options",
-    "boq.rs_variant_pill_mixed_tooltip":
-      "Different variants picked across positions. Click to choose one for all.",
+    "boq.rs_variant_pill_mixed_tooltip": "Different variants picked across positions. Click to choose one for all.",
     "boq.rs_variant_pill_options": "▾ {{count}} options",
-    "boq.rs_variant_pill_picked_tooltip":
-      "Variant: {{label}}. Click to switch (applies to all positions).",
-    "boq.rs_variant_pill_unset_tooltip":
-      "{{count}} priced variants available. Click to pick one for all positions.",
+    "boq.rs_variant_pill_picked_tooltip": "Variant: {{label}}. Click to switch (applies to all positions).",
+    "boq.rs_variant_pill_unset_tooltip": "{{count}} priced variants available. Click to pick one for all positions.",
     "boq.save_as_assembly": "Save as Assembly",
     "boq.save_as_assembly_failed": "Failed to create assembly",
     "boq.save_snapshot": "Save snapshot",
@@ -4673,10 +4275,8 @@ const resource = {
     "boq.saved_as_assembly": "Saved as Assembly",
     "boq.saved_to_catalog": "Saved to catalog",
     "boq.scope_of_work_label": "What work is included in this rate",
-    "boq.search_and_add_resources":
-      "Search cost items to add as resources to position",
-    "boq.search_catalog_resources":
-      "Search resources by name, code, or category...‌⁠‍",
+    "boq.search_and_add_resources": "Search cost items to add as resources to position",
+    "boq.search_catalog_resources": "Search resources by name, code, or category...‌⁠‍",
     "boq.section_add_failed": "Failed to add section",
     "boq.section_child_count": "{{count}} item",
     "boq.section_deleted": "Section deleted with {{count}} positions",
@@ -4684,8 +4284,7 @@ const resource = {
     "boq.section_optional": "Section (optional)",
     "boq.select_boq": "Select BOQ...",
     "boq.select_classification": "Classification...‌⁠‍",
-    "boq.sensitivity_error":
-      "Failed to load sensitivity analysis. Please try again.‌⁠‍",
+    "boq.sensitivity_error": "Failed to load sensitivity analysis. Please try again.‌⁠‍",
     "boq.set_as_quantity": "Set as qty",
     "boq.set_as_quantity_title": "Push this value into the BOQ quantity field",
     "boq.shortcut_ai_chat": "Toggle AI Chat",
@@ -4714,8 +4313,7 @@ const resource = {
     "boq.show_shortcuts": "Keyboard Shortcuts (F1)",
     "boq.snapshot_created": "Snapshot saved‌⁠‍",
     "boq.snapshot_failed": "Failed to save snapshot‌⁠‍",
-    "boq.snapshot_hint":
-      "Type a label above and click Save to create your first snapshot.",
+    "boq.snapshot_hint": "Type a label above and click Save to create your first snapshot.",
     "boq.snapshot_label": "Snapshot label (optional)...",
     "boq.snapshot_restored": "Snapshot restored‌⁠‍",
     "boq.snapshots_error": "Failed to load version history.",
@@ -4726,11 +4324,9 @@ const resource = {
     "boq.source_dwg": "DWG drawing",
     "boq.source_id_label": "Item id",
     "boq.source_measurement_label": "Measurement",
-    "boq.source_no_measurement":
-      "Measurement data not stored locally — open the source to view details.",
+    "boq.source_no_measurement": "Measurement data not stored locally — open the source to view details.",
     "boq.source_open": "Open source",
-    "boq.source_open_title":
-      "Open the source document in its viewer, focused on this item",
+    "boq.source_open_title": "Open the source document in its viewer, focused on this item",
     "boq.source_pdf": "PDF takeoff",
     "boq.source_pdf_page": "Page {{page}}",
     "boq.status_draft": "Draft",
@@ -4738,25 +4334,20 @@ const resource = {
     "boq.suggest_rate": "Suggest Rate",
     "boq.suggested": "Suggested‌⁠‍",
     "boq.toolbar_quality": "Quality",
-    "boq.toolbar_summary_aria":
-      "{{sections}} sections · {{positions}} positions",
+    "boq.toolbar_summary_aria": "{{sections}} sections · {{positions}} positions",
     "boq.try_different_search": "Try a different search term or filter",
     "boq.unit_options": "Unit options",
     "boq.unit_rate_variant_pill": "u25BE {{count}} options",
-    "boq.unit_rate_variant_pill_tooltip_default":
-      "Auto-applied with {{strategy}} rate ({{count}} options, {{range}}). Click to refine.",
-    "boq.unit_rate_variant_pill_tooltip_picked":
-      "Currently: {{label}}. Click to switch to a different variant.",
-    "boq.unit_rate_variant_pill_tooltip_unset":
-      "{{count}} priced variants available ({{range}}). Click to pick one.",
+    "boq.unit_rate_variant_pill_tooltip_default": "Auto-applied with {{strategy}} rate ({{count}} options, {{range}}). Click to refine.",
+    "boq.unit_rate_variant_pill_tooltip_picked": "Currently: {{label}}. Click to switch to a different variant.",
+    "boq.unit_rate_variant_pill_tooltip_unset": "{{count}} priced variants available ({{range}}). Click to pick one.",
     "boq.unlock": "Unlock",
     "boq.unlock_failed": "Unlock failed",
     "boq.unlocked_success": "Estimate unlocked",
     "boq.untitled": "Untitled BOQ‌⁠‍",
     "boq.untitled_section": "(untitled)",
     "boq.update_failed": "Failed to update position‌⁠‍",
-    "boq.validate_tip":
-      "Checks for missing descriptions, zero quantities, pricing gaps, classification compliance, and duplicate positions.",
+    "boq.validate_tip": "Checks for missing descriptions, zero quantities, pricing gaps, classification compliance, and duplicate positions.",
     "boq.validating": "Checking...",
     "boq.validation_all_passed": "All {{count}} checks passed",
     "boq.validation_errors": "{{count}} errors found",
@@ -4773,64 +4364,48 @@ const resource = {
     "boq.variables_description": "설명",
     "boq.variables_description_placeholder": "Optional note",
     "boq.variables_empty": "No variables yet. Add the first one below.‌⁠‍",
-    "boq.variables_help":
-      "Define named values you can reference in formulas. e.g. set $GFA = 1500, then write =$GFA * 0.15 in any quantity or rate cell.‌⁠‍",
+    "boq.variables_help": "Define named values you can reference in formulas. e.g. set $GFA = 1500, then write =$GFA * 0.15 in any quantity or rate cell.‌⁠‍",
     "boq.variables_name": "이름",
     "boq.variables_saved": "Variables saved‌⁠‍",
     "boq.variables_title": "BOQ variables‌⁠‍",
     "boq.variables_type": "유형",
     "boq.variables_value": "Value",
-    "boq.variant_default_applied_msg":
-      "Click the row in the BOQ to choose a specific variant.",
+    "boq.variant_default_applied_msg": "Click the row in the BOQ to choose a specific variant.",
     "boq.variant_default_applied_title": "Applied with average price",
     "boq.variant_default_pill": "Default u00B7 refine u25BE",
-    "boq.variant_default_pill_tooltip":
-      "Auto-applied with the {{strategy}} rate. Click the unit_rate cell to pick a specific variant.",
+    "boq.variant_default_pill_tooltip": "Auto-applied with the {{strategy}} rate. Click the unit_rate cell to pick a specific variant.",
     "boq.variant_default_pill_with_count": "Abstract u00B7 {{count}} options",
-    "boq.variant_header_code_tooltip":
-      "Abstract variant resource — inherits the position quantity",
-    "boq.variant_header_pill_tooltip":
-      "Choose / switch a price variant for this abstract resource",
-    "boq.variant_header_qty_edit_tooltip":
-      "Double-click to edit quantity (synced with the position).",
-    "boq.variant_header_type_tooltip":
-      "Click to pick a price variant from the catalog",
+    "boq.variant_header_code_tooltip": "Abstract variant resource — inherits the position quantity",
+    "boq.variant_header_pill_tooltip": "Choose / switch a price variant for this abstract resource",
+    "boq.variant_header_qty_edit_tooltip": "Double-click to edit quantity (synced with the position).",
+    "boq.variant_header_type_tooltip": "Click to pick a price variant from the catalog",
     "boq.variant_resource_added": "Resource added: {{label}}",
     "boq.variant_resource_repick_failed": "Variant re-pick failed",
     "boq.variant_resource_repicked": "Variant updated: {{label}}",
     "boq.vector_download": "Download cost database first",
-    "boq.vector_download_desc":
-      "Import CWICR databases (55,000+ items, 9 regions)",
-    "boq.vector_index_desc":
-      "Build vector index from your imported cost items (~30s)",
+    "boq.vector_download_desc": "Import CWICR databases (55,000+ items, 9 regions)",
+    "boq.vector_index_desc": "Build vector index from your imported cost items (~30s)",
     "boq.vector_index_error": "Indexing Failed",
-    "boq.vector_index_error_msg":
-      "Failed to index the cost database. Try importing a database first.",
+    "boq.vector_index_error_msg": "Failed to index the cost database. Try importing a database first.",
     "boq.vector_index_now": "Index existing cost database",
     "boq.vector_indexed": "Vector Database Ready",
-    "boq.vector_indexed_msg":
-      "Cost database indexed. AI features are now available.",
+    "boq.vector_indexed_msg": "Cost database indexed. AI features are now available.",
     "boq.vector_indexing": "Indexing...",
-    "boq.vector_setup_desc":
-      "AI rate suggestions, classification, and anomaly detection require a vector-indexed cost database. This is a one-time setup that takes about 30 seconds.",
+    "boq.vector_setup_desc": "AI rate suggestions, classification, and anomaly detection require a vector-indexed cost database. This is a one-time setup that takes about 30 seconds.",
     "boq.vector_setup_subtitle": "One-time setup required",
     "boq.vector_setup_title": "AI Features Setup",
-    "boq.vector_status_empty":
-      "No vector database found. Import a cost database or index your existing cost items.",
-    "boq.vector_status_partial":
-      "Vector DB has {{count}} items indexed. Minimum ~100 items needed for AI features.",
+    "boq.vector_status_empty": "No vector database found. Import a cost database or index your existing cost items.",
+    "boq.vector_status_partial": "Vector DB has {{count}} items indexed. Minimum ~100 items needed for AI features.",
     "boq.version_history": "Version History‌⁠‍",
     "boq.view_comments": "Comments ({{count}})",
     "boq.view_in_bim": "View in BIM 3D ({{count}})",
     "boq.view_in_cost_db": "View in Cost Database",
-    "boq.warn_lump_sum":
-      "Lump sum — quantity × rate may not match expected total",
+    "boq.warn_lump_sum": "Lump sum — quantity × rate may not match expected total",
     "boq.warn_zero_rate": "No rate — review before commit",
     "boq.warnings": "warnings",
     "compliance.tab_label": "규정 준수",
     "compliance.page.title": "Compliance documents",
-    "compliance.page.subtitle":
-      "Track insurance, permits, bonds and certifications with expiry reminders.",
+    "compliance.page.subtitle": "Track insurance, permits, bonds and certifications with expiry reminders.",
     "compliance.page.new": "New document",
     "compliance.modal.create_title": "New compliance document",
     "compliance.modal.create_submit": "Create document",
@@ -4861,10 +4436,8 @@ const resource = {
     "compliance.status.expired": "Expired",
     "compliance.status.cancelled": "Cancelled",
     "compliance.status.void": "Void",
-    "compliance.doc_type.insurance_general_liability":
-      "General liability insurance",
-    "compliance.doc_type.insurance_workers_comp":
-      "Workers' compensation insurance",
+    "compliance.doc_type.insurance_general_liability": "General liability insurance",
+    "compliance.doc_type.insurance_workers_comp": "Workers' compensation insurance",
     "compliance.doc_type.insurance_auto": "Auto insurance",
     "compliance.doc_type.insurance_umbrella": "Umbrella insurance",
     "compliance.doc_type.permit_building": "Building permit",
@@ -4878,11 +4451,9 @@ const resource = {
     "compliance.doc_type.certification_other": "Other certification",
     "compliance.doc_type.other": "Other",
     "compliance.empty.title": "No compliance documents yet",
-    "compliance.empty.description":
-      "Track insurance policies, permits, bonds and certifications. Get a warning before each one expires.",
+    "compliance.empty.description": "Track insurance policies, permits, bonds and certifications. Get a warning before each one expires.",
     "compliance.empty.no_project_title": "Open a project",
-    "compliance.empty.no_project_description":
-      "Compliance documents are scoped to a project — open one first.",
+    "compliance.empty.no_project_description": "Compliance documents are scoped to a project — open one first.",
     "compliance.toast.created": "Compliance document created.",
     "compliance.toast.create_failed": "Failed to create compliance document.",
     "compliance.toast.deleted": "Compliance document deleted.",
@@ -4905,8 +4476,7 @@ const resource = {
     "costs.base_cost": "Base cost",
     "costs.base_year": "Base year‌⁠‍",
     "costs.categories_title": "Categories",
-    "costs.clear_all_confirm_body":
-      "This will permanently remove all {{count}} CWICR cost items. You can re-import them later.",
+    "costs.clear_all_confirm_body": "This will permanently remove all {{count}} CWICR cost items. You can re-import them later.",
     "costs.clear_all_confirm_title": "Clear all {{count}} databases?",
     "costs.clear_filters": "Clear all",
     "costs.code_placeholder": "e.g. WALL-001",
@@ -4914,8 +4484,7 @@ const resource = {
     "costs.component_labor": "Labor",
     "costs.component_material": "Material",
     "costs.confirm_delete": "Delete this custom cost item?",
-    "costs.confirm_delete_region":
-      "Delete all cost items for {{region}}? This cannot be undone.",
+    "costs.confirm_delete_region": "Delete all cost items for {{region}}? This cannot be undone.",
     "costs.confirm_delete_title": "Delete cost item?",
     "costs.cost_items_count": "55,000+ cost items",
     "costs.custom_label": "Custom",
@@ -4933,30 +4502,23 @@ const resource = {
     "costs.cwicr_match.mode_label": "Mode",
     "costs.cwicr_match.mode_lexical": "Lexical‌⁠‍",
     "costs.cwicr_match.mode_semantic": "Semantic‌⁠‍",
-    "costs.cwicr_match.placeholder":
-      "Describe the work item (e.g. reinforced concrete wall)‌⁠‍",
+    "costs.cwicr_match.placeholder": "Describe the work item (e.g. reinforced concrete wall)‌⁠‍",
     "costs.cwicr_match.query_label": "Query",
     "costs.cwicr_match.search": "검색",
     "costs.cwicr_match.title": "CWICR rate match‌⁠‍",
-    "costs.db_downloading":
-      "Downloading and indexing cost items with full resource breakdown. This is a one-time setup.",
+    "costs.db_downloading": "Downloading and indexing cost items with full resource breakdown. This is a one-time setup.",
     "costs.db_installed": "Database installed successfully‌⁠‍",
     "costs.db_installing": "Installing {{name}}...",
-    "costs.db_saved_offline":
-      "Cost items are saved locally and available offline.",
-    "costs.description_placeholder":
-      "e.g. Reinforced concrete wall C30/37, 25cm",
+    "costs.db_saved_offline": "Cost items are saved locally and available offline.",
+    "costs.description_placeholder": "e.g. Reinforced concrete wall C30/37, 25cm",
     "costs.duplicates_skipped": "duplicates skipped",
-    "costs.empty_pick_region_above":
-      "Pick a region card above and click Install to load a regional cost database.",
+    "costs.empty_pick_region_above": "Pick a region card above and click Install to load a regional cost database.",
     "costs.equipment": "장비",
     "costs.escalated_cost": "Escalated cost",
     "costs.escalation": "Escalation",
     "costs.escalation_calculator": "Cost Escalation Calculator‌⁠‍",
-    "costs.escalation_desc":
-      "Adjust costs for inflation using published construction indices‌⁠‍",
-    "costs.escalation_disclaimer":
-      "Based on published indices. Verify with project-specific data.",
+    "costs.escalation_desc": "Adjust costs for inflation using published construction indices‌⁠‍",
+    "costs.escalation_disclaimer": "Based on published indices. Verify with project-specific data.",
     "costs.escalation_factor": "Factor",
     "costs.filters_active": "filters active",
     "costs.is_now_active": "is now the active database‌⁠‍",
@@ -4975,26 +4537,21 @@ const resource = {
     "costs.n_items_selected": "{{count}} items selected",
     "costs.n_positions_will_be_created": "{{count}} positions will be created",
     "costs.n_selected": "{{count}} selected",
-    "costs.no_databases_installed":
-      "No databases installed yet. Pick a region above to install.",
+    "costs.no_databases_installed": "No databases installed yet. Pick a region above to install.",
     "costs.no_favourites": "No favourites yet",
-    "costs.no_favourites_hint":
-      "Click the star icon on any cost item to add it to your favourites",
+    "costs.no_favourites_hint": "Click the star icon on any cost item to add it to your favourites",
     "costs.no_recent": "No recently used items",
-    "costs.no_recent_hint":
-      "Items you add to BOQ will appear here for quick access",
+    "costs.no_recent_hint": "Items you add to BOQ will appear here for quick access",
     "costs.one_time_download": "One-time download",
     "costs.phase_complete": "Complete",
     "costs.phase_extracting": "Extracting resources & cost breakdown...",
     "costs.phase_finalizing": "Finalizing...",
     "costs.phase_reading": "Reading Parquet file...",
     "costs.phase_writing": "Writing to local database...",
-    "costs.positions_created_hint":
-      "Positions created with unit rates from cost database",
+    "costs.positions_created_hint": "Positions created with unit rates from cost database",
     "costs.region_filter_count": "{{shown}} of {{total}}‌⁠‍",
-    "costs.region_filter_no_results": 'No regions match "{{q}}"',
-    "costs.region_filter_placeholder":
-      "Filter by country, city, currency or language…‌⁠‍",
+    "costs.region_filter_no_results": "No regions match \"{{q}}\"",
+    "costs.region_filter_placeholder": "Filter by country, city, currency or language…‌⁠‍",
     "costs.region_plural": "regions",
     "costs.region_singular": "region",
     "costs.remove_from_favourites": "Remove from favourites",
@@ -5027,14 +4584,12 @@ const resource = {
     "costs.variant_sort_price_asc": "Price ↑",
     "costs.variant_sort_price_desc": "Price ↓",
     "costs.variant_use_average": "Use average rate",
-    "costs.variant_use_default_tooltip":
-      "Apply the average rate without picking a specific variant. You can refine later by clicking the row.",
+    "costs.variant_use_default_tooltip": "Apply the average rate without picking a specific variant. You can refine later by clicking the row.",
     "costs.variant_use_median": "Use median rate",
     "costs.vec_indexing_all": "Generating vectors for all regions...",
     "costs.vec_indexing_region": "Generating vectors for {{name}}...",
     "costs.vec_phase_checking": "Checking pre-built vectors on GitHub...",
-    "costs.vec_phase_embedding":
-      "Generating 384d embeddings from cost items...",
+    "costs.vec_phase_embedding": "Generating 384d embeddings from cost items...",
     "costs.vec_phase_indexing": "Indexing into LanceDB and refreshing stats...",
     "costs.vec_phase_model": "Loading embedding model (first-time only)...",
     "costs.vec_phase_progress": "Step {{step}} of 4",
@@ -5048,8 +4603,7 @@ const resource = {
     "files.activity.title": "활동",
     "files.activity.open": "View activity history",
     "files.activity.empty_title": "No activity yet",
-    "files.activity.empty_hint":
-      "Uploads, renames, and other changes will show up here.",
+    "files.activity.empty_hint": "Uploads, renames, and other changes will show up here.",
     "files.activity.error_title": "Couldn't load activity",
     "files.activity.error_hint": "Check your connection and try again.",
     "files.activity.actor_unknown": "알 수 없는 사용자",
@@ -5063,8 +4617,7 @@ const resource = {
     "files.activity.action.cde_state_changed": "CDE state changed",
     "files.permissions.manage": "Manage access",
     "files.permissions.title": "Folder access",
-    "files.permissions.subtitle":
-      "Restrict who can see and edit files in {{folder}}.",
+    "files.permissions.subtitle": "Restrict who can see and edit files in {{folder}}.",
     "files.permissions.empty": "All project members can access this folder.",
     "files.permissions.list_title": "Current access",
     "files.permissions.grant_title": "Grant access",
@@ -5079,15 +4632,12 @@ const resource = {
     "files.permissions.revoke": "Revoke",
     "files.permissions.revoke_confirm": "Revoke access for {{name}}?",
     "files.permissions.lock_tooltip": "Restricted: {{count}} member can access",
-    "files.permissions.lock_tooltip_plural":
-      "Restricted: {{count}} members can access",
+    "files.permissions.lock_tooltip_plural": "Restricted: {{count}} members can access",
     "files.permissions.error_grant": "Could not grant access.",
     "files.permissions.error_revoke": "Could not revoke access.",
-    "files.permissions.error_duplicate":
-      "This member already has access at this level.",
+    "files.permissions.error_duplicate": "This member already has access at this level.",
     "share.page.title": "Shared file",
-    "share.page.subtitle":
-      "Someone shared a file with you via OpenConstructionERP.",
+    "share.page.subtitle": "Someone shared a file with you via OpenConstructionERP.",
     "share.page.filename_label": "File",
     "share.page.password_prompt": "Enter the password to download.",
     "share.page.password_placeholder": "비밀번호",
@@ -5102,85 +4652,59 @@ const resource = {
     "share.page.loading": "Loading link…",
     "share.page.ready_title": "Ready to download",
     "share.page.ready_body": "Click the button below to download the file.",
-    "files.bulk.delete_all_failed":
-      "None of the {{count}} selected file(s) could be deleted.",
+    "files.bulk.delete_all_failed": "None of the {{count}} selected file(s) could be deleted.",
     "files.bulk.delete_partial": "{{deleted}} of {{total}} deleted",
-    "files.bulk.delete_partial_detail":
-      "{{failed}} file(s) could not be deleted.",
-    "onboarding.mode_simple_desc":
-      "I'm getting started — show me the essentials. A clean interface with the most important features.",
-    "onboarding.mode_advanced_desc":
-      "I'm experienced — show me everything. Full professional toolset with all options visible.",
-    "project_intelligence.ai.cost_advisor_title":
-      "Cost Intelligence Advisor‌⁠‍",
-    "project_intelligence.ai_not_configured_desc":
-      "Connect an AI provider (Anthropic Claude, OpenAI, or Google Gemini) to get personalized, context-aware recommendations for your project. Without AI, you still see rule-based analysis below.",
-    "project_intelligence.ai_not_configured_title":
-      "AI provider not connected‌⁠‍",
+    "files.bulk.delete_partial_detail": "{{failed}} file(s) could not be deleted.",
+    "onboarding.mode_simple_desc": "I'm getting started — show me the essentials. A clean interface with the most important features.",
+    "onboarding.mode_advanced_desc": "I'm experienced — show me everything. Full professional toolset with all options visible.",
+    "project_intelligence.ai.cost_advisor_title": "Cost Intelligence Advisor‌⁠‍",
+    "project_intelligence.ai_not_configured_desc": "Connect an AI provider (Anthropic Claude, OpenAI, or Google Gemini) to get personalized, context-aware recommendations for your project. Without AI, you still see rule-based analysis below.",
+    "project_intelligence.ai_not_configured_title": "AI provider not connected‌⁠‍",
     "project_intelligence.analytics.cost_drivers": "Cost drivers‌⁠‍",
-    "project_intelligence.analytics.cost_drivers_sub":
-      "Top 5 line items by total cost‌⁠‍",
+    "project_intelligence.analytics.cost_drivers_sub": "Top 5 line items by total cost‌⁠‍",
     "project_intelligence.analytics.errors": "errors",
     "project_intelligence.analytics.no_data": "No data yet‌⁠‍",
     "project_intelligence.analytics.price_volatility": "Price volatility‌⁠‍",
-    "project_intelligence.analytics.price_volatility_sub":
-      "Bid total spread across vendors‌⁠‍",
+    "project_intelligence.analytics.price_volatility_sub": "Bid total spread across vendors‌⁠‍",
     "project_intelligence.analytics.schedule_cost": "Schedule ↔ cost",
     "project_intelligence.analytics.schedule_cost_sub": "Labour cost by phase",
     "project_intelligence.analytics.scope_coverage": "Scope coverage",
-    "project_intelligence.analytics.scope_coverage_ratio":
-      "{{current}} of {{baseline}} lines",
-    "project_intelligence.analytics.scope_coverage_sub":
-      "BOQ line count vs baseline",
+    "project_intelligence.analytics.scope_coverage_ratio": "{{current}} of {{baseline}} lines",
+    "project_intelligence.analytics.scope_coverage_sub": "BOQ line count vs baseline",
     "project_intelligence.analytics.validation_live": "Real-time validation",
-    "project_intelligence.analytics.validation_live_sub":
-      "Rule pass count (updates every 60s)",
-    "project_intelligence.analytics.vendor_concentration":
-      "Vendor concentration",
-    "project_intelligence.analytics.vendor_concentration_sub":
-      "Top 3 bidders’ share",
+    "project_intelligence.analytics.validation_live_sub": "Rule pass count (updates every 60s)",
+    "project_intelligence.analytics.vendor_concentration": "Vendor concentration",
+    "project_intelligence.analytics.vendor_concentration_sub": "Top 3 bidders’ share",
     "project_intelligence.analytics.warnings": "warnings",
     "project_intelligence.analyzing": "Analyzing project...‌⁠‍",
     "project_intelligence.analyzing_project": "Analyzing project...",
     "project_intelligence.ask_placeholder": "Ask about this project...",
     "project_intelligence.auth_error": "Session expired‌⁠‍",
-    "project_intelligence.auth_hint":
-      "Please refresh the page or sign in again to continue.",
+    "project_intelligence.auth_hint": "Please refresh the page or sign in again to continue.",
     "project_intelligence.back_to_rec": "Back to recommendations‌⁠‍",
-    "project_intelligence.chat_error":
-      "Sorry, I could not process your question. Please try again.‌⁠‍",
-    "project_intelligence.chat_prompt":
-      'Ask any question about this project. For example: "Why is my score so low?" or "What should I do first?"',
+    "project_intelligence.chat_error": "Sorry, I could not process your question. Please try again.‌⁠‍",
+    "project_intelligence.chat_prompt": "Ask any question about this project. For example: \"Why is my score so low?\" or \"What should I do first?\"",
     "project_intelligence.chat_toggle": "Toggle chat‌⁠‍",
     "project_intelligence.critical_gaps": "Critical Gaps",
     "project_intelligence.enable_failed": "Could not enable the module",
     "project_intelligence.enable_module": "Enable module",
     "project_intelligence.enabling": "Enabling…",
-    "project_intelligence.gaps.dollar_impact":
-      "{{count}} items missing prices → ~{{amount}} cost uncertainty",
+    "project_intelligence.gaps.dollar_impact": "{{count}} items missing prices → ~{{amount}} cost uncertainty",
     "project_intelligence.go_to_ai_settings": "Settings — AI Configuration",
     "project_intelligence.kpi.budget_variance": "Budget variance‌⁠‍",
     "project_intelligence.kpi.risk_adjusted_cost": "Risk-adjusted cost‌⁠‍",
-    "project_intelligence.kpi.risk_sub":
-      "±{{band}} (90% CI, {{count}} anomalies)",
+    "project_intelligence.kpi.risk_sub": "±{{band}} (90% CI, {{count}} anomalies)",
     "project_intelligence.kpi.schedule_health": "Schedule health‌⁠‍",
     "project_intelligence.kpi.schedule_sub": "Activities on baseline‌⁠‍",
-    "project_intelligence.kpi.variance_sub":
-      "Budget {{budget}} · Current {{current}}‌⁠‍",
+    "project_intelligence.kpi.variance_sub": "Budget {{budget}} · Current {{current}}‌⁠‍",
     "project_intelligence.load_error": "Could not load analysis",
-    "project_intelligence.module_disabled_ask_admin":
-      "Ask an admin to enable this module to continue.",
-    "project_intelligence.module_disabled_body":
-      "This dashboard runs against the optional Project Intelligence module. It is currently disabled on this server, so the AI advisor, gap detector and analytics grid have nothing to query.",
-    "project_intelligence.module_disabled_footnote":
-      "No data is collected while the module is off. Enabling is reversible from the Modules page.",
-    "project_intelligence.module_disabled_title":
-      "Project Intelligence is turned off",
-    "project_intelligence.no_gaps_desc":
-      "Your project has no critical issues. Keep refining to tighten variance.",
+    "project_intelligence.module_disabled_ask_admin": "Ask an admin to enable this module to continue.",
+    "project_intelligence.module_disabled_body": "This dashboard runs against the optional Project Intelligence module. It is currently disabled on this server, so the AI advisor, gap detector and analytics grid have nothing to query.",
+    "project_intelligence.module_disabled_footnote": "No data is collected while the module is off. Enabling is reversible from the Modules page.",
+    "project_intelligence.module_disabled_title": "Project Intelligence is turned off",
+    "project_intelligence.no_gaps_desc": "Your project has no critical issues. Keep refining to tighten variance.",
     "project_intelligence.no_gaps_title": "No critical gaps",
-    "project_intelligence.no_recommendations":
-      "No recommendations available yet. Try refreshing the analysis.",
+    "project_intelligence.no_recommendations": "No recommendations available yet. Try refreshing the analysis.",
     "project_intelligence.open_modules_page": "Open Modules page",
     "project_intelligence.page_title_v191": "Estimation Dashboard‌⁠‍",
     "project_intelligence.readiness_title": "Estimation readiness",
@@ -5189,24 +4713,18 @@ const resource = {
     "project_intelligence.role_estimator": "Estimator",
     "project_intelligence.role_explorer": "Explorer",
     "project_intelligence.role_manager": "Manager",
-    "project_intelligence.score_tooltip_v191":
-      "Score weighting (RFC 25): BOQ 40%, Cost Model 30%, Validation 20%, Risk 10%.",
-    "project_intelligence.select_domain":
-      "Select a domain tab above to see detailed metrics.‌⁠‍",
+    "project_intelligence.score_tooltip_v191": "Score weighting (RFC 25): BOQ 40%, Cost Model 30%, Validation 20%, Risk 10%.",
+    "project_intelligence.select_domain": "Select a domain tab above to see detailed metrics.‌⁠‍",
     "project_intelligence.show_more_gaps": "{{count}} more",
     "project_intelligence.thinking": "Thinking...",
     "project_intelligence.unnamed": "Unnamed Project",
-    "project_intelligence.v191_header_desc":
-      "Cost variance, anomalies, bid analytics — refreshed every 60s.",
-    "project_intelligence.v191_select_prompt":
-      "Select a project from the header to see its cost variance, anomalies, and bid analytics.‌⁠‍",
+    "project_intelligence.v191_header_desc": "Cost variance, anomalies, bid analytics — refreshed every 60s.",
+    "project_intelligence.v191_select_prompt": "Select a project from the header to see its cost variance, anomalies, and bid analytics.‌⁠‍",
     "projects.photos.tab_label": "사진",
     "projects.photos.no_project": "No active project",
-    "projects.photos.no_project_desc":
-      "Open a project to view and upload photos.",
+    "projects.photos.no_project_desc": "Open a project to view and upload photos.",
     "projects.photos.empty_title": "No photos yet",
-    "projects.photos.empty_desc":
-      "Upload site photos to keep visual records alongside the project.",
+    "projects.photos.empty_desc": "Upload site photos to keep visual records alongside the project.",
     "projects.photos.upload_cta": "Upload photos",
     "projects.photos.search_placeholder": "Search filename…",
     "projects.photos.search_aria": "Search photos by filename",
@@ -5226,8 +4744,7 @@ const resource = {
     "takeoff.markup.close": "닫기",
     "takeoff.markup.comments_drawer": "Markup comments",
     "takeoff.markup.comments_title": "댓글",
-    "takeoff.markup.comments_empty":
-      "No comments yet — be the first to add one.",
+    "takeoff.markup.comments_empty": "No comments yet — be the first to add one.",
     "takeoff.markup.comments_load_failed": "Could not load comments.",
     "takeoff.markup.comment_added": "Comment added",
     "takeoff.markup.comment_deleted": "Comment deleted",
@@ -5237,8 +4754,7 @@ const resource = {
     "takeoff.markup.comment_placeholder": "Write a comment...",
     "takeoff.markup.comment_hint": "Ctrl/Cmd+Enter to send",
     "takeoff.markup.comment_send": "Send",
-    "tendering.award_confirm":
-      "Award this contract to {{company}}? This action cannot be undone.",
+    "tendering.award_confirm": "Award this contract to {{company}}? This action cannot be undone.",
     "tendering.award_confirm_title": "Award contract?",
     "tendering.bid_count": "{{count}} bids‌⁠‍",
     "tendering.close_package": "닫기",
@@ -5248,10 +4764,8 @@ const resource = {
     "tendering.evaluate": "Evaluate Bids",
     "tendering.exported": "Comparison exported",
     "tendering.mark_awarded": "Mark Awarded",
-    "tendering.no_packages_description":
-      "Create a tender from a BOQ to start collecting bids",
-    "tendering.select_project_desc":
-      "Select a project and create a tender from a BOQ to get started",
+    "tendering.no_packages_description": "Create a tender from a BOQ to start collecting bids",
+    "tendering.select_project_desc": "Select a project and create a tender from a BOQ to get started",
     "tendering.select_project_first": "Select a project first",
     "tendering.select_project_title": "Select a project",
     "tendering.start_collecting": "Start Collecting",
@@ -5267,8 +4781,7 @@ const resource = {
     "tendering.status_submitted": "Submitted",
     "conflict.panel_aria_label": "Conflict resolution panel",
     "conflict.panel_title": "Merge Conflict Detected",
-    "conflict.panel_subtitle":
-      "A remote collaborator edited the same field. Choose how to resolve.",
+    "conflict.panel_subtitle": "A remote collaborator edited the same field. Choose how to resolve.",
     "conflict.changed_by": "Changed by",
     "conflict.your_version": "Your version",
     "conflict.their_version": "Their version",
@@ -5282,18 +4795,14 @@ const resource = {
     "conflict.conflict_number": "Conflict",
     "conflict.next": "Next",
     "finance.approve_failed": "Failed to approve invoice",
-    "finance.boq_tip_desc":
-      'Go to your BOQ → Lock the estimate → Click "Create Budget from Estimate" to auto-populate budget lines.',
+    "finance.boq_tip_desc": "Go to your BOQ → Lock the estimate → Click \"Create Budget from Estimate\" to auto-populate budget lines.",
     "finance.boq_tip_title": "팁:",
     "finance.budget_create_failed": "Failed to create budget line",
     "finance.budget_created": "Budget line created successfully",
-    "finance.budget_file_hint":
-      "Columns: WBS Code, Category, Original Budget, Notes",
+    "finance.budget_file_hint": "Columns: WBS Code, Category, Original Budget, Notes",
     "finance.budget_line": "예산",
-    "finance.budget_notes_placeholder":
-      "e.g., Includes contingency for weather delays",
-    "finance.budgets_explanation":
-      "Project budget tracks original vs actual costs by WBS category. Variance is highlighted green when under budget, red when over.",
+    "finance.budget_notes_placeholder": "e.g., Includes contingency for weather delays",
+    "finance.budgets_explanation": "Project budget tracks original vs actual costs by WBS category. Variance is highlighted green when under budget, red when over.",
     "finance.cat_equipment": "장비",
     "finance.cat_labor": "Labor",
     "finance.cat_material": "Material",
@@ -5307,10 +4816,8 @@ const resource = {
     "finance.create_snapshot": "Create Snapshot",
     "finance.currency": "통화",
     "finance.direction": "Direction",
-    "finance.drop_budget_file":
-      "Drop Excel or CSV file here, or click to browse",
-    "finance.evm_explanation":
-      "Earned Value Management (EVM) compares planned progress with actual performance. SPI > 1.0 = ahead of schedule. CPI > 1.0 = under budget. Create snapshots periodically to track trends over time.",
+    "finance.drop_budget_file": "Drop Excel or CSV file here, or click to browse",
+    "finance.evm_explanation": "Earned Value Management (EVM) compares planned progress with actual performance. SPI > 1.0 = ahead of schedule. CPI > 1.0 = under budget. Create snapshots periodically to track trends over time.",
     "finance.evm_hint_cost": "cost efficiency",
     "finance.evm_hint_forecast": "forecast total cost",
     "finance.evm_hint_schedule": "schedule efficiency",
@@ -5324,14 +4831,11 @@ const resource = {
     "finance.import": "Import",
     "finance.import_btn": "Import",
     "finance.import_budgets": "Import Budgets",
-    "finance.import_result":
-      "Imported: {{imported}}, Skipped: {{skipped}}, Errors: {{errors}}",
+    "finance.import_result": "Imported: {{imported}}, Skipped: {{skipped}}, Errors: {{errors}}",
     "finance.invoice_create_failed": "Failed to create invoice",
     "finance.invoice_created": "Invoice created successfully",
-    "finance.invoice_desc_placeholder":
-      "e.g., Progress payment for concrete works - Phase 2",
-    "finance.invoices_explanation":
-      "Track all project invoices in one place. Payable = invoices from subcontractors/vendors. Receivable = invoices you send to clients. Mark invoices as paid to auto-generate payment records.",
+    "finance.invoice_desc_placeholder": "e.g., Progress payment for concrete works - Phase 2",
+    "finance.invoices_explanation": "Track all project invoices in one place. Payable = invoices from subcontractors/vendors. Receivable = invoices you send to clients. Mark invoices as paid to auto-generate payment records.",
     "finance.invoices_export_failed": "Failed to export invoices",
     "finance.invoices_export_success": "Invoices exported successfully",
     "finance.link_to_boq": "BOQ Estimate‌⁠‍",
@@ -5339,15 +4843,12 @@ const resource = {
     "finance.new_invoice": "New Invoice",
     "finance.no_budget_match": "No matching budget lines",
     "finance.no_invoices_match": "No matching invoices",
-    "finance.no_invoices_match_desc":
-      "Try adjusting your search or status filter.",
+    "finance.no_invoices_match_desc": "Try adjusting your search or status filter.",
     "finance.notes": "Notes / Description",
     "finance.pay_failed": "Failed to mark invoice as paid",
     "finance.payable_desc": "Invoice you need to pay",
-    "finance.payable_receivable_tooltip":
-      "Payable = invoices you owe to vendors. Receivable = invoices clients owe to you.",
-    "finance.payments_explanation":
-      "Payment records are created when invoices are marked as paid.",
+    "finance.payable_receivable_tooltip": "Payable = invoices you owe to vendors. Receivable = invoices clients owe to you.",
+    "finance.payments_explanation": "Payment records are created when invoices are marked as paid.",
     "finance.receivable_desc": "Invoice you're sending",
     "finance.search_client": "Search client...",
     "finance.search_vendor": "Search vendor...",
@@ -5378,19 +4879,15 @@ const resource = {
     "notification.task_assigned_title": "New task assigned",
     "notification.task_assigned_body": "{{task_title}}",
     "notification.invoice_approved_title": "Invoice approved",
-    "notification.invoice_approved_body":
-      "Invoice {{invoice_number}} — {{amount_total}} {{currency_code}}",
+    "notification.invoice_approved_body": "Invoice {{invoice_number}} — {{amount_total}} {{currency_code}}",
     "notification.inspection_scheduled_title": "Inspection scheduled",
-    "notification.inspection_scheduled_body":
-      "{{inspection_number}} — {{title}} on {{inspection_date}}",
+    "notification.inspection_scheduled_body": "{{inspection_number}} — {{title}} on {{inspection_date}}",
     "notification.submittal_status_changed_title": "Submittal status changed",
-    "notification.submittal_status_changed_body":
-      "{{submittal_number}} ({{title}}) — {{new_status}}",
+    "notification.submittal_status_changed_body": "{{submittal_number}} ({{title}}) — {{new_status}}",
     "notification.meeting_scheduled_title": "Meeting scheduled",
     "notification.meeting_scheduled_body": "{{title}} on {{meeting_date}}",
     "notification.ncr_created_title": "Non-conformance raised",
-    "notification.ncr_created_body":
-      "NCR {{ncr_number}} — {{title}} ({{severity}})",
+    "notification.ncr_created_body": "NCR {{ncr_number}} — {{title}} ({{severity}})",
     "notification.document_uploaded_title": "Document uploaded",
     "notification.document_uploaded_body": "{{document_name}}",
     "procurement.add_item": "항목 추가",
@@ -5411,8 +4908,7 @@ const resource = {
     "procurement.no_gr_match": "No matching goods receipts",
     "procurement.no_po_match": "No matching purchase orders",
     "procurement.notes": "Notes",
-    "procurement.notes_placeholder":
-      "Optional notes or special instructions...",
+    "procurement.notes_placeholder": "Optional notes or special instructions...",
     "procurement.payment_terms": "Payment Terms",
     "procurement.po_created": "Purchase order created",
     "procurement.po_type": "PO Type",
@@ -5423,87 +4919,60 @@ const resource = {
     "procurement.subtotal": "Subtotal",
     "procurement.tax": "Tax",
     "procurement.total": "Total",
-    "bim.upload_generate_pdf_help":
-      "Exports the sheets the designer prepared inside the model as a single PDF into Documents. Runs after the model is ready — upload is not delayed.",
+    "bim.upload_generate_pdf_help": "Exports the sheets the designer prepared inside the model as a single PDF into Documents. Runs after the model is ready — upload is not delayed.",
     "match_elements.info.button_aria": "How matching works",
     "match_elements.info.button_title": "How matching works",
     "match_elements.info.dialog_aria": "How matching works",
     "match_elements.info.title": "How matching works",
     "match_elements.info.bullet_upload": "Upload your BIM model or BoQ.",
-    "match_elements.info.bullet_extract":
-      "We extract elements: descriptions, units, quantities, regions, classification.",
-    "match_elements.info.bullet_search":
-      "Each element is searched against the selected cost catalogue using vector similarity + lexical hints + region/unit boost.",
-    "match_elements.info.bullet_shortlist":
-      "You get a confidence-scored shortlist per element — pick the best, edit quantity if needed.",
-    "match_elements.info.bullet_save":
-      "Save the session — you can revisit, edit, and export it as BoQ later.",
-    "match_elements.info.footer":
-      "Saved sessions live in the list on this page.",
+    "match_elements.info.bullet_extract": "We extract elements: descriptions, units, quantities, regions, classification.",
+    "match_elements.info.bullet_search": "Each element is searched against the selected cost catalogue using vector similarity + lexical hints + region/unit boost.",
+    "match_elements.info.bullet_shortlist": "You get a confidence-scored shortlist per element — pick the best, edit quantity if needed.",
+    "match_elements.info.bullet_save": "Save the session — you can revisit, edit, and export it as BoQ later.",
+    "match_elements.info.footer": "Saved sessions live in the list on this page.",
     "match_elements.group_by_show_all": "Show all ({{count}})",
     "match_elements.group_by_show_less": "Show less",
-    "match_elements.group_by_show_all_help":
-      "Tenant-specific attributes from this BIM model",
+    "match_elements.group_by_show_all_help": "Tenant-specific attributes from this BIM model",
     "match_elements.region_bim_models": "BIM model",
-    "match_elements.region_bim_models_help":
-      "Pick the source model — quantities are read from here",
+    "match_elements.region_bim_models_help": "Pick the source model — quantities are read from here",
     "match_elements.region_sessions": "Matching session",
-    "match_elements.region_sessions_help":
-      "Resume an existing run or start a new one",
+    "match_elements.region_sessions_help": "Resume an existing run or start a new one",
     "match_elements.region_settings": "Match settings",
-    "match_elements.region_settings_help":
-      "Tune how matches are found and what shows up below",
+    "match_elements.region_settings_help": "Tune how matches are found and what shows up below",
     "match_elements.session_confirmed": "confirmed",
-    "match_elements.region_lang_help":
-      "Project region resolves to this language → cwicr_{{lang}}_v3 collection",
+    "match_elements.region_lang_help": "Project region resolves to this language → cwicr_{{lang}}_v3 collection",
     "match_elements.project_settings": "Project settings",
-    "match_elements.project_settings_help":
-      "Open project settings (region, currency, locale, fx rates)",
+    "match_elements.project_settings_help": "Open project settings (region, currency, locale, fx rates)",
     "match_elements.vector_status_loading": "Checking vector DB…",
     "match_elements.vector_status_ready": "Vector DB ready",
-    "match_elements.vector_status_ready_detail":
-      "{{lang}} · {{rateCount}} rates · {{collection}}",
+    "match_elements.vector_status_ready_detail": "{{lang}} · {{rateCount}} rates · {{collection}}",
     "match_elements.vector_status_empty": "Vector DB empty",
-    "match_elements.vector_status_empty_detail":
-      "{{lang}} · {{collection}} loaded but 0 rates — vectorize on /costs",
+    "match_elements.vector_status_empty_detail": "{{lang}} · {{collection}} loaded but 0 rates — vectorize on /costs",
     "match_elements.vector_status_missing": "Collection not loaded",
-    "match_elements.vector_status_missing_detail":
-      '{{collection}} for language "{{lang}}" not in Qdrant — visit /costs to vectorize',
+    "match_elements.vector_status_missing_detail": "{{collection}} for language \"{{lang}}\" not in Qdrant — visit /costs to vectorize",
     "match_elements.vector_status_no_country": "Region/language unknown",
-    "match_elements.vector_status_no_country_detail":
-      "Set the project region in /projects/.../settings to pin the collection",
+    "match_elements.vector_status_no_country_detail": "Set the project region in /projects/.../settings to pin the collection",
     "match_elements.vector_status_non_qdrant": "Legacy LanceDB backend",
-    "match_elements.vector_status_non_qdrant_detail":
-      "Per-language collections only apply on Qdrant — current engine is LanceDB",
+    "match_elements.vector_status_non_qdrant_detail": "Per-language collections only apply on Qdrant — current engine is LanceDB",
     "match_elements.vector_status_disconnected": "Vector DB unreachable",
-    "match_elements.vector_status_disconnected_detail":
-      "Qdrant is not responding · {{error}}",
-    "match_elements.vector_status_disconnected_help":
-      "Qdrant is not responding — matchers will fall back to lexical only",
+    "match_elements.vector_status_disconnected_detail": "Qdrant is not responding · {{error}}",
+    "match_elements.vector_status_disconnected_help": "Qdrant is not responding — matchers will fall back to lexical only",
     "match_elements.vector_status_open_costs": "Open /costs",
-    "match_elements.lang_mismatch_title":
-      "Catalogue language does not match project",
-    "match_elements.lang_mismatch_detail":
-      "Project region {{region}} speaks {{projLang}}, but the bound catalogue {{catalogue}} is in {{boundLang}}. Match results will surface in the wrong language until you re-bind.",
+    "match_elements.lang_mismatch_title": "Catalogue language does not match project",
+    "match_elements.lang_mismatch_detail": "Project region {{region}} speaks {{projLang}}, but the bound catalogue {{catalogue}} is in {{boundLang}}. Match results will surface in the wrong language until you re-bind.",
     "match_elements.lang_mismatch_rebind": "Re-bind catalogue",
     "match_elements.lang_mismatch_open_costs": "Or load a {{lang}} catalogue",
     "match_elements.advisor_mismatch_title": "Switch to a {{lang}} catalogue",
-    "match_elements.advisor_mismatch_detail":
-      "Pick a {{lang}} catalogue below — your project speaks {{lang}}, so matches need to come from a same-language rate book.",
-    "match_elements.advisor_missing_title":
-      "{{lang}} vector collection not loaded",
-    "match_elements.advisor_missing_detail":
-      "Pick a ready catalogue below, or load a new one.",
+    "match_elements.advisor_mismatch_detail": "Pick a {{lang}} catalogue below — your project speaks {{lang}}, so matches need to come from a same-language rate book.",
+    "match_elements.advisor_missing_title": "{{lang}} vector collection not loaded",
+    "match_elements.advisor_missing_detail": "Pick a ready catalogue below, or load a new one.",
     "match_elements.advisor_empty_title": "Catalogue not vectorised yet",
-    "match_elements.advisor_empty_detail":
-      "Pick a different ready catalogue below, or vectorise the current one.",
+    "match_elements.advisor_empty_detail": "Pick a different ready catalogue below, or vectorise the current one.",
     "match_elements.advisor_loading": "Loading available catalogues…",
     "match_elements.advisor_region_match": "Best",
     "match_elements.advisor_rates_count": "{{n}} rates",
-    "match_elements.advisor_none_available":
-      "No {{lang}} catalogues are loaded yet. Visit /costs to import one.",
-    "match_elements.advisor_install_hint":
-      "No {{lang}} catalogues loaded yet. One-click install:",
+    "match_elements.advisor_none_available": "No {{lang}} catalogues are loaded yet. Visit /costs to import one.",
+    "match_elements.advisor_install_hint": "No {{lang}} catalogues loaded yet. One-click install:",
     "match_elements.advisor_install_size": "~{{mb}} MB · {{lang}}",
     "match_elements.advisor_browse_all": "All on Hugging Face",
     "match_elements.hero_eyebrow": "BIM → BOQ",
@@ -5521,17 +4990,12 @@ const resource = {
     "match_elements.step_4_help": "Write to BOQ",
     "match_elements.embedder_loading": "Checking language model…",
     "match_elements.embedder_required_title": "Free language model required",
-    "match_elements.embedder_required_body":
-      "OpenConstructionERP uses BGE-M3 — a free, open-source multilingual encoder by BAAI. It runs entirely on your machine. No API key. No cloud calls. Install once with one command:",
+    "match_elements.embedder_required_body": "OpenConstructionERP uses BGE-M3 — a free, open-source multilingual encoder by BAAI. It runs entirely on your machine. No API key. No cloud calls. Install once with one command:",
     "match_elements.embedder_loaded_title": "Language model ready",
-    "match_elements.embedder_loaded_caption":
-      "{{model}} · {{precision}} · ~{{size}} MB · {{license}} · {{n}}+ languages",
-    "match_elements.embedder_runtime_caption":
-      "Runtime: {{runtime}} · model_loaded={{loaded}}",
-    "match_elements.embedder_install_hint_after":
-      "After install, restart the backend.",
-    "match_elements.embedder_size_caption":
-      "~{{int8}} MB download (INT8) or ~{{fp32}} MB (FP32).",
+    "match_elements.embedder_loaded_caption": "{{model}} · {{precision}} · ~{{size}} MB · {{license}} · {{n}}+ languages",
+    "match_elements.embedder_runtime_caption": "Runtime: {{runtime}} · model_loaded={{loaded}}",
+    "match_elements.embedder_install_hint_after": "After install, restart the backend.",
+    "match_elements.embedder_size_caption": "~{{int8}} MB download (INT8) or ~{{fp32}} MB (FP32).",
     "match_elements.embedder_languages_caption": "{{n}}+ languages",
     "match_elements.embedder_runs_locally": "Runs locally",
     "match_elements.embedder_no_api_key": "No API key",
@@ -5542,10 +5006,8 @@ const resource = {
     "match_elements.analytics_title": "Match analytics",
     "match_elements.analytics_alerts_count": "{{n}} alert",
     "match_elements.analytics_alerts_count_plural": "{{n}} alerts",
-    "match_elements.analytics_caption":
-      "{{n}} searches · {{picks}} picks · pick rate {{rate}} · mean score {{score}} · last {{days}}d",
-    "match_elements.analytics_empty_caption":
-      "No searches yet in the last {{days}}d window — run /match-elements to populate.",
+    "match_elements.analytics_caption": "{{n}} searches · {{picks}} picks · pick rate {{rate}} · mean score {{score}} · last {{days}}d",
+    "match_elements.analytics_empty_caption": "No searches yet in the last {{days}}d window — run /match-elements to populate.",
     "match_elements.analytics_window_label": "Window",
     "match_elements.analytics_window_days": "{{n}}d",
     "match_elements.analytics_tile_searches": "Searches",
@@ -5586,18 +5048,14 @@ const resource = {
     "match_progress.title_running": "매칭 진행 중",
     "match_progress.title_done": "매칭 완료",
     "match_progress.title_error": "매칭 실패",
-    "match_progress.subtitle_running":
-      "We’re searching the catalogue with vector + lexical + region signals. Safe to leave open in a tab.",
-    "match_progress.subtitle_done":
-      "All stages green — handing over to the review panel.",
-    "match_progress.subtitle_error":
-      "The matcher couldn’t finish — try again or pick a different catalogue.",
+    "match_progress.subtitle_running": "We’re searching the catalogue with vector + lexical + region signals. Safe to leave open in a tab.",
+    "match_progress.subtitle_done": "All stages green — handing over to the review panel.",
+    "match_progress.subtitle_error": "The matcher couldn’t finish — try again or pick a different catalogue.",
     "match_progress.elapsed": "경과",
     "match_progress.overall_aria": "Overall match progress",
     "match_progress.headline_done": "All done — opening your results",
     "match_progress.headline_error": "Something went wrong",
-    "match_progress.headline_long":
-      "Almost done — large projects can take a minute",
+    "match_progress.headline_long": "Almost done — large projects can take a minute",
     "match_progress.stage_load": "Loading BIM elements",
     "match_progress.stage_embed": "Building embeddings",
     "match_progress.stage_vector": "Vector search (top candidates)",
@@ -5607,8 +5065,7 @@ const resource = {
     "match_progress.error_label": "Error details",
     "match_progress.error_fallback": "Unknown error",
     "match_progress.retry": "Try again",
-    "match_progress.long_hint":
-      "Still working — first runs on large BIM models take longer because vectors are warming up. Subsequent runs on the same project are much faster.",
+    "match_progress.long_hint": "Still working — first runs on large BIM models take longer because vectors are warming up. Subsequent runs on the same project are much faster.",
     "match_progress.toast_failed_title": "매칭 실패",
     "projects.team.strip_label": "Project team",
     "projects.team.empty": "No members yet",
@@ -5630,8 +5087,7 @@ const resource = {
     "onboarding.explore_all_modules": "모든 {{count}}개 모듈 살펴보기",
     "boq.add_child_position": "하위 항목 추가",
     "boq.add_sub_section": "하위 섹션 추가",
-    "boq.ai_no_answer":
-      "어시스턴트가 응답을 반환하지 않았습니다. 다시 표현하거나 재시도해 주십시오.",
+    "boq.ai_no_answer": "어시스턴트가 응답을 반환하지 않았습니다. 다시 표현하거나 재시도해 주십시오.",
     "boq.compare_added": "추가됨",
     "boq.compare_against": "비교 대상",
     "boq.compare_btn": "비교",
@@ -5647,8 +5103,7 @@ const resource = {
     "boq.compare_qty": "수량",
     "boq.compare_rate": "단가",
     "boq.compare_removed": "삭제됨",
-    "boq.compare_select_hint":
-      "위에서 다른 물량내역서를 선택하면 줄 단위 차이가 표시됩니다.",
+    "boq.compare_select_hint": "위에서 다른 물량내역서를 선택하면 줄 단위 차이가 표시됩니다.",
     "boq.compare_unchanged": "변경 없음",
     "boq.compare_ct_added": "추가됨",
     "boq.compare_ct_removed": "삭제됨",
@@ -5665,8 +5120,7 @@ const resource = {
     "boq.model_link_agg_first": "첫번째",
     "boq.model_link_create": "링크 생성",
     "boq.model_link_created": "모델 링크가 생성되었습니다",
-    "boq.model_link_created_hint":
-      "수량은 아직 변경되지 않았습니다 — 「모델에서 새로고침」 후 「적용」으로 가져오세요.",
+    "boq.model_link_created_hint": "수량은 아직 변경되지 않았습니다 — 「모델에서 새로고침」 후 「적용」으로 가져오세요.",
     "boq.model_link_delete": "링크 삭제",
     "boq.model_link_delete_failed": "모델 링크를 삭제할 수 없습니다",
     "boq.model_link_deleted": "모델 링크가 제거되었습니다",
@@ -5685,64 +5139,48 @@ const resource = {
     "boq.model_link_status_active": "동기화됨",
     "boq.model_link_status_stale": "오래됨",
     "boq.model_link_status_broken": "끊김",
-    "boq.model_link_subtitle":
-      "항목 {{ordinal}} — 수량을 BIM 모델 요소에 바인딩",
+    "boq.model_link_subtitle": "항목 {{ordinal}} — 수량을 BIM 모델 요소에 바인딩",
     "boq.model_link_title": "모델 링크",
     "boq.model_link_version": "모델 v{{v}}",
-    "boq.model_review_all_synced":
-      "링크된 모든 수량이 모델과 동기화되었습니다.",
+    "boq.model_review_all_synced": "링크된 모든 수량이 모델과 동기화되었습니다.",
     "boq.model_review_applied": "{{count}}건의 수량 업데이트를 적용했습니다",
     "boq.model_review_apply": "선택된 {{count}}건 적용",
     "boq.model_review_apply_failed": "적용 실패",
     "boq.model_review_btn": "모델 동기화",
     "boq.model_review_btn_hint": "링크된 BIM 모델에서 수량을 재조회",
-    "boq.model_review_hint":
-      "최신 모델 버전에 대해 바인딩된 수량을 재계산합니다. 「적용」을 누를 때까지 변경되지 않습니다.",
+    "boq.model_review_hint": "최신 모델 버전에 대해 바인딩된 수량을 재계산합니다. 「적용」을 누를 때까지 변경되지 않습니다.",
     "boq.model_review_missing": "{{count}}건 누락",
     "boq.model_review_no_links": "이 물량내역서에 모델 링크가 없습니다",
     "boq.model_review_refresh": "모델에서 새로고침",
     "boq.model_review_refresh_failed": "모델에서 새로고침 실패",
-    "boq.model_review_run":
-      "새로고침을 실행하여 모델 기반 변경사항을 확인합니다.",
+    "boq.model_review_run": "새로고침을 실행하여 모델 기반 변경사항을 확인합니다.",
     "boq.model_review_title": "모델 수량 검토",
-    "boq.position_added_edit_hint":
-      "설명을 입력한 다음, Tab으로 단위·수량·단가로 이동하세요",
-    "boq.link_badge_instance":
-      "코드 {{code}}의 링크된 인스턴스 — 정의 편집은 분기를 유발합니다",
+    "boq.position_added_edit_hint": "설명을 입력한 다음, Tab으로 단위·수량·단가로 이동하세요",
+    "boq.link_badge_instance": "코드 {{code}}의 링크된 인스턴스 — 정의 편집은 분기를 유발합니다",
     "boq.link_badge_master": "코드 {{code}}의 마스터 — {{count}}건 링크됨",
     "boq.link_master_badge": "마스터",
-    "boq.link_propagated_msg":
-      "이 프로젝트에서 링크된 {{count}}건의 항목을 업데이트했습니다.",
+    "boq.link_propagated_msg": "이 프로젝트에서 링크된 {{count}}건의 항목을 업데이트했습니다.",
     "boq.link_propagated_title": "정의가 전파되었습니다",
-    "boq.max_depth_reached_tooltip":
-      "최대 중첩 깊이 {{max}}단계에 도달했습니다 — 구조를 평탄화하거나 하위 단계를 줄이세요.",
-    "boq.resource_link_propagated_msg":
-      "이 프로젝트의 다른 {{count}}건의 항목에서 공유 리소스를 업데이트했습니다.",
+    "boq.max_depth_reached_tooltip": "최대 중첩 깊이 {{max}}단계에 도달했습니다 — 구조를 평탄화하거나 하위 단계를 줄이세요.",
+    "boq.resource_link_propagated_msg": "이 프로젝트의 다른 {{count}}건의 항목에서 공유 리소스를 업데이트했습니다.",
     "boq.resource_link_propagated_title": "리소스 정의가 전파되었습니다",
     "boq.link_role_instance": "링크된 인스턴스",
     "boq.link_role_master": "마스터 (기준 정의)",
-    "boq.link_unlinked_msg":
-      "편집으로 인해 이 링크된 사본이 변경되어 공유 코드를 더 이상 따르지 않습니다. 분기를 의도하지 않았다면 코드를 원래대로 되돌리세요.",
+    "boq.link_unlinked_msg": "편집으로 인해 이 링크된 사본이 변경되어 공유 코드를 더 이상 따르지 않습니다. 분기를 의도하지 않았다면 코드를 원래대로 되돌리세요.",
     "boq.link_unlinked_title": "항목이 공유 코드에서 분리되었습니다",
-    "boq.linked_positions_count":
-      "{{total}}개 항목이 이 코드를 공유합니다 ({{instances}}개 링크 인스턴스). 마스터가 기준 정의이며, 편집 시 프로젝트의 모든 인스턴스로 전파됩니다.",
+    "boq.linked_positions_count": "{{total}}개 항목이 이 코드를 공유합니다 ({{instances}}개 링크 인스턴스). 마스터가 기준 정의이며, 편집 시 프로젝트의 모든 인스턴스로 전파됩니다.",
     "boq.linked_positions_error": "링크된 항목을 불러올 수 없습니다.",
-    "boq.linked_positions_none":
-      "이 항목은 독립적입니다 — 같은 코드를 공유하는 다른 항목이 없습니다.",
-    "boq.linked_positions_subtitle":
-      "코드 {{code}} — 항목 {{ordinal}}에서 보기",
+    "boq.linked_positions_none": "이 항목은 독립적입니다 — 같은 코드를 공유하는 다른 항목이 없습니다.",
+    "boq.linked_positions_subtitle": "코드 {{code}} — 항목 {{ordinal}}에서 보기",
     "boq.linked_positions_title": "링크된 항목",
     "boq.no_description": "(설명 없음)",
     "boq.reuse_code_action": "기존 코드 재사용…",
     "boq.reuse_code_existing": "기존 코드: {{codes}}",
-    "boq.reuse_code_msg":
-      "링크된 인스턴스가 생성되었습니다 — {{count}}개 항목이 이 코드를 공유합니다. 수량은 독립적으로 편집 가능합니다.",
-    "boq.reuse_code_prompt":
-      "여기서 재사용할 기존 코드를 입력하세요 (정의와 하위 항목이 복사되며, 수량은 독립 유지):",
+    "boq.reuse_code_msg": "링크된 인스턴스가 생성되었습니다 — {{count}}개 항목이 이 코드를 공유합니다. 수량은 독립적으로 편집 가능합니다.",
+    "boq.reuse_code_prompt": "여기서 재사용할 기존 코드를 입력하세요 (정의와 하위 항목이 복사되며, 수량은 독립 유지):",
     "boq.reuse_code_title": "코드 {{code}} 재사용됨",
     "boq.show_linked": "링크된 항목 표시",
-    "boq.unlink_done_msg":
-      "코드 {{code}}가 유지되었습니다. 이 항목은 더 이상 공유 코드를 따르지 않지만 값은 보존되었습니다.",
+    "boq.unlink_done_msg": "코드 {{code}}가 유지되었습니다. 이 항목은 더 이상 공유 코드를 따르지 않지만 값은 보존되었습니다.",
     "boq.unlink_done_title": "항목 링크가 해제되었습니다",
     "boq.unlink_failed": "항목 링크 해제에 실패했습니다",
     "boq.unlink_this": "이 항목 링크 해제",
@@ -5752,8 +5190,7 @@ const resource = {
     "login.community_sub": "도움말 및 토론",
     "login.brand_edit": "로고 사용자 지정",
     "login.brand_title": "화이트 라벨 브랜딩",
-    "login.brand_desc":
-      "이 로그인 화면과 앱 전체에 표시됩니다. 이 브라우저에만 저장됩니다.",
+    "login.brand_desc": "이 로그인 화면과 앱 전체에 표시됩니다. 이 브라우저에만 저장됩니다.",
     "login.brand_upload": "로고 업로드",
     "login.brand_name_ph": "회사명",
     "login.brand_reset": "기본값으로 재설정",
@@ -5765,10 +5202,8 @@ const resource = {
     "nav.phase_execution": "시공",
     "nav.phase_closure": "품질 및 마감",
     "nav.clash_detection": "충돌 검사",
-    "schedule_advanced.master_hint":
-      "마스터 일정을 선택하면 「단계」, 「룩어헤드」, 「주간」, 「제약」 탭의 작업 계획이 됩니다. 행 작업으로 이름 변경, 계획 날짜 및 상태 변경, 삭제가 가능합니다.",
-    "schedule_advanced.no_master_yet_desc":
-      "마스터 일정은 모든 단계 계획, 룩어헤드 및 주간 작업 계획이 통합되는 최상위 계획입니다. 풀 플래닝을 시작하려면 하나 생성하세요 — 언제든지 이름 변경, 날짜 변경 또는 삭제할 수 있습니다.",
+    "schedule_advanced.master_hint": "마스터 일정을 선택하면 「단계」, 「룩어헤드」, 「주간」, 「제약」 탭의 작업 계획이 됩니다. 행 작업으로 이름 변경, 계획 날짜 및 상태 변경, 삭제가 가능합니다.",
+    "schedule_advanced.no_master_yet_desc": "마스터 일정은 모든 단계 계획, 룩어헤드 및 주간 작업 계획이 통합되는 최상위 계획입니다. 풀 플래닝을 시작하려면 하나 생성하세요 — 언제든지 이름 변경, 날짜 변경 또는 삭제할 수 있습니다.",
     "schedule_advanced.active_selection": "작업 계획",
     "schedule_advanced.master_status.active": "활성",
     "schedule_advanced.master_status.archived": "보관됨",
@@ -5776,145 +5211,95 @@ const resource = {
     "schedule_advanced.master_updated": "마스터 일정이 업데이트되었습니다",
     "schedule_advanced.master_deleted": "마스터 일정이 삭제되었습니다",
     "schedule_advanced.delete_master_title": "마스터 일정을 삭제하시겠습니까?",
-    "schedule_advanced.delete_master_message":
-      '"{{name}}" and everything under it — phase plans, look-aheads, weekly work plans, commitments and baselines — will be permanently deleted. This cannot be undone.',
-    "schedule_advanced.err_master_name_required":
-      "마스터 일정 이름이 필요합니다.",
+    "schedule_advanced.delete_master_message": "\"{{name}}\" and everything under it — phase plans, look-aheads, weekly work plans, commitments and baselines — will be permanently deleted. This cannot be undone.",
+    "schedule_advanced.err_master_name_required": "마스터 일정 이름이 필요합니다.",
     "schedule_advanced.master_name_placeholder": "예: 건설 마스터 일정",
-    "schedule_advanced.master_status_hint":
-      "일정을 보관하면 작업 계획으로 두지 않으면서 이력을 유지할 수 있습니다. 보관된 일정은 언제든지 여기서 재활성화할 수 있습니다.",
-    "schedule_advanced.master_notes_placeholder":
-      "범위, 계약 참조, 주요 마일스톤…",
+    "schedule_advanced.master_status_hint": "일정을 보관하면 작업 계획으로 두지 않으면서 이력을 유지할 수 있습니다. 보관된 일정은 언제든지 여기서 재활성화할 수 있습니다.",
+    "schedule_advanced.master_notes_placeholder": "범위, 계약 참조, 주요 마일스톤…",
     "files.cta.add_first_short": "파일 추가",
     "files.folder.files_count": "파일",
     "files.folder.subfolders": "{{count}}개 폴더",
     "files.folder.share": "전체 저장소의 {{pct}}%",
     "notifications.safety.incident_created": "안전 사고 보고됨",
-    "notifications.safety.incident_created_body":
-      "사고 {{incident_number}} ({{severity}}): {{description}}",
+    "notifications.safety.incident_created_body": "사고 {{incident_number}} ({{severity}}): {{description}}",
     "notifications.safety.high_risk_observation": "고위험 안전 관찰",
-    "notifications.safety.high_risk_body":
-      "관찰 {{observation_number}} (위험도 {{risk_score}}): {{description}}",
+    "notifications.safety.high_risk_body": "관찰 {{observation_number}} (위험도 {{risk_score}}): {{description}}",
     "notifications.bi.alert.title": "대시보드 경보 발생",
-    "notifications.bi.alert.body":
-      "{{alert_name}} — {{kpi_code}}이 {{value}} ({{condition}} 임계값 {{threshold}}).",
+    "notifications.bi.alert.body": "{{alert_name}} — {{kpi_code}}이 {{value}} ({{condition}} 임계값 {{threshold}}).",
     "notifications.bi.report.title": "예약 보고서 완료",
-    "notifications.bi.report.body":
-      "보고서 {{report_code}}가 {{row_count}}행으로 생성되었습니다.",
+    "notifications.bi.report.body": "보고서 {{report_code}}가 {{row_count}}행으로 생성되었습니다.",
     "notifications.supplier_catalogs.po.sent.title": "발주서 전송됨",
-    "notifications.supplier_catalogs.po.sent.body":
-      "공급업체 {{vendor_id}}에 {{total}} {{currency}} 발주서를 전송했습니다.",
+    "notifications.supplier_catalogs.po.sent.body": "공급업체 {{vendor_id}}에 {{total}} {{currency}} 발주서를 전송했습니다.",
     "notifications.supplier_catalogs.invoice.exception.title": "송장 예외",
-    "notifications.supplier_catalogs.invoice.exception.body":
-      "발주 {{po_id}}에 대한 송장 검토 필요: {{reason}}",
+    "notifications.supplier_catalogs.invoice.exception.body": "발주 {{po_id}}에 대한 송장 검토 필요: {{reason}}",
     "notifications.supplier_catalogs.stock.low.title": "재고 부족 경고",
-    "notifications.supplier_catalogs.stock.low.body":
-      "{{sku}}: {{available_qty}}개 남음, 재주문점 {{reorder_point}} 이하입니다.",
-    "notifications.supplier_catalogs.vendor.blacklisted.title":
-      "공급업체 블랙리스트 등록",
-    "notifications.supplier_catalogs.vendor.blacklisted.body":
-      "공급업체 {{code}}가 블랙리스트에 등록되었습니다: {{reason}}",
-    "notifications.supplier_catalogs.kyc.expired.title":
-      "공급업체 컴플라이언스 문서 만료",
-    "notifications.supplier_catalogs.kyc.expired.body":
-      "{{doc_type}}이 {{expires_on}}에 만료되었습니다.",
-    "notifications.supplier_catalogs.kyc.expiring.title":
-      "공급업체 컴플라이언스 문서 만료 임박",
-    "notifications.supplier_catalogs.kyc.expiring.body":
-      "{{doc_type}}이 {{expires_on}}에 만료됩니다 ({{days_until_expiry}}일 남음).",
+    "notifications.supplier_catalogs.stock.low.body": "{{sku}}: {{available_qty}}개 남음, 재주문점 {{reorder_point}} 이하입니다.",
+    "notifications.supplier_catalogs.vendor.blacklisted.title": "공급업체 블랙리스트 등록",
+    "notifications.supplier_catalogs.vendor.blacklisted.body": "공급업체 {{code}}가 블랙리스트에 등록되었습니다: {{reason}}",
+    "notifications.supplier_catalogs.kyc.expired.title": "공급업체 컴플라이언스 문서 만료",
+    "notifications.supplier_catalogs.kyc.expired.body": "{{doc_type}}이 {{expires_on}}에 만료되었습니다.",
+    "notifications.supplier_catalogs.kyc.expiring.title": "공급업체 컴플라이언스 문서 만료 임박",
+    "notifications.supplier_catalogs.kyc.expiring.body": "{{doc_type}}이 {{expires_on}}에 만료됩니다 ({{days_until_expiry}}일 남음).",
     "notifications.resources.cert_expiring.title": "자격 만료 임박",
-    "notifications.resources.cert_expiring.body":
-      "{{resource_name}} — {{cert_type}}이 {{valid_until}}에 만료 ({{days_left}}일 남음).",
+    "notifications.resources.cert_expiring.body": "{{resource_name}} — {{cert_type}}이 {{valid_until}}에 만료 ({{days_left}}일 남음).",
     "notifications.resources.assignment_proposed.title": "리소스 배정 제안됨",
-    "notifications.resources.assignment_proposed.body":
-      "{{start}} 시작 작업 {{task}}에 대해 제안됨.",
+    "notifications.resources.assignment_proposed.body": "{{start}} 시작 작업 {{task}}에 대해 제안됨.",
     "notifications.resources.assignment_confirmed.title": "리소스 배정 확인됨",
-    "notifications.resources.assignment_confirmed.body":
-      "작업 {{task}}에 대한 배정이 확인되었습니다.",
+    "notifications.resources.assignment_confirmed.body": "작업 {{task}}에 대한 배정이 확인되었습니다.",
     "notifications.contracts.signed.title": "계약 체결",
-    "notifications.contracts.signed.body":
-      "계약 {{code}}이 {{value}} {{currency}}로 체결되었습니다.",
+    "notifications.contracts.signed.body": "계약 {{code}}이 {{value}} {{currency}}로 체결되었습니다.",
     "notifications.contracts.claim_submitted.title": "계약 클레임 제출됨",
-    "notifications.contracts.claim_submitted.body":
-      "{{amount}} {{currency}} 클레임이 제출되었습니다.",
+    "notifications.contracts.claim_submitted.body": "{{amount}} {{currency}} 클레임이 제출되었습니다.",
     "notifications.contracts.claim_paid.title": "계약 클레임 지급됨",
-    "notifications.contracts.claim_paid.body":
-      "클레임 지급: {{amount}} {{currency}}.",
+    "notifications.contracts.claim_paid.body": "클레임 지급: {{amount}} {{currency}}.",
     "notifications.contracts.retention_released.title": "유보금 해제됨",
-    "notifications.contracts.retention_released.body":
-      "계약 {{contract_code}}: {{amount_released}} 해제, {{remaining}} 잔여.",
+    "notifications.contracts.retention_released.body": "계약 {{contract_code}}: {{amount_released}} 해제, {{remaining}} 잔여.",
     "notifications.crm.lead_qualified.title": "리드 자격 인증",
-    "notifications.crm.lead_qualified.body":
-      "리드 {{name}}이 자격 인증되었습니다.",
+    "notifications.crm.lead_qualified.body": "리드 {{name}}이 자격 인증되었습니다.",
     "notifications.crm.opportunity_won.title": "기회 수주",
     "notifications.crm.opportunity_won.body": "{{name}} 수주 — 금액 {{value}}.",
     "notifications.crm.opportunity_scored.title": "기회 점수 매김",
-    "notifications.crm.opportunity_scored.body":
-      "{{title}}이 {{score}}점 (밴드 {{band}}).",
+    "notifications.crm.opportunity_scored.body": "{{title}}이 {{score}}점 (밴드 {{band}}).",
     "notifications.carbon.boq_position_assigned.title": "탄소 계수 할당",
-    "notifications.carbon.boq_position_assigned.body":
-      "BOQ 항목 {{boq_position_id}}: {{carbon_kg}} kg CO₂e ({{stage}}).",
+    "notifications.carbon.boq_position_assigned.body": "BOQ 항목 {{boq_position_id}}: {{carbon_kg}} kg CO₂e ({{stage}}).",
     "notifications.property_dev.buyer_contracted.title": "매수자 계약 체결",
-    "notifications.property_dev.buyer_contracted.body":
-      "{{buyer}}가 필지 {{plot}}에 대해 계약했습니다.",
+    "notifications.property_dev.buyer_contracted.body": "{{buyer}}가 필지 {{plot}}에 대해 계약했습니다.",
     "notifications.property_dev.handover_completed.title": "인도 완료",
-    "notifications.property_dev.handover_completed.body":
-      "필지 {{plot}} 인도가 완료되었습니다.",
+    "notifications.property_dev.handover_completed.body": "필지 {{plot}} 인도가 완료되었습니다.",
     "notifications.property_dev.warranty_raised.title": "하자보수 청구 제기",
-    "notifications.property_dev.warranty_raised.body":
-      "필지 {{plot}}에 대해 {{category}} 하자보수 청구가 제기되었습니다.",
+    "notifications.property_dev.warranty_raised.body": "필지 {{plot}}에 대해 {{category}} 하자보수 청구가 제기되었습니다.",
     "notifications.bid_management.invitation_sent.title": "입찰 초청장 전송됨",
-    "notifications.bid_management.invitation_sent.body":
-      "패키지 {{package}} 초청장 전송됨, 마감 {{due}}.",
+    "notifications.bid_management.invitation_sent.body": "패키지 {{package}} 초청장 전송됨, 마감 {{due}}.",
     "notifications.bid_management.awarded.title": "낙찰",
-    "notifications.bid_management.awarded.body":
-      "{{package}}이 {{amount}}에 낙찰되었습니다.",
-    "notifications.schedule_advanced.constraint_cleared.title":
-      "일정 제약 해제됨",
-    "notifications.schedule_advanced.constraint_cleared.body":
-      "작업 {{task}}이 더 이상 차단되지 않습니다.",
+    "notifications.bid_management.awarded.body": "{{package}}이 {{amount}}에 낙찰되었습니다.",
+    "notifications.schedule_advanced.constraint_cleared.title": "일정 제약 해제됨",
+    "notifications.schedule_advanced.constraint_cleared.body": "작업 {{task}}이 더 이상 차단되지 않습니다.",
     "notifications.daily_diary.signed.title": "공사일지 서명됨",
     "notifications.daily_diary.signed.body": "{{date}} 일지가 서명되었습니다.",
     "notifications.service.ticket_dispatched.title": "서비스 티켓 배정됨",
-    "notifications.service.ticket_dispatched.body":
-      "티켓 {{ticket_number}} 배정됨 (우선순위 {{priority}}).",
+    "notifications.service.ticket_dispatched.body": "티켓 {{ticket_number}} 배정됨 (우선순위 {{priority}}).",
     "notifications.service.ticket_resolved.title": "서비스 티켓 해결됨",
-    "notifications.service.ticket_resolved.body":
-      "티켓 {{ticket_number}}이 해결되었습니다.",
+    "notifications.service.ticket_resolved.body": "티켓 {{ticket_number}}이 해결되었습니다.",
     "notifications.service.work_order_billed.title": "작업 지시 청구됨",
-    "notifications.service.work_order_billed.body":
-      "작업 지시 {{wo_number}}이 {{amount}} {{currency}}로 청구되었습니다.",
-    "notifications.subcontractors.prequal_submitted.title":
-      "사전 자격심사 제출됨",
-    "notifications.subcontractors.prequal_submitted.body":
-      "{{subcontractor_name}}이 사전 자격심사를 제출했습니다.",
-    "notifications.subcontractors.payment_app_submitted.title":
-      "지급 신청 제출됨",
-    "notifications.subcontractors.payment_app_submitted.body":
-      "신청 {{application_number}}이 {{net_amount}} {{currency}}로 제출되었습니다.",
-    "notifications.subcontractors.retention_released.title":
-      "하도급 유보금 해제됨",
-    "notifications.subcontractors.retention_released.body":
-      "유보금 {{amount}} {{currency}} 해제됨.",
+    "notifications.service.work_order_billed.body": "작업 지시 {{wo_number}}이 {{amount}} {{currency}}로 청구되었습니다.",
+    "notifications.subcontractors.prequal_submitted.title": "사전 자격심사 제출됨",
+    "notifications.subcontractors.prequal_submitted.body": "{{subcontractor_name}}이 사전 자격심사를 제출했습니다.",
+    "notifications.subcontractors.payment_app_submitted.title": "지급 신청 제출됨",
+    "notifications.subcontractors.payment_app_submitted.body": "신청 {{application_number}}이 {{net_amount}} {{currency}}로 제출되었습니다.",
+    "notifications.subcontractors.retention_released.title": "하도급 유보금 해제됨",
+    "notifications.subcontractors.retention_released.body": "유보금 {{amount}} {{currency}} 해제됨.",
     "notifications.equipment.assigned.title": "장비 배정됨",
-    "notifications.equipment.assigned.body":
-      "{{equipment_code}}이 {{project_name}}에 배정되었습니다.",
+    "notifications.equipment.assigned.body": "{{equipment_code}}이 {{project_name}}에 배정되었습니다.",
     "notifications.equipment.damage_reported.title": "장비 손상 보고됨",
-    "notifications.equipment.damage_reported.body":
-      "{{equipment_code}} 손상 보고됨 ({{severity}}).",
+    "notifications.equipment.damage_reported.body": "{{equipment_code}} 손상 보고됨 ({{severity}}).",
     "notifications.portal.user_invited.title": "포털 사용자 초대됨",
-    "notifications.portal.user_invited.body":
-      "{{portal_user_email}}이 {{portal_role}}로 초대되었습니다.",
-    "match_elements.vector_status_disconnected_explainer":
-      'Semantic vector search is optional — it sharpens matches by meaning but needs a running Qdrant vector database. Use the "Vector database" panel below to start or install Qdrant natively (no Docker required), then retry.',
-    "match_elements.vector_status_disconnected_fallback":
-      "지금 계속 진행할 수도 있습니다. 벡터 DB가 오프라인인 동안 매칭은 자동으로 어휘(키워드) 및 규칙 기반 스코어링으로 대체됩니다.",
+    "notifications.portal.user_invited.body": "{{portal_user_email}}이 {{portal_role}}로 초대되었습니다.",
+    "match_elements.vector_status_disconnected_explainer": "Semantic vector search is optional — it sharpens matches by meaning but needs a running Qdrant vector database. Use the \"Vector database\" panel below to start or install Qdrant natively (no Docker required), then retry.",
+    "match_elements.vector_status_disconnected_fallback": "지금 계속 진행할 수도 있습니다. 벡터 DB가 오프라인인 동안 매칭은 자동으로 어휘(키워드) 및 규칙 기반 스코어링으로 대체됩니다.",
     "match_elements.vector_status_retry": "연결 재시도",
-    "match_elements.vector_status_open_costs_long":
-      "단가 데이터베이스 도구 열기",
+    "match_elements.vector_status_open_costs_long": "단가 데이터베이스 도구 열기",
     "match_elements.pipeline.title": "매칭 파이프라인",
-    "match_elements.pipeline.subtitle":
-      "CAD 파일에서 단가가 적용된 BOQ까지 7단계 — 모든 단계가 표시되고 조정 가능합니다",
+    "match_elements.pipeline.subtitle": "CAD 파일에서 단가가 적용된 BOQ까지 7단계 — 모든 단계가 표시되고 조정 가능합니다",
     "match_elements.pipeline.done_suffix": "완료",
     "match_elements.pipeline.run_all": "모든 단계 실행",
     "match_elements.pipeline.running_all": "모든 단계 실행 중…",
@@ -5932,20 +5317,17 @@ const resource = {
     "match_elements.pipeline.status_error": "오류",
     "match_elements.pipeline.status_stale": "재실행 필요",
     "match_elements.pipeline.status_skipped": "건너뜀",
-    "match_elements.pipeline.stale_hint":
-      "이전 단계가 변경되었습니다 — 이 단계를 재실행하여 출력을 새로 고치세요.",
+    "match_elements.pipeline.stale_hint": "이전 단계가 변경되었습니다 — 이 단계를 재실행하여 출력을 새로 고치세요.",
     "match_elements.pipeline.llm_badge": "LLM",
     "match_elements.pipeline.llm_tunable": "LLM 강화 — 프롬프트 편집 가능",
     "match_elements.pipeline.group_by": "그룹화 키",
-    "match_elements.pipeline.group_by_hint":
-      "쉼표로 구분. RVT → category, type_name · IFC → ifc_class, predefined_type · DWG → layer, block_name",
+    "match_elements.pipeline.group_by_hint": "쉼표로 구분. RVT → category, type_name · IFC → ifc_class, predefined_type · DWG → layer, block_name",
     "match_elements.pipeline.method": "방법",
     "match_elements.pipeline.max_groups": "최대 그룹 수",
     "match_elements.pipeline.llm_provider": "LLM 공급자",
     "match_elements.pipeline.prompt": "프롬프트",
     "match_elements.pipeline.system": "system",
-    "match_elements.pipeline.system_readonly":
-      "시스템 프롬프트 — 읽기 전용. 포크하여 편집하고 회사에 맞게 조정하세요.",
+    "match_elements.pipeline.system_readonly": "시스템 프롬프트 — 읽기 전용. 포크하여 편집하고 회사에 맞게 조정하세요.",
     "match_elements.pipeline.system_prompt": "시스템 프롬프트",
     "match_elements.pipeline.user_template": "사용자 템플릿",
     "match_elements.pipeline.variables": "이 단계가 채우는 변수:",
@@ -5955,12 +5337,10 @@ const resource = {
     "match_elements.pipeline.revert": "되돌리기",
     "match_elements.pipeline.run_failed": "단계 실행 실패",
     "match_elements.pipeline.intro_title": "표시되는 매칭 파이프라인 열기",
-    "match_elements.pipeline.intro_blurb":
-      "CAD 파일에서 단가가 적용된 BOQ까지 7단계 — 변환, 로드, 스키마, 필터, 그룹, 매칭, 롤업. 모든 단계가 표시·설명·조정 가능합니다 (프롬프트, LLM 공급자, 그룹 키).",
+    "match_elements.pipeline.intro_blurb": "CAD 파일에서 단가가 적용된 BOQ까지 7단계 — 변환, 로드, 스키마, 필터, 그룹, 매칭, 롤업. 모든 단계가 표시·설명·조정 가능합니다 (프롬프트, LLM 공급자, 그룹 키).",
     "match_elements.pipeline.intro_cta": "파이프라인 열기",
     "match_elements.pipeline.intro_resume": "마지막 세션 재개",
-    "match_elements.pipeline.busy_hint":
-      "단계가 실행 중입니다 — 다른 단계를 시작하기 전에 완료될 때까지 기다리세요.",
+    "match_elements.pipeline.busy_hint": "단계가 실행 중입니다 — 다른 단계를 시작하기 전에 완료될 때까지 기다리세요.",
     "match_elements.pipeline.step_convert": "변환",
     "match_elements.pipeline.step_load": "로드",
     "match_elements.pipeline.step_schema": "스키마",
@@ -5969,8 +5349,7 @@ const resource = {
     "match_elements.pipeline.step_match": "매칭",
     "match_elements.pipeline.step_rollup": "롤업",
     "clash.title": "충돌 검사",
-    "clash.subtitle":
-      "통합 BIM 모델 전반의 기하학적 간섭 및 이격 조정 — 충돌 매트릭스와 BCF 내보내기 포함.",
+    "clash.subtitle": "통합 BIM 모델 전반의 기하학적 간섭 및 이격 조정 — 충돌 매트릭스와 BCF 내보내기 포함.",
     "clash.pick_project": "프로젝트 선택",
     "clash.new_run": "새 충돌 검사",
     "clash.models": "모델",
@@ -5981,12 +5360,10 @@ const resource = {
     "clash.mode_cross": "분야 간만",
     "clash.mode_all": "모든 쌍",
     "clash.mode_sets": "세트 A 대 세트 B (유형별)",
-    "clash.sets_hint":
-      "한 요소는 세트 A에, 다른 요소는 세트 B에 있는 쌍만 검사됩니다 — 예: 모든 벽 (A) 대 모든 배관 (B).",
+    "clash.sets_hint": "한 요소는 세트 A에, 다른 요소는 세트 B에 있는 쌍만 검사됩니다 — 예: 모든 벽 (A) 대 모든 배관 (B).",
     "clash.set_a": "세트 A",
     "clash.set_b": "세트 B",
-    "clash.sets_required":
-      "세트 A와 세트 B 모두에 대해 하나 이상의 유형 또는 분야를 선택하세요.",
+    "clash.sets_required": "세트 A와 세트 B 모두에 대해 하나 이상의 유형 또는 분야를 선택하세요.",
     "clash.set_search": "유형 / 분야 검색…",
     "clash.set_empty": "요소 없음 — 먼저 파싱된 모델을 선택하세요.",
     "clash.disciplines": "분야",
@@ -6000,8 +5377,7 @@ const resource = {
     "clash.status_saved": "상태 업데이트됨",
     "clash.bcf_done": "{{n}}건의 충돌을 BCF로 내보냄 ({{s}}건 건너뜀)",
     "clash.empty_title": "선택된 충돌 검사가 없습니다",
-    "clash.empty_desc":
-      "왼쪽에서 BIM 모델을 선택하고 충돌 검사를 실행하여 조정 매트릭스를 구축하세요.",
+    "clash.empty_desc": "왼쪽에서 BIM 모델을 선택하고 충돌 검사를 실행하여 조정 매트릭스를 구축하세요.",
     "clash.kpi_total": "총 충돌",
     "clash.kpi_hard": "하드",
     "clash.kpi_clearance": "이격",
@@ -6017,11 +5393,9 @@ const resource = {
     "clash.no_match_title": "필터와 일치하는 충돌이 없습니다",
     "clash.no_match_desc": "활성 필터를 넓히거나 지워보세요.",
     "clash.results_error": "충돌 결과를 불러올 수 없습니다",
-    "clash.results_error_desc":
-      "충돌 결과를 불러올 수 없습니다. 이것은 모델이 깨끗하다는 것을 의미하지 않습니다 — 다시 시도하세요.",
+    "clash.results_error_desc": "충돌 결과를 불러올 수 없습니다. 이것은 모델이 깨끗하다는 것을 의미하지 않습니다 — 다시 시도하세요.",
     "clash.retry": "재시도",
-    "clash.capped_notice":
-      "총 {{total}}건 중 처음 {{loaded}}건 표시 중 — 검토 범위를 좁히려면 필터를 정교화하세요.",
+    "clash.capped_notice": "총 {{total}}건 중 처음 {{loaded}}건 표시 중 — 검토 범위를 좁히려면 필터를 정교화하세요.",
     "clash.results": "충돌 결과",
     "clash.count_of": "{{total}}건 중 {{shown}}건",
     "clash.search_ph": "요소 이름 검색…",
@@ -6062,23 +5436,18 @@ const resource = {
     "nav.pipelines": "파이프라인 빌더",
     "pipeline.untitled": "제목 없는 파이프라인",
     "pipeline.empty.title": "첫 자동화를 만드세요",
-    "pipeline.empty.description":
-      "왼쪽 팔레트에서 트리거와 몇 개의 단계를 끌어다 놓고 연결한 후 「실행」을 누르세요.",
+    "pipeline.empty.description": "왼쪽 팔레트에서 트리거와 몇 개의 단계를 끌어다 놓고 연결한 후 「실행」을 누르세요.",
     "pipeline.toast.saved": "파이프라인 저장됨",
     "pipeline.toast.save_failed": "파이프라인을 저장할 수 없습니다",
     "pipeline.toast.run_failed": "실행을 시작할 수 없습니다",
     "pipeline.explain.coming_soon_title": "이 파이프라인 설명",
-    "pipeline.explain.coming_soon_body":
-      "평이한 언어 스토리 보기는 다음 릴리스에서 제공됩니다.",
+    "pipeline.explain.coming_soon_body": "평이한 언어 스토리 보기는 다음 릴리스에서 제공됩니다.",
     "pipeline.tour.palette_title": "단계 선택",
-    "pipeline.tour.palette_body":
-      "여기서 캔버스로 단계를 끌어다 놓거나, 클릭하여 중앙에 배치하세요.",
+    "pipeline.tour.palette_body": "여기서 캔버스로 단계를 끌어다 놓거나, 클릭하여 중앙에 배치하세요.",
     "pipeline.tour.canvas_title": "단계 연결",
-    "pipeline.tour.canvas_body":
-      "한 단계의 출력 점에서 다음 단계의 입력으로 드래그하세요. 색상이 데이터 유형을 나타냅니다.",
+    "pipeline.tour.canvas_body": "한 단계의 출력 점에서 다음 단계의 입력으로 드래그하세요. 색상이 데이터 유형을 나타냅니다.",
     "pipeline.tour.run_title": "실행",
-    "pipeline.tour.run_body":
-      "「실행」을 눌러 파이프라인을 실행하고 각 단계가 실시간으로 켜지는 것을 확인하세요.",
+    "pipeline.tour.run_body": "「실행」을 눌러 파이프라인을 실행하고 각 단계가 실시간으로 켜지는 것을 확인하세요.",
     "pipeline.toolbar.aria": "파이프라인 도구 모음",
     "pipeline.toolbar.undo": "실행 취소",
     "pipeline.toolbar.redo": "다시 실행",
@@ -6094,12 +5463,11 @@ const resource = {
     "pipeline.palette.collapse": "팔레트 접기",
     "pipeline.palette.search": "단계 검색",
     "pipeline.palette.search_ph": "검색…",
-    "pipeline.palette.no_match": 'No steps match "{{query}}"',
+    "pipeline.palette.no_match": "No steps match \"{{query}}\"",
     "pipeline.palette.none": "사용 가능한 노드 유형이 없습니다.",
     "pipeline.palette.module_chip": "{{module}} 모듈에 영향",
     "pipeline.palette.writes": "쓰기",
-    "pipeline.palette.writes_chip":
-      "이 단계는 데이터를 씁니다 — 앞에 게이트가 필요합니다",
+    "pipeline.palette.writes_chip": "이 단계는 데이터를 씁니다 — 앞에 게이트가 필요합니다",
     "pipeline.palette.cat_trigger": "소스 / 트리거",
     "pipeline.palette.cat_source": "데이터 가져오기",
     "pipeline.palette.cat_transform": "변환",
@@ -6123,23 +5491,18 @@ const resource = {
     "pipeline.inspector.name_ph": "내 자동화",
     "pipeline.inspector.description": "설명",
     "pipeline.inspector.published": "게시됨 (트리거 가능)",
-    "pipeline.inspector.summary_stub":
-      'A plain-language summary of what this pipeline does will appear here. Use "Explain this pipeline" for the full story.',
+    "pipeline.inspector.summary_stub": "A plain-language summary of what this pipeline does will appear here. Use \"Explain this pipeline\" for the full story.",
     "pipeline.canvas.aria": "파이프라인 편집기 캔버스",
-    "pipeline.canvas.hint":
-      "팔레트에서 단계를 끌어다 놓고 포트를 연결한 후 「실행」을 누르세요.",
-    "pipeline.canvas.legend_sr":
-      "엣지 색상, 모양 및 점선이 함께 데이터 유형을 인코딩합니다.",
+    "pipeline.canvas.hint": "팔레트에서 단계를 끌어다 놓고 포트를 연결한 후 「실행」을 누르세요.",
+    "pipeline.canvas.legend_sr": "엣지 색상, 모양 및 점선이 함께 데이터 유형을 인코딩합니다.",
     "pipeline.connect.incompatible_title": "이 단계들은 연결할 수 없습니다",
-    "pipeline.connect.incompatible_body":
-      "이 출력은 {{from}}이지만, 해당 입력은 {{to}}을 요구합니다.",
+    "pipeline.connect.incompatible_body": "이 출력은 {{from}}이지만, 해당 입력은 {{to}}을 요구합니다.",
     "pipeline.node.rename": "노드 이름 변경",
     "pipeline.node.rename_hint": "더블 클릭으로 이름 변경",
     "pipeline.node.ai_badge": "AI",
     "pipeline.node.ai_confidence": "AI 제안 — 신뢰도 점수를 검토하세요",
     "pipeline.node.help": "이 노드의 기능",
-    "pipeline.node.help_generic":
-      "인스펙터에서 이 단계를 구성하세요. 앞의 연결된 단계로부터 데이터를 받아 결과를 전달합니다.",
+    "pipeline.node.help_generic": "인스펙터에서 이 단계를 구성하세요. 앞의 연결된 단계로부터 데이터를 받아 결과를 전달합니다.",
     "pipeline.node.collapse": "접기",
     "pipeline.node.expand": "펼치기",
     "pipeline.node.more_params": "+추가 {{count}}",
@@ -6160,12 +5523,10 @@ const resource = {
     "pipeline.dock.progress": "{{pct}}%",
     "pipeline.dock.tab_run": "실행",
     "pipeline.dock.tab_history": "이력",
-    "pipeline.dock.no_steps":
-      "단계를 추가하고 「실행」을 눌러 파이프라인을 통해 데이터가 흐르는 것을 확인하세요.",
+    "pipeline.dock.no_steps": "단계를 추가하고 「실행」을 눌러 파이프라인을 통해 데이터가 흐르는 것을 확인하세요.",
     "pipeline.dock.loading_history": "실행 이력 로딩 중…",
     "pipeline.dock.no_runs_title": "아직 실행이 없습니다",
-    "pipeline.dock.no_runs_desc":
-      "「실행」을 눌러 파이프라인을 통해 데이터가 흐르는 것을 확인하세요.",
+    "pipeline.dock.no_runs_desc": "「실행」을 눌러 파이프라인을 통해 데이터가 흐르는 것을 확인하세요.",
     "pipeline.dock.manual": "수동",
     "pipeline.dock.queued_hint": "워커가 실행을 가져갈 때까지 대기 중…",
     "pipeline.runstatus.pending": "대기 중",
@@ -6184,35 +5545,23 @@ const resource = {
     "pipeline.trigger.schedule": "예약",
     "pipeline.trigger.event": "이벤트",
     "pipeline.nodetype.trigger.manual": "수동 트리거",
-    "pipeline.nodetype.trigger.manual.desc":
-      "REST 호출로 파이프라인을 시작합니다. 입력 없음.",
+    "pipeline.nodetype.trigger.manual.desc": "REST 호출로 파이프라인을 시작합니다. 입력 없음.",
     "pipeline.nodetype.source.project": "프로젝트 가져오기",
-    "pipeline.nodetype.source.project.desc":
-      "바인딩된 프로젝트의 id 및 이름을 불러옵니다.",
+    "pipeline.nodetype.source.project.desc": "바인딩된 프로젝트의 id 및 이름을 불러옵니다.",
     "pipeline.nodetype.source.boq": "BOQ 항목 가져오기",
-    "pipeline.nodetype.source.boq.desc":
-      "프로젝트의 모든 BOQ 항목을 행으로 불러옵니다 (id + 작은 샘플).",
+    "pipeline.nodetype.source.boq.desc": "프로젝트의 모든 BOQ 항목을 행으로 불러옵니다 (id + 작은 샘플).",
     "pipeline.nodetype.transform.filter": "행 필터링",
-    "pipeline.nodetype.transform.filter.desc":
-      "단순한 필드/연산자/값 테스트와 일치하는 행만 유지합니다.",
+    "pipeline.nodetype.transform.filter.desc": "단순한 필드/연산자/값 테스트와 일치하는 행만 유지합니다.",
     "pipeline.nodetype.gate.validation": "검증 게이트",
-    "pipeline.nodetype.gate.validation.desc":
-      "행에 대해 검증 엔진을 실행; 차단 오류 시 실행 중지.",
+    "pipeline.nodetype.gate.validation.desc": "행에 대해 검증 엔진을 실행; 차단 오류 시 실행 중지.",
     "pipeline.nodetype.action.export.excel": "Excel로 내보내기",
-    "pipeline.nodetype.action.export.excel.desc":
-      "행을 .xlsx 파일에 씁니다 (다운로드 참조 반환; 데이터베이스는 변경하지 않음).",
-    "pipeline.nodehelp.trigger.manual":
-      "여기서 파이프라인이 시작됩니다. 설정 없음 — 다음으로 데이터 단계에 연결하세요.",
-    "pipeline.nodehelp.source.project":
-      "이 파이프라인이 바인딩된 프로젝트를 불러옵니다. 페이지 URL의 것을 사용하려면 프로젝트 id를 비워두세요.",
-    "pipeline.nodehelp.source.boq":
-      "프로젝트의 모든 BOQ 항목을 읽습니다. 단계 간에는 id와 작은 미리보기만 전송되며, 전체 데이터는 서버에 남아 있습니다.",
-    "pipeline.nodehelp.transform.filter":
-      "인스펙터에서 설정한 필드/연산자/값 테스트와 일치하는 행만 유지합니다. 필드를 비워두면 모든 것이 통과합니다.",
-    "pipeline.nodehelp.gate.validation":
-      "행에 대해 검증 엔진을 실행합니다. 차단 오류가 있으면 여기서 실행이 중지되어, 이후 쓰기 단계가 잘못된 데이터에 작동하지 않도록 합니다.",
-    "pipeline.nodehelp.action.export.excel":
-      "수신 행을 Excel 파일에 쓰고 다운로드 참조를 반환합니다. 데이터를 변경하지 않습니다.",
+    "pipeline.nodetype.action.export.excel.desc": "행을 .xlsx 파일에 씁니다 (다운로드 참조 반환; 데이터베이스는 변경하지 않음).",
+    "pipeline.nodehelp.trigger.manual": "여기서 파이프라인이 시작됩니다. 설정 없음 — 다음으로 데이터 단계에 연결하세요.",
+    "pipeline.nodehelp.source.project": "이 파이프라인이 바인딩된 프로젝트를 불러옵니다. 페이지 URL의 것을 사용하려면 프로젝트 id를 비워두세요.",
+    "pipeline.nodehelp.source.boq": "프로젝트의 모든 BOQ 항목을 읽습니다. 단계 간에는 id와 작은 미리보기만 전송되며, 전체 데이터는 서버에 남아 있습니다.",
+    "pipeline.nodehelp.transform.filter": "인스펙터에서 설정한 필드/연산자/값 테스트와 일치하는 행만 유지합니다. 필드를 비워두면 모든 것이 통과합니다.",
+    "pipeline.nodehelp.gate.validation": "행에 대해 검증 엔진을 실행합니다. 차단 오류가 있으면 여기서 실행이 중지되어, 이후 쓰기 단계가 잘못된 데이터에 작동하지 않도록 합니다.",
+    "pipeline.nodehelp.action.export.excel": "수신 행을 Excel 파일에 쓰고 다운로드 참조를 반환합니다. 데이터를 변경하지 않습니다.",
     "pipeline.param.source.project.project_id": "프로젝트 ID (선택)",
     "pipeline.param.source.boq.project_id": "프로젝트 ID (선택)",
     "pipeline.param.transform.filter.field": "필드",
@@ -6221,7 +5570,61 @@ const resource = {
     "pipeline.param.gate.validation.rule_sets": "규칙 세트",
     "pipeline.param.action.export.excel.filename": "파일 이름",
     "pipeline.param.action.export.excel.columns": "열",
-  },
+    "admin.audit_log_title": "Audit Log",
+    "admin.audit_log_subtitle": "Read-only timeline of every recorded change. Filter by user, module, action or date — open a row for the full payload.",
+    "admin.permissions.title": "Permissions Matrix",
+    "admin.permissions.subtitle": "Read-only view of every permission registered by every module, and which roles can use it. Admin always passes — locked cells indicate admin-only by design.",
+    "admin.permissions.search_placeholder": "Filter by module or permission key",
+    "admin.permissions.search_label": "Search permissions",
+    "admin.permissions.col_permission": "Permission",
+    "admin.permissions.role_viewer": "Viewer",
+    "admin.permissions.role_editor": "Editor",
+    "admin.permissions.role_member": "Member",
+    "admin.permissions.role_manager": "Manager",
+    "admin.permissions.role_admin": "Admin",
+    "admin.permissions.min_role_label": "min role",
+    "admin.permissions.module_count_one": "{{count}} permission",
+    "admin.permissions.module_count_other": "{{count}} permissions",
+    "admin.permissions.summary": "{{modules}} modules · {{permissions}} permissions",
+    "admin.permissions.empty_title": "No permissions registered",
+    "admin.permissions.empty_description": "No modules have registered permissions yet. They appear here as soon as a module loads.",
+    "admin.permissions.error_title": "Could not load permissions matrix",
+    "admin.permissions.error_unknown": "Unknown error",
+    "admin.permissions.legend_allowed": "allowed",
+    "admin.permissions.legend_denied": "denied",
+    "admin.permissions.legend_admin_bypass": "admin-only by design",
+    "admin.permissions.tooltip_allowed": "{{role}} can do {{key}} (min role: {{min}})",
+    "admin.permissions.tooltip_denied": "{{role}} cannot do {{key}} (min role: {{min}})",
+    "admin.permissions.tooltip_admin_bypass": "Admin-only by design — {{key}} requires admin",
+    "admin.permissions.subtitle_edit": "Click any cell to set the minimum role for that permission. Changes apply immediately and are audit-logged.",
+    "admin.permissions.edit_on": "Enable edit mode",
+    "admin.permissions.edit_off": "Done editing",
+    "admin.permissions.export_csv": "Export CSV",
+    "admin.permissions.role_filter_label": "Role",
+    "admin.permissions.role_filter_all": "All roles",
+    "admin.permissions.role_filter_denied_to": "Denied to {{role}}",
+    "admin.permissions.preset_label": "Reset to preset",
+    "admin.permissions.read_only_notice": "Read-only: admin role required to edit",
+    "admin.permissions.confirm_toggle_title": "Change permission?",
+    "admin.permissions.confirm_toggle_message": "Set \"{{key}}\" minimum role from {{from}} to {{to}}? This is audit-logged.",
+    "admin.permissions.confirm_toggle_confirm": "Change",
+    "admin.permissions.confirm_preset_title": "Apply preset?",
+    "admin.permissions.confirm_preset_message": "Reset every permission to the \"{{preset}}\" baseline? This rewrites the entire matrix and is audit-logged.",
+    "admin.permissions.confirm_preset_confirm": "Apply preset",
+    "admin.permissions.lockout_title": "Cannot demote admin permission",
+    "admin.permissions.lockout_message": "\"{{key}}\" must remain admin-only — lowering it would let non-admins edit the permissions matrix and lock you out.",
+    "admin.permissions.lockout_dismiss": "Got it",
+    "admin.permissions.toggle_success_title": "Permission updated",
+    "admin.permissions.toggle_success_message": "{{key}} → {{role}}",
+    "admin.permissions.toggle_error_title": "Update failed",
+    "admin.permissions.toggle_error": "Could not update permission",
+    "admin.permissions.preset_success_title": "Preset applied",
+    "admin.permissions.preset_success_message": "{{count}} permission(s) updated to \"{{preset}}\"",
+    "admin.permissions.preset_error_title": "Preset failed",
+    "admin.permissions.preset_error": "Could not apply preset",
+    "admin.permissions.noop_title": "No change",
+    "admin.permissions.noop_message": "{{key}} is already minimum {{role}}"
+  }
 } as { translation: Record<string, string> };
 
 export default resource;

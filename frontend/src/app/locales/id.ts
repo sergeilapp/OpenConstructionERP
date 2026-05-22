@@ -2,47 +2,35 @@
 // Regenerate with: node --experimental-strip-types scripts/split-i18n-fallbacks.mjs
 
 const resource = {
-  translation: {
-    "about.ai_desc":
-      "OpenConstructionERP menyertakan alat bertenaga AI opsional — estimasi cepat dari deskripsi teks, saran biaya cerdas, dan asisten obrolan BOQ. Fitur-fitur ini memerlukan kunci API dari penyedia pilihan Anda (Anthropic, OpenAI, Google). AI selalu bersifat opt-in: hanya aktif saat Anda mengonfigurasinya, dan Anda memutuskan data apa yang dikirim. Tanpa kunci API, semua fitur lain berfungsi penuh secara offline.",
+  "translation": {
+    "about.ai_desc": "OpenConstructionERP menyertakan alat bertenaga AI opsional — estimasi cepat dari deskripsi teks, saran biaya cerdas, dan asisten obrolan BOQ. Fitur-fitur ini memerlukan kunci API dari penyedia pilihan Anda (Anthropic, OpenAI, Google). AI selalu bersifat opt-in: hanya aktif saat Anda mengonfigurasinya, dan Anda memutuskan data apa yang dikirim. Tanpa kunci API, semua fitur lain berfungsi penuh secara offline.",
     "about.ai_title": "Tentang fitur AI",
     "about.cap.boq": "Daftar Kuantitas",
-    "about.cap.boq_desc":
-      "Buat Daftar Kuantitas terperinci dengan bagian hierarkis, item, rakitan, markup (overhead, keuntungan, PPN), dan total otomatis. Mendukung DIN 276, NRM 1/2, MasterFormat, dan sistem klasifikasi kustom.",
+    "about.cap.boq_desc": "Buat Daftar Kuantitas terperinci dengan bagian hierarkis, item, rakitan, markup (overhead, keuntungan, PPN), dan total otomatis. Mendukung DIN 276, NRM 1/2, MasterFormat, dan sistem klasifikasi kustom.",
     "about.cap.catalog": "Katalog Sumber Daya",
-    "about.cap.catalog_desc":
-      "7.000+ sumber daya — material, peralatan, tenaga kerja, operator, dan utilitas. Bangun rakitan yang dapat digunakan kembali (tarif komposit) dari item katalog dan terapkan langsung ke item BOQ.",
+    "about.cap.catalog_desc": "7.000+ sumber daya — material, peralatan, tenaga kerja, operator, dan utilitas. Bangun rakitan yang dapat digunakan kembali (tarif komposit) dari item katalog dan terapkan langsung ke item BOQ.",
     "about.cap.costmodel": "Model Biaya 5D",
-    "about.cap.costmodel_desc":
-      "Lacak anggaran dari waktu ke waktu dengan Manajemen Nilai yang Diperoleh (SPI, CPI), visualisasi kurva-S, proyeksi arus kas, snapshot biaya, dan pemodelan skenario what-if untuk pengambilan keputusan yang tepat.",
+    "about.cap.costmodel_desc": "Lacak anggaran dari waktu ke waktu dengan Manajemen Nilai yang Diperoleh (SPI, CPI), visualisasi kurva-S, proyeksi arus kas, snapshot biaya, dan pemodelan skenario what-if untuk pengambilan keputusan yang tepat.",
     "about.cap.costs": "Basis Data Biaya",
-    "about.cap.costs_desc":
-      "55.000+ item biaya di 11 database regional yang mencakup DACH, Inggris, Amerika Utara, Timur Tengah, dan lainnya. Tambahkan tarif Anda sendiri, impor dari Excel, atau bangun database kustom dari awal.",
+    "about.cap.costs_desc": "55.000+ item biaya di 11 database regional yang mencakup DACH, Inggris, Amerika Utara, Timur Tengah, dan lainnya. Tambahkan tarif Anda sendiri, impor dari Excel, atau bangun database kustom dari awal.",
     "about.cap.import": "Impor & Ekspor",
-    "about.cap.import_desc":
-      "Dukungan penuh untuk impor/ekspor GAEB XML (X83), Excel, dan CSV. Buat laporan PDF profesional. Integrasikan dengan mulus dengan alat dan alur kerja Anda yang sudah ada.",
+    "about.cap.import_desc": "Dukungan penuh untuk impor/ekspor GAEB XML (X83), Excel, dan CSV. Buat laporan PDF profesional. Integrasikan dengan mulus dengan alat dan alur kerja Anda yang sudah ada.",
     "about.cap.schedule": "Jadwal 4D",
-    "about.cap.schedule_desc":
-      "Buat jadwal proyek dengan perhitungan jalur kritis CPM, grafik Gantt interaktif, analisis risiko Monte Carlo, penugasan sumber daya, dan pembuatan aktivitas otomatis dari BOQ Anda.",
+    "about.cap.schedule_desc": "Buat jadwal proyek dengan perhitungan jalur kritis CPM, grafik Gantt interaktif, analisis risiko Monte Carlo, penugasan sumber daya, dan pembuatan aktivitas otomatis dari BOQ Anda.",
     "about.cap.tendering": "Tender & Penawaran",
-    "about.cap.tendering_desc":
-      "Buat paket tender dengan lingkup dan item, distribusikan ke subkontraktor, kumpulkan dan bandingkan penawaran secara berdampingan dalam cermin harga, dan buat keputusan penghargaan berdasarkan data.",
+    "about.cap.tendering_desc": "Buat paket tender dengan lingkup dan item, distribusikan ke subkontraktor, kumpulkan dan bandingkan penawaran secara berdampingan dalam cermin harga, dan buat keputusan penghargaan berdasarkan data.",
     "about.cap.validation": "Validasi Kualitas",
-    "about.cap.validation_desc":
-      "Mesin kualitas bawaan secara otomatis memeriksa kuantitas yang hilang, harga nol, item duplikat, kepatuhan klasifikasi, dan anomali tarif — dengan dasbor lampu lalu lintas.",
+    "about.cap.validation_desc": "Mesin kualitas bawaan secara otomatis memeriksa kuantitas yang hilang, harga nol, item duplikat, kepatuhan klasifikasi, dan anomali tarif — dengan dasbor lampu lalu lintas.",
     "about.capabilities_title": "Apa yang dapat Anda lakukan",
     "about.close": "Mengerti",
-    "about.intro":
-      "OpenConstructionERP adalah platform modern untuk manajemen biaya konstruksi. Platform ini mencakup alur kerja estimasi lengkap — dari pembuatan daftar kuantitas hingga tender dan perbandingan penawaran. Dirancang untuk para profesional di seluruh dunia, mendukung standar internasional dan bekerja dalam 20 bahasa.",
-    "about.intro2":
-      "Berbeda dengan solusi komersial tradisional, OpenConstructionERP berjalan sepenuhnya di komputer Anda. Data proyek Anda tidak pernah meninggalkan mesin Anda — Anda memiliki kepemilikan dan kendali penuh. Kode sumber bersifat terbuka dan dapat diaudit, sehingga Anda selalu tahu persis apa yang dilakukan perangkat lunak ini.",
+    "about.intro": "OpenConstructionERP adalah platform modern untuk manajemen biaya konstruksi. Platform ini mencakup alur kerja estimasi lengkap — dari pembuatan daftar kuantitas hingga tender dan perbandingan penawaran. Dirancang untuk para profesional di seluruh dunia, mendukung standar internasional dan bekerja dalam 20 bahasa.",
+    "about.intro2": "Berbeda dengan solusi komersial tradisional, OpenConstructionERP berjalan sepenuhnya di komputer Anda. Data proyek Anda tidak pernah meninggalkan mesin Anda — Anda memiliki kepemilikan dan kendali penuh. Kode sumber bersifat terbuka dan dapat diaudit, sehingga Anda selalu tahu persis apa yang dilakukan perangkat lunak ini.",
     "about.numbers_title": "Platform dalam angka",
     "about.stat.costs": "Item biaya",
     "about.stat.free": "Gratis & sumber terbuka",
     "about.stat.languages": "Bahasa",
     "about.stat.regions": "Basis data regional",
-    "about.title":
-      "Estimasi biaya konstruksi profesional — gratis dan sumber terbuka",
+    "about.title": "Estimasi biaya konstruksi profesional — gratis dan sumber terbuka",
     "about.who.architects": "Arsitek & insinyur",
     "about.who.contractors": "Kontraktor utama",
     "about.who.developers": "Pengembang real estat",
@@ -53,15 +41,11 @@ const resource = {
     "about.who.qsurveyor": "Quantity surveyor",
     "about.who.students": "Pelajar & pendidik",
     "about.who.subs": "Subkontraktor",
-    "about.who_desc":
-      "OpenConstructionERP dirancang untuk siapa saja yang terlibat dalam manajemen biaya konstruksi — baik Anda mengerjakan proyek residensial maupun infrastruktur skala besar, secara internal maupun sebagai konsultan.",
+    "about.who_desc": "OpenConstructionERP dirancang untuk siapa saja yang terlibat dalam manajemen biaya konstruksi — baik Anda mengerjakan proyek residensial maupun infrastruktur skala besar, secara internal maupun sebagai konsultan.",
     "about.who_title": "Untuk siapa",
-    "about.why_1":
-      "Data biaya konstruksi adalah salah satu aset paling berharga yang dimiliki perusahaan. Dengan perangkat lunak proprietari, data Anda sering terkunci dalam format yang tidak dapat Anda kendalikan. Jika vendor menaikkan harga, mengubah ketentuan, atau menghentikan produk — Anda mungkin kehilangan akses ke hasil kerja bertahun-tahun.",
-    "about.why_2":
-      "OpenConstructionERP mengambil pendekatan yang berbeda. Data Anda disimpan dalam format terbuka (SQLite, JSON, CSV) di perangkat keras Anda sendiri. Anda dapat mengekspor semuanya kapan saja. Kode sumber dapat diaudit secara publik di bawah AGPL-3.0, sehingga tidak ada transfer data tersembunyi, tidak ada telemetri, dan tidak ada kejutan.",
-    "about.why_3":
-      "Platform ini bersifat modular — instal hanya yang Anda butuhkan. Modul komunitas memperluas fungsionalitas tanpa membebani inti. Dan karena berjalan secara lokal, ia bekerja offline dan tampil cepat bahkan dengan proyek besar.",
+    "about.why_1": "Data biaya konstruksi adalah salah satu aset paling berharga yang dimiliki perusahaan. Dengan perangkat lunak proprietari, data Anda sering terkunci dalam format yang tidak dapat Anda kendalikan. Jika vendor menaikkan harga, mengubah ketentuan, atau menghentikan produk — Anda mungkin kehilangan akses ke hasil kerja bertahun-tahun.",
+    "about.why_2": "OpenConstructionERP mengambil pendekatan yang berbeda. Data Anda disimpan dalam format terbuka (SQLite, JSON, CSV) di perangkat keras Anda sendiri. Anda dapat mengekspor semuanya kapan saja. Kode sumber dapat diaudit secara publik di bawah AGPL-3.0, sehingga tidak ada transfer data tersembunyi, tidak ada telemetri, dan tidak ada kejutan.",
+    "about.why_3": "Platform ini bersifat modular — instal hanya yang Anda butuhkan. Modul komunitas memperluas fungsionalitas tanpa membebani inti. Dan karena berjalan secara lokal, ia bekerja offline dan tampil cepat bahkan dengan proyek besar.",
     "about.why_title": "Mengapa open source itu penting",
     "ai.analyze_photo": "Analisis Foto",
     "ai.area": "Area (m²)",
@@ -69,8 +53,7 @@ const resource = {
     "ai.boq_name_placeholder": "Nama untuk BOQ ini...",
     "ai.boq_saved": "BOQ berhasil disimpan",
     "ai.building_type": "Tipe Bangunan",
-    "ai.cad_info":
-      "File CAD/BIM (.rvt, .ifc, .dwg, .dgn) memerlukan konverter DDC yang terinstal. Elemen akan diekstrak dan digunakan untuk menghasilkan estimasi biaya. Unduh konverter dari GitHub dan tempatkan di ~/.openestimator/converters/.",
+    "ai.cad_info": "File CAD/BIM (.rvt, .ifc, .dwg, .dgn) memerlukan konverter DDC yang terinstal. Elemen akan diekstrak dan digunakan untuk menghasilkan estimasi biaya. Unduh konverter dari GitHub dan tempatkan di ~/.openestimator/converters/.",
     "ai.choose_project": "-- Pilih proyek --",
     "ai.col_description": "Description",
     "ai.col_pos": "Pos",
@@ -91,8 +74,7 @@ const resource = {
     "ai.estimate_failed": "Estimasi gagal",
     "ai.estimate_subtitle": "Buat estimasi dari sumber apa pun",
     "ai.estimate_title": "Estimasi AI",
-    "ai.excel_hint":
-      "Paling baik dengan kolom: Deskripsi, Satuan, Kuantitas, Tarif/Harga.",
+    "ai.excel_hint": "Paling baik dengan kolom: Deskripsi, Satuan, Kuantitas, Tarif/Harga.",
     "ai.export_coming_soon": "Ekspor segera hadir",
     "ai.export_pdf": "Ekspor PDF",
     "ai.extract_estimate": "Ekstrak & Estimasi",
@@ -107,12 +89,9 @@ const resource = {
     "ai.location_placeholder": "e.g. Berlin",
     "ai.new_estimate": "Estimasi Baru",
     "ai.parse_import": "Parse & Impor",
-    "ai.paste_info":
-      "Mendeteksi otomatis data yang dipisahkan tab, titik koma, atau koma. AI akan mengurai dan menyusun data Anda menjadi item estimasi.",
-    "ai.paste_placeholder":
-      "Tempel data BOQ Anda di sini (dari Excel, Word, atau tabel apa pun)...  Contoh: Pos\\tDeskripsi\\tSatuan\\tJml\\tTarif 01.01\\tGalian tanah\\tm3\\t250\\t18.50 01.02\\tBeton C30/37\\tm3\\t120\\t145.00 01.03\\tTulangan BSt 500\\tkg\\t12000\\t1.85",
-    "ai.pdf_hint":
-      "Unggah dokumen BOQ, spesifikasi, atau gambar dalam format PDF.",
+    "ai.paste_info": "Mendeteksi otomatis data yang dipisahkan tab, titik koma, atau koma. AI akan mengurai dan menyusun data Anda menjadi item estimasi.",
+    "ai.paste_placeholder": "Tempel data BOQ Anda di sini (dari Excel, Word, atau tabel apa pun)...  Contoh: Pos\\tDeskripsi\\tSatuan\\tJml\\tTarif 01.01\\tGalian tanah\\tm3\\t250\\t18.50 01.02\\tBeton C30/37\\tm3\\t120\\t145.00 01.03\\tTulangan BSt 500\\tkg\\t12000\\t1.85",
+    "ai.pdf_hint": "Unggah dokumen BOQ, spesifikasi, atau gambar dalam format PDF.",
     "ai.powered_by": "Didukung oleh {{model}}",
     "ai.results": "Hasil Estimasi",
     "ai.save": "Save",
@@ -120,8 +99,7 @@ const resource = {
     "ai.save_failed": "Gagal menyimpan BOQ",
     "ai.save_to_boq": "Simpan sebagai BOQ",
     "ai.select_project": "Pilih Proyek",
-    "ai.setup_required_desc":
-      "Tambahkan kunci API Anda untuk Anthropic Claude, OpenAI, atau Google Gemini untuk menghasilkan estimasi dari teks, foto, PDF, dan file CAD.",
+    "ai.setup_required_desc": "Tambahkan kunci API Anda untuk Anthropic Claude, OpenAI, atau Google Gemini untuk menghasilkan estimasi dari teks, foto, PDF, dan file CAD.",
     "ai.setup_required_title": "Hubungkan AI Anda untuk memulai",
     "ai.standard_label": "Standard",
     "ai.supported_formats": "Supports: {{formats}}",
@@ -145,14 +123,12 @@ const resource = {
     "ai.currency_auto": "Auto",
     "ai.try_again": "Coba lagi atau periksa pengaturan AI Anda.",
     "ai.advisor_title": "Penasihat Biaya AI",
-    "ai.advisor_desc":
-      "Ajukan pertanyaan tentang biaya, material, dan harga — dari database Anda dan pengetahuan AI",
+    "ai.advisor_desc": "Ajukan pertanyaan tentang biaya, material, dan harga — dari database Anda dan pengetahuan AI",
     "ai.advisor_empty": "Tanyakan apa saja tentang biaya konstruksi",
     "ai.advisor_placeholder": "Tanyakan tentang biaya, material, harga...",
     "ai.advisor_sources": "Sources:",
     "ai.advisor_error": "Kesalahan Penasihat AI",
-    "ai.advisor_unavailable":
-      "Tidak dapat mendapatkan respons. Periksa pengaturan AI.",
+    "ai.advisor_unavailable": "Tidak dapat mendapatkan respons. Periksa pengaturan AI.",
     "ai.advisor_q1": "Berapa biaya rata-rata per m² untuk plester?",
     "ai.advisor_q2": "Bandingkan harga beton berdasarkan wilayah",
     "ai.advisor_q3": "Sarankan alternatif yang lebih murah untuk baja",
@@ -160,10 +136,8 @@ const resource = {
     "app.name": "OpenConstructionERP",
     "app.tagline": "Ruang kerja estimasi konstruksi profesional",
     "assemblies.assemblies_found": "assemblies",
-    "assemblies.description":
-      "Resep biaya yang dapat digunakan kembali untuk elemen konstruksi umum",
-    "assemblies.what_are_assemblies":
-      'Rakitan adalah resep biaya yang dapat digunakan kembali yang menggabungkan beberapa sumber daya (material, tenaga kerja, peralatan) menjadi satu tarif komposit. Misalnya, rakitan "Dinding Beton Bertulang" mencakup beton, tulangan baja, bekisting, dan tenaga kerja. Terapkan rakitan ke item BOQ untuk mengisi biaya komponen secara otomatis.',
+    "assemblies.description": "Resep biaya yang dapat digunakan kembali untuk elemen konstruksi umum",
+    "assemblies.what_are_assemblies": "Rakitan adalah resep biaya yang dapat digunakan kembali yang menggabungkan beberapa sumber daya (material, tenaga kerja, peralatan) menjadi satu tarif komposit. Misalnya, rakitan \"Dinding Beton Bertulang\" mencakup beton, tulangan baja, bekisting, dan tenaga kerja. Terapkan rakitan ke item BOQ untuk mengisi biaya komponen secara otomatis.",
     "assemblies.new_assembly": "Rakitan Baru",
     "assemblies.no_results": "Tidak ada rakitan yang ditemukan",
     "assemblies.no_results_hint": "Coba sesuaikan pencarian atau filter Anda",
@@ -172,20 +146,17 @@ const resource = {
     "auth.check_email": "Periksa email Anda",
     "auth.confirm_password": "Konfirmasi Kata Sandi",
     "auth.confirm_password_placeholder": "Ulangi kata sandi Anda",
-    "auth.connection_error":
-      "Tidak dapat terhubung ke server. Silakan coba lagi.",
+    "auth.connection_error": "Tidak dapat terhubung ke server. Silakan coba lagi.",
     "auth.create_account": "Buat akun",
     "auth.email": "Email",
     "auth.forgot_password": "Lupa kata sandi?",
-    "auth.forgot_subtitle":
-      "Masukkan email Anda dan kami akan mengirimkan tautan reset.",
+    "auth.forgot_subtitle": "Masukkan email Anda dan kami akan mengirimkan tautan reset.",
     "auth.full_name": "Nama Lengkap",
     "auth.full_name_placeholder": "Budi Santoso",
     "auth.has_account": "Sudah punya akun?",
     "auth.invalid_credentials": "Email atau kata sandi tidak valid",
     "auth.login": "Masuk",
-    "auth.login_subtitle":
-      "Masukkan kredensial Anda untuk mengakses ruang kerja",
+    "auth.login_subtitle": "Masukkan kredensial Anda untuk mengakses ruang kerja",
     "auth.logout": "Keluar",
     "auth.no_account": "Belum punya akun?",
     "auth.password": "Kata Sandi",
@@ -199,10 +170,8 @@ const resource = {
     "auth.register_subtitle": "Mulai dengan OpenEstimate",
     "auth.register_title": "Buat akun",
     "auth.remember_me": "Ingat saya selama 30 hari",
-    "auth.reset_error":
-      "Tidak dapat memproses permintaan reset. Silakan coba lagi.",
-    "auth.reset_sent":
-      "Jika akun ada untuk email ini, Anda akan segera menerima tautan reset kata sandi.",
+    "auth.reset_error": "Tidak dapat memproses permintaan reset. Silakan coba lagi.",
+    "auth.reset_sent": "Jika akun ada untuk email ini, Anda akan segera menerima tautan reset kata sandi.",
     "auth.send_reset_link": "Kirim tautan reset",
     "auth.server_error": "Tidak dapat terhubung ke server. Silakan coba lagi.",
     "auth.sign_in": "Masuk",
@@ -214,8 +183,7 @@ const resource = {
     "boq.aace_methodology": "Methodology",
     "boq.aace_metrics": "Metrik Klasifikasi",
     "boq.aace_positions": "Positions",
-    "boq.aace_reference":
-      "Berdasarkan Praktik yang Direkomendasikan AACE International 18R-97. Klasifikasi terdeteksi otomatis dari metrik kelengkapan BOQ.",
+    "boq.aace_reference": "Berdasarkan Praktik yang Direkomendasikan AACE International 18R-97. Klasifikasi terdeteksi otomatis dari metrik kelengkapan BOQ.",
     "boq.aace_to": "to",
     "boq.aace_with_classification": "Dengan klasifikasi",
     "boq.aace_with_rates": "Dengan tarif satuan",
@@ -228,23 +196,20 @@ const resource = {
     "boq.add_n_positions": "Tambahkan {{count}} ke BOQ",
     "boq.add_position": "Tambahkan Item",
     "boq.add_resource": "Add",
-    "boq.add_resource_hint":
-      "Tekan Enter untuk menambahkan, Escape untuk membatalkan",
+    "boq.add_resource_hint": "Tekan Enter untuk menambahkan, Escape untuk membatalkan",
     "boq.add_section": "Tambahkan Bagian",
     "boq.add_selected": "Tambahkan yang dipilih ke BOQ",
     "boq.adding": "Adding...",
     "boq.ai_assistant": "Asisten AI",
     "boq.ai_chat_error": "Permintaan AI gagal. Coba lagi.",
-    "boq.ai_hint":
-      'Minta saya untuk menghasilkan item BOQ. Misalnya: "Tambahkan item MEP untuk gedung kantor 5 lantai"',
+    "boq.ai_hint": "Minta saya untuk menghasilkan item BOQ. Misalnya: \"Tambahkan item MEP untuk gedung kantor 5 lantai\"",
     "boq.ai_placeholder": "Deskripsikan item yang akan dibuat...",
     "boq.ai_welcome": "Minta saya untuk menghasilkan item BOQ. Misalnya: ",
     "boq.all_projects": "Semua proyek",
     "boq.all_statuses": "Semua status",
     "boq.area_m2": "Area (m²)",
     "boq.back_to_project": "Kembali ke proyek",
-    "boq.toolbar_hint":
-      "Gunakan toolbar untuk menambahkan bagian dan item, mengimpor dari database biaya atau rakitan, mengekspor ke GAEB/PDF/Excel, atau menjalankan estimasi AI. Net = jumlah total item. Markup diterapkan sebagai persentase. Total Keseluruhan = Net + Markup + PPN.",
+    "boq.toolbar_hint": "Gunakan toolbar untuk menambahkan bagian dan item, mengimpor dari database biaya atau rakitan, mengekspor ke GAEB/PDF/Excel, atau menjalankan estimasi AI. Net = jumlah total item. Markup diterapkan sebagai persentase. Total Keseluruhan = Net + Markup + PPN.",
     "boq.boq_created": "BOQ dibuat",
     "boq.boq_name": "Nama BOQ",
     "boq.cancel_compare": "Batalkan Perbandingan",
@@ -289,8 +254,7 @@ const resource = {
     "boq.cost_risk_contingency": "Contingency (P80 - P50)",
     "boq.cost_risk_distribution": "Distribusi Biaya",
     "boq.cost_risk_drivers": "Pendorong Risiko Teratas",
-    "boq.cost_risk_empty":
-      "Tambahkan item dengan biaya untuk menjalankan simulasi Monte Carlo.",
+    "boq.cost_risk_empty": "Tambahkan item dengan biaya untuk menjalankan simulasi Monte Carlo.",
     "boq.cost_risk_iterations": "Iterations",
     "boq.cost_risk_iterations_label": "iter.",
     "boq.cost_risk_loading": "Menjalankan simulasi Monte Carlo...",
@@ -316,10 +280,8 @@ const resource = {
     "boq.markup_bond": "Bond",
     "boq.markup_other": "Other",
     "boq.template_applied": "Template regional diterapkan",
-    "boq.confirm_replace_markups":
-      "Ini akan menggantikan markup yang ada. Lanjutkan?",
-    "boq.no_markups":
-      "Belum ada markup. Tambahkan satu atau terapkan template regional.",
+    "boq.confirm_replace_markups": "Ini akan menggantikan markup yang ada. Lanjutkan?",
+    "boq.no_markups": "Belum ada markup. Tambahkan satu atau terapkan template regional.",
     "boq.new_markup": "Markup Baru",
     "boq.markup_added": "Markup ditambahkan",
     "boq.markup_deleted": "Markup dihapus",
@@ -332,8 +294,7 @@ const resource = {
     "boq.duplicate_failed": "Gagal menduplikasi",
     "boq.duplicated": "BOQ diduplikasi",
     "boq.editor": "Editor BOQ",
-    "boq.empty_section":
-      'Tidak ada item di bagian ini. Klik "Tambahkan Item" untuk menambahkan.',
+    "boq.empty_section": "Tidak ada item di bagian ini. Klik \"Tambahkan Item\" untuk menambahkan.",
     "boq.enter_description": "Masukkan deskripsi...",
     "boq.estimated_total": "Total estimasi",
     "boq.estimates": "estimates",
@@ -365,12 +326,10 @@ const resource = {
     "boq.new_estimate": "Estimasi Baru",
     "boq.no_activity": "Belum ada aktivitas. Perubahan akan muncul di sini.",
     "boq.no_boqs": "Belum ada estimasi",
-    "boq.no_boqs_hint":
-      "Buat proyek terlebih dahulu, lalu tambahkan Daftar Kuantitas",
+    "boq.no_boqs_hint": "Buat proyek terlebih dahulu, lalu tambahkan Daftar Kuantitas",
     "boq.no_items_found": "Tidak ada item yang cocok",
     "boq.no_positions": "Belum ada item. Tambahkan bagian untuk memulai.",
-    "boq.no_resources":
-      "Tidak ada sumber daya yang ditetapkan. Pilih item biaya dengan ikon ⚡ dari saran pelengkapan otomatis untuk mengisi secara otomatis.",
+    "boq.no_resources": "Tidak ada sumber daya yang ditetapkan. Pilih item biaya dengan ikon ⚡ dari saran pelengkapan otomatis untuk mengisi secara otomatis.",
     "boq.no_results": "Tidak ada estimasi yang cocok",
     "boq.no_results_hint": "Coba sesuaikan pencarian atau filter Anda",
     "boq.no_section": "Tidak ada bagian (tingkat atas)",
@@ -391,8 +350,7 @@ const resource = {
     "boq.quality_descriptions": "Deskripsi terisi",
     "boq.quality_fair": "Fair",
     "boq.quality_great": "Great",
-    "boq.quality_hint":
-      "Isi semua kolom untuk mencapai 100% dan memastikan akurasi estimasi.",
+    "boq.quality_hint": "Isi semua kolom untuk mencapai 100% dan memastikan akurasi estimasi.",
     "boq.quality_markups": "Markup ditambahkan",
     "boq.quality_missing": "Missing",
     "boq.quality_needs_work": "Perlu perbaikan",
@@ -405,16 +363,13 @@ const resource = {
     "boq.quick_add_section": "Tambahkan Bagian",
     "boq.quick_add_section_desc": "Buat bagian baru untuk mengorganisir item",
     "boq.quick_import_costs": "Impor dari Database Biaya",
-    "boq.quick_import_costs_desc":
-      "Telusuri dan pilih item dari database biaya",
+    "boq.quick_import_costs_desc": "Telusuri dan pilih item dari database biaya",
     "boq.quick_use_template": "Gunakan Template",
-    "boq.quick_use_template_desc":
-      "Mulai dari template estimasi yang sudah dibuat",
+    "boq.quick_use_template_desc": "Mulai dari template estimasi yang sudah dibuat",
     "boq.recalculate": "Recalculate",
     "boq.recalculate_complete": "Penghitungan ulang selesai",
     "boq.recalculate_failed": "Penghitungan ulang gagal",
-    "boq.recalculate_summary":
-      "Dihitung ulang: {{sections}} bagian, {{positions}} item",
+    "boq.recalculate_summary": "Dihitung ulang: {{sections}} bagian, {{positions}} item",
     "boq.recent_activity": "Aktivitas Terbaru",
     "boq.redo": "Ulangi (Ctrl+Y)",
     "boq.redone": "Redone",
@@ -450,8 +405,7 @@ const resource = {
     "boq.rs_labor": "Labor",
     "boq.rs_material": "Material",
     "boq.rs_no_resources": "Tidak ada sumber daya dalam kategori ini",
-    "boq.rs_no_results":
-      "Tidak ada sumber daya yang cocok dengan pencarian Anda",
+    "boq.rs_no_results": "Tidak ada sumber daya yang cocok dengan pencarian Anda",
     "boq.rs_other": "Other",
     "boq.rs_resources": "resources",
     "boq.rs_save_failed": "Gagal menyimpan",
@@ -475,8 +429,7 @@ const resource = {
     "boq.sections": "sections",
     "boq.select_project": "Pilih proyek...",
     "boq.sensitivity_base_total": "Total Dasar",
-    "boq.sensitivity_empty":
-      "Tambahkan item dengan biaya untuk melihat analisis sensitivitas.",
+    "boq.sensitivity_empty": "Tambahkan item dengan biaya untuk melihat analisis sensitivitas.",
     "boq.sensitivity_impact_high": "Impact (+)",
     "boq.sensitivity_impact_low": "Impact (-)",
     "boq.sensitivity_overrun": "Kenaikan biaya",
@@ -487,21 +440,16 @@ const resource = {
     "boq.show_all_activity": "Tampilkan semua aktivitas...",
     "boq.showing_estimates": "{{shown}} dari {{total}} estimasi",
     "boq.start_building": "Mulai membangun estimasi Anda",
-    "boq.start_building_desc":
-      "Ikuti langkah-langkah berikut untuk membuat Daftar Kuantitas yang profesional",
+    "boq.start_building_desc": "Ikuti langkah-langkah berikut untuk membuat Daftar Kuantitas yang profesional",
     "boq.status": "Status",
     "boq.step_add_positions": "Tambahkan item",
-    "boq.step_add_positions_desc":
-      "Tambahkan baris item dengan deskripsi dan satuan ke setiap bagian",
+    "boq.step_add_positions_desc": "Tambahkan baris item dengan deskripsi dan satuan ke setiap bagian",
     "boq.step_add_sections": "Tambahkan bagian",
-    "boq.step_add_sections_desc":
-      "Atur estimasi Anda ke dalam bagian (misalnya, Fondasi, Dinding, Atap)",
+    "boq.step_add_sections_desc": "Atur estimasi Anda ke dalam bagian (misalnya, Fondasi, Dinding, Atap)",
     "boq.step_review": "Tinjau total",
-    "boq.step_review_desc":
-      "Tambahkan markup untuk overhead dan keuntungan, lalu tinjau total keseluruhan Anda",
+    "boq.step_review_desc": "Tambahkan markup untuk overhead dan keuntungan, lalu tinjau total keseluruhan Anda",
     "boq.step_set_quantities": "Tetapkan kuantitas",
-    "boq.step_set_quantities_desc":
-      "Masukkan kuantitas dan tarif satuan untuk setiap item guna menghitung total",
+    "boq.step_set_quantities_desc": "Masukkan kuantitas dan tarif satuan untuk setiap item guna menghitung total",
     "boq.subtotal": "Subtotal",
     "boq.sync_rate": "Sinkronkan tarif",
     "boq.table_label": "Item Daftar Kuantitas",
@@ -509,20 +457,13 @@ const resource = {
     "boq.template_error": "Gagal membuat BOQ dari template",
     "boq.templates": "Template BOQ",
     "boq.templates_coming_soon": "Template segera hadir",
-    "boq.templates_coming_soon_desc":
-      "Pemilih template akan tersedia dalam pembaruan mendatang.",
-    "boq.templates_subtitle":
-      "Mulai dengan template profesional untuk tipe bangunan Anda. Pilih template, tetapkan area, dan buat BOQ lengkap secara instan.",
-    "boq.tip_autocomplete":
-      "Isi deskripsi untuk semua item — mulai mengetik untuk melihat saran dari database biaya",
-    "boq.tip_markups":
-      "Tambahkan markup untuk biaya overhead dan keuntungan menggunakan bagian Markup di bawah tabel",
-    "boq.tip_menu":
-      "Klik menu (...) pada bagian untuk menambahkan item atau menghapusnya",
-    "boq.tip_sections":
-      "Tambahkan bagian untuk mengorganisir estimasi Anda (misalnya, Fondasi, Dinding, Atap)",
-    "boq.tip_tab":
-      "Gunakan Tab untuk berpindah antar kolom, Enter untuk menyimpan perubahan",
+    "boq.templates_coming_soon_desc": "Pemilih template akan tersedia dalam pembaruan mendatang.",
+    "boq.templates_subtitle": "Mulai dengan template profesional untuk tipe bangunan Anda. Pilih template, tetapkan area, dan buat BOQ lengkap secara instan.",
+    "boq.tip_autocomplete": "Isi deskripsi untuk semua item — mulai mengetik untuk melihat saran dari database biaya",
+    "boq.tip_markups": "Tambahkan markup untuk biaya overhead dan keuntungan menggunakan bagian Markup di bawah tabel",
+    "boq.tip_menu": "Klik menu (...) pada bagian untuk menambahkan item atau menghapusnya",
+    "boq.tip_sections": "Tambahkan bagian untuk mengorganisir estimasi Anda (misalnya, Fondasi, Dinding, Atap)",
+    "boq.tip_tab": "Gunakan Tab untuk berpindah antar kolom, Enter untuk menyimpan perubahan",
     "boq.tips_title": "Tips & Petunjuk",
     "boq.mvp.title": "Choose materials",
     "boq.mvp.subtitle_one": "{{count}} resource needs a choice",
@@ -590,15 +531,12 @@ const resource = {
     "catalog.creating": "Creating...",
     "catalog.delete_failed": "Gagal menghapus",
     "catalog.delete_region": "Hapus Wilayah",
-    "catalog.empty_hint":
-      "Impor katalog regional untuk mengisi sumber daya, atau ekstrak dari item biaya.",
-    "catalog.empty_with_regions":
-      "Tidak ada sumber daya yang cocok dengan filter saat ini. Coba ubah tipe atau wilayah.",
+    "catalog.empty_hint": "Impor katalog regional untuk mengisi sumber daya, atau ekstrak dari item biaya.",
+    "catalog.empty_with_regions": "Tidak ada sumber daya yang cocok dengan filter saat ini. Coba ubah tipe atau wilayah.",
     "catalog.import": "Import",
     "catalog.import_failed": "Impor gagal",
     "catalog.import_region": "Impor wilayah",
-    "catalog.import_regions_desc":
-      "Unduh katalog sumber daya yang sudah dibuat dari database regional CWICR",
+    "catalog.import_regions_desc": "Unduh katalog sumber daya yang sudah dibuat dari database regional CWICR",
     "catalog.import_regions_title": "Impor Katalog Sumber Daya",
     "catalog.import_success": "Impor selesai",
     "catalog.importing": "Importing...",
@@ -607,8 +545,7 @@ const resource = {
     "catalog.loaded": "Loaded",
     "catalog.my_catalog": "Katalog Saya",
     "catalog.my_catalog_empty": "Katalog Anda kosong",
-    "catalog.my_catalog_empty_desc":
-      "Tambahkan material, peralatan, dan tarif tenaga kerja Anda sendiri. Sumber daya kustom dapat digunakan dalam rakitan dan diterapkan ke item BOQ.",
+    "catalog.my_catalog_empty_desc": "Tambahkan material, peralatan, dan tarif tenaga kerja Anda sendiri. Sumber daya kustom dapat digunakan dalam rakitan dan diterapkan ke item BOQ.",
     "catalog.name": "Name",
     "catalog.no_results": "Tidak ada sumber daya yang ditemukan",
     "catalog.no_results_hint": "Coba sesuaikan pencarian atau filter Anda",
@@ -624,10 +561,8 @@ const resource = {
     "catalog.resources_found": "sumber daya ditemukan",
     "catalog.resources_imported": "sumber daya diimpor",
     "catalog.resources_removed": "sumber daya dihapus",
-    "catalog.search_hint":
-      "Telusuri material, peralatan, tenaga kerja, dan operator",
-    "catalog.what_is_catalog":
-      "Material, tenaga kerja, peralatan, dan tarif operator yang diorganisir berdasarkan wilayah. Instal katalog regional dari Modul, lalu gunakan untuk membangun rakitan atau menambahkan item langsung ke item BOQ.",
+    "catalog.search_hint": "Telusuri material, peralatan, tenaga kerja, dan operator",
+    "catalog.what_is_catalog": "Material, tenaga kerja, peralatan, dan tarif operator yang diorganisir berdasarkan wilayah. Instal katalog regional dari Modul, lalu gunakan untuk membangun rakitan atau menambahkan item langsung ke item BOQ.",
     "catalog.search_in": "Cari di",
     "catalog.search_placeholder": "Cari berdasarkan nama atau kode...",
     "catalog.selected": "selected",
@@ -652,14 +587,12 @@ const resource = {
     "command_palette.action_run_validation": "Jalankan Validasi",
     "command_palette.action_import_database": "Impor Database",
     "error.something_wrong": "Terjadi kesalahan",
-    "error.unexpected_error":
-      "Kesalahan tak terduga terjadi saat merender halaman ini. Anda dapat mencoba memuat ulang atau kembali ke dasbor.",
+    "error.unexpected_error": "Kesalahan tak terduga terjadi saat merender halaman ini. Anda dapat mencoba memuat ulang atau kembali ke dasbor.",
     "error.details": "Detail kesalahan",
     "error.try_again": "Coba lagi",
     "error.go_dashboard": "Ke Dasbor",
     "error.not_found": "Halaman tidak ditemukan",
-    "error.not_found_desc":
-      "Halaman yang Anda cari tidak ada atau telah dipindahkan. Periksa URL atau kembali ke dasbor.",
+    "error.not_found_desc": "Halaman yang Anda cari tidak ada atau telah dipindahkan. Periksa URL atau kembali ke dasbor.",
     "error.go_back": "Kembali",
     "common.archive": "Arsipkan",
     "common.back": "Kembali",
@@ -697,8 +630,7 @@ const resource = {
     "costmodel.benchmark_area_value": "{{area}} m²",
     "costmodel.benchmark_cost_per_m2": "Cost / m²",
     "costmodel.benchmark_current_cost": "Current: {{value}}/m²",
-    "costmodel.benchmark_enter_area":
-      "Masukkan area proyek untuk melihat perbandingan patokan biaya per m²",
+    "costmodel.benchmark_enter_area": "Masukkan area proyek untuk melihat perbandingan patokan biaya per m²",
     "costmodel.benchmark_per_m2": "per m²",
     "costmodel.benchmark_project_area": "Area Proyek (m²)",
     "costmodel.benchmark_project_type": "Tipe Proyek",
@@ -742,8 +674,7 @@ const resource = {
     "costmodel.evm_spi": "SPI",
     "costmodel.evm_status": "Status",
     "costmodel.evm_sv_label": "SV",
-    "costmodel.evm_tcpi_hint":
-      "Untuk menyelesaikan sesuai anggaran, Anda memerlukan CPI sebesar {{tcpi}} ke depan",
+    "costmodel.evm_tcpi_hint": "Untuk menyelesaikan sesuai anggaran, Anda memerlukan CPI sebesar {{tcpi}} ke depan",
     "costmodel.evm_time_elapsed": "Waktu yang Telah Berlalu",
     "costmodel.evm_title": "Analisis Nilai yang Diperoleh",
     "costmodel.evm_unknown": "Unknown",
@@ -763,8 +694,7 @@ const resource = {
     "costmodel.s_curve": "Kurva-S (EVM)",
     "costmodel.s_curve_chart": "Grafik Kurva-S",
     "costmodel.title": "Model Biaya 5D",
-    "costmodel.what_is_5d":
-      "Manajemen biaya 5D menambahkan pelacakan biaya dari waktu ke waktu ke proyek Anda. Pantau anggaran vs. pengeluaran aktual dengan grafik kurva-S, lacak Nilai yang Diperoleh (SPI = efisiensi jadwal, CPI = efisiensi biaya — keduanya >= 1,0 berarti sehat), dan jalankan skenario what-if untuk memperkirakan hasil.",
+    "costmodel.what_is_5d": "Manajemen biaya 5D menambahkan pelacakan biaya dari waktu ke waktu ke proyek Anda. Pantau anggaran vs. pengeluaran aktual dengan grafik kurva-S, lacak Nilai yang Diperoleh (SPI = efisiensi jadwal, CPI = efisiensi biaya — keduanya >= 1,0 berarti sehat), dan jalankan skenario what-if untuk memperkirakan hasil.",
     "costmodel.total": "Total",
     "costmodel.total_budget": "Total Anggaran",
     "costmodel.variance": "Variance",
@@ -779,8 +709,7 @@ const resource = {
     "costmodel.whatif_material": "Biaya Material",
     "costmodel.whatif_original_bac": "BAC Asli",
     "costmodel.whatif_reset": "Reset",
-    "costmodel.whatif_scenario_name":
-      "What-If: M{{material}}% L{{labor}}% D{{duration}}%",
+    "costmodel.whatif_scenario_name": "What-If: M{{material}}% L{{labor}}% D{{duration}}%",
     "costmodel.whatif_title": "Skenario What-If",
     "costs.add_database": "Import",
     "costs.add_item": "Tambahkan Item",
@@ -819,22 +748,18 @@ const resource = {
     "costs.import_and_more": "dan {{count}} kesalahan lagi",
     "costs.import_another": "Impor Lainnya",
     "costs.import_click_to_change": "Klik untuk memilih file yang berbeda",
-    "costs.import_columns_hint":
-      "Kolom terdeteksi otomatis. Header yang diterima: Kode, Deskripsi, Satuan, Tarif/Harga/Biaya, Mata Uang, DIN 276/Klasifikasi.",
+    "costs.import_columns_hint": "Kolom terdeteksi otomatis. Header yang diterima: Kode, Deskripsi, Satuan, Tarif/Harga/Biaya, Mata Uang, DIN 276/Klasifikasi.",
     "costs.import_complete": "Impor Selesai",
     "costs.import_database": "Impor Database",
     "costs.import_drop_here": "Jatuhkan file Anda di sini",
-    "costs.import_drop_or_click":
-      "Jatuhkan file Anda di sini atau klik untuk menelusuri",
+    "costs.import_drop_or_click": "Jatuhkan file Anda di sini atau klik untuk menelusuri",
     "costs.import_error_details": "Detail kesalahan",
     "costs.import_errors": "Errors",
     "costs.import_failed": "Impor gagal",
     "costs.import_file_too_large": "File terlalu besar",
-    "costs.import_first_hint":
-      "Impor database biaya regional untuk mulai mencari 55.000+ item.",
+    "costs.import_first_hint": "Impor database biaya regional untuk mulai mencari 55.000+ item.",
     "costs.import_format_csv": "CSV (.csv) dengan kolom yang sama",
-    "costs.import_format_excel":
-      "Excel (.xlsx) dengan kolom: Kode, Deskripsi, Satuan, Tarif",
+    "costs.import_format_excel": "Excel (.xlsx) dengan kolom: Kode, Deskripsi, Satuan, Tarif",
     "costs.import_formats_title": "Format yang didukung",
     "costs.import_go_to_database": "Buka Database Biaya",
     "costs.import_imported": "Imported",
@@ -843,11 +768,9 @@ const resource = {
     "costs.import_row": "Row",
     "costs.import_rows_processed": "baris diproses",
     "costs.import_skipped": "Skipped",
-    "costs.import_subtitle":
-      "Muat database harga atau unggah file Anda sendiri.",
+    "costs.import_subtitle": "Muat database harga atau unggah file Anda sendiri.",
     "costs.import_success": "Impor selesai",
-    "costs.import_supported_hint":
-      "Silakan unggah file Excel (.xlsx) atau CSV (.csv).",
+    "costs.import_supported_hint": "Silakan unggah file Excel (.xlsx) atau CSV (.csv).",
     "costs.import_title": "Impor Database Biaya",
     "costs.import_unsupported_format": "Format file tidak didukung",
     "costs.indexing_failed": "Pengindeksan gagal",
@@ -856,8 +779,7 @@ const resource = {
     "costs.items_copied": "{{count}} item disalin ke clipboard",
     "costs.load_more": "Muat lebih banyak",
     "costs.loaded_databases": "Database yang Dimuat",
-    "costs.no_boqs_helper":
-      "Tidak ada BOQ dalam proyek ini. Buat satu terlebih dahulu di editor BOQ.",
+    "costs.no_boqs_helper": "Tidak ada BOQ dalam proyek ini. Buat satu terlebih dahulu di editor BOQ.",
     "costs.no_database_loaded": "Tidak ada database yang dimuat",
     "costs.no_results": "Tidak ada item biaya yang ditemukan",
     "costs.no_results_hint": "Coba sesuaikan pencarian atau filter Anda",
@@ -869,11 +791,9 @@ const resource = {
     "costs.region_cleared": "Wilayah dikosongkan",
     "costs.results_found": "hasil ditemukan",
     "costs.search_hint": "Cari item biaya berdasarkan deskripsi atau kode",
-    "costs.what_is_cost_db":
-      "Tarif satuan dan harga komposit untuk material, tenaga kerja, dan peralatan. Impor database regional (CWICR, BKI, RSMeans) dari Modul atau tambahkan tarif kustom. Aktifkan Pencarian Semantik AI untuk kueri berbahasa alami.",
+    "costs.what_is_cost_db": "Tarif satuan dan harga komposit untuk material, tenaga kerja, dan peralatan. Impor database regional (CWICR, BKI, RSMeans) dari Modul atau tambahkan tarif kustom. Aktifkan Pencarian Semantik AI untuk kueri berbahasa alami.",
     "costs.search_placeholder": "Cari berdasarkan deskripsi atau kode...",
-    "costs.semantic_placeholder":
-      "Deskripsikan apa yang Anda butuhkan (AI menemukan yang serupa)...",
+    "costs.semantic_placeholder": "Deskripsikan apa yang Anda butuhkan (AI menemukan yang serupa)...",
     "costs.showing": "Showing",
     "costs.title": "Database Biaya",
     "costs.no_variants_hint": "Harga tunggal",
@@ -893,8 +813,7 @@ const resource = {
     "dashboard.add_api_keys": "Tambahkan Kunci API",
     "dashboard.ai_providers": "Penyedia AI",
     "dashboard.analytics": "Analitik",
-    "dashboard.kpi_hint":
-      "Ringkasan di semua proyek. Nilai diperbarui saat Anda menambahkan estimasi dan aktivitas jadwal.",
+    "dashboard.kpi_hint": "Ringkasan di semua proyek. Nilai diperbarui saat Anda menambahkan estimasi dan aktivitas jadwal.",
     "dashboard.api_server": "Server API",
     "dashboard.boq_status": "Status BOQ",
     "dashboard.completed": "Selesai",
@@ -925,23 +844,17 @@ const resource = {
     "dashboard.recent_projects": "Proyek Terbaru",
     "dashboard.show_shortcuts": "Tampilkan pintasan keyboard",
     "dashboard.step_ai_search": "Aktifkan Pencarian AI",
-    "dashboard.step_ai_search_desc":
-      "Buat embedding vektor untuk pencocokan biaya semantik",
+    "dashboard.step_ai_search_desc": "Buat embedding vektor untuk pencocokan biaya semantik",
     "dashboard.step_build_boq": "Bangun BOQ Anda",
     "dashboard.step_build_boq_desc": "Buat Daftar Kuantitas dengan bantuan AI",
     "dashboard.step_connect_ai": "Hubungkan AI",
-    "dashboard.step_connect_ai_desc":
-      "Tambahkan kunci API Anda untuk estimasi bertenaga AI",
+    "dashboard.step_connect_ai_desc": "Tambahkan kunci API Anda untuk estimasi bertenaga AI",
     "dashboard.step_create_project": "Buat Proyek",
-    "dashboard.step_create_project_desc":
-      "Mulai proyek estimasi konstruksi pertama Anda",
+    "dashboard.step_create_project_desc": "Mulai proyek estimasi konstruksi pertama Anda",
     "dashboard.step_load_db": "Muat Database Biaya",
-    "dashboard.step_load_db_desc":
-      "Impor data harga regional dengan 55.000+ item",
-    "dashboard.subtitle":
-      "Ikhtisar proyek, metrik utama, dan aktivitas terbaru Anda",
-    "dashboard.subtitle_2":
-      "Perencanaan sumber daya cerdas untuk proyek konstruksi Anda",
+    "dashboard.step_load_db_desc": "Impor data harga regional dengan 55.000+ item",
+    "dashboard.subtitle": "Ikhtisar proyek, metrik utama, dan aktivitas terbaru Anda",
+    "dashboard.subtitle_2": "Perencanaan sumber daya cerdas untuk proyek konstruksi Anda",
     "dashboard.activity": "Aktivitas Terbaru",
     "dashboard.system_status": "Status Sistem",
     "dashboard.total_boqs": "Total BOQ",
@@ -955,19 +868,16 @@ const resource = {
     "demo.install": "Install",
     "demo.install_error": "Gagal menginstal proyek demo. Coba lagi.",
     "demo.installing": "Installing...",
-    "demo.modal_subtitle":
-      "Instal proyek lengkap dengan BOQ, jadwal, anggaran, dan tender",
+    "demo.modal_subtitle": "Instal proyek lengkap dengan BOQ, jadwal, anggaran, dan tender",
     "demo.modal_title": "Impor Proyek Demo",
     "documents.title": "Documents",
-    "documents.subtitle":
-      "Unggah dan kelola file proyek — gambar, kontrak, spesifikasi",
+    "documents.subtitle": "Unggah dan kelola file proyek — gambar, kontrak, spesifikasi",
     "documents.upload": "Unggah File",
     "documents.uploaded": "Uploaded",
     "documents.upload_failed": "Pengunggahan gagal",
     "documents.upload_skipped": "File dilewati",
     "documents.file_too_large": "{{name}} melebihi batas 100 MB",
-    "documents.upload_summary":
-      "Pengunggahan selesai: {{success}} diunggah, {{failed}} gagal",
+    "documents.upload_summary": "Pengunggahan selesai: {{success}} diunggah, {{failed}} gagal",
     "documents.delete_failed": "Gagal menghapus",
     "documents.deleted": "Dokumen dihapus",
     "documents.download": "Download",
@@ -979,14 +889,11 @@ const resource = {
     "documents.no_results_hint": "Coba kata kunci pencarian yang berbeda",
     "documents.clear_search": "Hapus pencarian",
     "documents.drop_hint": "Seret & lepas file di sini, atau klik Unggah",
-    "documents.drop_hint_types":
-      "PDF, gambar, Excel, DWG, IFC — semua tipe file",
+    "documents.drop_hint_types": "PDF, gambar, Excel, DWG, IFC — semua tipe file",
     "documents.empty": "Belum ada dokumen",
-    "documents.empty_hint":
-      "Unggah file pertama Anda — gambar, kontrak, foto, atau dokumen proyek apa pun.",
+    "documents.empty_hint": "Unggah file pertama Anda — gambar, kontrak, foto, atau dokumen proyek apa pun.",
     "documents.select_project": "Pilih proyek",
-    "documents.select_project_hint":
-      "Gunakan pemilih proyek di header untuk memilih proyek terlebih dahulu.",
+    "documents.select_project_hint": "Gunakan pemilih proyek di header untuk memilih proyek terlebih dahulu.",
     "documents.sort_date": "Berdasarkan tanggal",
     "documents.sort_name": "Berdasarkan nama",
     "documents.sort_size": "Berdasarkan ukuran",
@@ -1000,45 +907,33 @@ const resource = {
     "documents.cat_correspondence": "Correspondence",
     "documents.cat_other": "Other",
     "login.benefit.ai": "Estimasi berbantuan AI",
-    "login.benefit.ai_desc":
-      "Saran cerdas dengan skor kepercayaan. Anda yang memutuskan, AI yang membantu.",
+    "login.benefit.ai_desc": "Saran cerdas dengan skor kepercayaan. Anda yang memutuskan, AI yang membantu.",
     "login.benefit.allinone": "BOQ + 4D + 5D + Tender",
-    "login.benefit.allinone_desc":
-      "Alur kerja lengkap dari estimasi biaya hingga perbandingan tender dalam satu alat.",
+    "login.benefit.allinone_desc": "Alur kerja lengkap dari estimasi biaya hingga perbandingan tender dalam satu alat.",
     "login.benefit.free": "Gratis untuk semua",
-    "login.benefit.free_desc":
-      "Tanpa biaya lisensi. Tanpa batasan. Dibuat oleh estimator, untuk estimator.",
+    "login.benefit.free_desc": "Tanpa biaya lisensi. Tanpa batasan. Dibuat oleh estimator, untuk estimator.",
     "login.benefit.local": "Data Anda tetap di komputer Anda",
-    "login.benefit.local_desc":
-      "Tanpa cloud. Tanpa server pihak ketiga. Kontrol penuh atas data proyek Anda.",
+    "login.benefit.local_desc": "Tanpa cloud. Tanpa server pihak ketiga. Kontrol penuh atas data proyek Anda.",
     "login.benefit.open_source": "100% sumber terbuka",
-    "login.benefit.open_source_desc":
-      "Kode transparan. Tanpa vendor lock-in. Ekspor semua, kapan saja.",
+    "login.benefit.open_source_desc": "Kode transparan. Tanpa vendor lock-in. Ekspor semua, kapan saja.",
     "login.benefit.standards": "Standar internasional",
-    "login.benefit.standards_desc":
-      "55.000+ item biaya di 11 basis data regional di seluruh dunia.",
-    "login.hero_desc":
-      "BOQ profesional, jadwal 4D, model biaya 5D, dan tender — semua dalam satu platform sumber terbuka.",
+    "login.benefit.standards_desc": "55.000+ item biaya di 11 basis data regional di seluruh dunia.",
+    "login.hero_desc": "BOQ profesional, jadwal 4D, model biaya 5D, dan tender — semua dalam satu platform sumber terbuka.",
     "login.hero_highlight": "yang baru",
     "login.hero_title": "Estimasi biaya konstruksi,",
     "login.open_source_badge": "ERP konstruksi sumber terbuka #1",
     "dashboard.open_source_badge": "ERP konstruksi open-source #1",
     "login.learn_more": "Pelajari lebih lanjut tentang platform",
-    "login.privacy":
-      "Semua data diproses dan disimpan secara lokal di mesin Anda. Tidak ada yang dikirim ke server eksternal. Anda memiliki data Anda — selalu.",
-    "login.privacy_ai":
-      "Jika Anda menggunakan alat AI bawaan, beberapa data mungkin dikirim ke penyedia AI yang Anda konfigurasi (OpenAI, Anthropic, dll.). Anda mengontrol penyedia mana yang digunakan dan data apa yang dibagikan.",
+    "login.privacy": "Semua data diproses dan disimpan secara lokal di mesin Anda. Tidak ada yang dikirim ke server eksternal. Anda memiliki data Anda — selalu.",
+    "login.privacy_ai": "Jika Anda menggunakan alat AI bawaan, beberapa data mungkin dikirim ke penyedia AI yang Anda konfigurasi (OpenAI, Anthropic, dll.). Anda mengontrol penyedia mana yang digunakan dan data apa yang dibagikan.",
     "marketplace.active": "Active",
     "marketplace.available": "Modul yang Tersedia",
     "marketplace.builtin": "Bawaan",
-    "marketplace.builtin_message":
-      "Modul ini sudah tertanam dalam instalasi Anda dan siap digunakan.",
+    "marketplace.builtin_message": "Modul ini sudah tertanam dalam instalasi Anda dan siap digunakan.",
     "marketplace.catalog_imported": "Katalog diimpor",
-    "marketplace.catalog_imported_message":
-      "{{imported}} sumber daya diimpor, {{skipped}} dilewati untuk {{region}}.",
+    "marketplace.catalog_imported_message": "{{imported}} sumber daya diimpor, {{skipped}} dilewati untuk {{region}}.",
     "marketplace.demo_installed": "Demo terinstal",
-    "marketplace.demo_installed_message":
-      "{{name}} dibuat dengan BOQ, jadwal, anggaran, dan tender lengkap.",
+    "marketplace.demo_installed_message": "{{name}} dibuat dengan BOQ, jadwal, anggaran, dan tender lengkap.",
     "marketplace.free": "Free",
     "marketplace.import_failed": "Impor gagal",
     "marketplace.imported": "Imported",
@@ -1047,8 +942,7 @@ const resource = {
     "marketplace.install_failed": "Instalasi gagal",
     "marketplace.installed_modules": "Modul Inti yang Terinstal",
     "marketplace.installing": "Installing...",
-    "marketplace.language_activated":
-      "Paket bahasa diaktifkan. Ubah bahasa di Pengaturan.",
+    "marketplace.language_activated": "Paket bahasa diaktifkan. Ubah bahasa di Pengaturan.",
     "marketplace.language_already_included": "Bahasa ini sudah termasuk.",
     "marketplace.manage": "Manage",
     "marketplace.module_disabled": "{{name}} disabled",
@@ -1056,40 +950,30 @@ const resource = {
     "marketplace.my_modules": "Modul yang Terinstal",
     "marketplace.no_region_mapping": "Tidak ada pemetaan wilayah untuk {{id}}",
     "marketplace.no_results": "Tidak ada modul yang ditemukan",
-    "marketplace.no_results_hint":
-      "Coba sesuaikan pencarian atau filter kategori Anda.",
+    "marketplace.no_results_hint": "Coba sesuaikan pencarian atau filter kategori Anda.",
     "marketplace.rules": "rules",
     "marketplace.search_placeholder": "Cari modul...",
-    "marketplace.subtitle":
-      "Telusuri dan instal add-on untuk database biaya, alat AI, konverter CAD, dan lainnya.",
-    "marketplace.description":
-      "Perluas OpenEstimate dengan database biaya regional, katalog sumber daya (CWICR), indeks vektor untuk AI, paket bahasa, proyek demo, dan integrasi. Instal modul untuk mengaktifkannya — hapus kapan saja.",
+    "marketplace.subtitle": "Telusuri dan instal add-on untuk database biaya, alat AI, konverter CAD, dan lainnya.",
+    "marketplace.description": "Perluas OpenEstimate dengan database biaya regional, katalog sumber daya (CWICR), indeks vektor untuk AI, paket bahasa, proyek demo, dan integrasi. Instal modul untuk mengaktifkannya — hapus kapan saja.",
     "marketplace.title": "Marketplace Modul",
     "marketplace.uninstall": "Uninstall",
     "marketplace.unknown_region": "Wilayah tidak dikenal",
     "marketplace.validation_rule_sets": "Set Aturan Validasi",
     "marketplace.validation_rules_active": "aturan validasi aktif",
     "marketplace.vector_index": "Indeks Vektor",
-    "marketplace.vector_index_hint":
-      "Impor database biaya terlebih dahulu, lalu buat vektor.",
+    "marketplace.vector_index_hint": "Impor database biaya terlebih dahulu, lalu buat vektor.",
     "modules.title": "Modul",
     "modules.cat_regional": "Standar Regional",
-    "modules.cat_regional_desc":
-      "Format impor/ekspor BOQ dan standar klasifikasi khusus negara",
+    "modules.cat_regional_desc": "Format impor/ekspor BOQ dan standar klasifikasi khusus negara",
     "modules.community_title": "Bangun Modul Anda Sendiri",
-    "modules.community_desc":
-      "OpenConstructionERP memiliki arsitektur plugin modular. Siapa pun dapat membuat modul kustom — database biaya, standar regional, konverter CAD, dasbor analitik, integrasi dengan sistem eksternal, atau fungsionalitas lainnya. Modul Anda akan muncul di bagian Modul ini dan dapat diinstal oleh pengguna mana pun.",
+    "modules.community_desc": "OpenConstructionERP memiliki arsitektur plugin modular. Siapa pun dapat membuat modul kustom — database biaya, standar regional, konverter CAD, dasbor analitik, integrasi dengan sistem eksternal, atau fungsionalitas lainnya. Modul Anda akan muncul di bagian Modul ini dan dapat diinstal oleh pengguna mana pun.",
     "modules.community_type_data": "Modul Data",
-    "modules.community_type_data_desc":
-      "Database biaya regional, katalog sumber daya, perpustakaan material, standar klasifikasi (DIN, NRM, SNIP, dll.)",
+    "modules.community_type_data_desc": "Database biaya regional, katalog sumber daya, perpustakaan material, standar klasifikasi (DIN, NRM, SNIP, dll.)",
     "modules.community_type_integration": "Integrasi",
-    "modules.community_type_integration_desc":
-      "Hubungkan dengan SAP, Procore, MS Project, BIM 360, PlanRadar, Primavera, atau sistem eksternal apa pun melalui API",
+    "modules.community_type_integration_desc": "Hubungkan dengan SAP, Procore, MS Project, BIM 360, PlanRadar, Primavera, atau sistem eksternal apa pun melalui API",
     "modules.community_type_tools": "Alat & Analitik",
-    "modules.community_type_tools_desc":
-      "Laporan kustom, dasbor, kalkulator, konverter format, model AI, atau alat konstruksi khusus lainnya",
-    "modules.community_how":
-      "Setiap modul adalah paket Python dengan file manifest.py. Buat modul Anda, uji secara lokal, dan bagikan dengan komunitas. Bahkan jika Anda hanya memiliki ide — kirimkan deskripsi teks kepada kami dan kami akan membantu Anda membangunnya.",
+    "modules.community_type_tools_desc": "Laporan kustom, dasbor, kalkulator, konverter format, model AI, atau alat konstruksi khusus lainnya",
+    "modules.community_how": "Setiap modul adalah paket Python dengan file manifest.py. Buat modul Anda, uji secara lokal, dan bagikan dengan komunitas. Bahkan jika Anda hanya memiliki ide — kirimkan deskripsi teks kepada kami dan kami akan membantu Anda membangunnya.",
     "modules.community_submit_email": "Kirim Modul via Email",
     "modules.community_submit_github": "Usulkan di GitHub",
     "modules.community_telegram": "Diskusikan di Telegram",
@@ -1140,27 +1024,20 @@ const resource = {
     "files.toast.copied": "Disalin",
     "files.toast.copy_failed": "Tidak dapat menyalin",
     "files.no_project_title": "Tidak ada proyek aktif",
-    "files.no_project_desc":
-      "Pilih proyek dari dasbor untuk melihat semua dokumen, foto, berkas BIM dan DWG di satu tempat.",
+    "files.no_project_desc": "Pilih proyek dari dasbor untuk melihat semua dokumen, foto, berkas BIM dan DWG di satu tempat.",
     "files.go_to_projects": "Ke proyek",
     "files.export.title": "Ekspor paket proyek",
-    "files.export.intro":
-      "Pilih apa yang akan disertakan. Paket lebih kecil ditransfer lebih cepat; yang lebih besar menyimpan lebih banyak.",
+    "files.export.intro": "Pilih apa yang akan disertakan. Paket lebih kecil ditransfer lebih cepat; yang lebih besar menyimpan lebih banyak.",
     "files.export.scope_metadata": "Hanya metadata",
-    "files.export.scope_metadata_hint":
-      "Cocok untuk email. Kuantitas, tabel, dan tautan — tanpa lampiran.",
+    "files.export.scope_metadata_hint": "Cocok untuk email. Kuantitas, tabel, dan tautan — tanpa lampiran.",
     "files.export.scope_documents": "Dokumen",
-    "files.export.scope_documents_hint":
-      "Menambahkan dokumen dan foto yang diunggah dengan thumbnail.",
+    "files.export.scope_documents_hint": "Menambahkan dokumen dan foto yang diunggah dengan thumbnail.",
     "files.export.scope_bim": "Model BIM",
-    "files.export.scope_bim_hint":
-      "Menambahkan model BIM, elemen, dan geometri standar.",
+    "files.export.scope_bim_hint": "Menambahkan model BIM, elemen, dan geometri standar.",
     "files.export.scope_dwg": "Gambar DWG",
-    "files.export.scope_dwg_hint":
-      "Menambahkan gambar DWG, versi, dan lembar terkait.",
+    "files.export.scope_dwg_hint": "Menambahkan gambar DWG, versi, dan lembar terkait.",
     "files.export.scope_full": "Proyek lengkap",
-    "files.export.scope_full_hint":
-      "Semuanya — paket migrasi lengkap, termasuk semua lampiran.",
+    "files.export.scope_full_hint": "Semuanya — paket migrasi lengkap, termasuk semua lampiran.",
     "files.export.stat_scope": "Cakupan",
     "files.export.stat_attachments": "Lampiran",
     "files.export.stat_size": "Perkiraan ukuran",
@@ -1168,12 +1045,10 @@ const resource = {
     "files.export.tables": "Tabel",
     "files.export.preview_btn": "Pratinjau",
     "files.export.download_btn": "Unduh paket",
-    "files.export.large_warn":
-      "Paket besar — biarkan tab ini terbuka selama ekspor.",
+    "files.export.large_warn": "Paket besar — biarkan tab ini terbuka selama ekspor.",
     "files.export.success_title": "Paket diunduh",
     "files.import.title": "Impor paket proyek",
-    "files.import.intro":
-      "Pilih paket .ocep yang diekspor dari ruang kerja ini atau lainnya.",
+    "files.import.intro": "Pilih paket .ocep yang diekspor dari ruang kerja ini atau lainnya.",
     "files.import.select_file": "Pilih berkas .ocep",
     "files.import.drop_hint": "Klik untuk menelusuri",
     "files.import.validating": "Memvalidasi paket…",
@@ -1185,19 +1060,15 @@ const resource = {
     "files.import.stat_format": "Format",
     "files.import.choose_mode": "Mode impor",
     "files.import.mode_new": "Buat proyek baru",
-    "files.import.mode_new_hint":
-      "Paling aman. ID baru di mana-mana; tidak ada yang berubah di ruang kerja Anda.",
+    "files.import.mode_new_hint": "Paling aman. ID baru di mana-mana; tidak ada yang berubah di ruang kerja Anda.",
     "files.import.mode_merge": "Gabungkan ke proyek yang ada",
-    "files.import.mode_merge_hint":
-      "Menambahkan baris ke proyek yang dipilih. ID yang ada dilewati.",
+    "files.import.mode_merge_hint": "Menambahkan baris ke proyek yang dipilih. ID yang ada dilewati.",
     "files.import.mode_replace": "Ganti proyek yang ada",
-    "files.import.mode_replace_hint":
-      "Menghapus baris proyek yang dikelola paket, lalu mengimpor. Bersifat destruktif.",
+    "files.import.mode_replace_hint": "Menghapus baris proyek yang dikelola paket, lalu mengimpor. Bersifat destruktif.",
     "files.import.rename": "Nama proyek baru (opsional)",
     "files.import.target_project": "Proyek target",
     "files.import.pick_project": "— pilih proyek —",
-    "files.import.destructive_warn":
-      "Ini akan menghapus secara permanen baris proyek yang dikelola paket di proyek target sebelum impor. Tidak dapat dibatalkan.",
+    "files.import.destructive_warn": "Ini akan menghapus secara permanen baris proyek yang dikelola paket di proyek target sebelum impor. Tidak dapat dibatalkan.",
     "files.import.confirm": "Impor",
     "files.import.result_done": "Impor selesai",
     "files.import.imported": "Diimpor",
@@ -1217,8 +1088,7 @@ const resource = {
     "files.email.paste_into_email": "Contoh isi email",
     "files.email.open_mail_client": "Buka klien email",
     "files.email.sample_subject": "Berkas: {{name}}",
-    "files.email.sample_body":
-      "Halo,\n\nberikut berkas yang Anda minta — {{name}} ({{size}}).\nTautan unduh (kedaluwarsa {{expires}}):\n{{url}}\n\n— dikirim dari OpenConstructionERP",
+    "files.email.sample_body": "Halo,\n\nberikut berkas yang Anda minta — {{name}} ({{size}}).\nTautan unduh (kedaluwarsa {{expires}}):\n{{url}}\n\n— dikirim dari OpenConstructionERP",
     "files.title_all": "Semua berkas",
     "files.empty_category": "Belum ada {{category}}",
     "files.cta.add_first": "Tambahkan {{category}} pertama Anda",
@@ -1232,8 +1102,7 @@ const resource = {
     "files.upload_browse": "Telusuri berkas",
     "files.upload_no_project": "Tidak ada proyek aktif",
     "files.upload_too_large": "Berkas terlalu besar",
-    "files.upload_too_large_msg":
-      "{{count}} berkas melebihi batas 100 MB dan dilewati.",
+    "files.upload_too_large_msg": "{{count}} berkas melebihi batas 100 MB dan dilewati.",
     "files.upload_queued": "{{count}} berkas dalam antrian",
     "files.uploading": "Mengunggah…",
     "files.uploaded": "Diunggah",
@@ -1244,8 +1113,7 @@ const resource = {
     "files.bulk.deleted": "{{count}} berkas dihapus",
     "files.bulk.delete_failed": "Penghapusan massal gagal",
     "files.bulk.skip_unsupported": "{{count}} dilewati (tidak didukung)",
-    "files.bulk.no_deletable":
-      "Berkas yang dipilih belum bisa dihapus dari sini",
+    "files.bulk.no_deletable": "Berkas yang dipilih belum bisa dihapus dari sini",
     "files.actions.open_in": "Buka di {{module}}",
     "files.actions.open_in_short": "Buka di {{module}}",
     "files.actions.share": "Bagikan",
@@ -1286,10 +1154,10 @@ const resource = {
     "nav.equipment": "Peralatan & Armada",
     "nav.resources": "Sumber Daya & Tim",
     "nav.service": "Layanan & Pemeliharaan",
-    "nav.portal": "Portal Subkontraktor",
+    "nav.portal": "Portal Subkontr.",
     "nav.crm": "CRM (Manajemen Pelanggan)",
     "nav.contracts": "Kontrak",
-    "nav.subcontractors": "Subkontraktor",
+    "nav.subcontractors": "Direktori Subkontraktor",
     "nav.bid_management": "Manajemen Penawaran",
     "nav.variations": "Variasi",
     "nav.supplier_catalogs": "Katalog Pemasok",
@@ -1301,17 +1169,21 @@ const resource = {
     "nav.bi_dashboards": "Dasbor BI",
     "nav.match_elements": "Cocokkan Elemen → Biaya",
     "nav.group_operations": "Operasi Lapangan",
-    "nav.group_operations_desc":
-      "Operasi lapangan harian — tiket layanan, peralatan, buku harian, portal subkontraktor, sumber daya",
+    "nav.group_operations_desc": "Operasi lapangan harian — tiket layanan, peralatan, buku harian, portal subkontraktor, sumber daya",
     "nav.group_commercial": "Komersial",
-    "nav.group_commercial_desc":
-      "Pipeline komersial — CRM, kontrak, penawaran, perubahan, pemasok, pengembangan properti",
+    "nav.group_commercial_desc": "Pipeline komersial — CRM, kontrak, penawaran, perubahan, pemasok, pengembangan properti",
     "nav.group_bi": "Analitik",
     "nav.group_bi_desc": "Dasbor BI di atas proyeksi gudang data",
+    "nav.group_analytics": "Analitik & Laporan",
+    "nav.group_analytics_desc": "Laporan lintas modul, dasbor BI, dan proyeksi gudang data",
     "nav.group_estimation": "Estimasi",
-    "nav.group_estimation_desc": "Alat inti: proyek, BOQ, biaya, dan rakitan",
+    "nav.group_estimation_desc": "Estimasi proyek — BOQ, BIM ke biaya, estimasi AI, analitik",
+    "nav.group_catalogues": "Katalog & Referensi",
+    "nav.group_catalogues_desc": "Basis data biaya, katalog regional, templat rakitan",
     "nav.group_databases": "Basis Data",
     "nav.group_takeoff": "Takeoff",
+    "nav.group_cad_bim_analytics": "Koordinasi model",
+    "nav.group_cad_bim_analytics_desc": "Federasi, deteksi tabrakan, paket aturan dan hub koordinasi",
     "nav.group_cad_bim": "CAD / BIM & BI",
     "nav.takeoff_overview": "Ikhtisar",
     "nav.pdf_takeoff": "Perhitungan Kuantitas PDF",
@@ -1319,7 +1191,7 @@ const resource = {
     "nav.erp_chat": "Obrolan AI",
     "nav.cad_takeoff": "Perhitungan Kuantitas CAD/BIM",
     "nav.cad_bim_explorer": "Penjelajah CAD-BIM BI",
-    "nav.bim_viewer": "Penampil BIM 3D",
+    "nav.bim_viewer": "BIM 3D Takeoff",
     "nav.bim_rules": "Aturan BIM",
     "nav.quantity_rules": "Aturan Kuantitas",
     "nav.assets": "Daftar Aset",
@@ -1336,16 +1208,13 @@ const resource = {
     "bim.loading_geometry": "Memuat geometri 3D…",
     "bim.loading_finalising": "Menyelesaikan adegan…",
     "bim.loading_streaming": "Streaming geometri dari server…",
-    "bim.loading_parsing":
-      "Mem-parse geometri 3D — untuk model besar (>50 MB) ini dapat memakan waktu 20-60 detik; jangan refresh",
-    "bim.loading_navigate_hint":
-      "Anda dapat berpindah ke halaman lain — pemuatan akan berlanjut di latar belakang",
+    "bim.loading_parsing": "Mem-parse geometri 3D — untuk model besar (>50 MB) ini dapat memakan waktu 20-60 detik; jangan refresh",
+    "bim.loading_navigate_hint": "Anda dapat berpindah ke halaman lain — pemuatan akan berlanjut di latar belakang",
     "bim.no_models": "Belum ada model yang diunggah",
     "bim.no_project": "Tidak ada proyek yang dipilih",
     "bim.no_project_desc": "Pilih proyek untuk melihat model BIM.",
     "bim.select_model": "Pilih model",
-    "bim.select_model_desc":
-      "Pilih model BIM dari daftar untuk memvisualisasikannya dalam 3D.",
+    "bim.select_model_desc": "Pilih model BIM dari daftar untuk memvisualisasikannya dalam 3D.",
     "bim.search_elements": "Cari elemen...",
     "bim.no_search_results": "Tidak ada elemen yang cocok",
     "bim.load_error": "Gagal memuat elemen model",
@@ -1367,11 +1236,13 @@ const resource = {
     "bim.properties": "Properties",
     "bim.disciplines": "Disciplines",
     "nav.group_overview": "Ikhtisar",
-    "nav.group_ai_estimation": "AI & Estimasi",
+    "nav.group_ai_estimation": "AI & Alat",
+    "nav.group_ai_estimation_desc": "Agen AI, penasihat, obrolan ERP — Estimasi AI dipindahkan ke Estimasi",
     "nav.group_finance": "Keuangan & Pengadaan",
     "nav.group_communication": "Komunikasi",
     "nav.group_documentation": "Dokumen",
-    "nav.group_quality": "Kualitas & Keselamatan",
+    "nav.group_quality": "Kualitas",
+    "nav.group_safety": "Keselamatan & HSE",
     "nav.group_field": "Lapangan & Laporan",
     "nav.group_quality_risk": "Kualitas & Risiko",
     "nav.group_planning": "Perencanaan",
@@ -1379,8 +1250,7 @@ const resource = {
     "nav.group_procurement": "Pengadaan",
     "nav.group_procurement_desc": "Manajemen tender, lelang, dan laporan",
     "nav.group_tools": "Alat",
-    "nav.group_tools_desc":
-      "Validasi, pemeriksaan kepatuhan, dan keberlanjutan",
+    "nav.group_tools_desc": "Validasi, pemeriksaan kepatuhan, dan keberlanjutan",
     "nav.mode_advanced": "Lanjutan",
     "nav.mode_pro_badge": "PRO",
     "nav.mode_simple": "Sederhana",
@@ -1465,10 +1335,8 @@ const resource = {
     "requirements.notes": "Notes",
     "requirements.notes_placeholder": "Catatan atau konteks tambahan...",
     "requirements.import_text": "Impor dari Teks",
-    "requirements.import_text_desc":
-      "Tempel spesifikasi persyaratan. Setiap baris harus mengikuti format: entitas | atribut | tipe_batasan | nilai | satuan | kategori | prioritas",
-    "requirements.import_placeholder":
-      "dinding | ketebalan | min | 200 | mm | struktural | harus atap | nilai_u | maks | 0.20 | W/m²K | termal | harus",
+    "requirements.import_text_desc": "Tempel spesifikasi persyaratan. Setiap baris harus mengikuti format: entitas | atribut | tipe_batasan | nilai | satuan | kategori | prioritas",
+    "requirements.import_placeholder": "dinding | ketebalan | min | 200 | mm | struktural | harus atap | nilai_u | maks | 0.20 | W/m²K | termal | harus",
     "requirements.set_created": "Set persyaratan dibuat",
     "requirements.new_set": "Set Persyaratan Baru",
     "requirements.set_name_placeholder": "mis. Persyaratan Struktural Fase 1",
@@ -1487,40 +1355,33 @@ const resource = {
     "requirements.all_priorities": "Semua Prioritas",
     "requirements.all_statuses": "Semua Status",
     "requirements.no_sets": "Tidak ada set persyaratan",
-    "requirements.no_sets_desc":
-      "Buat set persyaratan untuk mulai mendefinisikan persyaratan proyek dan gerbang kualitas.",
+    "requirements.no_sets_desc": "Buat set persyaratan untuk mulai mendefinisikan persyaratan proyek dan gerbang kualitas.",
     "requirements.empty": "Belum ada persyaratan",
-    "requirements.empty_desc":
-      "Tambahkan persyaratan untuk mendefinisikan triplet Entitas-Atribut-Batasan untuk proyek Anda.",
-    "requirements.no_match":
-      "Tidak ada persyaratan yang cocok dengan filter Anda.",
+    "requirements.empty_desc": "Tambahkan persyaratan untuk mendefinisikan triplet Entitas-Atribut-Batasan untuk proyek Anda.",
+    "requirements.no_match": "Tidak ada persyaratan yang cocok dengan filter Anda.",
     "requirements.constraint": "Constraint",
     "requirements.confidence": "Conf.",
     "requirements.source": "Source",
     "requirements.showing": "{{count}} requirements",
     "requirements.of_total": "of {{total}}",
-    "requirements.confirm_delete_set":
-      "Hapus set persyaratan ini dan semua persyaratannya?",
+    "requirements.confirm_delete_set": "Hapus set persyaratan ini dan semua persyaratannya?",
     "requirements.delete_set": "Hapus Set",
     "requirements.and_more": "dan {{count}} lagi...",
     "requirements.click_to_upload_csv": "Klik untuk mengunggah file CSV",
     "requirements.click_to_upload_json": "Klik untuk mengunggah file JSON",
     "requirements.csv_loaded": "{{count}} baris dimuat dari CSV",
-    "requirements.csv_parse_error":
-      "CSV harus memiliki header: entity, attribute, constraint_value",
+    "requirements.csv_parse_error": "CSV harus memiliki header: entity, attribute, constraint_value",
     "requirements.export": "Export",
     "requirements.export_csv": "Ekspor CSV",
     "requirements.export_excel": "Ekspor Excel",
     "requirements.export_json": "Ekspor JSON",
     "requirements.exported": "Persyaratan diekspor",
     "requirements.import_count": "Mengimpor {{count}} persyaratan...",
-    "requirements.import_csv_desc":
-      "Unggah file CSV dengan kolom: entity, attribute, constraint_value",
+    "requirements.import_csv_desc": "Unggah file CSV dengan kolom: entity, attribute, constraint_value",
     "requirements.import_json_desc": "Unggah array JSON dari objek persyaratan",
     "requirements.import_requirements": "Impor Persyaratan",
     "requirements.json_loaded": "{{count}} item dimuat dari JSON",
-    "requirements.json_parse_error":
-      "JSON harus berupa array objek dengan entity, attribute, constraint_value",
+    "requirements.json_parse_error": "JSON harus berupa array objek dengan entity, attribute, constraint_value",
     "requirements.preview": "Preview",
     "requirements.regex_hint": "Masukkan pola ekspresi reguler, mis. ^F[0-9]+$",
     "requirements.regex_invalid": "Pola tidak valid",
@@ -1574,13 +1435,11 @@ const resource = {
     "markups.col_measurement": "Measurement",
     "markups.col_date": "Date",
     "markups.empty_title": "Tidak ada markup yang ditemukan",
-    "markups.empty_desc":
-      "Markup dan anotasi dari dokumen proyek Anda akan muncul di sini.",
+    "markups.empty_desc": "Markup dan anotasi dari dokumen proyek Anda akan muncul di sini.",
     "markups.action_resolve": "Resolve",
     "markups.action_archive": "Archive",
     "markups.add_markup": "Tambahkan Markup",
-    "markups.add_first":
-      "Tambahkan markup pertama Anda untuk mulai memberi anotasi pada dokumen",
+    "markups.add_first": "Tambahkan markup pertama Anda untuk mulai memberi anotasi pada dokumen",
     "markups.active": "Active",
     "markups.all_documents": "Semua Dokumen",
     "markups.clear_filters": "Hapus filter",
@@ -1598,8 +1457,7 @@ const resource = {
     "markups.measurement_unit": "Unit",
     "markups.measurement_value": "Value",
     "markups.no_document": "Tidak ada dokumen",
-    "markups.no_project_desc":
-      "Pilih proyek untuk melihat dan mengelola markup",
+    "markups.no_project_desc": "Pilih proyek untuk melihat dan mengelola markup",
     "markups.no_project_title": "Tidak ada proyek yang dipilih",
     "markups.page": "Page",
     "markups.resolved": "Resolved",
@@ -1620,8 +1478,7 @@ const resource = {
     "punch.stat_overdue": "Overdue",
     "punch.add_item": "Tambahkan Item Punch",
     "punch.field_title": "Title",
-    "punch.title_placeholder":
-      "mis. Segel api yang hilang pada penetrasi Lantai 3",
+    "punch.title_placeholder": "mis. Segel api yang hilang pada penetrasi Lantai 3",
     "punch.field_description": "Description",
     "punch.description_placeholder": "Berikan detail tentang masalah ini...",
     "punch.field_priority": "Priority",
@@ -1659,8 +1516,7 @@ const resource = {
     "punch.all_assignees": "Semua Penugasan",
     "punch.kanban_empty": "Tidak ada item",
     "punch.empty_title": "Tidak ada item daftar punch",
-    "punch.empty_desc":
-      "Buat item daftar punch untuk melacak kekurangan, cacat, dan pekerjaan yang belum selesai.",
+    "punch.empty_desc": "Buat item daftar punch untuk melacak kekurangan, cacat, dan pekerjaan yang belum selesai.",
     "punch.col_title": "Title",
     "punch.col_priority": "Priority",
     "punch.col_status": "Status",
@@ -1681,8 +1537,7 @@ const resource = {
     "punch.action_close": "Close",
     "punch.no_project_desc": "Pilih proyek untuk mengelola item daftar punch",
     "punch.no_project_title": "Tidak ada proyek yang dipilih",
-    "punch.no_results_desc":
-      "Coba sesuaikan filter atau kriteria pencarian Anda",
+    "punch.no_results_desc": "Coba sesuaikan filter atau kriteria pencarian Anda",
     "punch.no_results_title": "Tidak ada item yang cocok",
     "punch.select_project": "Pilih proyek...",
     "punch.title_required": "Judul wajib diisi",
@@ -1727,8 +1582,7 @@ const resource = {
     "field_reports.total": "Total Laporan",
     "field_reports.workforce_hours": "Jam Tenaga Kerja",
     "field_reports.empty": "Belum ada laporan",
-    "field_reports.empty_desc":
-      "Buat laporan harian pertama Anda untuk mulai mendokumentasikan kemajuan konstruksi",
+    "field_reports.empty_desc": "Buat laporan harian pertama Anda untuk mulai mendokumentasikan kemajuan konstruksi",
     "photos.title": "Foto Proyek",
     "photos.upload": "Unggah Foto",
     "photos.upload_hint": "Seret dan lepas foto atau klik untuk menelusuri",
@@ -1746,8 +1600,7 @@ const resource = {
     "photos.grid": "Grid",
     "photos.timeline": "Timeline",
     "photos.empty": "Belum ada foto",
-    "photos.empty_desc":
-      "Unggah foto lokasi konstruksi untuk mendokumentasikan kemajuan",
+    "photos.empty_desc": "Unggah foto lokasi konstruksi untuk mendokumentasikan kemajuan",
     "photos.delete_confirm": "Hapus foto ini?",
     "photos.edit": "Edit Foto",
     "onboarding.ai_feature_1": "Buat estimasi dari deskripsi teks",
@@ -1761,10 +1614,8 @@ const resource = {
     "onboarding.ai_title": "Penyedia AI (Opsional)",
     "onboarding.api_key": "Kunci API",
     "onboarding.api_key_placeholder": "Tempel kunci API Anda di sini...",
-    "onboarding.cost_db_hint":
-      "Anda dapat menambahkan lebih banyak database nanti di Database Biaya → Impor.",
-    "onboarding.cost_db_subtitle":
-      "Muat database harga untuk estimasi yang akurat. Pilih wilayah Anda:",
+    "onboarding.cost_db_hint": "Anda dapat menambahkan lebih banyak database nanti di Database Biaya → Impor.",
+    "onboarding.cost_db_subtitle": "Muat database harga untuk estimasi yang akurat. Pilih wilayah Anda:",
     "onboarding.cost_db_title": "Database Biaya",
     "onboarding.create_error": "Gagal membuat proyek",
     "onboarding.create_project": "Buat & Mulai Estimasi",
@@ -1774,8 +1625,7 @@ const resource = {
     "onboarding.get_started": "Mulai",
     "onboarding.items_loaded": "item dimuat",
     "onboarding.loading_database": "Mengimpor database...",
-    "onboarding.loading_database_hint":
-      "Memuat ~55.000 item. Ini membutuhkan 1-3 menit.",
+    "onboarding.loading_database_hint": "Memuat ~55.000 item. Ini membutuhkan 1-3 menit.",
     "onboarding.project_created": "Proyek dibuat!",
     "onboarding.project_created_msg": "Ruang kerja Anda siap. Mari",
     "onboarding.project_error": "Gagal membuat proyek",
@@ -1790,36 +1640,27 @@ const resource = {
     "onboarding.standard": "Standard",
     "onboarding.test_connection": "Uji Koneksi",
     "onboarding.testing": "Testing...",
-    "onboarding.welcome_hint":
-      "Gratis dan open source. Tidak perlu kartu kredit.",
-    "onboarding.welcome_subtitle":
-      "Ruang kerja estimasi konstruksi profesional. Siapkan lingkungan Anda dalam beberapa langkah sederhana.",
+    "onboarding.welcome_hint": "Gratis dan open source. Tidak perlu kartu kredit.",
+    "onboarding.welcome_subtitle": "Ruang kerja estimasi konstruksi profesional. Siapkan lingkungan Anda dalam beberapa langkah sederhana.",
     "onboarding.welcome_title": "Selamat datang di OpenConstructionERP",
     "onboarding.step_company": "Company",
     "onboarding.step_modules": "Modules",
     "onboarding.step_mode": "Mode",
     "onboarding.company_type_title": "Anda bergerak di bidang apa?",
-    "onboarding.company_type_subtitle":
-      "Kami akan mengonfigurasi terlebih dahulu set modul terbaik untuk alur kerja Anda.",
+    "onboarding.company_type_subtitle": "Kami akan mengonfigurasi terlebih dahulu set modul terbaik untuk alur kerja Anda.",
     "onboarding.company_general_contractor": "Kontraktor Umum",
-    "onboarding.company_general_contractor_desc":
-      "Kami membangun proyek — estimasi, pengadaan, manajemen lapangan",
+    "onboarding.company_general_contractor_desc": "Kami membangun proyek — estimasi, pengadaan, manajemen lapangan",
     "onboarding.company_estimator": "Estimator / Konsultan Biaya",
-    "onboarding.company_estimator_desc":
-      "Kami berfokus pada estimasi biaya dan perhitungan kuantitas",
+    "onboarding.company_estimator_desc": "Kami berfokus pada estimasi biaya dan perhitungan kuantitas",
     "onboarding.company_project_management": "Perusahaan Manajemen Proyek",
-    "onboarding.company_project_management_desc":
-      "Kami mengelola proyek besar — perencanaan, komunikasi, dokumen",
+    "onboarding.company_project_management_desc": "Kami mengelola proyek besar — perencanaan, komunikasi, dokumen",
     "onboarding.company_architecture": "Kantor Arsitektur / Teknik",
-    "onboarding.company_architecture_desc":
-      "Kami merancang bangunan — BIM, dokumen, CDE",
+    "onboarding.company_architecture_desc": "Kami merancang bangunan — BIM, dokumen, CDE",
     "onboarding.company_full_enterprise": "Perusahaan Penuh",
-    "onboarding.company_full_enterprise_desc":
-      "Kami membutuhkan segalanya — siklus hidup konstruksi lengkap",
+    "onboarding.company_full_enterprise_desc": "Kami membutuhkan segalanya — siklus hidup konstruksi lengkap",
     "onboarding.modules_label": "modules",
     "onboarding.modules_title": "Tinjau Modul Anda",
-    "onboarding.modules_subtitle":
-      "Dipilih sebelumnya berdasarkan tipe perusahaan Anda. Aktifkan atau nonaktifkan modul apa pun.",
+    "onboarding.modules_subtitle": "Dipilih sebelumnya berdasarkan tipe perusahaan Anda. Aktifkan atau nonaktifkan modul apa pun.",
     "onboarding.modules_active": "modul aktif",
     "onboarding.mod_group_core": "Estimasi Inti",
     "onboarding.mod_group_takeoff": "Perhitungan Kuantitas & AI",
@@ -1835,10 +1676,8 @@ const resource = {
     "onboarding.mod_costs_desc": "Database biaya dan manajemen tarif",
     "onboarding.mod_assemblies_desc": "Resep tarif komposit dan template",
     "onboarding.mod_catalog_desc": "Katalog material, tenaga kerja, peralatan",
-    "onboarding.mod_templates_desc":
-      "Template BOQ yang dapat digunakan kembali",
-    "onboarding.mod_validation_desc":
-      "Aturan kualitas dan pemeriksaan kepatuhan",
+    "onboarding.mod_templates_desc": "Template BOQ yang dapat digunakan kembali",
+    "onboarding.mod_validation_desc": "Aturan kualitas dan pemeriksaan kepatuhan",
     "onboarding.mod_takeoff_desc": "Ikhtisar perhitungan kuantitas",
     "onboarding.mod_pdf_takeoff_desc": "Pengukuran dan anotasi berbasis PDF",
     "onboarding.mod_ai_estimate_desc": "Estimasi cepat bertenaga AI",
@@ -1846,14 +1685,12 @@ const resource = {
     "onboarding.mod_data_explorer_desc": "Eksplorasi data CAD/BIM",
     "onboarding.mod_bim_desc": "Penampil model BIM 3D",
     "onboarding.mod_schedule_desc": "Grafik Gantt 4D dan penjadwalan CPM",
-    "onboarding.mod_5d_desc":
-      "Model biaya 5D dengan pelacakan nilai yang diperoleh",
+    "onboarding.mod_5d_desc": "Model biaya 5D dengan pelacakan nilai yang diperoleh",
     "onboarding.mod_tasks_desc": "Manajemen tugas dan penugasan",
     "onboarding.mod_finance_desc": "Pelacakan anggaran dan ikhtisar keuangan",
     "onboarding.mod_procurement_desc": "Pesanan pembelian dan manajemen vendor",
     "onboarding.mod_tendering_desc": "Paket penawaran dan alur kerja tender",
-    "onboarding.mod_changeorders_desc":
-      "Pelacakan dan persetujuan perintah perubahan",
+    "onboarding.mod_changeorders_desc": "Pelacakan dan persetujuan perintah perubahan",
     "onboarding.mod_contacts_desc": "Direktori kontak dan tim",
     "onboarding.mod_meetings_desc": "Manajemen rapat dan notulen",
     "onboarding.mod_rfi_desc": "Permintaan informasi",
@@ -1878,29 +1715,22 @@ const resource = {
     "onboarding.mod_cost_benchmark_desc": "Analisis pembandingan biaya",
     "onboarding.mod_collaboration_desc": "Alat kolaborasi real-time",
     "support.button_label": "Dukung kami",
-    "support.button_tooltip":
-      "Dukung proyek — beri bintang, bagikan, atau kirim studi kasus",
+    "support.button_tooltip": "Dukung proyek — beri bintang, bagikan, atau kirim studi kasus",
     "support.button_aria": "Dukung kami",
     "support.modal_title": "Bantu OpenConstructionERP tumbuh",
-    "support.modal_subtitle":
-      "Kami membangun ini secara terbuka dan menyediakan setiap fitur secara gratis. Beberapa tindakan kecil dari Anda menjaga pengembangan tetap berjalan — tidak memerlukan biaya tetapi membuat perbedaan besar.",
+    "support.modal_subtitle": "Kami membangun ini secara terbuka dan menyediakan setiap fitur secara gratis. Beberapa tindakan kecil dari Anda menjaga pengembangan tetap berjalan — tidak memerlukan biaya tetapi membuat perbedaan besar.",
     "support.action_star_title": "Beri kami bintang di GitHub",
-    "support.action_star_body":
-      "30 detik. Bintang adalah cara tim konstruksi baru menemukan proyek dan cara kami mengamankan waktu untuk rilis berikutnya.",
+    "support.action_star_body": "30 detik. Bintang adalah cara tim konstruksi baru menemukan proyek dan cara kami mengamankan waktu untuk rilis berikutnya.",
     "support.action_share_title": "Bagikan dengan tim atau jaringan Anda",
-    "support.action_share_body":
-      "Satu posting di LinkedIn atau X / Twitter menjangkau puluhan estimator, perencana, dan manajer BIM. Bantu kami menempatkan perangkat lunak konstruksi open source di peta.",
+    "support.action_share_body": "Satu posting di LinkedIn atau X / Twitter menjangkau puluhan estimator, perencana, dan manajer BIM. Bantu kami menempatkan perangkat lunak konstruksi open source di peta.",
     "support.share_twitter": "Posting di X",
     "support.share_linkedin": "Posting di LinkedIn",
     "support.share_copy": "Salin teks + tautan",
     "support.share_copied": "Disalin!",
-    "support.action_case_study_title":
-      "Punya studi kasus, video, atau artikel?",
+    "support.action_case_study_title": "Punya studi kasus, video, atau artikel?",
     "support.action_case_study_tag": "Kami akan memperkuat",
-    "support.action_case_study_body":
-      "Tunjukkan kepada kami bagaimana Anda menggunakan OpenConstructionERP — video, studi kasus, artikel LinkedIn. Anda dapat mengirim tautan langsung, atau cukup tag @DataDrivenConstruction di posting Anda — kami akan melihatnya dan membagikannya kembali melalui buletin dan saluran sosial kami, di mana puluhan ribu profesional konstruksi dan pakar industri senior mengikuti pekerjaan kami. Email untuk tautan: ",
-    "support.thanks":
-      "Terima kasih. Setiap bintang, pembagian, dan cerita benar-benar membuat proyek ini tetap hidup — dibangun dengan ❤️ untuk komunitas konstruksi.",
+    "support.action_case_study_body": "Tunjukkan kepada kami bagaimana Anda menggunakan OpenConstructionERP — video, studi kasus, artikel LinkedIn. Anda dapat mengirim tautan langsung, atau cukup tag @DataDrivenConstruction di posting Anda — kami akan melihatnya dan membagikannya kembali melalui buletin dan saluran sosial kami, di mana puluhan ribu profesional konstruksi dan pakar industri senior mengikuti pekerjaan kami. Email untuk tautan: ",
+    "support.thanks": "Terima kasih. Setiap bintang, pembagian, dan cerita benar-benar membuat proyek ini tetap hidup — dibangun dengan ❤️ untuk komunitas konstruksi.",
     "onboarding.mod_group_estimation": "Estimasi",
     "onboarding.mod_group_ai": "AI",
     "onboarding.mod_group_bim_advanced": "BIM dan 3D",
@@ -1913,169 +1743,117 @@ const resource = {
     "onboarding.mod_group_regional": "Paket regional",
     "onboarding.mod_group_platform": "Platform",
     "onboarding.mod_cost_match": "Pencocokan biaya",
-    "onboarding.mod_cost_match_desc":
-      "Pencocokan otomatis posisi BOQ dengan item basis data biaya",
+    "onboarding.mod_cost_match_desc": "Pencocokan otomatis posisi BOQ dengan item basis data biaya",
     "onboarding.mod_match": "Pencocokan elemen",
-    "onboarding.mod_match_desc":
-      "Hubungkan elemen BIM/CAD dengan posisi BOQ dan tarif",
+    "onboarding.mod_match_desc": "Hubungkan elemen BIM/CAD dengan posisi BOQ dan tarif",
     "onboarding.mod_dwg_takeoff": "Takeoff DWG",
-    "onboarding.mod_dwg_takeoff_desc":
-      "Perhitungan volume langsung dari gambar DWG",
+    "onboarding.mod_dwg_takeoff_desc": "Perhitungan volume langsung dari gambar DWG",
     "onboarding.mod_cad": "Impor CAD",
-    "onboarding.mod_cad_desc":
-      "Impor DWG/DGN/RVT/IFC melalui pipeline DDC cad2data",
+    "onboarding.mod_cad_desc": "Impor DWG/DGN/RVT/IFC melalui pipeline DDC cad2data",
     "onboarding.mod_bim_requirements": "Persyaratan BIM",
-    "onboarding.mod_bim_requirements_desc":
-      "Tetapkan dan validasi persyaratan model (IDS / EIR)",
+    "onboarding.mod_bim_requirements_desc": "Tetapkan dan validasi persyaratan model (IDS / EIR)",
     "onboarding.mod_match_elements": "Cocokkan elemen",
-    "onboarding.mod_match_elements_desc":
-      "Pencocokan elemen BIM-biaya dengan bantuan AI dengan skor kepercayaan",
+    "onboarding.mod_match_elements_desc": "Pencocokan elemen BIM-biaya dengan bantuan AI dengan skor kepercayaan",
     "onboarding.mod_opencde_api": "API OpenCDE",
-    "onboarding.mod_opencde_api_desc":
-      "API yang sesuai OpenCDE untuk BCF + Dokumen + Foundation",
+    "onboarding.mod_opencde_api_desc": "API yang sesuai OpenCDE untuk BCF + Dokumen + Foundation",
     "onboarding.mod_erp_chat": "Chat ERP",
-    "onboarding.mod_erp_chat_desc":
-      "Asisten chat AI dalam aplikasi dengan konteks ERP lengkap",
+    "onboarding.mod_erp_chat_desc": "Asisten chat AI dalam aplikasi dengan konteks ERP lengkap",
     "onboarding.mod_compliance_ai": "AI Kepatuhan",
-    "onboarding.mod_compliance_ai_desc":
-      "Pemeriksaan kepatuhan regulasi berbasis LLM",
+    "onboarding.mod_compliance_ai_desc": "Pemeriksaan kepatuhan regulasi berbasis LLM",
     "onboarding.mod_schedule_advanced": "Penjadwalan lanjutan",
-    "onboarding.mod_schedule_advanced_desc":
-      "Last Planner System dengan look-ahead mingguan dan PPC",
+    "onboarding.mod_schedule_advanced_desc": "Last Planner System dengan look-ahead mingguan dan PPC",
     "onboarding.mod_eac": "Mesin EAC",
-    "onboarding.mod_eac_desc":
-      "Estimate at Completion dengan perkiraan bergulir",
+    "onboarding.mod_eac_desc": "Estimate at Completion dengan perkiraan bergulir",
     "onboarding.mod_bid_management": "Manajemen penawaran",
-    "onboarding.mod_bid_management_desc":
-      "Kelola penawaran keluar, strategi harga, pelacakan menang/kalah",
+    "onboarding.mod_bid_management_desc": "Kelola penawaran keluar, strategi harga, pelacakan menang/kalah",
     "onboarding.mod_contracts": "Kontrak",
-    "onboarding.mod_contracts_desc":
-      "Mesin jenis kontrak (FIDIC, NEC, JCT, lump sum, T&M)",
+    "onboarding.mod_contracts_desc": "Mesin jenis kontrak (FIDIC, NEC, JCT, lump sum, T&M)",
     "onboarding.mod_variations": "Variasi",
-    "onboarding.mod_variations_desc":
-      "Variasi pengukuran di lokasi dengan alur persetujuan",
+    "onboarding.mod_variations_desc": "Variasi pengukuran di lokasi dengan alur persetujuan",
     "onboarding.mod_crm": "CRM",
     "onboarding.mod_crm_desc": "Pipeline penjualan, lead, peluang, akun",
     "onboarding.mod_supplier_catalogs": "Katalog pemasok",
-    "onboarding.mod_supplier_catalogs_desc":
-      "Feed harga pemasok langsung dan manajemen pemasok",
+    "onboarding.mod_supplier_catalogs_desc": "Feed harga pemasok langsung dan manajemen pemasok",
     "onboarding.mod_property_dev": "Pengembangan properti",
-    "onboarding.mod_property_dev_desc":
-      "Tanah, fase, mix penjualan, kelayakan untuk pengembang",
+    "onboarding.mod_property_dev_desc": "Tanah, fase, mix penjualan, kelayakan untuk pengembang",
     "onboarding.mod_service": "Layanan dan pemeliharaan",
-    "onboarding.mod_service_desc":
-      "Permintaan layanan pasca-serah terima, garansi, pemeliharaan",
+    "onboarding.mod_service_desc": "Permintaan layanan pasca-serah terima, garansi, pemeliharaan",
     "onboarding.mod_equipment": "Peralatan dan armada",
-    "onboarding.mod_equipment_desc":
-      "Mesin, alat, kendaraan — penggunaan, pemeliharaan, tarif sewa",
+    "onboarding.mod_equipment_desc": "Mesin, alat, kendaraan — penggunaan, pemeliharaan, tarif sewa",
     "onboarding.mod_resources": "Sumber daya",
-    "onboarding.mod_resources_desc":
-      "Perencanaan sumber daya: tenaga kerja, material, peralatan",
+    "onboarding.mod_resources_desc": "Perencanaan sumber daya: tenaga kerja, material, peralatan",
     "onboarding.mod_daily_diary": "Buku harian",
-    "onboarding.mod_daily_diary_desc":
-      "Buku harian lokasi dengan cuaca, kru, peralatan, foto",
+    "onboarding.mod_daily_diary_desc": "Buku harian lokasi dengan cuaca, kru, peralatan, foto",
     "onboarding.mod_subcontractors": "Subkontraktor",
-    "onboarding.mod_subcontractors_desc":
-      "Onboarding subkontraktor, kontrak, pembayaran, kinerja",
+    "onboarding.mod_subcontractors_desc": "Onboarding subkontraktor, kontrak, pembayaran, kinerja",
     "onboarding.mod_portal": "Portal pelanggan",
-    "onboarding.mod_portal_desc":
-      "Portal eksternal untuk klien dan mitra dengan akses terbatas",
+    "onboarding.mod_portal_desc": "Portal eksternal untuk klien dan mitra dengan akses terbatas",
     "onboarding.mod_notifications": "Notifikasi",
-    "onboarding.mod_notifications_desc":
-      "Notifikasi dalam aplikasi, email, dan webhook",
+    "onboarding.mod_notifications_desc": "Notifikasi dalam aplikasi, email, dan webhook",
     "onboarding.mod_hse_advanced": "HSE lanjutan",
-    "onboarding.mod_hse_advanced_desc":
-      "Kesehatan, keselamatan, lingkungan lanjutan — toolbox talks, JHA, audit",
+    "onboarding.mod_hse_advanced_desc": "Kesehatan, keselamatan, lingkungan lanjutan — toolbox talks, JHA, audit",
     "onboarding.mod_qms": "Sistem manajemen mutu",
     "onboarding.mod_qms_desc": "QMS selaras ISO 9001 — prosedur, audit, KPI",
     "onboarding.mod_compliance": "DSL Kepatuhan",
-    "onboarding.mod_compliance_desc":
-      "Bahasa spesifik domain code-as-rules untuk kepatuhan",
+    "onboarding.mod_compliance_desc": "Bahasa spesifik domain code-as-rules untuk kepatuhan",
     "onboarding.mod_compliance_docs": "Dokumen kepatuhan",
-    "onboarding.mod_compliance_docs_desc":
-      "Perpustakaan sertifikat, pelacakan masa berlaku, pengingat perpanjangan",
+    "onboarding.mod_compliance_docs_desc": "Perpustakaan sertifikat, pelacakan masa berlaku, pengingat perpanjangan",
     "onboarding.mod_carbon": "Karbon dan keberlanjutan",
-    "onboarding.mod_carbon_desc":
-      "Karbon tertanam + operasional, pelaporan ESG, EN 15978",
+    "onboarding.mod_carbon_desc": "Karbon tertanam + operasional, pelaporan ESG, EN 15978",
     "onboarding.mod_bi_dashboards": "Dashboard BI",
-    "onboarding.mod_bi_dashboards_desc":
-      "Analitik interaktif lintas modul dengan drill-down",
+    "onboarding.mod_bi_dashboards_desc": "Analitik interaktif lintas modul dengan drill-down",
     "onboarding.mod_enterprise_workflows": "Alur kerja enterprise",
-    "onboarding.mod_enterprise_workflows_desc":
-      "Alur kerja persetujuan kustom berbasis FSM untuk organisasi besar",
+    "onboarding.mod_enterprise_workflows_desc": "Alur kerja persetujuan kustom berbasis FSM untuk organisasi besar",
     "onboarding.mod_full_evm": "EVM penuh",
-    "onboarding.mod_full_evm_desc":
-      "Earned Value Management penuh — PV/EV/AC, SPI/CPI, CV/SV, ETC/EAC",
+    "onboarding.mod_full_evm_desc": "Earned Value Management penuh — PV/EV/AC, SPI/CPI, CV/SV, ETC/EAC",
     "onboarding.mod_rfq_bidding": "RFQ dan tender",
-    "onboarding.mod_rfq_bidding_desc":
-      "Alur kerja RFQ multi-putaran, tender tersegel, e-lelang",
+    "onboarding.mod_rfq_bidding_desc": "Alur kerja RFQ multi-putaran, tender tersegel, e-lelang",
     "onboarding.mod_integrations": "Integrasi",
-    "onboarding.mod_integrations_desc":
-      "Webhooks, SAP, Procore, MS Project melalui n8n",
+    "onboarding.mod_integrations_desc": "Webhooks, SAP, Procore, MS Project melalui n8n",
     "onboarding.mod_dach_pack": "Paket regional — DACH (DE/AT/CH)",
-    "onboarding.mod_dach_pack_desc":
-      "Standar, klasifikasi, mata uang, format untuk DACH (DE/AT/CH)",
+    "onboarding.mod_dach_pack_desc": "Standar, klasifikasi, mata uang, format untuk DACH (DE/AT/CH)",
     "onboarding.mod_uk_pack": "Paket regional — Inggris",
-    "onboarding.mod_uk_pack_desc":
-      "Standar, klasifikasi, mata uang, format untuk Inggris",
+    "onboarding.mod_uk_pack_desc": "Standar, klasifikasi, mata uang, format untuk Inggris",
     "onboarding.mod_us_pack": "Paket regional — Amerika Serikat",
-    "onboarding.mod_us_pack_desc":
-      "Standar, klasifikasi, mata uang, format untuk Amerika Serikat",
+    "onboarding.mod_us_pack_desc": "Standar, klasifikasi, mata uang, format untuk Amerika Serikat",
     "onboarding.mod_india_pack": "Paket regional — India",
-    "onboarding.mod_india_pack_desc":
-      "Standar, klasifikasi, mata uang, format untuk India",
+    "onboarding.mod_india_pack_desc": "Standar, klasifikasi, mata uang, format untuk India",
     "onboarding.mod_middle_east_pack": "Paket regional — Timur Tengah dan GCC",
-    "onboarding.mod_middle_east_pack_desc":
-      "Standar, klasifikasi, mata uang, format untuk Timur Tengah dan GCC",
+    "onboarding.mod_middle_east_pack_desc": "Standar, klasifikasi, mata uang, format untuk Timur Tengah dan GCC",
     "onboarding.mod_latam_pack": "Paket regional — Amerika Latin",
-    "onboarding.mod_latam_pack_desc":
-      "Standar, klasifikasi, mata uang, format untuk Amerika Latin",
+    "onboarding.mod_latam_pack_desc": "Standar, klasifikasi, mata uang, format untuk Amerika Latin",
     "onboarding.mod_asia_pac_pack": "Paket regional — Asia-Pasifik",
-    "onboarding.mod_asia_pac_pack_desc":
-      "Standar, klasifikasi, mata uang, format untuk Asia-Pasifik",
+    "onboarding.mod_asia_pac_pack_desc": "Standar, klasifikasi, mata uang, format untuk Asia-Pasifik",
     "onboarding.mod_russia_pack": "Paket regional — Rusia dan CIS",
-    "onboarding.mod_russia_pack_desc":
-      "Standar, klasifikasi, mata uang, format untuk Rusia dan CIS",
+    "onboarding.mod_russia_pack_desc": "Standar, klasifikasi, mata uang, format untuk Rusia dan CIS",
     "onboarding.mod_users": "Pengguna dan Auth",
     "onboarding.mod_users_desc": "Akun pengguna, peran, JWT, kunci API",
     "onboarding.mod_teams": "Tim",
-    "onboarding.mod_teams_desc":
-      "Pengelompokan tim, cakupan visibilitas, penugasan proyek",
+    "onboarding.mod_teams_desc": "Pengelompokan tim, cakupan visibilitas, penugasan proyek",
     "onboarding.mod_uploads": "Unggahan",
-    "onboarding.mod_uploads_desc":
-      "Unggahan langsung file besar dengan kelanjutan",
+    "onboarding.mod_uploads_desc": "Unggahan langsung file besar dengan kelanjutan",
     "onboarding.mod_jobs": "Tugas latar belakang",
-    "onboarding.mod_jobs_desc":
-      "Antrian worker untuk impor, ekspor, pipeline CV",
+    "onboarding.mod_jobs_desc": "Antrian worker untuk impor, ekspor, pipeline CV",
     "onboarding.mod_search": "Pencarian semantik",
-    "onboarding.mod_search_desc":
-      "Pencarian vektor + leksikal di BOQ, dokumen, gambar",
+    "onboarding.mod_search_desc": "Pencarian vektor + leksikal di BOQ, dokumen, gambar",
     "onboarding.mod_backup": "Backup dan pemulihan",
-    "onboarding.mod_backup_desc":
-      "Backup otomatis dengan pemulihan point-in-time",
+    "onboarding.mod_backup_desc": "Backup otomatis dengan pemulihan point-in-time",
     "onboarding.mod_admin": "Konsol admin",
-    "onboarding.mod_admin_desc":
-      "Endpoint operator, pipeline QA, pemeliharaan sistem",
+    "onboarding.mod_admin_desc": "Endpoint operator, pipeline QA, pemeliharaan sistem",
     "onboarding.mod_i18n_foundation": "Fondasi i18n",
-    "onboarding.mod_i18n_foundation_desc":
-      "Runtime i18n 27 bahasa dengan locale chunk malas",
+    "onboarding.mod_i18n_foundation_desc": "Runtime i18n 27 bahasa dengan locale chunk malas",
     "onboarding.mod_collaboration_locks": "Penguncian kolaborasi",
-    "onboarding.mod_collaboration_locks_desc":
-      "Penguncian optimistis dan pesimistis untuk pengeditan multi-pengguna",
+    "onboarding.mod_collaboration_locks_desc": "Penguncian optimistis dan pesimistis untuk pengeditan multi-pengguna",
     "onboarding.mod_architecture_map": "Peta arsitektur",
-    "onboarding.mod_architecture_map_desc":
-      "Peta visual interaktif dari arsitektur sistem",
+    "onboarding.mod_architecture_map_desc": "Peta visual interaktif dari arsitektur sistem",
     "onboarding.mod_dashboards": "Dashboard",
     "onboarding.mod_dashboards_desc": "Dashboard per proyek dan portofolio",
     "onboarding.mode_title": "Pilih Mode Antarmuka",
-    "onboarding.mode_subtitle":
-      "Anda dapat beralih antar mode kapan saja di Pengaturan.",
+    "onboarding.mode_subtitle": "Anda dapat beralih antar mode kapan saja di Pengaturan.",
     "onboarding.mode_simple": "Simple",
-    "onboarding.mode_simple_desc":
-      "I'm getting started — show me the essentials. A clean interface with the most important features.",
+    "onboarding.mode_simple_desc": "I'm getting started — show me the essentials. A clean interface with the most important features.",
     "onboarding.mode_advanced": "Advanced",
-    "onboarding.mode_advanced_desc":
-      "I'm experienced — show me everything. Full professional toolset with all options visible.",
+    "onboarding.mode_advanced_desc": "I'm experienced — show me everything. Full professional toolset with all options visible.",
     "onboarding.summary_company": "Tipe Perusahaan",
     "onboarding.summary_modules": "Modul Aktif",
     "onboarding.summary_mode": "Mode Antarmuka",
@@ -2086,20 +1864,15 @@ const resource = {
     "onboarding.next": "Next",
     "onboarding.finish": "Finish",
     "onboarding.step1.title": "Bilah Navigasi",
-    "onboarding.step1.description":
-      "Bilah sisi memberi Anda akses cepat ke semua modul: proyek, estimasi, database biaya, jadwal, dan lainnya.",
+    "onboarding.step1.description": "Bilah sisi memberi Anda akses cepat ke semua modul: proyek, estimasi, database biaya, jadwal, dan lainnya.",
     "onboarding.step2.title": "Projects",
-    "onboarding.step2.description":
-      "Mulai di sini dengan membuat proyek pertama Anda. Setiap proyek menyimpan BOQ, jadwal, dan dokumen dalam satu tempat.",
+    "onboarding.step2.description": "Mulai di sini dengan membuat proyek pertama Anda. Setiap proyek menyimpan BOQ, jadwal, dan dokumen dalam satu tempat.",
     "onboarding.step3.title": "Daftar Kuantitas",
-    "onboarding.step3.description":
-      "Bangun estimasi terperinci dengan editor BOQ — item hierarkis, rakitan, dan penghitungan biaya real-time.",
+    "onboarding.step3.description": "Bangun estimasi terperinci dengan editor BOQ — item hierarkis, rakitan, dan penghitungan biaya real-time.",
     "onboarding.step4.title": "Database Biaya",
-    "onboarding.step4.description":
-      "Telusuri dan kelola database tarif biaya termasuk CWICR bawaan dengan 55.000+ item dalam 9 bahasa.",
+    "onboarding.step4.description": "Telusuri dan kelola database tarif biaya termasuk CWICR bawaan dengan 55.000+ item dalam 9 bahasa.",
     "onboarding.step5.title": "Mode Sederhana / Lanjutan",
-    "onboarding.step5.description":
-      "Beralih antara mode Sederhana (alat penting) dan mode Lanjutan (semua fitur termasuk tender dan penjadwalan).",
+    "onboarding.step5.description": "Beralih antara mode Sederhana (alat penting) dan mode Lanjutan (semua fitur termasuk tender dan penjadwalan).",
     "projects.4d_schedule": "Jadwal 4D",
     "projects.5d_budget": "Anggaran 5D",
     "projects.active": "aktif",
@@ -2131,28 +1904,21 @@ const resource = {
     "projects.name_placeholder": "mis. Menara Kantor Pusat Kota",
     "projects.new_boq": "BOQ Baru",
     "projects.new_project": "Proyek Baru",
-    "projects.create_hint":
-      "Wilayah menentukan basis data biaya yang tersedia dan tarif PPN. Standar klasifikasi mendefinisikan struktur biaya: DIN 276 untuk negara DACH, NRM untuk UK, MasterFormat untuk AS/Kanada, UniFormat untuk Oseania. Mata uang menetapkan semua harga di BOQ.",
+    "projects.create_hint": "Wilayah menentukan basis data biaya yang tersedia dan tarif PPN. Standar klasifikasi mendefinisikan struktur biaya: DIN 276 untuk negara DACH, NRM untuk UK, MasterFormat untuk AS/Kanada, UniFormat untuk Oseania. Mata uang menetapkan semua harga di BOQ.",
     "projects.no_boqs": "Belum ada BOQ",
-    "projects.no_boqs_desc":
-      "Buat Daftar Kuantitas untuk mulai mengestimasi biaya proyek ini.",
+    "projects.no_boqs_desc": "Buat Daftar Kuantitas untuk mulai mengestimasi biaya proyek ini.",
     "projects.no_budget": "Tidak ada data anggaran",
-    "projects.no_budget_desc":
-      "Siapkan model biaya 5D untuk melacak biaya yang direncanakan vs aktual.",
+    "projects.no_budget_desc": "Siapkan model biaya 5D untuk melacak biaya yang direncanakan vs aktual.",
     "projects.no_projects": "Belum ada proyek",
-    "projects.no_projects_description":
-      "Buat proyek estimasi biaya konstruksi pertama Anda",
+    "projects.no_projects_description": "Buat proyek estimasi biaya konstruksi pertama Anda",
     "projects.no_results": "Tidak ada proyek yang cocok",
     "projects.no_results_hint": "Coba sesuaikan pencarian atau filter Anda",
     "projects.no_schedules": "Belum ada jadwal",
-    "projects.no_schedules_desc":
-      "Buat jadwal untuk mengelola garis waktu proyek.",
+    "projects.no_schedules_desc": "Buat jadwal untuk mengelola garis waktu proyek.",
     "projects.no_tenders": "Tidak ada paket tender",
-    "projects.no_tenders_desc":
-      "Buat paket tender untuk mengelola pengajuan proyek ini.",
+    "projects.no_tenders_desc": "Buat paket tender untuk mengelola pengajuan proyek ini.",
     "projects.not_found": "Proyek tidak ditemukan",
-    "projects.not_found_desc":
-      "Proyek yang Anda cari tidak ada atau telah dihapus.",
+    "projects.not_found_desc": "Proyek yang Anda cari tidak ada atau telah dihapus.",
     "projects.of": "dari",
     "projects.open_tendering": "Buka Tender",
     "projects.overview": "Ikhtisar",
@@ -2165,8 +1931,7 @@ const resource = {
     "projects.projects_label": "proyek",
     "projects.region": "Wilayah",
     "projects.regional_factor": "Faktor Regional",
-    "projects.regional_factor_hint":
-      "Kalikan semua harga satuan dengan faktor ini (mis. Munich = 1,12, Berlin = 1,05)",
+    "projects.regional_factor_hint": "Kalikan semua harga satuan dengan faktor ini (mis. Munich = 1,12, Berlin = 1,05)",
     "projects.remaining": "Tersisa",
     "projects.schedule_subtitle": "Jadwal dan garis waktu proyek",
     "projects.search_placeholder": "Cari proyek...",
@@ -2193,87 +1958,66 @@ const resource = {
     "quantities.badge_cad": "CAD",
     "quantities.badge_coming_soon": "Segera Hadir",
     "quantities.how_it_works": "Cara kerja",
-    "quantities.manual_desc":
-      "Perlu menambahkan kuantitas secara langsung? Buka Editor BOQ.",
+    "quantities.manual_desc": "Perlu menambahkan kuantitas secara langsung? Buka Editor BOQ.",
     "quantities.manual_title": "Entri Manual Cepat",
-    "quantities.method_ai_desc":
-      "Deskripsikan bangunan Anda dan AI akan menghasilkan Daftar Kuantitas dengan volume dan biaya yang diestimasi.",
+    "quantities.method_ai_desc": "Deskripsikan bangunan Anda dan AI akan menghasilkan Daftar Kuantitas dengan volume dan biaya yang diestimasi.",
     "quantities.method_ai_title": "Input Teks AI",
-    "quantities.method_cad_desc":
-      "Impor file DWG, RVT, IFC, atau DGN dan ekstrak kuantitas langsung dari geometri 3D.",
+    "quantities.method_cad_desc": "Impor file DWG, RVT, IFC, atau DGN dan ekstrak kuantitas langsung dari geometri 3D.",
     "quantities.method_cad_title": "Model CAD / BIM",
-    "quantities.method_pdf_desc":
-      "Unggah gambar konstruksi (PDF) dan ekstrak kuantitas secara otomatis dengan perhitungan kuantitas bertenaga AI.",
+    "quantities.method_pdf_desc": "Unggah gambar konstruksi (PDF) dan ekstrak kuantitas secara otomatis dengan perhitungan kuantitas bertenaga AI.",
     "quantities.method_pdf_title": "Gambar PDF",
     "quantities.open": "Open",
     "quantities.open_boq": "Buka Editor BOQ",
-    "quantities.step1_desc":
-      "Pilih metode input Anda: teks, PDF, atau model CAD.",
+    "quantities.step1_desc": "Pilih metode input Anda: teks, PDF, atau model CAD.",
     "quantities.step1_title": "Unggah atau deskripsikan",
-    "quantities.step2_desc":
-      "AI kami menganalisis input Anda dan mengekstrak kuantitas terstruktur.",
+    "quantities.step2_desc": "AI kami menganalisis input Anda dan mengekstrak kuantitas terstruktur.",
     "quantities.step2_title": "AI mengekstrak kuantitas",
-    "quantities.step3_desc":
-      "Verifikasi hasilnya dan tambahkan ke Daftar Kuantitas Anda.",
+    "quantities.step3_desc": "Verifikasi hasilnya dan tambahkan ke Daftar Kuantitas Anda.",
     "quantities.step3_title": "Tinjau & tambahkan ke BOQ",
-    "quantities.subtitle":
-      "Kumpulkan kuantitas proyek — dari input teks AI, gambar PDF, atau model CAD/BIM",
+    "quantities.subtitle": "Kumpulkan kuantitas proyek — dari input teks AI, gambar PDF, atau model CAD/BIM",
     "quantities.converter_title": "Cara Konversi CAD/BIM Bekerja",
-    "quantities.converter_desc":
-      "Unggah file CAD/BIM Anda (.rvt, .ifc, .dwg, .dgn) dan konverter DDC mengekstrak semua elemen ke dalam tabel terstruktur — dinding, pelat, kolom, pintu, jendela — dengan volume, area, dan kuantitas yang dihitung. AI kemudian memetakan elemen-elemen ini ke item biaya dan menghasilkan BOQ lengkap secara otomatis.",
+    "quantities.converter_desc": "Unggah file CAD/BIM Anda (.rvt, .ifc, .dwg, .dgn) dan konverter DDC mengekstrak semua elemen ke dalam tabel terstruktur — dinding, pelat, kolom, pintu, jendela — dengan volume, area, dan kuantitas yang dihitung. AI kemudian memetakan elemen-elemen ini ke item biaya dan menghasilkan BOQ lengkap secara otomatis.",
     "quantities.download_converters": "Unduh Konverter DDC",
     "quantities.converter_path": "Instal ke: ~/.openestimator/converters/",
     "quantities.title": "Perhitungan Kuantitas",
     "reports.5d_report": "Laporan Biaya 5D",
-    "reports.5d_report_desc":
-      "Analisis anggaran vs. aktual dengan kurva-S dan perkiraan biaya.",
+    "reports.5d_report_desc": "Analisis anggaran vs. aktual dengan kurva-S dan perkiraan biaya.",
     "reports.cash_flow": "Perkiraan Arus Kas",
-    "reports.cash_flow_desc":
-      "Proyeksi arus kas bulanan dari pengeluaran yang direncanakan vs aktual kurva-S.",
+    "reports.cash_flow_desc": "Proyeksi arus kas bulanan dari pengeluaran yang direncanakan vs aktual kurva-S.",
     "reports.change_order_register": "Daftar Perintah Perubahan",
-    "reports.change_order_register_desc":
-      "Daftar lengkap perubahan lingkup dengan dampak biaya dan jadwal kumulatif.",
+    "reports.change_order_register_desc": "Daftar lengkap perubahan lingkup dengan dampak biaya dan jadwal kumulatif.",
     "reports.tender_comparison": "Perbandingan Tender",
-    "reports.tender_comparison_desc":
-      "Perbandingan penawaran subkontraktor secara berdampingan dengan analisis deviasi.",
+    "reports.tender_comparison_desc": "Perbandingan penawaran subkontraktor secara berdampingan dengan analisis deviasi.",
     "reports.risk_register": "Daftar Risiko",
-    "reports.risk_register_desc":
-      "Matriks risiko dengan probabilitas, dampak, skor, dan rencana mitigasi.",
+    "reports.risk_register_desc": "Matriks risiko dengan probabilitas, dampak, skor, dan rencana mitigasi.",
     "reports.progress_report": "Laporan Kemajuan",
-    "reports.progress_report_desc":
-      "Kinerja EVM, status jadwal, dan risiko teratas dalam satu laporan.",
+    "reports.progress_report_desc": "Kinerja EVM, status jadwal, dan risiko teratas dalam satu laporan.",
     "reports.preset_monthly": "Kemajuan Bulanan",
     "reports.preset_client": "Presentasi Klien",
     "reports.preset_audit": "Laporan Audit",
     "reports.preset_full": "Laporan Lengkap",
     "reports.presets": "Preset cepat:",
     "reports.boq_report": "Laporan BOQ",
-    "reports.boq_report_desc":
-      "Daftar Kuantitas lengkap dengan bagian, item, markup, dan total. Tersedia sebagai PDF atau Excel.",
+    "reports.boq_report_desc": "Daftar Kuantitas lengkap dengan bagian, item, markup, dan total. Tersedia sebagai PDF atau Excel.",
     "reports.coming_soon": "Segera hadir",
     "reports.cost_report": "Laporan Biaya",
-    "reports.cost_report_desc":
-      "Rincian biaya berdasarkan kategori dengan grafik ringkasan dan analisis biaya terperinci.",
+    "reports.cost_report_desc": "Rincian biaya berdasarkan kategori dengan grafik ringkasan dan analisis biaya terperinci.",
     "reports.download_error": "Gagal membuat laporan",
     "reports.download_format": "Download {{format}}",
     "reports.download_success": "Laporan berhasil diunduh",
     "reports.gaeb_xml": "GAEB XML",
-    "reports.gaeb_xml_desc":
-      "Ekspor tender GAEB X83 — format pertukaran standar untuk pasar konstruksi DACH.",
+    "reports.gaeb_xml_desc": "Ekspor tender GAEB X83 — format pertukaran standar untuk pasar konstruksi DACH.",
     "reports.no_boqs": "Tidak ada BOQ dalam proyek ini",
     "reports.no_projects": "Tidak ada proyek yang tersedia",
     "reports.schedule_report": "Laporan Jadwal",
-    "reports.schedule_report_desc":
-      "Grafik Gantt dengan jadwal proyek, tonggak pencapaian, dan jalur kritis.",
+    "reports.schedule_report_desc": "Grafik Gantt dengan jadwal proyek, tonggak pencapaian, dan jalur kritis.",
     "reports.select_boq_first": "Silakan pilih proyek dan BOQ terlebih dahulu",
     "reports.select_project_first": "Silakan pilih proyek terlebih dahulu",
     "reports.subtitle": "Buat laporan profesional untuk proyek Anda",
-    "reports.guide_desc":
-      "Laporan BOQ = daftar kuantitas terperinci dengan total. Laporan Biaya = rincian biaya berdasarkan kategori. GAEB XML = format tender Jerman (.x83) untuk pertukaran subkontraktor. Validasi = hasil pemeriksaan kepatuhan. Jadwal = ringkasan aktivitas Gantt. 5D = kurva biaya anggaran vs. aktual.",
+    "reports.guide_desc": "Laporan BOQ = daftar kuantitas terperinci dengan total. Laporan Biaya = rincian biaya berdasarkan kategori. GAEB XML = format tender Jerman (.x83) untuk pertukaran subkontraktor. Validasi = hasil pemeriksaan kepatuhan. Jadwal = ringkasan aktivitas Gantt. 5D = kurva biaya anggaran vs. aktual.",
     "reports.title": "Reports",
     "reports.validation_report": "Laporan Validasi",
-    "reports.validation_report_desc":
-      "Laporan pemeriksaan kepatuhan terhadap standar DIN 276, NRM, atau MasterFormat.",
+    "reports.validation_report_desc": "Laporan pemeriksaan kepatuhan terhadap standar DIN 276, NRM, atau MasterFormat.",
     "schedule.activity": "Activity",
     "schedule.activity_name": "Nama Aktivitas",
     "schedule.activity_name_placeholder": "mis. Pekerjaan Fondasi",
@@ -2284,8 +2028,7 @@ const resource = {
     "schedule.buffer": "Buffer",
     "schedule.calculate_cpm": "Jalur Kritis",
     "schedule.completed": "Completed",
-    "schedule.cpm_result":
-      "Jalur Kritis: {{duration}} hari, {{count}} aktivitas kritis",
+    "schedule.cpm_result": "Jalur Kritis: {{duration}} hari, {{count}} aktivitas kritis",
     "schedule.create_activity": "Buat Aktivitas",
     "schedule.create_schedule": "Buat Jadwal",
     "schedule.critical_path": "Jalur Kritis",
@@ -2300,40 +2043,32 @@ const resource = {
     "schedule.fifty_pct_confidence": "50% confidence",
     "schedule.generate": "Generate",
     "schedule.generate_from_boq": "Buat dari BOQ",
-    "schedule.generate_from_boq_description":
-      "Pilih Daftar Kuantitas untuk membuat aktivitas jadwal secara otomatis. Satu aktivitas akan dibuat per bagian Daftar Kuantitas dengan durasi proporsional terhadap biaya.",
+    "schedule.generate_from_boq_description": "Pilih Daftar Kuantitas untuk membuat aktivitas jadwal secara otomatis. Satu aktivitas akan dibuat per bagian Daftar Kuantitas dengan durasi proporsional terhadap biaya.",
     "schedule.in_progress": "Sedang Berlangsung",
     "schedule.mean_label": "Rata-rata (jalur kritis)",
     "schedule.ninetyfive_pct_confidence": "95% confidence",
     "schedule.no_activities": "Belum ada aktivitas",
-    "schedule.no_activities_hint":
-      "Tambahkan aktivitas untuk membangun jadwal proyek Anda",
-    "schedule.no_boqs_available":
-      "Tidak ada Daftar Kuantitas yang tersedia untuk proyek ini.",
+    "schedule.no_activities_hint": "Tambahkan aktivitas untuk membangun jadwal proyek Anda",
+    "schedule.no_boqs_available": "Tidak ada Daftar Kuantitas yang tersedia untuk proyek ini.",
     "schedule.no_dates": "Tanggal belum ditetapkan",
     "schedule.no_projects": "Tidak ada proyek yang tersedia",
-    "schedule.no_projects_hint":
-      "Buat proyek terlebih dahulu, kemudian tambahkan jadwal",
+    "schedule.no_projects_hint": "Buat proyek terlebih dahulu, kemudian tambahkan jadwal",
     "schedule.no_schedules": "Belum ada jadwal",
-    "schedule.no_schedules_hint":
-      "Buat jadwal untuk mulai merencanakan linimasa proyek Anda",
+    "schedule.no_schedules_hint": "Buat jadwal untuk mulai merencanakan linimasa proyek Anda",
     "schedule.planned_duration": "Durasi terencana",
     "schedule.project_schedules": "Jadwal untuk proyek ini",
     "schedule.risk_analysis": "Analisis Risiko (PERT)",
     "schedule.risk_analysis_btn": "Analisis Risiko",
     "schedule.schedule_name": "Nama Jadwal",
     "schedule.schedule_name_placeholder": "mis. Jadwal Konstruksi Utama",
-    "schedule.select_project":
-      "Pilih proyek untuk melihat dan mengelola jadwal konstruksinya",
+    "schedule.select_project": "Pilih proyek untuk melihat dan mengelola jadwal konstruksinya",
     "schedule.start": "Start",
     "schedule.start_date": "Tanggal Mulai",
     "schedule.status_active": "active",
     "schedule.status_draft": "draft",
     "schedule.std_dev_label": "Simpangan baku",
-    "schedule.subtitle":
-      "Pilih proyek untuk melihat dan mengelola jadwal konstruksinya",
-    "schedule.what_is_4d":
-      "Penjadwalan 4D menghubungkan item Daftar Kuantitas Anda ke linimasa proyek. Buat aktivitas, tetapkan ketergantungan, dan visualisasikan kemajuan dalam diagram Gantt. Analisis jalur kritis menyoroti aktivitas yang langsung mempengaruhi tanggal selesai proyek. Jenis aktivitas: Tugas = item pekerjaan, Tonggak = titik pemeriksaan dengan durasi nol, Ringkasan = header pengelompokan.",
+    "schedule.subtitle": "Pilih proyek untuk melihat dan mengelola jadwal konstruksinya",
+    "schedule.what_is_4d": "Penjadwalan 4D menghubungkan item Daftar Kuantitas Anda ke linimasa proyek. Buat aktivitas, tetapkan ketergantungan, dan visualisasikan kemajuan dalam diagram Gantt. Analisis jalur kritis menyoroti aktivitas yang langsung mempengaruhi tanggal selesai proyek. Jenis aktivitas: Tugas = item pekerjaan, Tonggak = titik pemeriksaan dengan durasi nol, Ringkasan = header pengelompokan.",
     "schedule.title": "4D Schedule",
     "schedule.total_activities": "Total",
     "schedule.type_milestone": "Milestone",
@@ -2349,17 +2084,14 @@ const resource = {
     "settings.active": "Active",
     "settings.ai_api_key": "Kunci API",
     "settings.ai_connected": "Connected",
-    "settings.ai_desc_anthropic":
-      "Claude 3.5 Sonnet / Opus — terbaik untuk estimasi konstruksi",
+    "settings.ai_desc_anthropic": "Claude 3.5 Sonnet / Opus — terbaik untuk estimasi konstruksi",
     "settings.ai_desc_gemini": "Gemini 1.5 Pro — kemampuan multimodal",
     "settings.ai_desc_openai": "GPT-4o / GPT-4 Turbo — didukung secara luas",
     "settings.ai_error": "Kesalahan koneksi",
     "settings.ai_get_key": "Dapatkan kunci API",
-    "settings.ai_key_hint":
-      "Kunci API Anda dienkripsi dan disimpan dengan aman. Tidak pernah dibagikan.",
+    "settings.ai_key_hint": "Kunci API Anda dienkripsi dan disimpan dengan aman. Tidak pernah dibagikan.",
     "settings.ai_key_placeholder": "Masukkan kunci API Anda...",
-    "settings.ai_key_placeholder_existing":
-      "Masukkan kunci baru untuk mengganti yang ada...",
+    "settings.ai_key_placeholder_existing": "Masukkan kunci baru untuk mengganti yang ada...",
     "settings.ai_key_set": "Kunci telah dikonfigurasi",
     "settings.ai_last_tested": "(terakhir diuji: {{time}})",
     "settings.ai_not_configured": "Belum dikonfigurasi",
@@ -2390,8 +2122,7 @@ const resource = {
     "settings.sign_out": "Keluar",
     "settings.status": "Status",
     "settings.subtitle": "Kelola akun dan preferensi Anda",
-    "settings.ai_guidance":
-      "Fitur AI (estimasi, analisis takeoff, pencarian semantik) memerlukan kunci API. Anthropic Claude direkomendasikan untuk akurasi terbaik. Kunci disimpan terenkripsi dan tidak pernah meninggalkan server Anda.",
+    "settings.ai_guidance": "Fitur AI (estimasi, analisis takeoff, pencarian semantik) memerlukan kunci API. Anthropic Claude direkomendasikan untuk akurasi terbaik. Kunci disimpan terenkripsi dan tidak pernah meninggalkan server Anda.",
     "settings.theme_dark": "Dark",
     "settings.theme_light": "Light",
     "settings.theme_system": "System",
@@ -2400,8 +2131,7 @@ const resource = {
     "shortcuts.cancel_editing": "Batalkan pengeditan",
     "shortcuts.command_palette": "Palet Perintah",
     "shortcuts.confirm_next_row": "Konfirmasi / Baris berikutnya",
-    "shortcuts.footer_hint":
-      "Pintasan dinonaktifkan saat fokus pada bidang input.",
+    "shortcuts.footer_hint": "Pintasan dinonaktifkan saat fokus pada bidang input.",
     "shortcuts.group.actions": "Actions",
     "shortcuts.group.boq_editor": "Editor Daftar Kuantitas",
     "shortcuts.group.general": "General",
@@ -2434,55 +2164,43 @@ const resource = {
     "shortcuts.group.module_pages": "Halaman Modul",
     "shortcuts.create_new_item": "Buat item baru (di halaman daftar)",
     "shortcuts.save_recalculate": "Simpan / Hitung ulang tarif",
-    "errors.bad_request":
-      "Permintaan tidak dapat diproses. Silakan periksa input Anda.",
+    "errors.bad_request": "Permintaan tidak dapat diproses. Silakan periksa input Anda.",
     "errors.unauthorized": "Sesi Anda telah berakhir. Silakan masuk lagi.",
-    "errors.forbidden":
-      "Anda tidak memiliki izin untuk melakukan tindakan ini.",
+    "errors.forbidden": "Anda tidak memiliki izin untuk melakukan tindakan ini.",
     "errors.not_found": "Item yang diminta tidak dapat ditemukan.",
-    "errors.conflict":
-      "Ini bertentangan dengan data yang ada — segarkan dan coba lagi.",
-    "errors.payload_too_large":
-      "File terlalu besar. Silakan coba yang lebih kecil.",
-    "errors.validation":
-      "Beberapa kolom tidak valid. Silakan periksa input Anda.",
-    "errors.rate_limit":
-      "Terlalu banyak permintaan. Tunggu sebentar dan coba lagi.",
+    "errors.conflict": "Ini bertentangan dengan data yang ada — segarkan dan coba lagi.",
+    "errors.payload_too_large": "File terlalu besar. Silakan coba yang lebih kecil.",
+    "errors.validation": "Beberapa kolom tidak valid. Silakan periksa input Anda.",
+    "errors.rate_limit": "Terlalu banyak permintaan. Tunggu sebentar dan coba lagi.",
     "errors.server": "Kesalahan server. Silakan coba lagi sebentar.",
-    "errors.unavailable":
-      "Server sementara tidak tersedia. Silakan coba lagi nanti.",
+    "errors.unavailable": "Server sementara tidak tersedia. Silakan coba lagi nanti.",
     "errors.client": "Permintaan tidak dapat diselesaikan.",
     "errors.unknown": "Terjadi kesalahan. Silakan coba lagi.",
     "errors.network": "Tidak dapat menjangkau server. Periksa koneksi Anda.",
-    "errors.timeout":
-      "Permintaan terlalu lama dan dibatalkan. Silakan coba lagi.",
+    "errors.timeout": "Permintaan terlalu lama dan dibatalkan. Silakan coba lagi.",
     "shortcuts.undo": "Undo",
     "sustainability.area": "Area (m2)",
     "sustainability.benchmark": "Benchmark",
     "sustainability.boq": "BOQ",
     "sustainability.breakdown_title": "Rincian berdasarkan Material",
     "sustainability.calculate": "Calculate",
-    "sustainability.empty_desc":
-      "Pilih proyek dan Daftar Kuantitas di atas, lalu klik Hitung untuk menganalisis emisi CO2 berdasarkan jenis material.",
+    "sustainability.empty_desc": "Pilih proyek dan Daftar Kuantitas di atas, lalu klik Hitung untuk menganalisis emisi CO2 berdasarkan jenis material.",
     "sustainability.empty_title": "Analisis jejak karbon CO2",
     "sustainability.export_pdf": "Ekspor Laporan CO2 PDF",
     "sustainability.material": "Material",
-    "sustainability.no_area":
-      "Masukkan luas proyek untuk melihat benchmark per m2",
+    "sustainability.no_area": "Masukkan luas proyek untuk melihat benchmark per m2",
     "sustainability.positions_matched": "item sesuai",
     "sustainability.project": "Project",
     "sustainability.project_area": "project",
     "sustainability.rating": "Rating",
     "sustainability.select_boq": "-- Pilih Daftar Kuantitas --",
     "sustainability.select_project": "-- Pilih proyek --",
-    "sustainability.subtitle":
-      "Pilih proyek dan Daftar Kuantitas untuk menganalisis jejak karbon CO2",
+    "sustainability.subtitle": "Pilih proyek dan Daftar Kuantitas untuk menganalisis jejak karbon CO2",
     "sustainability.title": "Keberlanjutan / CO2",
     "sustainability.total_co2": "Total CO2",
     "takeoff.add_selected_to_boq": "Tambahkan {{count}} ke Daftar Kuantitas",
     "takeoff.add_to_boq": "Tambahkan ke Daftar Kuantitas",
-    "takeoff.added_to_boq_success":
-      "Item berhasil ditambahkan ke Daftar Kuantitas",
+    "takeoff.added_to_boq_success": "Item berhasil ditambahkan ke Daftar Kuantitas",
     "takeoff.ai_analysis_results": "Hasil Analisis AI",
     "takeoff.analyze_with_ai": "Analisis dengan AI",
     "takeoff.analyzing": "Analyzing...",
@@ -2499,8 +2217,7 @@ const resource = {
     "takeoff.just_now": "Baru saja",
     "takeoff.minutes_ago": "{{count}} mnt lalu",
     "takeoff.no_documents": "Tidak ada dokumen yang diunggah",
-    "takeoff.no_documents_description":
-      "Unggah gambar konstruksi PDF untuk mulai mengekstrak kuantitas dengan AI.",
+    "takeoff.no_documents_description": "Unggah gambar konstruksi PDF untuk mulai mengekstrak kuantitas dengan AI.",
     "takeoff.pages": "pages",
     "takeoff.pdf_limit": "File .pdf hingga {{size}}MB",
     "takeoff.quick_measurements": "Pengukuran Cepat",
@@ -2508,17 +2225,14 @@ const resource = {
     "takeoff.select_all": "Pilih semua",
     "takeoff.select_boq": "Daftar Kuantitas",
     "takeoff.select_boq_placeholder": "Pilih Daftar Kuantitas...",
-    "takeoff.select_boq_to_add":
-      "Pilih proyek dan Daftar Kuantitas di atas untuk menambahkan pengukuran.",
-    "takeoff.select_items_hint":
-      "Pilih item untuk ditambahkan ke Daftar Kuantitas",
+    "takeoff.select_boq_to_add": "Pilih proyek dan Daftar Kuantitas di atas untuk menambahkan pengukuran.",
+    "takeoff.select_items_hint": "Pilih item untuk ditambahkan ke Daftar Kuantitas",
     "takeoff.select_project": "Project",
     "takeoff.select_project_first": "Pilih proyek terlebih dahulu",
     "takeoff.select_project_placeholder": "Pilih proyek...",
     "takeoff.selected": "selected",
     "takeoff.subtitle": "Unggah gambar konstruksi untuk mengekstrak kuantitas",
-    "takeoff.workflow_desc":
-      "Unggah gambar PDF — AI menganalisis halaman dan mengekstrak elemen (dinding, pelat, pintu, dll.) beserta kuantitasnya — Tinjau hasil dan sesuaikan — Tambahkan item yang dipilih ke Daftar Kuantitas Anda. Skor kepercayaan: hijau (>80%) = kepercayaan tinggi, kuning (50-80%) = disarankan ditinjau, merah (<50%) = verifikasi manual diperlukan.",
+    "takeoff.workflow_desc": "Unggah gambar PDF — AI menganalisis halaman dan mengekstrak elemen (dinding, pelat, pintu, dll.) beserta kuantitasnya — Tinjau hasil dan sesuaikan — Tambahkan item yang dipilih ke Daftar Kuantitas Anda. Skor kepercayaan: hijau (>80%) = kepercayaan tinggi, kuning (50-80%) = disarankan ditinjau, merah (<50%) = verifikasi manual diperlukan.",
     "takeoff.summary": "Summary",
     "takeoff.title": "PDF Takeoff",
     "takeoff.total_quantity": "total",
@@ -2533,8 +2247,7 @@ const resource = {
     "tendering.award": "Award",
     "tendering.award_bid": "Berikan penawaran ini",
     "tendering.bid_comparison": "Perbandingan Penawaran",
-    "tendering.bid_comparison_chart_label":
-      "Diagram batang perbandingan total penawaran",
+    "tendering.bid_comparison_chart_label": "Diagram batang perbandingan total penawaran",
     "tendering.bid_totals_chart": "Ikhtisar Total Penawaran",
     "tendering.bids_count": "bids",
     "tendering.bids_received": "Penawaran Diterima",
@@ -2570,8 +2283,7 @@ const resource = {
     "tendering.source_boq": "Daftar Kuantitas Sumber",
     "tendering.submit_bid": "Kirim Penawaran",
     "tendering.title": "Tendering",
-    "tendering.workflow_desc":
-      "Alur kerja Tender: Draf (siapkan paket) → Diterbitkan (kirim ke peserta tender) → Pengumpulan (terima penawaran) → Evaluasi (bandingkan penawaran berdampingan) → Ditetapkan (pilih pemenang). Buat paket dari Daftar Kuantitas, tambahkan penawaran subkontraktor, lalu gunakan tabel perbandingan untuk mengidentifikasi penawaran terbaik. Tambahkan 2+ penawaran untuk melihat analisis berdampingan.",
+    "tendering.workflow_desc": "Alur kerja Tender: Draf (siapkan paket) → Diterbitkan (kirim ke peserta tender) → Pengumpulan (terima penawaran) → Evaluasi (bandingkan penawaran berdampingan) → Ditetapkan (pilih pemenang). Buat paket dari Daftar Kuantitas, tambahkan penawaran subkontraktor, lalu gunakan tabel perbandingan untuk mengidentifikasi penawaran terbaik. Tambahkan 2+ penawaran untuk melihat analisis berdampingan.",
     "tendering.total": "TOTAL",
     "tendering.total_amount": "Jumlah Total",
     "tendering.vs_budget": "vs anggaran",
@@ -2585,8 +2297,7 @@ const resource = {
     "validation.filter_errors": "Kesalahan",
     "validation.filter_passed": "Lolos",
     "validation.filter_warnings": "Peringatan",
-    "validation.no_results_for_filter":
-      "Tidak ada hasil yang cocok dengan filter ini.",
+    "validation.no_results_for_filter": "Tidak ada hasil yang cocok dengan filter ini.",
     "validation.passed": "Lolos",
     "validation.pending": "Menunggu",
     "validation.results_title": "Hasil",
@@ -2632,8 +2343,7 @@ const resource = {
     "cde.label_revisions": "Riwayat Revisi",
     "cde.new_container": "Kontainer Baru",
     "cde.no_containers": "Belum ada kontainer",
-    "cde.no_containers_hint":
-      "Buat kontainer dokumen pertama Anda untuk memulai.",
+    "cde.no_containers_hint": "Buat kontainer dokumen pertama Anda untuk memulai.",
     "cde.no_results": "Tidak ada kontainer yang cocok",
     "cde.no_results_hint": "Coba sesuaikan pencarian atau filter Anda.",
     "cde.no_revisions": "Tidak ada revisi yang tercatat",
@@ -2650,24 +2360,20 @@ const resource = {
     "cde.suitability_none": "— None —",
     "cde.view_history": "History",
     "cde.history_title": "Riwayat transisi status",
-    "cde.history_empty":
-      "Belum ada transisi status — promosikan kontainer untuk memulai jejak audit.",
+    "cde.history_empty": "Belum ada transisi status — promosikan kontainer untuk memulai jejak audit.",
     "cde.history_by_role": "By: {{role}}",
     "cde.history_signature": "Signed: {{signer}}",
     "cde.gate_label": "Gate {{code}}",
     "cde.transmittals_badge": "{{count}} transmittals",
-    "cde.transmittals_badge_aria":
-      "{{count}} transmittal tertaut ke kontainer ini",
+    "cde.transmittals_badge_aria": "{{count}} transmittal tertaut ke kontainer ini",
     "cde.transmittals_drawer_title": "Transmittal yang membawa kontainer ini",
     "cde.approval_modal_title": "Tanda tangan persetujuan Gate B",
-    "cde.approval_modal_body":
-      "Mempromosikan {{code}} dari SHARED ke PUBLISHED memerlukan persetujuan bertanda tangan (ISO 19650). Tanda tangan dan komentar Anda dicatat dalam log audit.",
+    "cde.approval_modal_body": "Mempromosikan {{code}} dari SHARED ke PUBLISHED memerlukan persetujuan bertanda tangan (ISO 19650). Tanda tangan dan komentar Anda dicatat dalam log audit.",
     "cde.approval_field_signature": "Signature",
     "cde.approval_field_comments": "Comments",
     "cde.approval_signature_placeholder": "Nama lengkap / inisial",
     "cde.approval_signature_required": "Tanda tangan wajib diisi",
-    "cde.approval_comments_placeholder":
-      "Catatan opsional untuk jejak audit...",
+    "cde.approval_comments_placeholder": "Catatan opsional untuk jejak audit...",
     "cde.approval_submit": "Tandatangani dan terbitkan",
     "transmittals.field_link_revision": "Tautkan Revisi CDE",
     "transmittals.picker_select_container": "Pilih kontainer…",
@@ -2780,11 +2486,9 @@ const resource = {
     "correspondence.label_to": "To",
     "correspondence.new_entry": "Entri Baru",
     "correspondence.no_entries": "Belum ada korespondensi",
-    "correspondence.no_entries_hint":
-      "Catat korespondensi pertama Anda untuk memulai.",
+    "correspondence.no_entries_hint": "Catat korespondensi pertama Anda untuk memulai.",
     "correspondence.no_results": "Tidak ada entri yang cocok",
-    "correspondence.no_results_hint":
-      "Coba sesuaikan pencarian atau filter Anda.",
+    "correspondence.no_results_hint": "Coba sesuaikan pencarian atau filter Anda.",
     "correspondence.notes_placeholder": "Catatan tambahan...",
     "correspondence.page_title": "Log Korespondensi",
     "correspondence.search_placeholder": "Cari korespondensi...",
@@ -2827,16 +2531,13 @@ const resource = {
     "finance.mark_paid": "Tandai Dibayar",
     "finance.method": "Method",
     "finance.no_budgets": "Tidak ada anggaran yang ditetapkan",
-    "finance.no_budgets_desc":
-      "Item anggaran akan muncul di sini setelah ditetapkan.",
+    "finance.no_budgets_desc": "Item anggaran akan muncul di sini setelah ditetapkan.",
     "finance.no_evm": "Tidak ada data EVM",
-    "finance.no_evm_desc":
-      "Data nilai yang diperoleh akan muncul setelah snapshot diambil.",
+    "finance.no_evm_desc": "Data nilai yang diperoleh akan muncul setelah snapshot diambil.",
     "finance.no_invoices": "Tidak ada faktur",
     "finance.no_invoices_desc": "Faktur akan muncul di sini setelah dibuat.",
     "finance.no_payments": "Tidak ada pembayaran",
-    "finance.no_payments_desc":
-      "Pembayaran akan muncul di sini setelah dicatat.",
+    "finance.no_payments_desc": "Pembayaran akan muncul di sini setelah dicatat.",
     "finance.no_project": "Pilih proyek untuk melihat data keuangan.",
     "finance.on_track": "Sesuai Rencana",
     "finance.original": "Original",
@@ -2864,8 +2565,7 @@ const resource = {
     "gantt.today": "Today",
     "integrations.add_another": "Tambahkan Lagi",
     "integrations.calendar": "Calendar",
-    "integrations.calendar_desc":
-      "Berlangganan di Google/Outlook Calendar (umpan iCal)",
+    "integrations.calendar_desc": "Berlangganan di Google/Outlook Calendar (umpan iCal)",
     "integrations.coming_soon": "Segera hadir",
     "integrations.confirm_disconnect": "Putuskan integrasi ini?",
     "integrations.connect": "Connect",
@@ -2879,13 +2579,10 @@ const resource = {
     "integrations.email_desc": "Terima notifikasi email (SMTP)",
     "integrations.setup_steps": "Petunjuk penyiapan",
     "integrations.slack": "Slack",
-    "integrations.slack_desc":
-      "Kirim notifikasi ke Slack melalui Incoming Webhook",
-    "integrations.subtitle":
-      "Hubungkan layanan eksternal untuk menerima notifikasi proyek di alat favorit Anda.",
+    "integrations.slack_desc": "Kirim notifikasi ke Slack melalui Incoming Webhook",
+    "integrations.subtitle": "Hubungkan layanan eksternal untuk menerima notifikasi proyek di alat favorit Anda.",
     "integrations.teams": "Microsoft Teams",
-    "integrations.teams_desc":
-      "Kirim notifikasi ke saluran Teams Anda melalui Incoming Webhook",
+    "integrations.teams_desc": "Kirim notifikasi ke saluran Teams Anda melalui Incoming Webhook",
     "integrations.telegram": "Telegram",
     "integrations.telegram_desc": "Dapatkan notifikasi melalui bot Telegram",
     "integrations.test": "Test",
@@ -2918,8 +2615,7 @@ const resource = {
     "inspections.location_placeholder": "Lokasi inspeksi",
     "inspections.new_inspection": "Inspeksi Baru",
     "inspections.no_inspections": "Belum ada inspeksi",
-    "inspections.no_inspections_hint":
-      "Jadwalkan inspeksi pertama Anda untuk memulai.",
+    "inspections.no_inspections_hint": "Jadwalkan inspeksi pertama Anda untuk memulai.",
     "inspections.no_results": "Tidak ada inspeksi yang cocok",
     "inspections.no_results_hint": "Coba sesuaikan pencarian atau filter Anda.",
     "inspections.page_title": "Inspections",
@@ -3021,20 +2717,15 @@ const resource = {
     "notifications.title": "Notifikasi",
     "notifications.unread": "{{count}} belum dibaca",
     "notifications.boq.created.title": "BOQ dibuat",
-    "notifications.boq.created.body":
-      "Bill of Quantities Anda '{{boq_name}}' telah disimpan.",
-    "notifications.meeting.action_assigned.title":
-      "Item tindakan ditugaskan kepada Anda",
-    "notifications.meeting.action_assigned.body":
-      "Dari rapat {{meeting_number}}: {{description}}",
+    "notifications.boq.created.body": "Bill of Quantities Anda '{{boq_name}}' telah disimpan.",
+    "notifications.meeting.action_assigned.title": "Item tindakan ditugaskan kepada Anda",
+    "notifications.meeting.action_assigned.body": "Dari rapat {{meeting_number}}: {{description}}",
     "notifications.cde.state_transitioned.title": "Status dokumen berubah",
-    "notifications.cde.state_transitioned.body":
-      "Container berpindah ke '{{new_state}}'.",
+    "notifications.cde.state_transitioned.body": "Container berpindah ke '{{new_state}}'.",
     "notifications.rfi.assigned.title": "RFI ditugaskan kepada Anda",
     "notifications.rfi.assigned.body": "{{code}} — {{title}}",
     "notifications.rfi.responded.title": "RFI dijawab",
-    "notifications.rfi.responded.body":
-      "Permintaan Anda {{code}} ({{title}}) telah dijawab.",
+    "notifications.rfi.responded.body": "Permintaan Anda {{code}} ({{title}}) telah dijawab.",
     "notifications.risk.assigned.title": "Risiko ditugaskan kepada Anda",
     "notifications.risk.assigned.body": "{{code}} — {{title}}",
     "notifications.submittal.submitted.title": "Submittal menunggu peninjauan",
@@ -3042,31 +2733,24 @@ const resource = {
     "notifications.submittal.approved.title": "Submittal disetujui",
     "notifications.submittal.approved.body": "{{code}} — {{title}}",
     "notifications.submittal.rejected.title": "Submittal ditolak",
-    "notifications.submittal.rejected.body":
-      "{{code}} ({{title}}). Alasan: {{reason}}",
+    "notifications.submittal.rejected.body": "{{code}} ({{title}}). Alasan: {{reason}}",
     "notifications.submittal.revise_resubmit.title": "Submittal perlu revisi",
-    "notifications.submittal.revise_resubmit.body":
-      "{{code}} ({{title}}). Alasan: {{reason}}",
-    "notifications.transmittal.issued.title":
-      "Transmittal dikeluarkan untuk Anda",
+    "notifications.submittal.revise_resubmit.body": "{{code}} ({{title}}). Alasan: {{reason}}",
+    "notifications.transmittal.issued.title": "Transmittal dikeluarkan untuk Anda",
     "notifications.transmittal.issued.body": "{{code}} — {{title}}",
     "notifications.transmittal.acknowledged.title": "Transmittal dikonfirmasi",
-    "notifications.transmittal.acknowledged.body":
-      "Penerima mengonfirmasi {{code}} ({{title}}).",
+    "notifications.transmittal.acknowledged.body": "Penerima mengonfirmasi {{code}} ({{title}}).",
     "notifications.transmittal.responded.title": "Transmittal dijawab",
-    "notifications.transmittal.responded.body":
-      "{{code}} ({{title}}). {{response_summary}}",
+    "notifications.transmittal.responded.body": "{{code}} ({{title}}). {{response_summary}}",
     "procurement.amount": "Amount",
     "procurement.delivery_date": "Tanggal Pengiriman",
     "procurement.goods_receipts": "Tanda Terima Barang",
     "procurement.gr_ref": "Ref TR",
     "procurement.issue_date": "Tanggal Terbit",
     "procurement.no_gr": "Tidak ada tanda terima barang",
-    "procurement.no_gr_desc":
-      "Tanda terima barang akan muncul di sini setelah dicatat.",
+    "procurement.no_gr_desc": "Tanda terima barang akan muncul di sini setelah dicatat.",
     "procurement.no_po": "Tidak ada pesanan pembelian",
-    "procurement.no_po_desc":
-      "Pesanan pembelian akan muncul di sini setelah dibuat.",
+    "procurement.no_po_desc": "Pesanan pembelian akan muncul di sini setelah dibuat.",
     "procurement.no_project": "Pilih proyek untuk melihat data pengadaan.",
     "procurement.po_number": "PO #",
     "procurement.po_ref": "Ref PP",
@@ -3131,11 +2815,9 @@ const resource = {
     "safety.incident_number": "Incident #",
     "safety.incidents": "Incidents",
     "safety.no_incidents": "Tidak ada insiden yang tercatat",
-    "safety.no_incidents_desc":
-      "Insiden akan muncul di sini setelah dilaporkan.",
+    "safety.no_incidents_desc": "Insiden akan muncul di sini setelah dilaporkan.",
     "safety.no_observations": "Tidak ada observasi yang tercatat",
-    "safety.no_observations_desc":
-      "Observasi akan muncul di sini setelah dilaporkan.",
+    "safety.no_observations_desc": "Observasi akan muncul di sini setelah dilaporkan.",
     "safety.no_project": "Pilih proyek untuk melihat data keselamatan.",
     "safety.observation_number": "Observation #",
     "safety.observations": "Observations",
@@ -3158,17 +2840,13 @@ const resource = {
     "settings.edit_profile": "Edit nama profil",
     "settings.full_name": "Nama lengkap",
     "settings.imperial": "Imperial (ft, lb)",
-    "settings.interface_mode_subtitle":
-      "Kontrol fitur mana yang terlihat dalam navigasi",
+    "settings.interface_mode_subtitle": "Kontrol fitur mana yang terlihat dalam navigasi",
     "settings.interface_mode_title": "Mode Antarmuka",
     "settings.measurement_system": "Sistem Pengukuran",
     "settings.metric": "Metrik (m, kg)",
-    "settings.mode_advanced_detail":
-      "Perangkat profesional lengkap dengan semua modul dan fitur yang terlihat.",
-    "settings.mode_simple_detail":
-      "Alat estimasi esensial. Antarmuka bersih untuk pekerjaan yang terfokus.",
-    "settings.modules_link_desc":
-      "Aktifkan, nonaktifkan, dan konfigurasikan modul individual di bagian Modul.",
+    "settings.mode_advanced_detail": "Perangkat profesional lengkap dengan semua modul dan fitur yang terlihat.",
+    "settings.mode_simple_detail": "Alat estimasi esensial. Antarmuka bersih untuk pekerjaan yang terfokus.",
+    "settings.modules_link_desc": "Aktifkan, nonaktifkan, dan konfigurasikan modul individual di bagian Modul.",
     "settings.modules_link_title": "Modules",
     "settings.number_format": "Format Angka",
     "settings.paper_size": "Ukuran Kertas",
@@ -3177,8 +2855,7 @@ const resource = {
     "settings.regional_subtitle": "Format, satuan, dan preferensi lokalisasi",
     "settings.regional_title": "Pengaturan Regional",
     "settings.restart_onboarding": "Buka Wizard Penyiapan",
-    "settings.setup_wizard_subtitle":
-      "Jalankan ulang penyiapan awal untuk mengubah bahasa, menginstal basis data, katalog, atau proyek demo",
+    "settings.setup_wizard_subtitle": "Jalankan ulang penyiapan awal untuk mengubah bahasa, menginstal basis data, katalog, atau proyek demo",
     "settings.setup_wizard_title": "Wizard Penyiapan",
     "settings.time_days_ago": "{{count}}d ago",
     "settings.time_hours_ago": "{{count}}h ago",
@@ -3197,15 +2874,13 @@ const resource = {
     "settings.tm_import": "Import",
     "settings.tm_missing": "Missing",
     "settings.tm_missing_label": "(missing)",
-    "settings.tm_no_results":
-      "Tidak ada kunci yang cocok dengan pencarian Anda.",
+    "settings.tm_no_results": "Tidak ada kunci yang cocok dengan pencarian Anda.",
     "settings.tm_reset_tooltip": "Setel ulang ke default",
     "settings.tm_search_placeholder": "Cari kunci terjemahan...",
     "settings.tm_show_more": "Tampilkan lebih banyak ({{remaining}} tersisa)",
     "settings.tm_total_keys": "Total kunci",
     "settings.tm_translated": "Translated",
-    "settings.translation_manager_subtitle":
-      "Lihat dan sesuaikan terjemahan untuk bahasa saat ini",
+    "settings.translation_manager_subtitle": "Lihat dan sesuaikan terjemahan untuk bahasa saat ini",
     "settings.translation_manager_title": "Manajer Terjemahan",
     "submittals.action_review": "Review",
     "submittals.action_submit": "Submit",
@@ -3236,8 +2911,7 @@ const resource = {
     "submittals.no_results": "Tidak ada submittal yang cocok",
     "submittals.no_results_hint": "Coba sesuaikan pencarian atau filter Anda.",
     "submittals.no_submittals": "Belum ada submittal",
-    "submittals.no_submittals_hint":
-      "Buat submittal pertama Anda untuk memulai.",
+    "submittals.no_submittals_hint": "Buat submittal pertama Anda untuk memulai.",
     "submittals.page_title": "Submittals",
     "submittals.review_title": "Tinjau Submittal",
     "submittals.reviewed": "Submittal ditinjau",
@@ -3289,8 +2963,7 @@ const resource = {
     "transmittals.col_recipients": "Recipients",
     "transmittals.col_status": "Status",
     "transmittals.col_subject": "Subject",
-    "transmittals.cover_note_placeholder":
-      "Catatan pengantar untuk transmittal...",
+    "transmittals.cover_note_placeholder": "Catatan pengantar untuk transmittal...",
     "transmittals.create_transmittal": "Buat Transmittal",
     "transmittals.created": "Transmittal dibuat",
     "transmittals.field_cover_note": "Catatan Pengantar",
@@ -3307,11 +2980,9 @@ const resource = {
     "transmittals.label_recipients": "Recipients",
     "transmittals.new_transmittal": "Transmittal Baru",
     "transmittals.no_results": "Tidak ada transmittal yang cocok",
-    "transmittals.no_results_hint":
-      "Coba sesuaikan pencarian atau filter Anda.",
+    "transmittals.no_results_hint": "Coba sesuaikan pencarian atau filter Anda.",
     "transmittals.no_transmittals": "Belum ada transmittal",
-    "transmittals.no_transmittals_hint":
-      "Buat transmittal pertama Anda untuk memulai.",
+    "transmittals.no_transmittals_hint": "Buat transmittal pertama Anda untuk memulai.",
     "transmittals.page_title": "Transmittals",
     "transmittals.recipients_placeholder": "Masukkan nama penerima...",
     "transmittals.search_placeholder": "Cari transmittal...",
@@ -3363,8 +3034,7 @@ const resource = {
     "common.previous": "Sebelumnya",
     "common.project": "Proyek",
     "common.quantity": "Kuantitas",
-    "common.rate_limit_wait":
-      "Harap tunggu {{seconds}} detik sebelum mencoba lagi.",
+    "common.rate_limit_wait": "Harap tunggu {{seconds}} detik sebelum mencoba lagi.",
     "common.recommended": "Direkomendasikan",
     "common.region": "Wilayah",
     "common.remove": "Hapus",
@@ -3392,11 +3062,9 @@ const resource = {
     "dashboard.create_first_project": "Buat Proyek Pertama",
     "dashboard.create_first_project_desc": "Siapkan estimasi baru dari awal",
     "dashboard.import_existing_boq": "Impor Daftar Kuantitas yang Ada",
-    "dashboard.import_existing_boq_desc":
-      "Gunakan AI untuk estimasi dari dokumen yang ada",
+    "dashboard.import_existing_boq_desc": "Gunakan AI untuk estimasi dari dokumen yang ada",
     "dashboard.install_demo": "Instal Proyek Demo",
-    "dashboard.install_demo_desc":
-      "Proyek residensial bawaan dengan data realistis",
+    "dashboard.install_demo_desc": "Proyek residensial bawaan dengan data realistis",
     "dashboard.kpi_not_validated": "N/A",
     "dashboard.kpi_run_validation": "jalankan validasi",
     "dashboard.over_budget": "melebihi anggaran",
@@ -3405,19 +3073,14 @@ const resource = {
     "dashboard.quick_start": "Estimasi Cepat",
     "dashboard.run_setup": "Jalankan Wizard Penyiapan",
     "dashboard.total_budget_all": "Total Anggaran",
-    "dashboard.welcome_body":
-      "Proyek ini dibangun dan dipelihara oleh komunitas. Dukungan Anda membantu kami menambahkan fitur baru, basis data regional, dan menjaganya tetap gratis untuk semua orang.",
+    "dashboard.welcome_body": "Proyek ini dibangun dan dipelihara oleh komunitas. Dukungan Anda membantu kami menambahkan fitur baru, basis data regional, dan menjaganya tetap gratis untuk semua orang.",
     "dashboard.welcome_consult": "Konsultasi Profesional",
-    "dashboard.welcome_consult_desc":
-      "Penerapan kustom, pelatihan, dan solusi enterprise di seluruh dunia",
-    "dashboard.welcome_desc":
-      "Mulai dengan menginstal proyek demo atau membuat proyek Anda sendiri.",
+    "dashboard.welcome_consult_desc": "Penerapan kustom, pelatihan, dan solusi enterprise di seluruh dunia",
+    "dashboard.welcome_desc": "Mulai dengan menginstal proyek demo atau membuat proyek Anda sendiri.",
     "dashboard.welcome_sponsor": "Menjadi Sponsor",
-    "dashboard.welcome_sponsor_desc":
-      "Danai fitur baru dan jaga proyek tetap gratis untuk semua orang",
+    "dashboard.welcome_sponsor_desc": "Danai fitur baru dan jaga proyek tetap gratis untuk semua orang",
     "dashboard.welcome_star": "Beri Bintang di GitHub",
-    "dashboard.welcome_star_desc":
-      "Bantu orang lain menemukan proyek ini — hanya butuh 2 detik",
+    "dashboard.welcome_star_desc": "Bantu orang lain menemukan proyek ini — hanya butuh 2 detik",
     "dashboard.welcome_start": "Mulai",
     "dashboard.welcome_sub": "Estimasi biaya konstruksi gratis & open-source",
     "dashboard.welcome_title": "Selamat datang di OpenConstructionERP",
@@ -3438,8 +3101,7 @@ const resource = {
     "analytics.col_status": "Status",
     "analytics.col_variance": "Variance",
     "analytics.col_variance_pct": "Var. %",
-    "analytics.empty_description":
-      "Buat proyek dengan anggaran untuk melihat analitik lintas proyek.",
+    "analytics.empty_description": "Buat proyek dengan anggaran untuk melihat analitik lintas proyek.",
     "analytics.empty_title": "Belum ada data analitik",
     "analytics.export_csv": "Ekspor CSV",
     "analytics.filter_region": "Filter berdasarkan wilayah",
@@ -3462,38 +3124,32 @@ const resource = {
     "analytics.total_projects": "Total Proyek",
     "analytics.with_budget": "{{count}} dengan anggaran",
     "backup.confirm_replace_btn": "Ganti Semua Data",
-    "backup.confirm_replace_message":
-      "Ini akan mengganti semua data yang ada dengan konten cadangan. Tindakan ini tidak dapat dibatalkan.",
+    "backup.confirm_replace_message": "Ini akan mengganti semua data yang ada dengan konten cadangan. Tindakan ini tidak dapat dibatalkan.",
     "backup.confirm_replace_title": "Ganti semua data?",
     "backup.drop_zone_hint": "File cadangan .zip",
-    "backup.drop_zone_label":
-      "Jatuhkan file cadangan di sini atau klik untuk menelusuri",
+    "backup.drop_zone_label": "Jatuhkan file cadangan di sini atau klik untuk menelusuri",
     "backup.export_btn": "Buat Cadangan",
-    "backup.export_desc":
-      "Unduh cadangan lengkap semua data Anda sebagai file ZIP.",
+    "backup.export_desc": "Unduh cadangan lengkap semua data Anda sebagai file ZIP.",
     "backup.export_error": "Ekspor gagal",
     "backup.export_success": "Cadangan dibuat",
     "backup.export_success_detail": "File cadangan Anda telah diunduh.",
     "backup.export_title": "Buat Cadangan",
     "backup.exporting": "Membuat cadangan...",
-    "backup.import_desc":
-      "Pulihkan data dari file cadangan yang telah diekspor sebelumnya.",
+    "backup.import_desc": "Pulihkan data dari file cadangan yang telah diekspor sebelumnya.",
     "backup.import_title": "Pulihkan dari Cadangan",
     "backup.incompatible": "Versi cadangan tidak kompatibel",
     "backup.invalid_file": "File tidak valid",
     "backup.mode_merge": "Gabung (tambahkan baru, pertahankan yang ada)",
     "backup.mode_replace": "Ganti (timpa semua)",
     "backup.record_counts": "Jumlah catatan",
-    "backup.replace_warning":
-      "Peringatan: Mode ganti akan menghapus semua data yang ada.",
+    "backup.replace_warning": "Peringatan: Mode ganti akan menghapus semua data yang ada.",
     "backup.restore_btn": "Restore",
     "backup.restore_error": "Kesalahan pemulihan",
     "backup.restore_failed": "Pemulihan gagal",
     "backup.restore_failed_detail": "Tidak dapat memulihkan dari cadangan",
     "backup.restore_mode": "Mode Pemulihan",
     "backup.restore_success": "Cadangan dipulihkan",
-    "backup.restore_success_detail":
-      "Semua data telah dipulihkan dari cadangan.",
+    "backup.restore_success_detail": "Semua data telah dipulihkan dari cadangan.",
     "backup.restoring": "Restoring...",
     "backup.subtitle": "Ekspor dan impor data Anda",
     "backup.title": "Cadangan & Pemulihan",
@@ -3505,8 +3161,7 @@ const resource = {
     "changeorders.add_item": "Tambahkan Item",
     "changeorders.all_statuses": "Semua Status",
     "changeorders.approve": "Approve",
-    "changeorders.approve_confirm":
-      "Setujui perintah perubahan ini? Dampak biaya akan diterapkan ke anggaran proyek.",
+    "changeorders.approve_confirm": "Setujui perintah perubahan ini? Dampak biaya akan diterapkan ke anggaran proyek.",
     "changeorders.approved": "Perintah perubahan disetujui",
     "changeorders.approved_at": "Approved",
     "changeorders.approved_impact": "Dampak yang Disetujui",
@@ -3518,28 +3173,24 @@ const resource = {
     "changeorders.delete_item_confirm": "Hapus item ini?",
     "changeorders.deleted": "Perintah perubahan dihapus",
     "changeorders.empty": "Tidak ada perintah perubahan",
-    "changeorders.empty_desc":
-      "Buat perintah perubahan untuk melacak perubahan lingkup dengan dampak biaya dan jadwal",
+    "changeorders.empty_desc": "Buat perintah perubahan untuk melacak perubahan lingkup dengan dampak biaya dan jadwal",
     "changeorders.export_csv": "Ekspor CSV",
     "changeorders.filter_status": "Filter berdasarkan status",
     "changeorders.item_added": "Item ditambahkan",
     "changeorders.item_deleted": "Item dihapus",
     "changeorders.items": "Item Baris",
-    "changeorders.load_error":
-      "Gagal memuat perintah perubahan. Silakan coba lagi.",
+    "changeorders.load_error": "Gagal memuat perintah perubahan. Silakan coba lagi.",
     "changeorders.new": "Perintah Perubahan Baru",
     "changeorders.new_qty": "Kuantitas Baru",
     "changeorders.new_rate": "Tarif Baru",
     "changeorders.no_items": "Belum ada item",
-    "changeorders.no_items_desc":
-      "Tambahkan item baris untuk mendefinisikan perubahan lingkup",
+    "changeorders.no_items_desc": "Tambahkan item baris untuk mendefinisikan perubahan lingkup",
     "changeorders.of_total": "of",
     "changeorders.orig_qty": "Kuantitas Asal",
     "changeorders.orig_rate": "Tarif Asal",
     "changeorders.pending": "Pending",
     "changeorders.pending_approval": "Menunggu persetujuan",
-    "changeorders.pending_approval_hint":
-      "Hanya manajer dan admin yang dapat menyetujui.",
+    "changeorders.pending_approval_hint": "Hanya manajer dan admin yang dapat menyetujui.",
     "changeorders.reason": "Reason",
     "changeorders.reject": "Reject",
     "changeorders.reject_confirm": "Tolak perintah perubahan ini?",
@@ -3555,12 +3206,10 @@ const resource = {
     "changeorders.status_submitted": "Submitted",
     "changeorders.status_under_review": "Sedang Ditinjau",
     "changeorders.submit": "Submit",
-    "changeorders.submit_confirm":
-      "Kirimkan perintah perubahan ini untuk ditinjau? Tindakan ini tidak dapat dibatalkan.",
+    "changeorders.submit_confirm": "Kirimkan perintah perubahan ini untuk ditinjau? Tindakan ini tidak dapat dibatalkan.",
     "changeorders.submitted": "Perintah perubahan dikirimkan",
     "changeorders.submitted_at": "Submitted",
-    "changeorders.subtitle":
-      "Lacak perubahan lingkup dengan dampak biaya dan jadwal",
+    "changeorders.subtitle": "Lacak perubahan lingkup dengan dampak biaya dan jadwal",
     "changeorders.title_placeholder": "mis. Pekerjaan fondasi tambahan",
     "changeorders.total": "Total Pesanan",
     "changeorders.type": "Type",
@@ -3569,14 +3218,12 @@ const resource = {
     "changeorders.type_removed": "Removed",
     "changeorders.unit_placeholder": "m2, m3, pcs...",
     "changeorders.workflow": "Workflow",
-    "changeorders.workflow_desc":
-      "Alur kerja Perintah Perubahan: Draf (siapkan perubahan lingkup) → Dikirimkan (kirim untuk ditinjau) → Disetujui atau Ditolak. Setiap pesanan melacak dampak biaya dan dampak jadwal dalam hari. Tambahkan item baris untuk merincikan apa yang berubah — kuantitas dan tarif asal vs baru. Delta biaya dihitung secara otomatis.",
+    "changeorders.workflow_desc": "Alur kerja Perintah Perubahan: Draf (siapkan perubahan lingkup) → Dikirimkan (kirim untuk ditinjau) → Disetujui atau Ditolak. Setiap pesanan melacak dampak biaya dan dampak jadwal dalam hari. Tambahkan item baris untuk merincikan apa yang berubah — kuantitas dan tarif asal vs baru. Delta biaya dihitung secara otomatis.",
     "explorer.analysis_name": "Name",
     "explorer.apply_pivot": "Apply",
     "explorer.bar": "Bar",
     "explorer.boq_create_failed": "Gagal membuat item Daftar Kuantitas",
-    "explorer.boq_created_success":
-      "{{count}} item dibuat dalam Daftar Kuantitas",
+    "explorer.boq_created_success": "{{count}} item dibuat dalam Daftar Kuantitas",
     "explorer.categories": "Categories",
     "explorer.chart_type": "Type",
     "explorer.click_header_sort": "Klik header kolom untuk mengurutkan",
@@ -3587,21 +3234,17 @@ const resource = {
     "explorer.conversion_complete": "Konversi selesai",
     "explorer.conversion_failed": "Konversi gagal",
     "explorer.converters": "Konverter CAD",
-    "explorer.converters_desc":
-      "Konverter komunitas DDC untuk mengekstrak data elemen BIM",
-    "explorer.converters_external_hint":
-      "Konverter CAD memerlukan alat DDC cad2data yang diinstal di server Anda",
+    "explorer.converters_desc": "Konverter komunitas DDC untuk mengekstrak data elemen BIM",
+    "explorer.converters_external_hint": "Konverter CAD memerlukan alat DDC cad2data yang diinstal di server Anda",
     "explorer.converting": "Converting {{name}}...",
     "explorer.converting_msg": "Converting...",
     "explorer.count": "Count",
     "explorer.create_boq_from_pivot": "Buat Daftar Kuantitas",
-    "explorer.create_boq_subtitle":
-      "{{count}} grup akan menjadi item Daftar Kuantitas",
+    "explorer.create_boq_subtitle": "{{count}} grup akan menjadi item Daftar Kuantitas",
     "explorer.create_boq_title": "Buat Daftar Kuantitas dari Pivot",
     "explorer.create_positions": "Buat {{count}} Item",
     "explorer.data_completeness": "Kelengkapan Data",
-    "explorer.delete_session_confirm":
-      "Hapus analisis ini? Tindakan ini tidak dapat dibatalkan.",
+    "explorer.delete_session_confirm": "Hapus analisis ini? Tindakan ini tidak dapat dibatalkan.",
     "explorer.documents": "Documents",
     "explorer.done": "Konversi selesai! Memuat...",
     "explorer.drop_cad": "Jatuhkan file CAD/BIM untuk dijelajahi",
@@ -3616,8 +3259,7 @@ const resource = {
     "explorer.heatmap": "Aktifkan heatmap nilai",
     "explorer.heatmap_short": "Heatmap",
     "explorer.installed": "installed",
-    "explorer.invalid_format":
-      "Format file tidak didukung. Gunakan RVT, IFC, DWG, atau DGN.",
+    "explorer.invalid_format": "Format file tidak didukung. Gunakan RVT, IFC, DWG, atau DGN.",
     "explorer.like_describe": "seperti df.describe()",
     "explorer.max": "Max",
     "explorer.mean": "Mean",
@@ -3628,8 +3270,7 @@ const resource = {
     "explorer.no_chart_data": "Tidak ada data grafik",
     "explorer.no_groups": "Tidak ada grup ditemukan. Coba kolom yang berbeda.",
     "explorer.non_null": "Tidak Null",
-    "explorer.or_click":
-      "atau klik untuk menelusuri — tabel data, pivot, grafik & statistik",
+    "explorer.or_click": "atau klik untuk menelusuri — tabel data, pivot, grafik & statistik",
     "explorer.page_of": "Halaman {{page}} dari {{total}}",
     "explorer.page_summary": "Total halaman:",
     "explorer.pie": "Pie",
@@ -3638,27 +3279,22 @@ const resource = {
     "explorer.powered_by": "Didukung oleh",
     "explorer.project": "Project",
     "explorer.recent_models": "Model Terbaru",
-    "explorer.requires_external":
-      "Alat eksternal — klik untuk petunjuk penyiapan",
+    "explorer.requires_external": "Alat eksternal — klik untuk petunjuk penyiapan",
     "explorer.rows": "rows",
     "explorer.save_analysis": "Simpan Analisis",
     "explorer.save_as_bim": "Simpan sebagai Model BIM",
     "explorer.save_permanently": "Simpan Permanen",
     "explorer.save_to_project": "Simpan ke Proyek (BIM Hub)",
     "explorer.save_to_project_btn": "Simpan ke Proyek",
-    "explorer.save_to_project_desc":
-      "Membuat model BIM dengan semua elemen yang diekstrak dalam proyek yang dipilih.",
+    "explorer.save_to_project_desc": "Membuat model BIM dengan semua elemen yang diekstrak dalam proyek yang dipilih.",
     "explorer.saved": "Analisis disimpan secara permanen",
     "explorer.saved_to_project": "Disimpan ke BIM Hub",
-    "explorer.saved_to_project_msg":
-      "Elemen disimpan ke BIM Hub. Lihat di BIM Viewer.",
+    "explorer.saved_to_project_msg": "Elemen disimpan ke BIM Hub. Lihat di BIM Viewer.",
     "explorer.search_all": "Cari semua kolom...",
-    "explorer.select_columns_for_chart":
-      "Pilih kolom kelompok dan nilai untuk membuat grafik.",
+    "explorer.select_columns_for_chart": "Pilih kolom kelompok dan nilai untuk membuat grafik.",
     "explorer.select_project": "Pilih proyek...",
     "explorer.selected": "selected",
-    "explorer.session_expired_desc":
-      "Sesi CAD berlaku selama 24 jam. Unggah file Anda lagi untuk melanjutkan.",
+    "explorer.session_expired_desc": "Sesi CAD berlaku selama 24 jam. Unggah file Anda lagi untuk melanjutkan.",
     "explorer.session_expired_title": "Sesi kedaluwarsa atau tidak ditemukan",
     "explorer.setup_guide": "Panduan Penyiapan",
     "explorer.sparse_columns": "Sparse (<10%)",
@@ -3678,8 +3314,7 @@ const resource = {
     "explorer.visible_columns": "Kolom Terlihat",
     "explorer.active_filters": "Filter aktif",
     "explorer.clear_all_filters": "Hapus semua",
-    "explorer.no_active_filters":
-      "Klik bilah/irisan/titik grafik mana pun untuk memfilter di seluruh tab.",
+    "explorer.no_active_filters": "Klik bilah/irisan/titik grafik mana pun untuk memfilter di seluruh tab.",
     "explorer.line": "Line",
     "explorer.scatter": "Scatter",
     "explorer.format": "Format",
@@ -3694,19 +3329,16 @@ const resource = {
     "explorer.save_view": "Simpan tampilan",
     "explorer.save_view_prompt": "Beri nama tampilan ini",
     "explorer.saved_views": "Tampilan tersimpan",
-    "explorer.no_saved_views":
-      "Belum ada tampilan tersimpan. Simpan filter, grafik, dan konfigurasi pivot untuk digunakan nanti.",
+    "explorer.no_saved_views": "Belum ada tampilan tersimpan. Simpan filter, grafik, dan konfigurasi pivot untuk digunakan nanti.",
     "explorer.load_view": "Load",
     "explorer.delete_view": "Delete",
     "explorer.view_saved": "Tampilan disimpan",
     "explorer.view_loaded": "Tampilan dipulihkan",
     "explorer.drill_down_title": "Baris untuk {{label}}",
-    "explorer.drill_down_empty":
-      "Tidak ada baris yang cocok dengan irisan ini.",
+    "explorer.drill_down_empty": "Tidak ada baris yang cocok dengan irisan ini.",
     "explorer.close": "Close",
     "explorer.showing_rows": "Menampilkan {{count}} baris",
-    "explorer.chart_click_hint":
-      "Klik bilah / irisan / titik untuk filter silang",
+    "explorer.chart_click_hint": "Klik bilah / irisan / titik untuk filter silang",
     "fieldreports.add_trade": "Tambahkan jenis pekerjaan",
     "fieldreports.all_statuses": "Semua Status",
     "fieldreports.all_types": "Semua Jenis",
@@ -3729,15 +3361,12 @@ const resource = {
     "fieldreports.delays_placeholder": "Jelaskan keterlambatan yang terjadi...",
     "fieldreports.deleted": "Laporan lapangan dihapus",
     "fieldreports.deliveries": "Deliveries",
-    "fieldreports.deliveries_placeholder":
-      "Material atau peralatan yang dikirimkan...",
+    "fieldreports.deliveries_placeholder": "Material atau peralatan yang dikirimkan...",
     "fieldreports.download_template": "Unduh templat impor",
-    "fieldreports.drop_file":
-      "Jatuhkan file Excel atau CSV di sini, atau klik untuk menelusuri",
+    "fieldreports.drop_file": "Jatuhkan file Excel atau CSV di sini, atau klik untuk menelusuri",
     "fieldreports.edit_report": "Edit Laporan Lapangan",
     "fieldreports.empty": "Belum ada laporan lapangan",
-    "fieldreports.empty_desc":
-      "Buat laporan lapangan harian pertama Anda untuk melacak aktivitas di lokasi.",
+    "fieldreports.empty_desc": "Buat laporan lapangan harian pertama Anda untuk melacak aktivitas di lokasi.",
     "fieldreports.export": "Export",
     "fieldreports.export_failed": "Ekspor gagal",
     "fieldreports.export_pdf": "Ekspor PDF",
@@ -3749,24 +3378,20 @@ const resource = {
     "fieldreports.import": "Import",
     "fieldreports.import_btn": "Import",
     "fieldreports.import_reports": "Impor Laporan Lapangan",
-    "fieldreports.import_result":
-      "Diimpor: {{imported}}, Dilewati: {{skipped}}, Kesalahan: {{errors}}",
+    "fieldreports.import_result": "Diimpor: {{imported}}, Dilewati: {{skipped}}, Kesalahan: {{errors}}",
     "fieldreports.list_view": "List",
     "fieldreports.new_report": "Laporan Baru",
     "fieldreports.no_match": "Tidak ada laporan yang cocok",
-    "fieldreports.no_match_desc":
-      "Coba sesuaikan filter status atau jenis Anda.",
+    "fieldreports.no_match_desc": "Coba sesuaikan filter status atau jenis Anda.",
     "fieldreports.no_project": "Pilih proyek",
-    "fieldreports.no_project_desc":
-      "Pilih proyek dari bilah sisi untuk melihat laporan lapangan.",
+    "fieldreports.no_project_desc": "Pilih proyek dari bilah sisi untuk melihat laporan lapangan.",
     "fieldreports.notes": "Notes",
     "fieldreports.notes_placeholder": "Catatan atau observasi tambahan...",
     "fieldreports.report_date": "Date",
     "fieldreports.report_type": "Jenis Laporan",
     "fieldreports.row_error": "Row {{row}}: {{error}}",
     "fieldreports.safety_incidents": "Insiden Keselamatan",
-    "fieldreports.safety_placeholder":
-      "Laporkan insiden keselamatan atau hampir celaka...",
+    "fieldreports.safety_placeholder": "Laporkan insiden keselamatan atau hampir celaka...",
     "fieldreports.show_errors": "Tampilkan detail kesalahan",
     "fieldreports.stat_approved": "Approved",
     "fieldreports.stat_draft": "Draft",
@@ -3789,8 +3414,7 @@ const resource = {
     "fieldreports.wind": "Wind",
     "fieldreports.wind_placeholder": "mis. 15 km/jam arah barat laut",
     "fieldreports.work_performed": "Pekerjaan yang Dilakukan",
-    "fieldreports.work_performed_placeholder":
-      "Jelaskan aktivitas pekerjaan yang selesai hari ini...",
+    "fieldreports.work_performed_placeholder": "Jelaskan aktivitas pekerjaan yang selesai hari ini...",
     "fieldreports.workers": "workers",
     "fieldreports.workforce_section": "Workforce",
     "risk.all_categories": "Semua Kategori",
@@ -3802,20 +3426,17 @@ const resource = {
     "risk.contingency": "Rencana Kontinjensi",
     "risk.created": "Risiko dibuat",
     "risk.critical": "Critical (16-25)",
-    "risk.delete_message":
-      "Risiko ini akan dihapus secara permanen. Tindakan ini tidak dapat dibatalkan.",
+    "risk.delete_message": "Risiko ini akan dihapus secara permanen. Tindakan ini tidak dapat dibatalkan.",
     "risk.delete_title": "Hapus Risiko",
     "risk.deleted": "Risiko dihapus",
-    "risk.disclaimer":
-      "Simulasi Monte Carlo hanya memberikan estimasi probabilistik. Hasil tergantung pada asumsi input.",
+    "risk.disclaimer": "Simulasi Monte Carlo hanya memberikan estimasi probabilistik. Hasil tergantung pada asumsi input.",
     "risk.dist": "Distribution",
     "risk.dist_pert": "PERT",
     "risk.dist_triangular": "Triangular",
     "risk.dist_uniform": "Uniform",
     "risk.distribution": "Distribusi Biaya (Histogram)",
     "risk.empty": "Tidak ada risiko yang terdaftar",
-    "risk.empty_desc":
-      "Tambahkan risiko untuk melacak potensi masalah dan strategi mitigasi",
+    "risk.empty_desc": "Tambahkan risiko untuk melacak potensi masalah dan strategi mitigasi",
     "risk.export_csv": "Ekspor CSV",
     "risk.exposure": "Total Eksposur",
     "risk.heatmap": "Matriks Risiko",
@@ -3888,13 +3509,11 @@ const resource = {
     "toasts.schedule_generated": "Jadwal dibuat dari BOQ",
     "toasts.status_updated": "Status diperbarui",
     "toasts.update_failed": "Pembaruan gagal",
-    "bim.cad_processing_note":
-      "Pemrosesan mungkin memerlukan beberapa menit untuk file besar",
+    "bim.cad_processing_note": "Pemrosesan mungkin memerlukan beberapa menit untuk file besar",
     "bim.cad_upload_queued": "File CAD antre untuk diproses",
     "bim.cad_upload_success": "File CAD diunggah",
-    "bim.cad_upload_success_desc":
-      "File berhasil diunggah. Pemrosesan akan segera dimulai.",
-    "bim.confirm_delete_model": 'Hapus "{{name}}"? Semua elemen akan dihapus.',
+    "bim.cad_upload_success_desc": "File berhasil diunggah. Pemrosesan akan segera dimulai.",
+    "bim.confirm_delete_model": "Hapus \"{{name}}\"? Semua elemen akan dihapus.",
     "bim.disc_architecture": "Architecture",
     "bim.disc_civil": "Civil",
     "bim.disc_electrical": "Electrical",
@@ -3906,30 +3525,22 @@ const resource = {
     "bim.disc_structural": "Structural",
     "bim.discipline_label": "Discipline",
     "bim.getting_started": "BIM Viewer",
-    "bim.getting_started_desc":
-      "Unggah data elemen (CSV/Excel) dan geometri 3D opsional (DAE) dari konverter CAD Anda untuk memvisualisasikan model bangunan dalam 3D. Elemen dapat ditautkan ke item Daftar Kuantitas untuk verifikasi kuantitas.",
+    "bim.getting_started_desc": "Unggah data elemen (CSV/Excel) dan geometri 3D opsional (DAE) dari konverter CAD Anda untuk memvisualisasikan model bangunan dalam 3D. Elemen dapat ditautkan ke item Daftar Kuantitas untuk verifikasi kuantitas.",
     "bim.hide_upload": "Close",
     "bim.landing_drop_here": "Jatuhkan file Anda di sini",
-    "bim.landing_feat_3d_desc":
-      "Viewer Three.js interaktif dengan penyaringan lantai, pewarnaan disiplin, dan pemilihan elemen.",
+    "bim.landing_feat_3d_desc": "Viewer Three.js interaktif dengan penyaringan lantai, pewarnaan disiplin, dan pemilihan elemen.",
     "bim.landing_feat_3d_title": "3D Visualization",
-    "bim.landing_feat_boq_desc":
-      "Hubungkan elemen BIM ke item biaya untuk verifikasi kuantitas otomatis dan pengambilan 5D.",
+    "bim.landing_feat_boq_desc": "Hubungkan elemen BIM ke item biaya untuk verifikasi kuantitas otomatis dan pengambilan 5D.",
     "bim.landing_feat_boq_title": "Tautan Daftar Kuantitas",
-    "bim.landing_feat_compare_desc":
-      "Bandingkan versi untuk mendeteksi elemen yang ditambahkan, dihapus, dan dimodifikasi secara otomatis.",
+    "bim.landing_feat_compare_desc": "Bandingkan versi untuk mendeteksi elemen yang ditambahkan, dihapus, dan dimodifikasi secara otomatis.",
     "bim.landing_feat_compare_title": "Perbandingan Model",
-    "bim.landing_feat_extract_desc":
-      "Dinding, pelat, kolom, balok, MEP — dengan properti, luas, volume, dan klasifikasi.",
+    "bim.landing_feat_extract_desc": "Dinding, pelat, kolom, balok, MEP — dengan properti, luas, volume, dan klasifikasi.",
     "bim.landing_feat_extract_title": "Ekstraksi Elemen",
-    "bim.landing_feat_format_desc":
-      "IFC diproses secara instan. RVT melalui DDC cad2data. CSV/Excel untuk data yang telah dikonversi.",
+    "bim.landing_feat_format_desc": "IFC diproses secara instan. RVT melalui DDC cad2data. CSV/Excel untuk data yang telah dikonversi.",
     "bim.landing_feat_format_title": "Format Agnostik",
-    "bim.landing_feat_qty_desc":
-      "Tentukan aturan untuk mengekstrak luas, volume, dan panjang — terapkan ke seluruh model sekaligus.",
+    "bim.landing_feat_qty_desc": "Tentukan aturan untuk mengekstrak luas, volume, dan panjang — terapkan ke seluruh model sekaligus.",
     "bim.landing_feat_qty_title": "Peta Kuantitas",
-    "bim.landing_hero_subtitle":
-      "Unggah file IFC atau Revit untuk memvisualisasikan elemen bangunan, mengekstrak kuantitas, dan menautkan ke Daftar Kuantitas Anda.",
+    "bim.landing_hero_subtitle": "Unggah file IFC atau Revit untuk memvisualisasikan elemen bangunan, mengekstrak kuantitas, dan menautkan ke Daftar Kuantitas Anda.",
     "bim.landing_hero_title": "BIM 3D Viewer",
     "bim.landing_processing": "Processing...",
     "bim.landing_size_hint": "IFC, Revit, CSV, atau Excel · Maks 500 MB",
@@ -3940,14 +3551,11 @@ const resource = {
     "bim.model_name_placeholder": "mis. Gedung A — Arsitektur",
     "bim.no_models_hint_upload": "Unggah data BIM untuk memulai.",
     "bim.overlay_delete_btn": "Delete",
-    "bim.overlay_error_desc":
-      "Tidak dapat mengekstrak elemen. Coba konversi ke IFC terlebih dahulu atau unggah data secara manual.",
+    "bim.overlay_error_desc": "Tidak dapat mengekstrak elemen. Coba konversi ke IFC terlebih dahulu atau unggah data secara manual.",
     "bim.overlay_error_title": "Pemrosesan Gagal",
-    "bim.overlay_needs_converter_desc":
-      "File {{format}} memerlukan DDC cad2data untuk ekstraksi. Konversi ke IFC terlebih dahulu, atau unggah data yang telah dikonversi.",
+    "bim.overlay_needs_converter_desc": "File {{format}} memerlukan DDC cad2data untuk ekstraksi. Konversi ke IFC terlebih dahulu, atau unggah data yang telah dikonversi.",
     "bim.overlay_needs_converter_title": "Konverter Diperlukan",
-    "bim.overlay_processing_desc":
-      "Mengekstrak elemen dari file {{format}} Anda. Ini mungkin memerlukan beberapa saat.",
+    "bim.overlay_processing_desc": "Mengekstrak elemen dari file {{format}} Anda. Ini mungkin memerlukan beberapa saat.",
     "bim.overlay_processing_title": "Memproses Model...",
     "bim.overlay_upload_converted_btn": "Unggah Data yang Dikonversi",
     "bim.show_upload": "Unggah Data BIM",
@@ -3980,27 +3588,22 @@ const resource = {
     "bim.upload_advanced_element_data_hint": "CSV / Excel",
     "bim.upload_advanced_geometry": "3D Geometry",
     "bim.upload_advanced_geometry_hint": "DAE / COLLADA",
-    "bim.upload_advanced_mode_toggle":
-      "Sudah dikonversi? Unggah data + geometri secara terpisah",
+    "bim.upload_advanced_mode_toggle": "Sudah dikonversi? Unggah data + geometri secara terpisah",
     "bim.upload_depth_label": "Kedalaman konversi",
     "bim.upload_depth_standard": "Standar · kategori utama (cepat)",
     "bim.upload_depth_medium": "Menengah · kategori yang diperluas (seimbang)",
     "bim.upload_depth_complete": "Lengkap · semua kategori (lambat)",
-    "bim.upload_depth_help":
-      "Mengontrol berapa banyak kategori Revit yang diekstrak. ID elemen dan properti lengkap selalu disimpan.",
+    "bim.upload_depth_help": "Mengontrol berapa banyak kategori Revit yang diekstrak. ID elemen dan properti lengkap selalu disimpan.",
     "bim.upload_discipline_label": "Discipline",
     "bim.upload_drop_here": "Jatuhkan file di sini",
-    "bim.upload_generate_pdf_label":
-      "Juga ekspor lembar proyek sebagai PDF (latar belakang)",
-    "bim.upload_generate_pdf_help":
-      "Exports the sheets the designer prepared inside the model as a single PDF into Documents. Runs after the model is ready — upload is not delayed.",
+    "bim.upload_generate_pdf_label": "Juga ekspor lembar proyek sebagai PDF (latar belakang)",
+    "bim.upload_generate_pdf_help": "Exports the sheets the designer prepared inside the model as a single PDF into Documents. Runs after the model is ready — upload is not delayed.",
     "bim.upload_model_name_label": "Nama Model",
     "bim.upload_model_name_placeholder": "e.g. Building A",
     "bim.upload_panel_subtitle": "IFC, RVT, CSV, Excel",
     "bim.upload_panel_title": "Unggah Model",
     "bim.upload_remove_file": "Remove",
-    "bim.upload_rvt_note":
-      "Catatan: File RVT memerlukan DDC cad2data. Pertimbangkan IFC.",
+    "bim.upload_rvt_note": "Catatan: File RVT memerlukan DDC cad2data. Pertimbangkan IFC.",
     "bim.upload_simple_mode_toggle": "Beralih ke mode sederhana",
     "bim.upload_size_hint": "Revit (.rvt), IFC (.ifc) · Maks 500 MB",
     "bim.upload_success_desc": "Model berhasil diunggah.",
@@ -4060,11 +3663,9 @@ const resource = {
     "reporting.invoices_month": "Faktur Jatuh Tempo (Bulan)",
     "reporting.invoices_week": "Faktur Jatuh Tempo (Minggu)",
     "reporting.no_boqs": "Tidak ada Daftar Kuantitas dalam proyek ini",
-    "reporting.no_finance_data":
-      "Tidak ada data keuangan yang tersedia untuk proyek ini. Buat faktur dan anggaran terlebih dahulu.",
+    "reporting.no_finance_data": "Tidak ada data keuangan yang tersedia untuk proyek ini. Buat faktur dan anggaran terlebih dahulu.",
     "reporting.no_projects": "Tidak ada proyek ditemukan",
-    "reporting.no_safety_data":
-      "Tidak ada data keselamatan yang tersedia untuk proyek ini.",
+    "reporting.no_safety_data": "Tidak ada data keselamatan yang tersedia untuk proyek ini.",
     "reporting.observations": "Observations",
     "reporting.on_track": "Sesuai Rencana",
     "reporting.open": "Open",
@@ -4103,8 +3704,7 @@ const resource = {
     "settings.tm_showing": "Menampilkan {{count}} dari {{total}} kunci",
     "punch.stat_avg_close": "Rata-rata Hari untuk Menutup",
     "match_elements.title": "Cocokkan elemen",
-    "match_elements.subtitle":
-      "Petakan elemen BIM → posisi CWICR. BIM aktif; DWG / PDF / Foto akan datang di fase berikutnya.",
+    "match_elements.subtitle": "Petakan elemen BIM → posisi CWICR. BIM aktif; DWG / PDF / Foto akan datang di fase berikutnya.",
     "match_elements.select_project": "Pilih proyek…",
     "match_elements.source.bim_live": "BIM (aktif)",
     "match_elements.library": "Pustaka",
@@ -4117,11 +3717,9 @@ const resource = {
     "match_elements.detail": "Detail",
     "match_elements.no_match": "Tidak ada kecocokan…",
     "match_elements.loading_groups": "Memuat grup…",
-    "match_elements.no_groups":
-      "Belum ada grup — impor model BIM untuk mengisi proyek ini.",
+    "match_elements.no_groups": "Belum ada grup — impor model BIM untuk mengisi proyek ini.",
     "match_elements.loading_detail": "Memuat detail…",
-    "match_elements.footer":
-      "Fase A.10–A.12 — operasi massal multi-pilih, konfirmasi berdasarkan ambang batas, alur tanpa kecocokan, dan pustaka template penyewa aktif. Chip seret dan sorotan 3D akan datang di Fase B.",
+    "match_elements.footer": "Fase A.10–A.12 — operasi massal multi-pilih, konfirmasi berdasarkan ambang batas, alur tanpa kecocokan, dan pustaka template penyewa aktif. Chip seret dan sorotan 3D akan datang di Fase B.",
     "match_elements.aria.select_all": "Pilih semua grup yang terlihat",
     "match_elements.aria.select_group": "Pilih {{key}}",
     "match_elements.col.group": "Grup",
@@ -4144,55 +3742,40 @@ const resource = {
     "match_elements.action.lexical_all": "Cocokan leksikal — top 10",
     "match_elements.action.resources_selected": "Sumber daya ({{count}})",
     "match_elements.action.resources_all": "Cocokan sumber daya — top 10",
-    "match_elements.action.resources_title":
-      "Cocokkan dengan katalog material/sumber daya",
+    "match_elements.action.resources_title": "Cocokkan dengan katalog material/sumber daya",
     "match_elements.action.confirm_selected": "Konfirmasi {{count}} ≥ {{thr}}",
     "match_elements.action.confirm_all": "Konfirmasi semua ≥ {{thr}}",
     "match_elements.action.skip_n": "Lewati {{count}} (akan ditentukan)",
-    "match_elements.busy.run_selected":
-      "Menjalankan matcher {{method}} pada {{count}} terpilih…",
-    "match_elements.busy.run_all":
-      "Menjalankan matcher {{method}} pada semua grup…",
-    "match_elements.busy.bulk_confirm_selected":
-      "Konfirmasi massal {{count}} terpilih ≥ {{thr}}…",
-    "match_elements.busy.bulk_confirm_all":
-      "Konfirmasi massal kecocokan ≥ {{thr}}…",
-    "match_elements.busy.mark_tbd":
-      "Menandai {{count}} grup sebagai akan ditentukan…",
+    "match_elements.busy.run_selected": "Menjalankan matcher {{method}} pada {{count}} terpilih…",
+    "match_elements.busy.run_all": "Menjalankan matcher {{method}} pada semua grup…",
+    "match_elements.busy.bulk_confirm_selected": "Konfirmasi massal {{count}} terpilih ≥ {{thr}}…",
+    "match_elements.busy.bulk_confirm_all": "Konfirmasi massal kecocokan ≥ {{thr}}…",
+    "match_elements.busy.mark_tbd": "Menandai {{count}} grup sebagai akan ditentukan…",
     "match_elements.alert.confirmed": "Mengonfirmasi {{count}} grup",
-    "match_elements.alert.marked_tbd":
-      "Menandai {{count}} grup sebagai akan ditentukan",
+    "match_elements.alert.marked_tbd": "Menandai {{count}} grup sebagai akan ditentukan",
     "match_elements.detail.elements_count": "{{count}} elemen",
-    "match_elements.detail.no_matchers_run":
-      "Belum ada matcher yang dijalankan untuk grup ini.",
-    "match_elements.detail.use_action_bar":
-      "Gunakan tombol bilah tindakan di atas.",
+    "match_elements.detail.no_matchers_run": "Belum ada matcher yang dijalankan untuk grup ini.",
+    "match_elements.detail.use_action_bar": "Gunakan tombol bilah tindakan di atas.",
     "match_elements.detail.col.code": "Kode",
     "match_elements.detail.col.description": "Deskripsi",
     "match_elements.detail.col.unit_rate": "Satuan · Harga",
     "match_elements.detail.col.conf": "Kep.",
     "match_elements.detail.confirm": "Konfirmasi",
-    "match_elements.detail.element_ids_count":
-      "{{count}} ID elemen. Sorotan 3D di Fase A.12.",
+    "match_elements.detail.element_ids_count": "{{count}} ID elemen. Sorotan 3D di Fase A.12.",
     "match_elements.detail.and_more": "…dan {{count}} lainnya",
     "match_elements.detail.building_preview": "Membangun pratinjau…",
-    "match_elements.detail.auto_loaded_resources":
-      "Sumber daya yang dimuat otomatis:",
-    "match_elements.detail.confirm_first":
-      "Konfirmasi kecocokan terlebih dahulu untuk melihat pratinjau BOQ.",
+    "match_elements.detail.auto_loaded_resources": "Sumber daya yang dimuat otomatis:",
+    "match_elements.detail.confirm_first": "Konfirmasi kecocokan terlebih dahulu untuk melihat pratinjau BOQ.",
     "match_elements.tab.methods": "Kandidat kecocokan",
     "match_elements.tab.elements": "Elemen ({{count}})",
     "match_elements.tab.apply": "Pratinjau penerapan",
     "match_elements.no_match.heading": "Tidak ada kecocokan — pilih tindakan",
     "match_elements.no_match.custom.title": "Buat posisi khusus",
-    "match_elements.no_match.custom.sub":
-      "Tambahkan posisi khusus proyek dengan deskripsi, satuan, dan harga.",
+    "match_elements.no_match.custom.sub": "Tambahkan posisi khusus proyek dengan deskripsi, satuan, dan harga.",
     "match_elements.no_match.rfq.title": "Kirim ke RFQ",
-    "match_elements.no_match.rfq.sub":
-      "Tandai untuk tender — minta penawaran dari subkontraktor.",
+    "match_elements.no_match.rfq.sub": "Tandai untuk tender — minta penawaran dari subkontraktor.",
     "match_elements.no_match.tbd.title": "Tandai akan ditentukan",
-    "match_elements.no_match.tbd.sub":
-      "Tahan grup; tinjau nanti. Dikecualikan dari total BOQ hingga diselesaikan.",
+    "match_elements.no_match.tbd.sub": "Tahan grup; tinjau nanti. Dikecualikan dari total BOQ hingga diselesaikan.",
     "match_elements.no_match.placeholder.description": "Deskripsi posisi",
     "match_elements.no_match.placeholder.unit": "Satuan",
     "match_elements.no_match.placeholder.rate": "Harga satuan",
@@ -4202,24 +3785,19 @@ const resource = {
     "match_elements.templates.count": "{{count}} tanda tangan",
     "match_elements.templates.loading": "Memuat pustaka…",
     "match_elements.templates.empty": "Belum ada template tersimpan.",
-    "match_elements.templates.empty_hint":
-      "Kecocokan yang dikonfirmasi dengan «Simpan ke pustaka» diaktifkan muncul di sini dan menyebar ke proyek mendatang.",
+    "match_elements.templates.empty_hint": "Kecocokan yang dikonfirmasi dengan «Simpan ke pustaka» diaktifkan muncul di sini dan menyebar ke proyek mendatang.",
     "match_elements.templates.unnamed": "(tanpa nama)",
     "match_elements.templates.sig": "tanda: {{prefix}}…",
     "match_elements.templates.used": "Digunakan",
     "match_elements.templates.last": "terakhir {{date}}",
-    "match_elements.templates.remove_confirm":
-      "Hapus template ini dari pustaka?",
+    "match_elements.templates.remove_confirm": "Hapus template ini dari pustaka?",
     "match_elements.templates.remove_title": "Hapus dari pustaka",
-    "match_elements.templates.footer":
-      "Template berlingkup penyewa. Tanda tangan yang dikonfirmasi otomatis menyarankan kecocokan dalam proyek mendatang.",
+    "match_elements.templates.footer": "Template berlingkup penyewa. Tanda tangan yang dikonfirmasi otomatis menyarankan kecocokan dalam proyek mendatang.",
     "match_elements.no_project_title": "No active project selected.",
-    "match_elements.no_project_hint":
-      "Open the project picker in the header, or visit",
+    "match_elements.no_project_hint": "Open the project picker in the header, or visit",
     "match_elements.active_project": "Active project",
     "match_elements.loading_sessions": "Loading sessions…",
-    "match_elements.no_prior_sessions":
-      "No prior matching sessions for this project.",
+    "match_elements.no_prior_sessions": "No prior matching sessions for this project.",
     "match_elements.session_default_name": "Session {{id}}",
     "match_elements.new_session": "New session",
     "match_elements.legend_label": "Confidence",
@@ -4228,21 +3806,16 @@ const resource = {
     "match_elements.legend_low": "Low",
     "match_elements.col.suggested": "Suggested cost",
     "match_elements.subtractive_hint": "Subtractive / non-billable",
-    "match_elements.detail.opening_warning":
-      "host has openings but gross == net (IFC export bug)",
-    "match_elements.detail.candidate_no_id":
-      "Candidate has no DB id — cannot confirm",
+    "match_elements.detail.opening_warning": "host has openings but gross == net (IFC export bug)",
+    "match_elements.detail.candidate_no_id": "Candidate has no DB id — cannot confirm",
     "match_elements.detail.apply_total": "Total",
     "match_elements.auto_confirm_threshold": "Auto-confirm threshold",
-    "match_elements.auto_confirm_help":
-      "Suggested matches at or above this score auto-confirm.",
+    "match_elements.auto_confirm_help": "Suggested matches at or above this score auto-confirm.",
     "match_elements.use_net": "Use net quantities (deduct openings)",
-    "match_elements.use_net_help":
-      "Off = use gross. Default deducts IfcOpeningElement / IfcRelVoidsElement from host quantities.",
+    "match_elements.use_net_help": "Off = use gross. Default deducts IfcOpeningElement / IfcRelVoidsElement from host quantities.",
     "match_elements.trade_filter": "Filter by trade",
     "match_elements.stage_label": "Tahap konstruksi",
-    "match_elements.stage_help":
-      "Pasangkan hasil ke satu fase OmniClass. Biarkan kosong untuk mencari di semua tahap.",
+    "match_elements.stage_help": "Pasangkan hasil ke satu fase OmniClass. Biarkan kosong untuk mencari di semua tahap.",
     "match_elements.stage_any": "Semua tahap",
     "match_elements.stage.02_Demolition": "Pembongkaran",
     "match_elements.stage.03_Earthwork": "Pekerjaan tanah",
@@ -4263,11 +3836,9 @@ const resource = {
     "match_elements.group_by_sample": "mis.",
     "match_elements.loading_attributes": "Memuat…",
     "match_elements.action.apply": "Apply to BOQ ({{n}})",
-    "match_elements.action.apply_title":
-      "Write confirmed matches to the project BOQ",
+    "match_elements.action.apply_title": "Write confirmed matches to the project BOQ",
     "match_elements.busy.applying": "Applying confirmed groups to BOQ…",
-    "match_elements.alert.applied":
-      "Created {{n}} BOQ positions · total {{total}} {{ccy}}",
+    "match_elements.alert.applied": "Created {{n}} BOQ positions · total {{total}} {{ccy}}",
     "match_elements.visible_groups": "{{n}} visible",
     "match_elements.selected_count": "{{n}} selected",
     "match_elements.trade.architectural": "Architectural",
@@ -4282,12 +3853,10 @@ const resource = {
     "nav.add_module": "Tambah modul",
     "nav.add_module_hint": "Buat milikmu · panduan pengembang",
     "nav.request_custom_module": "Minta modul kustom",
-    "nav.request_custom_module_hint":
-      "Ada yang kurang? Beri tahu kami apa yang Anda butuhkan",
+    "nav.request_custom_module_hint": "Ada yang kurang? Beri tahu kami apa yang Anda butuhkan",
     "modules.dev_guide": "Bangun modul — panduan pengembang",
     "boq.accept": "Terima",
-    "boq.accept_all_anomaly_suggestions":
-      "Accept All Suggested Rates ({{count}})",
+    "boq.accept_all_anomaly_suggestions": "Accept All Suggested Rates ({{count}})",
     "boq.add_all_failed": "Could not add any of the {{count}} positions",
     "boq.add_as_resources": "Add {{count}} as resources",
     "boq.add_column_btn": "Tambah kolom",
@@ -4309,68 +3878,54 @@ const resource = {
     "boq.ai_applied": "AI Suggestion Applied",
     "boq.ai_apply_description": "Apply Enhanced Description",
     "boq.ai_apply_rate": "Apply Escalated Rate",
-    "boq.ai_assistant_tooltip":
-      "Describe what you need in plain text — AI creates BOQ positions with realistic pricing.",
+    "boq.ai_assistant_tooltip": "Describe what you need in plain text — AI creates BOQ positions with realistic pricing.",
     "boq.ai_chat_short": "AI Chat",
     "boq.ai_classification": "AI Classification",
     "boq.ai_classify_error": "Classification failed",
     "boq.ai_connected_via": "Connected via {{provider}}",
-    "boq.ai_enhance_subtitle":
-      "Add technical specs, standards, material grades",
+    "boq.ai_enhance_subtitle": "Add technical specs, standards, material grades",
     "boq.ai_enhance_title": "Enhance Description",
-    "boq.ai_error_generic":
-      "Could not connect to AI service. Check that the embedding model is available.",
+    "boq.ai_error_generic": "Could not connect to AI service. Check that the embedding model is available.",
     "boq.ai_escalate_subtitle": "Adjust rate for inflation and market changes",
     "boq.ai_escalate_title": "Escalate Rate",
     "boq.ai_escalated": "Escalated",
     "boq.ai_factor_labor": "Labor",
     "boq.ai_factor_material": "Material",
     "boq.ai_factor_region": "Regional",
-    "boq.ai_generated_summary":
-      "Generated {{count}} positions totalling {{total}} {{currency}}.‌⁠‍",
+    "boq.ai_generated_summary": "Generated {{count}} positions totalling {{total}} {{currency}}.‌⁠‍",
     "boq.ai_global_actions": "BOQ-level Actions",
     "boq.ai_missing_items": "Missing Items",
     "boq.ai_no_classification": "No Classification Found",
-    "boq.ai_no_classification_msg":
-      "Could not determine classification from cost database.",
-    "boq.ai_no_prereqs":
-      "No missing items found — BOQ looks complete for this position.",
+    "boq.ai_no_classification_msg": "Could not determine classification from cost database.",
+    "boq.ai_no_prereqs": "No missing items found — BOQ looks complete for this position.",
     "boq.ai_no_rate": "No Rate Found",
     "boq.ai_no_rate_msg": "No similar items found in the cost database.",
-    "boq.ai_no_selection":
-      "Select a position in the grid for per-position AI actions‌⁠‍",
+    "boq.ai_no_selection": "Select a position in the grid for per-position AI actions‌⁠‍",
     "boq.ai_not_configured": "AI not configured‌⁠‍",
-    "boq.ai_not_configured_desc":
-      "Add your API key in Settings to use AI Smart Actions.‌⁠‍",
+    "boq.ai_not_configured_desc": "Add your API key in Settings to use AI Smart Actions.‌⁠‍",
     "boq.ai_original": "Original",
     "boq.ai_position_actions": "Position Actions",
-    "boq.ai_prereqs_subtitle":
-      "Find missing prerequisites, companions, successors",
+    "boq.ai_prereqs_subtitle": "Find missing prerequisites, companions, successors",
     "boq.ai_prereqs_title": "Suggest Related Items",
     "boq.ai_rate_error": "Rate suggestion failed",
     "boq.ai_rate_suggestion": "AI Rate Suggestion",
     "boq.ai_scope_score": "Completeness Score",
-    "boq.ai_scope_subtitle":
-      "Find missing trades, work packages, critical items",
+    "boq.ai_scope_subtitle": "Find missing trades, work packages, critical items",
     "boq.ai_scope_title": "Check Scope Completeness",
     "boq.ai_selected_position": "Selected Position‌⁠‍",
-    "boq.ai_smart_footer":
-      "Powered by your AI provider (Settings > AI). Results are suggestions — always review.",
+    "boq.ai_smart_footer": "Powered by your AI provider (Settings > AI). Results are suggestions — always review.",
     "boq.ai_smart_panel": "AI Smart Actions‌⁠‍",
-    "boq.ai_smart_tooltip":
-      "Enhance descriptions, find missing items, check scope completeness, escalate rates to current prices.",
+    "boq.ai_smart_tooltip": "Enhance descriptions, find missing items, check scope completeness, escalate rates to current prices.",
     "boq.ai_specs": "Specifications",
     "boq.all_anomalies_resolved": "All {{count}} suggested rates applied",
     "boq.all_rates_normal": "All rates are within normal market range.",
     "boq.anomalies_badge": "Anomalies ({{count}})",
-    "boq.anomalies_count":
-      "{{count}} anomalies detected in {{total}} positions",
+    "boq.anomalies_count": "{{count}} anomalies detected in {{total}} positions",
     "boq.anomalies_found": "Pricing Anomalies Found",
     "boq.anomaly_cancelled": "Price check cancelled",
     "boq.anomaly_check_error": "Anomaly check failed",
     "boq.anomaly_rate_applied": "Suggested Rate Applied",
-    "boq.anomaly_tip":
-      "Compares each unit rate against median market rates from the cost database. Flags overpriced and underpriced positions.",
+    "boq.anomaly_tip": "Compares each unit rate against median market rates from the cost database. Flags overpriced and underpriced positions.",
     "boq.applied": "Applied",
     "boq.apply_all_suggestions": "Apply All‌⁠‍",
     "boq.apply_defaults_failed": "Failed to apply template",
@@ -4384,27 +3939,22 @@ const resource = {
     "boq.autocomplete_tooltip_rate_per_unit": "Rate per unit‌⁠‍",
     "boq.autocomplete_tooltip_tab_to_insert": "Tab or Enter to insert‌⁠‍",
     "boq.autocomplete_tooltip_unit": "/",
-    "boq.autocomplete_tooltip_variants_available":
-      "${variantCount} variants available",
+    "boq.autocomplete_tooltip_variants_available": "${variantCount} variants available",
     "boq.batch_actions": "Batch actions‌⁠‍",
     "boq.batch_change_unit": "Change unit‌⁠‍",
     "boq.batch_clear_selection": "Clear selection",
     "boq.batch_delete": "Delete selected‌⁠‍",
     "boq.batch_delete_confirm": "Delete {{count}} positions",
-    "boq.batch_delete_confirm_message":
-      "Are you sure you want to delete {{count}} selected positions? This action cannot be undone.",
+    "boq.batch_delete_confirm_message": "Are you sure you want to delete {{count}} selected positions? This action cannot be undone.",
     "boq.batch_delete_confirm_title": "Delete positions",
     "boq.batch_deleted": "{{count}} positions deleted",
-    "boq.batch_unit_changed":
-      "Unit changed to {{unit}} for {{count}} positions",
+    "boq.batch_unit_changed": "Unit changed to {{unit}} for {{count}} positions",
     "boq.bim_agg_distinct_label": "{{n}} values",
-    "boq.bim_agg_distinct_title":
-      "Per-element value — summing is meaningless, so each unique value is listed. Click one to apply it.",
+    "boq.bim_agg_distinct_title": "Per-element value — summing is meaningless, so each unique value is listed. Click one to apply it.",
     "boq.bim_agg_sum_title": "Summed across all linked elements",
     "boq.bim_collapse_sums": "Show only headline quantities",
     "boq.bim_expand_sums": "Show all numeric values from BIM",
-    "boq.bim_link_tooltip":
-      "{{count}} BIM element(s) linked — click to preview",
+    "boq.bim_link_tooltip": "{{count}} BIM element(s) linked — click to preview",
     "boq.bim_properties": "Properties",
     "boq.bim_props_show_all_title": "Include every numeric property from BIM",
     "boq.bim_props_show_basic_title": "Hide non-quantity properties",
@@ -4431,22 +3981,19 @@ const resource = {
     "boq.column_calc_invalid_formula": "Formula has a syntax error",
     "boq.column_calc_needs_formula": "Calculated column needs a formula",
     "boq.column_decimals": "Decimals",
-    "boq.column_delete_confirm":
-      'Remove the "{{name}}" column? Existing values in positions are preserved but no longer shown.',
+    "boq.column_delete_confirm": "Remove the \"{{name}}\" column? Existing values in positions are preserved but no longer shown.",
     "boq.column_delete_confirm_title": "Remove column?",
     "boq.column_delete_failed": "Could not remove column‌⁠‍",
     "boq.column_formula": "Formula",
     "boq.column_name": "Column name",
-    "boq.column_name_duplicate": 'A column named "{{name}}" already exists',
+    "boq.column_name_duplicate": "A column named \"{{name}}\" already exists",
     "boq.column_name_invalid": "Column name is invalid",
-    "boq.column_name_invalid_hint":
-      "Use letters (any script), numbers and spaces. Must start with a letter.",
+    "boq.column_name_invalid_hint": "Use letters (any script), numbers and spaces. Must start with a letter.",
     "boq.column_name_placeholder": "e.g. Supplier, Notes, PO Number",
-    "boq.column_name_reserved": '"{{name}}" is a reserved column name',
+    "boq.column_name_reserved": "\"{{name}}\" is a reserved column name",
     "boq.column_options": "Options (comma or newline separated)",
     "boq.column_removed": "Column removed‌⁠‍",
-    "boq.column_select_needs_options":
-      "Select column needs at least one option",
+    "boq.column_select_needs_options": "Select column needs at least one option",
     "boq.column_test_formula": "Test",
     "boq.column_test_result": "Result:",
     "boq.column_type": "Tipe",
@@ -4466,17 +4013,13 @@ const resource = {
     "boq.cost_finder_components": "{{count}} components",
     "boq.cost_finder_error": "Search failed. Check vector database.",
     "boq.cost_finder_for_position": "For: {{description}}",
-    "boq.cost_finder_no_query":
-      "Enter a description to search the cost database",
+    "boq.cost_finder_no_query": "Enter a description to search the cost database",
     "boq.cost_finder_no_results": "No matching items found",
     "boq.cost_finder_results_count": "{{count}} results ({{ms}}ms)",
-    "boq.cost_finder_search_placeholder":
-      "Search cost items by description...‌⁠‍",
+    "boq.cost_finder_search_placeholder": "Search cost items by description...‌⁠‍",
     "boq.cost_finder_title": "AI Cost Finder‌⁠‍",
-    "boq.cost_finder_tooltip":
-      "Search 55,000+ cost items by description. Find materials, labor, and equipment rates from regional databases.",
-    "boq.cost_risk_error":
-      "Failed to load cost risk analysis. Please try again.",
+    "boq.cost_finder_tooltip": "Search 55,000+ cost items by description. Find materials, labor, and equipment rates from regional databases.",
+    "boq.cost_risk_error": "Failed to load cost risk analysis. Please try again.",
     "boq.create_budget": "Create Budget",
     "boq.create_failed": "Failed to create BOQ",
     "boq.create_revision": "Create Revision",
@@ -4486,10 +4029,8 @@ const resource = {
     "boq.currency_group_world": "World currencies",
     "boq.current": "Current‌⁠‍",
     "boq.custom_columns": "Custom Columns",
-    "boq.custom_columns_hint":
-      "Custom columns appear in the BOQ grid before the actions column. Values are stored per position and exported with the BOQ. Removing a column hides it but preserves the underlying data.",
-    "boq.custom_columns_subtitle":
-      "Add your own fields — supplier, notes, procurement info…",
+    "boq.custom_columns_hint": "Custom columns appear in the BOQ grid before the actions column. Values are stored per position and exported with the BOQ. Removing a column hides it but preserves the underlying data.",
+    "boq.custom_columns_subtitle": "Add your own fields — supplier, notes, procurement info…",
     "boq.delete_section": "Delete section with all positions",
     "boq.display_base": "Base",
     "boq.display_currency_aria": "Choose currency for grand total display",
@@ -4498,8 +4039,7 @@ const resource = {
     "boq.duplicate_position": "Duplicate Position",
     "boq.dwg_link_tooltip_v2": "DWG drawing — click for details & navigation",
     "boq.element_count": "{{count}} element(s)",
-    "boq.empty_position_quality_hint":
-      "Empty position lowers Quality Score until quantity & rate are filled",
+    "boq.empty_position_quality_hint": "Empty position lowers Quality Score until quantity & rate are filled",
     "boq.errors": "errors",
     "boq.estimate_type_budget": "Anggaran",
     "boq.estimate_type_conceptual": "Conceptual",
@@ -4512,35 +4052,28 @@ const resource = {
     "boq.expand_resources": "Expand Resources",
     "boq.expand_section": "Expand Section",
     "boq.export_anyway": "Export Anyway",
-    "boq.export_quality_warning_desc":
-      "Your estimate has a quality score below 60%. Missing quantities, zero prices, or incomplete descriptions may affect the exported document. Consider reviewing the estimate before exporting.",
+    "boq.export_quality_warning_desc": "Your estimate has a quality score below 60%. Missing quantities, zero prices, or incomplete descriptions may affect the exported document. Consider reviewing the estimate before exporting.",
     "boq.filled": "filled",
     "boq.filtered_from": "filtered from {{total}}",
     "boq.fx_rate_global_badge": "GLOBAL",
     "boq.fx_rate_input": "FX rate {{from}}→{{to}}",
     "boq.fx_rate_label": "FX rate",
     "boq.fx_rate_project_badge": "PROJECT",
-    "boq.gaeb_export_desc":
-      "This will export your BOQ as GAEB XML 3.3 format, compatible with standard tender workflows.",
+    "boq.gaeb_export_desc": "This will export your BOQ as GAEB XML 3.3 format, compatible with standard tender workflows.",
     "boq.gaeb_export_title": "Export GAEB XML (X83)",
     "boq.gaeb_grand_total": "Grand Total",
     "boq.gaeb_positions": "Positions",
-    "boq.grand_total_conversion_tooltip_v2":
-      'Whole BOQ rendered in {{disp}} at rate {{rate}} ({{base}} → {{disp}}). View-only — server keeps base values. Switch to "Base" to edit prices.',
+    "boq.grand_total_conversion_tooltip_v2": "Whole BOQ rendered in {{disp}} at rate {{rate}} ({{base}} → {{disp}}). View-only — server keeps base values. Switch to \"Base\" to edit prices.",
     "boq.grid_settings": "Grid Settings",
     "boq.ignore": "Ignore",
-    "boq.import_catalog_hint":
-      "Import a resource catalog from Settings or the Catalog page",
+    "boq.import_catalog_hint": "Import a resource catalog from Settings or the Catalog page",
     "boq.import_database_cta": "Import a database",
     "boq.import_file": "Import File",
     "boq.import_rows": "Import {{count}} rows",
     "boq.import_started": "Importing {{name}}…",
-    "boq.import_started_gaeb_hint":
-      "Parsing GAEB XML — namespace-agnostic, X81/X83/X84 supported.",
-    "boq.import_started_hint":
-      "Large files (PDF / CAD / 1000+ rows) may take up to 60 seconds.",
-    "boq.import_timeout":
-      "Server did not respond within 90 seconds. The file may be too large — try splitting it.",
+    "boq.import_started_gaeb_hint": "Parsing GAEB XML — namespace-agnostic, X81/X83/X84 supported.",
+    "boq.import_started_hint": "Large files (PDF / CAD / 1000+ rows) may take up to 60 seconds.",
+    "boq.import_timeout": "Server did not respond within 90 seconds. The file may be too large — try splitting it.",
     "boq.import_tooltip": "Import GAEB, Excel, or CSV into this BOQ",
     "boq.inline_edit_number": "Edit value",
     "boq.inline_edit_text": "Edit text",
@@ -4551,16 +4084,13 @@ const resource = {
     "boq.link_finance": "View Budget",
     "boq.link_validation": "Run Validation",
     "boq.linked_geometry": "Linked Geometry",
-    "boq.list_subtitle_count":
-      "{{boqCount}} estimates across {{projectCount}} projects",
+    "boq.list_subtitle_count": "{{boqCount}} estimates across {{projectCount}} projects",
     "boq.loading_element_data": "Loading element data...",
     "boq.loading_full_properties": "Loading full properties…",
     "boq.lock": "Lock Estimate",
-    "boq.lock_confirm":
-      "Lock this estimate?nnLocked estimates cannot be edited. Unlocking requires admin privileges.",
+    "boq.lock_confirm": "Lock this estimate?nnLocked estimates cannot be edited. Unlocking requires admin privileges.",
     "boq.lock_failed": "Lock failed",
-    "boq.lock_tooltip":
-      "Lock prevents edits. Create a revision to make changes to a locked estimate.",
+    "boq.lock_tooltip": "Lock prevents edits. Create a revision to make changes to a locked estimate.",
     "boq.locked": "LOCKED",
     "boq.locked_next": "Estimate locked. Create project budget?",
     "boq.locked_success": "Estimate locked",
@@ -4571,8 +4101,7 @@ const resource = {
     "boq.markup_delete_failed": "Failed to delete markup‌⁠‍",
     "boq.markup_update_failed": "Failed to update markup‌⁠‍",
     "boq.mvp.apply_to_remaining": "Apply to remaining {{count}}",
-    "boq.mvp.apply_to_remaining_hint":
-      "Re-use these picks for all other multi-variant items in this batch",
+    "boq.mvp.apply_to_remaining_hint": "Re-use these picks for all other multi-variant items in this batch",
     "boq.mvp.subtitle": "{{count}} resource needs a choice‌⁠‍",
     "boq.mvp.toast_applied": "{{count}} variant chosen",
     "boq.mvp.toast_apply_to_remaining": "Applied picks to {{count}} more item",
@@ -4582,64 +4111,52 @@ const resource = {
     "boq.no_boqs_in_project": "No BOQs in this project.",
     "boq.no_catalog_results": "No resources match your search",
     "boq.no_changes": "No changes",
-    "boq.no_custom_columns":
-      "No custom columns yet. Pick a preset below or add your own.",
-    "boq.no_databases_help":
-      "There's no cost-rate database on this server, so search has nothing to show. Import a free CWICR pack — 30 regional databases are one click away.",
+    "boq.no_custom_columns": "No custom columns yet. Pick a preset below or add your own.",
+    "boq.no_databases_help": "There's no cost-rate database on this server, so search has nothing to show. Import a free CWICR pack — 30 regional databases are one click away.",
     "boq.no_databases_title": "No cost database installed yet",
     "boq.no_numeric_found": "No numeric values in this element",
     "boq.no_numeric_quantities": "No numeric quantities",
-    "boq.no_quantities_hint_button":
-      'No quantities — press "Show all" above to surface every BIM property',
+    "boq.no_quantities_hint_button": "No quantities — press \"Show all\" above to surface every BIM property",
     "boq.no_snapshots": "No snapshots yet",
     "boq.open_in_bim": "Open in BIM",
-    "boq.open_in_bim_title":
-      "Open in 3D viewer with the linked element pre-selected",
+    "boq.open_in_bim_title": "Open in 3D viewer with the linked element pre-selected",
     "boq.open_in_bim_viewer": "Open in BIM Viewer",
     "boq.options": "options",
     "boq.pagination_range": "{{from}}–{{to}} of {{total}} estimates",
     "boq.partial": "Partial",
     "boq.paste_columns": "Columns‌⁠‍",
     "boq.paste_detected": "{{count}} rows detected‌⁠‍",
-    "boq.paste_excel_hint":
-      "Copy rows from Excel or Google Sheets and paste below‌⁠‍",
+    "boq.paste_excel_hint": "Copy rows from Excel or Google Sheets and paste below‌⁠‍",
     "boq.paste_failed": "Could not paste — invalid data or read-only cells‌⁠‍",
     "boq.paste_from_excel": "Paste from Excel",
     "boq.paste_from_excel_short": "Paste",
     "boq.paste_import_count": "{{count}} positions added to BOQ",
     "boq.paste_import_failed": "Import failed",
     "boq.paste_import_success": "Imported successfully",
-    "boq.paste_no_data":
-      "No valid rows detected. Make sure data is tab-separated.",
-    "boq.paste_placeholder":
-      "Paste tab-separated data here...nnExample:nDescriptiontUnittQtytRatenConcrete foundationtm3t120t185.00nRebar B500Stkgt2400t1.45‌⁠‍",
+    "boq.paste_no_data": "No valid rows detected. Make sure data is tab-separated.",
+    "boq.paste_placeholder": "Paste tab-separated data here...nnExample:nDescriptiontUnittQtytRatenConcrete foundationtm3t120t185.00nRebar B500Stkgt2400t1.45‌⁠‍",
     "boq.paste_showing": "Showing first 50 of {{total}} rows",
     "boq.pdf_link_tooltip_v2": "PDF takeoff — click for details & navigation",
     "boq.per_unit": "per {{unit}}",
     "boq.pick_from_catalog": "Pick from Catalog‌⁠‍",
-    "boq.pick_from_catalog_desc":
-      "Search and add a resource from the catalog to this position‌⁠‍",
+    "boq.pick_from_catalog_desc": "Search and add a resource from the catalog to this position‌⁠‍",
     "boq.pick_qty_from_bim": "Pick quantity from BIM",
     "boq.pos": "Pos",
     "boq.position_deleted": "Position deleted",
     "boq.position_duplicated": "Position duplicated",
     "boq.position_restored": "Position restored",
     "boq.position_variant_v_label": "Expand resources",
-    "boq.position_variant_v_tooltip":
-      "This position carries a variant resource — click to expand the resource panel.",
+    "boq.position_variant_v_tooltip": "This position carries a variant resource — click to expand the resource panel.",
     "boq.positions_removed": "{{count}} pos removed",
     "boq.positions_reordered": "Positions reordered",
     "boq.positions_short": "pos.",
-    "boq.preset_already_applied":
-      "All columns from this preset already exist‌⁠‍",
-    "boq.preset_applied": '{{count}} columns added from "{{name}}" preset',
+    "boq.preset_already_applied": "All columns from this preset already exist‌⁠‍",
+    "boq.preset_applied": "{{count}} columns added from \"{{name}}\" preset",
     "boq.preset_partial": "Preset partially applied",
     "boq.preset_regional": "Regional standards",
     "boq.preset_universal": "Quick start with a preset",
-    "boq.preview_total_hint":
-      "Catalog-rate × quantity for the selection. Variant picks may adjust this.",
-    "boq.price_review_desc":
-      "Review each suggestion below. Accept to update the rate, or ignore to keep your current price.‌⁠‍",
+    "boq.preview_total_hint": "Catalog-rate × quantity for the selection. Variant picks may adjust this.",
+    "boq.price_review_desc": "Review each suggestion below. Accept to update the rate, or ignore to keep your current price.‌⁠‍",
     "boq.price_review_title": "Price Check Results‌⁠‍",
     "boq.quality_ai_menu": "Quality & AI",
     "boq.quality_ai_menu_tip": "All quality & AI tools",
@@ -4648,40 +4165,29 @@ const resource = {
     "boq.quantity_for_item": "Quantity for {{item}}",
     "boq.quantity_short": "Qty",
     "boq.rate_applied": "Rate Applied",
-    "boq.rate_from_resources":
-      "Rate is calculated from resources. Edit individual resources to change.‌⁠‍",
+    "boq.rate_from_resources": "Rate is calculated from resources. Edit individual resources to change.‌⁠‍",
     "boq.recalc_confirm_button": "Update Rates",
-    "boq.recalc_confirm_step1":
-      "1. Search cost database for matching items by description",
-    "boq.recalc_confirm_step2":
-      "2. Attach resource breakdowns (materials, labor, equipment)",
-    "boq.recalc_confirm_step3":
-      "3. Recalculate unit rates from resource components",
+    "boq.recalc_confirm_step1": "1. Search cost database for matching items by description",
+    "boq.recalc_confirm_step2": "2. Attach resource breakdowns (materials, labor, equipment)",
+    "boq.recalc_confirm_step3": "3. Recalculate unit rates from resource components",
     "boq.recalc_confirm_subtitle": "Match positions to cost database",
     "boq.recalc_confirm_title": "Update Unit Rates",
-    "boq.recalc_confirm_warning":
-      "Positions with manual rates that have no match in the cost database will not be changed.",
+    "boq.recalc_confirm_warning": "Positions with manual rates that have no match in the cost database will not be changed.",
     "boq.recalc_enriched": "{{count}} positions matched to cost database",
-    "boq.recalc_skipped":
-      "{{count}} positions without cost data (manual rates kept)",
+    "boq.recalc_skipped": "{{count}} positions without cost data (manual rates kept)",
     "boq.recalc_updated": "{{count}} unit rates recalculated from resources",
-    "boq.recalculate_all_manual":
-      "All positions use manual rates — add resources from cost database to enable automatic rate calculation.",
-    "boq.recalculate_failed_hint":
-      "Check that the backend is running and cost database is loaded.",
+    "boq.recalculate_all_manual": "All positions use manual rates — add resources from cost database to enable automatic rate calculation.",
+    "boq.recalculate_failed_hint": "Check that the backend is running and cost database is loaded.",
     "boq.recalculate_no_changes": "No changes needed",
-    "boq.recalculate_tip":
-      "Matches positions to cost database, attaches resource breakdowns (materials, labor, equipment), and recalculates unit rates from components.",
+    "boq.recalculate_tip": "Matches positions to cost database, attaches resource breakdowns (materials, labor, equipment), and recalculates unit rates from components.",
     "boq.recalculating": "Updating...",
     "boq.remove_resource": "Remove Resource",
     "boq.renumber": "Renumber Positions",
     "boq.renumber_apply": "Apply renumbering",
-    "boq.renumber_dialog_subtitle":
-      "Pick a numbering scheme. The current order is preserved — only ordinals are rewritten.‌⁠‍",
+    "boq.renumber_dialog_subtitle": "Pick a numbering scheme. The current order is preserved — only ordinals are rewritten.‌⁠‍",
     "boq.renumber_dialog_title": "Renumber positions‌⁠‍",
     "boq.renumber_done": "{{count}} positions renumbered",
-    "boq.renumber_done_hint":
-      "Order preserved — only ordinals were rewritten. Undo with Ctrl+Z is not supported for renumber.",
+    "boq.renumber_done_hint": "Order preserved — only ordinals were rewritten. Undo with Ctrl+Z is not supported for renumber.",
     "boq.renumber_failed": "Renumber failed",
     "boq.renumber_no_preview": "No positions to preview yet.",
     "boq.renumber_pad": "Zero-pad section numbers‌⁠‍",
@@ -4689,19 +4195,14 @@ const resource = {
     "boq.renumber_pad_on": "Sections will be 01, 02, 03 (two-digit padded)‌⁠‍",
     "boq.renumber_preview": "Preview (first 5 positions)",
     "boq.renumber_scheme_dotted": "Short decimal",
-    "boq.renumber_scheme_dotted_desc":
-      "Short-form decimal numbering common in NRM-style measurement.",
+    "boq.renumber_scheme_dotted_desc": "Short-form decimal numbering common in NRM-style measurement.",
     "boq.renumber_scheme_gap10": "Gap of 10",
-    "boq.renumber_scheme_gap10_desc":
-      "Leaves room to insert positions like 01.15 between 01.10 and 01.20 later. Standard German tender output.",
+    "boq.renumber_scheme_gap10_desc": "Leaves room to insert positions like 01.15 between 01.10 and 01.20 later. Standard German tender output.",
     "boq.renumber_scheme_gap100": "Gap of 100",
-    "boq.renumber_scheme_gap100_desc":
-      "Even more headroom for very large BOQs that may grow significantly post-tender.",
+    "boq.renumber_scheme_gap100_desc": "Even more headroom for very large BOQs that may grow significantly post-tender.",
     "boq.renumber_scheme_sequential": "Sequential",
-    "boq.renumber_scheme_sequential_desc":
-      "Compact, traditional numbering. Best for fixed-scope BOQs that won't get extra positions later.",
-    "boq.renumber_warning":
-      "This overwrites any manually edited position numbers. The current display order is preserved — only ordinals change.",
+    "boq.renumber_scheme_sequential_desc": "Compact, traditional numbering. Best for fixed-scope BOQs that won't get extra positions later.",
+    "boq.renumber_warning": "This overwrites any manually edited position numbers. The current display order is preserved — only ordinals change.",
     "boq.renumbering": "Renumbering...",
     "boq.reorder_failed": "Failed to reorder positions",
     "boq.resource_added": "Resource added",
@@ -4709,41 +4210,28 @@ const resource = {
     "boq.resource_catalog_code": "Catalogue code: {{code}}",
     "boq.resource_currency": "Mata Uang",
     "boq.resource_currency_add_custom": "Add custom: {{code}}",
-    "boq.resource_currency_custom":
-      "Custom currency: {{code}} (not in project FX or ISO 4217 list)",
-    "boq.resource_currency_hint":
-      "Currency for this resource. Defaults to project base currency.",
-    "boq.resource_currency_no_match":
-      "No matches — type at least 2 letters to add a custom code.",
+    "boq.resource_currency_custom": "Custom currency: {{code}} (not in project FX or ISO 4217 list)",
+    "boq.resource_currency_hint": "Currency for this resource. Defaults to project base currency.",
+    "boq.resource_currency_no_match": "No matches — type at least 2 letters to add a custom code.",
     "boq.resource_currency_pick": "Currency — {{symbol}} {{code}}",
     "boq.resource_currency_search": "Type or search (e.g. EUR, MYC)",
     "boq.resource_customised": "Customised resource — no catalogue code",
-    "boq.resource_is_variant_badge":
-      "Variant resource — multiple price options available",
+    "boq.resource_is_variant_badge": "Variant resource — multiple price options available",
     "boq.resource_name": "Nama",
     "boq.resource_name_placeholder": "e.g. Concrete C30/37",
-    "boq.resource_no_fx_rate":
-      "No FX rate configured for {{code}} — total shown in {{code}}",
-    "boq.resource_no_fx_rate_click":
-      "No FX rate configured for {{code}} — click to set one in Project Settings",
+    "boq.resource_no_fx_rate": "No FX rate configured for {{code}} — total shown in {{code}}",
+    "boq.resource_no_fx_rate_click": "No FX rate configured for {{code}} — click to set one in Project Settings",
     "boq.resource_no_fx_short": "set FX",
-    "boq.resource_total_in_base":
-      "{{foreign}} ≈ {{base}} (1 {{code}} = {{rate}} {{baseCode}})",
+    "boq.resource_total_in_base": "{{foreign}} ≈ {{base}} (1 {{code}} = {{rate}} {{baseCode}})",
     "boq.resource_type": "Tipe",
     "boq.resource_type_variant_chip": "Variant",
-    "boq.resource_type_variant_tooltip":
-      "Variant resource — pick from {{base}} catalog. Click to reclassify resource type.",
-    "boq.resource_variant_bar_tooltip_default":
-      "Auto-default ({{strategy}}){{captured}} — click pill to refine.",
-    "boq.resource_variant_bar_tooltip_picked":
-      "Explicit variant: {{label}}{{captured}}",
+    "boq.resource_type_variant_tooltip": "Variant resource — pick from {{base}} catalog. Click to reclassify resource type.",
+    "boq.resource_variant_bar_tooltip_default": "Auto-default ({{strategy}}){{captured}} — click pill to refine.",
+    "boq.resource_variant_bar_tooltip_picked": "Explicit variant: {{label}}{{captured}}",
     "boq.resource_variant_pill": "▾ {{count}}",
-    "boq.resource_variant_pill_tooltip_default":
-      "Auto-applied with {{strategy}} rate. {{count}} options ({{range}}). Click to refine.",
-    "boq.resource_variant_pill_tooltip_picked":
-      "Variant: {{label}} @ {{price}} {{currency}}{{delta}}. Click to switch.",
-    "boq.resource_variant_pill_tooltip_unset":
-      "{{count}} priced variants available ({{range}}). Click to pick one.",
+    "boq.resource_variant_pill_tooltip_default": "Auto-applied with {{strategy}} rate. {{count}} options ({{range}}). Click to refine.",
+    "boq.resource_variant_pill_tooltip_picked": "Variant: {{label}} @ {{price}} {{currency}}{{delta}}. Click to switch.",
+    "boq.resource_variant_pill_tooltip_unset": "{{count}} priced variants available ({{range}}). Click to pick one.",
     "boq.resources_added": "Resources added to position",
     "boq.resources_total": "Resources total",
     "boq.restore": "Restore",
@@ -4751,25 +4239,19 @@ const resource = {
     "boq.restore_snapshot": "Restore this version",
     "boq.revision_created": "Revision created",
     "boq.revision_failed": "Create revision failed",
-    "boq.rs_abc_pill_tooltip":
-      "Class {{cls}} · {{pct}}% of project resource cost",
+    "boq.rs_abc_pill_tooltip": "Class {{cls}} · {{pct}}% of project resource cost",
     "boq.rs_col_abc": "ABC %",
-    "boq.rs_col_abc_tooltip":
-      "Pareto / ABC analysis — A items make up ~80% of cost, B ~15%, C ~5%. Click to highlight bucket boundaries.",
+    "boq.rs_col_abc_tooltip": "Pareto / ABC analysis — A items make up ~80% of cost, B ~15%, C ~5%. Click to highlight bucket boundaries.",
     "boq.rs_error": "Failed to load resource summary.",
-    "boq.rs_save_variant_to_catalog":
-      "Save as a regular article in your catalog",
+    "boq.rs_save_variant_to_catalog": "Save as a regular article in your catalog",
     "boq.rs_show_all": "Show all {{count}} resources",
     "boq.rs_show_less": "Show less",
     "boq.rs_variant_applied_to_n": "Applied to {{count}} position(s)‌⁠‍",
     "boq.rs_variant_pill_mixed": "Mixed · {{count}} options",
-    "boq.rs_variant_pill_mixed_tooltip":
-      "Different variants picked across positions. Click to choose one for all.",
+    "boq.rs_variant_pill_mixed_tooltip": "Different variants picked across positions. Click to choose one for all.",
     "boq.rs_variant_pill_options": "▾ {{count}} options",
-    "boq.rs_variant_pill_picked_tooltip":
-      "Variant: {{label}}. Click to switch (applies to all positions).",
-    "boq.rs_variant_pill_unset_tooltip":
-      "{{count}} priced variants available. Click to pick one for all positions.",
+    "boq.rs_variant_pill_picked_tooltip": "Variant: {{label}}. Click to switch (applies to all positions).",
+    "boq.rs_variant_pill_unset_tooltip": "{{count}} priced variants available. Click to pick one for all positions.",
     "boq.save_as_assembly": "Save as Assembly",
     "boq.save_as_assembly_failed": "Failed to create assembly",
     "boq.save_snapshot": "Save snapshot",
@@ -4778,10 +4260,8 @@ const resource = {
     "boq.saved_as_assembly": "Saved as Assembly",
     "boq.saved_to_catalog": "Saved to catalog",
     "boq.scope_of_work_label": "What work is included in this rate",
-    "boq.search_and_add_resources":
-      "Search cost items to add as resources to position",
-    "boq.search_catalog_resources":
-      "Search resources by name, code, or category...‌⁠‍",
+    "boq.search_and_add_resources": "Search cost items to add as resources to position",
+    "boq.search_catalog_resources": "Search resources by name, code, or category...‌⁠‍",
     "boq.section_add_failed": "Failed to add section",
     "boq.section_child_count": "{{count}} item",
     "boq.section_deleted": "Section deleted with {{count}} positions",
@@ -4789,8 +4269,7 @@ const resource = {
     "boq.section_optional": "Section (optional)",
     "boq.select_boq": "Select BOQ...",
     "boq.select_classification": "Classification...‌⁠‍",
-    "boq.sensitivity_error":
-      "Failed to load sensitivity analysis. Please try again.‌⁠‍",
+    "boq.sensitivity_error": "Failed to load sensitivity analysis. Please try again.‌⁠‍",
     "boq.set_as_quantity": "Set as qty",
     "boq.set_as_quantity_title": "Push this value into the BOQ quantity field",
     "boq.shortcut_ai_chat": "Toggle AI Chat",
@@ -4819,8 +4298,7 @@ const resource = {
     "boq.show_shortcuts": "Keyboard Shortcuts (F1)",
     "boq.snapshot_created": "Snapshot saved‌⁠‍",
     "boq.snapshot_failed": "Failed to save snapshot‌⁠‍",
-    "boq.snapshot_hint":
-      "Type a label above and click Save to create your first snapshot.",
+    "boq.snapshot_hint": "Type a label above and click Save to create your first snapshot.",
     "boq.snapshot_label": "Snapshot label (optional)...",
     "boq.snapshot_restored": "Snapshot restored‌⁠‍",
     "boq.snapshots_error": "Failed to load version history.",
@@ -4831,11 +4309,9 @@ const resource = {
     "boq.source_dwg": "DWG drawing",
     "boq.source_id_label": "Item id",
     "boq.source_measurement_label": "Measurement",
-    "boq.source_no_measurement":
-      "Measurement data not stored locally — open the source to view details.",
+    "boq.source_no_measurement": "Measurement data not stored locally — open the source to view details.",
     "boq.source_open": "Open source",
-    "boq.source_open_title":
-      "Open the source document in its viewer, focused on this item",
+    "boq.source_open_title": "Open the source document in its viewer, focused on this item",
     "boq.source_pdf": "PDF takeoff",
     "boq.source_pdf_page": "Page {{page}}",
     "boq.status_draft": "Draft",
@@ -4843,25 +4319,20 @@ const resource = {
     "boq.suggest_rate": "Suggest Rate",
     "boq.suggested": "Suggested‌⁠‍",
     "boq.toolbar_quality": "Quality",
-    "boq.toolbar_summary_aria":
-      "{{sections}} sections · {{positions}} positions",
+    "boq.toolbar_summary_aria": "{{sections}} sections · {{positions}} positions",
     "boq.try_different_search": "Try a different search term or filter",
     "boq.unit_options": "Unit options",
     "boq.unit_rate_variant_pill": "u25BE {{count}} options",
-    "boq.unit_rate_variant_pill_tooltip_default":
-      "Auto-applied with {{strategy}} rate ({{count}} options, {{range}}). Click to refine.",
-    "boq.unit_rate_variant_pill_tooltip_picked":
-      "Currently: {{label}}. Click to switch to a different variant.",
-    "boq.unit_rate_variant_pill_tooltip_unset":
-      "{{count}} priced variants available ({{range}}). Click to pick one.",
+    "boq.unit_rate_variant_pill_tooltip_default": "Auto-applied with {{strategy}} rate ({{count}} options, {{range}}). Click to refine.",
+    "boq.unit_rate_variant_pill_tooltip_picked": "Currently: {{label}}. Click to switch to a different variant.",
+    "boq.unit_rate_variant_pill_tooltip_unset": "{{count}} priced variants available ({{range}}). Click to pick one.",
     "boq.unlock": "Unlock",
     "boq.unlock_failed": "Unlock failed",
     "boq.unlocked_success": "Estimate unlocked",
     "boq.untitled": "Untitled BOQ‌⁠‍",
     "boq.untitled_section": "(untitled)",
     "boq.update_failed": "Failed to update position‌⁠‍",
-    "boq.validate_tip":
-      "Checks for missing descriptions, zero quantities, pricing gaps, classification compliance, and duplicate positions.",
+    "boq.validate_tip": "Checks for missing descriptions, zero quantities, pricing gaps, classification compliance, and duplicate positions.",
     "boq.validating": "Checking...",
     "boq.validation_all_passed": "All {{count}} checks passed",
     "boq.validation_errors": "{{count}} errors found",
@@ -4878,64 +4349,48 @@ const resource = {
     "boq.variables_description": "Deskripsi",
     "boq.variables_description_placeholder": "Optional note",
     "boq.variables_empty": "No variables yet. Add the first one below.‌⁠‍",
-    "boq.variables_help":
-      "Define named values you can reference in formulas. e.g. set $GFA = 1500, then write =$GFA * 0.15 in any quantity or rate cell.‌⁠‍",
+    "boq.variables_help": "Define named values you can reference in formulas. e.g. set $GFA = 1500, then write =$GFA * 0.15 in any quantity or rate cell.‌⁠‍",
     "boq.variables_name": "Nama",
     "boq.variables_saved": "Variables saved‌⁠‍",
     "boq.variables_title": "BOQ variables‌⁠‍",
     "boq.variables_type": "Tipe",
     "boq.variables_value": "Value",
-    "boq.variant_default_applied_msg":
-      "Click the row in the BOQ to choose a specific variant.",
+    "boq.variant_default_applied_msg": "Click the row in the BOQ to choose a specific variant.",
     "boq.variant_default_applied_title": "Applied with average price",
     "boq.variant_default_pill": "Default u00B7 refine u25BE",
-    "boq.variant_default_pill_tooltip":
-      "Auto-applied with the {{strategy}} rate. Click the unit_rate cell to pick a specific variant.",
+    "boq.variant_default_pill_tooltip": "Auto-applied with the {{strategy}} rate. Click the unit_rate cell to pick a specific variant.",
     "boq.variant_default_pill_with_count": "Abstract u00B7 {{count}} options",
-    "boq.variant_header_code_tooltip":
-      "Abstract variant resource — inherits the position quantity",
-    "boq.variant_header_pill_tooltip":
-      "Choose / switch a price variant for this abstract resource",
-    "boq.variant_header_qty_edit_tooltip":
-      "Double-click to edit quantity (synced with the position).",
-    "boq.variant_header_type_tooltip":
-      "Click to pick a price variant from the catalog",
+    "boq.variant_header_code_tooltip": "Abstract variant resource — inherits the position quantity",
+    "boq.variant_header_pill_tooltip": "Choose / switch a price variant for this abstract resource",
+    "boq.variant_header_qty_edit_tooltip": "Double-click to edit quantity (synced with the position).",
+    "boq.variant_header_type_tooltip": "Click to pick a price variant from the catalog",
     "boq.variant_resource_added": "Resource added: {{label}}",
     "boq.variant_resource_repick_failed": "Variant re-pick failed",
     "boq.variant_resource_repicked": "Variant updated: {{label}}",
     "boq.vector_download": "Download cost database first",
-    "boq.vector_download_desc":
-      "Import CWICR databases (55,000+ items, 9 regions)",
-    "boq.vector_index_desc":
-      "Build vector index from your imported cost items (~30s)",
+    "boq.vector_download_desc": "Import CWICR databases (55,000+ items, 9 regions)",
+    "boq.vector_index_desc": "Build vector index from your imported cost items (~30s)",
     "boq.vector_index_error": "Indexing Failed",
-    "boq.vector_index_error_msg":
-      "Failed to index the cost database. Try importing a database first.",
+    "boq.vector_index_error_msg": "Failed to index the cost database. Try importing a database first.",
     "boq.vector_index_now": "Index existing cost database",
     "boq.vector_indexed": "Vector Database Ready",
-    "boq.vector_indexed_msg":
-      "Cost database indexed. AI features are now available.",
+    "boq.vector_indexed_msg": "Cost database indexed. AI features are now available.",
     "boq.vector_indexing": "Indexing...",
-    "boq.vector_setup_desc":
-      "AI rate suggestions, classification, and anomaly detection require a vector-indexed cost database. This is a one-time setup that takes about 30 seconds.",
+    "boq.vector_setup_desc": "AI rate suggestions, classification, and anomaly detection require a vector-indexed cost database. This is a one-time setup that takes about 30 seconds.",
     "boq.vector_setup_subtitle": "One-time setup required",
     "boq.vector_setup_title": "AI Features Setup",
-    "boq.vector_status_empty":
-      "No vector database found. Import a cost database or index your existing cost items.",
-    "boq.vector_status_partial":
-      "Vector DB has {{count}} items indexed. Minimum ~100 items needed for AI features.",
+    "boq.vector_status_empty": "No vector database found. Import a cost database or index your existing cost items.",
+    "boq.vector_status_partial": "Vector DB has {{count}} items indexed. Minimum ~100 items needed for AI features.",
     "boq.version_history": "Version History‌⁠‍",
     "boq.view_comments": "Comments ({{count}})",
     "boq.view_in_bim": "View in BIM 3D ({{count}})",
     "boq.view_in_cost_db": "View in Cost Database",
-    "boq.warn_lump_sum":
-      "Lump sum — quantity × rate may not match expected total",
+    "boq.warn_lump_sum": "Lump sum — quantity × rate may not match expected total",
     "boq.warn_zero_rate": "No rate — review before commit",
     "boq.warnings": "warnings",
     "compliance.tab_label": "Kepatuhan",
     "compliance.page.title": "Compliance documents",
-    "compliance.page.subtitle":
-      "Track insurance, permits, bonds and certifications with expiry reminders.",
+    "compliance.page.subtitle": "Track insurance, permits, bonds and certifications with expiry reminders.",
     "compliance.page.new": "New document",
     "compliance.modal.create_title": "New compliance document",
     "compliance.modal.create_submit": "Create document",
@@ -4966,10 +4421,8 @@ const resource = {
     "compliance.status.expired": "Expired",
     "compliance.status.cancelled": "Cancelled",
     "compliance.status.void": "Void",
-    "compliance.doc_type.insurance_general_liability":
-      "General liability insurance",
-    "compliance.doc_type.insurance_workers_comp":
-      "Workers' compensation insurance",
+    "compliance.doc_type.insurance_general_liability": "General liability insurance",
+    "compliance.doc_type.insurance_workers_comp": "Workers' compensation insurance",
     "compliance.doc_type.insurance_auto": "Auto insurance",
     "compliance.doc_type.insurance_umbrella": "Umbrella insurance",
     "compliance.doc_type.permit_building": "Building permit",
@@ -4983,11 +4436,9 @@ const resource = {
     "compliance.doc_type.certification_other": "Other certification",
     "compliance.doc_type.other": "Other",
     "compliance.empty.title": "No compliance documents yet",
-    "compliance.empty.description":
-      "Track insurance policies, permits, bonds and certifications. Get a warning before each one expires.",
+    "compliance.empty.description": "Track insurance policies, permits, bonds and certifications. Get a warning before each one expires.",
     "compliance.empty.no_project_title": "Open a project",
-    "compliance.empty.no_project_description":
-      "Compliance documents are scoped to a project — open one first.",
+    "compliance.empty.no_project_description": "Compliance documents are scoped to a project — open one first.",
     "compliance.toast.created": "Compliance document created.",
     "compliance.toast.create_failed": "Failed to create compliance document.",
     "compliance.toast.deleted": "Compliance document deleted.",
@@ -5010,8 +4461,7 @@ const resource = {
     "costs.base_cost": "Base cost",
     "costs.base_year": "Base year‌⁠‍",
     "costs.categories_title": "Categories",
-    "costs.clear_all_confirm_body":
-      "This will permanently remove all {{count}} CWICR cost items. You can re-import them later.",
+    "costs.clear_all_confirm_body": "This will permanently remove all {{count}} CWICR cost items. You can re-import them later.",
     "costs.clear_all_confirm_title": "Clear all {{count}} databases?",
     "costs.clear_filters": "Clear all",
     "costs.code_placeholder": "e.g. WALL-001",
@@ -5019,8 +4469,7 @@ const resource = {
     "costs.component_labor": "Labor",
     "costs.component_material": "Material",
     "costs.confirm_delete": "Delete this custom cost item?",
-    "costs.confirm_delete_region":
-      "Delete all cost items for {{region}}? This cannot be undone.",
+    "costs.confirm_delete_region": "Delete all cost items for {{region}}? This cannot be undone.",
     "costs.confirm_delete_title": "Delete cost item?",
     "costs.cost_items_count": "55,000+ cost items",
     "costs.custom_label": "Custom",
@@ -5038,30 +4487,23 @@ const resource = {
     "costs.cwicr_match.mode_label": "Mode",
     "costs.cwicr_match.mode_lexical": "Lexical‌⁠‍",
     "costs.cwicr_match.mode_semantic": "Semantic‌⁠‍",
-    "costs.cwicr_match.placeholder":
-      "Describe the work item (e.g. reinforced concrete wall)‌⁠‍",
+    "costs.cwicr_match.placeholder": "Describe the work item (e.g. reinforced concrete wall)‌⁠‍",
     "costs.cwicr_match.query_label": "Query",
     "costs.cwicr_match.search": "Cari",
     "costs.cwicr_match.title": "CWICR rate match‌⁠‍",
-    "costs.db_downloading":
-      "Downloading and indexing cost items with full resource breakdown. This is a one-time setup.",
+    "costs.db_downloading": "Downloading and indexing cost items with full resource breakdown. This is a one-time setup.",
     "costs.db_installed": "Database installed successfully‌⁠‍",
     "costs.db_installing": "Installing {{name}}...",
-    "costs.db_saved_offline":
-      "Cost items are saved locally and available offline.",
-    "costs.description_placeholder":
-      "e.g. Reinforced concrete wall C30/37, 25cm",
+    "costs.db_saved_offline": "Cost items are saved locally and available offline.",
+    "costs.description_placeholder": "e.g. Reinforced concrete wall C30/37, 25cm",
     "costs.duplicates_skipped": "duplicates skipped",
-    "costs.empty_pick_region_above":
-      "Pick a region card above and click Install to load a regional cost database.",
+    "costs.empty_pick_region_above": "Pick a region card above and click Install to load a regional cost database.",
     "costs.equipment": "Peralatan",
     "costs.escalated_cost": "Escalated cost",
     "costs.escalation": "Escalation",
     "costs.escalation_calculator": "Cost Escalation Calculator‌⁠‍",
-    "costs.escalation_desc":
-      "Adjust costs for inflation using published construction indices‌⁠‍",
-    "costs.escalation_disclaimer":
-      "Based on published indices. Verify with project-specific data.",
+    "costs.escalation_desc": "Adjust costs for inflation using published construction indices‌⁠‍",
+    "costs.escalation_disclaimer": "Based on published indices. Verify with project-specific data.",
     "costs.escalation_factor": "Factor",
     "costs.filters_active": "filters active",
     "costs.is_now_active": "is now the active database‌⁠‍",
@@ -5080,26 +4522,21 @@ const resource = {
     "costs.n_items_selected": "{{count}} items selected",
     "costs.n_positions_will_be_created": "{{count}} positions will be created",
     "costs.n_selected": "{{count}} selected",
-    "costs.no_databases_installed":
-      "No databases installed yet. Pick a region above to install.",
+    "costs.no_databases_installed": "No databases installed yet. Pick a region above to install.",
     "costs.no_favourites": "No favourites yet",
-    "costs.no_favourites_hint":
-      "Click the star icon on any cost item to add it to your favourites",
+    "costs.no_favourites_hint": "Click the star icon on any cost item to add it to your favourites",
     "costs.no_recent": "No recently used items",
-    "costs.no_recent_hint":
-      "Items you add to BOQ will appear here for quick access",
+    "costs.no_recent_hint": "Items you add to BOQ will appear here for quick access",
     "costs.one_time_download": "One-time download",
     "costs.phase_complete": "Complete",
     "costs.phase_extracting": "Extracting resources & cost breakdown...",
     "costs.phase_finalizing": "Finalizing...",
     "costs.phase_reading": "Reading Parquet file...",
     "costs.phase_writing": "Writing to local database...",
-    "costs.positions_created_hint":
-      "Positions created with unit rates from cost database",
+    "costs.positions_created_hint": "Positions created with unit rates from cost database",
     "costs.region_filter_count": "{{shown}} of {{total}}‌⁠‍",
-    "costs.region_filter_no_results": 'No regions match "{{q}}"',
-    "costs.region_filter_placeholder":
-      "Filter by country, city, currency or language…‌⁠‍",
+    "costs.region_filter_no_results": "No regions match \"{{q}}\"",
+    "costs.region_filter_placeholder": "Filter by country, city, currency or language…‌⁠‍",
     "costs.region_plural": "regions",
     "costs.region_singular": "region",
     "costs.remove_from_favourites": "Remove from favourites",
@@ -5132,14 +4569,12 @@ const resource = {
     "costs.variant_sort_price_asc": "Price ↑",
     "costs.variant_sort_price_desc": "Price ↓",
     "costs.variant_use_average": "Use average rate",
-    "costs.variant_use_default_tooltip":
-      "Apply the average rate without picking a specific variant. You can refine later by clicking the row.",
+    "costs.variant_use_default_tooltip": "Apply the average rate without picking a specific variant. You can refine later by clicking the row.",
     "costs.variant_use_median": "Use median rate",
     "costs.vec_indexing_all": "Generating vectors for all regions...",
     "costs.vec_indexing_region": "Generating vectors for {{name}}...",
     "costs.vec_phase_checking": "Checking pre-built vectors on GitHub...",
-    "costs.vec_phase_embedding":
-      "Generating 384d embeddings from cost items...",
+    "costs.vec_phase_embedding": "Generating 384d embeddings from cost items...",
     "costs.vec_phase_indexing": "Indexing into LanceDB and refreshing stats...",
     "costs.vec_phase_model": "Loading embedding model (first-time only)...",
     "costs.vec_phase_progress": "Step {{step}} of 4",
@@ -5153,8 +4588,7 @@ const resource = {
     "files.activity.title": "Aktivitas",
     "files.activity.open": "View activity history",
     "files.activity.empty_title": "No activity yet",
-    "files.activity.empty_hint":
-      "Uploads, renames, and other changes will show up here.",
+    "files.activity.empty_hint": "Uploads, renames, and other changes will show up here.",
     "files.activity.error_title": "Couldn't load activity",
     "files.activity.error_hint": "Check your connection and try again.",
     "files.activity.actor_unknown": "Pengguna tak dikenal",
@@ -5168,8 +4602,7 @@ const resource = {
     "files.activity.action.cde_state_changed": "CDE state changed",
     "files.permissions.manage": "Manage access",
     "files.permissions.title": "Folder access",
-    "files.permissions.subtitle":
-      "Restrict who can see and edit files in {{folder}}.",
+    "files.permissions.subtitle": "Restrict who can see and edit files in {{folder}}.",
     "files.permissions.empty": "All project members can access this folder.",
     "files.permissions.list_title": "Current access",
     "files.permissions.grant_title": "Grant access",
@@ -5184,15 +4617,12 @@ const resource = {
     "files.permissions.revoke": "Revoke",
     "files.permissions.revoke_confirm": "Revoke access for {{name}}?",
     "files.permissions.lock_tooltip": "Restricted: {{count}} member can access",
-    "files.permissions.lock_tooltip_plural":
-      "Restricted: {{count}} members can access",
+    "files.permissions.lock_tooltip_plural": "Restricted: {{count}} members can access",
     "files.permissions.error_grant": "Could not grant access.",
     "files.permissions.error_revoke": "Could not revoke access.",
-    "files.permissions.error_duplicate":
-      "This member already has access at this level.",
+    "files.permissions.error_duplicate": "This member already has access at this level.",
     "share.page.title": "Shared file",
-    "share.page.subtitle":
-      "Someone shared a file with you via OpenConstructionERP.",
+    "share.page.subtitle": "Someone shared a file with you via OpenConstructionERP.",
     "share.page.filename_label": "File",
     "share.page.password_prompt": "Enter the password to download.",
     "share.page.password_placeholder": "Kata Sandi",
@@ -5207,81 +4637,57 @@ const resource = {
     "share.page.loading": "Loading link…",
     "share.page.ready_title": "Ready to download",
     "share.page.ready_body": "Click the button below to download the file.",
-    "files.bulk.delete_all_failed":
-      "None of the {{count}} selected file(s) could be deleted.",
+    "files.bulk.delete_all_failed": "None of the {{count}} selected file(s) could be deleted.",
     "files.bulk.delete_partial": "{{deleted}} of {{total}} deleted",
-    "files.bulk.delete_partial_detail":
-      "{{failed}} file(s) could not be deleted.",
-    "project_intelligence.ai.cost_advisor_title":
-      "Cost Intelligence Advisor‌⁠‍",
-    "project_intelligence.ai_not_configured_desc":
-      "Connect an AI provider (Anthropic Claude, OpenAI, or Google Gemini) to get personalized, context-aware recommendations for your project. Without AI, you still see rule-based analysis below.",
-    "project_intelligence.ai_not_configured_title":
-      "AI provider not connected‌⁠‍",
+    "files.bulk.delete_partial_detail": "{{failed}} file(s) could not be deleted.",
+    "project_intelligence.ai.cost_advisor_title": "Cost Intelligence Advisor‌⁠‍",
+    "project_intelligence.ai_not_configured_desc": "Connect an AI provider (Anthropic Claude, OpenAI, or Google Gemini) to get personalized, context-aware recommendations for your project. Without AI, you still see rule-based analysis below.",
+    "project_intelligence.ai_not_configured_title": "AI provider not connected‌⁠‍",
     "project_intelligence.analytics.cost_drivers": "Cost drivers‌⁠‍",
-    "project_intelligence.analytics.cost_drivers_sub":
-      "Top 5 line items by total cost‌⁠‍",
+    "project_intelligence.analytics.cost_drivers_sub": "Top 5 line items by total cost‌⁠‍",
     "project_intelligence.analytics.errors": "errors",
     "project_intelligence.analytics.no_data": "No data yet‌⁠‍",
     "project_intelligence.analytics.price_volatility": "Price volatility‌⁠‍",
-    "project_intelligence.analytics.price_volatility_sub":
-      "Bid total spread across vendors‌⁠‍",
+    "project_intelligence.analytics.price_volatility_sub": "Bid total spread across vendors‌⁠‍",
     "project_intelligence.analytics.schedule_cost": "Schedule ↔ cost",
     "project_intelligence.analytics.schedule_cost_sub": "Labour cost by phase",
     "project_intelligence.analytics.scope_coverage": "Scope coverage",
-    "project_intelligence.analytics.scope_coverage_ratio":
-      "{{current}} of {{baseline}} lines",
-    "project_intelligence.analytics.scope_coverage_sub":
-      "BOQ line count vs baseline",
+    "project_intelligence.analytics.scope_coverage_ratio": "{{current}} of {{baseline}} lines",
+    "project_intelligence.analytics.scope_coverage_sub": "BOQ line count vs baseline",
     "project_intelligence.analytics.validation_live": "Real-time validation",
-    "project_intelligence.analytics.validation_live_sub":
-      "Rule pass count (updates every 60s)",
-    "project_intelligence.analytics.vendor_concentration":
-      "Vendor concentration",
-    "project_intelligence.analytics.vendor_concentration_sub":
-      "Top 3 bidders’ share",
+    "project_intelligence.analytics.validation_live_sub": "Rule pass count (updates every 60s)",
+    "project_intelligence.analytics.vendor_concentration": "Vendor concentration",
+    "project_intelligence.analytics.vendor_concentration_sub": "Top 3 bidders’ share",
     "project_intelligence.analytics.warnings": "warnings",
     "project_intelligence.analyzing": "Analyzing project...‌⁠‍",
     "project_intelligence.analyzing_project": "Analyzing project...",
     "project_intelligence.ask_placeholder": "Ask about this project...",
     "project_intelligence.auth_error": "Session expired‌⁠‍",
-    "project_intelligence.auth_hint":
-      "Please refresh the page or sign in again to continue.",
+    "project_intelligence.auth_hint": "Please refresh the page or sign in again to continue.",
     "project_intelligence.back_to_rec": "Back to recommendations‌⁠‍",
-    "project_intelligence.chat_error":
-      "Sorry, I could not process your question. Please try again.‌⁠‍",
-    "project_intelligence.chat_prompt":
-      'Ask any question about this project. For example: "Why is my score so low?" or "What should I do first?"',
+    "project_intelligence.chat_error": "Sorry, I could not process your question. Please try again.‌⁠‍",
+    "project_intelligence.chat_prompt": "Ask any question about this project. For example: \"Why is my score so low?\" or \"What should I do first?\"",
     "project_intelligence.chat_toggle": "Toggle chat‌⁠‍",
     "project_intelligence.critical_gaps": "Critical Gaps",
     "project_intelligence.enable_failed": "Could not enable the module",
     "project_intelligence.enable_module": "Enable module",
     "project_intelligence.enabling": "Enabling…",
-    "project_intelligence.gaps.dollar_impact":
-      "{{count}} items missing prices → ~{{amount}} cost uncertainty",
+    "project_intelligence.gaps.dollar_impact": "{{count}} items missing prices → ~{{amount}} cost uncertainty",
     "project_intelligence.go_to_ai_settings": "Settings — AI Configuration",
     "project_intelligence.kpi.budget_variance": "Budget variance‌⁠‍",
     "project_intelligence.kpi.risk_adjusted_cost": "Risk-adjusted cost‌⁠‍",
-    "project_intelligence.kpi.risk_sub":
-      "±{{band}} (90% CI, {{count}} anomalies)",
+    "project_intelligence.kpi.risk_sub": "±{{band}} (90% CI, {{count}} anomalies)",
     "project_intelligence.kpi.schedule_health": "Schedule health‌⁠‍",
     "project_intelligence.kpi.schedule_sub": "Activities on baseline‌⁠‍",
-    "project_intelligence.kpi.variance_sub":
-      "Budget {{budget}} · Current {{current}}‌⁠‍",
+    "project_intelligence.kpi.variance_sub": "Budget {{budget}} · Current {{current}}‌⁠‍",
     "project_intelligence.load_error": "Could not load analysis",
-    "project_intelligence.module_disabled_ask_admin":
-      "Ask an admin to enable this module to continue.",
-    "project_intelligence.module_disabled_body":
-      "This dashboard runs against the optional Project Intelligence module. It is currently disabled on this server, so the AI advisor, gap detector and analytics grid have nothing to query.",
-    "project_intelligence.module_disabled_footnote":
-      "No data is collected while the module is off. Enabling is reversible from the Modules page.",
-    "project_intelligence.module_disabled_title":
-      "Project Intelligence is turned off",
-    "project_intelligence.no_gaps_desc":
-      "Your project has no critical issues. Keep refining to tighten variance.",
+    "project_intelligence.module_disabled_ask_admin": "Ask an admin to enable this module to continue.",
+    "project_intelligence.module_disabled_body": "This dashboard runs against the optional Project Intelligence module. It is currently disabled on this server, so the AI advisor, gap detector and analytics grid have nothing to query.",
+    "project_intelligence.module_disabled_footnote": "No data is collected while the module is off. Enabling is reversible from the Modules page.",
+    "project_intelligence.module_disabled_title": "Project Intelligence is turned off",
+    "project_intelligence.no_gaps_desc": "Your project has no critical issues. Keep refining to tighten variance.",
     "project_intelligence.no_gaps_title": "No critical gaps",
-    "project_intelligence.no_recommendations":
-      "No recommendations available yet. Try refreshing the analysis.",
+    "project_intelligence.no_recommendations": "No recommendations available yet. Try refreshing the analysis.",
     "project_intelligence.open_modules_page": "Open Modules page",
     "project_intelligence.page_title_v191": "Estimation Dashboard‌⁠‍",
     "project_intelligence.readiness_title": "Estimation readiness",
@@ -5290,24 +4696,18 @@ const resource = {
     "project_intelligence.role_estimator": "Estimator",
     "project_intelligence.role_explorer": "Explorer",
     "project_intelligence.role_manager": "Manager",
-    "project_intelligence.score_tooltip_v191":
-      "Score weighting (RFC 25): BOQ 40%, Cost Model 30%, Validation 20%, Risk 10%.",
-    "project_intelligence.select_domain":
-      "Select a domain tab above to see detailed metrics.‌⁠‍",
+    "project_intelligence.score_tooltip_v191": "Score weighting (RFC 25): BOQ 40%, Cost Model 30%, Validation 20%, Risk 10%.",
+    "project_intelligence.select_domain": "Select a domain tab above to see detailed metrics.‌⁠‍",
     "project_intelligence.show_more_gaps": "{{count}} more",
     "project_intelligence.thinking": "Thinking...",
     "project_intelligence.unnamed": "Unnamed Project",
-    "project_intelligence.v191_header_desc":
-      "Cost variance, anomalies, bid analytics — refreshed every 60s.",
-    "project_intelligence.v191_select_prompt":
-      "Select a project from the header to see its cost variance, anomalies, and bid analytics.‌⁠‍",
+    "project_intelligence.v191_header_desc": "Cost variance, anomalies, bid analytics — refreshed every 60s.",
+    "project_intelligence.v191_select_prompt": "Select a project from the header to see its cost variance, anomalies, and bid analytics.‌⁠‍",
     "projects.photos.tab_label": "Foto",
     "projects.photos.no_project": "No active project",
-    "projects.photos.no_project_desc":
-      "Open a project to view and upload photos.",
+    "projects.photos.no_project_desc": "Open a project to view and upload photos.",
     "projects.photos.empty_title": "No photos yet",
-    "projects.photos.empty_desc":
-      "Upload site photos to keep visual records alongside the project.",
+    "projects.photos.empty_desc": "Upload site photos to keep visual records alongside the project.",
     "projects.photos.upload_cta": "Upload photos",
     "projects.photos.search_placeholder": "Search filename…",
     "projects.photos.search_aria": "Search photos by filename",
@@ -5327,8 +4727,7 @@ const resource = {
     "takeoff.markup.close": "Tutup",
     "takeoff.markup.comments_drawer": "Markup comments",
     "takeoff.markup.comments_title": "Komentar",
-    "takeoff.markup.comments_empty":
-      "No comments yet — be the first to add one.",
+    "takeoff.markup.comments_empty": "No comments yet — be the first to add one.",
     "takeoff.markup.comments_load_failed": "Could not load comments.",
     "takeoff.markup.comment_added": "Comment added",
     "takeoff.markup.comment_deleted": "Comment deleted",
@@ -5338,8 +4737,7 @@ const resource = {
     "takeoff.markup.comment_placeholder": "Write a comment...",
     "takeoff.markup.comment_hint": "Ctrl/Cmd+Enter to send",
     "takeoff.markup.comment_send": "Send",
-    "tendering.award_confirm":
-      "Award this contract to {{company}}? This action cannot be undone.",
+    "tendering.award_confirm": "Award this contract to {{company}}? This action cannot be undone.",
     "tendering.award_confirm_title": "Award contract?",
     "tendering.bid_count": "{{count}} bids‌⁠‍",
     "tendering.close_package": "Tutup",
@@ -5349,10 +4747,8 @@ const resource = {
     "tendering.evaluate": "Evaluate Bids",
     "tendering.exported": "Comparison exported",
     "tendering.mark_awarded": "Mark Awarded",
-    "tendering.no_packages_description":
-      "Create a tender from a BOQ to start collecting bids",
-    "tendering.select_project_desc":
-      "Select a project and create a tender from a BOQ to get started",
+    "tendering.no_packages_description": "Create a tender from a BOQ to start collecting bids",
+    "tendering.select_project_desc": "Select a project and create a tender from a BOQ to get started",
     "tendering.select_project_first": "Select a project first",
     "tendering.select_project_title": "Select a project",
     "tendering.start_collecting": "Start Collecting",
@@ -5368,8 +4764,7 @@ const resource = {
     "tendering.status_submitted": "Submitted",
     "conflict.panel_aria_label": "Conflict resolution panel",
     "conflict.panel_title": "Merge Conflict Detected",
-    "conflict.panel_subtitle":
-      "A remote collaborator edited the same field. Choose how to resolve.",
+    "conflict.panel_subtitle": "A remote collaborator edited the same field. Choose how to resolve.",
     "conflict.changed_by": "Changed by",
     "conflict.your_version": "Your version",
     "conflict.their_version": "Their version",
@@ -5383,18 +4778,14 @@ const resource = {
     "conflict.conflict_number": "Conflict",
     "conflict.next": "Next",
     "finance.approve_failed": "Failed to approve invoice",
-    "finance.boq_tip_desc":
-      'Go to your BOQ → Lock the estimate → Click "Create Budget from Estimate" to auto-populate budget lines.',
+    "finance.boq_tip_desc": "Go to your BOQ → Lock the estimate → Click \"Create Budget from Estimate\" to auto-populate budget lines.",
     "finance.boq_tip_title": "Tips:",
     "finance.budget_create_failed": "Failed to create budget line",
     "finance.budget_created": "Budget line created successfully",
-    "finance.budget_file_hint":
-      "Columns: WBS Code, Category, Original Budget, Notes",
+    "finance.budget_file_hint": "Columns: WBS Code, Category, Original Budget, Notes",
     "finance.budget_line": "Anggaran",
-    "finance.budget_notes_placeholder":
-      "e.g., Includes contingency for weather delays",
-    "finance.budgets_explanation":
-      "Project budget tracks original vs actual costs by WBS category. Variance is highlighted green when under budget, red when over.",
+    "finance.budget_notes_placeholder": "e.g., Includes contingency for weather delays",
+    "finance.budgets_explanation": "Project budget tracks original vs actual costs by WBS category. Variance is highlighted green when under budget, red when over.",
     "finance.cat_equipment": "Peralatan",
     "finance.cat_labor": "Labor",
     "finance.cat_material": "Material",
@@ -5408,10 +4799,8 @@ const resource = {
     "finance.create_snapshot": "Create Snapshot",
     "finance.currency": "Mata Uang",
     "finance.direction": "Direction",
-    "finance.drop_budget_file":
-      "Drop Excel or CSV file here, or click to browse",
-    "finance.evm_explanation":
-      "Earned Value Management (EVM) compares planned progress with actual performance. SPI > 1.0 = ahead of schedule. CPI > 1.0 = under budget. Create snapshots periodically to track trends over time.",
+    "finance.drop_budget_file": "Drop Excel or CSV file here, or click to browse",
+    "finance.evm_explanation": "Earned Value Management (EVM) compares planned progress with actual performance. SPI > 1.0 = ahead of schedule. CPI > 1.0 = under budget. Create snapshots periodically to track trends over time.",
     "finance.evm_hint_cost": "cost efficiency",
     "finance.evm_hint_forecast": "forecast total cost",
     "finance.evm_hint_schedule": "schedule efficiency",
@@ -5425,14 +4814,11 @@ const resource = {
     "finance.import": "Import",
     "finance.import_btn": "Import",
     "finance.import_budgets": "Import Budgets",
-    "finance.import_result":
-      "Imported: {{imported}}, Skipped: {{skipped}}, Errors: {{errors}}",
+    "finance.import_result": "Imported: {{imported}}, Skipped: {{skipped}}, Errors: {{errors}}",
     "finance.invoice_create_failed": "Failed to create invoice",
     "finance.invoice_created": "Invoice created successfully",
-    "finance.invoice_desc_placeholder":
-      "e.g., Progress payment for concrete works - Phase 2",
-    "finance.invoices_explanation":
-      "Track all project invoices in one place. Payable = invoices from subcontractors/vendors. Receivable = invoices you send to clients. Mark invoices as paid to auto-generate payment records.",
+    "finance.invoice_desc_placeholder": "e.g., Progress payment for concrete works - Phase 2",
+    "finance.invoices_explanation": "Track all project invoices in one place. Payable = invoices from subcontractors/vendors. Receivable = invoices you send to clients. Mark invoices as paid to auto-generate payment records.",
     "finance.invoices_export_failed": "Failed to export invoices",
     "finance.invoices_export_success": "Invoices exported successfully",
     "finance.link_to_boq": "BOQ Estimate‌⁠‍",
@@ -5440,15 +4826,12 @@ const resource = {
     "finance.new_invoice": "New Invoice",
     "finance.no_budget_match": "No matching budget lines",
     "finance.no_invoices_match": "No matching invoices",
-    "finance.no_invoices_match_desc":
-      "Try adjusting your search or status filter.",
+    "finance.no_invoices_match_desc": "Try adjusting your search or status filter.",
     "finance.notes": "Notes / Description",
     "finance.pay_failed": "Failed to mark invoice as paid",
     "finance.payable_desc": "Invoice you need to pay",
-    "finance.payable_receivable_tooltip":
-      "Payable = invoices you owe to vendors. Receivable = invoices clients owe to you.",
-    "finance.payments_explanation":
-      "Payment records are created when invoices are marked as paid.",
+    "finance.payable_receivable_tooltip": "Payable = invoices you owe to vendors. Receivable = invoices clients owe to you.",
+    "finance.payments_explanation": "Payment records are created when invoices are marked as paid.",
     "finance.receivable_desc": "Invoice you're sending",
     "finance.search_client": "Search client...",
     "finance.search_vendor": "Search vendor...",
@@ -5479,19 +4862,15 @@ const resource = {
     "notification.task_assigned_title": "New task assigned",
     "notification.task_assigned_body": "{{task_title}}",
     "notification.invoice_approved_title": "Invoice approved",
-    "notification.invoice_approved_body":
-      "Invoice {{invoice_number}} — {{amount_total}} {{currency_code}}",
+    "notification.invoice_approved_body": "Invoice {{invoice_number}} — {{amount_total}} {{currency_code}}",
     "notification.inspection_scheduled_title": "Inspection scheduled",
-    "notification.inspection_scheduled_body":
-      "{{inspection_number}} — {{title}} on {{inspection_date}}",
+    "notification.inspection_scheduled_body": "{{inspection_number}} — {{title}} on {{inspection_date}}",
     "notification.submittal_status_changed_title": "Submittal status changed",
-    "notification.submittal_status_changed_body":
-      "{{submittal_number}} ({{title}}) — {{new_status}}",
+    "notification.submittal_status_changed_body": "{{submittal_number}} ({{title}}) — {{new_status}}",
     "notification.meeting_scheduled_title": "Meeting scheduled",
     "notification.meeting_scheduled_body": "{{title}} on {{meeting_date}}",
     "notification.ncr_created_title": "Non-conformance raised",
-    "notification.ncr_created_body":
-      "NCR {{ncr_number}} — {{title}} ({{severity}})",
+    "notification.ncr_created_body": "NCR {{ncr_number}} — {{title}} ({{severity}})",
     "notification.document_uploaded_title": "Document uploaded",
     "notification.document_uploaded_body": "{{document_name}}",
     "procurement.add_item": "Tambah Item",
@@ -5512,8 +4891,7 @@ const resource = {
     "procurement.no_gr_match": "No matching goods receipts",
     "procurement.no_po_match": "No matching purchase orders",
     "procurement.notes": "Notes",
-    "procurement.notes_placeholder":
-      "Optional notes or special instructions...",
+    "procurement.notes_placeholder": "Optional notes or special instructions...",
     "procurement.payment_terms": "Payment Terms",
     "procurement.po_created": "Purchase order created",
     "procurement.po_type": "PO Type",
@@ -5529,103 +4907,72 @@ const resource = {
     "match_elements.info.dialog_aria": "How matching works",
     "match_elements.info.title": "How matching works",
     "match_elements.info.bullet_upload": "Upload your BIM model or BoQ.",
-    "match_elements.info.bullet_extract":
-      "We extract elements: descriptions, units, quantities, regions, classification.",
-    "match_elements.info.bullet_search":
-      "Each element is searched against the selected cost catalogue using vector similarity + lexical hints + region/unit boost.",
-    "match_elements.info.bullet_shortlist":
-      "You get a confidence-scored shortlist per element — pick the best, edit quantity if needed.",
-    "match_elements.info.bullet_save":
-      "Save the session — you can revisit, edit, and export it as BoQ later.",
-    "match_elements.info.footer":
-      "Saved sessions live in the list on this page.",
+    "match_elements.info.bullet_extract": "We extract elements: descriptions, units, quantities, regions, classification.",
+    "match_elements.info.bullet_search": "Each element is searched against the selected cost catalogue using vector similarity + lexical hints + region/unit boost.",
+    "match_elements.info.bullet_shortlist": "You get a confidence-scored shortlist per element — pick the best, edit quantity if needed.",
+    "match_elements.info.bullet_save": "Save the session — you can revisit, edit, and export it as BoQ later.",
+    "match_elements.info.footer": "Saved sessions live in the list on this page.",
     "match_elements.new_text.button": "From text",
     "match_elements.new_text.button_title": "Paste descriptions — one per line",
     "match_elements.new_text.title": "New session — paste descriptions",
-    "match_elements.new_text.hint":
-      "One line per item. Each line becomes a group; semantic search finds the closest CWICR rates. Use any language — the multilingual encoder handles cross-lang queries.",
+    "match_elements.new_text.hint": "One line per item. Each line becomes a group; semantic search finds the closest CWICR rates. Use any language — the multilingual encoder handles cross-lang queries.",
     "match_elements.new_text.name_label": "Session name (optional)",
     "match_elements.new_text.name_placeholder": "e.g. Quick estimate Q3",
     "match_elements.new_text.lines_label": "Descriptions (one per line)",
-    "match_elements.new_text.lines_placeholder":
-      "Stahlbetonwand C30/37, d=240mm\nленточный фундамент 800x600\nconcrete slab 200mm",
+    "match_elements.new_text.lines_placeholder": "Stahlbetonwand C30/37, d=240mm\nленточный фундамент 800x600\nconcrete slab 200mm",
     "match_elements.new_text.create": "Create session",
     "match_elements.new_excel.button": "From Excel BoQ",
-    "match_elements.new_excel.button_title":
-      "Upload an .xlsx Bill of Quantities",
+    "match_elements.new_excel.button_title": "Upload an .xlsx Bill of Quantities",
     "match_elements.new_excel.title": "New session from Excel BoQ",
-    "match_elements.new_excel.hint":
-      'Upload an .xlsx with at least a "Description" column (or its localised equivalent — Beschreibung, Описание, Descripción, 描述, etc.). Optional columns: Qty, Unit, Code, Category. Decimal-comma quantities are recognised.',
+    "match_elements.new_excel.hint": "Upload an .xlsx with at least a \"Description\" column (or its localised equivalent — Beschreibung, Описание, Descripción, 描述, etc.). Optional columns: Qty, Unit, Code, Category. Decimal-comma quantities are recognised.",
     "match_elements.new_excel.name_label": "Session name (optional)",
     "match_elements.new_excel.name_placeholder": "e.g. Tender BoQ rev 3",
     "match_elements.new_excel.drop": "Drop your .xlsx here or click to browse",
-    "match_elements.new_excel.format_hint":
-      ".xlsx only · multi-language headers supported",
+    "match_elements.new_excel.format_hint": ".xlsx only · multi-language headers supported",
     "match_elements.new_excel.create": "Upload & create session",
     "match_elements.group_by_show_all": "Show all ({{count}})",
     "match_elements.group_by_show_less": "Show less",
-    "match_elements.group_by_show_all_help":
-      "Tenant-specific attributes from this BIM model",
+    "match_elements.group_by_show_all_help": "Tenant-specific attributes from this BIM model",
     "match_elements.region_bim_models": "BIM model",
-    "match_elements.region_bim_models_help":
-      "Pick the source model — quantities are read from here",
+    "match_elements.region_bim_models_help": "Pick the source model — quantities are read from here",
     "match_elements.region_sessions": "Matching session",
-    "match_elements.region_sessions_help":
-      "Resume an existing run or start a new one",
+    "match_elements.region_sessions_help": "Resume an existing run or start a new one",
     "match_elements.region_settings": "Match settings",
-    "match_elements.region_settings_help":
-      "Tune how matches are found and what shows up below",
+    "match_elements.region_settings_help": "Tune how matches are found and what shows up below",
     "match_elements.session_confirmed": "confirmed",
-    "match_elements.region_lang_help":
-      "Project region resolves to this language → cwicr_{{lang}}_v3 collection",
+    "match_elements.region_lang_help": "Project region resolves to this language → cwicr_{{lang}}_v3 collection",
     "match_elements.project_settings": "Project settings",
-    "match_elements.project_settings_help":
-      "Open project settings (region, currency, locale, fx rates)",
+    "match_elements.project_settings_help": "Open project settings (region, currency, locale, fx rates)",
     "match_elements.vector_status_loading": "Checking vector DB…",
     "match_elements.vector_status_ready": "Vector DB ready",
-    "match_elements.vector_status_ready_detail":
-      "{{lang}} · {{rateCount}} rates · {{collection}}",
+    "match_elements.vector_status_ready_detail": "{{lang}} · {{rateCount}} rates · {{collection}}",
     "match_elements.vector_status_empty": "Vector DB empty",
-    "match_elements.vector_status_empty_detail":
-      "{{lang}} · {{collection}} loaded but 0 rates — vectorize on /costs",
+    "match_elements.vector_status_empty_detail": "{{lang}} · {{collection}} loaded but 0 rates — vectorize on /costs",
     "match_elements.vector_status_missing": "Collection not loaded",
-    "match_elements.vector_status_missing_detail":
-      '{{collection}} for language "{{lang}}" not in Qdrant — visit /costs to vectorize',
+    "match_elements.vector_status_missing_detail": "{{collection}} for language \"{{lang}}\" not in Qdrant — visit /costs to vectorize",
     "match_elements.vector_status_no_country": "Region/language unknown",
-    "match_elements.vector_status_no_country_detail":
-      "Set the project region in /projects/.../settings to pin the collection",
+    "match_elements.vector_status_no_country_detail": "Set the project region in /projects/.../settings to pin the collection",
     "match_elements.vector_status_non_qdrant": "Legacy LanceDB backend",
-    "match_elements.vector_status_non_qdrant_detail":
-      "Per-language collections only apply on Qdrant — current engine is LanceDB",
+    "match_elements.vector_status_non_qdrant_detail": "Per-language collections only apply on Qdrant — current engine is LanceDB",
     "match_elements.vector_status_disconnected": "Vector DB unreachable",
-    "match_elements.vector_status_disconnected_detail":
-      "Qdrant is not responding · {{error}}",
-    "match_elements.vector_status_disconnected_help":
-      "Qdrant is not responding — matchers will fall back to lexical only",
+    "match_elements.vector_status_disconnected_detail": "Qdrant is not responding · {{error}}",
+    "match_elements.vector_status_disconnected_help": "Qdrant is not responding — matchers will fall back to lexical only",
     "match_elements.vector_status_open_costs": "Open /costs",
-    "match_elements.lang_mismatch_title":
-      "Catalogue language does not match project",
-    "match_elements.lang_mismatch_detail":
-      "Project region {{region}} speaks {{projLang}}, but the bound catalogue {{catalogue}} is in {{boundLang}}. Match results will surface in the wrong language until you re-bind.",
+    "match_elements.lang_mismatch_title": "Catalogue language does not match project",
+    "match_elements.lang_mismatch_detail": "Project region {{region}} speaks {{projLang}}, but the bound catalogue {{catalogue}} is in {{boundLang}}. Match results will surface in the wrong language until you re-bind.",
     "match_elements.lang_mismatch_rebind": "Re-bind catalogue",
     "match_elements.lang_mismatch_open_costs": "Or load a {{lang}} catalogue",
     "match_elements.advisor_mismatch_title": "Switch to a {{lang}} catalogue",
-    "match_elements.advisor_mismatch_detail":
-      "Pick a {{lang}} catalogue below — your project speaks {{lang}}, so matches need to come from a same-language rate book.",
-    "match_elements.advisor_missing_title":
-      "{{lang}} vector collection not loaded",
-    "match_elements.advisor_missing_detail":
-      "Pick a ready catalogue below, or load a new one.",
+    "match_elements.advisor_mismatch_detail": "Pick a {{lang}} catalogue below — your project speaks {{lang}}, so matches need to come from a same-language rate book.",
+    "match_elements.advisor_missing_title": "{{lang}} vector collection not loaded",
+    "match_elements.advisor_missing_detail": "Pick a ready catalogue below, or load a new one.",
     "match_elements.advisor_empty_title": "Catalogue not vectorised yet",
-    "match_elements.advisor_empty_detail":
-      "Pick a different ready catalogue below, or vectorise the current one.",
+    "match_elements.advisor_empty_detail": "Pick a different ready catalogue below, or vectorise the current one.",
     "match_elements.advisor_loading": "Loading available catalogues…",
     "match_elements.advisor_region_match": "Best",
     "match_elements.advisor_rates_count": "{{n}} rates",
-    "match_elements.advisor_none_available":
-      "No {{lang}} catalogues are loaded yet. Visit /costs to import one.",
-    "match_elements.advisor_install_hint":
-      "No {{lang}} catalogues loaded yet. One-click install:",
+    "match_elements.advisor_none_available": "No {{lang}} catalogues are loaded yet. Visit /costs to import one.",
+    "match_elements.advisor_install_hint": "No {{lang}} catalogues loaded yet. One-click install:",
     "match_elements.advisor_install_size": "~{{mb}} MB · {{lang}}",
     "match_elements.advisor_browse_all": "All on Hugging Face",
     "match_elements.hero_eyebrow": "BIM → BOQ",
@@ -5643,17 +4990,12 @@ const resource = {
     "match_elements.step_4_help": "Write to BOQ",
     "match_elements.embedder_loading": "Checking language model…",
     "match_elements.embedder_required_title": "Free language model required",
-    "match_elements.embedder_required_body":
-      "OpenConstructionERP uses BGE-M3 — a free, open-source multilingual encoder by BAAI. It runs entirely on your machine. No API key. No cloud calls. Install once with one command:",
+    "match_elements.embedder_required_body": "OpenConstructionERP uses BGE-M3 — a free, open-source multilingual encoder by BAAI. It runs entirely on your machine. No API key. No cloud calls. Install once with one command:",
     "match_elements.embedder_loaded_title": "Language model ready",
-    "match_elements.embedder_loaded_caption":
-      "{{model}} · {{precision}} · ~{{size}} MB · {{license}} · {{n}}+ languages",
-    "match_elements.embedder_runtime_caption":
-      "Runtime: {{runtime}} · model_loaded={{loaded}}",
-    "match_elements.embedder_install_hint_after":
-      "After install, restart the backend.",
-    "match_elements.embedder_size_caption":
-      "~{{int8}} MB download (INT8) or ~{{fp32}} MB (FP32).",
+    "match_elements.embedder_loaded_caption": "{{model}} · {{precision}} · ~{{size}} MB · {{license}} · {{n}}+ languages",
+    "match_elements.embedder_runtime_caption": "Runtime: {{runtime}} · model_loaded={{loaded}}",
+    "match_elements.embedder_install_hint_after": "After install, restart the backend.",
+    "match_elements.embedder_size_caption": "~{{int8}} MB download (INT8) or ~{{fp32}} MB (FP32).",
     "match_elements.embedder_languages_caption": "{{n}}+ languages",
     "match_elements.embedder_runs_locally": "Runs locally",
     "match_elements.embedder_no_api_key": "No API key",
@@ -5664,10 +5006,8 @@ const resource = {
     "match_elements.analytics_title": "Match analytics",
     "match_elements.analytics_alerts_count": "{{n}} alert",
     "match_elements.analytics_alerts_count_plural": "{{n}} alerts",
-    "match_elements.analytics_caption":
-      "{{n}} searches · {{picks}} picks · pick rate {{rate}} · mean score {{score}} · last {{days}}d",
-    "match_elements.analytics_empty_caption":
-      "No searches yet in the last {{days}}d window — run /match-elements to populate.",
+    "match_elements.analytics_caption": "{{n}} searches · {{picks}} picks · pick rate {{rate}} · mean score {{score}} · last {{days}}d",
+    "match_elements.analytics_empty_caption": "No searches yet in the last {{days}}d window — run /match-elements to populate.",
     "match_elements.analytics_window_label": "Window",
     "match_elements.analytics_window_days": "{{n}}d",
     "match_elements.analytics_tile_searches": "Searches",
@@ -5708,18 +5048,14 @@ const resource = {
     "match_progress.title_running": "Pencocokan sedang berjalan",
     "match_progress.title_done": "Pencocokan selesai",
     "match_progress.title_error": "Pencocokan gagal",
-    "match_progress.subtitle_running":
-      "We’re searching the catalogue with vector + lexical + region signals. Safe to leave open in a tab.",
-    "match_progress.subtitle_done":
-      "All stages green — handing over to the review panel.",
-    "match_progress.subtitle_error":
-      "The matcher couldn’t finish — try again or pick a different catalogue.",
+    "match_progress.subtitle_running": "We’re searching the catalogue with vector + lexical + region signals. Safe to leave open in a tab.",
+    "match_progress.subtitle_done": "All stages green — handing over to the review panel.",
+    "match_progress.subtitle_error": "The matcher couldn’t finish — try again or pick a different catalogue.",
     "match_progress.elapsed": "Berlalu",
     "match_progress.overall_aria": "Overall match progress",
     "match_progress.headline_done": "All done — opening your results",
     "match_progress.headline_error": "Something went wrong",
-    "match_progress.headline_long":
-      "Almost done — large projects can take a minute",
+    "match_progress.headline_long": "Almost done — large projects can take a minute",
     "match_progress.stage_load": "Loading BIM elements",
     "match_progress.stage_embed": "Building embeddings",
     "match_progress.stage_vector": "Vector search (top candidates)",
@@ -5729,8 +5065,7 @@ const resource = {
     "match_progress.error_label": "Error details",
     "match_progress.error_fallback": "Unknown error",
     "match_progress.retry": "Try again",
-    "match_progress.long_hint":
-      "Still working — first runs on large BIM models take longer because vectors are warming up. Subsequent runs on the same project are much faster.",
+    "match_progress.long_hint": "Still working — first runs on large BIM models take longer because vectors are warming up. Subsequent runs on the same project are much faster.",
     "match_progress.toast_failed_title": "Pencocokan gagal",
     "projects.team.strip_label": "Project team",
     "projects.team.empty": "No members yet",
@@ -5748,33 +5083,27 @@ const resource = {
     "projects.team.role.viewer": "Viewer",
     "projects.team.role.project_manager": "Project manager",
     "onboarding.company_property_developer": "Pengembang Properti",
-    "onboarding.company_property_developer_desc":
-      "Tim pengembangan real estate",
+    "onboarding.company_property_developer_desc": "Tim pengembangan real estate",
     "onboarding.explore_all_modules": "Jelajahi semua {{count}} modul",
     "boq.add_child_position": "Tambahkan sub-item",
     "boq.add_sub_section": "Tambahkan sub-bagian",
-    "boq.ai_no_answer":
-      "Asisten tidak memberikan jawaban. Silakan ungkapkan ulang atau coba lagi.",
+    "boq.ai_no_answer": "Asisten tidak memberikan jawaban. Silakan ungkapkan ulang atau coba lagi.",
     "boq.compare_added": "Ditambahkan",
     "boq.compare_against": "Bandingkan dengan",
     "boq.compare_btn": "Bandingkan",
-    "boq.compare_btn_hint":
-      "Bandingkan perkiraan ini dengan daftar volume pekerjaan lain",
+    "boq.compare_btn_hint": "Bandingkan perkiraan ini dengan daftar volume pekerjaan lain",
     "boq.compare_col_delta": "Δ basis",
     "boq.compare_col_line": "Baris",
     "boq.compare_col_qty": "Vol.",
     "boq.compare_col_rate": "Harga satuan",
-    "boq.compare_error":
-      "Tidak dapat membandingkan daftar volume pekerjaan ini.",
+    "boq.compare_error": "Tidak dapat membandingkan daftar volume pekerjaan ini.",
     "boq.compare_hide_unchanged": "Sembunyikan baris tak berubah",
-    "boq.compare_no_diff":
-      "Tidak ada perbedaan antar daftar volume pekerjaan ini.",
+    "boq.compare_no_diff": "Tidak ada perbedaan antar daftar volume pekerjaan ini.",
     "boq.compare_pick": "— Pilih daftar volume pekerjaan —",
     "boq.compare_qty": "Vol.",
     "boq.compare_rate": "Harga satuan",
     "boq.compare_removed": "Dihapus",
-    "boq.compare_select_hint":
-      "Pilih daftar volume pekerjaan lain di atas untuk melihat perbedaan per baris.",
+    "boq.compare_select_hint": "Pilih daftar volume pekerjaan lain di atas untuk melihat perbedaan per baris.",
     "boq.compare_unchanged": "Tidak berubah",
     "boq.compare_ct_added": "Ditambahkan",
     "boq.compare_ct_removed": "Dihapus",
@@ -5791,8 +5120,7 @@ const resource = {
     "boq.model_link_agg_first": "Pertama",
     "boq.model_link_create": "Buat tautan",
     "boq.model_link_created": "Tautan model dibuat",
-    "boq.model_link_created_hint":
-      "Volume belum diperbarui — gunakan «Segarkan dari model» lalu Terapkan untuk mengambilnya.",
+    "boq.model_link_created_hint": "Volume belum diperbarui — gunakan «Segarkan dari model» lalu Terapkan untuk mengambilnya.",
     "boq.model_link_delete": "Hapus tautan",
     "boq.model_link_delete_failed": "Gagal menghapus tautan model",
     "boq.model_link_deleted": "Tautan model dihapus",
@@ -5811,66 +5139,48 @@ const resource = {
     "boq.model_link_status_active": "Tersinkron",
     "boq.model_link_status_stale": "Usang",
     "boq.model_link_status_broken": "Terputus",
-    "boq.model_link_subtitle":
-      "Item {{ordinal}} — kaitkan volumenya dengan elemen model BIM",
+    "boq.model_link_subtitle": "Item {{ordinal}} — kaitkan volumenya dengan elemen model BIM",
     "boq.model_link_title": "Tautan model",
     "boq.model_link_version": "model v{{v}}",
-    "boq.model_review_all_synced":
-      "Semua volume yang tertaut tersinkron dengan model.",
+    "boq.model_review_all_synced": "Semua volume yang tertaut tersinkron dengan model.",
     "boq.model_review_applied": "{{count}} pembaruan volume diterapkan",
     "boq.model_review_apply": "Terapkan {{count}} terpilih",
     "boq.model_review_apply_failed": "Penerapan gagal",
     "boq.model_review_btn": "Sync model",
-    "boq.model_review_btn_hint":
-      "Tarik ulang volume dari model BIM yang tertaut",
-    "boq.model_review_hint":
-      "Menghitung ulang volume yang tertaut terhadap versi model terbaru. Tidak ada yang berubah hingga Anda menekan Terapkan.",
+    "boq.model_review_btn_hint": "Tarik ulang volume dari model BIM yang tertaut",
+    "boq.model_review_hint": "Menghitung ulang volume yang tertaut terhadap versi model terbaru. Tidak ada yang berubah hingga Anda menekan Terapkan.",
     "boq.model_review_missing": "{{count}} hilang",
-    "boq.model_review_no_links":
-      "Tidak ada tautan model di daftar volume pekerjaan ini",
+    "boq.model_review_no_links": "Tidak ada tautan model di daftar volume pekerjaan ini",
     "boq.model_review_refresh": "Segarkan dari model",
     "boq.model_review_refresh_failed": "Gagal menyegarkan dari model",
-    "boq.model_review_run":
-      "Jalankan penyegaran untuk melihat perubahan dari model.",
+    "boq.model_review_run": "Jalankan penyegaran untuk melihat perubahan dari model.",
     "boq.model_review_title": "Tinjauan volume model",
-    "boq.position_added_edit_hint":
-      "Ketik deskripsi, lalu Tab melalui satuan, volume & harga satuan",
-    "boq.link_badge_instance":
-      "Instansi tertaut kode {{code}} — perubahan definisinya akan memisahkannya",
+    "boq.position_added_edit_hint": "Ketik deskripsi, lalu Tab melalui satuan, volume & harga satuan",
+    "boq.link_badge_instance": "Instansi tertaut kode {{code}} — perubahan definisinya akan memisahkannya",
     "boq.link_badge_master": "Master kode {{code}} — {{count}} tertaut",
     "boq.link_master_badge": "Master",
-    "boq.link_propagated_msg":
-      "Memperbarui {{count}} item tertaut di proyek ini.",
+    "boq.link_propagated_msg": "Memperbarui {{count}} item tertaut di proyek ini.",
     "boq.link_propagated_title": "Definisi disebarkan",
-    "boq.max_depth_reached_tooltip":
-      "Kedalaman penyusunan maksimum {{max}} tingkat tercapai — ratakan struktur atau gunakan sub-tingkat lebih sedikit.",
-    "boq.resource_link_propagated_msg":
-      "Memperbarui sumber daya bersama pada {{count}} item lain di proyek ini.",
+    "boq.max_depth_reached_tooltip": "Kedalaman penyusunan maksimum {{max}} tingkat tercapai — ratakan struktur atau gunakan sub-tingkat lebih sedikit.",
+    "boq.resource_link_propagated_msg": "Memperbarui sumber daya bersama pada {{count}} item lain di proyek ini.",
     "boq.resource_link_propagated_title": "Definisi sumber daya disebarkan",
     "boq.link_role_instance": "Instansi tertaut",
     "boq.link_role_master": "Master (definisi resmi)",
-    "boq.link_unlinked_msg":
-      "Pengeditan Anda mengubah salinan tertaut ini sehingga tidak lagi mengikuti kode bersama. Jika Anda tidak bermaksud memisahkannya, kembalikan kodenya.",
+    "boq.link_unlinked_msg": "Pengeditan Anda mengubah salinan tertaut ini sehingga tidak lagi mengikuti kode bersama. Jika Anda tidak bermaksud memisahkannya, kembalikan kodenya.",
     "boq.link_unlinked_title": "Item dipisahkan dari kode bersama",
-    "boq.linked_positions_count":
-      "{{total}} item berbagi kode ini ({{instances}} instansi tertaut). Master adalah definisi resmi; mengeditnya disebarkan ke setiap instansi di proyek ini.",
+    "boq.linked_positions_count": "{{total}} item berbagi kode ini ({{instances}} instansi tertaut). Master adalah definisi resmi; mengeditnya disebarkan ke setiap instansi di proyek ini.",
     "boq.linked_positions_error": "Tidak dapat memuat item tertaut.",
-    "boq.linked_positions_none":
-      "Item ini berdiri sendiri — tidak ada item lain yang berbagi kodenya.",
-    "boq.linked_positions_subtitle":
-      "Kode {{code}} — dilihat dari item {{ordinal}}",
+    "boq.linked_positions_none": "Item ini berdiri sendiri — tidak ada item lain yang berbagi kodenya.",
+    "boq.linked_positions_subtitle": "Kode {{code}} — dilihat dari item {{ordinal}}",
     "boq.linked_positions_title": "Item tertaut",
     "boq.no_description": "(tanpa deskripsi)",
     "boq.reuse_code_action": "Gunakan kembali kode yang ada…",
     "boq.reuse_code_existing": "Kode yang ada: {{codes}}",
-    "boq.reuse_code_msg":
-      "Instansi tertaut dibuat — {{count}} item berbagi kode ini. Volumenya dapat diedit secara mandiri.",
-    "boq.reuse_code_prompt":
-      "Masukkan kode yang ada untuk dipakai ulang di sini (definisi dan sub-item disalin; volume tetap mandiri):",
+    "boq.reuse_code_msg": "Instansi tertaut dibuat — {{count}} item berbagi kode ini. Volumenya dapat diedit secara mandiri.",
+    "boq.reuse_code_prompt": "Masukkan kode yang ada untuk dipakai ulang di sini (definisi dan sub-item disalin; volume tetap mandiri):",
     "boq.reuse_code_title": "Kode {{code}} digunakan ulang",
     "boq.show_linked": "Tampilkan item tertaut",
-    "boq.unlink_done_msg":
-      "Kode {{code}} dipertahankan. Item ini tidak lagi mengikuti kode bersama; nilainya tetap dipertahankan.",
+    "boq.unlink_done_msg": "Kode {{code}} dipertahankan. Item ini tidak lagi mengikuti kode bersama; nilainya tetap dipertahankan.",
     "boq.unlink_done_title": "Item dipisahkan",
     "boq.unlink_failed": "Gagal memisahkan item",
     "boq.unlink_this": "Pisahkan item ini",
@@ -5880,8 +5190,7 @@ const resource = {
     "login.community_sub": "Dapatkan bantuan & berdiskusi",
     "login.brand_edit": "Sesuaikan logo",
     "login.brand_title": "Branding label putih",
-    "login.brand_desc":
-      "Ditampilkan di layar masuk ini dan di seluruh aplikasi. Disimpan hanya di browser ini.",
+    "login.brand_desc": "Ditampilkan di layar masuk ini dan di seluruh aplikasi. Disimpan hanya di browser ini.",
     "login.brand_upload": "Unggah logo",
     "login.brand_name_ph": "Nama perusahaan",
     "login.brand_reset": "Atur ulang ke bawaan",
@@ -5893,10 +5202,8 @@ const resource = {
     "nav.phase_execution": "Eksekusi",
     "nav.phase_closure": "Kualitas & Penutupan",
     "nav.clash_detection": "Deteksi Tabrakan",
-    "schedule_advanced.master_hint":
-      "Pilih jadwal master agar menjadi rencana kerja untuk tab Fase, Look-Ahead, Mingguan, dan Kendala. Gunakan aksi baris untuk mengubah nama, mengubah tanggal terencana dan status, atau menghapusnya.",
-    "schedule_advanced.no_master_yet_desc":
-      "Jadwal master adalah rencana tingkat tertinggi tempat setiap rencana fase, look-ahead, dan rencana kerja mingguan dikumpulkan. Buat satu untuk memulai pull planning — Anda dapat mengubah nama, tanggal, atau menghapusnya kapan saja.",
+    "schedule_advanced.master_hint": "Pilih jadwal master agar menjadi rencana kerja untuk tab Fase, Look-Ahead, Mingguan, dan Kendala. Gunakan aksi baris untuk mengubah nama, mengubah tanggal terencana dan status, atau menghapusnya.",
+    "schedule_advanced.no_master_yet_desc": "Jadwal master adalah rencana tingkat tertinggi tempat setiap rencana fase, look-ahead, dan rencana kerja mingguan dikumpulkan. Buat satu untuk memulai pull planning — Anda dapat mengubah nama, tanggal, atau menghapusnya kapan saja.",
     "schedule_advanced.active_selection": "Rencana kerja",
     "schedule_advanced.master_status.active": "Aktif",
     "schedule_advanced.master_status.archived": "Diarsipkan",
@@ -5904,160 +5211,95 @@ const resource = {
     "schedule_advanced.master_updated": "Jadwal master diperbarui",
     "schedule_advanced.master_deleted": "Jadwal master dihapus",
     "schedule_advanced.delete_master_title": "Hapus jadwal master?",
-    "schedule_advanced.delete_master_message":
-      '"{{name}}" and everything under it — phase plans, look-aheads, weekly work plans, commitments and baselines — will be permanently deleted. This cannot be undone.',
-    "schedule_advanced.err_master_name_required":
-      "Nama jadwal master diperlukan.",
-    "schedule_advanced.master_name_placeholder":
-      "mis. Jadwal master konstruksi",
-    "schedule_advanced.master_status_hint":
-      "Arsipkan jadwal untuk menyimpan historinya tanpa menjadikannya rencana kerja. Jadwal yang diarsipkan dapat diaktifkan kembali di sini kapan saja.",
-    "schedule_advanced.master_notes_placeholder":
-      "Lingkup, referensi kontrak, tonggak utama…",
+    "schedule_advanced.delete_master_message": "\"{{name}}\" and everything under it — phase plans, look-aheads, weekly work plans, commitments and baselines — will be permanently deleted. This cannot be undone.",
+    "schedule_advanced.err_master_name_required": "Nama jadwal master diperlukan.",
+    "schedule_advanced.master_name_placeholder": "mis. Jadwal master konstruksi",
+    "schedule_advanced.master_status_hint": "Arsipkan jadwal untuk menyimpan historinya tanpa menjadikannya rencana kerja. Jadwal yang diarsipkan dapat diaktifkan kembali di sini kapan saja.",
+    "schedule_advanced.master_notes_placeholder": "Lingkup, referensi kontrak, tonggak utama…",
     "files.cta.add_first_short": "Tambah berkas",
     "files.folder.files_count": "berkas",
     "files.folder.subfolders": "{{count}} folder",
     "files.folder.share": "{{pct}}% dari total penyimpanan",
     "notifications.safety.incident_created": "Insiden keselamatan dilaporkan",
-    "notifications.safety.incident_created_body":
-      "Insiden {{incident_number}} ({{severity}}): {{description}}",
-    "notifications.safety.high_risk_observation":
-      "Observasi keselamatan risiko tinggi",
-    "notifications.safety.high_risk_body":
-      "Observasi {{observation_number}} (risiko {{risk_score}}): {{description}}",
+    "notifications.safety.incident_created_body": "Insiden {{incident_number}} ({{severity}}): {{description}}",
+    "notifications.safety.high_risk_observation": "Observasi keselamatan risiko tinggi",
+    "notifications.safety.high_risk_body": "Observasi {{observation_number}} (risiko {{risk_score}}): {{description}}",
     "notifications.bi.alert.title": "Alert dasbor dipicu",
-    "notifications.bi.alert.body":
-      "{{alert_name}} — {{kpi_code}} bernilai {{value}} (ambang {{threshold}} {{condition}}).",
+    "notifications.bi.alert.body": "{{alert_name}} — {{kpi_code}} bernilai {{value}} (ambang {{threshold}} {{condition}}).",
     "notifications.bi.report.title": "Laporan terjadwal siap",
-    "notifications.bi.report.body":
-      "Laporan {{report_code}} dibuat dengan {{row_count}} baris.",
-    "notifications.supplier_catalogs.po.sent.title":
-      "Pesanan pembelian dikirim",
-    "notifications.supplier_catalogs.po.sent.body":
-      "PO dikirim ke vendor {{vendor_id}} sebesar {{total}} {{currency}}.",
-    "notifications.supplier_catalogs.invoice.exception.title":
-      "Pengecualian faktur",
-    "notifications.supplier_catalogs.invoice.exception.body":
-      "Faktur untuk PO {{po_id}} perlu ditinjau: {{reason}}",
+    "notifications.bi.report.body": "Laporan {{report_code}} dibuat dengan {{row_count}} baris.",
+    "notifications.supplier_catalogs.po.sent.title": "Pesanan pembelian dikirim",
+    "notifications.supplier_catalogs.po.sent.body": "PO dikirim ke vendor {{vendor_id}} sebesar {{total}} {{currency}}.",
+    "notifications.supplier_catalogs.invoice.exception.title": "Pengecualian faktur",
+    "notifications.supplier_catalogs.invoice.exception.body": "Faktur untuk PO {{po_id}} perlu ditinjau: {{reason}}",
     "notifications.supplier_catalogs.stock.low.title": "Peringatan stok rendah",
-    "notifications.supplier_catalogs.stock.low.body":
-      "{{sku}}: tersisa {{available_qty}}, pada atau di bawah titik pesanan ulang {{reorder_point}}.",
-    "notifications.supplier_catalogs.vendor.blacklisted.title":
-      "Vendor masuk daftar hitam",
-    "notifications.supplier_catalogs.vendor.blacklisted.body":
-      "Vendor {{code}} dimasukkan ke daftar hitam: {{reason}}",
-    "notifications.supplier_catalogs.kyc.expired.title":
-      "Dokumen kepatuhan vendor kedaluwarsa",
-    "notifications.supplier_catalogs.kyc.expired.body":
-      "{{doc_type}} kedaluwarsa pada {{expires_on}}.",
-    "notifications.supplier_catalogs.kyc.expiring.title":
-      "Dokumen kepatuhan vendor segera kedaluwarsa",
-    "notifications.supplier_catalogs.kyc.expiring.body":
-      "{{doc_type}} kedaluwarsa pada {{expires_on}} (tersisa {{days_until_expiry}} hari).",
-    "notifications.resources.cert_expiring.title":
-      "Sertifikasi segera kedaluwarsa",
-    "notifications.resources.cert_expiring.body":
-      "{{resource_name}} — {{cert_type}} kedaluwarsa {{valid_until}} (tersisa {{days_left}} hari).",
-    "notifications.resources.assignment_proposed.title":
-      "Penugasan sumber daya diusulkan",
-    "notifications.resources.assignment_proposed.body":
-      "Diusulkan untuk tugas {{task}} mulai {{start}}.",
-    "notifications.resources.assignment_confirmed.title":
-      "Penugasan sumber daya dikonfirmasi",
-    "notifications.resources.assignment_confirmed.body":
-      "Penugasan untuk tugas {{task}} dikonfirmasi.",
+    "notifications.supplier_catalogs.stock.low.body": "{{sku}}: tersisa {{available_qty}}, pada atau di bawah titik pesanan ulang {{reorder_point}}.",
+    "notifications.supplier_catalogs.vendor.blacklisted.title": "Vendor masuk daftar hitam",
+    "notifications.supplier_catalogs.vendor.blacklisted.body": "Vendor {{code}} dimasukkan ke daftar hitam: {{reason}}",
+    "notifications.supplier_catalogs.kyc.expired.title": "Dokumen kepatuhan vendor kedaluwarsa",
+    "notifications.supplier_catalogs.kyc.expired.body": "{{doc_type}} kedaluwarsa pada {{expires_on}}.",
+    "notifications.supplier_catalogs.kyc.expiring.title": "Dokumen kepatuhan vendor segera kedaluwarsa",
+    "notifications.supplier_catalogs.kyc.expiring.body": "{{doc_type}} kedaluwarsa pada {{expires_on}} (tersisa {{days_until_expiry}} hari).",
+    "notifications.resources.cert_expiring.title": "Sertifikasi segera kedaluwarsa",
+    "notifications.resources.cert_expiring.body": "{{resource_name}} — {{cert_type}} kedaluwarsa {{valid_until}} (tersisa {{days_left}} hari).",
+    "notifications.resources.assignment_proposed.title": "Penugasan sumber daya diusulkan",
+    "notifications.resources.assignment_proposed.body": "Diusulkan untuk tugas {{task}} mulai {{start}}.",
+    "notifications.resources.assignment_confirmed.title": "Penugasan sumber daya dikonfirmasi",
+    "notifications.resources.assignment_confirmed.body": "Penugasan untuk tugas {{task}} dikonfirmasi.",
     "notifications.contracts.signed.title": "Kontrak ditandatangani",
-    "notifications.contracts.signed.body":
-      "Kontrak {{code}} ditandatangani senilai {{value}} {{currency}}.",
+    "notifications.contracts.signed.body": "Kontrak {{code}} ditandatangani senilai {{value}} {{currency}}.",
     "notifications.contracts.claim_submitted.title": "Klaim kontrak diajukan",
-    "notifications.contracts.claim_submitted.body":
-      "Klaim diajukan senilai {{amount}} {{currency}}.",
+    "notifications.contracts.claim_submitted.body": "Klaim diajukan senilai {{amount}} {{currency}}.",
     "notifications.contracts.claim_paid.title": "Klaim kontrak dibayar",
-    "notifications.contracts.claim_paid.body":
-      "Klaim dibayar: {{amount}} {{currency}}.",
+    "notifications.contracts.claim_paid.body": "Klaim dibayar: {{amount}} {{currency}}.",
     "notifications.contracts.retention_released.title": "Retensi dibebaskan",
-    "notifications.contracts.retention_released.body":
-      "Kontrak {{contract_code}}: {{amount_released}} dibebaskan, {{remaining}} tersisa.",
+    "notifications.contracts.retention_released.body": "Kontrak {{contract_code}}: {{amount_released}} dibebaskan, {{remaining}} tersisa.",
     "notifications.crm.lead_qualified.title": "Lead memenuhi syarat",
-    "notifications.crm.lead_qualified.body":
-      "Lead {{name}} telah memenuhi syarat.",
+    "notifications.crm.lead_qualified.body": "Lead {{name}} telah memenuhi syarat.",
     "notifications.crm.opportunity_won.title": "Peluang dimenangkan",
-    "notifications.crm.opportunity_won.body":
-      "{{name}} menang — nilai {{value}}.",
+    "notifications.crm.opportunity_won.body": "{{name}} menang — nilai {{value}}.",
     "notifications.crm.opportunity_scored.title": "Peluang diberi skor",
-    "notifications.crm.opportunity_scored.body":
-      "{{title}} memperoleh skor {{score}} (band {{band}}).",
-    "notifications.carbon.boq_position_assigned.title":
-      "Faktor karbon ditetapkan",
-    "notifications.carbon.boq_position_assigned.body":
-      "Item BOQ {{boq_position_id}}: {{carbon_kg}} kg CO₂e ({{stage}}).",
-    "notifications.property_dev.buyer_contracted.title":
-      "Pembeli terikat kontrak",
-    "notifications.property_dev.buyer_contracted.body":
-      "{{buyer}} terikat kontrak untuk kavling {{plot}}.",
-    "notifications.property_dev.handover_completed.title":
-      "Serah terima selesai",
-    "notifications.property_dev.handover_completed.body":
-      "Serah terima kavling {{plot}} selesai.",
-    "notifications.property_dev.warranty_raised.title":
-      "Klaim garansi diajukan",
-    "notifications.property_dev.warranty_raised.body":
-      "Klaim garansi {{category}} diajukan untuk kavling {{plot}}.",
-    "notifications.bid_management.invitation_sent.title":
-      "Undangan tender dikirim",
-    "notifications.bid_management.invitation_sent.body":
-      "Undangan paket {{package}} dikirim, batas {{due}}.",
+    "notifications.crm.opportunity_scored.body": "{{title}} memperoleh skor {{score}} (band {{band}}).",
+    "notifications.carbon.boq_position_assigned.title": "Faktor karbon ditetapkan",
+    "notifications.carbon.boq_position_assigned.body": "Item BOQ {{boq_position_id}}: {{carbon_kg}} kg CO₂e ({{stage}}).",
+    "notifications.property_dev.buyer_contracted.title": "Pembeli terikat kontrak",
+    "notifications.property_dev.buyer_contracted.body": "{{buyer}} terikat kontrak untuk kavling {{plot}}.",
+    "notifications.property_dev.handover_completed.title": "Serah terima selesai",
+    "notifications.property_dev.handover_completed.body": "Serah terima kavling {{plot}} selesai.",
+    "notifications.property_dev.warranty_raised.title": "Klaim garansi diajukan",
+    "notifications.property_dev.warranty_raised.body": "Klaim garansi {{category}} diajukan untuk kavling {{plot}}.",
+    "notifications.bid_management.invitation_sent.title": "Undangan tender dikirim",
+    "notifications.bid_management.invitation_sent.body": "Undangan paket {{package}} dikirim, batas {{due}}.",
     "notifications.bid_management.awarded.title": "Tender dimenangkan",
-    "notifications.bid_management.awarded.body":
-      "{{package}} dimenangkan senilai {{amount}}.",
-    "notifications.schedule_advanced.constraint_cleared.title":
-      "Kendala jadwal dihapus",
-    "notifications.schedule_advanced.constraint_cleared.body":
-      "Tugas {{task}} tidak lagi terhalang.",
+    "notifications.bid_management.awarded.body": "{{package}} dimenangkan senilai {{amount}}.",
+    "notifications.schedule_advanced.constraint_cleared.title": "Kendala jadwal dihapus",
+    "notifications.schedule_advanced.constraint_cleared.body": "Tugas {{task}} tidak lagi terhalang.",
     "notifications.daily_diary.signed.title": "Buku harian ditandatangani",
-    "notifications.daily_diary.signed.body":
-      "Buku harian untuk {{date}} telah ditandatangani.",
+    "notifications.daily_diary.signed.body": "Buku harian untuk {{date}} telah ditandatangani.",
     "notifications.service.ticket_dispatched.title": "Tiket layanan dikirim",
-    "notifications.service.ticket_dispatched.body":
-      "Tiket {{ticket_number}} dikirim (prioritas {{priority}}).",
+    "notifications.service.ticket_dispatched.body": "Tiket {{ticket_number}} dikirim (prioritas {{priority}}).",
     "notifications.service.ticket_resolved.title": "Tiket layanan diselesaikan",
-    "notifications.service.ticket_resolved.body":
-      "Tiket {{ticket_number}} telah diselesaikan.",
+    "notifications.service.ticket_resolved.body": "Tiket {{ticket_number}} telah diselesaikan.",
     "notifications.service.work_order_billed.title": "Perintah kerja ditagih",
-    "notifications.service.work_order_billed.body":
-      "Perintah kerja {{wo_number}} ditagih senilai {{amount}} {{currency}}.",
-    "notifications.subcontractors.prequal_submitted.title":
-      "Prakualifikasi diajukan",
-    "notifications.subcontractors.prequal_submitted.body":
-      "{{subcontractor_name}} mengajukan prakualifikasi.",
-    "notifications.subcontractors.payment_app_submitted.title":
-      "Permohonan pembayaran diajukan",
-    "notifications.subcontractors.payment_app_submitted.body":
-      "Permohonan {{application_number}} diajukan senilai {{net_amount}} {{currency}}.",
-    "notifications.subcontractors.retention_released.title":
-      "Retensi subkontraktor dibebaskan",
-    "notifications.subcontractors.retention_released.body":
-      "Retensi {{amount}} {{currency}} dibebaskan.",
+    "notifications.service.work_order_billed.body": "Perintah kerja {{wo_number}} ditagih senilai {{amount}} {{currency}}.",
+    "notifications.subcontractors.prequal_submitted.title": "Prakualifikasi diajukan",
+    "notifications.subcontractors.prequal_submitted.body": "{{subcontractor_name}} mengajukan prakualifikasi.",
+    "notifications.subcontractors.payment_app_submitted.title": "Permohonan pembayaran diajukan",
+    "notifications.subcontractors.payment_app_submitted.body": "Permohonan {{application_number}} diajukan senilai {{net_amount}} {{currency}}.",
+    "notifications.subcontractors.retention_released.title": "Retensi subkontraktor dibebaskan",
+    "notifications.subcontractors.retention_released.body": "Retensi {{amount}} {{currency}} dibebaskan.",
     "notifications.equipment.assigned.title": "Peralatan ditugaskan",
-    "notifications.equipment.assigned.body":
-      "{{equipment_code}} ditugaskan ke {{project_name}}.",
-    "notifications.equipment.damage_reported.title":
-      "Kerusakan peralatan dilaporkan",
-    "notifications.equipment.damage_reported.body":
-      "Kerusakan {{equipment_code}} dilaporkan ({{severity}}).",
+    "notifications.equipment.assigned.body": "{{equipment_code}} ditugaskan ke {{project_name}}.",
+    "notifications.equipment.damage_reported.title": "Kerusakan peralatan dilaporkan",
+    "notifications.equipment.damage_reported.body": "Kerusakan {{equipment_code}} dilaporkan ({{severity}}).",
     "notifications.portal.user_invited.title": "Pengguna portal diundang",
-    "notifications.portal.user_invited.body":
-      "{{portal_user_email}} diundang sebagai {{portal_role}}.",
-    "match_elements.vector_status_disconnected_explainer":
-      'Semantic vector search is optional — it sharpens matches by meaning but needs a running Qdrant vector database. Use the "Vector database" panel below to start or install Qdrant natively (no Docker required), then retry.',
-    "match_elements.vector_status_disconnected_fallback":
-      "Anda masih dapat melanjutkan: pencocokan otomatis kembali ke skoring leksikal (kata kunci) dan berbasis aturan selama basis data vektor luring.",
+    "notifications.portal.user_invited.body": "{{portal_user_email}} diundang sebagai {{portal_role}}.",
+    "match_elements.vector_status_disconnected_explainer": "Semantic vector search is optional — it sharpens matches by meaning but needs a running Qdrant vector database. Use the \"Vector database\" panel below to start or install Qdrant natively (no Docker required), then retry.",
+    "match_elements.vector_status_disconnected_fallback": "Anda masih dapat melanjutkan: pencocokan otomatis kembali ke skoring leksikal (kata kunci) dan berbasis aturan selama basis data vektor luring.",
     "match_elements.vector_status_retry": "Coba sambung lagi",
-    "match_elements.vector_status_open_costs_long":
-      "Buka alat basis data biaya",
+    "match_elements.vector_status_open_costs_long": "Buka alat basis data biaya",
     "match_elements.pipeline.title": "Pipeline pencocokan",
-    "match_elements.pipeline.subtitle":
-      "Tujuh langkah dari berkas CAD ke BOQ berharga — setiap langkah terlihat dan dapat disetel",
+    "match_elements.pipeline.subtitle": "Tujuh langkah dari berkas CAD ke BOQ berharga — setiap langkah terlihat dan dapat disetel",
     "match_elements.pipeline.done_suffix": "selesai",
     "match_elements.pipeline.run_all": "Jalankan semua tahap",
     "match_elements.pipeline.running_all": "Menjalankan semua…",
@@ -6075,21 +5317,17 @@ const resource = {
     "match_elements.pipeline.status_error": "Galat",
     "match_elements.pipeline.status_stale": "Perlu dijalankan ulang",
     "match_elements.pipeline.status_skipped": "Dilewati",
-    "match_elements.pipeline.stale_hint":
-      "Tahap sebelumnya berubah — jalankan ulang langkah ini untuk menyegarkan keluarannya.",
+    "match_elements.pipeline.stale_hint": "Tahap sebelumnya berubah — jalankan ulang langkah ini untuk menyegarkan keluarannya.",
     "match_elements.pipeline.llm_badge": "LLM",
-    "match_elements.pipeline.llm_tunable":
-      "Diperkuat LLM — prompt dapat diedit",
+    "match_elements.pipeline.llm_tunable": "Diperkuat LLM — prompt dapat diedit",
     "match_elements.pipeline.group_by": "Kelompokkan berdasar kunci",
-    "match_elements.pipeline.group_by_hint":
-      "Dipisahkan koma. RVT → category, type_name · IFC → ifc_class, predefined_type · DWG → layer, block_name",
+    "match_elements.pipeline.group_by_hint": "Dipisahkan koma. RVT → category, type_name · IFC → ifc_class, predefined_type · DWG → layer, block_name",
     "match_elements.pipeline.method": "Metode",
     "match_elements.pipeline.max_groups": "Maks kelompok",
     "match_elements.pipeline.llm_provider": "Penyedia LLM",
     "match_elements.pipeline.prompt": "Prompt",
     "match_elements.pipeline.system": "system",
-    "match_elements.pipeline.system_readonly":
-      "Prompt sistem — hanya-baca. Fork untuk mengedit dan menyesuaikan dengan perusahaan Anda.",
+    "match_elements.pipeline.system_readonly": "Prompt sistem — hanya-baca. Fork untuk mengedit dan menyesuaikan dengan perusahaan Anda.",
     "match_elements.pipeline.system_prompt": "Prompt sistem",
     "match_elements.pipeline.user_template": "Templat pengguna",
     "match_elements.pipeline.variables": "Variabel yang diisi tahap ini:",
@@ -6099,12 +5337,10 @@ const resource = {
     "match_elements.pipeline.revert": "Pulihkan",
     "match_elements.pipeline.run_failed": "Tahap gagal dijalankan",
     "match_elements.pipeline.intro_title": "Buka pipeline pencocokan terlihat",
-    "match_elements.pipeline.intro_blurb":
-      "Tujuh langkah dari berkas CAD ke BOQ berharga — Konversi, Muat, Skema, Filter, Kelompok, Cocokkan, Rollup. Setiap langkah terlihat, dijelaskan, dan dapat disetel (prompt, penyedia LLM, kunci kelompok).",
+    "match_elements.pipeline.intro_blurb": "Tujuh langkah dari berkas CAD ke BOQ berharga — Konversi, Muat, Skema, Filter, Kelompok, Cocokkan, Rollup. Setiap langkah terlihat, dijelaskan, dan dapat disetel (prompt, penyedia LLM, kunci kelompok).",
     "match_elements.pipeline.intro_cta": "Buka pipeline",
     "match_elements.pipeline.intro_resume": "Lanjutkan sesi terakhir",
-    "match_elements.pipeline.busy_hint":
-      "Sebuah tahap berjalan — tunggu hingga selesai sebelum memulai yang lain.",
+    "match_elements.pipeline.busy_hint": "Sebuah tahap berjalan — tunggu hingga selesai sebelum memulai yang lain.",
     "match_elements.pipeline.step_convert": "Konversi",
     "match_elements.pipeline.step_load": "Muat",
     "match_elements.pipeline.step_schema": "Skema",
@@ -6113,8 +5349,7 @@ const resource = {
     "match_elements.pipeline.step_match": "Cocokkan",
     "match_elements.pipeline.step_rollup": "Rollup",
     "clash.title": "Deteksi Tabrakan",
-    "clash.subtitle":
-      "Interferensi geometris dan koordinasi jarak antara model BIM gabungan — dengan matriks tabrakan dan ekspor BCF.",
+    "clash.subtitle": "Interferensi geometris dan koordinasi jarak antara model BIM gabungan — dengan matriks tabrakan dan ekspor BCF.",
     "clash.pick_project": "Pilih proyek",
     "clash.new_run": "Pengujian tabrakan baru",
     "clash.models": "Model",
@@ -6125,12 +5360,10 @@ const resource = {
     "clash.mode_cross": "Hanya antar disiplin",
     "clash.mode_all": "Setiap pasangan",
     "clash.mode_sets": "Set A vs Set B (berdasar jenis)",
-    "clash.sets_hint":
-      "Hanya pasangan dengan satu elemen di Set A dan satu di Set B yang diuji — mis. semua dinding (A) terhadap semua pipa (B).",
+    "clash.sets_hint": "Hanya pasangan dengan satu elemen di Set A dan satu di Set B yang diuji — mis. semua dinding (A) terhadap semua pipa (B).",
     "clash.set_a": "Set A",
     "clash.set_b": "Set B",
-    "clash.sets_required":
-      "Pilih minimal satu jenis atau disiplin untuk Set A dan Set B.",
+    "clash.sets_required": "Pilih minimal satu jenis atau disiplin untuk Set A dan Set B.",
     "clash.set_search": "Cari jenis / disiplin…",
     "clash.set_empty": "Tidak ada elemen — pilih model yang sudah diurai dulu.",
     "clash.disciplines": "Disiplin",
@@ -6144,8 +5377,7 @@ const resource = {
     "clash.status_saved": "Status diperbarui",
     "clash.bcf_done": "{{n}} tabrakan diekspor ke BCF ({{s}} dilewati)",
     "clash.empty_title": "Tidak ada pengujian tabrakan dipilih",
-    "clash.empty_desc":
-      "Pilih model BIM di sebelah kiri dan jalankan deteksi tabrakan untuk membangun matriks koordinasi.",
+    "clash.empty_desc": "Pilih model BIM di sebelah kiri dan jalankan deteksi tabrakan untuk membangun matriks koordinasi.",
     "clash.kpi_total": "Total tabrakan",
     "clash.kpi_hard": "Keras",
     "clash.kpi_clearance": "Jarak",
@@ -6161,11 +5393,9 @@ const resource = {
     "clash.no_match_title": "Tidak ada tabrakan cocok dengan filter",
     "clash.no_match_desc": "Coba perluas atau hapus filter aktif.",
     "clash.results_error": "Gagal memuat hasil tabrakan",
-    "clash.results_error_desc":
-      "Hasil tabrakan tidak dapat dimuat. Ini bukan berarti modelnya bersih — silakan coba lagi.",
+    "clash.results_error_desc": "Hasil tabrakan tidak dapat dimuat. Ini bukan berarti modelnya bersih — silakan coba lagi.",
     "clash.retry": "Coba lagi",
-    "clash.capped_notice":
-      "Menampilkan {{loaded}} pertama dari {{total}} tabrakan — perhalus filter untuk mempersempit set tinjauan.",
+    "clash.capped_notice": "Menampilkan {{loaded}} pertama dari {{total}} tabrakan — perhalus filter untuk mempersempit set tinjauan.",
     "clash.results": "Hasil tabrakan",
     "clash.count_of": "{{shown}} dari {{total}}",
     "clash.search_ph": "Cari nama elemen…",
@@ -6206,23 +5436,18 @@ const resource = {
     "nav.pipelines": "Pembangun Pipeline",
     "pipeline.untitled": "Pipeline tanpa judul",
     "pipeline.empty.title": "Buat otomatisasi pertama Anda",
-    "pipeline.empty.description":
-      "Seret pemicu dan beberapa langkah dari palet di sebelah kiri, sambungkan, lalu tekan Jalankan.",
+    "pipeline.empty.description": "Seret pemicu dan beberapa langkah dari palet di sebelah kiri, sambungkan, lalu tekan Jalankan.",
     "pipeline.toast.saved": "Pipeline disimpan",
     "pipeline.toast.save_failed": "Tidak dapat menyimpan pipeline",
     "pipeline.toast.run_failed": "Tidak dapat memulai eksekusi",
     "pipeline.explain.coming_soon_title": "Jelaskan pipeline ini",
-    "pipeline.explain.coming_soon_body":
-      "Tampilan naratif bahasa biasa hadir di rilis berikutnya.",
+    "pipeline.explain.coming_soon_body": "Tampilan naratif bahasa biasa hadir di rilis berikutnya.",
     "pipeline.tour.palette_title": "Pilih langkah Anda",
-    "pipeline.tour.palette_body":
-      "Seret langkah dari sini ke kanvas, atau klik untuk meletakkannya di tengah.",
+    "pipeline.tour.palette_body": "Seret langkah dari sini ke kanvas, atau klik untuk meletakkannya di tengah.",
     "pipeline.tour.canvas_title": "Sambungkan langkah",
-    "pipeline.tour.canvas_body":
-      "Seret dari titik output satu langkah ke input langkah berikutnya. Warna menunjukkan jenis data.",
+    "pipeline.tour.canvas_body": "Seret dari titik output satu langkah ke input langkah berikutnya. Warna menunjukkan jenis data.",
     "pipeline.tour.run_title": "Jalankan",
-    "pipeline.tour.run_body":
-      "Tekan Jalankan untuk mengeksekusi pipeline dan saksikan setiap langkah menyala langsung.",
+    "pipeline.tour.run_body": "Tekan Jalankan untuk mengeksekusi pipeline dan saksikan setiap langkah menyala langsung.",
     "pipeline.toolbar.aria": "Bilah alat pipeline",
     "pipeline.toolbar.undo": "Urungkan",
     "pipeline.toolbar.redo": "Ulangi",
@@ -6238,12 +5463,11 @@ const resource = {
     "pipeline.palette.collapse": "Runtuhkan palet",
     "pipeline.palette.search": "Cari langkah",
     "pipeline.palette.search_ph": "Cari…",
-    "pipeline.palette.no_match": 'No steps match "{{query}}"',
+    "pipeline.palette.no_match": "No steps match \"{{query}}\"",
     "pipeline.palette.none": "Tidak ada jenis simpul tersedia.",
     "pipeline.palette.module_chip": "Memengaruhi modul {{module}}",
     "pipeline.palette.writes": "menulis",
-    "pipeline.palette.writes_chip":
-      "Langkah ini menulis data — butuh gate sebelumnya",
+    "pipeline.palette.writes_chip": "Langkah ini menulis data — butuh gate sebelumnya",
     "pipeline.palette.cat_trigger": "Sumber / Pemicu",
     "pipeline.palette.cat_source": "Ambil data",
     "pipeline.palette.cat_transform": "Transformasi",
@@ -6258,8 +5482,7 @@ const resource = {
     "pipeline.inspector.tab_pipeline": "Pipeline",
     "pipeline.inspector.context_node": "Mengedit langkah",
     "pipeline.inspector.context_pipeline": "Mengedit pipeline",
-    "pipeline.inspector.no_params":
-      "Langkah ini tidak memiliki pengaturan untuk dikonfigurasi.",
+    "pipeline.inspector.no_params": "Langkah ini tidak memiliki pengaturan untuk dikonfigurasi.",
     "pipeline.inspector.enabled": "Aktif",
     "pipeline.inspector.choose": "Pilih…",
     "pipeline.inspector.duplicate": "Duplikat",
@@ -6268,24 +5491,18 @@ const resource = {
     "pipeline.inspector.name_ph": "Otomatisasi saya",
     "pipeline.inspector.description": "Deskripsi",
     "pipeline.inspector.published": "Diterbitkan (dapat dipicu)",
-    "pipeline.inspector.summary_stub":
-      'A plain-language summary of what this pipeline does will appear here. Use "Explain this pipeline" for the full story.',
+    "pipeline.inspector.summary_stub": "A plain-language summary of what this pipeline does will appear here. Use \"Explain this pipeline\" for the full story.",
     "pipeline.canvas.aria": "Kanvas editor pipeline",
-    "pipeline.canvas.hint":
-      "Seret langkah dari palet, sambungkan portnya, lalu tekan Jalankan.",
-    "pipeline.canvas.legend_sr":
-      "Warna, bentuk, dan dasher tepi bersama-sama menyandikan jenis data.",
-    "pipeline.connect.incompatible_title":
-      "Langkah ini tidak dapat disambungkan",
-    "pipeline.connect.incompatible_body":
-      "Output ini adalah {{from}}; input itu mengharapkan {{to}}.",
+    "pipeline.canvas.hint": "Seret langkah dari palet, sambungkan portnya, lalu tekan Jalankan.",
+    "pipeline.canvas.legend_sr": "Warna, bentuk, dan dasher tepi bersama-sama menyandikan jenis data.",
+    "pipeline.connect.incompatible_title": "Langkah ini tidak dapat disambungkan",
+    "pipeline.connect.incompatible_body": "Output ini adalah {{from}}; input itu mengharapkan {{to}}.",
     "pipeline.node.rename": "Ganti nama simpul",
     "pipeline.node.rename_hint": "Klik ganda untuk mengganti nama",
     "pipeline.node.ai_badge": "AI",
     "pipeline.node.ai_confidence": "Saran AI — tinjau skor keyakinan",
     "pipeline.node.help": "Apa yang dilakukan simpul ini",
-    "pipeline.node.help_generic":
-      "Konfigurasikan langkah ini di Inspektur. Ia menerima data dari langkah tersambung sebelumnya dan meneruskan hasilnya.",
+    "pipeline.node.help_generic": "Konfigurasikan langkah ini di Inspektur. Ia menerima data dari langkah tersambung sebelumnya dan meneruskan hasilnya.",
     "pipeline.node.collapse": "Runtuhkan",
     "pipeline.node.expand": "Bentangkan",
     "pipeline.node.more_params": "+{{count}} lagi",
@@ -6306,12 +5523,10 @@ const resource = {
     "pipeline.dock.progress": "{{pct}}%",
     "pipeline.dock.tab_run": "Eksekusi",
     "pipeline.dock.tab_history": "Riwayat",
-    "pipeline.dock.no_steps":
-      "Tambahkan langkah dan tekan Jalankan untuk melihat alur data melalui pipeline Anda.",
+    "pipeline.dock.no_steps": "Tambahkan langkah dan tekan Jalankan untuk melihat alur data melalui pipeline Anda.",
     "pipeline.dock.loading_history": "Memuat riwayat eksekusi…",
     "pipeline.dock.no_runs_title": "Belum ada eksekusi",
-    "pipeline.dock.no_runs_desc":
-      "Tekan Jalankan untuk melihat alur data melalui pipeline Anda.",
+    "pipeline.dock.no_runs_desc": "Tekan Jalankan untuk melihat alur data melalui pipeline Anda.",
     "pipeline.dock.manual": "Manual",
     "pipeline.dock.queued_hint": "Menunggu worker mengambil eksekusi…",
     "pipeline.runstatus.pending": "Menunggu",
@@ -6330,35 +5545,23 @@ const resource = {
     "pipeline.trigger.schedule": "Terjadwal",
     "pipeline.trigger.event": "Peristiwa",
     "pipeline.nodetype.trigger.manual": "Pemicu manual",
-    "pipeline.nodetype.trigger.manual.desc":
-      "Mulai pipeline dari panggilan REST. Tanpa input.",
+    "pipeline.nodetype.trigger.manual.desc": "Mulai pipeline dari panggilan REST. Tanpa input.",
     "pipeline.nodetype.source.project": "Ambil proyek",
-    "pipeline.nodetype.source.project.desc":
-      "Muat id + nama proyek yang terikat.",
+    "pipeline.nodetype.source.project.desc": "Muat id + nama proyek yang terikat.",
     "pipeline.nodetype.source.boq": "Ambil item BOQ",
-    "pipeline.nodetype.source.boq.desc":
-      "Muat setiap item BOQ proyek sebagai baris (id + sampel kecil).",
+    "pipeline.nodetype.source.boq.desc": "Muat setiap item BOQ proyek sebagai baris (id + sampel kecil).",
     "pipeline.nodetype.transform.filter": "Filter baris",
-    "pipeline.nodetype.transform.filter.desc":
-      "Pertahankan hanya baris yang cocok dengan uji bidang/operator/nilai sederhana.",
+    "pipeline.nodetype.transform.filter.desc": "Pertahankan hanya baris yang cocok dengan uji bidang/operator/nilai sederhana.",
     "pipeline.nodetype.gate.validation": "Gate validasi",
-    "pipeline.nodetype.gate.validation.desc":
-      "Jalankan mesin validasi pada baris; hentikan eksekusi pada galat penghambat.",
+    "pipeline.nodetype.gate.validation.desc": "Jalankan mesin validasi pada baris; hentikan eksekusi pada galat penghambat.",
     "pipeline.nodetype.action.export.excel": "Ekspor ke Excel",
-    "pipeline.nodetype.action.export.excel.desc":
-      "Tulis baris ke berkas .xlsx (mengembalikan referensi unduhan; tidak mengubah basis data).",
-    "pipeline.nodehelp.trigger.manual":
-      "Di sinilah pipeline dimulai. Tidak memiliki pengaturan — sambungkan dengan langkah data berikutnya.",
-    "pipeline.nodehelp.source.project":
-      "Memuat proyek yang terikat dengan pipeline ini. Biarkan project id kosong untuk menggunakan yang dari URL halaman.",
-    "pipeline.nodehelp.source.boq":
-      "Membaca setiap item BOQ proyek. Hanya id dan pratinjau kecil yang dikirim antar langkah; data lengkap tetap di server.",
-    "pipeline.nodehelp.transform.filter":
-      "Mempertahankan hanya baris yang cocok dengan uji bidang/operator/nilai yang Anda atur di Inspektur. Biarkan bidang kosong untuk meneruskan semuanya.",
-    "pipeline.nodehelp.gate.validation":
-      "Menjalankan mesin validasi pada baris. Jika ada galat penghambat, eksekusi berhenti di sini, agar langkah penulisan berikutnya tidak pernah bertindak pada data buruk.",
-    "pipeline.nodehelp.action.export.excel":
-      "Menulis baris masuk ke berkas Excel dan mengembalikan referensi unduhan. Tidak mengubah data apa pun.",
+    "pipeline.nodetype.action.export.excel.desc": "Tulis baris ke berkas .xlsx (mengembalikan referensi unduhan; tidak mengubah basis data).",
+    "pipeline.nodehelp.trigger.manual": "Di sinilah pipeline dimulai. Tidak memiliki pengaturan — sambungkan dengan langkah data berikutnya.",
+    "pipeline.nodehelp.source.project": "Memuat proyek yang terikat dengan pipeline ini. Biarkan project id kosong untuk menggunakan yang dari URL halaman.",
+    "pipeline.nodehelp.source.boq": "Membaca setiap item BOQ proyek. Hanya id dan pratinjau kecil yang dikirim antar langkah; data lengkap tetap di server.",
+    "pipeline.nodehelp.transform.filter": "Mempertahankan hanya baris yang cocok dengan uji bidang/operator/nilai yang Anda atur di Inspektur. Biarkan bidang kosong untuk meneruskan semuanya.",
+    "pipeline.nodehelp.gate.validation": "Menjalankan mesin validasi pada baris. Jika ada galat penghambat, eksekusi berhenti di sini, agar langkah penulisan berikutnya tidak pernah bertindak pada data buruk.",
+    "pipeline.nodehelp.action.export.excel": "Menulis baris masuk ke berkas Excel dan mengembalikan referensi unduhan. Tidak mengubah data apa pun.",
     "pipeline.param.source.project.project_id": "Project id (opsional)",
     "pipeline.param.source.boq.project_id": "Project id (opsional)",
     "pipeline.param.transform.filter.field": "Bidang",
@@ -6367,7 +5570,61 @@ const resource = {
     "pipeline.param.gate.validation.rule_sets": "Set aturan",
     "pipeline.param.action.export.excel.filename": "Nama berkas",
     "pipeline.param.action.export.excel.columns": "Kolom",
-  },
+    "admin.audit_log_title": "Audit Log",
+    "admin.audit_log_subtitle": "Read-only timeline of every recorded change. Filter by user, module, action or date — open a row for the full payload.",
+    "admin.permissions.title": "Permissions Matrix",
+    "admin.permissions.subtitle": "Read-only view of every permission registered by every module, and which roles can use it. Admin always passes — locked cells indicate admin-only by design.",
+    "admin.permissions.search_placeholder": "Filter by module or permission key",
+    "admin.permissions.search_label": "Search permissions",
+    "admin.permissions.col_permission": "Permission",
+    "admin.permissions.role_viewer": "Viewer",
+    "admin.permissions.role_editor": "Editor",
+    "admin.permissions.role_member": "Member",
+    "admin.permissions.role_manager": "Manager",
+    "admin.permissions.role_admin": "Admin",
+    "admin.permissions.min_role_label": "min role",
+    "admin.permissions.module_count_one": "{{count}} permission",
+    "admin.permissions.module_count_other": "{{count}} permissions",
+    "admin.permissions.summary": "{{modules}} modules · {{permissions}} permissions",
+    "admin.permissions.empty_title": "No permissions registered",
+    "admin.permissions.empty_description": "No modules have registered permissions yet. They appear here as soon as a module loads.",
+    "admin.permissions.error_title": "Could not load permissions matrix",
+    "admin.permissions.error_unknown": "Unknown error",
+    "admin.permissions.legend_allowed": "allowed",
+    "admin.permissions.legend_denied": "denied",
+    "admin.permissions.legend_admin_bypass": "admin-only by design",
+    "admin.permissions.tooltip_allowed": "{{role}} can do {{key}} (min role: {{min}})",
+    "admin.permissions.tooltip_denied": "{{role}} cannot do {{key}} (min role: {{min}})",
+    "admin.permissions.tooltip_admin_bypass": "Admin-only by design — {{key}} requires admin",
+    "admin.permissions.subtitle_edit": "Click any cell to set the minimum role for that permission. Changes apply immediately and are audit-logged.",
+    "admin.permissions.edit_on": "Enable edit mode",
+    "admin.permissions.edit_off": "Done editing",
+    "admin.permissions.export_csv": "Export CSV",
+    "admin.permissions.role_filter_label": "Role",
+    "admin.permissions.role_filter_all": "All roles",
+    "admin.permissions.role_filter_denied_to": "Denied to {{role}}",
+    "admin.permissions.preset_label": "Reset to preset",
+    "admin.permissions.read_only_notice": "Read-only: admin role required to edit",
+    "admin.permissions.confirm_toggle_title": "Change permission?",
+    "admin.permissions.confirm_toggle_message": "Set \"{{key}}\" minimum role from {{from}} to {{to}}? This is audit-logged.",
+    "admin.permissions.confirm_toggle_confirm": "Change",
+    "admin.permissions.confirm_preset_title": "Apply preset?",
+    "admin.permissions.confirm_preset_message": "Reset every permission to the \"{{preset}}\" baseline? This rewrites the entire matrix and is audit-logged.",
+    "admin.permissions.confirm_preset_confirm": "Apply preset",
+    "admin.permissions.lockout_title": "Cannot demote admin permission",
+    "admin.permissions.lockout_message": "\"{{key}}\" must remain admin-only — lowering it would let non-admins edit the permissions matrix and lock you out.",
+    "admin.permissions.lockout_dismiss": "Got it",
+    "admin.permissions.toggle_success_title": "Permission updated",
+    "admin.permissions.toggle_success_message": "{{key}} → {{role}}",
+    "admin.permissions.toggle_error_title": "Update failed",
+    "admin.permissions.toggle_error": "Could not update permission",
+    "admin.permissions.preset_success_title": "Preset applied",
+    "admin.permissions.preset_success_message": "{{count}} permission(s) updated to \"{{preset}}\"",
+    "admin.permissions.preset_error_title": "Preset failed",
+    "admin.permissions.preset_error": "Could not apply preset",
+    "admin.permissions.noop_title": "No change",
+    "admin.permissions.noop_message": "{{key}} is already minimum {{role}}"
+  }
 } as { translation: Record<string, string> };
 
 export default resource;

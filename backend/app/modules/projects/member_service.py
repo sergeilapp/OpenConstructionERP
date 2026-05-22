@@ -34,9 +34,15 @@ from app.modules.teams.models import Team, TeamMembership
 from app.modules.users.models import User
 
 
-async def _get_or_create_default_team(session: AsyncSession, project_id: uuid.UUID) -> Team:
+async def _get_or_create_default_team(
+    session: AsyncSession, project_id: uuid.UUID
+) -> Team:
     """‌⁠‍Fetch the project's default team, lazily creating one if missing."""
-    stmt = select(Team).where(Team.project_id == project_id, Team.is_default.is_(True)).limit(1)
+    stmt = (
+        select(Team)
+        .where(Team.project_id == project_id, Team.is_default.is_(True))
+        .limit(1)
+    )
     team = (await session.execute(stmt)).scalar_one_or_none()
     if team is not None:
         return team
@@ -54,13 +60,19 @@ async def _get_or_create_default_team(session: AsyncSession, project_id: uuid.UU
 
 
 async def _load_project(session: AsyncSession, project_id: uuid.UUID) -> Project:
-    project = (await session.execute(select(Project).where(Project.id == project_id))).scalar_one_or_none()
+    project = (
+        await session.execute(select(Project).where(Project.id == project_id))
+    ).scalar_one_or_none()
     if project is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Project not found")
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="Project not found"
+        )
     return project
 
 
-async def list_project_members(session: AsyncSession, project_id: uuid.UUID) -> list[ProjectMemberResponse]:
+async def list_project_members(
+    session: AsyncSession, project_id: uuid.UUID
+) -> list[ProjectMemberResponse]:
     """‌⁠‍Return all members of the project's default team, joined to User.
 
     The project owner is always included, even if for some reason the owner
@@ -95,7 +107,9 @@ async def list_project_members(session: AsyncSession, project_id: uuid.UUID) -> 
 
     # Ensure the owner is always represented even if no row exists yet.
     if project.owner_id not in seen:
-        owner = (await session.execute(select(User).where(User.id == project.owner_id))).scalar_one_or_none()
+        owner = (
+            await session.execute(select(User).where(User.id == project.owner_id))
+        ).scalar_one_or_none()
         if owner is not None:
             members.insert(
                 0,
@@ -137,11 +151,25 @@ async def add_project_member(
         )
 
     # Validate the user actually exists.
-    user = (await session.execute(select(User).where(User.id == data.user_id))).scalar_one_or_none()
+    user = (
+        await session.execute(select(User).where(User.id == data.user_id))
+    ).scalar_one_or_none()
     if user is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="User not found"
+        )
+    # Inactive (deactivated / soft-deleted) users must never be re-added
+    # to a project — they can't log in anyway, and silently adding them
+    # creates dangling membership rows the admin UI then has to clean up.
+    if not getattr(user, "is_active", True):
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Cannot add a deactivated user to a project",
+        )
 
-    membership = TeamMembership(team_id=team.id, user_id=data.user_id, role=data.role)
+    membership = TeamMembership(
+        team_id=team.id, user_id=data.user_id, role=data.role
+    )
     session.add(membership)
     await session.flush()
 
@@ -156,7 +184,9 @@ async def add_project_member(
     )
 
 
-async def remove_project_member(session: AsyncSession, project_id: uuid.UUID, user_id: uuid.UUID) -> None:
+async def remove_project_member(
+    session: AsyncSession, project_id: uuid.UUID, user_id: uuid.UUID
+) -> None:
     """Remove a user from the project's default team.
 
     Refuses to remove the project owner — that has to go through the

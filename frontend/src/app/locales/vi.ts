@@ -2,47 +2,35 @@
 // Regenerate with: node --experimental-strip-types scripts/split-i18n-fallbacks.mjs
 
 const resource = {
-  translation: {
-    "about.ai_desc":
-      "OpenConstructionERP bao gồm các công cụ hỗ trợ AI tùy chọn — dự toán nhanh từ mô tả văn bản, gợi ý chi phí thông minh và trợ lý chat BOQ. Các tính năng này yêu cầu khóa API từ nhà cung cấp do bạn lựa chọn (Anthropic, OpenAI, Google). AI luôn là tùy chọn: chỉ kích hoạt khi bạn cấu hình và bạn quyết định dữ liệu nào được gửi đi. Không có khóa API, tất cả các tính năng khác hoạt động hoàn toàn ngoại tuyến.",
+  "translation": {
+    "about.ai_desc": "OpenConstructionERP bao gồm các công cụ hỗ trợ AI tùy chọn — dự toán nhanh từ mô tả văn bản, gợi ý chi phí thông minh và trợ lý chat BOQ. Các tính năng này yêu cầu khóa API từ nhà cung cấp do bạn lựa chọn (Anthropic, OpenAI, Google). AI luôn là tùy chọn: chỉ kích hoạt khi bạn cấu hình và bạn quyết định dữ liệu nào được gửi đi. Không có khóa API, tất cả các tính năng khác hoạt động hoàn toàn ngoại tuyến.",
     "about.ai_title": "Về tính năng AI",
     "about.cap.boq": "Bảng khối lượng",
-    "about.cap.boq_desc":
-      "Tạo Bảng khối lượng chi tiết với các phần theo phân cấp, hạng mục, tổ hợp, phụ phí (chi phí chung, lợi nhuận, VAT) và tổng cộng tự động. Hỗ trợ DIN 276, NRM 1/2, MasterFormat và các hệ thống phân loại tùy chỉnh.",
+    "about.cap.boq_desc": "Tạo Bảng khối lượng chi tiết với các phần theo phân cấp, hạng mục, tổ hợp, phụ phí (chi phí chung, lợi nhuận, VAT) và tổng cộng tự động. Hỗ trợ DIN 276, NRM 1/2, MasterFormat và các hệ thống phân loại tùy chỉnh.",
     "about.cap.catalog": "Danh mục tài nguyên",
-    "about.cap.catalog_desc":
-      "Hơn 7.000 nguồn lực — vật liệu, thiết bị, nhân công, vận hành và tiện ích. Xây dựng các tổ hợp có thể tái sử dụng (đơn giá tổng hợp) từ các mục danh mục và áp dụng trực tiếp vào hạng mục BOQ.",
+    "about.cap.catalog_desc": "Hơn 7.000 nguồn lực — vật liệu, thiết bị, nhân công, vận hành và tiện ích. Xây dựng các tổ hợp có thể tái sử dụng (đơn giá tổng hợp) từ các mục danh mục và áp dụng trực tiếp vào hạng mục BOQ.",
     "about.cap.costmodel": "Mô hình chi phí 5D",
-    "about.cap.costmodel_desc":
-      "Theo dõi ngân sách theo thời gian với Phân tích Giá trị Đạt được (SPI, CPI), trực quan hóa đường S-curve, dự báo dòng tiền, ảnh chụp chi phí và mô hình hóa kịch bản giả định để hỗ trợ ra quyết định.",
+    "about.cap.costmodel_desc": "Theo dõi ngân sách theo thời gian với Phân tích Giá trị Đạt được (SPI, CPI), trực quan hóa đường S-curve, dự báo dòng tiền, ảnh chụp chi phí và mô hình hóa kịch bản giả định để hỗ trợ ra quyết định.",
     "about.cap.costs": "Cơ sở dữ liệu chi phí",
-    "about.cap.costs_desc":
-      "Hơn 55.000 mục chi phí trong 11 cơ sở dữ liệu khu vực bao gồm DACH, Anh, Bắc Mỹ, Trung Đông và nhiều khu vực khác. Thêm đơn giá riêng, nhập từ Excel hoặc xây dựng cơ sở dữ liệu tùy chỉnh từ đầu.",
+    "about.cap.costs_desc": "Hơn 55.000 mục chi phí trong 11 cơ sở dữ liệu khu vực bao gồm DACH, Anh, Bắc Mỹ, Trung Đông và nhiều khu vực khác. Thêm đơn giá riêng, nhập từ Excel hoặc xây dựng cơ sở dữ liệu tùy chỉnh từ đầu.",
     "about.cap.import": "Nhập và xuất",
-    "about.cap.import_desc":
-      "Hỗ trợ đầy đủ nhập/xuất GAEB XML (X83), Excel và CSV. Tạo báo cáo PDF chuyên nghiệp. Tích hợp liền mạch với các công cụ và quy trình làm việc hiện có của bạn.",
+    "about.cap.import_desc": "Hỗ trợ đầy đủ nhập/xuất GAEB XML (X83), Excel và CSV. Tạo báo cáo PDF chuyên nghiệp. Tích hợp liền mạch với các công cụ và quy trình làm việc hiện có của bạn.",
     "about.cap.schedule": "Lịch 4D",
-    "about.cap.schedule_desc":
-      "Tạo tiến độ dự án với tính toán đường Găng CPM, biểu đồ Gantt tương tác, phân tích rủi ro Monte Carlo, phân công nguồn lực và tự động tạo công việc từ BOQ của bạn.",
+    "about.cap.schedule_desc": "Tạo tiến độ dự án với tính toán đường Găng CPM, biểu đồ Gantt tương tác, phân tích rủi ro Monte Carlo, phân công nguồn lực và tự động tạo công việc từ BOQ của bạn.",
     "about.cap.tendering": "Đấu thầu và chào giá",
-    "about.cap.tendering_desc":
-      "Tạo gói đấu thầu với phạm vi và hạng mục, phân phối cho nhà thầu phụ, thu thập và so sánh hồ sơ dự thầu song song trong bảng so sánh giá và đưa ra quyết định trao thầu dựa trên dữ liệu.",
+    "about.cap.tendering_desc": "Tạo gói đấu thầu với phạm vi và hạng mục, phân phối cho nhà thầu phụ, thu thập và so sánh hồ sơ dự thầu song song trong bảng so sánh giá và đưa ra quyết định trao thầu dựa trên dữ liệu.",
     "about.cap.validation": "Xác thực chất lượng",
-    "about.cap.validation_desc":
-      "Công cụ kiểm tra chất lượng tích hợp tự động phát hiện khối lượng còn thiếu, đơn giá bằng không, hạng mục trùng lặp, sự tuân thủ phân loại và sai lệch đơn giá — với bảng điều khiển đèn giao thông.",
+    "about.cap.validation_desc": "Công cụ kiểm tra chất lượng tích hợp tự động phát hiện khối lượng còn thiếu, đơn giá bằng không, hạng mục trùng lặp, sự tuân thủ phân loại và sai lệch đơn giá — với bảng điều khiển đèn giao thông.",
     "about.capabilities_title": "Bạn có thể làm gì",
     "about.close": "Đã hiểu",
-    "about.intro":
-      "OpenConstructionERP là nền tảng hiện đại cho quản lý chi phí xây dựng. Nền tảng bao quát toàn bộ quy trình dự toán — từ tạo bảng khối lượng đến đấu thầu và so sánh hồ sơ dự thầu. Được thiết kế cho các chuyên gia toàn cầu, hỗ trợ các tiêu chuẩn quốc tế và hoạt động bằng 20 ngôn ngữ.",
-    "about.intro2":
-      "Khác với các giải pháp thương mại truyền thống, OpenConstructionERP chạy hoàn toàn trên máy tính của bạn. Dữ liệu dự án không bao giờ rời khỏi máy — bạn có quyền sở hữu và kiểm soát hoàn toàn. Mã nguồn mở và có thể kiểm toán, vì vậy bạn luôn biết chính xác phần mềm thực hiện điều gì.",
+    "about.intro": "OpenConstructionERP là nền tảng hiện đại cho quản lý chi phí xây dựng. Nền tảng bao quát toàn bộ quy trình dự toán — từ tạo bảng khối lượng đến đấu thầu và so sánh hồ sơ dự thầu. Được thiết kế cho các chuyên gia toàn cầu, hỗ trợ các tiêu chuẩn quốc tế và hoạt động bằng 20 ngôn ngữ.",
+    "about.intro2": "Khác với các giải pháp thương mại truyền thống, OpenConstructionERP chạy hoàn toàn trên máy tính của bạn. Dữ liệu dự án không bao giờ rời khỏi máy — bạn có quyền sở hữu và kiểm soát hoàn toàn. Mã nguồn mở và có thể kiểm toán, vì vậy bạn luôn biết chính xác phần mềm thực hiện điều gì.",
     "about.numbers_title": "Nền tảng qua các con số",
     "about.stat.costs": "Hạng mục chi phí",
     "about.stat.free": "Miễn phí và mã nguồn mở",
     "about.stat.languages": "Ngôn ngữ",
     "about.stat.regions": "Cơ sở dữ liệu vùng",
-    "about.title":
-      "Dự toán chi phí xây dựng chuyên nghiệp — miễn phí và mã nguồn mở",
+    "about.title": "Dự toán chi phí xây dựng chuyên nghiệp — miễn phí và mã nguồn mở",
     "about.who.architects": "Kiến trúc sư và kỹ sư",
     "about.who.contractors": "Nhà thầu chính",
     "about.who.developers": "Nhà phát triển bất động sản",
@@ -53,15 +41,11 @@ const resource = {
     "about.who.qsurveyor": "Quantity surveyor",
     "about.who.students": "Sinh viên và giảng viên",
     "about.who.subs": "Nhà thầu phụ",
-    "about.who_desc":
-      "OpenConstructionERP được thiết kế cho bất kỳ ai liên quan đến quản lý chi phí xây dựng — dù bạn làm việc với dự án nhà ở hay cơ sở hạ tầng quy mô lớn, trong doanh nghiệp hay với tư cách tư vấn.",
+    "about.who_desc": "OpenConstructionERP được thiết kế cho bất kỳ ai liên quan đến quản lý chi phí xây dựng — dù bạn làm việc với dự án nhà ở hay cơ sở hạ tầng quy mô lớn, trong doanh nghiệp hay với tư cách tư vấn.",
     "about.who_title": "Dành cho ai",
-    "about.why_1":
-      "Dữ liệu chi phí xây dựng là một trong những tài sản quý giá nhất mà doanh nghiệp sở hữu. Với phần mềm độc quyền, dữ liệu của bạn thường bị khóa trong các định dạng bạn không thể kiểm soát. Nếu nhà cung cấp tăng giá, thay đổi điều khoản hoặc ngừng sản phẩm — bạn có thể mất quyền truy cập vào nhiều năm công việc.",
-    "about.why_2":
-      "OpenConstructionERP tiếp cận theo hướng khác. Dữ liệu của bạn được lưu trữ ở các định dạng mở (SQLite, JSON, CSV) trên phần cứng của chính bạn. Bạn có thể xuất toàn bộ dữ liệu bất cứ lúc nào. Mã nguồn được kiểm toán công khai theo AGPL-3.0, vì vậy không có chuyển dữ liệu ẩn, không có telemetry và không có bất ngờ nào.",
-    "about.why_3":
-      "Nền tảng có tính mô-đun — chỉ cài đặt những gì bạn cần. Các mô-đun cộng đồng mở rộng chức năng mà không làm phình to lõi. Và vì chạy cục bộ, nền tảng hoạt động ngoại tuyến và thực hiện nhanh ngay cả với các dự án lớn.",
+    "about.why_1": "Dữ liệu chi phí xây dựng là một trong những tài sản quý giá nhất mà doanh nghiệp sở hữu. Với phần mềm độc quyền, dữ liệu của bạn thường bị khóa trong các định dạng bạn không thể kiểm soát. Nếu nhà cung cấp tăng giá, thay đổi điều khoản hoặc ngừng sản phẩm — bạn có thể mất quyền truy cập vào nhiều năm công việc.",
+    "about.why_2": "OpenConstructionERP tiếp cận theo hướng khác. Dữ liệu của bạn được lưu trữ ở các định dạng mở (SQLite, JSON, CSV) trên phần cứng của chính bạn. Bạn có thể xuất toàn bộ dữ liệu bất cứ lúc nào. Mã nguồn được kiểm toán công khai theo AGPL-3.0, vì vậy không có chuyển dữ liệu ẩn, không có telemetry và không có bất ngờ nào.",
+    "about.why_3": "Nền tảng có tính mô-đun — chỉ cài đặt những gì bạn cần. Các mô-đun cộng đồng mở rộng chức năng mà không làm phình to lõi. Và vì chạy cục bộ, nền tảng hoạt động ngoại tuyến và thực hiện nhanh ngay cả với các dự án lớn.",
     "about.why_title": "Tại sao mã nguồn mở quan trọng",
     "ai.analyze_photo": "Phân tích ảnh",
     "ai.area": "Area (m²)",
@@ -69,8 +53,7 @@ const resource = {
     "ai.boq_name_placeholder": "Tên cho BOQ này...",
     "ai.boq_saved": "BOQ đã được lưu thành công",
     "ai.building_type": "Loại công trình",
-    "ai.cad_info":
-      "Tệp CAD/BIM (.rvt, .ifc, .dwg, .dgn) yêu cầu bộ chuyển đổi DDC được cài đặt. Các phần tử sẽ được trích xuất và sử dụng để tạo dự toán chi phí. Tải bộ chuyển đổi từ GitHub và đặt chúng vào ~/.openestimator/converters/.",
+    "ai.cad_info": "Tệp CAD/BIM (.rvt, .ifc, .dwg, .dgn) yêu cầu bộ chuyển đổi DDC được cài đặt. Các phần tử sẽ được trích xuất và sử dụng để tạo dự toán chi phí. Tải bộ chuyển đổi từ GitHub và đặt chúng vào ~/.openestimator/converters/.",
     "ai.choose_project": "-- Chọn dự án --",
     "ai.col_description": "Description",
     "ai.col_pos": "Pos",
@@ -91,8 +74,7 @@ const resource = {
     "ai.estimate_failed": "Dự toán thất bại",
     "ai.estimate_subtitle": "Tạo dự toán từ bất kỳ nguồn nào",
     "ai.estimate_title": "Dự toán AI",
-    "ai.excel_hint":
-      "Hoạt động tốt nhất với các cột: Mô tả, Đơn vị, Khối lượng, Đơn giá/Giá.",
+    "ai.excel_hint": "Hoạt động tốt nhất với các cột: Mô tả, Đơn vị, Khối lượng, Đơn giá/Giá.",
     "ai.export_coming_soon": "Tính năng xuất sẽ sớm ra mắt",
     "ai.export_pdf": "Xuất PDF",
     "ai.extract_estimate": "Trích xuất & Dự toán",
@@ -107,12 +89,9 @@ const resource = {
     "ai.location_placeholder": "e.g. Berlin",
     "ai.new_estimate": "Dự toán mới",
     "ai.parse_import": "Phân tích & Nhập",
-    "ai.paste_info":
-      "Tự động nhận dạng dữ liệu phân cách bằng tab, dấu chấm phẩy hoặc dấu phẩy. AI sẽ phân tích và cấu trúc dữ liệu của bạn thành các hạng mục dự toán.",
-    "ai.paste_placeholder":
-      "Dán dữ liệu BOQ vào đây (từ Excel, Word hoặc bất kỳ bảng nào)...  Ví dụ: Pos\\tMô tả\\tĐơn vị\\tKL\\tĐơn giá 01.01\\tĐào đất\\tm3\\t250\\t18.50 01.02\\tBê tông C30/37\\tm3\\t120\\t145.00 01.03\\tCốt thép BSt 500\\tkg\\t12000\\t1.85",
-    "ai.pdf_hint":
-      "Tải lên các tài liệu BOQ, thuyết minh hoặc bản vẽ ở định dạng PDF.",
+    "ai.paste_info": "Tự động nhận dạng dữ liệu phân cách bằng tab, dấu chấm phẩy hoặc dấu phẩy. AI sẽ phân tích và cấu trúc dữ liệu của bạn thành các hạng mục dự toán.",
+    "ai.paste_placeholder": "Dán dữ liệu BOQ vào đây (từ Excel, Word hoặc bất kỳ bảng nào)...  Ví dụ: Pos\\tMô tả\\tĐơn vị\\tKL\\tĐơn giá 01.01\\tĐào đất\\tm3\\t250\\t18.50 01.02\\tBê tông C30/37\\tm3\\t120\\t145.00 01.03\\tCốt thép BSt 500\\tkg\\t12000\\t1.85",
+    "ai.pdf_hint": "Tải lên các tài liệu BOQ, thuyết minh hoặc bản vẽ ở định dạng PDF.",
     "ai.powered_by": "Được hỗ trợ bởi {{model}}",
     "ai.results": "Kết quả dự toán",
     "ai.save": "Save",
@@ -120,8 +99,7 @@ const resource = {
     "ai.save_failed": "Lưu BOQ thất bại",
     "ai.save_to_boq": "Lưu dưới dạng BOQ",
     "ai.select_project": "Chọn dự án",
-    "ai.setup_required_desc":
-      "Thêm khóa API cho Anthropic Claude, OpenAI hoặc Google Gemini để tạo dự toán từ văn bản, ảnh, PDF và tệp CAD.",
+    "ai.setup_required_desc": "Thêm khóa API cho Anthropic Claude, OpenAI hoặc Google Gemini để tạo dự toán từ văn bản, ảnh, PDF và tệp CAD.",
     "ai.setup_required_title": "Kết nối AI để bắt đầu",
     "ai.standard_label": "Standard",
     "ai.supported_formats": "Supports: {{formats}}",
@@ -145,14 +123,12 @@ const resource = {
     "ai.currency_auto": "Auto",
     "ai.try_again": "Vui lòng thử lại hoặc kiểm tra cài đặt AI của bạn.",
     "ai.advisor_title": "Cố vấn chi phí AI",
-    "ai.advisor_desc":
-      "Đặt câu hỏi về chi phí, vật liệu và giá cả — từ cơ sở dữ liệu và kiến thức AI của bạn",
+    "ai.advisor_desc": "Đặt câu hỏi về chi phí, vật liệu và giá cả — từ cơ sở dữ liệu và kiến thức AI của bạn",
     "ai.advisor_empty": "Hỏi tôi bất cứ điều gì về chi phí xây dựng",
     "ai.advisor_placeholder": "Hỏi về chi phí, vật liệu, giá cả...",
     "ai.advisor_sources": "Sources:",
     "ai.advisor_error": "Lỗi cố vấn AI",
-    "ai.advisor_unavailable":
-      "Không thể nhận phản hồi. Vui lòng kiểm tra cài đặt AI.",
+    "ai.advisor_unavailable": "Không thể nhận phản hồi. Vui lòng kiểm tra cài đặt AI.",
     "ai.advisor_q1": "Chi phí trung bình mỗi m² cho vữa trát là bao nhiêu?",
     "ai.advisor_q2": "So sánh giá bê tông theo khu vực",
     "ai.advisor_q3": "Đề xuất phương án thay thế rẻ hơn cho thép",
@@ -160,10 +136,8 @@ const resource = {
     "app.name": "OpenConstructionERP",
     "app.tagline": "Không gian làm việc dự toán xây dựng chuyên nghiệp",
     "assemblies.assemblies_found": "assemblies",
-    "assemblies.description":
-      "Công thức chi phí có thể tái sử dụng cho các cấu kiện xây dựng phổ biến",
-    "assemblies.what_are_assemblies":
-      'Tổ hợp là các công thức chi phí có thể tái sử dụng, kết hợp nhiều nguồn lực (vật liệu, nhân công, thiết bị) thành một đơn giá tổng hợp duy nhất. Ví dụ, tổ hợp "Tường bê tông cốt thép" bao gồm bê tông, cốt thép, ván khuôn và nhân công. Áp dụng tổ hợp vào hạng mục BOQ để tự động điền chi phí thành phần.',
+    "assemblies.description": "Công thức chi phí có thể tái sử dụng cho các cấu kiện xây dựng phổ biến",
+    "assemblies.what_are_assemblies": "Tổ hợp là các công thức chi phí có thể tái sử dụng, kết hợp nhiều nguồn lực (vật liệu, nhân công, thiết bị) thành một đơn giá tổng hợp duy nhất. Ví dụ, tổ hợp \"Tường bê tông cốt thép\" bao gồm bê tông, cốt thép, ván khuôn và nhân công. Áp dụng tổ hợp vào hạng mục BOQ để tự động điền chi phí thành phần.",
     "assemblies.new_assembly": "Tổ hợp mới",
     "assemblies.no_results": "Không tìm thấy tổ hợp nào",
     "assemblies.no_results_hint": "Thử điều chỉnh tìm kiếm hoặc bộ lọc của bạn",
@@ -176,15 +150,13 @@ const resource = {
     "auth.create_account": "Tạo tài khoản",
     "auth.email": "Email",
     "auth.forgot_password": "Quên mật khẩu?",
-    "auth.forgot_subtitle":
-      "Nhập email của bạn và chúng tôi sẽ gửi liên kết đặt lại.",
+    "auth.forgot_subtitle": "Nhập email của bạn và chúng tôi sẽ gửi liên kết đặt lại.",
     "auth.full_name": "Họ và tên",
     "auth.full_name_placeholder": "Nguyễn Văn A",
     "auth.has_account": "Đã có tài khoản?",
     "auth.invalid_credentials": "Email hoặc mật khẩu không hợp lệ",
     "auth.login": "Đăng nhập",
-    "auth.login_subtitle":
-      "Nhập thông tin để truy cập không gian làm việc của bạn",
+    "auth.login_subtitle": "Nhập thông tin để truy cập không gian làm việc của bạn",
     "auth.logout": "Đăng xuất",
     "auth.no_account": "Chưa có tài khoản?",
     "auth.password": "Mật khẩu",
@@ -199,8 +171,7 @@ const resource = {
     "auth.register_title": "Tạo tài khoản",
     "auth.remember_me": "Ghi nhớ tôi trong 30 ngày",
     "auth.reset_error": "Không thể xử lý yêu cầu đặt lại. Vui lòng thử lại.",
-    "auth.reset_sent":
-      "Nếu tài khoản tồn tại cho email này, bạn sẽ sớm nhận được liên kết đặt lại mật khẩu.",
+    "auth.reset_sent": "Nếu tài khoản tồn tại cho email này, bạn sẽ sớm nhận được liên kết đặt lại mật khẩu.",
     "auth.send_reset_link": "Gửi liên kết đặt lại",
     "auth.server_error": "Không thể kết nối đến máy chủ. Vui lòng thử lại.",
     "auth.sign_in": "Đăng nhập",
@@ -212,8 +183,7 @@ const resource = {
     "boq.aace_methodology": "Methodology",
     "boq.aace_metrics": "Chỉ số phân loại",
     "boq.aace_positions": "Positions",
-    "boq.aace_reference":
-      "Dựa trên Khuyến nghị thực hành 18R-97 của AACE International. Phân loại được tự động nhận dạng từ các chỉ số hoàn chỉnh của BOQ.",
+    "boq.aace_reference": "Dựa trên Khuyến nghị thực hành 18R-97 của AACE International. Phân loại được tự động nhận dạng từ các chỉ số hoàn chỉnh của BOQ.",
     "boq.aace_to": "to",
     "boq.aace_with_classification": "Có phân loại",
     "boq.aace_with_rates": "Có đơn giá",
@@ -232,16 +202,14 @@ const resource = {
     "boq.adding": "Adding...",
     "boq.ai_assistant": "Trợ lý AI",
     "boq.ai_chat_error": "Yêu cầu AI thất bại. Vui lòng thử lại.",
-    "boq.ai_hint":
-      'Hãy yêu cầu tôi tạo hạng mục BOQ. Ví dụ: "Thêm các hạng mục MEP cho tòa nhà văn phòng 5 tầng"',
+    "boq.ai_hint": "Hãy yêu cầu tôi tạo hạng mục BOQ. Ví dụ: \"Thêm các hạng mục MEP cho tòa nhà văn phòng 5 tầng\"",
     "boq.ai_placeholder": "Mô tả các hạng mục cần tạo...",
     "boq.ai_welcome": "Hãy yêu cầu tôi tạo hạng mục BOQ. Ví dụ: ",
     "boq.all_projects": "Tất cả dự án",
     "boq.all_statuses": "Tất cả trạng thái",
     "boq.area_m2": "Area (m²)",
     "boq.back_to_project": "Quay lại dự án",
-    "boq.toolbar_hint":
-      "Sử dụng thanh công cụ để thêm phần và hạng mục, nhập từ cơ sở dữ liệu chi phí hoặc tổ hợp, xuất sang GAEB/PDF/Excel hoặc chạy dự toán AI. Giá trị thuần = tổng các hạng mục. Phụ phí được áp dụng theo tỷ lệ phần trăm. Tổng cộng = Thuần + Phụ phí + VAT.",
+    "boq.toolbar_hint": "Sử dụng thanh công cụ để thêm phần và hạng mục, nhập từ cơ sở dữ liệu chi phí hoặc tổ hợp, xuất sang GAEB/PDF/Excel hoặc chạy dự toán AI. Giá trị thuần = tổng các hạng mục. Phụ phí được áp dụng theo tỷ lệ phần trăm. Tổng cộng = Thuần + Phụ phí + VAT.",
     "boq.boq_created": "BOQ đã được tạo",
     "boq.boq_name": "Tên BOQ",
     "boq.cancel_compare": "Hủy so sánh",
@@ -286,8 +254,7 @@ const resource = {
     "boq.cost_risk_contingency": "Contingency (P80 - P50)",
     "boq.cost_risk_distribution": "Phân phối chi phí",
     "boq.cost_risk_drivers": "Yếu tố rủi ro hàng đầu",
-    "boq.cost_risk_empty":
-      "Thêm hạng mục có chi phí để chạy mô phỏng Monte Carlo.",
+    "boq.cost_risk_empty": "Thêm hạng mục có chi phí để chạy mô phỏng Monte Carlo.",
     "boq.cost_risk_iterations": "Iterations",
     "boq.cost_risk_iterations_label": "iter.",
     "boq.cost_risk_loading": "Đang chạy mô phỏng Monte Carlo...",
@@ -313,10 +280,8 @@ const resource = {
     "boq.markup_bond": "Bond",
     "boq.markup_other": "Other",
     "boq.template_applied": "Đã áp dụng mẫu khu vực",
-    "boq.confirm_replace_markups":
-      "Thao tác này sẽ thay thế các phụ phí hiện có. Tiếp tục?",
-    "boq.no_markups":
-      "Chưa có phụ phí nào. Thêm một mục hoặc áp dụng mẫu khu vực.",
+    "boq.confirm_replace_markups": "Thao tác này sẽ thay thế các phụ phí hiện có. Tiếp tục?",
+    "boq.no_markups": "Chưa có phụ phí nào. Thêm một mục hoặc áp dụng mẫu khu vực.",
     "boq.new_markup": "Phụ phí mới",
     "boq.markup_added": "Đã thêm phụ phí",
     "boq.markup_deleted": "Đã xóa phụ phí",
@@ -329,8 +294,7 @@ const resource = {
     "boq.duplicate_failed": "Sao chép thất bại",
     "boq.duplicated": "BOQ đã được sao chép",
     "boq.editor": "Trình soạn thảo BOQ",
-    "boq.empty_section":
-      'Không có hạng mục nào trong phần này. Nhấp "Thêm hạng mục" để thêm.',
+    "boq.empty_section": "Không có hạng mục nào trong phần này. Nhấp \"Thêm hạng mục\" để thêm.",
     "boq.enter_description": "Nhập mô tả...",
     "boq.estimated_total": "Tổng dự toán",
     "boq.estimates": "estimates",
@@ -360,14 +324,12 @@ const resource = {
     "boq.name_label": "Tên BOQ",
     "boq.net_total": "Tổng thuần",
     "boq.new_estimate": "Dự toán mới",
-    "boq.no_activity":
-      "Chưa có hoạt động nào. Các thay đổi sẽ xuất hiện ở đây.",
+    "boq.no_activity": "Chưa có hoạt động nào. Các thay đổi sẽ xuất hiện ở đây.",
     "boq.no_boqs": "Chưa có dự toán nào",
     "boq.no_boqs_hint": "Tạo dự án trước, sau đó thêm Bảng khối lượng",
     "boq.no_items_found": "Không tìm thấy hạng mục phù hợp",
     "boq.no_positions": "Chưa có hạng mục nào. Thêm phần để bắt đầu.",
-    "boq.no_resources":
-      "Chưa có nguồn lực nào được gán. Chọn mục chi phí có biểu tượng ⚡ từ gợi ý tự hoàn thành để tự động điền.",
+    "boq.no_resources": "Chưa có nguồn lực nào được gán. Chọn mục chi phí có biểu tượng ⚡ từ gợi ý tự hoàn thành để tự động điền.",
     "boq.no_results": "Không có dự toán phù hợp",
     "boq.no_results_hint": "Thử điều chỉnh tìm kiếm hoặc bộ lọc của bạn",
     "boq.no_section": "Không có phần (cấp cao nhất)",
@@ -388,8 +350,7 @@ const resource = {
     "boq.quality_descriptions": "Mô tả đã điền",
     "boq.quality_fair": "Fair",
     "boq.quality_great": "Great",
-    "boq.quality_hint":
-      "Điền đầy đủ tất cả các trường để đạt 100% và đảm bảo độ chính xác của dự toán.",
+    "boq.quality_hint": "Điền đầy đủ tất cả các trường để đạt 100% và đảm bảo độ chính xác của dự toán.",
     "boq.quality_markups": "Phụ phí đã thêm",
     "boq.quality_missing": "Missing",
     "boq.quality_needs_work": "Cần bổ sung",
@@ -408,8 +369,7 @@ const resource = {
     "boq.recalculate": "Recalculate",
     "boq.recalculate_complete": "Tính lại hoàn tất",
     "boq.recalculate_failed": "Tính lại thất bại",
-    "boq.recalculate_summary":
-      "Đã tính lại: {{sections}} phần, {{positions}} hạng mục",
+    "boq.recalculate_summary": "Đã tính lại: {{sections}} phần, {{positions}} hạng mục",
     "boq.recent_activity": "Hoạt động gần đây",
     "boq.redo": "Làm lại (Ctrl+Y)",
     "boq.redone": "Redone",
@@ -469,8 +429,7 @@ const resource = {
     "boq.sections": "sections",
     "boq.select_project": "Chọn dự án...",
     "boq.sensitivity_base_total": "Tổng cơ sở",
-    "boq.sensitivity_empty":
-      "Thêm hạng mục có chi phí để xem phân tích độ nhạy.",
+    "boq.sensitivity_empty": "Thêm hạng mục có chi phí để xem phân tích độ nhạy.",
     "boq.sensitivity_impact_high": "Impact (+)",
     "boq.sensitivity_impact_low": "Impact (-)",
     "boq.sensitivity_overrun": "Tăng chi phí",
@@ -481,21 +440,16 @@ const resource = {
     "boq.show_all_activity": "Hiển thị tất cả hoạt động...",
     "boq.showing_estimates": "{{shown}} trong {{total}} dự toán",
     "boq.start_building": "Bắt đầu xây dựng dự toán",
-    "boq.start_building_desc":
-      "Làm theo các bước sau để tạo Bảng khối lượng chuyên nghiệp",
+    "boq.start_building_desc": "Làm theo các bước sau để tạo Bảng khối lượng chuyên nghiệp",
     "boq.status": "Status",
     "boq.step_add_positions": "Thêm hạng mục",
-    "boq.step_add_positions_desc":
-      "Thêm các dòng với mô tả và đơn vị vào từng phần",
+    "boq.step_add_positions_desc": "Thêm các dòng với mô tả và đơn vị vào từng phần",
     "boq.step_add_sections": "Thêm các phần",
-    "boq.step_add_sections_desc":
-      "Tổ chức dự toán thành các phần (ví dụ: Móng, Tường, Mái)",
+    "boq.step_add_sections_desc": "Tổ chức dự toán thành các phần (ví dụ: Móng, Tường, Mái)",
     "boq.step_review": "Xem xét tổng cộng",
-    "boq.step_review_desc":
-      "Thêm phụ phí cho chi phí chung và lợi nhuận, sau đó xem xét tổng cộng cuối cùng",
+    "boq.step_review_desc": "Thêm phụ phí cho chi phí chung và lợi nhuận, sau đó xem xét tổng cộng cuối cùng",
     "boq.step_set_quantities": "Đặt khối lượng",
-    "boq.step_set_quantities_desc":
-      "Nhập khối lượng và đơn giá cho từng hạng mục để tính tổng",
+    "boq.step_set_quantities_desc": "Nhập khối lượng và đơn giá cho từng hạng mục để tính tổng",
     "boq.subtotal": "Subtotal",
     "boq.sync_rate": "Đồng bộ đơn giá",
     "boq.table_label": "Hạng mục Bảng khối lượng",
@@ -503,20 +457,13 @@ const resource = {
     "boq.template_error": "Tạo BOQ từ mẫu thất bại",
     "boq.templates": "Mẫu BOQ",
     "boq.templates_coming_soon": "Mẫu sắp ra mắt",
-    "boq.templates_coming_soon_desc":
-      "Bộ chọn mẫu sẽ có trong bản cập nhật tương lai.",
-    "boq.templates_subtitle":
-      "Bắt đầu với mẫu chuyên nghiệp cho loại công trình của bạn. Chọn mẫu, đặt diện tích và tạo BOQ hoàn chỉnh ngay lập tức.",
-    "boq.tip_autocomplete":
-      "Điền mô tả cho tất cả hạng mục — bắt đầu gõ để xem gợi ý từ cơ sở dữ liệu chi phí",
-    "boq.tip_markups":
-      "Thêm phụ phí cho chi phí chung và lợi nhuận bằng cách sử dụng phần Phụ phí bên dưới bảng",
-    "boq.tip_menu":
-      "Nhấp vào menu (...) trên phần để thêm hạng mục hoặc xóa phần",
-    "boq.tip_sections":
-      "Thêm các phần để tổ chức dự toán (ví dụ: Móng, Tường, Mái)",
-    "boq.tip_tab":
-      "Dùng Tab để di chuyển giữa các trường, Enter để lưu thay đổi",
+    "boq.templates_coming_soon_desc": "Bộ chọn mẫu sẽ có trong bản cập nhật tương lai.",
+    "boq.templates_subtitle": "Bắt đầu với mẫu chuyên nghiệp cho loại công trình của bạn. Chọn mẫu, đặt diện tích và tạo BOQ hoàn chỉnh ngay lập tức.",
+    "boq.tip_autocomplete": "Điền mô tả cho tất cả hạng mục — bắt đầu gõ để xem gợi ý từ cơ sở dữ liệu chi phí",
+    "boq.tip_markups": "Thêm phụ phí cho chi phí chung và lợi nhuận bằng cách sử dụng phần Phụ phí bên dưới bảng",
+    "boq.tip_menu": "Nhấp vào menu (...) trên phần để thêm hạng mục hoặc xóa phần",
+    "boq.tip_sections": "Thêm các phần để tổ chức dự toán (ví dụ: Móng, Tường, Mái)",
+    "boq.tip_tab": "Dùng Tab để di chuyển giữa các trường, Enter để lưu thay đổi",
     "boq.tips_title": "Mẹo & Gợi ý",
     "boq.mvp.title": "Choose materials",
     "boq.mvp.subtitle_one": "{{count}} resource needs a choice",
@@ -584,15 +531,12 @@ const resource = {
     "catalog.creating": "Creating...",
     "catalog.delete_failed": "Xóa thất bại",
     "catalog.delete_region": "Xóa khu vực",
-    "catalog.empty_hint":
-      "Nhập danh mục khu vực để điền nguồn lực hoặc trích xuất từ các mục chi phí.",
-    "catalog.empty_with_regions":
-      "Không có nguồn lực nào phù hợp với bộ lọc hiện tại. Thử thay đổi loại hoặc khu vực.",
+    "catalog.empty_hint": "Nhập danh mục khu vực để điền nguồn lực hoặc trích xuất từ các mục chi phí.",
+    "catalog.empty_with_regions": "Không có nguồn lực nào phù hợp với bộ lọc hiện tại. Thử thay đổi loại hoặc khu vực.",
     "catalog.import": "Import",
     "catalog.import_failed": "Nhập thất bại",
     "catalog.import_region": "Nhập khu vực",
-    "catalog.import_regions_desc":
-      "Tải xuống danh mục nguồn lực có sẵn từ cơ sở dữ liệu khu vực CWICR",
+    "catalog.import_regions_desc": "Tải xuống danh mục nguồn lực có sẵn từ cơ sở dữ liệu khu vực CWICR",
     "catalog.import_regions_title": "Nhập danh mục nguồn lực",
     "catalog.import_success": "Nhập hoàn tất",
     "catalog.importing": "Importing...",
@@ -601,8 +545,7 @@ const resource = {
     "catalog.loaded": "Loaded",
     "catalog.my_catalog": "Danh mục của tôi",
     "catalog.my_catalog_empty": "Danh mục của bạn trống",
-    "catalog.my_catalog_empty_desc":
-      "Thêm vật liệu, thiết bị và đơn giá nhân công của riêng bạn. Nguồn lực tùy chỉnh có thể được sử dụng trong tổ hợp và áp dụng vào hạng mục BOQ.",
+    "catalog.my_catalog_empty_desc": "Thêm vật liệu, thiết bị và đơn giá nhân công của riêng bạn. Nguồn lực tùy chỉnh có thể được sử dụng trong tổ hợp và áp dụng vào hạng mục BOQ.",
     "catalog.name": "Name",
     "catalog.no_results": "Không tìm thấy nguồn lực nào",
     "catalog.no_results_hint": "Thử điều chỉnh tìm kiếm hoặc bộ lọc của bạn",
@@ -619,8 +562,7 @@ const resource = {
     "catalog.resources_imported": "nguồn lực đã nhập",
     "catalog.resources_removed": "nguồn lực đã xóa",
     "catalog.search_hint": "Duyệt vật liệu, thiết bị, nhân công và vận hành",
-    "catalog.what_is_catalog":
-      "Đơn giá vật liệu, nhân công, thiết bị và vận hành được tổ chức theo khu vực. Cài đặt danh mục khu vực từ Mô-đun, sau đó sử dụng để xây dựng tổ hợp hoặc thêm trực tiếp vào hạng mục BOQ.",
+    "catalog.what_is_catalog": "Đơn giá vật liệu, nhân công, thiết bị và vận hành được tổ chức theo khu vực. Cài đặt danh mục khu vực từ Mô-đun, sau đó sử dụng để xây dựng tổ hợp hoặc thêm trực tiếp vào hạng mục BOQ.",
     "catalog.search_in": "Tìm kiếm trong",
     "catalog.search_placeholder": "Tìm kiếm theo tên hoặc mã...",
     "catalog.selected": "selected",
@@ -645,14 +587,12 @@ const resource = {
     "command_palette.action_run_validation": "Chạy kiểm tra",
     "command_palette.action_import_database": "Nhập cơ sở dữ liệu",
     "error.something_wrong": "Đã xảy ra lỗi",
-    "error.unexpected_error":
-      "Đã xảy ra lỗi không mong muốn khi hiển thị trang này. Bạn có thể thử tải lại hoặc quay lại bảng điều khiển.",
+    "error.unexpected_error": "Đã xảy ra lỗi không mong muốn khi hiển thị trang này. Bạn có thể thử tải lại hoặc quay lại bảng điều khiển.",
     "error.details": "Chi tiết lỗi",
     "error.try_again": "Thử lại",
     "error.go_dashboard": "Đến bảng điều khiển",
     "error.not_found": "Không tìm thấy trang",
-    "error.not_found_desc":
-      "Trang bạn đang tìm không tồn tại hoặc đã được di chuyển. Kiểm tra URL hoặc quay lại bảng điều khiển.",
+    "error.not_found_desc": "Trang bạn đang tìm không tồn tại hoặc đã được di chuyển. Kiểm tra URL hoặc quay lại bảng điều khiển.",
     "error.go_back": "Quay lại",
     "common.archive": "Lưu trữ",
     "common.back": "Quay lại",
@@ -690,8 +630,7 @@ const resource = {
     "costmodel.benchmark_area_value": "{{area}} m²",
     "costmodel.benchmark_cost_per_m2": "Cost / m²",
     "costmodel.benchmark_current_cost": "Current: {{value}}/m²",
-    "costmodel.benchmark_enter_area":
-      "Nhập diện tích dự án để xem so sánh chuẩn chi phí mỗi m²",
+    "costmodel.benchmark_enter_area": "Nhập diện tích dự án để xem so sánh chuẩn chi phí mỗi m²",
     "costmodel.benchmark_per_m2": "per m²",
     "costmodel.benchmark_project_area": "Diện tích dự án (m²)",
     "costmodel.benchmark_project_type": "Loại dự án",
@@ -735,8 +674,7 @@ const resource = {
     "costmodel.evm_spi": "SPI",
     "costmodel.evm_status": "Status",
     "costmodel.evm_sv_label": "SV",
-    "costmodel.evm_tcpi_hint":
-      "Để hoàn thành đúng ngân sách, bạn cần CPI là {{tcpi}} từ đây trở đi",
+    "costmodel.evm_tcpi_hint": "Để hoàn thành đúng ngân sách, bạn cần CPI là {{tcpi}} từ đây trở đi",
     "costmodel.evm_time_elapsed": "Thời gian đã qua",
     "costmodel.evm_title": "Phân tích giá trị đạt được",
     "costmodel.evm_unknown": "Unknown",
@@ -756,8 +694,7 @@ const resource = {
     "costmodel.s_curve": "Đường S-Curve (EVM)",
     "costmodel.s_curve_chart": "Biểu đồ đường S-Curve",
     "costmodel.title": "Mô hình chi phí 5D",
-    "costmodel.what_is_5d":
-      "Quản lý chi phí 5D bổ sung theo dõi chi phí theo thời gian vào dự án của bạn. Giám sát ngân sách so với thực chi bằng biểu đồ đường S-curve, theo dõi Giá trị đạt được (SPI = hiệu suất tiến độ, CPI = hiệu suất chi phí — cả hai >= 1,0 là lành mạnh) và chạy kịch bản giả định để dự báo kết quả.",
+    "costmodel.what_is_5d": "Quản lý chi phí 5D bổ sung theo dõi chi phí theo thời gian vào dự án của bạn. Giám sát ngân sách so với thực chi bằng biểu đồ đường S-curve, theo dõi Giá trị đạt được (SPI = hiệu suất tiến độ, CPI = hiệu suất chi phí — cả hai >= 1,0 là lành mạnh) và chạy kịch bản giả định để dự báo kết quả.",
     "costmodel.total": "Total",
     "costmodel.total_budget": "Tổng ngân sách",
     "costmodel.variance": "Variance",
@@ -772,8 +709,7 @@ const resource = {
     "costmodel.whatif_material": "Chi phí vật liệu",
     "costmodel.whatif_original_bac": "BAC gốc",
     "costmodel.whatif_reset": "Reset",
-    "costmodel.whatif_scenario_name":
-      "Giả định: M{{material}}% N{{labor}}% TG{{duration}}%",
+    "costmodel.whatif_scenario_name": "Giả định: M{{material}}% N{{labor}}% TG{{duration}}%",
     "costmodel.whatif_title": "Kịch bản giả định",
     "costs.add_database": "Import",
     "costs.add_item": "Thêm mục",
@@ -812,8 +748,7 @@ const resource = {
     "costs.import_and_more": "và {{count}} lỗi khác",
     "costs.import_another": "Nhập tệp khác",
     "costs.import_click_to_change": "Nhấp để chọn tệp khác",
-    "costs.import_columns_hint":
-      "Các cột được tự động nhận dạng. Tiêu đề được chấp nhận: Mã, Mô tả, Đơn vị, Đơn giá/Giá/Chi phí, Tiền tệ, DIN 276/Phân loại.",
+    "costs.import_columns_hint": "Các cột được tự động nhận dạng. Tiêu đề được chấp nhận: Mã, Mô tả, Đơn vị, Đơn giá/Giá/Chi phí, Tiền tệ, DIN 276/Phân loại.",
     "costs.import_complete": "Nhập hoàn tất",
     "costs.import_database": "Nhập cơ sở dữ liệu",
     "costs.import_drop_here": "Thả tệp vào đây",
@@ -822,11 +757,9 @@ const resource = {
     "costs.import_errors": "Errors",
     "costs.import_failed": "Nhập thất bại",
     "costs.import_file_too_large": "Tệp quá lớn",
-    "costs.import_first_hint":
-      "Nhập cơ sở dữ liệu chi phí khu vực để bắt đầu tìm kiếm hơn 55.000 mục.",
+    "costs.import_first_hint": "Nhập cơ sở dữ liệu chi phí khu vực để bắt đầu tìm kiếm hơn 55.000 mục.",
     "costs.import_format_csv": "CSV (.csv) với các cột tương tự",
-    "costs.import_format_excel":
-      "Excel (.xlsx) với các cột: Mã, Mô tả, Đơn vị, Đơn giá",
+    "costs.import_format_excel": "Excel (.xlsx) với các cột: Mã, Mô tả, Đơn vị, Đơn giá",
     "costs.import_formats_title": "Định dạng được hỗ trợ",
     "costs.import_go_to_database": "Đến cơ sở dữ liệu chi phí",
     "costs.import_imported": "Imported",
@@ -835,11 +768,9 @@ const resource = {
     "costs.import_row": "Row",
     "costs.import_rows_processed": "hàng đã xử lý",
     "costs.import_skipped": "Skipped",
-    "costs.import_subtitle":
-      "Tải cơ sở dữ liệu định giá hoặc tải lên tệp của riêng bạn.",
+    "costs.import_subtitle": "Tải cơ sở dữ liệu định giá hoặc tải lên tệp của riêng bạn.",
     "costs.import_success": "Nhập hoàn tất",
-    "costs.import_supported_hint":
-      "Vui lòng tải lên tệp Excel (.xlsx) hoặc CSV (.csv).",
+    "costs.import_supported_hint": "Vui lòng tải lên tệp Excel (.xlsx) hoặc CSV (.csv).",
     "costs.import_title": "Nhập cơ sở dữ liệu chi phí",
     "costs.import_unsupported_format": "Định dạng tệp không được hỗ trợ",
     "costs.indexing_failed": "Lập chỉ mục thất bại",
@@ -848,8 +779,7 @@ const resource = {
     "costs.items_copied": "{{count}} mục đã sao chép vào clipboard",
     "costs.load_more": "Tải thêm",
     "costs.loaded_databases": "Cơ sở dữ liệu đã tải",
-    "costs.no_boqs_helper":
-      "Không có BOQ nào trong dự án này. Tạo một BOQ trước trong trình soạn thảo BOQ.",
+    "costs.no_boqs_helper": "Không có BOQ nào trong dự án này. Tạo một BOQ trước trong trình soạn thảo BOQ.",
     "costs.no_database_loaded": "Chưa tải cơ sở dữ liệu",
     "costs.no_results": "Không tìm thấy mục chi phí nào",
     "costs.no_results_hint": "Thử điều chỉnh tìm kiếm hoặc bộ lọc của bạn",
@@ -861,8 +791,7 @@ const resource = {
     "costs.region_cleared": "Đã xóa khu vực",
     "costs.results_found": "kết quả tìm thấy",
     "costs.search_hint": "Tìm kiếm mục chi phí theo mô tả hoặc mã",
-    "costs.what_is_cost_db":
-      "Đơn giá và giá tổng hợp cho vật liệu, nhân công và thiết bị. Nhập cơ sở dữ liệu khu vực (CWICR, BKI, RSMeans) từ Mô-đun hoặc thêm đơn giá tùy chỉnh. Bật Tìm kiếm ngữ nghĩa AI để truy vấn bằng ngôn ngữ tự nhiên.",
+    "costs.what_is_cost_db": "Đơn giá và giá tổng hợp cho vật liệu, nhân công và thiết bị. Nhập cơ sở dữ liệu khu vực (CWICR, BKI, RSMeans) từ Mô-đun hoặc thêm đơn giá tùy chỉnh. Bật Tìm kiếm ngữ nghĩa AI để truy vấn bằng ngôn ngữ tự nhiên.",
     "costs.search_placeholder": "Tìm kiếm theo mô tả hoặc mã...",
     "costs.semantic_placeholder": "Mô tả những gì bạn cần (AI tìm tương tự)...",
     "costs.showing": "Showing",
@@ -884,8 +813,7 @@ const resource = {
     "dashboard.add_api_keys": "Thêm khóa API",
     "dashboard.ai_providers": "Nhà cung cấp AI",
     "dashboard.analytics": "Phân tích",
-    "dashboard.kpi_hint":
-      "Tóm tắt trên tất cả dự án. Giá trị cập nhật khi bạn thêm dự toán và hoạt động lịch trình.",
+    "dashboard.kpi_hint": "Tóm tắt trên tất cả dự án. Giá trị cập nhật khi bạn thêm dự toán và hoạt động lịch trình.",
     "dashboard.api_server": "Máy chủ API",
     "dashboard.boq_status": "Trạng thái BOQ",
     "dashboard.completed": "Hoàn thành",
@@ -916,21 +844,17 @@ const resource = {
     "dashboard.recent_projects": "Dự án gần đây",
     "dashboard.show_shortcuts": "Hiển thị phím tắt",
     "dashboard.step_ai_search": "Bật tìm kiếm AI",
-    "dashboard.step_ai_search_desc":
-      "Tạo vector nhúng để tìm kiếm chi phí ngữ nghĩa",
+    "dashboard.step_ai_search_desc": "Tạo vector nhúng để tìm kiếm chi phí ngữ nghĩa",
     "dashboard.step_build_boq": "Xây dựng BOQ",
     "dashboard.step_build_boq_desc": "Tạo Bảng khối lượng với sự hỗ trợ của AI",
     "dashboard.step_connect_ai": "Kết nối AI",
     "dashboard.step_connect_ai_desc": "Thêm khóa API cho dự toán hỗ trợ AI",
     "dashboard.step_create_project": "Tạo dự án",
-    "dashboard.step_create_project_desc":
-      "Bắt đầu dự án dự toán xây dựng đầu tiên",
+    "dashboard.step_create_project_desc": "Bắt đầu dự án dự toán xây dựng đầu tiên",
     "dashboard.step_load_db": "Tải cơ sở dữ liệu chi phí",
-    "dashboard.step_load_db_desc":
-      "Nhập dữ liệu định giá khu vực với hơn 55.000 mục",
+    "dashboard.step_load_db_desc": "Nhập dữ liệu định giá khu vực với hơn 55.000 mục",
     "dashboard.subtitle": "Tổng quan dự án, chỉ số chính và hoạt động gần đây",
-    "dashboard.subtitle_2":
-      "Lập kế hoạch nguồn lực thông minh cho dự án xây dựng",
+    "dashboard.subtitle_2": "Lập kế hoạch nguồn lực thông minh cho dự án xây dựng",
     "dashboard.activity": "Hoạt động gần đây",
     "dashboard.system_status": "Trạng thái hệ thống",
     "dashboard.total_boqs": "Tổng số BOQ",
@@ -944,19 +868,16 @@ const resource = {
     "demo.install": "Install",
     "demo.install_error": "Cài đặt dự án demo thất bại. Vui lòng thử lại.",
     "demo.installing": "Installing...",
-    "demo.modal_subtitle":
-      "Cài đặt dự án đầy đủ với BOQ, lịch trình, ngân sách và đấu thầu",
+    "demo.modal_subtitle": "Cài đặt dự án đầy đủ với BOQ, lịch trình, ngân sách và đấu thầu",
     "demo.modal_title": "Nhập dự án demo",
     "documents.title": "Documents",
-    "documents.subtitle":
-      "Tải lên và quản lý tệp dự án — bản vẽ, hợp đồng, thuyết minh",
+    "documents.subtitle": "Tải lên và quản lý tệp dự án — bản vẽ, hợp đồng, thuyết minh",
     "documents.upload": "Tải lên tệp",
     "documents.uploaded": "Uploaded",
     "documents.upload_failed": "Tải lên thất bại",
     "documents.upload_skipped": "Tệp bị bỏ qua",
     "documents.file_too_large": "{{name}} vượt quá giới hạn 100 MB",
-    "documents.upload_summary":
-      "Tải lên hoàn tất: {{success}} thành công, {{failed}} thất bại",
+    "documents.upload_summary": "Tải lên hoàn tất: {{success}} thành công, {{failed}} thất bại",
     "documents.delete_failed": "Xóa thất bại",
     "documents.deleted": "Tài liệu đã được xóa",
     "documents.download": "Download",
@@ -968,14 +889,11 @@ const resource = {
     "documents.no_results_hint": "Thử từ khóa tìm kiếm khác",
     "documents.clear_search": "Xóa tìm kiếm",
     "documents.drop_hint": "Kéo và thả tệp vào đây hoặc nhấp Tải lên",
-    "documents.drop_hint_types":
-      "PDF, hình ảnh, Excel, DWG, IFC — bất kỳ loại tệp nào",
+    "documents.drop_hint_types": "PDF, hình ảnh, Excel, DWG, IFC — bất kỳ loại tệp nào",
     "documents.empty": "Chưa có tài liệu nào",
-    "documents.empty_hint":
-      "Tải lên tệp đầu tiên — bản vẽ, hợp đồng, ảnh hoặc bất kỳ tài liệu dự án nào.",
+    "documents.empty_hint": "Tải lên tệp đầu tiên — bản vẽ, hợp đồng, ảnh hoặc bất kỳ tài liệu dự án nào.",
     "documents.select_project": "Chọn dự án",
-    "documents.select_project_hint":
-      "Sử dụng bộ chuyển đổi dự án trong tiêu đề để chọn dự án trước.",
+    "documents.select_project_hint": "Sử dụng bộ chuyển đổi dự án trong tiêu đề để chọn dự án trước.",
     "documents.sort_date": "Theo ngày",
     "documents.sort_name": "Theo tên",
     "documents.sort_size": "Theo kích thước",
@@ -989,45 +907,33 @@ const resource = {
     "documents.cat_correspondence": "Correspondence",
     "documents.cat_other": "Other",
     "login.benefit.ai": "Dự toán hỗ trợ bởi AI",
-    "login.benefit.ai_desc":
-      "Đề xuất thông minh kèm điểm tin cậy. Bạn quyết định, AI hỗ trợ.",
+    "login.benefit.ai_desc": "Đề xuất thông minh kèm điểm tin cậy. Bạn quyết định, AI hỗ trợ.",
     "login.benefit.allinone": "BOQ + 4D + 5D + Đấu thầu",
-    "login.benefit.allinone_desc":
-      "Quy trình hoàn chỉnh từ dự toán chi phí đến so sánh thầu trong một công cụ.",
+    "login.benefit.allinone_desc": "Quy trình hoàn chỉnh từ dự toán chi phí đến so sánh thầu trong một công cụ.",
     "login.benefit.free": "Miễn phí cho mọi người",
-    "login.benefit.free_desc":
-      "Không phí bản quyền. Không giới hạn. Được tạo bởi nhân viên dự toán, cho nhân viên dự toán.",
+    "login.benefit.free_desc": "Không phí bản quyền. Không giới hạn. Được tạo bởi nhân viên dự toán, cho nhân viên dự toán.",
     "login.benefit.local": "Dữ liệu của bạn ở lại trên máy tính của bạn",
-    "login.benefit.local_desc":
-      "Không cloud. Không máy chủ bên thứ ba. Toàn quyền kiểm soát dữ liệu dự án.",
+    "login.benefit.local_desc": "Không cloud. Không máy chủ bên thứ ba. Toàn quyền kiểm soát dữ liệu dự án.",
     "login.benefit.open_source": "100% mã nguồn mở",
-    "login.benefit.open_source_desc":
-      "Mã minh bạch. Không bị ràng buộc nhà cung cấp. Xuất tất cả, bất cứ lúc nào.",
+    "login.benefit.open_source_desc": "Mã minh bạch. Không bị ràng buộc nhà cung cấp. Xuất tất cả, bất cứ lúc nào.",
     "login.benefit.standards": "Tiêu chuẩn quốc tế",
-    "login.benefit.standards_desc":
-      "55.000+ hạng mục chi phí trong 11 cơ sở dữ liệu vùng trên toàn thế giới.",
-    "login.hero_desc":
-      "BOQ chuyên nghiệp, lịch 4D, mô hình chi phí 5D và đấu thầu — tất cả trong một nền tảng mã nguồn mở.",
+    "login.benefit.standards_desc": "55.000+ hạng mục chi phí trong 11 cơ sở dữ liệu vùng trên toàn thế giới.",
+    "login.hero_desc": "BOQ chuyên nghiệp, lịch 4D, mô hình chi phí 5D và đấu thầu — tất cả trong một nền tảng mã nguồn mở.",
     "login.hero_highlight": "tái định nghĩa",
     "login.hero_title": "Dự toán chi phí xây dựng,",
     "login.open_source_badge": "ERP xây dựng mã nguồn mở số 1",
     "dashboard.open_source_badge": "Phần mềm ERP xây dựng mã nguồn mở hàng đầu",
     "login.learn_more": "Tìm hiểu thêm về nền tảng",
-    "login.privacy":
-      "Tất cả dữ liệu được xử lý và lưu trữ cục bộ trên máy của bạn. Không có gì được gửi đến máy chủ bên ngoài. Bạn sở hữu dữ liệu của mình — luôn luôn.",
-    "login.privacy_ai":
-      "Nếu bạn sử dụng các công cụ AI tích hợp, một số dữ liệu có thể được gửi đến nhà cung cấp AI bạn cấu hình (OpenAI, Anthropic, v.v.). Bạn kiểm soát nhà cung cấp nào sử dụng và dữ liệu nào chia sẻ.",
+    "login.privacy": "Tất cả dữ liệu được xử lý và lưu trữ cục bộ trên máy của bạn. Không có gì được gửi đến máy chủ bên ngoài. Bạn sở hữu dữ liệu của mình — luôn luôn.",
+    "login.privacy_ai": "Nếu bạn sử dụng các công cụ AI tích hợp, một số dữ liệu có thể được gửi đến nhà cung cấp AI bạn cấu hình (OpenAI, Anthropic, v.v.). Bạn kiểm soát nhà cung cấp nào sử dụng và dữ liệu nào chia sẻ.",
     "marketplace.active": "Active",
     "marketplace.available": "Mô-đun có sẵn",
     "marketplace.builtin": "Tích hợp sẵn",
-    "marketplace.builtin_message":
-      "Mô-đun này được tích hợp trong bản cài đặt của bạn và sẵn sàng sử dụng.",
+    "marketplace.builtin_message": "Mô-đun này được tích hợp trong bản cài đặt của bạn và sẵn sàng sử dụng.",
     "marketplace.catalog_imported": "Danh mục đã nhập",
-    "marketplace.catalog_imported_message":
-      "{{imported}} nguồn lực đã nhập, {{skipped}} bỏ qua cho {{region}}.",
+    "marketplace.catalog_imported_message": "{{imported}} nguồn lực đã nhập, {{skipped}} bỏ qua cho {{region}}.",
     "marketplace.demo_installed": "Demo đã cài đặt",
-    "marketplace.demo_installed_message":
-      "{{name}} đã được tạo với BOQ, lịch trình, ngân sách và đấu thầu đầy đủ.",
+    "marketplace.demo_installed_message": "{{name}} đã được tạo với BOQ, lịch trình, ngân sách và đấu thầu đầy đủ.",
     "marketplace.free": "Free",
     "marketplace.import_failed": "Nhập thất bại",
     "marketplace.imported": "Imported",
@@ -1036,8 +942,7 @@ const resource = {
     "marketplace.install_failed": "Cài đặt thất bại",
     "marketplace.installed_modules": "Mô-đun lõi đã cài đặt",
     "marketplace.installing": "Installing...",
-    "marketplace.language_activated":
-      "Gói ngôn ngữ đã kích hoạt. Thay đổi ngôn ngữ trong Cài đặt.",
+    "marketplace.language_activated": "Gói ngôn ngữ đã kích hoạt. Thay đổi ngôn ngữ trong Cài đặt.",
     "marketplace.language_already_included": "Ngôn ngữ này đã được bao gồm.",
     "marketplace.manage": "Manage",
     "marketplace.module_disabled": "{{name}} disabled",
@@ -1045,40 +950,30 @@ const resource = {
     "marketplace.my_modules": "Mô-đun đã cài đặt",
     "marketplace.no_region_mapping": "Không có ánh xạ khu vực cho {{id}}",
     "marketplace.no_results": "Không tìm thấy mô-đun nào",
-    "marketplace.no_results_hint":
-      "Thử điều chỉnh tìm kiếm hoặc bộ lọc danh mục.",
+    "marketplace.no_results_hint": "Thử điều chỉnh tìm kiếm hoặc bộ lọc danh mục.",
     "marketplace.rules": "rules",
     "marketplace.search_placeholder": "Tìm kiếm mô-đun...",
-    "marketplace.subtitle":
-      "Duyệt và cài đặt tiện ích mở rộng cho cơ sở dữ liệu chi phí, công cụ AI, bộ chuyển đổi CAD và nhiều hơn nữa.",
-    "marketplace.description":
-      "Mở rộng OpenEstimate với cơ sở dữ liệu chi phí khu vực, danh mục nguồn lực (CWICR), chỉ mục vector cho AI, gói ngôn ngữ, dự án demo và tích hợp. Cài đặt mô-đun để kích hoạt — gỡ cài đặt bất cứ lúc nào.",
+    "marketplace.subtitle": "Duyệt và cài đặt tiện ích mở rộng cho cơ sở dữ liệu chi phí, công cụ AI, bộ chuyển đổi CAD và nhiều hơn nữa.",
+    "marketplace.description": "Mở rộng OpenEstimate với cơ sở dữ liệu chi phí khu vực, danh mục nguồn lực (CWICR), chỉ mục vector cho AI, gói ngôn ngữ, dự án demo và tích hợp. Cài đặt mô-đun để kích hoạt — gỡ cài đặt bất cứ lúc nào.",
     "marketplace.title": "Chợ mô-đun",
     "marketplace.uninstall": "Uninstall",
     "marketplace.unknown_region": "Khu vực không xác định",
     "marketplace.validation_rule_sets": "Bộ quy tắc kiểm tra",
     "marketplace.validation_rules_active": "quy tắc kiểm tra đang hoạt động",
     "marketplace.vector_index": "Chỉ mục vector",
-    "marketplace.vector_index_hint":
-      "Nhập cơ sở dữ liệu chi phí trước, sau đó tạo vector.",
+    "marketplace.vector_index_hint": "Nhập cơ sở dữ liệu chi phí trước, sau đó tạo vector.",
     "modules.title": "Mô-đun",
     "modules.cat_regional": "Tiêu chuẩn khu vực",
-    "modules.cat_regional_desc":
-      "Định dạng nhập/xuất BOQ và tiêu chuẩn phân loại theo quốc gia",
+    "modules.cat_regional_desc": "Định dạng nhập/xuất BOQ và tiêu chuẩn phân loại theo quốc gia",
     "modules.community_title": "Xây dựng mô-đun của riêng bạn",
-    "modules.community_desc":
-      "OpenConstructionERP có kiến trúc plugin mô-đun. Bất kỳ ai cũng có thể tạo mô-đun tùy chỉnh — cơ sở dữ liệu chi phí, tiêu chuẩn khu vực, bộ chuyển đổi CAD, bảng điều khiển phân tích, tích hợp với hệ thống bên ngoài hoặc bất kỳ chức năng nào khác. Mô-đun của bạn sẽ xuất hiện trong phần Mô-đun và có thể được cài đặt bởi bất kỳ người dùng nào.",
+    "modules.community_desc": "OpenConstructionERP có kiến trúc plugin mô-đun. Bất kỳ ai cũng có thể tạo mô-đun tùy chỉnh — cơ sở dữ liệu chi phí, tiêu chuẩn khu vực, bộ chuyển đổi CAD, bảng điều khiển phân tích, tích hợp với hệ thống bên ngoài hoặc bất kỳ chức năng nào khác. Mô-đun của bạn sẽ xuất hiện trong phần Mô-đun và có thể được cài đặt bởi bất kỳ người dùng nào.",
     "modules.community_type_data": "Mô-đun dữ liệu",
-    "modules.community_type_data_desc":
-      "Cơ sở dữ liệu chi phí khu vực, danh mục nguồn lực, thư viện vật liệu, tiêu chuẩn phân loại (DIN, NRM, SNIP, v.v.)",
+    "modules.community_type_data_desc": "Cơ sở dữ liệu chi phí khu vực, danh mục nguồn lực, thư viện vật liệu, tiêu chuẩn phân loại (DIN, NRM, SNIP, v.v.)",
     "modules.community_type_integration": "Tích hợp",
-    "modules.community_type_integration_desc":
-      "Kết nối với SAP, Procore, MS Project, BIM 360, PlanRadar, Primavera hoặc bất kỳ hệ thống bên ngoài nào qua API",
+    "modules.community_type_integration_desc": "Kết nối với SAP, Procore, MS Project, BIM 360, PlanRadar, Primavera hoặc bất kỳ hệ thống bên ngoài nào qua API",
     "modules.community_type_tools": "Công cụ & Phân tích",
-    "modules.community_type_tools_desc":
-      "Báo cáo tùy chỉnh, bảng điều khiển, máy tính, bộ chuyển đổi định dạng, mô hình AI hoặc bất kỳ công cụ xây dựng chuyên biệt nào",
-    "modules.community_how":
-      "Mỗi mô-đun là một gói Python với tệp manifest.py. Tạo mô-đun của bạn, kiểm tra cục bộ và chia sẻ với cộng đồng. Dù bạn chỉ có ý tưởng — gửi cho chúng tôi mô tả văn bản và chúng tôi sẽ giúp bạn xây dựng.",
+    "modules.community_type_tools_desc": "Báo cáo tùy chỉnh, bảng điều khiển, máy tính, bộ chuyển đổi định dạng, mô hình AI hoặc bất kỳ công cụ xây dựng chuyên biệt nào",
+    "modules.community_how": "Mỗi mô-đun là một gói Python với tệp manifest.py. Tạo mô-đun của bạn, kiểm tra cục bộ và chia sẻ với cộng đồng. Dù bạn chỉ có ý tưởng — gửi cho chúng tôi mô tả văn bản và chúng tôi sẽ giúp bạn xây dựng.",
     "modules.community_submit_email": "Gửi mô-đun qua Email",
     "modules.community_submit_github": "Đề xuất trên GitHub",
     "modules.community_telegram": "Thảo luận trên Telegram",
@@ -1129,27 +1024,20 @@ const resource = {
     "files.toast.copied": "Đã sao chép",
     "files.toast.copy_failed": "Không thể sao chép",
     "files.no_project_title": "Không có dự án đang hoạt động",
-    "files.no_project_desc":
-      "Chọn một dự án từ bảng điều khiển để xem tất cả tài liệu, ảnh, tệp BIM và DWG ở cùng một nơi.",
+    "files.no_project_desc": "Chọn một dự án từ bảng điều khiển để xem tất cả tài liệu, ảnh, tệp BIM và DWG ở cùng một nơi.",
     "files.go_to_projects": "Đến dự án",
     "files.export.title": "Xuất gói dự án",
-    "files.export.intro":
-      "Chọn nội dung cần đưa vào. Gói nhỏ truyền nhanh hơn; gói lớn giữ lại nhiều hơn.",
+    "files.export.intro": "Chọn nội dung cần đưa vào. Gói nhỏ truyền nhanh hơn; gói lớn giữ lại nhiều hơn.",
     "files.export.scope_metadata": "Chỉ siêu dữ liệu",
-    "files.export.scope_metadata_hint":
-      "Phù hợp với email. Bóc khối lượng, bảng và liên kết — không có tệp đính kèm.",
+    "files.export.scope_metadata_hint": "Phù hợp với email. Bóc khối lượng, bảng và liên kết — không có tệp đính kèm.",
     "files.export.scope_documents": "Tài liệu",
-    "files.export.scope_documents_hint":
-      "Thêm tài liệu và ảnh đã tải lên cùng với hình thu nhỏ.",
+    "files.export.scope_documents_hint": "Thêm tài liệu và ảnh đã tải lên cùng với hình thu nhỏ.",
     "files.export.scope_bim": "Mô hình BIM",
-    "files.export.scope_bim_hint":
-      "Thêm mô hình BIM, các thành phần và hình học chuẩn.",
+    "files.export.scope_bim_hint": "Thêm mô hình BIM, các thành phần và hình học chuẩn.",
     "files.export.scope_dwg": "Bản vẽ DWG",
-    "files.export.scope_dwg_hint":
-      "Thêm bản vẽ DWG, các phiên bản và bản vẽ liên quan.",
+    "files.export.scope_dwg_hint": "Thêm bản vẽ DWG, các phiên bản và bản vẽ liên quan.",
     "files.export.scope_full": "Toàn bộ dự án",
-    "files.export.scope_full_hint":
-      "Tất cả — gói di chuyển đầy đủ, bao gồm tất cả tệp đính kèm.",
+    "files.export.scope_full_hint": "Tất cả — gói di chuyển đầy đủ, bao gồm tất cả tệp đính kèm.",
     "files.export.stat_scope": "Phạm vi",
     "files.export.stat_attachments": "Tệp đính kèm",
     "files.export.stat_size": "Kích thước ước tính",
@@ -1160,8 +1048,7 @@ const resource = {
     "files.export.large_warn": "Gói lớn — giữ tab này mở trong khi xuất.",
     "files.export.success_title": "Đã tải gói xuống",
     "files.import.title": "Nhập gói dự án",
-    "files.import.intro":
-      "Chọn một gói .ocep được xuất từ không gian làm việc này hoặc nơi khác.",
+    "files.import.intro": "Chọn một gói .ocep được xuất từ không gian làm việc này hoặc nơi khác.",
     "files.import.select_file": "Chọn tệp .ocep",
     "files.import.drop_hint": "Nhấp để duyệt",
     "files.import.validating": "Đang xác thực gói…",
@@ -1173,19 +1060,15 @@ const resource = {
     "files.import.stat_format": "Định dạng",
     "files.import.choose_mode": "Chế độ nhập",
     "files.import.mode_new": "Tạo dự án mới",
-    "files.import.mode_new_hint":
-      "An toàn nhất. ID mới ở mọi nơi; không có gì thay đổi trong không gian làm việc của bạn.",
+    "files.import.mode_new_hint": "An toàn nhất. ID mới ở mọi nơi; không có gì thay đổi trong không gian làm việc của bạn.",
     "files.import.mode_merge": "Hợp nhất với dự án hiện có",
-    "files.import.mode_merge_hint":
-      "Thêm các hàng vào dự án đã chọn. ID hiện có sẽ bị bỏ qua.",
+    "files.import.mode_merge_hint": "Thêm các hàng vào dự án đã chọn. ID hiện có sẽ bị bỏ qua.",
     "files.import.mode_replace": "Thay thế dự án hiện có",
-    "files.import.mode_replace_hint":
-      "Xóa các hàng do gói quản lý của dự án đã chọn, sau đó nhập. Phá hủy.",
+    "files.import.mode_replace_hint": "Xóa các hàng do gói quản lý của dự án đã chọn, sau đó nhập. Phá hủy.",
     "files.import.rename": "Tên dự án mới (tùy chọn)",
     "files.import.target_project": "Dự án đích",
     "files.import.pick_project": "— chọn một dự án —",
-    "files.import.destructive_warn":
-      "Hành động này sẽ xóa vĩnh viễn các hàng do gói quản lý trong dự án đích trước khi nhập. Không thể hoàn tác.",
+    "files.import.destructive_warn": "Hành động này sẽ xóa vĩnh viễn các hàng do gói quản lý trong dự án đích trước khi nhập. Không thể hoàn tác.",
     "files.import.confirm": "Nhập",
     "files.import.result_done": "Nhập hoàn tất",
     "files.import.imported": "Đã nhập",
@@ -1205,8 +1088,7 @@ const resource = {
     "files.email.paste_into_email": "Mẫu nội dung email",
     "files.email.open_mail_client": "Mở ứng dụng email",
     "files.email.sample_subject": "Tệp: {{name}}",
-    "files.email.sample_body":
-      "Xin chào,\n\nđây là tệp bạn đã yêu cầu — {{name}} ({{size}}).\nLiên kết tải xuống (hết hạn {{expires}}):\n{{url}}\n\n— gửi từ OpenConstructionERP",
+    "files.email.sample_body": "Xin chào,\n\nđây là tệp bạn đã yêu cầu — {{name}} ({{size}}).\nLiên kết tải xuống (hết hạn {{expires}}):\n{{url}}\n\n— gửi từ OpenConstructionERP",
     "files.title_all": "Tất cả tệp",
     "files.empty_category": "Chưa có {{category}}",
     "files.cta.add_first": "Thêm {{category}} đầu tiên của bạn",
@@ -1220,8 +1102,7 @@ const resource = {
     "files.upload_browse": "Duyệt tệp",
     "files.upload_no_project": "Không có dự án đang hoạt động",
     "files.upload_too_large": "Tệp quá lớn",
-    "files.upload_too_large_msg":
-      "{{count}} tệp vượt quá giới hạn 100 MB và đã bị bỏ qua.",
+    "files.upload_too_large_msg": "{{count}} tệp vượt quá giới hạn 100 MB và đã bị bỏ qua.",
     "files.upload_queued": "{{count}} tệp trong hàng đợi",
     "files.uploading": "Đang tải lên…",
     "files.uploaded": "Đã tải lên",
@@ -1273,10 +1154,10 @@ const resource = {
     "nav.equipment": "Thiết bị & phương tiện",
     "nav.resources": "Tài nguyên & đội ngũ",
     "nav.service": "Dịch vụ & bảo trì",
-    "nav.portal": "Cổng nhà thầu phụ",
+    "nav.portal": "Cổng thầu phụ",
     "nav.crm": "CRM (Quản lý khách hàng)",
     "nav.contracts": "Hợp đồng",
-    "nav.subcontractors": "Nhà thầu phụ",
+    "nav.subcontractors": "Danh bạ nhà thầu phụ",
     "nav.bid_management": "Quản lý đấu thầu",
     "nav.variations": "Lệnh thay đổi",
     "nav.supplier_catalogs": "Danh mục nhà cung cấp",
@@ -1288,18 +1169,21 @@ const resource = {
     "nav.bi_dashboards": "Bảng điều khiển BI",
     "nav.match_elements": "Khớp phần tử → Chi phí",
     "nav.group_operations": "Vận hành công trường",
-    "nav.group_operations_desc":
-      "Vận hành công trường hàng ngày — phiếu dịch vụ, thiết bị, nhật ký, cổng nhà thầu phụ, tài nguyên",
+    "nav.group_operations_desc": "Vận hành công trường hàng ngày — phiếu dịch vụ, thiết bị, nhật ký, cổng nhà thầu phụ, tài nguyên",
     "nav.group_commercial": "Thương mại",
-    "nav.group_commercial_desc":
-      "Pipeline thương mại — CRM, hợp đồng, đấu thầu, thay đổi, nhà cung cấp, phát triển bất động sản",
+    "nav.group_commercial_desc": "Pipeline thương mại — CRM, hợp đồng, đấu thầu, thay đổi, nhà cung cấp, phát triển bất động sản",
     "nav.group_bi": "Phân tích",
     "nav.group_bi_desc": "Bảng điều khiển BI dựa trên hình chiếu kho dữ liệu",
-    "nav.group_estimation": "Dự toán",
-    "nav.group_estimation_desc":
-      "Công cụ cốt lõi: dự án, BOQ, chi phí và tổ hợp",
+    "nav.group_analytics": "Phân tích và Báo cáo",
+    "nav.group_analytics_desc": "Báo cáo đa mô-đun, bảng điều khiển BI và dự báo kho dữ liệu",
+    "nav.group_estimation": "Lập dự toán",
+    "nav.group_estimation_desc": "Dự toán dự án — BOQ, đối chiếu BIM với chi phí, AI dự toán, phân tích",
+    "nav.group_catalogues": "Danh mục & Tham chiếu",
+    "nav.group_catalogues_desc": "Cơ sở chi phí, danh mục khu vực, mẫu tổ hợp",
     "nav.group_databases": "Cơ sở dữ liệu",
     "nav.group_takeoff": "Bóc khối lượng",
+    "nav.group_cad_bim_analytics": "Phối hợp mô hình",
+    "nav.group_cad_bim_analytics_desc": "Federations, phát hiện xung đột, bộ quy tắc và trung tâm phối hợp",
     "nav.group_cad_bim": "CAD / BIM và BI",
     "nav.takeoff_overview": "Tổng quan",
     "nav.pdf_takeoff": "Bóc tách khối lượng PDF",
@@ -1307,7 +1191,7 @@ const resource = {
     "nav.erp_chat": "Trò chuyện AI",
     "nav.cad_takeoff": "Bóc tách khối lượng CAD/BIM",
     "nav.cad_bim_explorer": "Trình duyệt CAD-BIM BI",
-    "nav.bim_viewer": "Trình xem BIM 3D",
+    "nav.bim_viewer": "Bóc khối lượng BIM 3D",
     "nav.bim_rules": "Quy tắc BIM",
     "nav.quantity_rules": "Quy tắc khối lượng",
     "nav.assets": "Sổ đăng ký tài sản",
@@ -1324,16 +1208,13 @@ const resource = {
     "bim.loading_geometry": "Đang tải hình học 3D…",
     "bim.loading_finalising": "Đang hoàn tất cảnh…",
     "bim.loading_streaming": "Đang truyền hình học từ máy chủ…",
-    "bim.loading_parsing":
-      "Đang phân tích hình học 3D — với mô hình lớn (>50 MB) có thể mất 20-60 giây; đừng làm mới trang",
-    "bim.loading_navigate_hint":
-      "Bạn có thể chuyển sang các trang khác — quá trình tải sẽ tiếp tục ở chế độ nền",
+    "bim.loading_parsing": "Đang phân tích hình học 3D — với mô hình lớn (>50 MB) có thể mất 20-60 giây; đừng làm mới trang",
+    "bim.loading_navigate_hint": "Bạn có thể chuyển sang các trang khác — quá trình tải sẽ tiếp tục ở chế độ nền",
     "bim.no_models": "Chưa tải lên mô hình nào",
     "bim.no_project": "Chưa chọn dự án",
     "bim.no_project_desc": "Chọn dự án để xem các mô hình BIM.",
     "bim.select_model": "Chọn mô hình",
-    "bim.select_model_desc":
-      "Chọn mô hình BIM từ danh sách để trực quan hóa trong 3D.",
+    "bim.select_model_desc": "Chọn mô hình BIM từ danh sách để trực quan hóa trong 3D.",
     "bim.search_elements": "Tìm kiếm phần tử...",
     "bim.no_search_results": "Không có phần tử phù hợp",
     "bim.load_error": "Tải phần tử mô hình thất bại",
@@ -1355,11 +1236,13 @@ const resource = {
     "bim.properties": "Properties",
     "bim.disciplines": "Disciplines",
     "nav.group_overview": "Tổng quan",
-    "nav.group_ai_estimation": "AI và dự toán",
+    "nav.group_ai_estimation": "AI & Công cụ",
+    "nav.group_ai_estimation_desc": "Tác tử AI, cố vấn, trò chuyện ERP — AI dự toán chuyển sang Lập dự toán",
     "nav.group_finance": "Tài chính và mua sắm",
     "nav.group_communication": "Giao tiếp",
     "nav.group_documentation": "Tài liệu",
-    "nav.group_quality": "Chất lượng & an toàn",
+    "nav.group_quality": "Chất lượng",
+    "nav.group_safety": "An toàn & HSE",
     "nav.group_field": "Hiện trường và báo cáo",
     "nav.group_quality_risk": "Chất lượng và rủi ro",
     "nav.group_planning": "Lập kế hoạch",
@@ -1452,10 +1335,8 @@ const resource = {
     "requirements.notes": "Notes",
     "requirements.notes_placeholder": "Ghi chú bổ sung hoặc ngữ cảnh...",
     "requirements.import_text": "Nhập từ văn bản",
-    "requirements.import_text_desc":
-      "Dán thuyết minh yêu cầu. Mỗi dòng nên theo định dạng: thực_thể | thuộc_tính | loại_ràng_buộc | giá_trị | đơn_vị | danh_mục | mức_ưu_tiên",
-    "requirements.import_placeholder":
-      "tường | chiều_dày | min | 200 | mm | kết_cấu | bắt_buộc mái | u_value | max | 0.20 | W/m²K | nhiệt | bắt_buộc",
+    "requirements.import_text_desc": "Dán thuyết minh yêu cầu. Mỗi dòng nên theo định dạng: thực_thể | thuộc_tính | loại_ràng_buộc | giá_trị | đơn_vị | danh_mục | mức_ưu_tiên",
+    "requirements.import_placeholder": "tường | chiều_dày | min | 200 | mm | kết_cấu | bắt_buộc mái | u_value | max | 0.20 | W/m²K | nhiệt | bắt_buộc",
     "requirements.set_created": "Bộ yêu cầu đã được tạo",
     "requirements.new_set": "Bộ yêu cầu mới",
     "requirements.set_name_placeholder": "ví dụ: Yêu cầu kết cấu Giai đoạn 1",
@@ -1474,39 +1355,33 @@ const resource = {
     "requirements.all_priorities": "Tất cả mức ưu tiên",
     "requirements.all_statuses": "Tất cả trạng thái",
     "requirements.no_sets": "Chưa có bộ yêu cầu nào",
-    "requirements.no_sets_desc":
-      "Tạo bộ yêu cầu để bắt đầu xác định yêu cầu dự án và cổng chất lượng.",
+    "requirements.no_sets_desc": "Tạo bộ yêu cầu để bắt đầu xác định yêu cầu dự án và cổng chất lượng.",
     "requirements.empty": "Chưa có yêu cầu nào",
-    "requirements.empty_desc":
-      "Thêm yêu cầu để xác định các bộ ba Thực thể-Thuộc tính-Ràng buộc cho dự án của bạn.",
+    "requirements.empty_desc": "Thêm yêu cầu để xác định các bộ ba Thực thể-Thuộc tính-Ràng buộc cho dự án của bạn.",
     "requirements.no_match": "Không có yêu cầu nào phù hợp với bộ lọc của bạn.",
     "requirements.constraint": "Constraint",
     "requirements.confidence": "Conf.",
     "requirements.source": "Source",
     "requirements.showing": "{{count}} requirements",
     "requirements.of_total": "of {{total}}",
-    "requirements.confirm_delete_set":
-      "Xóa bộ yêu cầu này và tất cả yêu cầu của nó?",
+    "requirements.confirm_delete_set": "Xóa bộ yêu cầu này và tất cả yêu cầu của nó?",
     "requirements.delete_set": "Xóa bộ",
     "requirements.and_more": "và {{count}} mục khác...",
     "requirements.click_to_upload_csv": "Nhấp để tải lên tệp CSV",
     "requirements.click_to_upload_json": "Nhấp để tải lên tệp JSON",
     "requirements.csv_loaded": "{{count}} hàng đã tải từ CSV",
-    "requirements.csv_parse_error":
-      "CSV phải có tiêu đề: entity, attribute, constraint_value",
+    "requirements.csv_parse_error": "CSV phải có tiêu đề: entity, attribute, constraint_value",
     "requirements.export": "Export",
     "requirements.export_csv": "Xuất CSV",
     "requirements.export_excel": "Xuất Excel",
     "requirements.export_json": "Xuất JSON",
     "requirements.exported": "Yêu cầu đã được xuất",
     "requirements.import_count": "Đang nhập {{count}} yêu cầu...",
-    "requirements.import_csv_desc":
-      "Tải lên tệp CSV với các cột: entity, attribute, constraint_value",
+    "requirements.import_csv_desc": "Tải lên tệp CSV với các cột: entity, attribute, constraint_value",
     "requirements.import_json_desc": "Tải lên mảng JSON các đối tượng yêu cầu",
     "requirements.import_requirements": "Nhập yêu cầu",
     "requirements.json_loaded": "{{count}} mục đã tải từ JSON",
-    "requirements.json_parse_error":
-      "JSON phải là mảng các đối tượng có entity, attribute, constraint_value",
+    "requirements.json_parse_error": "JSON phải là mảng các đối tượng có entity, attribute, constraint_value",
     "requirements.preview": "Preview",
     "requirements.regex_hint": "Nhập mẫu biểu thức chính quy, ví dụ: ^F[0-9]+$",
     "requirements.regex_invalid": "Mẫu không hợp lệ",
@@ -1560,8 +1435,7 @@ const resource = {
     "markups.col_measurement": "Measurement",
     "markups.col_date": "Date",
     "markups.empty_title": "Không tìm thấy chú thích nào",
-    "markups.empty_desc":
-      "Các chú thích và ghi chú từ tài liệu dự án sẽ xuất hiện ở đây.",
+    "markups.empty_desc": "Các chú thích và ghi chú từ tài liệu dự án sẽ xuất hiện ở đây.",
     "markups.action_resolve": "Resolve",
     "markups.action_archive": "Archive",
     "markups.add_markup": "Thêm chú thích",
@@ -1604,8 +1478,7 @@ const resource = {
     "punch.stat_overdue": "Overdue",
     "punch.add_item": "Thêm mục lỗi",
     "punch.field_title": "Title",
-    "punch.title_placeholder":
-      "ví dụ: Thiếu bịt kín chống cháy tại lỗ xuyên Tầng 3",
+    "punch.title_placeholder": "ví dụ: Thiếu bịt kín chống cháy tại lỗ xuyên Tầng 3",
     "punch.field_description": "Description",
     "punch.description_placeholder": "Cung cấp chi tiết về vấn đề...",
     "punch.field_priority": "Priority",
@@ -1643,8 +1516,7 @@ const resource = {
     "punch.all_assignees": "Tất cả người phụ trách",
     "punch.kanban_empty": "Không có mục nào",
     "punch.empty_title": "Không có mục lỗi nào",
-    "punch.empty_desc":
-      "Tạo các mục lỗi để theo dõi sai sót, khiếm khuyết và công việc còn lại.",
+    "punch.empty_desc": "Tạo các mục lỗi để theo dõi sai sót, khiếm khuyết và công việc còn lại.",
     "punch.col_title": "Title",
     "punch.col_priority": "Priority",
     "punch.col_status": "Status",
@@ -1710,8 +1582,7 @@ const resource = {
     "field_reports.total": "Tổng số báo cáo",
     "field_reports.workforce_hours": "Giờ nhân công",
     "field_reports.empty": "Chưa có báo cáo nào",
-    "field_reports.empty_desc":
-      "Tạo báo cáo hàng ngày đầu tiên để bắt đầu ghi chép tiến độ xây dựng",
+    "field_reports.empty_desc": "Tạo báo cáo hàng ngày đầu tiên để bắt đầu ghi chép tiến độ xây dựng",
     "photos.title": "Ảnh dự án",
     "photos.upload": "Tải lên ảnh",
     "photos.upload_hint": "Kéo và thả ảnh hoặc nhấp để duyệt",
@@ -1736,18 +1607,15 @@ const resource = {
     "onboarding.ai_feature_2": "Phân tích ảnh công trình",
     "onboarding.ai_feature_3": "Phân tích tài liệu PDF tự động",
     "onboarding.ai_saved": "Đã lưu cài đặt AI",
-    "onboarding.ai_subtitle":
-      "Kết nối nhà cung cấp AI để sử dụng tính năng thông minh:",
+    "onboarding.ai_subtitle": "Kết nối nhà cung cấp AI để sử dụng tính năng thông minh:",
     "onboarding.ai_test_error": "Kiểm tra thất bại",
     "onboarding.ai_test_failed": "Kết nối thất bại",
     "onboarding.ai_test_success": "Kết nối thành công!",
     "onboarding.ai_title": "Nhà cung cấp AI (Tùy chọn)",
     "onboarding.api_key": "Khóa API",
     "onboarding.api_key_placeholder": "Dán khóa API của bạn vào đây...",
-    "onboarding.cost_db_hint":
-      "Bạn có thể thêm cơ sở dữ liệu sau trong Cơ sở dữ liệu chi phí → Nhập.",
-    "onboarding.cost_db_subtitle":
-      "Tải cơ sở dữ liệu định giá để có dự toán chính xác. Chọn khu vực của bạn:",
+    "onboarding.cost_db_hint": "Bạn có thể thêm cơ sở dữ liệu sau trong Cơ sở dữ liệu chi phí → Nhập.",
+    "onboarding.cost_db_subtitle": "Tải cơ sở dữ liệu định giá để có dự toán chính xác. Chọn khu vực của bạn:",
     "onboarding.cost_db_title": "Cơ sở dữ liệu chi phí",
     "onboarding.create_error": "Tạo dự án thất bại",
     "onboarding.create_project": "Tạo & Bắt đầu dự toán",
@@ -1757,14 +1625,12 @@ const resource = {
     "onboarding.get_started": "Bắt đầu",
     "onboarding.items_loaded": "mục đã tải",
     "onboarding.loading_database": "Đang nhập cơ sở dữ liệu...",
-    "onboarding.loading_database_hint":
-      "Đang tải ~55.000 mục. Quá trình này mất 1-3 phút.",
+    "onboarding.loading_database_hint": "Đang tải ~55.000 mục. Quá trình này mất 1-3 phút.",
     "onboarding.project_created": "Dự án đã được tạo!",
     "onboarding.project_created_msg": "Không gian làm việc đã sẵn sàng. Hãy",
     "onboarding.project_error": "Tạo dự án thất bại",
     "onboarding.project_name": "Tên dự án",
-    "onboarding.project_name_placeholder":
-      "ví dụ: Tòa tháp văn phòng Trung tâm",
+    "onboarding.project_name_placeholder": "ví dụ: Tòa tháp văn phòng Trung tâm",
     "onboarding.project_subtitle": "Thiết lập dự án đầu tiên để bắt đầu.",
     "onboarding.project_title": "Dự án đầu tiên của bạn",
     "onboarding.recommended": "Recommended",
@@ -1774,36 +1640,27 @@ const resource = {
     "onboarding.standard": "Standard",
     "onboarding.test_connection": "Kiểm tra kết nối",
     "onboarding.testing": "Testing...",
-    "onboarding.welcome_hint":
-      "Miễn phí và mã nguồn mở. Không cần thẻ tín dụng.",
-    "onboarding.welcome_subtitle":
-      "Không gian làm việc dự toán xây dựng chuyên nghiệp. Thiết lập môi trường của bạn trong vài bước đơn giản.",
+    "onboarding.welcome_hint": "Miễn phí và mã nguồn mở. Không cần thẻ tín dụng.",
+    "onboarding.welcome_subtitle": "Không gian làm việc dự toán xây dựng chuyên nghiệp. Thiết lập môi trường của bạn trong vài bước đơn giản.",
     "onboarding.welcome_title": "Chào mừng đến với OpenConstructionERP",
     "onboarding.step_company": "Company",
     "onboarding.step_modules": "Modules",
     "onboarding.step_mode": "Mode",
     "onboarding.company_type_title": "Loại doanh nghiệp của bạn là gì?",
-    "onboarding.company_type_subtitle":
-      "Chúng tôi sẽ cấu hình trước bộ mô-đun tốt nhất cho quy trình làm việc của bạn.",
+    "onboarding.company_type_subtitle": "Chúng tôi sẽ cấu hình trước bộ mô-đun tốt nhất cho quy trình làm việc của bạn.",
     "onboarding.company_general_contractor": "Tổng thầu",
-    "onboarding.company_general_contractor_desc":
-      "Chúng tôi thi công dự án — dự toán, mua sắm, quản lý công trường",
+    "onboarding.company_general_contractor_desc": "Chúng tôi thi công dự án — dự toán, mua sắm, quản lý công trường",
     "onboarding.company_estimator": "Dự toán viên / Tư vấn chi phí",
-    "onboarding.company_estimator_desc":
-      "Chúng tôi tập trung vào dự toán chi phí và bóc tách khối lượng",
+    "onboarding.company_estimator_desc": "Chúng tôi tập trung vào dự toán chi phí và bóc tách khối lượng",
     "onboarding.company_project_management": "Công ty quản lý dự án",
-    "onboarding.company_project_management_desc":
-      "Chúng tôi quản lý dự án lớn — lập kế hoạch, giao tiếp, tài liệu",
+    "onboarding.company_project_management_desc": "Chúng tôi quản lý dự án lớn — lập kế hoạch, giao tiếp, tài liệu",
     "onboarding.company_architecture": "Văn phòng Kiến trúc / Kỹ thuật",
-    "onboarding.company_architecture_desc":
-      "Chúng tôi thiết kế công trình — BIM, tài liệu, CDE",
+    "onboarding.company_architecture_desc": "Chúng tôi thiết kế công trình — BIM, tài liệu, CDE",
     "onboarding.company_full_enterprise": "Doanh nghiệp toàn diện",
-    "onboarding.company_full_enterprise_desc":
-      "Chúng tôi cần tất cả — vòng đời xây dựng đầy đủ",
+    "onboarding.company_full_enterprise_desc": "Chúng tôi cần tất cả — vòng đời xây dựng đầy đủ",
     "onboarding.modules_label": "modules",
     "onboarding.modules_title": "Xem xét mô-đun của bạn",
-    "onboarding.modules_subtitle":
-      "Đã chọn trước dựa trên loại doanh nghiệp. Bật hoặc tắt bất kỳ mô-đun nào.",
+    "onboarding.modules_subtitle": "Đã chọn trước dựa trên loại doanh nghiệp. Bật hoặc tắt bất kỳ mô-đun nào.",
     "onboarding.modules_active": "mô-đun đang hoạt động",
     "onboarding.mod_group_core": "Dự toán cốt lõi",
     "onboarding.mod_group_takeoff": "Bóc tách & AI",
@@ -1814,8 +1671,7 @@ const resource = {
     "onboarding.mod_group_quality": "Chất lượng & An toàn",
     "onboarding.mod_group_field": "Field",
     "onboarding.mod_group_analytics": "Phân tích & Tiện ích",
-    "onboarding.mod_boq_desc":
-      "Trình soạn thảo Bảng khối lượng với hạng mục phân cấp",
+    "onboarding.mod_boq_desc": "Trình soạn thảo Bảng khối lượng với hạng mục phân cấp",
     "onboarding.mod_projects_desc": "Quản lý và tổ chức dự án",
     "onboarding.mod_costs_desc": "Cơ sở dữ liệu chi phí và quản lý đơn giá",
     "onboarding.mod_assemblies_desc": "Công thức đơn giá tổng hợp và mẫu",
@@ -1829,14 +1685,12 @@ const resource = {
     "onboarding.mod_data_explorer_desc": "Khám phá dữ liệu CAD/BIM",
     "onboarding.mod_bim_desc": "Trình xem mô hình BIM 3D",
     "onboarding.mod_schedule_desc": "Biểu đồ Gantt 4D và lập lịch CPM",
-    "onboarding.mod_5d_desc":
-      "Mô hình chi phí 5D với theo dõi giá trị đạt được",
+    "onboarding.mod_5d_desc": "Mô hình chi phí 5D với theo dõi giá trị đạt được",
     "onboarding.mod_tasks_desc": "Quản lý nhiệm vụ và phân công",
     "onboarding.mod_finance_desc": "Theo dõi ngân sách và tổng quan tài chính",
     "onboarding.mod_procurement_desc": "Đơn mua hàng và quản lý nhà cung cấp",
     "onboarding.mod_tendering_desc": "Gói đấu thầu và quy trình mời thầu",
-    "onboarding.mod_changeorders_desc":
-      "Theo dõi và phê duyệt thay đổi khối lượng",
+    "onboarding.mod_changeorders_desc": "Theo dõi và phê duyệt thay đổi khối lượng",
     "onboarding.mod_contacts_desc": "Danh bạ liên hệ và nhóm",
     "onboarding.mod_meetings_desc": "Quản lý cuộc họp và biên bản",
     "onboarding.mod_rfi_desc": "Yêu cầu thông tin",
@@ -1847,8 +1701,7 @@ const resource = {
     "onboarding.mod_cde_desc": "Môi trường Dữ liệu Chung",
     "onboarding.mod_photos_desc": "Thư viện ảnh và chú thích",
     "onboarding.mod_markups_desc": "Chú thích bản vẽ và ghi chú đỏ",
-    "onboarding.mod_inspections_desc":
-      "Kiểm tra công trường và danh sách kiểm tra",
+    "onboarding.mod_inspections_desc": "Kiểm tra công trường và danh sách kiểm tra",
     "onboarding.mod_ncr_desc": "Báo cáo không phù hợp",
     "onboarding.mod_safety_desc": "Quản lý an toàn và sự cố",
     "onboarding.mod_punchlist_desc": "Theo dõi danh sách lỗi / sai sót",
@@ -1862,28 +1715,22 @@ const resource = {
     "onboarding.mod_cost_benchmark_desc": "Phân tích chuẩn chi phí",
     "onboarding.mod_collaboration_desc": "Công cụ cộng tác thời gian thực",
     "support.button_label": "Ủng hộ chúng tôi",
-    "support.button_tooltip":
-      "Ủng hộ dự án — gắn sao, chia sẻ hoặc gửi case study",
+    "support.button_tooltip": "Ủng hộ dự án — gắn sao, chia sẻ hoặc gửi case study",
     "support.button_aria": "Ủng hộ chúng tôi",
     "support.modal_title": "Giúp OpenConstructionERP phát triển",
-    "support.modal_subtitle":
-      "Chúng tôi phát triển mã nguồn mở và cung cấp mọi tính năng miễn phí. Vài hành động nhỏ từ bạn giữ cho việc phát triển tiếp tục — không tốn gì nhưng tạo ra khác biệt to lớn.",
+    "support.modal_subtitle": "Chúng tôi phát triển mã nguồn mở và cung cấp mọi tính năng miễn phí. Vài hành động nhỏ từ bạn giữ cho việc phát triển tiếp tục — không tốn gì nhưng tạo ra khác biệt to lớn.",
     "support.action_star_title": "Gắn sao cho chúng tôi trên GitHub",
-    "support.action_star_body":
-      "30 giây. Sao là cách các đội xây dựng mới khám phá dự án và là cách chúng tôi đảm bảo thời gian cho phiên bản tiếp theo.",
+    "support.action_star_body": "30 giây. Sao là cách các đội xây dựng mới khám phá dự án và là cách chúng tôi đảm bảo thời gian cho phiên bản tiếp theo.",
     "support.action_share_title": "Chia sẻ với đội của bạn hoặc mạng lưới",
-    "support.action_share_body":
-      "Một bài đăng trên LinkedIn hoặc X / Twitter tiếp cận hàng chục estimator, lập kế hoạch và BIM manager. Giúp chúng tôi đưa phần mềm xây dựng mã nguồn mở lên bản đồ.",
+    "support.action_share_body": "Một bài đăng trên LinkedIn hoặc X / Twitter tiếp cận hàng chục estimator, lập kế hoạch và BIM manager. Giúp chúng tôi đưa phần mềm xây dựng mã nguồn mở lên bản đồ.",
     "support.share_twitter": "Đăng trên X",
     "support.share_linkedin": "Đăng trên LinkedIn",
     "support.share_copy": "Sao chép văn bản + liên kết",
     "support.share_copied": "Đã sao chép!",
     "support.action_case_study_title": "Bạn có case study, video hay bài viết?",
     "support.action_case_study_tag": "Chúng tôi sẽ lan tỏa",
-    "support.action_case_study_body":
-      "Cho chúng tôi thấy bạn sử dụng OpenConstructionERP như thế nào — video, case study, bài viết LinkedIn. Bạn có thể gửi liên kết trực tiếp, hoặc chỉ cần tag @DataDrivenConstruction trong bài đăng — chúng tôi sẽ nhận thấy và chia sẻ lại qua bản tin và kênh xã hội, nơi hàng chục nghìn chuyên gia xây dựng và chuyên gia ngành cấp cao theo dõi công việc của chúng tôi. Email cho liên kết: ",
-    "support.thanks":
-      "Cảm ơn. Mỗi ngôi sao, chia sẻ và câu chuyện thực sự giữ cho dự án này sống — xây dựng bằng ❤️ cho cộng đồng xây dựng.",
+    "support.action_case_study_body": "Cho chúng tôi thấy bạn sử dụng OpenConstructionERP như thế nào — video, case study, bài viết LinkedIn. Bạn có thể gửi liên kết trực tiếp, hoặc chỉ cần tag @DataDrivenConstruction trong bài đăng — chúng tôi sẽ nhận thấy và chia sẻ lại qua bản tin và kênh xã hội, nơi hàng chục nghìn chuyên gia xây dựng và chuyên gia ngành cấp cao theo dõi công việc của chúng tôi. Email cho liên kết: ",
+    "support.thanks": "Cảm ơn. Mỗi ngôi sao, chia sẻ và câu chuyện thực sự giữ cho dự án này sống — xây dựng bằng ❤️ cho cộng đồng xây dựng.",
     "onboarding.mod_group_estimation": "Dự toán",
     "onboarding.mod_group_ai": "AI",
     "onboarding.mod_group_bim_advanced": "BIM và 3D",
@@ -1896,165 +1743,117 @@ const resource = {
     "onboarding.mod_group_regional": "Gói khu vực",
     "onboarding.mod_group_platform": "Nền tảng",
     "onboarding.mod_cost_match": "Khớp chi phí",
-    "onboarding.mod_cost_match_desc":
-      "Khớp tự động các hạng mục BOQ với các mục cơ sở dữ liệu chi phí",
+    "onboarding.mod_cost_match_desc": "Khớp tự động các hạng mục BOQ với các mục cơ sở dữ liệu chi phí",
     "onboarding.mod_match": "Khớp phần tử",
-    "onboarding.mod_match_desc":
-      "Liên kết các phần tử BIM/CAD với hạng mục BOQ và đơn giá",
+    "onboarding.mod_match_desc": "Liên kết các phần tử BIM/CAD với hạng mục BOQ và đơn giá",
     "onboarding.mod_dwg_takeoff": "Bóc khối lượng DWG",
     "onboarding.mod_dwg_takeoff_desc": "Bóc khối lượng trực tiếp từ bản vẽ DWG",
     "onboarding.mod_cad": "Nhập CAD",
-    "onboarding.mod_cad_desc":
-      "Nhập DWG/DGN/RVT/IFC qua đường ống DDC cad2data",
+    "onboarding.mod_cad_desc": "Nhập DWG/DGN/RVT/IFC qua đường ống DDC cad2data",
     "onboarding.mod_bim_requirements": "Yêu cầu BIM",
-    "onboarding.mod_bim_requirements_desc":
-      "Xác định và xác thực yêu cầu mô hình (IDS / EIR)",
+    "onboarding.mod_bim_requirements_desc": "Xác định và xác thực yêu cầu mô hình (IDS / EIR)",
     "onboarding.mod_match_elements": "Khớp phần tử",
-    "onboarding.mod_match_elements_desc":
-      "Khớp phần tử BIM-chi phí có sự hỗ trợ của AI với điểm tin cậy",
+    "onboarding.mod_match_elements_desc": "Khớp phần tử BIM-chi phí có sự hỗ trợ của AI với điểm tin cậy",
     "onboarding.mod_opencde_api": "API OpenCDE",
-    "onboarding.mod_opencde_api_desc":
-      "API tuân thủ OpenCDE cho BCF + Tài liệu + Foundation",
+    "onboarding.mod_opencde_api_desc": "API tuân thủ OpenCDE cho BCF + Tài liệu + Foundation",
     "onboarding.mod_erp_chat": "Chat ERP",
-    "onboarding.mod_erp_chat_desc":
-      "Trợ lý chat AI trong ứng dụng với ngữ cảnh ERP đầy đủ",
+    "onboarding.mod_erp_chat_desc": "Trợ lý chat AI trong ứng dụng với ngữ cảnh ERP đầy đủ",
     "onboarding.mod_compliance_ai": "AI tuân thủ",
-    "onboarding.mod_compliance_ai_desc":
-      "Kiểm tra tuân thủ quy định dựa trên LLM",
+    "onboarding.mod_compliance_ai_desc": "Kiểm tra tuân thủ quy định dựa trên LLM",
     "onboarding.mod_schedule_advanced": "Lịch trình nâng cao",
-    "onboarding.mod_schedule_advanced_desc":
-      "Last Planner System với look-ahead hàng tuần và PPC",
+    "onboarding.mod_schedule_advanced_desc": "Last Planner System với look-ahead hàng tuần và PPC",
     "onboarding.mod_eac": "Engine EAC",
     "onboarding.mod_eac_desc": "Estimate at Completion với dự báo lăn",
     "onboarding.mod_bid_management": "Quản lý hồ sơ thầu",
-    "onboarding.mod_bid_management_desc":
-      "Quản lý hồ sơ thầu gửi đi, chiến lược giá, theo dõi thắng/thua",
+    "onboarding.mod_bid_management_desc": "Quản lý hồ sơ thầu gửi đi, chiến lược giá, theo dõi thắng/thua",
     "onboarding.mod_contracts": "Hợp đồng",
-    "onboarding.mod_contracts_desc":
-      "Engine loại hợp đồng (FIDIC, NEC, JCT, trọn gói, T&M)",
+    "onboarding.mod_contracts_desc": "Engine loại hợp đồng (FIDIC, NEC, JCT, trọn gói, T&M)",
     "onboarding.mod_variations": "Thay đổi",
-    "onboarding.mod_variations_desc":
-      "Thay đổi đo lường tại công trường với quy trình phê duyệt",
+    "onboarding.mod_variations_desc": "Thay đổi đo lường tại công trường với quy trình phê duyệt",
     "onboarding.mod_crm": "CRM",
     "onboarding.mod_crm_desc": "Pipeline bán hàng, lead, cơ hội, tài khoản",
     "onboarding.mod_supplier_catalogs": "Catalog nhà cung cấp",
-    "onboarding.mod_supplier_catalogs_desc":
-      "Bảng giá nhà cung cấp trực tiếp và quản lý nhà cung cấp",
+    "onboarding.mod_supplier_catalogs_desc": "Bảng giá nhà cung cấp trực tiếp và quản lý nhà cung cấp",
     "onboarding.mod_property_dev": "Phát triển bất động sản",
-    "onboarding.mod_property_dev_desc":
-      "Đất, giai đoạn, mix bán hàng, tính khả thi cho nhà phát triển",
+    "onboarding.mod_property_dev_desc": "Đất, giai đoạn, mix bán hàng, tính khả thi cho nhà phát triển",
     "onboarding.mod_service": "Dịch vụ và bảo trì",
-    "onboarding.mod_service_desc":
-      "Yêu cầu dịch vụ sau bàn giao, bảo hành, bảo trì",
+    "onboarding.mod_service_desc": "Yêu cầu dịch vụ sau bàn giao, bảo hành, bảo trì",
     "onboarding.mod_equipment": "Thiết bị và đội xe",
-    "onboarding.mod_equipment_desc":
-      "Máy móc, dụng cụ, phương tiện — sử dụng, bảo trì, giá thuê",
+    "onboarding.mod_equipment_desc": "Máy móc, dụng cụ, phương tiện — sử dụng, bảo trì, giá thuê",
     "onboarding.mod_resources": "Tài nguyên",
-    "onboarding.mod_resources_desc":
-      "Lập kế hoạch tài nguyên: lao động, vật tư, thiết bị",
+    "onboarding.mod_resources_desc": "Lập kế hoạch tài nguyên: lao động, vật tư, thiết bị",
     "onboarding.mod_daily_diary": "Nhật ký hàng ngày",
-    "onboarding.mod_daily_diary_desc":
-      "Nhật ký công trường hàng ngày với thời tiết, đội, thiết bị, ảnh",
+    "onboarding.mod_daily_diary_desc": "Nhật ký công trường hàng ngày với thời tiết, đội, thiết bị, ảnh",
     "onboarding.mod_subcontractors": "Thầu phụ",
-    "onboarding.mod_subcontractors_desc":
-      "Onboarding thầu phụ, hợp đồng, thanh toán, hiệu suất",
+    "onboarding.mod_subcontractors_desc": "Onboarding thầu phụ, hợp đồng, thanh toán, hiệu suất",
     "onboarding.mod_portal": "Cổng khách hàng",
-    "onboarding.mod_portal_desc":
-      "Cổng bên ngoài cho khách hàng và đối tác với quyền truy cập hạn chế",
+    "onboarding.mod_portal_desc": "Cổng bên ngoài cho khách hàng và đối tác với quyền truy cập hạn chế",
     "onboarding.mod_notifications": "Thông báo",
-    "onboarding.mod_notifications_desc":
-      "Thông báo trong ứng dụng, email và webhook",
+    "onboarding.mod_notifications_desc": "Thông báo trong ứng dụng, email và webhook",
     "onboarding.mod_hse_advanced": "HSE nâng cao",
-    "onboarding.mod_hse_advanced_desc":
-      "Sức khỏe, an toàn, môi trường nâng cao — toolbox talks, JHA, kiểm toán",
+    "onboarding.mod_hse_advanced_desc": "Sức khỏe, an toàn, môi trường nâng cao — toolbox talks, JHA, kiểm toán",
     "onboarding.mod_qms": "Hệ thống quản lý chất lượng",
-    "onboarding.mod_qms_desc":
-      "QMS phù hợp ISO 9001 — quy trình, kiểm toán, KPI",
+    "onboarding.mod_qms_desc": "QMS phù hợp ISO 9001 — quy trình, kiểm toán, KPI",
     "onboarding.mod_compliance": "Compliance DSL",
-    "onboarding.mod_compliance_desc":
-      "Ngôn ngữ đặc thù miền code-as-rules cho tuân thủ",
+    "onboarding.mod_compliance_desc": "Ngôn ngữ đặc thù miền code-as-rules cho tuân thủ",
     "onboarding.mod_compliance_docs": "Tài liệu tuân thủ",
-    "onboarding.mod_compliance_docs_desc":
-      "Thư viện chứng chỉ, theo dõi hiệu lực, nhắc gia hạn",
+    "onboarding.mod_compliance_docs_desc": "Thư viện chứng chỉ, theo dõi hiệu lực, nhắc gia hạn",
     "onboarding.mod_carbon": "Carbon và bền vững",
     "onboarding.mod_carbon_desc": "Carbon ẩn + vận hành, báo cáo ESG, EN 15978",
     "onboarding.mod_bi_dashboards": "Dashboard BI",
-    "onboarding.mod_bi_dashboards_desc":
-      "Phân tích tương tác chéo module với drill-down",
+    "onboarding.mod_bi_dashboards_desc": "Phân tích tương tác chéo module với drill-down",
     "onboarding.mod_enterprise_workflows": "Workflow doanh nghiệp",
-    "onboarding.mod_enterprise_workflows_desc":
-      "Workflow phê duyệt tùy chỉnh dựa trên FSM cho tổ chức lớn",
+    "onboarding.mod_enterprise_workflows_desc": "Workflow phê duyệt tùy chỉnh dựa trên FSM cho tổ chức lớn",
     "onboarding.mod_full_evm": "EVM đầy đủ",
-    "onboarding.mod_full_evm_desc":
-      "Earned Value Management đầy đủ — PV/EV/AC, SPI/CPI, CV/SV, ETC/EAC",
+    "onboarding.mod_full_evm_desc": "Earned Value Management đầy đủ — PV/EV/AC, SPI/CPI, CV/SV, ETC/EAC",
     "onboarding.mod_rfq_bidding": "RFQ và đấu thầu",
-    "onboarding.mod_rfq_bidding_desc":
-      "Workflow RFQ nhiều vòng, đấu thầu kín, đấu giá điện tử",
+    "onboarding.mod_rfq_bidding_desc": "Workflow RFQ nhiều vòng, đấu thầu kín, đấu giá điện tử",
     "onboarding.mod_integrations": "Tích hợp",
-    "onboarding.mod_integrations_desc":
-      "Webhooks, SAP, Procore, MS Project qua n8n",
+    "onboarding.mod_integrations_desc": "Webhooks, SAP, Procore, MS Project qua n8n",
     "onboarding.mod_dach_pack": "Gói khu vực — DACH (DE/AT/CH)",
-    "onboarding.mod_dach_pack_desc":
-      "Tiêu chuẩn, phân loại, tiền tệ, định dạng cho DACH (DE/AT/CH)",
+    "onboarding.mod_dach_pack_desc": "Tiêu chuẩn, phân loại, tiền tệ, định dạng cho DACH (DE/AT/CH)",
     "onboarding.mod_uk_pack": "Gói khu vực — Vương quốc Anh",
-    "onboarding.mod_uk_pack_desc":
-      "Tiêu chuẩn, phân loại, tiền tệ, định dạng cho Vương quốc Anh",
+    "onboarding.mod_uk_pack_desc": "Tiêu chuẩn, phân loại, tiền tệ, định dạng cho Vương quốc Anh",
     "onboarding.mod_us_pack": "Gói khu vực — Hoa Kỳ",
-    "onboarding.mod_us_pack_desc":
-      "Tiêu chuẩn, phân loại, tiền tệ, định dạng cho Hoa Kỳ",
+    "onboarding.mod_us_pack_desc": "Tiêu chuẩn, phân loại, tiền tệ, định dạng cho Hoa Kỳ",
     "onboarding.mod_india_pack": "Gói khu vực — Ấn Độ",
-    "onboarding.mod_india_pack_desc":
-      "Tiêu chuẩn, phân loại, tiền tệ, định dạng cho Ấn Độ",
+    "onboarding.mod_india_pack_desc": "Tiêu chuẩn, phân loại, tiền tệ, định dạng cho Ấn Độ",
     "onboarding.mod_middle_east_pack": "Gói khu vực — Trung Đông và GCC",
-    "onboarding.mod_middle_east_pack_desc":
-      "Tiêu chuẩn, phân loại, tiền tệ, định dạng cho Trung Đông và GCC",
+    "onboarding.mod_middle_east_pack_desc": "Tiêu chuẩn, phân loại, tiền tệ, định dạng cho Trung Đông và GCC",
     "onboarding.mod_latam_pack": "Gói khu vực — Mỹ Latinh",
-    "onboarding.mod_latam_pack_desc":
-      "Tiêu chuẩn, phân loại, tiền tệ, định dạng cho Mỹ Latinh",
+    "onboarding.mod_latam_pack_desc": "Tiêu chuẩn, phân loại, tiền tệ, định dạng cho Mỹ Latinh",
     "onboarding.mod_asia_pac_pack": "Gói khu vực — Châu Á-Thái Bình Dương",
-    "onboarding.mod_asia_pac_pack_desc":
-      "Tiêu chuẩn, phân loại, tiền tệ, định dạng cho Châu Á-Thái Bình Dương",
+    "onboarding.mod_asia_pac_pack_desc": "Tiêu chuẩn, phân loại, tiền tệ, định dạng cho Châu Á-Thái Bình Dương",
     "onboarding.mod_russia_pack": "Gói khu vực — Nga và CIS",
-    "onboarding.mod_russia_pack_desc":
-      "Tiêu chuẩn, phân loại, tiền tệ, định dạng cho Nga và CIS",
+    "onboarding.mod_russia_pack_desc": "Tiêu chuẩn, phân loại, tiền tệ, định dạng cho Nga và CIS",
     "onboarding.mod_users": "Người dùng và Auth",
     "onboarding.mod_users_desc": "Tài khoản người dùng, vai trò, JWT, khóa API",
     "onboarding.mod_teams": "Đội",
     "onboarding.mod_teams_desc": "Nhóm đội, phạm vi hiển thị, gán dự án",
     "onboarding.mod_uploads": "Tải lên",
-    "onboarding.mod_uploads_desc":
-      "Tải lên trực tiếp các tệp lớn có thể tiếp tục",
+    "onboarding.mod_uploads_desc": "Tải lên trực tiếp các tệp lớn có thể tiếp tục",
     "onboarding.mod_jobs": "Công việc nền",
     "onboarding.mod_jobs_desc": "Hàng đợi worker cho nhập, xuất, đường ống CV",
     "onboarding.mod_search": "Tìm kiếm ngữ nghĩa",
-    "onboarding.mod_search_desc":
-      "Tìm kiếm vector + từ vựng trên BOQ, tài liệu, bản vẽ",
+    "onboarding.mod_search_desc": "Tìm kiếm vector + từ vựng trên BOQ, tài liệu, bản vẽ",
     "onboarding.mod_backup": "Sao lưu và khôi phục",
-    "onboarding.mod_backup_desc":
-      "Sao lưu tự động với khôi phục theo thời điểm",
+    "onboarding.mod_backup_desc": "Sao lưu tự động với khôi phục theo thời điểm",
     "onboarding.mod_admin": "Bảng điều khiển admin",
-    "onboarding.mod_admin_desc":
-      "Endpoint vận hành, đường ống QA, bảo trì hệ thống",
+    "onboarding.mod_admin_desc": "Endpoint vận hành, đường ống QA, bảo trì hệ thống",
     "onboarding.mod_i18n_foundation": "Nền tảng i18n",
-    "onboarding.mod_i18n_foundation_desc":
-      "Runtime i18n 27 ngôn ngữ với locale chunk lazy",
+    "onboarding.mod_i18n_foundation_desc": "Runtime i18n 27 ngôn ngữ với locale chunk lazy",
     "onboarding.mod_collaboration_locks": "Khóa cộng tác",
-    "onboarding.mod_collaboration_locks_desc":
-      "Khóa lạc quan và bi quan cho chỉnh sửa đa người dùng",
+    "onboarding.mod_collaboration_locks_desc": "Khóa lạc quan và bi quan cho chỉnh sửa đa người dùng",
     "onboarding.mod_architecture_map": "Bản đồ kiến trúc",
-    "onboarding.mod_architecture_map_desc":
-      "Bản đồ trực quan tương tác về kiến trúc hệ thống",
+    "onboarding.mod_architecture_map_desc": "Bản đồ trực quan tương tác về kiến trúc hệ thống",
     "onboarding.mod_dashboards": "Dashboard",
     "onboarding.mod_dashboards_desc": "Dashboard theo dự án và danh mục",
     "onboarding.mode_title": "Chọn chế độ giao diện",
-    "onboarding.mode_subtitle":
-      "Bạn có thể chuyển đổi giữa các chế độ bất cứ lúc nào trong Cài đặt.",
+    "onboarding.mode_subtitle": "Bạn có thể chuyển đổi giữa các chế độ bất cứ lúc nào trong Cài đặt.",
     "onboarding.mode_simple": "Simple",
-    "onboarding.mode_simple_desc":
-      "I'm getting started — show me the essentials. A clean interface with the most important features.",
+    "onboarding.mode_simple_desc": "I'm getting started — show me the essentials. A clean interface with the most important features.",
     "onboarding.mode_advanced": "Advanced",
-    "onboarding.mode_advanced_desc":
-      "I'm experienced — show me everything. Full professional toolset with all options visible.",
+    "onboarding.mode_advanced_desc": "I'm experienced — show me everything. Full professional toolset with all options visible.",
     "onboarding.summary_company": "Loại doanh nghiệp",
     "onboarding.summary_modules": "Mô-đun đang hoạt động",
     "onboarding.summary_mode": "Chế độ giao diện",
@@ -2065,20 +1864,15 @@ const resource = {
     "onboarding.next": "Next",
     "onboarding.finish": "Finish",
     "onboarding.step1.title": "Thanh điều hướng bên",
-    "onboarding.step1.description":
-      "Thanh bên cho phép bạn truy cập nhanh vào tất cả mô-đun: dự án, dự toán, cơ sở dữ liệu chi phí, lịch trình và nhiều hơn nữa.",
+    "onboarding.step1.description": "Thanh bên cho phép bạn truy cập nhanh vào tất cả mô-đun: dự án, dự toán, cơ sở dữ liệu chi phí, lịch trình và nhiều hơn nữa.",
     "onboarding.step2.title": "Projects",
-    "onboarding.step2.description":
-      "Bắt đầu bằng cách tạo dự án đầu tiên. Mỗi dự án chứa BOQ, lịch trình và tài liệu trong một nơi.",
+    "onboarding.step2.description": "Bắt đầu bằng cách tạo dự án đầu tiên. Mỗi dự án chứa BOQ, lịch trình và tài liệu trong một nơi.",
     "onboarding.step3.title": "Bảng khối lượng",
-    "onboarding.step3.description":
-      "Xây dựng dự toán chi tiết với trình soạn thảo BOQ — hạng mục phân cấp, tổ hợp và tổng chi phí thời gian thực.",
+    "onboarding.step3.description": "Xây dựng dự toán chi tiết với trình soạn thảo BOQ — hạng mục phân cấp, tổ hợp và tổng chi phí thời gian thực.",
     "onboarding.step4.title": "Cơ sở dữ liệu chi phí",
-    "onboarding.step4.description":
-      "Duyệt và quản lý cơ sở dữ liệu đơn giá bao gồm CWICR tích hợp với hơn 55.000 hạng mục trong 9 ngôn ngữ.",
+    "onboarding.step4.description": "Duyệt và quản lý cơ sở dữ liệu đơn giá bao gồm CWICR tích hợp với hơn 55.000 hạng mục trong 9 ngôn ngữ.",
     "onboarding.step5.title": "Chế độ Đơn giản / Nâng cao",
-    "onboarding.step5.description":
-      "Chuyển đổi giữa chế độ Đơn giản (công cụ thiết yếu) và chế độ Nâng cao (tất cả tính năng bao gồm đấu thầu và lập lịch trình).",
+    "onboarding.step5.description": "Chuyển đổi giữa chế độ Đơn giản (công cụ thiết yếu) và chế độ Nâng cao (tất cả tính năng bao gồm đấu thầu và lập lịch trình).",
     "projects.4d_schedule": "Lịch 4D",
     "projects.5d_budget": "Ngân sách 5D",
     "projects.active": "đang hoạt động",
@@ -2110,27 +1904,21 @@ const resource = {
     "projects.name_placeholder": "ví dụ: Tòa nhà văn phòng trung tâm",
     "projects.new_boq": "BOQ mới",
     "projects.new_project": "Dự án mới",
-    "projects.create_hint":
-      "Khu vực xác định cơ sở dữ liệu chi phí và mức thuế VAT khả dụng. Tiêu chuẩn phân loại định nghĩa cấu trúc chi phí: DIN 276 cho các nước DACH, NRM cho Anh, MasterFormat cho Hoa Kỳ/Canada, UniFormat cho Châu Đại Dương. Tiền tệ thiết lập tất cả đơn giá trong BOQ.",
+    "projects.create_hint": "Khu vực xác định cơ sở dữ liệu chi phí và mức thuế VAT khả dụng. Tiêu chuẩn phân loại định nghĩa cấu trúc chi phí: DIN 276 cho các nước DACH, NRM cho Anh, MasterFormat cho Hoa Kỳ/Canada, UniFormat cho Châu Đại Dương. Tiền tệ thiết lập tất cả đơn giá trong BOQ.",
     "projects.no_boqs": "Chưa có BOQ",
-    "projects.no_boqs_desc":
-      "Tạo Bảng khối lượng để bắt đầu dự toán chi phí cho dự án này.",
+    "projects.no_boqs_desc": "Tạo Bảng khối lượng để bắt đầu dự toán chi phí cho dự án này.",
     "projects.no_budget": "Không có dữ liệu ngân sách",
-    "projects.no_budget_desc":
-      "Thiết lập mô hình chi phí 5D để theo dõi chi phí kế hoạch so với chi phí thực tế.",
+    "projects.no_budget_desc": "Thiết lập mô hình chi phí 5D để theo dõi chi phí kế hoạch so với chi phí thực tế.",
     "projects.no_projects": "Chưa có dự án",
-    "projects.no_projects_description":
-      "Tạo dự án dự toán chi phí xây dựng đầu tiên của bạn",
+    "projects.no_projects_description": "Tạo dự án dự toán chi phí xây dựng đầu tiên của bạn",
     "projects.no_results": "Không có dự án phù hợp",
     "projects.no_results_hint": "Thử điều chỉnh tìm kiếm hoặc bộ lọc",
     "projects.no_schedules": "Chưa có lịch trình",
     "projects.no_schedules_desc": "Tạo lịch trình để quản lý tiến độ dự án.",
     "projects.no_tenders": "Không có gói thầu",
-    "projects.no_tenders_desc":
-      "Tạo gói thầu để quản lý đấu thầu cho dự án này.",
+    "projects.no_tenders_desc": "Tạo gói thầu để quản lý đấu thầu cho dự án này.",
     "projects.not_found": "Không tìm thấy dự án",
-    "projects.not_found_desc":
-      "Dự án bạn đang tìm không tồn tại hoặc đã bị xóa.",
+    "projects.not_found_desc": "Dự án bạn đang tìm không tồn tại hoặc đã bị xóa.",
     "projects.of": "trong",
     "projects.open_tendering": "Mở đấu thầu",
     "projects.overview": "Tổng quan",
@@ -2143,8 +1931,7 @@ const resource = {
     "projects.projects_label": "dự án",
     "projects.region": "Khu vực",
     "projects.regional_factor": "Hệ số vùng",
-    "projects.regional_factor_hint":
-      "Nhân tất cả đơn giá với hệ số này (ví dụ: Munich = 1,12, Berlin = 1,05)",
+    "projects.regional_factor_hint": "Nhân tất cả đơn giá với hệ số này (ví dụ: Munich = 1,12, Berlin = 1,05)",
     "projects.remaining": "Còn lại",
     "projects.schedule_subtitle": "Lịch trình và tiến độ dự án",
     "projects.search_placeholder": "Tìm dự án...",
@@ -2171,86 +1958,66 @@ const resource = {
     "quantities.badge_cad": "CAD",
     "quantities.badge_coming_soon": "Sắp ra mắt",
     "quantities.how_it_works": "Cách hoạt động",
-    "quantities.manual_desc":
-      "Cần thêm khối lượng trực tiếp? Đến Trình soạn thảo BOQ.",
+    "quantities.manual_desc": "Cần thêm khối lượng trực tiếp? Đến Trình soạn thảo BOQ.",
     "quantities.manual_title": "Nhập thủ công nhanh",
-    "quantities.method_ai_desc":
-      "Mô tả công trình và AI sẽ tạo Bảng khối lượng với khối lượng và chi phí ước tính.",
+    "quantities.method_ai_desc": "Mô tả công trình và AI sẽ tạo Bảng khối lượng với khối lượng và chi phí ước tính.",
     "quantities.method_ai_title": "Nhập văn bản AI",
-    "quantities.method_cad_desc":
-      "Nhập tệp DWG, RVT, IFC hoặc DGN và trích xuất khối lượng trực tiếp từ hình học 3D.",
+    "quantities.method_cad_desc": "Nhập tệp DWG, RVT, IFC hoặc DGN và trích xuất khối lượng trực tiếp từ hình học 3D.",
     "quantities.method_cad_title": "Mô hình CAD / BIM",
-    "quantities.method_pdf_desc":
-      "Tải lên bản vẽ xây dựng (PDF) và trích xuất khối lượng tự động bằng bóc tách khối lượng hỗ trợ AI.",
+    "quantities.method_pdf_desc": "Tải lên bản vẽ xây dựng (PDF) và trích xuất khối lượng tự động bằng bóc tách khối lượng hỗ trợ AI.",
     "quantities.method_pdf_title": "Bản vẽ PDF",
     "quantities.open": "Open",
     "quantities.open_boq": "Mở Trình soạn thảo BOQ",
-    "quantities.step1_desc":
-      "Chọn phương thức nhập: văn bản, PDF hoặc mô hình CAD.",
+    "quantities.step1_desc": "Chọn phương thức nhập: văn bản, PDF hoặc mô hình CAD.",
     "quantities.step1_title": "Tải lên hoặc mô tả",
-    "quantities.step2_desc":
-      "AI phân tích đầu vào và trích xuất khối lượng có cấu trúc.",
+    "quantities.step2_desc": "AI phân tích đầu vào và trích xuất khối lượng có cấu trúc.",
     "quantities.step2_title": "AI trích xuất khối lượng",
     "quantities.step3_desc": "Xác minh kết quả và thêm vào Bảng khối lượng.",
     "quantities.step3_title": "Xem xét & thêm vào BOQ",
-    "quantities.subtitle":
-      "Thu thập khối lượng dự án — từ nhập văn bản AI, bản vẽ PDF hoặc mô hình CAD/BIM",
+    "quantities.subtitle": "Thu thập khối lượng dự án — từ nhập văn bản AI, bản vẽ PDF hoặc mô hình CAD/BIM",
     "quantities.converter_title": "Cách chuyển đổi CAD/BIM hoạt động",
-    "quantities.converter_desc":
-      "Tải lên tệp CAD/BIM (.rvt, .ifc, .dwg, .dgn) và bộ chuyển đổi DDC trích xuất tất cả phần tử thành bảng có cấu trúc — tường, sàn, cột, cửa, cửa sổ — với khối lượng, diện tích và số lượng đã tính. AI sau đó ánh xạ các phần tử này tới các mục chi phí và tự động tạo BOQ hoàn chỉnh.",
+    "quantities.converter_desc": "Tải lên tệp CAD/BIM (.rvt, .ifc, .dwg, .dgn) và bộ chuyển đổi DDC trích xuất tất cả phần tử thành bảng có cấu trúc — tường, sàn, cột, cửa, cửa sổ — với khối lượng, diện tích và số lượng đã tính. AI sau đó ánh xạ các phần tử này tới các mục chi phí và tự động tạo BOQ hoàn chỉnh.",
     "quantities.download_converters": "Tải xuống bộ chuyển đổi DDC",
     "quantities.converter_path": "Cài đặt tại: ~/.openestimator/converters/",
     "quantities.title": "Bóc tách khối lượng",
     "reports.5d_report": "Báo cáo chi phí 5D",
-    "reports.5d_report_desc":
-      "Phân tích ngân sách so với thực chi với đường S-curve và dự báo chi phí.",
+    "reports.5d_report_desc": "Phân tích ngân sách so với thực chi với đường S-curve và dự báo chi phí.",
     "reports.cash_flow": "Dự báo dòng tiền",
-    "reports.cash_flow_desc":
-      "Dự báo dòng tiền hàng tháng từ kế hoạch so với thực chi theo đường S-curve.",
+    "reports.cash_flow_desc": "Dự báo dòng tiền hàng tháng từ kế hoạch so với thực chi theo đường S-curve.",
     "reports.change_order_register": "Sổ đăng ký thay đổi khối lượng",
-    "reports.change_order_register_desc":
-      "Sổ đăng ký đầy đủ các thay đổi phạm vi với chi phí tích lũy và tác động tiến độ.",
+    "reports.change_order_register_desc": "Sổ đăng ký đầy đủ các thay đổi phạm vi với chi phí tích lũy và tác động tiến độ.",
     "reports.tender_comparison": "So sánh đấu thầu",
-    "reports.tender_comparison_desc":
-      "So sánh song song các hồ sơ dự thầu của nhà thầu phụ với phân tích độ lệch.",
+    "reports.tender_comparison_desc": "So sánh song song các hồ sơ dự thầu của nhà thầu phụ với phân tích độ lệch.",
     "reports.risk_register": "Sổ đăng ký rủi ro",
-    "reports.risk_register_desc":
-      "Ma trận rủi ro với xác suất, tác động, điểm số và kế hoạch giảm thiểu.",
+    "reports.risk_register_desc": "Ma trận rủi ro với xác suất, tác động, điểm số và kế hoạch giảm thiểu.",
     "reports.progress_report": "Báo cáo tiến độ",
-    "reports.progress_report_desc":
-      "Hiệu suất EVM, trạng thái lịch trình và rủi ro hàng đầu trong một báo cáo.",
+    "reports.progress_report_desc": "Hiệu suất EVM, trạng thái lịch trình và rủi ro hàng đầu trong một báo cáo.",
     "reports.preset_monthly": "Tiến độ hàng tháng",
     "reports.preset_client": "Trình bày khách hàng",
     "reports.preset_audit": "Báo cáo kiểm toán",
     "reports.preset_full": "Báo cáo đầy đủ",
     "reports.presets": "Mẫu nhanh:",
     "reports.boq_report": "Báo cáo BOQ",
-    "reports.boq_report_desc":
-      "Bảng khối lượng đầy đủ với các phần, hạng mục, phụ phí và tổng cộng. Có dưới dạng PDF hoặc Excel.",
+    "reports.boq_report_desc": "Bảng khối lượng đầy đủ với các phần, hạng mục, phụ phí và tổng cộng. Có dưới dạng PDF hoặc Excel.",
     "reports.coming_soon": "Sắp ra mắt",
     "reports.cost_report": "Báo cáo chi phí",
-    "reports.cost_report_desc":
-      "Phân tích chi phí theo danh mục với biểu đồ tóm tắt và phân tích chi phí chi tiết.",
+    "reports.cost_report_desc": "Phân tích chi phí theo danh mục với biểu đồ tóm tắt và phân tích chi phí chi tiết.",
     "reports.download_error": "Tạo báo cáo thất bại",
     "reports.download_format": "Download {{format}}",
     "reports.download_success": "Báo cáo đã được tải xuống thành công",
     "reports.gaeb_xml": "GAEB XML",
-    "reports.gaeb_xml_desc":
-      "Xuất đấu thầu GAEB X83 — định dạng trao đổi tiêu chuẩn cho thị trường xây dựng DACH.",
+    "reports.gaeb_xml_desc": "Xuất đấu thầu GAEB X83 — định dạng trao đổi tiêu chuẩn cho thị trường xây dựng DACH.",
     "reports.no_boqs": "Không có BOQ nào trong dự án này",
     "reports.no_projects": "Không có dự án nào",
     "reports.schedule_report": "Báo cáo lịch trình",
-    "reports.schedule_report_desc":
-      "Biểu đồ Gantt với tiến độ dự án, cột mốc và đường Găng.",
+    "reports.schedule_report_desc": "Biểu đồ Gantt với tiến độ dự án, cột mốc và đường Găng.",
     "reports.select_boq_first": "Vui lòng chọn dự án và BOQ trước",
     "reports.select_project_first": "Vui lòng chọn dự án trước",
     "reports.subtitle": "Tạo báo cáo chuyên nghiệp cho dự án của bạn",
-    "reports.guide_desc":
-      "Báo cáo BOQ = bảng khối lượng chi tiết với tổng cộng. Báo cáo chi phí = phân tích chi phí theo danh mục. GAEB XML = định dạng đấu thầu Đức (.x83) cho trao đổi nhà thầu phụ. Kiểm tra = kết quả kiểm tra tuân thủ. Lịch trình = tóm tắt công việc Gantt. 5D = đường cong ngân sách so với thực chi.",
+    "reports.guide_desc": "Báo cáo BOQ = bảng khối lượng chi tiết với tổng cộng. Báo cáo chi phí = phân tích chi phí theo danh mục. GAEB XML = định dạng đấu thầu Đức (.x83) cho trao đổi nhà thầu phụ. Kiểm tra = kết quả kiểm tra tuân thủ. Lịch trình = tóm tắt công việc Gantt. 5D = đường cong ngân sách so với thực chi.",
     "reports.title": "Reports",
     "reports.validation_report": "Báo cáo kiểm tra",
-    "reports.validation_report_desc":
-      "Báo cáo kiểm tra tuân thủ theo tiêu chuẩn DIN 276, NRM hoặc MasterFormat.",
+    "reports.validation_report_desc": "Báo cáo kiểm tra tuân thủ theo tiêu chuẩn DIN 276, NRM hoặc MasterFormat.",
     "schedule.activity": "Activity",
     "schedule.activity_name": "Tên công việc",
     "schedule.activity_name_placeholder": "ví dụ: Thi công móng",
@@ -2261,8 +2028,7 @@ const resource = {
     "schedule.buffer": "Buffer",
     "schedule.calculate_cpm": "Đường Găng",
     "schedule.completed": "Completed",
-    "schedule.cpm_result":
-      "Đường Găng: {{duration}} ngày, {{count}} công việc găng",
+    "schedule.cpm_result": "Đường Găng: {{duration}} ngày, {{count}} công việc găng",
     "schedule.create_activity": "Tạo công việc",
     "schedule.create_schedule": "Tạo lịch trình",
     "schedule.critical_path": "Đường Găng",
@@ -2277,22 +2043,18 @@ const resource = {
     "schedule.fifty_pct_confidence": "50% confidence",
     "schedule.generate": "Generate",
     "schedule.generate_from_boq": "Tạo từ BOQ",
-    "schedule.generate_from_boq_description":
-      "Chọn một BOQ để tự động tạo các hoạt động tiến độ. Mỗi phần BOQ sẽ được tạo một hoạt động với thời lượng tỷ lệ theo chi phí.",
+    "schedule.generate_from_boq_description": "Chọn một BOQ để tự động tạo các hoạt động tiến độ. Mỗi phần BOQ sẽ được tạo một hoạt động với thời lượng tỷ lệ theo chi phí.",
     "schedule.in_progress": "Đang thực hiện",
     "schedule.mean_label": "Trung bình (đường găng)",
     "schedule.ninetyfive_pct_confidence": "95% confidence",
     "schedule.no_activities": "Chưa có hoạt động nào",
-    "schedule.no_activities_hint":
-      "Thêm các hoạt động để xây dựng tiến độ dự án của bạn",
+    "schedule.no_activities_hint": "Thêm các hoạt động để xây dựng tiến độ dự án của bạn",
     "schedule.no_boqs_available": "Không có BOQ nào cho dự án này.",
     "schedule.no_dates": "Chưa đặt ngày",
     "schedule.no_projects": "Không có dự án nào",
-    "schedule.no_projects_hint":
-      "Tạo dự án trước, sau đó thêm tiến độ vào dự án",
+    "schedule.no_projects_hint": "Tạo dự án trước, sau đó thêm tiến độ vào dự án",
     "schedule.no_schedules": "Chưa có tiến độ nào",
-    "schedule.no_schedules_hint":
-      "Tạo tiến độ để bắt đầu lập kế hoạch dòng thời gian dự án của bạn",
+    "schedule.no_schedules_hint": "Tạo tiến độ để bắt đầu lập kế hoạch dòng thời gian dự án của bạn",
     "schedule.planned_duration": "Thời gian kế hoạch",
     "schedule.project_schedules": "Tiến độ của dự án này",
     "schedule.risk_analysis": "Phân tích rủi ro (PERT)",
@@ -2306,8 +2068,7 @@ const resource = {
     "schedule.status_draft": "draft",
     "schedule.std_dev_label": "Độ lệch chuẩn",
     "schedule.subtitle": "Chọn dự án để xem và quản lý tiến độ thi công",
-    "schedule.what_is_4d":
-      "Lập tiến độ 4D liên kết các hạng mục BOQ với dòng thời gian dự án. Tạo các hoạt động, thiết lập phụ thuộc và trực quan hóa tiến độ trên biểu đồ Gantt. Phân tích đường găng làm nổi bật các hoạt động ảnh hưởng trực tiếp đến ngày kết thúc dự án. Loại hoạt động: Task = công việc, Milestone = mốc kiểm tra với thời lượng bằng không, Summary = tiêu đề nhóm.",
+    "schedule.what_is_4d": "Lập tiến độ 4D liên kết các hạng mục BOQ với dòng thời gian dự án. Tạo các hoạt động, thiết lập phụ thuộc và trực quan hóa tiến độ trên biểu đồ Gantt. Phân tích đường găng làm nổi bật các hoạt động ảnh hưởng trực tiếp đến ngày kết thúc dự án. Loại hoạt động: Task = công việc, Milestone = mốc kiểm tra với thời lượng bằng không, Summary = tiêu đề nhóm.",
     "schedule.title": "4D Schedule",
     "schedule.total_activities": "Total",
     "schedule.type_milestone": "Milestone",
@@ -2323,17 +2084,14 @@ const resource = {
     "settings.active": "Active",
     "settings.ai_api_key": "Khóa API",
     "settings.ai_connected": "Connected",
-    "settings.ai_desc_anthropic":
-      "Claude 3.5 Sonnet / Opus — tốt nhất cho dự toán xây dựng",
+    "settings.ai_desc_anthropic": "Claude 3.5 Sonnet / Opus — tốt nhất cho dự toán xây dựng",
     "settings.ai_desc_gemini": "Gemini 1.5 Pro — khả năng đa phương thức",
     "settings.ai_desc_openai": "GPT-4o / GPT-4 Turbo — được hỗ trợ rộng rãi",
     "settings.ai_error": "Lỗi kết nối",
     "settings.ai_get_key": "Lấy khóa API",
-    "settings.ai_key_hint":
-      "Khóa API của bạn được mã hóa và lưu trữ an toàn. Nó không bao giờ được chia sẻ.",
+    "settings.ai_key_hint": "Khóa API của bạn được mã hóa và lưu trữ an toàn. Nó không bao giờ được chia sẻ.",
     "settings.ai_key_placeholder": "Nhập khóa API của bạn...",
-    "settings.ai_key_placeholder_existing":
-      "Nhập khóa mới để thay thế khóa hiện tại...",
+    "settings.ai_key_placeholder_existing": "Nhập khóa mới để thay thế khóa hiện tại...",
     "settings.ai_key_set": "Đã cấu hình khóa",
     "settings.ai_last_tested": "(kiểm tra lần cuối: {{time}})",
     "settings.ai_not_configured": "Chưa cấu hình",
@@ -2364,8 +2122,7 @@ const resource = {
     "settings.sign_out": "Đăng xuất",
     "settings.status": "Status",
     "settings.subtitle": "Quản lý tài khoản và tùy chọn của bạn",
-    "settings.ai_guidance":
-      "Các tính năng AI (dự toán, phân tích bóc tách khối lượng, tìm kiếm ngữ nghĩa) yêu cầu khóa API. Anthropic Claude được khuyến nghị để có độ chính xác tốt nhất. Khóa được lưu trữ dưới dạng mã hóa và không bao giờ rời khỏi máy chủ của bạn.",
+    "settings.ai_guidance": "Các tính năng AI (dự toán, phân tích bóc tách khối lượng, tìm kiếm ngữ nghĩa) yêu cầu khóa API. Anthropic Claude được khuyến nghị để có độ chính xác tốt nhất. Khóa được lưu trữ dưới dạng mã hóa và không bao giờ rời khỏi máy chủ của bạn.",
     "settings.theme_dark": "Dark",
     "settings.theme_light": "Light",
     "settings.theme_system": "System",
@@ -2374,8 +2131,7 @@ const resource = {
     "shortcuts.cancel_editing": "Hủy chỉnh sửa",
     "shortcuts.command_palette": "Bảng lệnh",
     "shortcuts.confirm_next_row": "Xác nhận / Hàng tiếp theo",
-    "shortcuts.footer_hint":
-      "Phím tắt bị vô hiệu hóa khi đang tập trung vào các trường nhập liệu.",
+    "shortcuts.footer_hint": "Phím tắt bị vô hiệu hóa khi đang tập trung vào các trường nhập liệu.",
     "shortcuts.group.actions": "Actions",
     "shortcuts.group.boq_editor": "Trình soạn thảo BOQ",
     "shortcuts.group.general": "General",
@@ -2408,33 +2164,27 @@ const resource = {
     "shortcuts.group.module_pages": "Trang mô-đun",
     "shortcuts.create_new_item": "Tạo mục mới (trên các trang danh sách)",
     "shortcuts.save_recalculate": "Lưu / Tính lại đơn giá",
-    "errors.bad_request":
-      "Không thể xử lý yêu cầu. Vui lòng kiểm tra dữ liệu nhập.",
+    "errors.bad_request": "Không thể xử lý yêu cầu. Vui lòng kiểm tra dữ liệu nhập.",
     "errors.unauthorized": "Phiên của bạn đã hết hạn. Vui lòng đăng nhập lại.",
     "errors.forbidden": "Bạn không có quyền thực hiện hành động này.",
     "errors.not_found": "Không tìm thấy mục được yêu cầu.",
     "errors.conflict": "Xung đột với dữ liệu hiện có — làm mới và thử lại.",
     "errors.payload_too_large": "Tệp quá lớn. Vui lòng thử tệp nhỏ hơn.",
-    "errors.validation":
-      "Một số trường không hợp lệ. Vui lòng kiểm tra dữ liệu nhập.",
+    "errors.validation": "Một số trường không hợp lệ. Vui lòng kiểm tra dữ liệu nhập.",
     "errors.rate_limit": "Quá nhiều yêu cầu. Vui lòng chờ một chút và thử lại.",
     "errors.server": "Lỗi máy chủ. Vui lòng thử lại sau ít phút.",
-    "errors.unavailable":
-      "Máy chủ tạm thời không khả dụng. Vui lòng thử lại sớm.",
+    "errors.unavailable": "Máy chủ tạm thời không khả dụng. Vui lòng thử lại sớm.",
     "errors.client": "Không thể hoàn thành yêu cầu.",
     "errors.unknown": "Đã xảy ra lỗi. Vui lòng thử lại.",
-    "errors.network":
-      "Không thể kết nối đến máy chủ. Vui lòng kiểm tra kết nối.",
-    "errors.timeout":
-      "Yêu cầu mất quá nhiều thời gian và đã bị hủy. Vui lòng thử lại.",
+    "errors.network": "Không thể kết nối đến máy chủ. Vui lòng kiểm tra kết nối.",
+    "errors.timeout": "Yêu cầu mất quá nhiều thời gian và đã bị hủy. Vui lòng thử lại.",
     "shortcuts.undo": "Undo",
     "sustainability.area": "Area (m2)",
     "sustainability.benchmark": "Benchmark",
     "sustainability.boq": "BOQ",
     "sustainability.breakdown_title": "Phân tích theo vật liệu",
     "sustainability.calculate": "Calculate",
-    "sustainability.empty_desc":
-      "Chọn dự án và BOQ ở trên, sau đó nhấn Tính toán để phân tích lượng khí thải CO2 dựa trên các loại vật liệu.",
+    "sustainability.empty_desc": "Chọn dự án và BOQ ở trên, sau đó nhấn Tính toán để phân tích lượng khí thải CO2 dựa trên các loại vật liệu.",
     "sustainability.empty_title": "Phân tích lượng khí thải CO2",
     "sustainability.export_pdf": "Xuất báo cáo CO2 PDF",
     "sustainability.material": "Material",
@@ -2467,8 +2217,7 @@ const resource = {
     "takeoff.just_now": "Vừa xong",
     "takeoff.minutes_ago": "{{count}} phút trước",
     "takeoff.no_documents": "Chưa tải lên tài liệu nào",
-    "takeoff.no_documents_description":
-      "Tải lên bản vẽ xây dựng PDF để bắt đầu trích xuất khối lượng bằng AI.",
+    "takeoff.no_documents_description": "Tải lên bản vẽ xây dựng PDF để bắt đầu trích xuất khối lượng bằng AI.",
     "takeoff.pages": "pages",
     "takeoff.pdf_limit": "Tệp .pdf tối đa {{size}}MB",
     "takeoff.quick_measurements": "Đo nhanh",
@@ -2483,8 +2232,7 @@ const resource = {
     "takeoff.select_project_placeholder": "Chọn một dự án...",
     "takeoff.selected": "selected",
     "takeoff.subtitle": "Tải lên bản vẽ xây dựng để trích xuất khối lượng",
-    "takeoff.workflow_desc":
-      "Tải lên bản vẽ PDF — AI phân tích các trang và trích xuất cấu kiện (tường, sàn, cửa, v.v.) kèm khối lượng — Xem lại kết quả và điều chỉnh — Thêm các mục đã chọn vào BOQ của bạn. Điểm tin cậy: xanh lá (>80%) = độ tin cậy cao, vàng (50-80%) = nên xem lại, đỏ (<50%) = cần kiểm tra thủ công.",
+    "takeoff.workflow_desc": "Tải lên bản vẽ PDF — AI phân tích các trang và trích xuất cấu kiện (tường, sàn, cửa, v.v.) kèm khối lượng — Xem lại kết quả và điều chỉnh — Thêm các mục đã chọn vào BOQ của bạn. Điểm tin cậy: xanh lá (>80%) = độ tin cậy cao, vàng (50-80%) = nên xem lại, đỏ (<50%) = cần kiểm tra thủ công.",
     "takeoff.summary": "Summary",
     "takeoff.title": "Bóc tách khối lượng PDF",
     "takeoff.total_quantity": "total",
@@ -2499,8 +2247,7 @@ const resource = {
     "tendering.award": "Award",
     "tendering.award_bid": "Trao thầu hồ sơ này",
     "tendering.bid_comparison": "So sánh hồ sơ dự thầu",
-    "tendering.bid_comparison_chart_label":
-      "Biểu đồ thanh so sánh tổng giá hồ sơ dự thầu",
+    "tendering.bid_comparison_chart_label": "Biểu đồ thanh so sánh tổng giá hồ sơ dự thầu",
     "tendering.bid_totals_chart": "Tổng quan tổng giá hồ sơ",
     "tendering.bids_count": "bids",
     "tendering.bids_received": "Hồ sơ đã nhận",
@@ -2536,8 +2283,7 @@ const resource = {
     "tendering.source_boq": "BOQ nguồn",
     "tendering.submit_bid": "Nộp hồ sơ dự thầu",
     "tendering.title": "Tendering",
-    "tendering.workflow_desc":
-      "Quy trình đấu thầu: Bản nháp (chuẩn bị gói thầu) → Đã phát hành (gửi đến nhà thầu) → Đang thu thập (nhận hồ sơ) → Đang đánh giá (so sánh hồ sơ song song) → Đã trao thầu (chọn nhà thắng thầu). Tạo gói thầu từ BOQ, thêm hồ sơ của nhà thầu phụ, sau đó sử dụng bảng so sánh để xác định ưu đãi tốt nhất. Thêm 2+ hồ sơ để xem phân tích song song.",
+    "tendering.workflow_desc": "Quy trình đấu thầu: Bản nháp (chuẩn bị gói thầu) → Đã phát hành (gửi đến nhà thầu) → Đang thu thập (nhận hồ sơ) → Đang đánh giá (so sánh hồ sơ song song) → Đã trao thầu (chọn nhà thắng thầu). Tạo gói thầu từ BOQ, thêm hồ sơ của nhà thầu phụ, sau đó sử dụng bảng so sánh để xác định ưu đãi tốt nhất. Thêm 2+ hồ sơ để xem phân tích song song.",
     "tendering.total": "TOTAL",
     "tendering.total_amount": "Tổng giá trị",
     "tendering.vs_budget": "so với ngân sách",
@@ -2614,24 +2360,20 @@ const resource = {
     "cde.suitability_none": "— None —",
     "cde.view_history": "History",
     "cde.history_title": "Lịch sử chuyển đổi trạng thái",
-    "cde.history_empty":
-      "Chưa có chuyển đổi trạng thái nào — hãy thăng cấp container để bắt đầu nhật ký kiểm tra.",
+    "cde.history_empty": "Chưa có chuyển đổi trạng thái nào — hãy thăng cấp container để bắt đầu nhật ký kiểm tra.",
     "cde.history_by_role": "By: {{role}}",
     "cde.history_signature": "Signed: {{signer}}",
     "cde.gate_label": "Gate {{code}}",
     "cde.transmittals_badge": "{{count}} transmittals",
-    "cde.transmittals_badge_aria":
-      "{{count}} phiếu chuyển giao liên kết với container này",
+    "cde.transmittals_badge_aria": "{{count}} phiếu chuyển giao liên kết với container này",
     "cde.transmittals_drawer_title": "Phiếu chuyển giao mang container này",
     "cde.approval_modal_title": "Chữ ký phê duyệt cổng B",
-    "cde.approval_modal_body":
-      "Thăng cấp {{code}} từ CHIA SẺ sang ĐÃ XUẤT BẢN yêu cầu phê duyệt có chữ ký (ISO 19650). Chữ ký và nhận xét của bạn được ghi lại trong nhật ký kiểm tra.",
+    "cde.approval_modal_body": "Thăng cấp {{code}} từ CHIA SẺ sang ĐÃ XUẤT BẢN yêu cầu phê duyệt có chữ ký (ISO 19650). Chữ ký và nhận xét của bạn được ghi lại trong nhật ký kiểm tra.",
     "cde.approval_field_signature": "Signature",
     "cde.approval_field_comments": "Comments",
     "cde.approval_signature_placeholder": "Họ tên đầy đủ / chữ ký tắt",
     "cde.approval_signature_required": "Chữ ký là bắt buộc",
-    "cde.approval_comments_placeholder":
-      "Ghi chú tùy chọn cho nhật ký kiểm tra...",
+    "cde.approval_comments_placeholder": "Ghi chú tùy chọn cho nhật ký kiểm tra...",
     "cde.approval_submit": "Ký và xuất bản",
     "transmittals.field_link_revision": "Liên kết sửa đổi CDE",
     "transmittals.picker_select_container": "Chọn container…",
@@ -2659,8 +2401,7 @@ const resource = {
     "comments.title": "Comments",
     "comments.unknown_author": "Unknown",
     "users.management": "Quản lý người dùng",
-    "users.management_desc":
-      "Quản lý thành viên nhóm, vai trò và quyền truy cập",
+    "users.management_desc": "Quản lý thành viên nhóm, vai trò và quyền truy cập",
     "users.invite_user": "Mời người dùng",
     "users.invite": "Invite",
     "users.full_name": "Họ và tên",
@@ -2747,8 +2488,7 @@ const resource = {
     "correspondence.no_entries": "Chưa có thư từ nào",
     "correspondence.no_entries_hint": "Ghi lại thư từ đầu tiên để bắt đầu.",
     "correspondence.no_results": "Không tìm thấy mục phù hợp",
-    "correspondence.no_results_hint":
-      "Thử điều chỉnh tìm kiếm hoặc bộ lọc của bạn.",
+    "correspondence.no_results_hint": "Thử điều chỉnh tìm kiếm hoặc bộ lọc của bạn.",
     "correspondence.notes_placeholder": "Ghi chú bổ sung...",
     "correspondence.page_title": "Nhật ký thư từ",
     "correspondence.search_placeholder": "Tìm kiếm thư từ...",
@@ -2791,16 +2531,13 @@ const resource = {
     "finance.mark_paid": "Đánh dấu đã thanh toán",
     "finance.method": "Method",
     "finance.no_budgets": "Chưa xác định ngân sách",
-    "finance.no_budgets_desc":
-      "Các mục ngân sách sẽ xuất hiện ở đây sau khi được xác định.",
+    "finance.no_budgets_desc": "Các mục ngân sách sẽ xuất hiện ở đây sau khi được xác định.",
     "finance.no_evm": "Không có dữ liệu EVM",
-    "finance.no_evm_desc":
-      "Dữ liệu giá trị thu được sẽ xuất hiện sau khi chụp ảnh trạng thái.",
+    "finance.no_evm_desc": "Dữ liệu giá trị thu được sẽ xuất hiện sau khi chụp ảnh trạng thái.",
     "finance.no_invoices": "Không có hóa đơn",
     "finance.no_invoices_desc": "Hóa đơn sẽ xuất hiện ở đây sau khi được tạo.",
     "finance.no_payments": "Không có thanh toán",
-    "finance.no_payments_desc":
-      "Các khoản thanh toán sẽ xuất hiện ở đây sau khi được ghi lại.",
+    "finance.no_payments_desc": "Các khoản thanh toán sẽ xuất hiện ở đây sau khi được ghi lại.",
     "finance.no_project": "Chọn dự án để xem dữ liệu tài chính.",
     "finance.on_track": "Đúng tiến độ",
     "finance.original": "Original",
@@ -2828,8 +2565,7 @@ const resource = {
     "gantt.today": "Today",
     "integrations.add_another": "Thêm một liên kết khác",
     "integrations.calendar": "Calendar",
-    "integrations.calendar_desc":
-      "Đăng ký trong Google/Outlook Calendar (nguồn cấp iCal)",
+    "integrations.calendar_desc": "Đăng ký trong Google/Outlook Calendar (nguồn cấp iCal)",
     "integrations.coming_soon": "Sắp ra mắt",
     "integrations.confirm_disconnect": "Ngắt kết nối tích hợp này?",
     "integrations.connect": "Connect",
@@ -2844,11 +2580,9 @@ const resource = {
     "integrations.setup_steps": "Hướng dẫn cài đặt",
     "integrations.slack": "Slack",
     "integrations.slack_desc": "Gửi thông báo đến Slack qua Incoming Webhook",
-    "integrations.subtitle":
-      "Kết nối các dịch vụ bên ngoài để nhận thông báo dự án trong các công cụ ưa thích của bạn.",
+    "integrations.subtitle": "Kết nối các dịch vụ bên ngoài để nhận thông báo dự án trong các công cụ ưa thích của bạn.",
     "integrations.teams": "Microsoft Teams",
-    "integrations.teams_desc":
-      "Gửi thông báo đến kênh Teams của bạn qua Incoming Webhook",
+    "integrations.teams_desc": "Gửi thông báo đến kênh Teams của bạn qua Incoming Webhook",
     "integrations.telegram": "Telegram",
     "integrations.telegram_desc": "Nhận thông báo qua bot Telegram",
     "integrations.test": "Test",
@@ -2883,8 +2617,7 @@ const resource = {
     "inspections.no_inspections": "Chưa có kiểm tra nào",
     "inspections.no_inspections_hint": "Lên lịch kiểm tra đầu tiên để bắt đầu.",
     "inspections.no_results": "Không tìm thấy kiểm tra phù hợp",
-    "inspections.no_results_hint":
-      "Thử điều chỉnh tìm kiếm hoặc bộ lọc của bạn.",
+    "inspections.no_results_hint": "Thử điều chỉnh tìm kiếm hoặc bộ lọc của bạn.",
     "inspections.page_title": "Inspections",
     "inspections.search_placeholder": "Tìm kiếm kiểm tra...",
     "inspections.select_project": "Project...",
@@ -2984,21 +2717,15 @@ const resource = {
     "notifications.title": "Thông báo",
     "notifications.unread": "{{count}} chưa đọc",
     "notifications.boq.created.title": "Đã tạo BOQ",
-    "notifications.boq.created.body":
-      "Bảng khối lượng '{{boq_name}}' của bạn đã được lưu.",
-    "notifications.meeting.action_assigned.title":
-      "Mục hành động được giao cho bạn",
-    "notifications.meeting.action_assigned.body":
-      "Từ cuộc họp {{meeting_number}}: {{description}}",
-    "notifications.cde.state_transitioned.title":
-      "Trạng thái tài liệu đã thay đổi",
-    "notifications.cde.state_transitioned.body":
-      "Container chuyển sang '{{new_state}}'.",
+    "notifications.boq.created.body": "Bảng khối lượng '{{boq_name}}' của bạn đã được lưu.",
+    "notifications.meeting.action_assigned.title": "Mục hành động được giao cho bạn",
+    "notifications.meeting.action_assigned.body": "Từ cuộc họp {{meeting_number}}: {{description}}",
+    "notifications.cde.state_transitioned.title": "Trạng thái tài liệu đã thay đổi",
+    "notifications.cde.state_transitioned.body": "Container chuyển sang '{{new_state}}'.",
     "notifications.rfi.assigned.title": "RFI được giao cho bạn",
     "notifications.rfi.assigned.body": "{{code}} — {{title}}",
     "notifications.rfi.responded.title": "RFI đã được trả lời",
-    "notifications.rfi.responded.body":
-      "Yêu cầu {{code}} ({{title}}) của bạn đã có phản hồi.",
+    "notifications.rfi.responded.body": "Yêu cầu {{code}} ({{title}}) của bạn đã có phản hồi.",
     "notifications.risk.assigned.title": "Rủi ro được giao cho bạn",
     "notifications.risk.assigned.body": "{{code}} — {{title}}",
     "notifications.submittal.submitted.title": "Submittal đang chờ duyệt",
@@ -3006,32 +2733,24 @@ const resource = {
     "notifications.submittal.approved.title": "Submittal đã được duyệt",
     "notifications.submittal.approved.body": "{{code}} — {{title}}",
     "notifications.submittal.rejected.title": "Submittal đã bị từ chối",
-    "notifications.submittal.rejected.body":
-      "{{code}} ({{title}}). Lý do: {{reason}}",
+    "notifications.submittal.rejected.body": "{{code}} ({{title}}). Lý do: {{reason}}",
     "notifications.submittal.revise_resubmit.title": "Submittal cần sửa đổi",
-    "notifications.submittal.revise_resubmit.body":
-      "{{code}} ({{title}}). Lý do: {{reason}}",
-    "notifications.transmittal.issued.title":
-      "Transmittal đã được ban hành cho bạn",
+    "notifications.submittal.revise_resubmit.body": "{{code}} ({{title}}). Lý do: {{reason}}",
+    "notifications.transmittal.issued.title": "Transmittal đã được ban hành cho bạn",
     "notifications.transmittal.issued.body": "{{code}} — {{title}}",
-    "notifications.transmittal.acknowledged.title":
-      "Transmittal đã được xác nhận",
-    "notifications.transmittal.acknowledged.body":
-      "Người nhận đã xác nhận {{code}} ({{title}}).",
+    "notifications.transmittal.acknowledged.title": "Transmittal đã được xác nhận",
+    "notifications.transmittal.acknowledged.body": "Người nhận đã xác nhận {{code}} ({{title}}).",
     "notifications.transmittal.responded.title": "Transmittal đã được trả lời",
-    "notifications.transmittal.responded.body":
-      "{{code}} ({{title}}). {{response_summary}}",
+    "notifications.transmittal.responded.body": "{{code}} ({{title}}). {{response_summary}}",
     "procurement.amount": "Amount",
     "procurement.delivery_date": "Ngày giao hàng",
     "procurement.goods_receipts": "Phiếu nhập kho",
     "procurement.gr_ref": "Mã phiếu nhập",
     "procurement.issue_date": "Ngày phát hành",
     "procurement.no_gr": "Không có phiếu nhập kho",
-    "procurement.no_gr_desc":
-      "Phiếu nhập kho sẽ xuất hiện ở đây sau khi được ghi lại.",
+    "procurement.no_gr_desc": "Phiếu nhập kho sẽ xuất hiện ở đây sau khi được ghi lại.",
     "procurement.no_po": "Không có đơn đặt hàng",
-    "procurement.no_po_desc":
-      "Đơn đặt hàng sẽ xuất hiện ở đây sau khi được tạo.",
+    "procurement.no_po_desc": "Đơn đặt hàng sẽ xuất hiện ở đây sau khi được tạo.",
     "procurement.no_project": "Chọn dự án để xem dữ liệu mua sắm.",
     "procurement.po_number": "PO #",
     "procurement.po_ref": "Mã đơn hàng",
@@ -3096,11 +2815,9 @@ const resource = {
     "safety.incident_number": "Incident #",
     "safety.incidents": "Incidents",
     "safety.no_incidents": "Chưa ghi nhận sự cố nào",
-    "safety.no_incidents_desc":
-      "Các sự cố sẽ xuất hiện ở đây sau khi được báo cáo.",
+    "safety.no_incidents_desc": "Các sự cố sẽ xuất hiện ở đây sau khi được báo cáo.",
     "safety.no_observations": "Chưa ghi nhận quan sát nào",
-    "safety.no_observations_desc":
-      "Các quan sát sẽ xuất hiện ở đây sau khi được báo cáo.",
+    "safety.no_observations_desc": "Các quan sát sẽ xuất hiện ở đây sau khi được báo cáo.",
     "safety.no_project": "Chọn dự án để xem dữ liệu an toàn.",
     "safety.observation_number": "Observation #",
     "safety.observations": "Observations",
@@ -3123,17 +2840,13 @@ const resource = {
     "settings.edit_profile": "Chỉnh sửa tên hồ sơ",
     "settings.full_name": "Họ và tên đầy đủ",
     "settings.imperial": "Hệ đo lường Anh (ft, lb)",
-    "settings.interface_mode_subtitle":
-      "Kiểm soát các tính năng hiển thị trong thanh điều hướng",
+    "settings.interface_mode_subtitle": "Kiểm soát các tính năng hiển thị trong thanh điều hướng",
     "settings.interface_mode_title": "Chế độ giao diện",
     "settings.measurement_system": "Hệ thống đo lường",
     "settings.metric": "Hệ mét (m, kg)",
-    "settings.mode_advanced_detail":
-      "Bộ công cụ chuyên nghiệp đầy đủ với tất cả mô-đun và tính năng hiển thị.",
-    "settings.mode_simple_detail":
-      "Công cụ dự toán thiết yếu. Giao diện gọn gàng cho công việc tập trung.",
-    "settings.modules_link_desc":
-      "Bật, tắt và cấu hình từng mô-đun trong phần Mô-đun.",
+    "settings.mode_advanced_detail": "Bộ công cụ chuyên nghiệp đầy đủ với tất cả mô-đun và tính năng hiển thị.",
+    "settings.mode_simple_detail": "Công cụ dự toán thiết yếu. Giao diện gọn gàng cho công việc tập trung.",
+    "settings.modules_link_desc": "Bật, tắt và cấu hình từng mô-đun trong phần Mô-đun.",
     "settings.modules_link_title": "Modules",
     "settings.number_format": "Định dạng số",
     "settings.paper_size": "Khổ giấy",
@@ -3142,8 +2855,7 @@ const resource = {
     "settings.regional_subtitle": "Định dạng, đơn vị và tùy chọn bản địa hóa",
     "settings.regional_title": "Cài đặt khu vực",
     "settings.restart_onboarding": "Mở trình hướng dẫn thiết lập",
-    "settings.setup_wizard_subtitle":
-      "Chạy lại thiết lập ban đầu để thay đổi ngôn ngữ, cài đặt cơ sở dữ liệu, danh mục hoặc dự án demo",
+    "settings.setup_wizard_subtitle": "Chạy lại thiết lập ban đầu để thay đổi ngôn ngữ, cài đặt cơ sở dữ liệu, danh mục hoặc dự án demo",
     "settings.setup_wizard_title": "Trình hướng dẫn thiết lập",
     "settings.time_days_ago": "{{count}}d ago",
     "settings.time_hours_ago": "{{count}}h ago",
@@ -3168,8 +2880,7 @@ const resource = {
     "settings.tm_show_more": "Hiển thị thêm (còn {{remaining}})",
     "settings.tm_total_keys": "Tổng số khóa",
     "settings.tm_translated": "Translated",
-    "settings.translation_manager_subtitle":
-      "Xem và tùy chỉnh bản dịch cho ngôn ngữ hiện tại",
+    "settings.translation_manager_subtitle": "Xem và tùy chỉnh bản dịch cho ngôn ngữ hiện tại",
     "settings.translation_manager_title": "Trình quản lý dịch thuật",
     "submittals.action_review": "Review",
     "submittals.action_submit": "Submit",
@@ -3198,11 +2909,9 @@ const resource = {
     "submittals.label_title": "Title",
     "submittals.new_submittal": "Hồ sơ trình duyệt mới",
     "submittals.no_results": "Không tìm thấy hồ sơ trình duyệt phù hợp",
-    "submittals.no_results_hint":
-      "Thử điều chỉnh tìm kiếm hoặc bộ lọc của bạn.",
+    "submittals.no_results_hint": "Thử điều chỉnh tìm kiếm hoặc bộ lọc của bạn.",
     "submittals.no_submittals": "Chưa có hồ sơ trình duyệt nào",
-    "submittals.no_submittals_hint":
-      "Tạo hồ sơ trình duyệt đầu tiên để bắt đầu.",
+    "submittals.no_submittals_hint": "Tạo hồ sơ trình duyệt đầu tiên để bắt đầu.",
     "submittals.page_title": "Submittals",
     "submittals.review_title": "Đánh giá hồ sơ trình duyệt",
     "submittals.reviewed": "Đã đánh giá hồ sơ trình duyệt",
@@ -3254,8 +2963,7 @@ const resource = {
     "transmittals.col_recipients": "Recipients",
     "transmittals.col_status": "Status",
     "transmittals.col_subject": "Subject",
-    "transmittals.cover_note_placeholder":
-      "Ghi chú kèm theo phiếu chuyển giao...",
+    "transmittals.cover_note_placeholder": "Ghi chú kèm theo phiếu chuyển giao...",
     "transmittals.create_transmittal": "Tạo phiếu chuyển giao",
     "transmittals.created": "Đã tạo phiếu chuyển giao",
     "transmittals.field_cover_note": "Ghi chú kèm theo",
@@ -3272,11 +2980,9 @@ const resource = {
     "transmittals.label_recipients": "Recipients",
     "transmittals.new_transmittal": "Phiếu chuyển giao mới",
     "transmittals.no_results": "Không tìm thấy phiếu chuyển giao phù hợp",
-    "transmittals.no_results_hint":
-      "Thử điều chỉnh tìm kiếm hoặc bộ lọc của bạn.",
+    "transmittals.no_results_hint": "Thử điều chỉnh tìm kiếm hoặc bộ lọc của bạn.",
     "transmittals.no_transmittals": "Chưa có phiếu chuyển giao nào",
-    "transmittals.no_transmittals_hint":
-      "Tạo phiếu chuyển giao đầu tiên để bắt đầu.",
+    "transmittals.no_transmittals_hint": "Tạo phiếu chuyển giao đầu tiên để bắt đầu.",
     "transmittals.page_title": "Transmittals",
     "transmittals.recipients_placeholder": "Nhập tên người nhận...",
     "transmittals.search_placeholder": "Tìm kiếm phiếu chuyển giao...",
@@ -3328,8 +3034,7 @@ const resource = {
     "common.previous": "Trước",
     "common.project": "Dự án",
     "common.quantity": "Số lượng",
-    "common.rate_limit_wait":
-      "Vui lòng đợi {{seconds}} giây trước khi thử lại.",
+    "common.rate_limit_wait": "Vui lòng đợi {{seconds}} giây trước khi thử lại.",
     "common.recommended": "Được đề xuất",
     "common.region": "Khu vực",
     "common.remove": "Xóa",
@@ -3357,8 +3062,7 @@ const resource = {
     "dashboard.create_first_project": "Tạo dự án đầu tiên",
     "dashboard.create_first_project_desc": "Thiết lập dự toán mới từ đầu",
     "dashboard.import_existing_boq": "Nhập BOQ hiện có",
-    "dashboard.import_existing_boq_desc":
-      "Sử dụng AI để dự toán từ tài liệu hiện có",
+    "dashboard.import_existing_boq_desc": "Sử dụng AI để dự toán từ tài liệu hiện có",
     "dashboard.install_demo": "Cài đặt dự án demo",
     "dashboard.install_demo_desc": "Dự án nhà ở dựng sẵn với dữ liệu thực tế",
     "dashboard.kpi_not_validated": "N/A",
@@ -3369,22 +3073,16 @@ const resource = {
     "dashboard.quick_start": "Dự toán nhanh",
     "dashboard.run_setup": "Chạy trình hướng dẫn thiết lập",
     "dashboard.total_budget_all": "Tổng ngân sách",
-    "dashboard.welcome_body":
-      "Dự án này được xây dựng và duy trì bởi cộng đồng. Sự hỗ trợ của bạn giúp chúng tôi thêm tính năng mới, cơ sở dữ liệu khu vực và giữ cho nó miễn phí cho mọi người.",
+    "dashboard.welcome_body": "Dự án này được xây dựng và duy trì bởi cộng đồng. Sự hỗ trợ của bạn giúp chúng tôi thêm tính năng mới, cơ sở dữ liệu khu vực và giữ cho nó miễn phí cho mọi người.",
     "dashboard.welcome_consult": "Tư vấn chuyên nghiệp",
-    "dashboard.welcome_consult_desc":
-      "Triển khai tùy chỉnh, đào tạo và giải pháp doanh nghiệp toàn cầu",
-    "dashboard.welcome_desc":
-      "Bắt đầu bằng cách cài đặt dự án demo hoặc tạo dự án của riêng bạn.",
+    "dashboard.welcome_consult_desc": "Triển khai tùy chỉnh, đào tạo và giải pháp doanh nghiệp toàn cầu",
+    "dashboard.welcome_desc": "Bắt đầu bằng cách cài đặt dự án demo hoặc tạo dự án của riêng bạn.",
     "dashboard.welcome_sponsor": "Trở thành nhà tài trợ",
-    "dashboard.welcome_sponsor_desc":
-      "Tài trợ các tính năng mới và giữ cho dự án miễn phí cho mọi người",
+    "dashboard.welcome_sponsor_desc": "Tài trợ các tính năng mới và giữ cho dự án miễn phí cho mọi người",
     "dashboard.welcome_star": "Gắn sao trên GitHub",
-    "dashboard.welcome_star_desc":
-      "Giúp người khác khám phá dự án — chỉ mất 2 giây",
+    "dashboard.welcome_star_desc": "Giúp người khác khám phá dự án — chỉ mất 2 giây",
     "dashboard.welcome_start": "Bắt đầu",
-    "dashboard.welcome_sub":
-      "Phần mềm dự toán chi phí xây dựng miễn phí & mã nguồn mở",
+    "dashboard.welcome_sub": "Phần mềm dự toán chi phí xây dựng miễn phí & mã nguồn mở",
     "dashboard.welcome_title": "Chào mừng đến với OpenConstructionERP",
     "dashboard.with_budget": "Có ngân sách",
     "analytics.action_create_project": "Tạo dự án",
@@ -3403,8 +3101,7 @@ const resource = {
     "analytics.col_status": "Status",
     "analytics.col_variance": "Variance",
     "analytics.col_variance_pct": "Var. %",
-    "analytics.empty_description":
-      "Tạo dự án với ngân sách để xem phân tích đa dự án.",
+    "analytics.empty_description": "Tạo dự án với ngân sách để xem phân tích đa dự án.",
     "analytics.empty_title": "Chưa có dữ liệu phân tích",
     "analytics.export_csv": "Xuất CSV",
     "analytics.filter_region": "Lọc theo khu vực",
@@ -3427,14 +3124,12 @@ const resource = {
     "analytics.total_projects": "Tổng dự án",
     "analytics.with_budget": "{{count}} có ngân sách",
     "backup.confirm_replace_btn": "Thay thế tất cả dữ liệu",
-    "backup.confirm_replace_message":
-      "Thao tác này sẽ thay thế toàn bộ dữ liệu hiện có bằng nội dung sao lưu. Không thể hoàn tác hành động này.",
+    "backup.confirm_replace_message": "Thao tác này sẽ thay thế toàn bộ dữ liệu hiện có bằng nội dung sao lưu. Không thể hoàn tác hành động này.",
     "backup.confirm_replace_title": "Thay thế tất cả dữ liệu?",
     "backup.drop_zone_hint": "Tệp sao lưu .zip",
     "backup.drop_zone_label": "Thả tệp sao lưu vào đây hoặc nhấn để duyệt",
     "backup.export_btn": "Tạo bản sao lưu",
-    "backup.export_desc":
-      "Tải xuống bản sao lưu hoàn chỉnh của tất cả dữ liệu dưới dạng tệp ZIP.",
+    "backup.export_desc": "Tải xuống bản sao lưu hoàn chỉnh của tất cả dữ liệu dưới dạng tệp ZIP.",
     "backup.export_error": "Xuất thất bại",
     "backup.export_success": "Đã tạo bản sao lưu",
     "backup.export_success_detail": "Tệp sao lưu của bạn đã được tải xuống.",
@@ -3447,16 +3142,14 @@ const resource = {
     "backup.mode_merge": "Hợp nhất (thêm mới, giữ nguyên hiện có)",
     "backup.mode_replace": "Thay thế (ghi đè tất cả)",
     "backup.record_counts": "Số lượng bản ghi",
-    "backup.replace_warning":
-      "Cảnh báo: Chế độ thay thế sẽ xóa tất cả dữ liệu hiện có.",
+    "backup.replace_warning": "Cảnh báo: Chế độ thay thế sẽ xóa tất cả dữ liệu hiện có.",
     "backup.restore_btn": "Restore",
     "backup.restore_error": "Lỗi khôi phục",
     "backup.restore_failed": "Khôi phục thất bại",
     "backup.restore_failed_detail": "Không thể khôi phục từ bản sao lưu",
     "backup.restore_mode": "Chế độ khôi phục",
     "backup.restore_success": "Đã khôi phục bản sao lưu",
-    "backup.restore_success_detail":
-      "Toàn bộ dữ liệu đã được khôi phục từ bản sao lưu.",
+    "backup.restore_success_detail": "Toàn bộ dữ liệu đã được khôi phục từ bản sao lưu.",
     "backup.restoring": "Restoring...",
     "backup.subtitle": "Xuất và nhập dữ liệu của bạn",
     "backup.title": "Sao lưu & Khôi phục",
@@ -3468,8 +3161,7 @@ const resource = {
     "changeorders.add_item": "Thêm hạng mục",
     "changeorders.all_statuses": "Tất cả trạng thái",
     "changeorders.approve": "Approve",
-    "changeorders.approve_confirm":
-      "Phê duyệt lệnh thay đổi này? Tác động chi phí sẽ được áp dụng vào ngân sách dự án.",
+    "changeorders.approve_confirm": "Phê duyệt lệnh thay đổi này? Tác động chi phí sẽ được áp dụng vào ngân sách dự án.",
     "changeorders.approved": "Đã phê duyệt lệnh thay đổi",
     "changeorders.approved_at": "Approved",
     "changeorders.approved_impact": "Tác động đã phê duyệt",
@@ -3481,8 +3173,7 @@ const resource = {
     "changeorders.delete_item_confirm": "Xóa hạng mục này?",
     "changeorders.deleted": "Đã xóa lệnh thay đổi",
     "changeorders.empty": "Không có lệnh thay đổi",
-    "changeorders.empty_desc":
-      "Tạo lệnh thay đổi để theo dõi các thay đổi phạm vi với tác động chi phí và tiến độ",
+    "changeorders.empty_desc": "Tạo lệnh thay đổi để theo dõi các thay đổi phạm vi với tác động chi phí và tiến độ",
     "changeorders.export_csv": "Xuất CSV",
     "changeorders.filter_status": "Lọc theo trạng thái",
     "changeorders.item_added": "Đã thêm hạng mục",
@@ -3493,15 +3184,13 @@ const resource = {
     "changeorders.new_qty": "Số lượng mới",
     "changeorders.new_rate": "Đơn giá mới",
     "changeorders.no_items": "Chưa có hạng mục nào",
-    "changeorders.no_items_desc":
-      "Thêm hạng mục chi tiết để xác định thay đổi phạm vi",
+    "changeorders.no_items_desc": "Thêm hạng mục chi tiết để xác định thay đổi phạm vi",
     "changeorders.of_total": "of",
     "changeorders.orig_qty": "Số lượng ban đầu",
     "changeorders.orig_rate": "Đơn giá ban đầu",
     "changeorders.pending": "Pending",
     "changeorders.pending_approval": "Chờ phê duyệt",
-    "changeorders.pending_approval_hint":
-      "Chỉ quản lý và quản trị viên mới có thể phê duyệt.",
+    "changeorders.pending_approval_hint": "Chỉ quản lý và quản trị viên mới có thể phê duyệt.",
     "changeorders.reason": "Reason",
     "changeorders.reject": "Reject",
     "changeorders.reject_confirm": "Từ chối lệnh thay đổi này?",
@@ -3517,12 +3206,10 @@ const resource = {
     "changeorders.status_submitted": "Submitted",
     "changeorders.status_under_review": "Đang xem xét",
     "changeorders.submit": "Submit",
-    "changeorders.submit_confirm":
-      "Nộp lệnh thay đổi này để xem xét? Không thể hoàn tác.",
+    "changeorders.submit_confirm": "Nộp lệnh thay đổi này để xem xét? Không thể hoàn tác.",
     "changeorders.submitted": "Đã nộp lệnh thay đổi",
     "changeorders.submitted_at": "Submitted",
-    "changeorders.subtitle":
-      "Theo dõi các thay đổi phạm vi với tác động chi phí và tiến độ",
+    "changeorders.subtitle": "Theo dõi các thay đổi phạm vi với tác động chi phí và tiến độ",
     "changeorders.title_placeholder": "Ví dụ: Công tác móng bổ sung",
     "changeorders.total": "Tổng lệnh thay đổi",
     "changeorders.type": "Type",
@@ -3531,8 +3218,7 @@ const resource = {
     "changeorders.type_removed": "Removed",
     "changeorders.unit_placeholder": "m2, m3, pcs...",
     "changeorders.workflow": "Workflow",
-    "changeorders.workflow_desc":
-      "Quy trình lệnh thay đổi: Bản nháp (chuẩn bị thay đổi phạm vi) → Đã nộp (gửi xem xét) → Phê duyệt hoặc Từ chối. Mỗi lệnh theo dõi tác động chi phí và tác động tiến độ theo ngày. Thêm hạng mục chi tiết để mô tả những gì đã thay đổi — số lượng và đơn giá ban đầu so với mới. Chênh lệch chi phí được tính tự động.",
+    "changeorders.workflow_desc": "Quy trình lệnh thay đổi: Bản nháp (chuẩn bị thay đổi phạm vi) → Đã nộp (gửi xem xét) → Phê duyệt hoặc Từ chối. Mỗi lệnh theo dõi tác động chi phí và tác động tiến độ theo ngày. Thêm hạng mục chi tiết để mô tả những gì đã thay đổi — số lượng và đơn giá ban đầu so với mới. Chênh lệch chi phí được tính tự động.",
     "explorer.analysis_name": "Name",
     "explorer.apply_pivot": "Apply",
     "explorer.bar": "Bar",
@@ -3548,10 +3234,8 @@ const resource = {
     "explorer.conversion_complete": "Chuyển đổi hoàn tất",
     "explorer.conversion_failed": "Chuyển đổi thất bại",
     "explorer.converters": "Bộ chuyển đổi CAD",
-    "explorer.converters_desc":
-      "Bộ chuyển đổi cộng đồng DDC để trích xuất dữ liệu cấu kiện BIM",
-    "explorer.converters_external_hint":
-      "Bộ chuyển đổi CAD yêu cầu công cụ DDC cad2data được cài đặt trên máy chủ của bạn",
+    "explorer.converters_desc": "Bộ chuyển đổi cộng đồng DDC để trích xuất dữ liệu cấu kiện BIM",
+    "explorer.converters_external_hint": "Bộ chuyển đổi CAD yêu cầu công cụ DDC cad2data được cài đặt trên máy chủ của bạn",
     "explorer.converting": "Converting {{name}}...",
     "explorer.converting_msg": "Converting...",
     "explorer.count": "Count",
@@ -3575,8 +3259,7 @@ const resource = {
     "explorer.heatmap": "Bật/tắt bản đồ nhiệt giá trị",
     "explorer.heatmap_short": "Heatmap",
     "explorer.installed": "installed",
-    "explorer.invalid_format":
-      "Định dạng tệp không được hỗ trợ. Dùng RVT, IFC, DWG hoặc DGN.",
+    "explorer.invalid_format": "Định dạng tệp không được hỗ trợ. Dùng RVT, IFC, DWG hoặc DGN.",
     "explorer.like_describe": "giống df.describe()",
     "explorer.max": "Max",
     "explorer.mean": "Mean",
@@ -3587,8 +3270,7 @@ const resource = {
     "explorer.no_chart_data": "Không có dữ liệu biểu đồ",
     "explorer.no_groups": "Không tìm thấy nhóm. Thử chọn cột khác.",
     "explorer.non_null": "Không rỗng",
-    "explorer.or_click":
-      "hoặc nhấn để duyệt — bảng dữ liệu, pivot, biểu đồ & thống kê",
+    "explorer.or_click": "hoặc nhấn để duyệt — bảng dữ liệu, pivot, biểu đồ & thống kê",
     "explorer.page_of": "Trang {{page}} / {{total}}",
     "explorer.page_summary": "Tổng trang:",
     "explorer.pie": "Pie",
@@ -3597,27 +3279,22 @@ const resource = {
     "explorer.powered_by": "Được cung cấp bởi",
     "explorer.project": "Project",
     "explorer.recent_models": "Mô hình gần đây",
-    "explorer.requires_external":
-      "Công cụ bên ngoài — nhấn để xem hướng dẫn cài đặt",
+    "explorer.requires_external": "Công cụ bên ngoài — nhấn để xem hướng dẫn cài đặt",
     "explorer.rows": "rows",
     "explorer.save_analysis": "Lưu phân tích",
     "explorer.save_as_bim": "Lưu thành mô hình BIM",
     "explorer.save_permanently": "Lưu vĩnh viễn",
     "explorer.save_to_project": "Lưu vào dự án (BIM Hub)",
     "explorer.save_to_project_btn": "Lưu vào dự án",
-    "explorer.save_to_project_desc":
-      "Tạo mô hình BIM với tất cả cấu kiện đã trích xuất trong dự án đã chọn.",
+    "explorer.save_to_project_desc": "Tạo mô hình BIM với tất cả cấu kiện đã trích xuất trong dự án đã chọn.",
     "explorer.saved": "Đã lưu phân tích vĩnh viễn",
     "explorer.saved_to_project": "Đã lưu vào BIM Hub",
-    "explorer.saved_to_project_msg":
-      "Đã lưu cấu kiện vào BIM Hub. Xem trong BIM Viewer.",
+    "explorer.saved_to_project_msg": "Đã lưu cấu kiện vào BIM Hub. Xem trong BIM Viewer.",
     "explorer.search_all": "Tìm kiếm tất cả cột...",
-    "explorer.select_columns_for_chart":
-      "Chọn cột nhóm theo và cột giá trị để tạo biểu đồ.",
+    "explorer.select_columns_for_chart": "Chọn cột nhóm theo và cột giá trị để tạo biểu đồ.",
     "explorer.select_project": "Chọn dự án...",
     "explorer.selected": "selected",
-    "explorer.session_expired_desc":
-      "Phiên CAD có hiệu lực trong 24 giờ. Tải lại tệp của bạn để tiếp tục.",
+    "explorer.session_expired_desc": "Phiên CAD có hiệu lực trong 24 giờ. Tải lại tệp của bạn để tiếp tục.",
     "explorer.session_expired_title": "Phiên đã hết hạn hoặc không tìm thấy",
     "explorer.setup_guide": "Hướng dẫn cài đặt",
     "explorer.sparse_columns": "Sparse (<10%)",
@@ -3637,8 +3314,7 @@ const resource = {
     "explorer.visible_columns": "Cột hiển thị",
     "explorer.active_filters": "Bộ lọc đang áp dụng",
     "explorer.clear_all_filters": "Xóa tất cả",
-    "explorer.no_active_filters":
-      "Nhấn vào thanh/lát biểu đồ bất kỳ để lọc chéo qua các tab.",
+    "explorer.no_active_filters": "Nhấn vào thanh/lát biểu đồ bất kỳ để lọc chéo qua các tab.",
     "explorer.line": "Line",
     "explorer.scatter": "Scatter",
     "explorer.format": "Format",
@@ -3653,8 +3329,7 @@ const resource = {
     "explorer.save_view": "Lưu chế độ xem",
     "explorer.save_view_prompt": "Đặt tên chế độ xem này",
     "explorer.saved_views": "Chế độ xem đã lưu",
-    "explorer.no_saved_views":
-      "Chưa có chế độ xem nào được lưu. Lưu bộ lọc, biểu đồ và cấu hình pivot của bạn để dùng sau.",
+    "explorer.no_saved_views": "Chưa có chế độ xem nào được lưu. Lưu bộ lọc, biểu đồ và cấu hình pivot của bạn để dùng sau.",
     "explorer.load_view": "Load",
     "explorer.delete_view": "Delete",
     "explorer.view_saved": "Đã lưu chế độ xem",
@@ -3688,12 +3363,10 @@ const resource = {
     "fieldreports.deliveries": "Deliveries",
     "fieldreports.deliveries_placeholder": "Vật liệu hoặc thiết bị đã giao...",
     "fieldreports.download_template": "Tải mẫu nhập liệu",
-    "fieldreports.drop_file":
-      "Thả tệp Excel hoặc CSV vào đây, hoặc nhấn để duyệt",
+    "fieldreports.drop_file": "Thả tệp Excel hoặc CSV vào đây, hoặc nhấn để duyệt",
     "fieldreports.edit_report": "Chỉnh sửa báo cáo công trường",
     "fieldreports.empty": "Chưa có báo cáo công trường nào",
-    "fieldreports.empty_desc":
-      "Tạo báo cáo công trường hàng ngày đầu tiên để theo dõi các hoạt động tại công trình.",
+    "fieldreports.empty_desc": "Tạo báo cáo công trường hàng ngày đầu tiên để theo dõi các hoạt động tại công trình.",
     "fieldreports.export": "Export",
     "fieldreports.export_failed": "Xuất thất bại",
     "fieldreports.export_pdf": "Xuất PDF",
@@ -3705,24 +3378,20 @@ const resource = {
     "fieldreports.import": "Import",
     "fieldreports.import_btn": "Import",
     "fieldreports.import_reports": "Nhập báo cáo công trường",
-    "fieldreports.import_result":
-      "Đã nhập: {{imported}}, Bỏ qua: {{skipped}}, Lỗi: {{errors}}",
+    "fieldreports.import_result": "Đã nhập: {{imported}}, Bỏ qua: {{skipped}}, Lỗi: {{errors}}",
     "fieldreports.list_view": "List",
     "fieldreports.new_report": "Báo cáo mới",
     "fieldreports.no_match": "Không tìm thấy báo cáo phù hợp",
-    "fieldreports.no_match_desc":
-      "Thử điều chỉnh bộ lọc trạng thái hoặc loại của bạn.",
+    "fieldreports.no_match_desc": "Thử điều chỉnh bộ lọc trạng thái hoặc loại của bạn.",
     "fieldreports.no_project": "Chọn dự án",
-    "fieldreports.no_project_desc":
-      "Chọn dự án từ thanh bên để xem báo cáo công trường.",
+    "fieldreports.no_project_desc": "Chọn dự án từ thanh bên để xem báo cáo công trường.",
     "fieldreports.notes": "Notes",
     "fieldreports.notes_placeholder": "Ghi chú hoặc quan sát bổ sung...",
     "fieldreports.report_date": "Date",
     "fieldreports.report_type": "Loại báo cáo",
     "fieldreports.row_error": "Row {{row}}: {{error}}",
     "fieldreports.safety_incidents": "Sự cố an toàn",
-    "fieldreports.safety_placeholder":
-      "Báo cáo các sự cố an toàn hoặc suýt tai nạn...",
+    "fieldreports.safety_placeholder": "Báo cáo các sự cố an toàn hoặc suýt tai nạn...",
     "fieldreports.show_errors": "Hiển thị chi tiết lỗi",
     "fieldreports.stat_approved": "Approved",
     "fieldreports.stat_draft": "Draft",
@@ -3745,8 +3414,7 @@ const resource = {
     "fieldreports.wind": "Wind",
     "fieldreports.wind_placeholder": "Ví dụ: 15 km/h hướng TBB",
     "fieldreports.work_performed": "Công việc đã thực hiện",
-    "fieldreports.work_performed_placeholder":
-      "Mô tả các hoạt động công việc đã hoàn thành hôm nay...",
+    "fieldreports.work_performed_placeholder": "Mô tả các hoạt động công việc đã hoàn thành hôm nay...",
     "fieldreports.workers": "workers",
     "fieldreports.workforce_section": "Workforce",
     "risk.all_categories": "Tất cả danh mục",
@@ -3758,20 +3426,17 @@ const resource = {
     "risk.contingency": "Kế hoạch dự phòng",
     "risk.created": "Đã tạo rủi ro",
     "risk.critical": "Critical (16-25)",
-    "risk.delete_message":
-      "Rủi ro này sẽ bị xóa vĩnh viễn. Không thể hoàn tác hành động này.",
+    "risk.delete_message": "Rủi ro này sẽ bị xóa vĩnh viễn. Không thể hoàn tác hành động này.",
     "risk.delete_title": "Xóa rủi ro",
     "risk.deleted": "Đã xóa rủi ro",
-    "risk.disclaimer":
-      "Mô phỏng Monte Carlo chỉ cung cấp ước tính xác suất. Kết quả phụ thuộc vào các giả định đầu vào.",
+    "risk.disclaimer": "Mô phỏng Monte Carlo chỉ cung cấp ước tính xác suất. Kết quả phụ thuộc vào các giả định đầu vào.",
     "risk.dist": "Distribution",
     "risk.dist_pert": "PERT",
     "risk.dist_triangular": "Triangular",
     "risk.dist_uniform": "Uniform",
     "risk.distribution": "Phân phối chi phí (Biểu đồ tần suất)",
     "risk.empty": "Chưa đăng ký rủi ro nào",
-    "risk.empty_desc":
-      "Thêm rủi ro để theo dõi các vấn đề tiềm ẩn và chiến lược giảm thiểu",
+    "risk.empty_desc": "Thêm rủi ro để theo dõi các vấn đề tiềm ẩn và chiến lược giảm thiểu",
     "risk.export_csv": "Xuất CSV",
     "risk.exposure": "Tổng rủi ro tiếp xúc",
     "risk.heatmap": "Ma trận rủi ro",
@@ -3844,13 +3509,11 @@ const resource = {
     "toasts.schedule_generated": "Đã tạo lịch trình từ BOQ",
     "toasts.status_updated": "Đã cập nhật trạng thái",
     "toasts.update_failed": "Cập nhật thất bại",
-    "bim.cad_processing_note":
-      "Quá trình xử lý có thể mất vài phút đối với tệp lớn",
+    "bim.cad_processing_note": "Quá trình xử lý có thể mất vài phút đối với tệp lớn",
     "bim.cad_upload_queued": "Tệp CAD đã được xếp hàng xử lý",
     "bim.cad_upload_success": "Đã tải lên tệp CAD",
-    "bim.cad_upload_success_desc":
-      "Tệp đã được tải lên thành công. Quá trình xử lý sẽ bắt đầu ngay sau đó.",
-    "bim.confirm_delete_model": 'Xóa "{{name}}"? Tất cả cấu kiện sẽ bị xóa.',
+    "bim.cad_upload_success_desc": "Tệp đã được tải lên thành công. Quá trình xử lý sẽ bắt đầu ngay sau đó.",
+    "bim.confirm_delete_model": "Xóa \"{{name}}\"? Tất cả cấu kiện sẽ bị xóa.",
     "bim.disc_architecture": "Architecture",
     "bim.disc_civil": "Civil",
     "bim.disc_electrical": "Electrical",
@@ -3862,30 +3525,22 @@ const resource = {
     "bim.disc_structural": "Structural",
     "bim.discipline_label": "Discipline",
     "bim.getting_started": "BIM Viewer",
-    "bim.getting_started_desc":
-      "Tải lên dữ liệu cấu kiện (CSV/Excel) và hình học 3D tùy chọn (DAE) từ bộ chuyển đổi CAD để trực quan hóa mô hình công trình trong 3D. Các cấu kiện có thể được liên kết với hạng mục BOQ để kiểm tra khối lượng.",
+    "bim.getting_started_desc": "Tải lên dữ liệu cấu kiện (CSV/Excel) và hình học 3D tùy chọn (DAE) từ bộ chuyển đổi CAD để trực quan hóa mô hình công trình trong 3D. Các cấu kiện có thể được liên kết với hạng mục BOQ để kiểm tra khối lượng.",
     "bim.hide_upload": "Close",
     "bim.landing_drop_here": "Thả tệp vào đây",
-    "bim.landing_feat_3d_desc":
-      "Trình xem Three.js tương tác với lọc theo tầng, tô màu theo chuyên ngành và chọn cấu kiện.",
+    "bim.landing_feat_3d_desc": "Trình xem Three.js tương tác với lọc theo tầng, tô màu theo chuyên ngành và chọn cấu kiện.",
     "bim.landing_feat_3d_title": "3D Visualization",
-    "bim.landing_feat_boq_desc":
-      "Kết nối cấu kiện BIM với hạng mục chi phí để kiểm tra khối lượng tự động và bóc tách 5D.",
+    "bim.landing_feat_boq_desc": "Kết nối cấu kiện BIM với hạng mục chi phí để kiểm tra khối lượng tự động và bóc tách 5D.",
     "bim.landing_feat_boq_title": "Liên kết BOQ",
-    "bim.landing_feat_compare_desc":
-      "So sánh các phiên bản để tự động phát hiện các cấu kiện được thêm, xóa và sửa đổi.",
+    "bim.landing_feat_compare_desc": "So sánh các phiên bản để tự động phát hiện các cấu kiện được thêm, xóa và sửa đổi.",
     "bim.landing_feat_compare_title": "So sánh mô hình",
-    "bim.landing_feat_extract_desc":
-      "Tường, sàn, cột, dầm, MEP — với thuộc tính, diện tích, thể tích và phân loại.",
+    "bim.landing_feat_extract_desc": "Tường, sàn, cột, dầm, MEP — với thuộc tính, diện tích, thể tích và phân loại.",
     "bim.landing_feat_extract_title": "Trích xuất cấu kiện",
-    "bim.landing_feat_format_desc":
-      "IFC xử lý tức thì. RVT qua DDC cad2data. CSV/Excel cho dữ liệu đã chuyển đổi sẵn.",
+    "bim.landing_feat_format_desc": "IFC xử lý tức thì. RVT qua DDC cad2data. CSV/Excel cho dữ liệu đã chuyển đổi sẵn.",
     "bim.landing_feat_format_title": "Không phụ thuộc định dạng",
-    "bim.landing_feat_qty_desc":
-      "Xác định các quy tắc để trích xuất diện tích, thể tích và chiều dài — áp dụng cho toàn bộ mô hình cùng một lúc.",
+    "bim.landing_feat_qty_desc": "Xác định các quy tắc để trích xuất diện tích, thể tích và chiều dài — áp dụng cho toàn bộ mô hình cùng một lúc.",
     "bim.landing_feat_qty_title": "Bản đồ khối lượng",
-    "bim.landing_hero_subtitle":
-      "Tải lên tệp IFC hoặc Revit để trực quan hóa cấu kiện công trình, trích xuất khối lượng và liên kết với Bảng khối lượng của bạn.",
+    "bim.landing_hero_subtitle": "Tải lên tệp IFC hoặc Revit để trực quan hóa cấu kiện công trình, trích xuất khối lượng và liên kết với Bảng khối lượng của bạn.",
     "bim.landing_hero_title": "BIM 3D Viewer",
     "bim.landing_processing": "Processing...",
     "bim.landing_size_hint": "IFC, Revit, CSV hoặc Excel · Tối đa 500 MB",
@@ -3896,14 +3551,11 @@ const resource = {
     "bim.model_name_placeholder": "Ví dụ: Tòa nhà A — Kiến trúc",
     "bim.no_models_hint_upload": "Tải lên dữ liệu BIM để bắt đầu.",
     "bim.overlay_delete_btn": "Delete",
-    "bim.overlay_error_desc":
-      "Không thể trích xuất cấu kiện. Thử chuyển đổi sang IFC trước hoặc tải dữ liệu thủ công.",
+    "bim.overlay_error_desc": "Không thể trích xuất cấu kiện. Thử chuyển đổi sang IFC trước hoặc tải dữ liệu thủ công.",
     "bim.overlay_error_title": "Xử lý thất bại",
-    "bim.overlay_needs_converter_desc":
-      "Tệp {{format}} yêu cầu DDC cad2data để trích xuất. Chuyển đổi sang IFC trước, hoặc tải dữ liệu đã chuyển đổi sẵn.",
+    "bim.overlay_needs_converter_desc": "Tệp {{format}} yêu cầu DDC cad2data để trích xuất. Chuyển đổi sang IFC trước, hoặc tải dữ liệu đã chuyển đổi sẵn.",
     "bim.overlay_needs_converter_title": "Cần bộ chuyển đổi",
-    "bim.overlay_processing_desc":
-      "Đang trích xuất cấu kiện từ tệp {{format}} của bạn. Quá trình này có thể mất một lúc.",
+    "bim.overlay_processing_desc": "Đang trích xuất cấu kiện từ tệp {{format}} của bạn. Quá trình này có thể mất một lúc.",
     "bim.overlay_processing_title": "Đang xử lý mô hình...",
     "bim.overlay_upload_converted_btn": "Tải lên dữ liệu đã chuyển đổi",
     "bim.show_upload": "Tải lên dữ liệu BIM",
@@ -3921,8 +3573,7 @@ const resource = {
     "bim.upload_btn": "Upload",
     "bim.upload_cad_hint": "Hỗ trợ: RVT, IFC, DWG, DGN",
     "bim.upload_cad_label": "Tệp CAD / BIM",
-    "bim.upload_cad_note":
-      "Yêu cầu bộ chuyển đổi DDC được cài đặt trên máy chủ",
+    "bim.upload_cad_note": "Yêu cầu bộ chuyển đổi DDC được cài đặt trên máy chủ",
     "bim.upload_data_columns": "Số cột phát hiện được",
     "bim.upload_data_hint": "CSV hoặc Excel từ bộ chuyển đổi CAD",
     "bim.upload_data_label": "Dữ liệu cấu kiện (bắt buộc)",
@@ -3937,26 +3588,22 @@ const resource = {
     "bim.upload_advanced_element_data_hint": "CSV / Excel",
     "bim.upload_advanced_geometry": "3D Geometry",
     "bim.upload_advanced_geometry_hint": "DAE / COLLADA",
-    "bim.upload_advanced_mode_toggle":
-      "Đã chuyển đổi? Tải lên dữ liệu + hình học riêng",
+    "bim.upload_advanced_mode_toggle": "Đã chuyển đổi? Tải lên dữ liệu + hình học riêng",
     "bim.upload_depth_label": "Độ sâu chuyển đổi",
     "bim.upload_depth_standard": "Tiêu chuẩn · danh mục chính (nhanh)",
     "bim.upload_depth_medium": "Trung bình · danh mục mở rộng (cân bằng)",
     "bim.upload_depth_complete": "Đầy đủ · tất cả danh mục (chậm)",
-    "bim.upload_depth_help":
-      "Kiểm soát số lượng danh mục Revit được trích xuất. ID cấu kiện và thuộc tính đầy đủ luôn được giữ nguyên.",
+    "bim.upload_depth_help": "Kiểm soát số lượng danh mục Revit được trích xuất. ID cấu kiện và thuộc tính đầy đủ luôn được giữ nguyên.",
     "bim.upload_discipline_label": "Discipline",
     "bim.upload_drop_here": "Thả tệp vào đây",
     "bim.upload_generate_pdf_label": "Cũng xuất các tờ dự án thành PDF (nền)",
-    "bim.upload_generate_pdf_help":
-      "Exports the sheets the designer prepared inside the model as a single PDF into Documents. Runs after the model is ready — upload is not delayed.",
+    "bim.upload_generate_pdf_help": "Exports the sheets the designer prepared inside the model as a single PDF into Documents. Runs after the model is ready — upload is not delayed.",
     "bim.upload_model_name_label": "Tên mô hình",
     "bim.upload_model_name_placeholder": "e.g. Building A",
     "bim.upload_panel_subtitle": "IFC, RVT, CSV, Excel",
     "bim.upload_panel_title": "Tải lên mô hình",
     "bim.upload_remove_file": "Remove",
-    "bim.upload_rvt_note":
-      "Lưu ý: Tệp RVT yêu cầu DDC cad2data. Hãy cân nhắc dùng IFC.",
+    "bim.upload_rvt_note": "Lưu ý: Tệp RVT yêu cầu DDC cad2data. Hãy cân nhắc dùng IFC.",
     "bim.upload_simple_mode_toggle": "Chuyển sang chế độ đơn giản",
     "bim.upload_size_hint": "Revit (.rvt), IFC (.ifc) · Tối đa 500 MB",
     "bim.upload_success_desc": "Đã tải lên mô hình thành công.",
@@ -4016,8 +3663,7 @@ const resource = {
     "reporting.invoices_month": "Hóa đơn đến hạn (tháng)",
     "reporting.invoices_week": "Hóa đơn đến hạn (tuần)",
     "reporting.no_boqs": "Không có BOQ nào trong dự án này",
-    "reporting.no_finance_data":
-      "Không có dữ liệu tài chính cho dự án này. Vui lòng tạo hóa đơn và ngân sách trước.",
+    "reporting.no_finance_data": "Không có dữ liệu tài chính cho dự án này. Vui lòng tạo hóa đơn và ngân sách trước.",
     "reporting.no_projects": "Không tìm thấy dự án",
     "reporting.no_safety_data": "Không có dữ liệu an toàn cho dự án này.",
     "reporting.observations": "Observations",
@@ -4058,8 +3704,7 @@ const resource = {
     "settings.tm_showing": "Hiển thị {{count}} / {{total}} khóa",
     "punch.stat_avg_close": "Số ngày đóng trung bình",
     "match_elements.title": "Khớp các phần tử",
-    "match_elements.subtitle":
-      "Ánh xạ các phần tử BIM → vị trí CWICR. BIM hoạt động; DWG / PDF / Ảnh sẽ có ở các giai đoạn sắp tới.",
+    "match_elements.subtitle": "Ánh xạ các phần tử BIM → vị trí CWICR. BIM hoạt động; DWG / PDF / Ảnh sẽ có ở các giai đoạn sắp tới.",
     "match_elements.select_project": "Chọn dự án…",
     "match_elements.source.bim_live": "BIM (hoạt động)",
     "match_elements.library": "Thư viện",
@@ -4072,11 +3717,9 @@ const resource = {
     "match_elements.detail": "Chi tiết",
     "match_elements.no_match": "Không có khớp…",
     "match_elements.loading_groups": "Đang tải các nhóm…",
-    "match_elements.no_groups":
-      "Chưa có nhóm — nhập mô hình BIM để điền dự án này.",
+    "match_elements.no_groups": "Chưa có nhóm — nhập mô hình BIM để điền dự án này.",
     "match_elements.loading_detail": "Đang tải chi tiết…",
-    "match_elements.footer":
-      "Giai đoạn A.10–A.12 — chọn nhiều, xác nhận theo ngưỡng, luồng không khớp và thư viện mẫu của người thuê đang hoạt động. Chip kéo và làm nổi bật 3D sẽ có ở Giai đoạn B.",
+    "match_elements.footer": "Giai đoạn A.10–A.12 — chọn nhiều, xác nhận theo ngưỡng, luồng không khớp và thư viện mẫu của người thuê đang hoạt động. Chip kéo và làm nổi bật 3D sẽ có ở Giai đoạn B.",
     "match_elements.aria.select_all": "Chọn tất cả các nhóm hiển thị",
     "match_elements.aria.select_group": "Chọn {{key}}",
     "match_elements.col.group": "Nhóm",
@@ -4099,54 +3742,40 @@ const resource = {
     "match_elements.action.lexical_all": "Khớp từ vựng — top 10",
     "match_elements.action.resources_selected": "Tài nguyên ({{count}})",
     "match_elements.action.resources_all": "Khớp tài nguyên — top 10",
-    "match_elements.action.resources_title":
-      "Khớp với danh mục vật liệu/tài nguyên",
+    "match_elements.action.resources_title": "Khớp với danh mục vật liệu/tài nguyên",
     "match_elements.action.confirm_selected": "Xác nhận {{count}} ≥ {{thr}}",
     "match_elements.action.confirm_all": "Xác nhận tất cả ≥ {{thr}}",
     "match_elements.action.skip_n": "Bỏ qua {{count}} (sẽ xác định)",
-    "match_elements.busy.run_selected":
-      "Đang chạy matcher {{method}} trên {{count}} đã chọn…",
-    "match_elements.busy.run_all":
-      "Đang chạy matcher {{method}} trên tất cả các nhóm…",
-    "match_elements.busy.bulk_confirm_selected":
-      "Xác nhận hàng loạt {{count}} đã chọn ≥ {{thr}}…",
-    "match_elements.busy.bulk_confirm_all":
-      "Xác nhận hàng loạt các kết quả khớp ≥ {{thr}}…",
+    "match_elements.busy.run_selected": "Đang chạy matcher {{method}} trên {{count}} đã chọn…",
+    "match_elements.busy.run_all": "Đang chạy matcher {{method}} trên tất cả các nhóm…",
+    "match_elements.busy.bulk_confirm_selected": "Xác nhận hàng loạt {{count}} đã chọn ≥ {{thr}}…",
+    "match_elements.busy.bulk_confirm_all": "Xác nhận hàng loạt các kết quả khớp ≥ {{thr}}…",
     "match_elements.busy.mark_tbd": "Đánh dấu {{count}} nhóm là sẽ xác định…",
     "match_elements.alert.confirmed": "Đã xác nhận {{count}} nhóm",
-    "match_elements.alert.marked_tbd":
-      "Đã đánh dấu {{count}} nhóm là sẽ xác định",
+    "match_elements.alert.marked_tbd": "Đã đánh dấu {{count}} nhóm là sẽ xác định",
     "match_elements.detail.elements_count": "{{count}} phần tử",
-    "match_elements.detail.no_matchers_run":
-      "Chưa có matcher nào được chạy cho nhóm này.",
-    "match_elements.detail.use_action_bar":
-      "Sử dụng các nút thanh hành động ở trên.",
+    "match_elements.detail.no_matchers_run": "Chưa có matcher nào được chạy cho nhóm này.",
+    "match_elements.detail.use_action_bar": "Sử dụng các nút thanh hành động ở trên.",
     "match_elements.detail.col.code": "Mã",
     "match_elements.detail.col.description": "Mô tả",
     "match_elements.detail.col.unit_rate": "Đơn vị · Giá",
     "match_elements.detail.col.conf": "Tin cậy",
     "match_elements.detail.confirm": "Xác nhận",
-    "match_elements.detail.element_ids_count":
-      "{{count}} ID phần tử. Làm nổi bật 3D ở Giai đoạn A.12.",
+    "match_elements.detail.element_ids_count": "{{count}} ID phần tử. Làm nổi bật 3D ở Giai đoạn A.12.",
     "match_elements.detail.and_more": "…và {{count}} nữa",
     "match_elements.detail.building_preview": "Đang xây dựng bản xem trước…",
-    "match_elements.detail.auto_loaded_resources":
-      "Tài nguyên được tải tự động:",
-    "match_elements.detail.confirm_first":
-      "Xác nhận một kết quả khớp trước để xem bản xem trước BOQ.",
+    "match_elements.detail.auto_loaded_resources": "Tài nguyên được tải tự động:",
+    "match_elements.detail.confirm_first": "Xác nhận một kết quả khớp trước để xem bản xem trước BOQ.",
     "match_elements.tab.methods": "Ứng viên khớp",
     "match_elements.tab.elements": "Phần tử ({{count}})",
     "match_elements.tab.apply": "Xem trước áp dụng",
     "match_elements.no_match.heading": "Không khớp — chọn hành động",
     "match_elements.no_match.custom.title": "Tạo vị trí tùy chỉnh",
-    "match_elements.no_match.custom.sub":
-      "Thêm vị trí riêng cho dự án với mô tả, đơn vị và giá.",
+    "match_elements.no_match.custom.sub": "Thêm vị trí riêng cho dự án với mô tả, đơn vị và giá.",
     "match_elements.no_match.rfq.title": "Gửi đến RFQ",
-    "match_elements.no_match.rfq.sub":
-      "Đánh dấu cho đấu thầu — yêu cầu báo giá từ thầu phụ.",
+    "match_elements.no_match.rfq.sub": "Đánh dấu cho đấu thầu — yêu cầu báo giá từ thầu phụ.",
     "match_elements.no_match.tbd.title": "Đánh dấu sẽ xác định",
-    "match_elements.no_match.tbd.sub":
-      "Tạm dừng nhóm; xem lại sau. Loại trừ khỏi tổng BOQ cho đến khi giải quyết.",
+    "match_elements.no_match.tbd.sub": "Tạm dừng nhóm; xem lại sau. Loại trừ khỏi tổng BOQ cho đến khi giải quyết.",
     "match_elements.no_match.placeholder.description": "Mô tả vị trí",
     "match_elements.no_match.placeholder.unit": "Đơn vị",
     "match_elements.no_match.placeholder.rate": "Giá đơn vị",
@@ -4156,23 +3785,19 @@ const resource = {
     "match_elements.templates.count": "{{count}} chữ ký",
     "match_elements.templates.loading": "Đang tải thư viện…",
     "match_elements.templates.empty": "Chưa có mẫu nào được lưu.",
-    "match_elements.templates.empty_hint":
-      "Các kết quả khớp đã xác nhận với «Lưu vào thư viện» được bật xuất hiện ở đây và lan ra các dự án trong tương lai.",
+    "match_elements.templates.empty_hint": "Các kết quả khớp đã xác nhận với «Lưu vào thư viện» được bật xuất hiện ở đây và lan ra các dự án trong tương lai.",
     "match_elements.templates.unnamed": "(không tên)",
     "match_elements.templates.sig": "ch.k: {{prefix}}…",
     "match_elements.templates.used": "Đã sử dụng",
     "match_elements.templates.last": "lần cuối {{date}}",
     "match_elements.templates.remove_confirm": "Xóa mẫu này khỏi thư viện?",
     "match_elements.templates.remove_title": "Xóa khỏi thư viện",
-    "match_elements.templates.footer":
-      "Mẫu thuộc phạm vi người thuê. Chữ ký đã xác nhận tự động đề xuất các kết quả khớp trong các dự án tương lai.",
+    "match_elements.templates.footer": "Mẫu thuộc phạm vi người thuê. Chữ ký đã xác nhận tự động đề xuất các kết quả khớp trong các dự án tương lai.",
     "match_elements.no_project_title": "No active project selected.",
-    "match_elements.no_project_hint":
-      "Open the project picker in the header, or visit",
+    "match_elements.no_project_hint": "Open the project picker in the header, or visit",
     "match_elements.active_project": "Active project",
     "match_elements.loading_sessions": "Loading sessions…",
-    "match_elements.no_prior_sessions":
-      "No prior matching sessions for this project.",
+    "match_elements.no_prior_sessions": "No prior matching sessions for this project.",
     "match_elements.session_default_name": "Session {{id}}",
     "match_elements.new_session": "New session",
     "match_elements.legend_label": "Confidence",
@@ -4181,21 +3806,16 @@ const resource = {
     "match_elements.legend_low": "Low",
     "match_elements.col.suggested": "Suggested cost",
     "match_elements.subtractive_hint": "Subtractive / non-billable",
-    "match_elements.detail.opening_warning":
-      "host has openings but gross == net (IFC export bug)",
-    "match_elements.detail.candidate_no_id":
-      "Candidate has no DB id — cannot confirm",
+    "match_elements.detail.opening_warning": "host has openings but gross == net (IFC export bug)",
+    "match_elements.detail.candidate_no_id": "Candidate has no DB id — cannot confirm",
     "match_elements.detail.apply_total": "Total",
     "match_elements.auto_confirm_threshold": "Auto-confirm threshold",
-    "match_elements.auto_confirm_help":
-      "Suggested matches at or above this score auto-confirm.",
+    "match_elements.auto_confirm_help": "Suggested matches at or above this score auto-confirm.",
     "match_elements.use_net": "Use net quantities (deduct openings)",
-    "match_elements.use_net_help":
-      "Off = use gross. Default deducts IfcOpeningElement / IfcRelVoidsElement from host quantities.",
+    "match_elements.use_net_help": "Off = use gross. Default deducts IfcOpeningElement / IfcRelVoidsElement from host quantities.",
     "match_elements.trade_filter": "Filter by trade",
     "match_elements.stage_label": "Giai đoạn xây dựng",
-    "match_elements.stage_help":
-      "Ghim các kết quả khớp vào một giai đoạn OmniClass. Để trống để tìm kiếm trong tất cả các giai đoạn.",
+    "match_elements.stage_help": "Ghim các kết quả khớp vào một giai đoạn OmniClass. Để trống để tìm kiếm trong tất cả các giai đoạn.",
     "match_elements.stage_any": "Mọi giai đoạn",
     "match_elements.stage.02_Demolition": "Phá dỡ",
     "match_elements.stage.03_Earthwork": "Công tác đất",
@@ -4216,11 +3836,9 @@ const resource = {
     "match_elements.group_by_sample": "ví dụ:",
     "match_elements.loading_attributes": "Đang tải…",
     "match_elements.action.apply": "Apply to BOQ ({{n}})",
-    "match_elements.action.apply_title":
-      "Write confirmed matches to the project BOQ",
+    "match_elements.action.apply_title": "Write confirmed matches to the project BOQ",
     "match_elements.busy.applying": "Applying confirmed groups to BOQ…",
-    "match_elements.alert.applied":
-      "Created {{n}} BOQ positions · total {{total}} {{ccy}}",
+    "match_elements.alert.applied": "Created {{n}} BOQ positions · total {{total}} {{ccy}}",
     "match_elements.visible_groups": "{{n}} visible",
     "match_elements.selected_count": "{{n}} selected",
     "match_elements.trade.architectural": "Architectural",
@@ -4235,12 +3853,10 @@ const resource = {
     "nav.add_module": "Thêm mô-đun",
     "nav.add_module_hint": "Tự tạo riêng · hướng dẫn cho lập trình viên",
     "nav.request_custom_module": "Yêu cầu mô-đun tùy chỉnh",
-    "nav.request_custom_module_hint":
-      "Còn thiếu gì? Cho chúng tôi biết bạn cần gì",
+    "nav.request_custom_module_hint": "Còn thiếu gì? Cho chúng tôi biết bạn cần gì",
     "modules.dev_guide": "Xây dựng một mô-đun — hướng dẫn cho lập trình viên",
     "boq.accept": "Chấp nhận",
-    "boq.accept_all_anomaly_suggestions":
-      "Accept All Suggested Rates ({{count}})",
+    "boq.accept_all_anomaly_suggestions": "Accept All Suggested Rates ({{count}})",
     "boq.add_all_failed": "Could not add any of the {{count}} positions",
     "boq.add_as_resources": "Add {{count}} as resources",
     "boq.add_column_btn": "Thêm cột",
@@ -4262,68 +3878,54 @@ const resource = {
     "boq.ai_applied": "AI Suggestion Applied",
     "boq.ai_apply_description": "Apply Enhanced Description",
     "boq.ai_apply_rate": "Apply Escalated Rate",
-    "boq.ai_assistant_tooltip":
-      "Describe what you need in plain text — AI creates BOQ positions with realistic pricing.",
+    "boq.ai_assistant_tooltip": "Describe what you need in plain text — AI creates BOQ positions with realistic pricing.",
     "boq.ai_chat_short": "AI Chat",
     "boq.ai_classification": "AI Classification",
     "boq.ai_classify_error": "Classification failed",
     "boq.ai_connected_via": "Connected via {{provider}}",
-    "boq.ai_enhance_subtitle":
-      "Add technical specs, standards, material grades",
+    "boq.ai_enhance_subtitle": "Add technical specs, standards, material grades",
     "boq.ai_enhance_title": "Enhance Description",
-    "boq.ai_error_generic":
-      "Could not connect to AI service. Check that the embedding model is available.",
+    "boq.ai_error_generic": "Could not connect to AI service. Check that the embedding model is available.",
     "boq.ai_escalate_subtitle": "Adjust rate for inflation and market changes",
     "boq.ai_escalate_title": "Escalate Rate",
     "boq.ai_escalated": "Escalated",
     "boq.ai_factor_labor": "Labor",
     "boq.ai_factor_material": "Material",
     "boq.ai_factor_region": "Regional",
-    "boq.ai_generated_summary":
-      "Generated {{count}} positions totalling {{total}} {{currency}}.‌⁠‍",
+    "boq.ai_generated_summary": "Generated {{count}} positions totalling {{total}} {{currency}}.‌⁠‍",
     "boq.ai_global_actions": "BOQ-level Actions",
     "boq.ai_missing_items": "Missing Items",
     "boq.ai_no_classification": "No Classification Found",
-    "boq.ai_no_classification_msg":
-      "Could not determine classification from cost database.",
-    "boq.ai_no_prereqs":
-      "No missing items found — BOQ looks complete for this position.",
+    "boq.ai_no_classification_msg": "Could not determine classification from cost database.",
+    "boq.ai_no_prereqs": "No missing items found — BOQ looks complete for this position.",
     "boq.ai_no_rate": "No Rate Found",
     "boq.ai_no_rate_msg": "No similar items found in the cost database.",
-    "boq.ai_no_selection":
-      "Select a position in the grid for per-position AI actions‌⁠‍",
+    "boq.ai_no_selection": "Select a position in the grid for per-position AI actions‌⁠‍",
     "boq.ai_not_configured": "AI not configured‌⁠‍",
-    "boq.ai_not_configured_desc":
-      "Add your API key in Settings to use AI Smart Actions.‌⁠‍",
+    "boq.ai_not_configured_desc": "Add your API key in Settings to use AI Smart Actions.‌⁠‍",
     "boq.ai_original": "Original",
     "boq.ai_position_actions": "Position Actions",
-    "boq.ai_prereqs_subtitle":
-      "Find missing prerequisites, companions, successors",
+    "boq.ai_prereqs_subtitle": "Find missing prerequisites, companions, successors",
     "boq.ai_prereqs_title": "Suggest Related Items",
     "boq.ai_rate_error": "Rate suggestion failed",
     "boq.ai_rate_suggestion": "AI Rate Suggestion",
     "boq.ai_scope_score": "Completeness Score",
-    "boq.ai_scope_subtitle":
-      "Find missing trades, work packages, critical items",
+    "boq.ai_scope_subtitle": "Find missing trades, work packages, critical items",
     "boq.ai_scope_title": "Check Scope Completeness",
     "boq.ai_selected_position": "Selected Position‌⁠‍",
-    "boq.ai_smart_footer":
-      "Powered by your AI provider (Settings > AI). Results are suggestions — always review.",
+    "boq.ai_smart_footer": "Powered by your AI provider (Settings > AI). Results are suggestions — always review.",
     "boq.ai_smart_panel": "AI Smart Actions‌⁠‍",
-    "boq.ai_smart_tooltip":
-      "Enhance descriptions, find missing items, check scope completeness, escalate rates to current prices.",
+    "boq.ai_smart_tooltip": "Enhance descriptions, find missing items, check scope completeness, escalate rates to current prices.",
     "boq.ai_specs": "Specifications",
     "boq.all_anomalies_resolved": "All {{count}} suggested rates applied",
     "boq.all_rates_normal": "All rates are within normal market range.",
     "boq.anomalies_badge": "Anomalies ({{count}})",
-    "boq.anomalies_count":
-      "{{count}} anomalies detected in {{total}} positions",
+    "boq.anomalies_count": "{{count}} anomalies detected in {{total}} positions",
     "boq.anomalies_found": "Pricing Anomalies Found",
     "boq.anomaly_cancelled": "Price check cancelled",
     "boq.anomaly_check_error": "Anomaly check failed",
     "boq.anomaly_rate_applied": "Suggested Rate Applied",
-    "boq.anomaly_tip":
-      "Compares each unit rate against median market rates from the cost database. Flags overpriced and underpriced positions.",
+    "boq.anomaly_tip": "Compares each unit rate against median market rates from the cost database. Flags overpriced and underpriced positions.",
     "boq.applied": "Applied",
     "boq.apply_all_suggestions": "Apply All‌⁠‍",
     "boq.apply_defaults_failed": "Failed to apply template",
@@ -4337,27 +3939,22 @@ const resource = {
     "boq.autocomplete_tooltip_rate_per_unit": "Rate per unit‌⁠‍",
     "boq.autocomplete_tooltip_tab_to_insert": "Tab or Enter to insert‌⁠‍",
     "boq.autocomplete_tooltip_unit": "/",
-    "boq.autocomplete_tooltip_variants_available":
-      "${variantCount} variants available",
+    "boq.autocomplete_tooltip_variants_available": "${variantCount} variants available",
     "boq.batch_actions": "Batch actions‌⁠‍",
     "boq.batch_change_unit": "Change unit‌⁠‍",
     "boq.batch_clear_selection": "Clear selection",
     "boq.batch_delete": "Delete selected‌⁠‍",
     "boq.batch_delete_confirm": "Delete {{count}} positions",
-    "boq.batch_delete_confirm_message":
-      "Are you sure you want to delete {{count}} selected positions? This action cannot be undone.",
+    "boq.batch_delete_confirm_message": "Are you sure you want to delete {{count}} selected positions? This action cannot be undone.",
     "boq.batch_delete_confirm_title": "Delete positions",
     "boq.batch_deleted": "{{count}} positions deleted",
-    "boq.batch_unit_changed":
-      "Unit changed to {{unit}} for {{count}} positions",
+    "boq.batch_unit_changed": "Unit changed to {{unit}} for {{count}} positions",
     "boq.bim_agg_distinct_label": "{{n}} values",
-    "boq.bim_agg_distinct_title":
-      "Per-element value — summing is meaningless, so each unique value is listed. Click one to apply it.",
+    "boq.bim_agg_distinct_title": "Per-element value — summing is meaningless, so each unique value is listed. Click one to apply it.",
     "boq.bim_agg_sum_title": "Summed across all linked elements",
     "boq.bim_collapse_sums": "Show only headline quantities",
     "boq.bim_expand_sums": "Show all numeric values from BIM",
-    "boq.bim_link_tooltip":
-      "{{count}} BIM element(s) linked — click to preview",
+    "boq.bim_link_tooltip": "{{count}} BIM element(s) linked — click to preview",
     "boq.bim_properties": "Properties",
     "boq.bim_props_show_all_title": "Include every numeric property from BIM",
     "boq.bim_props_show_basic_title": "Hide non-quantity properties",
@@ -4384,22 +3981,19 @@ const resource = {
     "boq.column_calc_invalid_formula": "Formula has a syntax error",
     "boq.column_calc_needs_formula": "Calculated column needs a formula",
     "boq.column_decimals": "Decimals",
-    "boq.column_delete_confirm":
-      'Remove the "{{name}}" column? Existing values in positions are preserved but no longer shown.',
+    "boq.column_delete_confirm": "Remove the \"{{name}}\" column? Existing values in positions are preserved but no longer shown.",
     "boq.column_delete_confirm_title": "Remove column?",
     "boq.column_delete_failed": "Could not remove column‌⁠‍",
     "boq.column_formula": "Formula",
     "boq.column_name": "Column name",
-    "boq.column_name_duplicate": 'A column named "{{name}}" already exists',
+    "boq.column_name_duplicate": "A column named \"{{name}}\" already exists",
     "boq.column_name_invalid": "Column name is invalid",
-    "boq.column_name_invalid_hint":
-      "Use letters (any script), numbers and spaces. Must start with a letter.",
+    "boq.column_name_invalid_hint": "Use letters (any script), numbers and spaces. Must start with a letter.",
     "boq.column_name_placeholder": "e.g. Supplier, Notes, PO Number",
-    "boq.column_name_reserved": '"{{name}}" is a reserved column name',
+    "boq.column_name_reserved": "\"{{name}}\" is a reserved column name",
     "boq.column_options": "Options (comma or newline separated)",
     "boq.column_removed": "Column removed‌⁠‍",
-    "boq.column_select_needs_options":
-      "Select column needs at least one option",
+    "boq.column_select_needs_options": "Select column needs at least one option",
     "boq.column_test_formula": "Test",
     "boq.column_test_result": "Result:",
     "boq.column_type": "Loại",
@@ -4419,17 +4013,13 @@ const resource = {
     "boq.cost_finder_components": "{{count}} components",
     "boq.cost_finder_error": "Search failed. Check vector database.",
     "boq.cost_finder_for_position": "For: {{description}}",
-    "boq.cost_finder_no_query":
-      "Enter a description to search the cost database",
+    "boq.cost_finder_no_query": "Enter a description to search the cost database",
     "boq.cost_finder_no_results": "No matching items found",
     "boq.cost_finder_results_count": "{{count}} results ({{ms}}ms)",
-    "boq.cost_finder_search_placeholder":
-      "Search cost items by description...‌⁠‍",
+    "boq.cost_finder_search_placeholder": "Search cost items by description...‌⁠‍",
     "boq.cost_finder_title": "AI Cost Finder‌⁠‍",
-    "boq.cost_finder_tooltip":
-      "Search 55,000+ cost items by description. Find materials, labor, and equipment rates from regional databases.",
-    "boq.cost_risk_error":
-      "Failed to load cost risk analysis. Please try again.",
+    "boq.cost_finder_tooltip": "Search 55,000+ cost items by description. Find materials, labor, and equipment rates from regional databases.",
+    "boq.cost_risk_error": "Failed to load cost risk analysis. Please try again.",
     "boq.create_budget": "Create Budget",
     "boq.create_failed": "Failed to create BOQ",
     "boq.create_revision": "Create Revision",
@@ -4439,10 +4029,8 @@ const resource = {
     "boq.currency_group_world": "World currencies",
     "boq.current": "Current‌⁠‍",
     "boq.custom_columns": "Custom Columns",
-    "boq.custom_columns_hint":
-      "Custom columns appear in the BOQ grid before the actions column. Values are stored per position and exported with the BOQ. Removing a column hides it but preserves the underlying data.",
-    "boq.custom_columns_subtitle":
-      "Add your own fields — supplier, notes, procurement info…",
+    "boq.custom_columns_hint": "Custom columns appear in the BOQ grid before the actions column. Values are stored per position and exported with the BOQ. Removing a column hides it but preserves the underlying data.",
+    "boq.custom_columns_subtitle": "Add your own fields — supplier, notes, procurement info…",
     "boq.delete_section": "Delete section with all positions",
     "boq.display_base": "Base",
     "boq.display_currency_aria": "Choose currency for grand total display",
@@ -4451,8 +4039,7 @@ const resource = {
     "boq.duplicate_position": "Duplicate Position",
     "boq.dwg_link_tooltip_v2": "DWG drawing — click for details & navigation",
     "boq.element_count": "{{count}} element(s)",
-    "boq.empty_position_quality_hint":
-      "Empty position lowers Quality Score until quantity & rate are filled",
+    "boq.empty_position_quality_hint": "Empty position lowers Quality Score until quantity & rate are filled",
     "boq.errors": "errors",
     "boq.estimate_type_budget": "Ngân sách",
     "boq.estimate_type_conceptual": "Conceptual",
@@ -4465,35 +4052,28 @@ const resource = {
     "boq.expand_resources": "Expand Resources",
     "boq.expand_section": "Expand Section",
     "boq.export_anyway": "Export Anyway",
-    "boq.export_quality_warning_desc":
-      "Your estimate has a quality score below 60%. Missing quantities, zero prices, or incomplete descriptions may affect the exported document. Consider reviewing the estimate before exporting.",
+    "boq.export_quality_warning_desc": "Your estimate has a quality score below 60%. Missing quantities, zero prices, or incomplete descriptions may affect the exported document. Consider reviewing the estimate before exporting.",
     "boq.filled": "filled",
     "boq.filtered_from": "filtered from {{total}}",
     "boq.fx_rate_global_badge": "GLOBAL",
     "boq.fx_rate_input": "FX rate {{from}}→{{to}}",
     "boq.fx_rate_label": "FX rate",
     "boq.fx_rate_project_badge": "PROJECT",
-    "boq.gaeb_export_desc":
-      "This will export your BOQ as GAEB XML 3.3 format, compatible with standard tender workflows.",
+    "boq.gaeb_export_desc": "This will export your BOQ as GAEB XML 3.3 format, compatible with standard tender workflows.",
     "boq.gaeb_export_title": "Export GAEB XML (X83)",
     "boq.gaeb_grand_total": "Grand Total",
     "boq.gaeb_positions": "Positions",
-    "boq.grand_total_conversion_tooltip_v2":
-      'Whole BOQ rendered in {{disp}} at rate {{rate}} ({{base}} → {{disp}}). View-only — server keeps base values. Switch to "Base" to edit prices.',
+    "boq.grand_total_conversion_tooltip_v2": "Whole BOQ rendered in {{disp}} at rate {{rate}} ({{base}} → {{disp}}). View-only — server keeps base values. Switch to \"Base\" to edit prices.",
     "boq.grid_settings": "Grid Settings",
     "boq.ignore": "Ignore",
-    "boq.import_catalog_hint":
-      "Import a resource catalog from Settings or the Catalog page",
+    "boq.import_catalog_hint": "Import a resource catalog from Settings or the Catalog page",
     "boq.import_database_cta": "Import a database",
     "boq.import_file": "Import File",
     "boq.import_rows": "Import {{count}} rows",
     "boq.import_started": "Importing {{name}}…",
-    "boq.import_started_gaeb_hint":
-      "Parsing GAEB XML — namespace-agnostic, X81/X83/X84 supported.",
-    "boq.import_started_hint":
-      "Large files (PDF / CAD / 1000+ rows) may take up to 60 seconds.",
-    "boq.import_timeout":
-      "Server did not respond within 90 seconds. The file may be too large — try splitting it.",
+    "boq.import_started_gaeb_hint": "Parsing GAEB XML — namespace-agnostic, X81/X83/X84 supported.",
+    "boq.import_started_hint": "Large files (PDF / CAD / 1000+ rows) may take up to 60 seconds.",
+    "boq.import_timeout": "Server did not respond within 90 seconds. The file may be too large — try splitting it.",
     "boq.import_tooltip": "Import GAEB, Excel, or CSV into this BOQ",
     "boq.inline_edit_number": "Edit value",
     "boq.inline_edit_text": "Edit text",
@@ -4504,16 +4084,13 @@ const resource = {
     "boq.link_finance": "View Budget",
     "boq.link_validation": "Run Validation",
     "boq.linked_geometry": "Linked Geometry",
-    "boq.list_subtitle_count":
-      "{{boqCount}} estimates across {{projectCount}} projects",
+    "boq.list_subtitle_count": "{{boqCount}} estimates across {{projectCount}} projects",
     "boq.loading_element_data": "Loading element data...",
     "boq.loading_full_properties": "Loading full properties…",
     "boq.lock": "Lock Estimate",
-    "boq.lock_confirm":
-      "Lock this estimate?nnLocked estimates cannot be edited. Unlocking requires admin privileges.",
+    "boq.lock_confirm": "Lock this estimate?nnLocked estimates cannot be edited. Unlocking requires admin privileges.",
     "boq.lock_failed": "Lock failed",
-    "boq.lock_tooltip":
-      "Lock prevents edits. Create a revision to make changes to a locked estimate.",
+    "boq.lock_tooltip": "Lock prevents edits. Create a revision to make changes to a locked estimate.",
     "boq.locked": "LOCKED",
     "boq.locked_next": "Estimate locked. Create project budget?",
     "boq.locked_success": "Estimate locked",
@@ -4524,8 +4101,7 @@ const resource = {
     "boq.markup_delete_failed": "Failed to delete markup‌⁠‍",
     "boq.markup_update_failed": "Failed to update markup‌⁠‍",
     "boq.mvp.apply_to_remaining": "Apply to remaining {{count}}",
-    "boq.mvp.apply_to_remaining_hint":
-      "Re-use these picks for all other multi-variant items in this batch",
+    "boq.mvp.apply_to_remaining_hint": "Re-use these picks for all other multi-variant items in this batch",
     "boq.mvp.subtitle": "{{count}} resource needs a choice‌⁠‍",
     "boq.mvp.toast_applied": "{{count}} variant chosen",
     "boq.mvp.toast_apply_to_remaining": "Applied picks to {{count}} more item",
@@ -4535,64 +4111,52 @@ const resource = {
     "boq.no_boqs_in_project": "No BOQs in this project.",
     "boq.no_catalog_results": "No resources match your search",
     "boq.no_changes": "No changes",
-    "boq.no_custom_columns":
-      "No custom columns yet. Pick a preset below or add your own.",
-    "boq.no_databases_help":
-      "There's no cost-rate database on this server, so search has nothing to show. Import a free CWICR pack — 30 regional databases are one click away.",
+    "boq.no_custom_columns": "No custom columns yet. Pick a preset below or add your own.",
+    "boq.no_databases_help": "There's no cost-rate database on this server, so search has nothing to show. Import a free CWICR pack — 30 regional databases are one click away.",
     "boq.no_databases_title": "No cost database installed yet",
     "boq.no_numeric_found": "No numeric values in this element",
     "boq.no_numeric_quantities": "No numeric quantities",
-    "boq.no_quantities_hint_button":
-      'No quantities — press "Show all" above to surface every BIM property',
+    "boq.no_quantities_hint_button": "No quantities — press \"Show all\" above to surface every BIM property",
     "boq.no_snapshots": "No snapshots yet",
     "boq.open_in_bim": "Open in BIM",
-    "boq.open_in_bim_title":
-      "Open in 3D viewer with the linked element pre-selected",
+    "boq.open_in_bim_title": "Open in 3D viewer with the linked element pre-selected",
     "boq.open_in_bim_viewer": "Open in BIM Viewer",
     "boq.options": "options",
     "boq.pagination_range": "{{from}}–{{to}} of {{total}} estimates",
     "boq.partial": "Partial",
     "boq.paste_columns": "Columns‌⁠‍",
     "boq.paste_detected": "{{count}} rows detected‌⁠‍",
-    "boq.paste_excel_hint":
-      "Copy rows from Excel or Google Sheets and paste below‌⁠‍",
+    "boq.paste_excel_hint": "Copy rows from Excel or Google Sheets and paste below‌⁠‍",
     "boq.paste_failed": "Could not paste — invalid data or read-only cells‌⁠‍",
     "boq.paste_from_excel": "Paste from Excel",
     "boq.paste_from_excel_short": "Paste",
     "boq.paste_import_count": "{{count}} positions added to BOQ",
     "boq.paste_import_failed": "Import failed",
     "boq.paste_import_success": "Imported successfully",
-    "boq.paste_no_data":
-      "No valid rows detected. Make sure data is tab-separated.",
-    "boq.paste_placeholder":
-      "Paste tab-separated data here...nnExample:nDescriptiontUnittQtytRatenConcrete foundationtm3t120t185.00nRebar B500Stkgt2400t1.45‌⁠‍",
+    "boq.paste_no_data": "No valid rows detected. Make sure data is tab-separated.",
+    "boq.paste_placeholder": "Paste tab-separated data here...nnExample:nDescriptiontUnittQtytRatenConcrete foundationtm3t120t185.00nRebar B500Stkgt2400t1.45‌⁠‍",
     "boq.paste_showing": "Showing first 50 of {{total}} rows",
     "boq.pdf_link_tooltip_v2": "PDF takeoff — click for details & navigation",
     "boq.per_unit": "per {{unit}}",
     "boq.pick_from_catalog": "Pick from Catalog‌⁠‍",
-    "boq.pick_from_catalog_desc":
-      "Search and add a resource from the catalog to this position‌⁠‍",
+    "boq.pick_from_catalog_desc": "Search and add a resource from the catalog to this position‌⁠‍",
     "boq.pick_qty_from_bim": "Pick quantity from BIM",
     "boq.pos": "Pos",
     "boq.position_deleted": "Position deleted",
     "boq.position_duplicated": "Position duplicated",
     "boq.position_restored": "Position restored",
     "boq.position_variant_v_label": "Expand resources",
-    "boq.position_variant_v_tooltip":
-      "This position carries a variant resource — click to expand the resource panel.",
+    "boq.position_variant_v_tooltip": "This position carries a variant resource — click to expand the resource panel.",
     "boq.positions_removed": "{{count}} pos removed",
     "boq.positions_reordered": "Positions reordered",
     "boq.positions_short": "pos.",
-    "boq.preset_already_applied":
-      "All columns from this preset already exist‌⁠‍",
-    "boq.preset_applied": '{{count}} columns added from "{{name}}" preset',
+    "boq.preset_already_applied": "All columns from this preset already exist‌⁠‍",
+    "boq.preset_applied": "{{count}} columns added from \"{{name}}\" preset",
     "boq.preset_partial": "Preset partially applied",
     "boq.preset_regional": "Regional standards",
     "boq.preset_universal": "Quick start with a preset",
-    "boq.preview_total_hint":
-      "Catalog-rate × quantity for the selection. Variant picks may adjust this.",
-    "boq.price_review_desc":
-      "Review each suggestion below. Accept to update the rate, or ignore to keep your current price.‌⁠‍",
+    "boq.preview_total_hint": "Catalog-rate × quantity for the selection. Variant picks may adjust this.",
+    "boq.price_review_desc": "Review each suggestion below. Accept to update the rate, or ignore to keep your current price.‌⁠‍",
     "boq.price_review_title": "Price Check Results‌⁠‍",
     "boq.quality_ai_menu": "Quality & AI",
     "boq.quality_ai_menu_tip": "All quality & AI tools",
@@ -4601,40 +4165,29 @@ const resource = {
     "boq.quantity_for_item": "Quantity for {{item}}",
     "boq.quantity_short": "Qty",
     "boq.rate_applied": "Rate Applied",
-    "boq.rate_from_resources":
-      "Rate is calculated from resources. Edit individual resources to change.‌⁠‍",
+    "boq.rate_from_resources": "Rate is calculated from resources. Edit individual resources to change.‌⁠‍",
     "boq.recalc_confirm_button": "Update Rates",
-    "boq.recalc_confirm_step1":
-      "1. Search cost database for matching items by description",
-    "boq.recalc_confirm_step2":
-      "2. Attach resource breakdowns (materials, labor, equipment)",
-    "boq.recalc_confirm_step3":
-      "3. Recalculate unit rates from resource components",
+    "boq.recalc_confirm_step1": "1. Search cost database for matching items by description",
+    "boq.recalc_confirm_step2": "2. Attach resource breakdowns (materials, labor, equipment)",
+    "boq.recalc_confirm_step3": "3. Recalculate unit rates from resource components",
     "boq.recalc_confirm_subtitle": "Match positions to cost database",
     "boq.recalc_confirm_title": "Update Unit Rates",
-    "boq.recalc_confirm_warning":
-      "Positions with manual rates that have no match in the cost database will not be changed.",
+    "boq.recalc_confirm_warning": "Positions with manual rates that have no match in the cost database will not be changed.",
     "boq.recalc_enriched": "{{count}} positions matched to cost database",
-    "boq.recalc_skipped":
-      "{{count}} positions without cost data (manual rates kept)",
+    "boq.recalc_skipped": "{{count}} positions without cost data (manual rates kept)",
     "boq.recalc_updated": "{{count}} unit rates recalculated from resources",
-    "boq.recalculate_all_manual":
-      "All positions use manual rates — add resources from cost database to enable automatic rate calculation.",
-    "boq.recalculate_failed_hint":
-      "Check that the backend is running and cost database is loaded.",
+    "boq.recalculate_all_manual": "All positions use manual rates — add resources from cost database to enable automatic rate calculation.",
+    "boq.recalculate_failed_hint": "Check that the backend is running and cost database is loaded.",
     "boq.recalculate_no_changes": "No changes needed",
-    "boq.recalculate_tip":
-      "Matches positions to cost database, attaches resource breakdowns (materials, labor, equipment), and recalculates unit rates from components.",
+    "boq.recalculate_tip": "Matches positions to cost database, attaches resource breakdowns (materials, labor, equipment), and recalculates unit rates from components.",
     "boq.recalculating": "Updating...",
     "boq.remove_resource": "Remove Resource",
     "boq.renumber": "Renumber Positions",
     "boq.renumber_apply": "Apply renumbering",
-    "boq.renumber_dialog_subtitle":
-      "Pick a numbering scheme. The current order is preserved — only ordinals are rewritten.‌⁠‍",
+    "boq.renumber_dialog_subtitle": "Pick a numbering scheme. The current order is preserved — only ordinals are rewritten.‌⁠‍",
     "boq.renumber_dialog_title": "Renumber positions‌⁠‍",
     "boq.renumber_done": "{{count}} positions renumbered",
-    "boq.renumber_done_hint":
-      "Order preserved — only ordinals were rewritten. Undo with Ctrl+Z is not supported for renumber.",
+    "boq.renumber_done_hint": "Order preserved — only ordinals were rewritten. Undo with Ctrl+Z is not supported for renumber.",
     "boq.renumber_failed": "Renumber failed",
     "boq.renumber_no_preview": "No positions to preview yet.",
     "boq.renumber_pad": "Zero-pad section numbers‌⁠‍",
@@ -4642,19 +4195,14 @@ const resource = {
     "boq.renumber_pad_on": "Sections will be 01, 02, 03 (two-digit padded)‌⁠‍",
     "boq.renumber_preview": "Preview (first 5 positions)",
     "boq.renumber_scheme_dotted": "Short decimal",
-    "boq.renumber_scheme_dotted_desc":
-      "Short-form decimal numbering common in NRM-style measurement.",
+    "boq.renumber_scheme_dotted_desc": "Short-form decimal numbering common in NRM-style measurement.",
     "boq.renumber_scheme_gap10": "Gap of 10",
-    "boq.renumber_scheme_gap10_desc":
-      "Leaves room to insert positions like 01.15 between 01.10 and 01.20 later. Standard German tender output.",
+    "boq.renumber_scheme_gap10_desc": "Leaves room to insert positions like 01.15 between 01.10 and 01.20 later. Standard German tender output.",
     "boq.renumber_scheme_gap100": "Gap of 100",
-    "boq.renumber_scheme_gap100_desc":
-      "Even more headroom for very large BOQs that may grow significantly post-tender.",
+    "boq.renumber_scheme_gap100_desc": "Even more headroom for very large BOQs that may grow significantly post-tender.",
     "boq.renumber_scheme_sequential": "Sequential",
-    "boq.renumber_scheme_sequential_desc":
-      "Compact, traditional numbering. Best for fixed-scope BOQs that won't get extra positions later.",
-    "boq.renumber_warning":
-      "This overwrites any manually edited position numbers. The current display order is preserved — only ordinals change.",
+    "boq.renumber_scheme_sequential_desc": "Compact, traditional numbering. Best for fixed-scope BOQs that won't get extra positions later.",
+    "boq.renumber_warning": "This overwrites any manually edited position numbers. The current display order is preserved — only ordinals change.",
     "boq.renumbering": "Renumbering...",
     "boq.reorder_failed": "Failed to reorder positions",
     "boq.resource_added": "Resource added",
@@ -4662,41 +4210,28 @@ const resource = {
     "boq.resource_catalog_code": "Catalogue code: {{code}}",
     "boq.resource_currency": "Tiền tệ",
     "boq.resource_currency_add_custom": "Add custom: {{code}}",
-    "boq.resource_currency_custom":
-      "Custom currency: {{code}} (not in project FX or ISO 4217 list)",
-    "boq.resource_currency_hint":
-      "Currency for this resource. Defaults to project base currency.",
-    "boq.resource_currency_no_match":
-      "No matches — type at least 2 letters to add a custom code.",
+    "boq.resource_currency_custom": "Custom currency: {{code}} (not in project FX or ISO 4217 list)",
+    "boq.resource_currency_hint": "Currency for this resource. Defaults to project base currency.",
+    "boq.resource_currency_no_match": "No matches — type at least 2 letters to add a custom code.",
     "boq.resource_currency_pick": "Currency — {{symbol}} {{code}}",
     "boq.resource_currency_search": "Type or search (e.g. EUR, MYC)",
     "boq.resource_customised": "Customised resource — no catalogue code",
-    "boq.resource_is_variant_badge":
-      "Variant resource — multiple price options available",
+    "boq.resource_is_variant_badge": "Variant resource — multiple price options available",
     "boq.resource_name": "Tên",
     "boq.resource_name_placeholder": "e.g. Concrete C30/37",
-    "boq.resource_no_fx_rate":
-      "No FX rate configured for {{code}} — total shown in {{code}}",
-    "boq.resource_no_fx_rate_click":
-      "No FX rate configured for {{code}} — click to set one in Project Settings",
+    "boq.resource_no_fx_rate": "No FX rate configured for {{code}} — total shown in {{code}}",
+    "boq.resource_no_fx_rate_click": "No FX rate configured for {{code}} — click to set one in Project Settings",
     "boq.resource_no_fx_short": "set FX",
-    "boq.resource_total_in_base":
-      "{{foreign}} ≈ {{base}} (1 {{code}} = {{rate}} {{baseCode}})",
+    "boq.resource_total_in_base": "{{foreign}} ≈ {{base}} (1 {{code}} = {{rate}} {{baseCode}})",
     "boq.resource_type": "Loại",
     "boq.resource_type_variant_chip": "Variant",
-    "boq.resource_type_variant_tooltip":
-      "Variant resource — pick from {{base}} catalog. Click to reclassify resource type.",
-    "boq.resource_variant_bar_tooltip_default":
-      "Auto-default ({{strategy}}){{captured}} — click pill to refine.",
-    "boq.resource_variant_bar_tooltip_picked":
-      "Explicit variant: {{label}}{{captured}}",
+    "boq.resource_type_variant_tooltip": "Variant resource — pick from {{base}} catalog. Click to reclassify resource type.",
+    "boq.resource_variant_bar_tooltip_default": "Auto-default ({{strategy}}){{captured}} — click pill to refine.",
+    "boq.resource_variant_bar_tooltip_picked": "Explicit variant: {{label}}{{captured}}",
     "boq.resource_variant_pill": "▾ {{count}}",
-    "boq.resource_variant_pill_tooltip_default":
-      "Auto-applied with {{strategy}} rate. {{count}} options ({{range}}). Click to refine.",
-    "boq.resource_variant_pill_tooltip_picked":
-      "Variant: {{label}} @ {{price}} {{currency}}{{delta}}. Click to switch.",
-    "boq.resource_variant_pill_tooltip_unset":
-      "{{count}} priced variants available ({{range}}). Click to pick one.",
+    "boq.resource_variant_pill_tooltip_default": "Auto-applied with {{strategy}} rate. {{count}} options ({{range}}). Click to refine.",
+    "boq.resource_variant_pill_tooltip_picked": "Variant: {{label}} @ {{price}} {{currency}}{{delta}}. Click to switch.",
+    "boq.resource_variant_pill_tooltip_unset": "{{count}} priced variants available ({{range}}). Click to pick one.",
     "boq.resources_added": "Resources added to position",
     "boq.resources_total": "Resources total",
     "boq.restore": "Restore",
@@ -4704,25 +4239,19 @@ const resource = {
     "boq.restore_snapshot": "Restore this version",
     "boq.revision_created": "Revision created",
     "boq.revision_failed": "Create revision failed",
-    "boq.rs_abc_pill_tooltip":
-      "Class {{cls}} · {{pct}}% of project resource cost",
+    "boq.rs_abc_pill_tooltip": "Class {{cls}} · {{pct}}% of project resource cost",
     "boq.rs_col_abc": "ABC %",
-    "boq.rs_col_abc_tooltip":
-      "Pareto / ABC analysis — A items make up ~80% of cost, B ~15%, C ~5%. Click to highlight bucket boundaries.",
+    "boq.rs_col_abc_tooltip": "Pareto / ABC analysis — A items make up ~80% of cost, B ~15%, C ~5%. Click to highlight bucket boundaries.",
     "boq.rs_error": "Failed to load resource summary.",
-    "boq.rs_save_variant_to_catalog":
-      "Save as a regular article in your catalog",
+    "boq.rs_save_variant_to_catalog": "Save as a regular article in your catalog",
     "boq.rs_show_all": "Show all {{count}} resources",
     "boq.rs_show_less": "Show less",
     "boq.rs_variant_applied_to_n": "Applied to {{count}} position(s)‌⁠‍",
     "boq.rs_variant_pill_mixed": "Mixed · {{count}} options",
-    "boq.rs_variant_pill_mixed_tooltip":
-      "Different variants picked across positions. Click to choose one for all.",
+    "boq.rs_variant_pill_mixed_tooltip": "Different variants picked across positions. Click to choose one for all.",
     "boq.rs_variant_pill_options": "▾ {{count}} options",
-    "boq.rs_variant_pill_picked_tooltip":
-      "Variant: {{label}}. Click to switch (applies to all positions).",
-    "boq.rs_variant_pill_unset_tooltip":
-      "{{count}} priced variants available. Click to pick one for all positions.",
+    "boq.rs_variant_pill_picked_tooltip": "Variant: {{label}}. Click to switch (applies to all positions).",
+    "boq.rs_variant_pill_unset_tooltip": "{{count}} priced variants available. Click to pick one for all positions.",
     "boq.save_as_assembly": "Save as Assembly",
     "boq.save_as_assembly_failed": "Failed to create assembly",
     "boq.save_snapshot": "Save snapshot",
@@ -4731,10 +4260,8 @@ const resource = {
     "boq.saved_as_assembly": "Saved as Assembly",
     "boq.saved_to_catalog": "Saved to catalog",
     "boq.scope_of_work_label": "What work is included in this rate",
-    "boq.search_and_add_resources":
-      "Search cost items to add as resources to position",
-    "boq.search_catalog_resources":
-      "Search resources by name, code, or category...‌⁠‍",
+    "boq.search_and_add_resources": "Search cost items to add as resources to position",
+    "boq.search_catalog_resources": "Search resources by name, code, or category...‌⁠‍",
     "boq.section_add_failed": "Failed to add section",
     "boq.section_child_count": "{{count}} item",
     "boq.section_deleted": "Section deleted with {{count}} positions",
@@ -4742,8 +4269,7 @@ const resource = {
     "boq.section_optional": "Section (optional)",
     "boq.select_boq": "Select BOQ...",
     "boq.select_classification": "Classification...‌⁠‍",
-    "boq.sensitivity_error":
-      "Failed to load sensitivity analysis. Please try again.‌⁠‍",
+    "boq.sensitivity_error": "Failed to load sensitivity analysis. Please try again.‌⁠‍",
     "boq.set_as_quantity": "Set as qty",
     "boq.set_as_quantity_title": "Push this value into the BOQ quantity field",
     "boq.shortcut_ai_chat": "Toggle AI Chat",
@@ -4772,8 +4298,7 @@ const resource = {
     "boq.show_shortcuts": "Keyboard Shortcuts (F1)",
     "boq.snapshot_created": "Snapshot saved‌⁠‍",
     "boq.snapshot_failed": "Failed to save snapshot‌⁠‍",
-    "boq.snapshot_hint":
-      "Type a label above and click Save to create your first snapshot.",
+    "boq.snapshot_hint": "Type a label above and click Save to create your first snapshot.",
     "boq.snapshot_label": "Snapshot label (optional)...",
     "boq.snapshot_restored": "Snapshot restored‌⁠‍",
     "boq.snapshots_error": "Failed to load version history.",
@@ -4784,11 +4309,9 @@ const resource = {
     "boq.source_dwg": "DWG drawing",
     "boq.source_id_label": "Item id",
     "boq.source_measurement_label": "Measurement",
-    "boq.source_no_measurement":
-      "Measurement data not stored locally — open the source to view details.",
+    "boq.source_no_measurement": "Measurement data not stored locally — open the source to view details.",
     "boq.source_open": "Open source",
-    "boq.source_open_title":
-      "Open the source document in its viewer, focused on this item",
+    "boq.source_open_title": "Open the source document in its viewer, focused on this item",
     "boq.source_pdf": "PDF takeoff",
     "boq.source_pdf_page": "Page {{page}}",
     "boq.status_draft": "Draft",
@@ -4796,25 +4319,20 @@ const resource = {
     "boq.suggest_rate": "Suggest Rate",
     "boq.suggested": "Suggested‌⁠‍",
     "boq.toolbar_quality": "Quality",
-    "boq.toolbar_summary_aria":
-      "{{sections}} sections · {{positions}} positions",
+    "boq.toolbar_summary_aria": "{{sections}} sections · {{positions}} positions",
     "boq.try_different_search": "Try a different search term or filter",
     "boq.unit_options": "Unit options",
     "boq.unit_rate_variant_pill": "u25BE {{count}} options",
-    "boq.unit_rate_variant_pill_tooltip_default":
-      "Auto-applied with {{strategy}} rate ({{count}} options, {{range}}). Click to refine.",
-    "boq.unit_rate_variant_pill_tooltip_picked":
-      "Currently: {{label}}. Click to switch to a different variant.",
-    "boq.unit_rate_variant_pill_tooltip_unset":
-      "{{count}} priced variants available ({{range}}). Click to pick one.",
+    "boq.unit_rate_variant_pill_tooltip_default": "Auto-applied with {{strategy}} rate ({{count}} options, {{range}}). Click to refine.",
+    "boq.unit_rate_variant_pill_tooltip_picked": "Currently: {{label}}. Click to switch to a different variant.",
+    "boq.unit_rate_variant_pill_tooltip_unset": "{{count}} priced variants available ({{range}}). Click to pick one.",
     "boq.unlock": "Unlock",
     "boq.unlock_failed": "Unlock failed",
     "boq.unlocked_success": "Estimate unlocked",
     "boq.untitled": "Untitled BOQ‌⁠‍",
     "boq.untitled_section": "(untitled)",
     "boq.update_failed": "Failed to update position‌⁠‍",
-    "boq.validate_tip":
-      "Checks for missing descriptions, zero quantities, pricing gaps, classification compliance, and duplicate positions.",
+    "boq.validate_tip": "Checks for missing descriptions, zero quantities, pricing gaps, classification compliance, and duplicate positions.",
     "boq.validating": "Checking...",
     "boq.validation_all_passed": "All {{count}} checks passed",
     "boq.validation_errors": "{{count}} errors found",
@@ -4831,64 +4349,48 @@ const resource = {
     "boq.variables_description": "Mô tả",
     "boq.variables_description_placeholder": "Optional note",
     "boq.variables_empty": "No variables yet. Add the first one below.‌⁠‍",
-    "boq.variables_help":
-      "Define named values you can reference in formulas. e.g. set $GFA = 1500, then write =$GFA * 0.15 in any quantity or rate cell.‌⁠‍",
+    "boq.variables_help": "Define named values you can reference in formulas. e.g. set $GFA = 1500, then write =$GFA * 0.15 in any quantity or rate cell.‌⁠‍",
     "boq.variables_name": "Tên",
     "boq.variables_saved": "Variables saved‌⁠‍",
     "boq.variables_title": "BOQ variables‌⁠‍",
     "boq.variables_type": "Loại",
     "boq.variables_value": "Value",
-    "boq.variant_default_applied_msg":
-      "Click the row in the BOQ to choose a specific variant.",
+    "boq.variant_default_applied_msg": "Click the row in the BOQ to choose a specific variant.",
     "boq.variant_default_applied_title": "Applied with average price",
     "boq.variant_default_pill": "Default u00B7 refine u25BE",
-    "boq.variant_default_pill_tooltip":
-      "Auto-applied with the {{strategy}} rate. Click the unit_rate cell to pick a specific variant.",
+    "boq.variant_default_pill_tooltip": "Auto-applied with the {{strategy}} rate. Click the unit_rate cell to pick a specific variant.",
     "boq.variant_default_pill_with_count": "Abstract u00B7 {{count}} options",
-    "boq.variant_header_code_tooltip":
-      "Abstract variant resource — inherits the position quantity",
-    "boq.variant_header_pill_tooltip":
-      "Choose / switch a price variant for this abstract resource",
-    "boq.variant_header_qty_edit_tooltip":
-      "Double-click to edit quantity (synced with the position).",
-    "boq.variant_header_type_tooltip":
-      "Click to pick a price variant from the catalog",
+    "boq.variant_header_code_tooltip": "Abstract variant resource — inherits the position quantity",
+    "boq.variant_header_pill_tooltip": "Choose / switch a price variant for this abstract resource",
+    "boq.variant_header_qty_edit_tooltip": "Double-click to edit quantity (synced with the position).",
+    "boq.variant_header_type_tooltip": "Click to pick a price variant from the catalog",
     "boq.variant_resource_added": "Resource added: {{label}}",
     "boq.variant_resource_repick_failed": "Variant re-pick failed",
     "boq.variant_resource_repicked": "Variant updated: {{label}}",
     "boq.vector_download": "Download cost database first",
-    "boq.vector_download_desc":
-      "Import CWICR databases (55,000+ items, 9 regions)",
-    "boq.vector_index_desc":
-      "Build vector index from your imported cost items (~30s)",
+    "boq.vector_download_desc": "Import CWICR databases (55,000+ items, 9 regions)",
+    "boq.vector_index_desc": "Build vector index from your imported cost items (~30s)",
     "boq.vector_index_error": "Indexing Failed",
-    "boq.vector_index_error_msg":
-      "Failed to index the cost database. Try importing a database first.",
+    "boq.vector_index_error_msg": "Failed to index the cost database. Try importing a database first.",
     "boq.vector_index_now": "Index existing cost database",
     "boq.vector_indexed": "Vector Database Ready",
-    "boq.vector_indexed_msg":
-      "Cost database indexed. AI features are now available.",
+    "boq.vector_indexed_msg": "Cost database indexed. AI features are now available.",
     "boq.vector_indexing": "Indexing...",
-    "boq.vector_setup_desc":
-      "AI rate suggestions, classification, and anomaly detection require a vector-indexed cost database. This is a one-time setup that takes about 30 seconds.",
+    "boq.vector_setup_desc": "AI rate suggestions, classification, and anomaly detection require a vector-indexed cost database. This is a one-time setup that takes about 30 seconds.",
     "boq.vector_setup_subtitle": "One-time setup required",
     "boq.vector_setup_title": "AI Features Setup",
-    "boq.vector_status_empty":
-      "No vector database found. Import a cost database or index your existing cost items.",
-    "boq.vector_status_partial":
-      "Vector DB has {{count}} items indexed. Minimum ~100 items needed for AI features.",
+    "boq.vector_status_empty": "No vector database found. Import a cost database or index your existing cost items.",
+    "boq.vector_status_partial": "Vector DB has {{count}} items indexed. Minimum ~100 items needed for AI features.",
     "boq.version_history": "Version History‌⁠‍",
     "boq.view_comments": "Comments ({{count}})",
     "boq.view_in_bim": "View in BIM 3D ({{count}})",
     "boq.view_in_cost_db": "View in Cost Database",
-    "boq.warn_lump_sum":
-      "Lump sum — quantity × rate may not match expected total",
+    "boq.warn_lump_sum": "Lump sum — quantity × rate may not match expected total",
     "boq.warn_zero_rate": "No rate — review before commit",
     "boq.warnings": "warnings",
     "compliance.tab_label": "Tuân thủ",
     "compliance.page.title": "Compliance documents",
-    "compliance.page.subtitle":
-      "Track insurance, permits, bonds and certifications with expiry reminders.",
+    "compliance.page.subtitle": "Track insurance, permits, bonds and certifications with expiry reminders.",
     "compliance.page.new": "New document",
     "compliance.modal.create_title": "New compliance document",
     "compliance.modal.create_submit": "Create document",
@@ -4919,10 +4421,8 @@ const resource = {
     "compliance.status.expired": "Expired",
     "compliance.status.cancelled": "Cancelled",
     "compliance.status.void": "Void",
-    "compliance.doc_type.insurance_general_liability":
-      "General liability insurance",
-    "compliance.doc_type.insurance_workers_comp":
-      "Workers' compensation insurance",
+    "compliance.doc_type.insurance_general_liability": "General liability insurance",
+    "compliance.doc_type.insurance_workers_comp": "Workers' compensation insurance",
     "compliance.doc_type.insurance_auto": "Auto insurance",
     "compliance.doc_type.insurance_umbrella": "Umbrella insurance",
     "compliance.doc_type.permit_building": "Building permit",
@@ -4936,11 +4436,9 @@ const resource = {
     "compliance.doc_type.certification_other": "Other certification",
     "compliance.doc_type.other": "Other",
     "compliance.empty.title": "No compliance documents yet",
-    "compliance.empty.description":
-      "Track insurance policies, permits, bonds and certifications. Get a warning before each one expires.",
+    "compliance.empty.description": "Track insurance policies, permits, bonds and certifications. Get a warning before each one expires.",
     "compliance.empty.no_project_title": "Open a project",
-    "compliance.empty.no_project_description":
-      "Compliance documents are scoped to a project — open one first.",
+    "compliance.empty.no_project_description": "Compliance documents are scoped to a project — open one first.",
     "compliance.toast.created": "Compliance document created.",
     "compliance.toast.create_failed": "Failed to create compliance document.",
     "compliance.toast.deleted": "Compliance document deleted.",
@@ -4963,8 +4461,7 @@ const resource = {
     "costs.base_cost": "Base cost",
     "costs.base_year": "Base year‌⁠‍",
     "costs.categories_title": "Categories",
-    "costs.clear_all_confirm_body":
-      "This will permanently remove all {{count}} CWICR cost items. You can re-import them later.",
+    "costs.clear_all_confirm_body": "This will permanently remove all {{count}} CWICR cost items. You can re-import them later.",
     "costs.clear_all_confirm_title": "Clear all {{count}} databases?",
     "costs.clear_filters": "Clear all",
     "costs.code_placeholder": "e.g. WALL-001",
@@ -4972,8 +4469,7 @@ const resource = {
     "costs.component_labor": "Labor",
     "costs.component_material": "Material",
     "costs.confirm_delete": "Delete this custom cost item?",
-    "costs.confirm_delete_region":
-      "Delete all cost items for {{region}}? This cannot be undone.",
+    "costs.confirm_delete_region": "Delete all cost items for {{region}}? This cannot be undone.",
     "costs.confirm_delete_title": "Delete cost item?",
     "costs.cost_items_count": "55,000+ cost items",
     "costs.custom_label": "Custom",
@@ -4991,30 +4487,23 @@ const resource = {
     "costs.cwicr_match.mode_label": "Mode",
     "costs.cwicr_match.mode_lexical": "Lexical‌⁠‍",
     "costs.cwicr_match.mode_semantic": "Semantic‌⁠‍",
-    "costs.cwicr_match.placeholder":
-      "Describe the work item (e.g. reinforced concrete wall)‌⁠‍",
+    "costs.cwicr_match.placeholder": "Describe the work item (e.g. reinforced concrete wall)‌⁠‍",
     "costs.cwicr_match.query_label": "Query",
     "costs.cwicr_match.search": "Tìm kiếm",
     "costs.cwicr_match.title": "CWICR rate match‌⁠‍",
-    "costs.db_downloading":
-      "Downloading and indexing cost items with full resource breakdown. This is a one-time setup.",
+    "costs.db_downloading": "Downloading and indexing cost items with full resource breakdown. This is a one-time setup.",
     "costs.db_installed": "Database installed successfully‌⁠‍",
     "costs.db_installing": "Installing {{name}}...",
-    "costs.db_saved_offline":
-      "Cost items are saved locally and available offline.",
-    "costs.description_placeholder":
-      "e.g. Reinforced concrete wall C30/37, 25cm",
+    "costs.db_saved_offline": "Cost items are saved locally and available offline.",
+    "costs.description_placeholder": "e.g. Reinforced concrete wall C30/37, 25cm",
     "costs.duplicates_skipped": "duplicates skipped",
-    "costs.empty_pick_region_above":
-      "Pick a region card above and click Install to load a regional cost database.",
+    "costs.empty_pick_region_above": "Pick a region card above and click Install to load a regional cost database.",
     "costs.equipment": "Thiết bị",
     "costs.escalated_cost": "Escalated cost",
     "costs.escalation": "Escalation",
     "costs.escalation_calculator": "Cost Escalation Calculator‌⁠‍",
-    "costs.escalation_desc":
-      "Adjust costs for inflation using published construction indices‌⁠‍",
-    "costs.escalation_disclaimer":
-      "Based on published indices. Verify with project-specific data.",
+    "costs.escalation_desc": "Adjust costs for inflation using published construction indices‌⁠‍",
+    "costs.escalation_disclaimer": "Based on published indices. Verify with project-specific data.",
     "costs.escalation_factor": "Factor",
     "costs.filters_active": "filters active",
     "costs.is_now_active": "is now the active database‌⁠‍",
@@ -5033,26 +4522,21 @@ const resource = {
     "costs.n_items_selected": "{{count}} items selected",
     "costs.n_positions_will_be_created": "{{count}} positions will be created",
     "costs.n_selected": "{{count}} selected",
-    "costs.no_databases_installed":
-      "No databases installed yet. Pick a region above to install.",
+    "costs.no_databases_installed": "No databases installed yet. Pick a region above to install.",
     "costs.no_favourites": "No favourites yet",
-    "costs.no_favourites_hint":
-      "Click the star icon on any cost item to add it to your favourites",
+    "costs.no_favourites_hint": "Click the star icon on any cost item to add it to your favourites",
     "costs.no_recent": "No recently used items",
-    "costs.no_recent_hint":
-      "Items you add to BOQ will appear here for quick access",
+    "costs.no_recent_hint": "Items you add to BOQ will appear here for quick access",
     "costs.one_time_download": "One-time download",
     "costs.phase_complete": "Complete",
     "costs.phase_extracting": "Extracting resources & cost breakdown...",
     "costs.phase_finalizing": "Finalizing...",
     "costs.phase_reading": "Reading Parquet file...",
     "costs.phase_writing": "Writing to local database...",
-    "costs.positions_created_hint":
-      "Positions created with unit rates from cost database",
+    "costs.positions_created_hint": "Positions created with unit rates from cost database",
     "costs.region_filter_count": "{{shown}} of {{total}}‌⁠‍",
-    "costs.region_filter_no_results": 'No regions match "{{q}}"',
-    "costs.region_filter_placeholder":
-      "Filter by country, city, currency or language…‌⁠‍",
+    "costs.region_filter_no_results": "No regions match \"{{q}}\"",
+    "costs.region_filter_placeholder": "Filter by country, city, currency or language…‌⁠‍",
     "costs.region_plural": "regions",
     "costs.region_singular": "region",
     "costs.remove_from_favourites": "Remove from favourites",
@@ -5085,14 +4569,12 @@ const resource = {
     "costs.variant_sort_price_asc": "Price ↑",
     "costs.variant_sort_price_desc": "Price ↓",
     "costs.variant_use_average": "Use average rate",
-    "costs.variant_use_default_tooltip":
-      "Apply the average rate without picking a specific variant. You can refine later by clicking the row.",
+    "costs.variant_use_default_tooltip": "Apply the average rate without picking a specific variant. You can refine later by clicking the row.",
     "costs.variant_use_median": "Use median rate",
     "costs.vec_indexing_all": "Generating vectors for all regions...",
     "costs.vec_indexing_region": "Generating vectors for {{name}}...",
     "costs.vec_phase_checking": "Checking pre-built vectors on GitHub...",
-    "costs.vec_phase_embedding":
-      "Generating 384d embeddings from cost items...",
+    "costs.vec_phase_embedding": "Generating 384d embeddings from cost items...",
     "costs.vec_phase_indexing": "Indexing into LanceDB and refreshing stats...",
     "costs.vec_phase_model": "Loading embedding model (first-time only)...",
     "costs.vec_phase_progress": "Step {{step}} of 4",
@@ -5106,8 +4588,7 @@ const resource = {
     "files.activity.title": "Hoạt động",
     "files.activity.open": "View activity history",
     "files.activity.empty_title": "No activity yet",
-    "files.activity.empty_hint":
-      "Uploads, renames, and other changes will show up here.",
+    "files.activity.empty_hint": "Uploads, renames, and other changes will show up here.",
     "files.activity.error_title": "Couldn't load activity",
     "files.activity.error_hint": "Check your connection and try again.",
     "files.activity.actor_unknown": "Người dùng không xác định",
@@ -5121,8 +4602,7 @@ const resource = {
     "files.activity.action.cde_state_changed": "CDE state changed",
     "files.permissions.manage": "Manage access",
     "files.permissions.title": "Folder access",
-    "files.permissions.subtitle":
-      "Restrict who can see and edit files in {{folder}}.",
+    "files.permissions.subtitle": "Restrict who can see and edit files in {{folder}}.",
     "files.permissions.empty": "All project members can access this folder.",
     "files.permissions.list_title": "Current access",
     "files.permissions.grant_title": "Grant access",
@@ -5137,15 +4617,12 @@ const resource = {
     "files.permissions.revoke": "Revoke",
     "files.permissions.revoke_confirm": "Revoke access for {{name}}?",
     "files.permissions.lock_tooltip": "Restricted: {{count}} member can access",
-    "files.permissions.lock_tooltip_plural":
-      "Restricted: {{count}} members can access",
+    "files.permissions.lock_tooltip_plural": "Restricted: {{count}} members can access",
     "files.permissions.error_grant": "Could not grant access.",
     "files.permissions.error_revoke": "Could not revoke access.",
-    "files.permissions.error_duplicate":
-      "This member already has access at this level.",
+    "files.permissions.error_duplicate": "This member already has access at this level.",
     "share.page.title": "Shared file",
-    "share.page.subtitle":
-      "Someone shared a file with you via OpenConstructionERP.",
+    "share.page.subtitle": "Someone shared a file with you via OpenConstructionERP.",
     "share.page.filename_label": "File",
     "share.page.password_prompt": "Enter the password to download.",
     "share.page.password_placeholder": "Mật khẩu",
@@ -5160,81 +4637,57 @@ const resource = {
     "share.page.loading": "Loading link…",
     "share.page.ready_title": "Ready to download",
     "share.page.ready_body": "Click the button below to download the file.",
-    "files.bulk.delete_all_failed":
-      "None of the {{count}} selected file(s) could be deleted.",
+    "files.bulk.delete_all_failed": "None of the {{count}} selected file(s) could be deleted.",
     "files.bulk.delete_partial": "{{deleted}} of {{total}} deleted",
-    "files.bulk.delete_partial_detail":
-      "{{failed}} file(s) could not be deleted.",
-    "project_intelligence.ai.cost_advisor_title":
-      "Cost Intelligence Advisor‌⁠‍",
-    "project_intelligence.ai_not_configured_desc":
-      "Connect an AI provider (Anthropic Claude, OpenAI, or Google Gemini) to get personalized, context-aware recommendations for your project. Without AI, you still see rule-based analysis below.",
-    "project_intelligence.ai_not_configured_title":
-      "AI provider not connected‌⁠‍",
+    "files.bulk.delete_partial_detail": "{{failed}} file(s) could not be deleted.",
+    "project_intelligence.ai.cost_advisor_title": "Cost Intelligence Advisor‌⁠‍",
+    "project_intelligence.ai_not_configured_desc": "Connect an AI provider (Anthropic Claude, OpenAI, or Google Gemini) to get personalized, context-aware recommendations for your project. Without AI, you still see rule-based analysis below.",
+    "project_intelligence.ai_not_configured_title": "AI provider not connected‌⁠‍",
     "project_intelligence.analytics.cost_drivers": "Cost drivers‌⁠‍",
-    "project_intelligence.analytics.cost_drivers_sub":
-      "Top 5 line items by total cost‌⁠‍",
+    "project_intelligence.analytics.cost_drivers_sub": "Top 5 line items by total cost‌⁠‍",
     "project_intelligence.analytics.errors": "errors",
     "project_intelligence.analytics.no_data": "No data yet‌⁠‍",
     "project_intelligence.analytics.price_volatility": "Price volatility‌⁠‍",
-    "project_intelligence.analytics.price_volatility_sub":
-      "Bid total spread across vendors‌⁠‍",
+    "project_intelligence.analytics.price_volatility_sub": "Bid total spread across vendors‌⁠‍",
     "project_intelligence.analytics.schedule_cost": "Schedule ↔ cost",
     "project_intelligence.analytics.schedule_cost_sub": "Labour cost by phase",
     "project_intelligence.analytics.scope_coverage": "Scope coverage",
-    "project_intelligence.analytics.scope_coverage_ratio":
-      "{{current}} of {{baseline}} lines",
-    "project_intelligence.analytics.scope_coverage_sub":
-      "BOQ line count vs baseline",
+    "project_intelligence.analytics.scope_coverage_ratio": "{{current}} of {{baseline}} lines",
+    "project_intelligence.analytics.scope_coverage_sub": "BOQ line count vs baseline",
     "project_intelligence.analytics.validation_live": "Real-time validation",
-    "project_intelligence.analytics.validation_live_sub":
-      "Rule pass count (updates every 60s)",
-    "project_intelligence.analytics.vendor_concentration":
-      "Vendor concentration",
-    "project_intelligence.analytics.vendor_concentration_sub":
-      "Top 3 bidders’ share",
+    "project_intelligence.analytics.validation_live_sub": "Rule pass count (updates every 60s)",
+    "project_intelligence.analytics.vendor_concentration": "Vendor concentration",
+    "project_intelligence.analytics.vendor_concentration_sub": "Top 3 bidders’ share",
     "project_intelligence.analytics.warnings": "warnings",
     "project_intelligence.analyzing": "Analyzing project...‌⁠‍",
     "project_intelligence.analyzing_project": "Analyzing project...",
     "project_intelligence.ask_placeholder": "Ask about this project...",
     "project_intelligence.auth_error": "Session expired‌⁠‍",
-    "project_intelligence.auth_hint":
-      "Please refresh the page or sign in again to continue.",
+    "project_intelligence.auth_hint": "Please refresh the page or sign in again to continue.",
     "project_intelligence.back_to_rec": "Back to recommendations‌⁠‍",
-    "project_intelligence.chat_error":
-      "Sorry, I could not process your question. Please try again.‌⁠‍",
-    "project_intelligence.chat_prompt":
-      'Ask any question about this project. For example: "Why is my score so low?" or "What should I do first?"',
+    "project_intelligence.chat_error": "Sorry, I could not process your question. Please try again.‌⁠‍",
+    "project_intelligence.chat_prompt": "Ask any question about this project. For example: \"Why is my score so low?\" or \"What should I do first?\"",
     "project_intelligence.chat_toggle": "Toggle chat‌⁠‍",
     "project_intelligence.critical_gaps": "Critical Gaps",
     "project_intelligence.enable_failed": "Could not enable the module",
     "project_intelligence.enable_module": "Enable module",
     "project_intelligence.enabling": "Enabling…",
-    "project_intelligence.gaps.dollar_impact":
-      "{{count}} items missing prices → ~{{amount}} cost uncertainty",
+    "project_intelligence.gaps.dollar_impact": "{{count}} items missing prices → ~{{amount}} cost uncertainty",
     "project_intelligence.go_to_ai_settings": "Settings — AI Configuration",
     "project_intelligence.kpi.budget_variance": "Budget variance‌⁠‍",
     "project_intelligence.kpi.risk_adjusted_cost": "Risk-adjusted cost‌⁠‍",
-    "project_intelligence.kpi.risk_sub":
-      "±{{band}} (90% CI, {{count}} anomalies)",
+    "project_intelligence.kpi.risk_sub": "±{{band}} (90% CI, {{count}} anomalies)",
     "project_intelligence.kpi.schedule_health": "Schedule health‌⁠‍",
     "project_intelligence.kpi.schedule_sub": "Activities on baseline‌⁠‍",
-    "project_intelligence.kpi.variance_sub":
-      "Budget {{budget}} · Current {{current}}‌⁠‍",
+    "project_intelligence.kpi.variance_sub": "Budget {{budget}} · Current {{current}}‌⁠‍",
     "project_intelligence.load_error": "Could not load analysis",
-    "project_intelligence.module_disabled_ask_admin":
-      "Ask an admin to enable this module to continue.",
-    "project_intelligence.module_disabled_body":
-      "This dashboard runs against the optional Project Intelligence module. It is currently disabled on this server, so the AI advisor, gap detector and analytics grid have nothing to query.",
-    "project_intelligence.module_disabled_footnote":
-      "No data is collected while the module is off. Enabling is reversible from the Modules page.",
-    "project_intelligence.module_disabled_title":
-      "Project Intelligence is turned off",
-    "project_intelligence.no_gaps_desc":
-      "Your project has no critical issues. Keep refining to tighten variance.",
+    "project_intelligence.module_disabled_ask_admin": "Ask an admin to enable this module to continue.",
+    "project_intelligence.module_disabled_body": "This dashboard runs against the optional Project Intelligence module. It is currently disabled on this server, so the AI advisor, gap detector and analytics grid have nothing to query.",
+    "project_intelligence.module_disabled_footnote": "No data is collected while the module is off. Enabling is reversible from the Modules page.",
+    "project_intelligence.module_disabled_title": "Project Intelligence is turned off",
+    "project_intelligence.no_gaps_desc": "Your project has no critical issues. Keep refining to tighten variance.",
     "project_intelligence.no_gaps_title": "No critical gaps",
-    "project_intelligence.no_recommendations":
-      "No recommendations available yet. Try refreshing the analysis.",
+    "project_intelligence.no_recommendations": "No recommendations available yet. Try refreshing the analysis.",
     "project_intelligence.open_modules_page": "Open Modules page",
     "project_intelligence.page_title_v191": "Estimation Dashboard‌⁠‍",
     "project_intelligence.readiness_title": "Estimation readiness",
@@ -5243,24 +4696,18 @@ const resource = {
     "project_intelligence.role_estimator": "Estimator",
     "project_intelligence.role_explorer": "Explorer",
     "project_intelligence.role_manager": "Manager",
-    "project_intelligence.score_tooltip_v191":
-      "Score weighting (RFC 25): BOQ 40%, Cost Model 30%, Validation 20%, Risk 10%.",
-    "project_intelligence.select_domain":
-      "Select a domain tab above to see detailed metrics.‌⁠‍",
+    "project_intelligence.score_tooltip_v191": "Score weighting (RFC 25): BOQ 40%, Cost Model 30%, Validation 20%, Risk 10%.",
+    "project_intelligence.select_domain": "Select a domain tab above to see detailed metrics.‌⁠‍",
     "project_intelligence.show_more_gaps": "{{count}} more",
     "project_intelligence.thinking": "Thinking...",
     "project_intelligence.unnamed": "Unnamed Project",
-    "project_intelligence.v191_header_desc":
-      "Cost variance, anomalies, bid analytics — refreshed every 60s.",
-    "project_intelligence.v191_select_prompt":
-      "Select a project from the header to see its cost variance, anomalies, and bid analytics.‌⁠‍",
+    "project_intelligence.v191_header_desc": "Cost variance, anomalies, bid analytics — refreshed every 60s.",
+    "project_intelligence.v191_select_prompt": "Select a project from the header to see its cost variance, anomalies, and bid analytics.‌⁠‍",
     "projects.photos.tab_label": "Ảnh",
     "projects.photos.no_project": "No active project",
-    "projects.photos.no_project_desc":
-      "Open a project to view and upload photos.",
+    "projects.photos.no_project_desc": "Open a project to view and upload photos.",
     "projects.photos.empty_title": "No photos yet",
-    "projects.photos.empty_desc":
-      "Upload site photos to keep visual records alongside the project.",
+    "projects.photos.empty_desc": "Upload site photos to keep visual records alongside the project.",
     "projects.photos.upload_cta": "Upload photos",
     "projects.photos.search_placeholder": "Search filename…",
     "projects.photos.search_aria": "Search photos by filename",
@@ -5280,8 +4727,7 @@ const resource = {
     "takeoff.markup.close": "Đóng",
     "takeoff.markup.comments_drawer": "Markup comments",
     "takeoff.markup.comments_title": "Bình luận",
-    "takeoff.markup.comments_empty":
-      "No comments yet — be the first to add one.",
+    "takeoff.markup.comments_empty": "No comments yet — be the first to add one.",
     "takeoff.markup.comments_load_failed": "Could not load comments.",
     "takeoff.markup.comment_added": "Comment added",
     "takeoff.markup.comment_deleted": "Comment deleted",
@@ -5291,8 +4737,7 @@ const resource = {
     "takeoff.markup.comment_placeholder": "Write a comment...",
     "takeoff.markup.comment_hint": "Ctrl/Cmd+Enter to send",
     "takeoff.markup.comment_send": "Send",
-    "tendering.award_confirm":
-      "Award this contract to {{company}}? This action cannot be undone.",
+    "tendering.award_confirm": "Award this contract to {{company}}? This action cannot be undone.",
     "tendering.award_confirm_title": "Award contract?",
     "tendering.bid_count": "{{count}} bids‌⁠‍",
     "tendering.close_package": "Đóng",
@@ -5302,10 +4747,8 @@ const resource = {
     "tendering.evaluate": "Evaluate Bids",
     "tendering.exported": "Comparison exported",
     "tendering.mark_awarded": "Mark Awarded",
-    "tendering.no_packages_description":
-      "Create a tender from a BOQ to start collecting bids",
-    "tendering.select_project_desc":
-      "Select a project and create a tender from a BOQ to get started",
+    "tendering.no_packages_description": "Create a tender from a BOQ to start collecting bids",
+    "tendering.select_project_desc": "Select a project and create a tender from a BOQ to get started",
     "tendering.select_project_first": "Select a project first",
     "tendering.select_project_title": "Select a project",
     "tendering.start_collecting": "Start Collecting",
@@ -5321,8 +4764,7 @@ const resource = {
     "tendering.status_submitted": "Submitted",
     "conflict.panel_aria_label": "Conflict resolution panel",
     "conflict.panel_title": "Merge Conflict Detected",
-    "conflict.panel_subtitle":
-      "A remote collaborator edited the same field. Choose how to resolve.",
+    "conflict.panel_subtitle": "A remote collaborator edited the same field. Choose how to resolve.",
     "conflict.changed_by": "Changed by",
     "conflict.your_version": "Your version",
     "conflict.their_version": "Their version",
@@ -5336,18 +4778,14 @@ const resource = {
     "conflict.conflict_number": "Conflict",
     "conflict.next": "Next",
     "finance.approve_failed": "Failed to approve invoice",
-    "finance.boq_tip_desc":
-      'Go to your BOQ → Lock the estimate → Click "Create Budget from Estimate" to auto-populate budget lines.',
+    "finance.boq_tip_desc": "Go to your BOQ → Lock the estimate → Click \"Create Budget from Estimate\" to auto-populate budget lines.",
     "finance.boq_tip_title": "Mẹo:",
     "finance.budget_create_failed": "Failed to create budget line",
     "finance.budget_created": "Budget line created successfully",
-    "finance.budget_file_hint":
-      "Columns: WBS Code, Category, Original Budget, Notes",
+    "finance.budget_file_hint": "Columns: WBS Code, Category, Original Budget, Notes",
     "finance.budget_line": "Ngân sách",
-    "finance.budget_notes_placeholder":
-      "e.g., Includes contingency for weather delays",
-    "finance.budgets_explanation":
-      "Project budget tracks original vs actual costs by WBS category. Variance is highlighted green when under budget, red when over.",
+    "finance.budget_notes_placeholder": "e.g., Includes contingency for weather delays",
+    "finance.budgets_explanation": "Project budget tracks original vs actual costs by WBS category. Variance is highlighted green when under budget, red when over.",
     "finance.cat_equipment": "Thiết bị",
     "finance.cat_labor": "Labor",
     "finance.cat_material": "Material",
@@ -5361,10 +4799,8 @@ const resource = {
     "finance.create_snapshot": "Create Snapshot",
     "finance.currency": "Tiền tệ",
     "finance.direction": "Direction",
-    "finance.drop_budget_file":
-      "Drop Excel or CSV file here, or click to browse",
-    "finance.evm_explanation":
-      "Earned Value Management (EVM) compares planned progress with actual performance. SPI > 1.0 = ahead of schedule. CPI > 1.0 = under budget. Create snapshots periodically to track trends over time.",
+    "finance.drop_budget_file": "Drop Excel or CSV file here, or click to browse",
+    "finance.evm_explanation": "Earned Value Management (EVM) compares planned progress with actual performance. SPI > 1.0 = ahead of schedule. CPI > 1.0 = under budget. Create snapshots periodically to track trends over time.",
     "finance.evm_hint_cost": "cost efficiency",
     "finance.evm_hint_forecast": "forecast total cost",
     "finance.evm_hint_schedule": "schedule efficiency",
@@ -5378,14 +4814,11 @@ const resource = {
     "finance.import": "Import",
     "finance.import_btn": "Import",
     "finance.import_budgets": "Import Budgets",
-    "finance.import_result":
-      "Imported: {{imported}}, Skipped: {{skipped}}, Errors: {{errors}}",
+    "finance.import_result": "Imported: {{imported}}, Skipped: {{skipped}}, Errors: {{errors}}",
     "finance.invoice_create_failed": "Failed to create invoice",
     "finance.invoice_created": "Invoice created successfully",
-    "finance.invoice_desc_placeholder":
-      "e.g., Progress payment for concrete works - Phase 2",
-    "finance.invoices_explanation":
-      "Track all project invoices in one place. Payable = invoices from subcontractors/vendors. Receivable = invoices you send to clients. Mark invoices as paid to auto-generate payment records.",
+    "finance.invoice_desc_placeholder": "e.g., Progress payment for concrete works - Phase 2",
+    "finance.invoices_explanation": "Track all project invoices in one place. Payable = invoices from subcontractors/vendors. Receivable = invoices you send to clients. Mark invoices as paid to auto-generate payment records.",
     "finance.invoices_export_failed": "Failed to export invoices",
     "finance.invoices_export_success": "Invoices exported successfully",
     "finance.link_to_boq": "BOQ Estimate‌⁠‍",
@@ -5393,15 +4826,12 @@ const resource = {
     "finance.new_invoice": "New Invoice",
     "finance.no_budget_match": "No matching budget lines",
     "finance.no_invoices_match": "No matching invoices",
-    "finance.no_invoices_match_desc":
-      "Try adjusting your search or status filter.",
+    "finance.no_invoices_match_desc": "Try adjusting your search or status filter.",
     "finance.notes": "Notes / Description",
     "finance.pay_failed": "Failed to mark invoice as paid",
     "finance.payable_desc": "Invoice you need to pay",
-    "finance.payable_receivable_tooltip":
-      "Payable = invoices you owe to vendors. Receivable = invoices clients owe to you.",
-    "finance.payments_explanation":
-      "Payment records are created when invoices are marked as paid.",
+    "finance.payable_receivable_tooltip": "Payable = invoices you owe to vendors. Receivable = invoices clients owe to you.",
+    "finance.payments_explanation": "Payment records are created when invoices are marked as paid.",
     "finance.receivable_desc": "Invoice you're sending",
     "finance.search_client": "Search client...",
     "finance.search_vendor": "Search vendor...",
@@ -5432,19 +4862,15 @@ const resource = {
     "notification.task_assigned_title": "New task assigned",
     "notification.task_assigned_body": "{{task_title}}",
     "notification.invoice_approved_title": "Invoice approved",
-    "notification.invoice_approved_body":
-      "Invoice {{invoice_number}} — {{amount_total}} {{currency_code}}",
+    "notification.invoice_approved_body": "Invoice {{invoice_number}} — {{amount_total}} {{currency_code}}",
     "notification.inspection_scheduled_title": "Inspection scheduled",
-    "notification.inspection_scheduled_body":
-      "{{inspection_number}} — {{title}} on {{inspection_date}}",
+    "notification.inspection_scheduled_body": "{{inspection_number}} — {{title}} on {{inspection_date}}",
     "notification.submittal_status_changed_title": "Submittal status changed",
-    "notification.submittal_status_changed_body":
-      "{{submittal_number}} ({{title}}) — {{new_status}}",
+    "notification.submittal_status_changed_body": "{{submittal_number}} ({{title}}) — {{new_status}}",
     "notification.meeting_scheduled_title": "Meeting scheduled",
     "notification.meeting_scheduled_body": "{{title}} on {{meeting_date}}",
     "notification.ncr_created_title": "Non-conformance raised",
-    "notification.ncr_created_body":
-      "NCR {{ncr_number}} — {{title}} ({{severity}})",
+    "notification.ncr_created_body": "NCR {{ncr_number}} — {{title}} ({{severity}})",
     "notification.document_uploaded_title": "Document uploaded",
     "notification.document_uploaded_body": "{{document_name}}",
     "procurement.add_item": "Thêm mục",
@@ -5465,8 +4891,7 @@ const resource = {
     "procurement.no_gr_match": "No matching goods receipts",
     "procurement.no_po_match": "No matching purchase orders",
     "procurement.notes": "Notes",
-    "procurement.notes_placeholder":
-      "Optional notes or special instructions...",
+    "procurement.notes_placeholder": "Optional notes or special instructions...",
     "procurement.payment_terms": "Payment Terms",
     "procurement.po_created": "Purchase order created",
     "procurement.po_type": "PO Type",
@@ -5482,103 +4907,72 @@ const resource = {
     "match_elements.info.dialog_aria": "How matching works",
     "match_elements.info.title": "How matching works",
     "match_elements.info.bullet_upload": "Upload your BIM model or BoQ.",
-    "match_elements.info.bullet_extract":
-      "We extract elements: descriptions, units, quantities, regions, classification.",
-    "match_elements.info.bullet_search":
-      "Each element is searched against the selected cost catalogue using vector similarity + lexical hints + region/unit boost.",
-    "match_elements.info.bullet_shortlist":
-      "You get a confidence-scored shortlist per element — pick the best, edit quantity if needed.",
-    "match_elements.info.bullet_save":
-      "Save the session — you can revisit, edit, and export it as BoQ later.",
-    "match_elements.info.footer":
-      "Saved sessions live in the list on this page.",
+    "match_elements.info.bullet_extract": "We extract elements: descriptions, units, quantities, regions, classification.",
+    "match_elements.info.bullet_search": "Each element is searched against the selected cost catalogue using vector similarity + lexical hints + region/unit boost.",
+    "match_elements.info.bullet_shortlist": "You get a confidence-scored shortlist per element — pick the best, edit quantity if needed.",
+    "match_elements.info.bullet_save": "Save the session — you can revisit, edit, and export it as BoQ later.",
+    "match_elements.info.footer": "Saved sessions live in the list on this page.",
     "match_elements.new_text.button": "From text",
     "match_elements.new_text.button_title": "Paste descriptions — one per line",
     "match_elements.new_text.title": "New session — paste descriptions",
-    "match_elements.new_text.hint":
-      "One line per item. Each line becomes a group; semantic search finds the closest CWICR rates. Use any language — the multilingual encoder handles cross-lang queries.",
+    "match_elements.new_text.hint": "One line per item. Each line becomes a group; semantic search finds the closest CWICR rates. Use any language — the multilingual encoder handles cross-lang queries.",
     "match_elements.new_text.name_label": "Session name (optional)",
     "match_elements.new_text.name_placeholder": "e.g. Quick estimate Q3",
     "match_elements.new_text.lines_label": "Descriptions (one per line)",
-    "match_elements.new_text.lines_placeholder":
-      "Stahlbetonwand C30/37, d=240mm\nленточный фундамент 800x600\nconcrete slab 200mm",
+    "match_elements.new_text.lines_placeholder": "Stahlbetonwand C30/37, d=240mm\nленточный фундамент 800x600\nconcrete slab 200mm",
     "match_elements.new_text.create": "Create session",
     "match_elements.new_excel.button": "From Excel BoQ",
-    "match_elements.new_excel.button_title":
-      "Upload an .xlsx Bill of Quantities",
+    "match_elements.new_excel.button_title": "Upload an .xlsx Bill of Quantities",
     "match_elements.new_excel.title": "New session from Excel BoQ",
-    "match_elements.new_excel.hint":
-      'Upload an .xlsx with at least a "Description" column (or its localised equivalent — Beschreibung, Описание, Descripción, 描述, etc.). Optional columns: Qty, Unit, Code, Category. Decimal-comma quantities are recognised.',
+    "match_elements.new_excel.hint": "Upload an .xlsx with at least a \"Description\" column (or its localised equivalent — Beschreibung, Описание, Descripción, 描述, etc.). Optional columns: Qty, Unit, Code, Category. Decimal-comma quantities are recognised.",
     "match_elements.new_excel.name_label": "Session name (optional)",
     "match_elements.new_excel.name_placeholder": "e.g. Tender BoQ rev 3",
     "match_elements.new_excel.drop": "Drop your .xlsx here or click to browse",
-    "match_elements.new_excel.format_hint":
-      ".xlsx only · multi-language headers supported",
+    "match_elements.new_excel.format_hint": ".xlsx only · multi-language headers supported",
     "match_elements.new_excel.create": "Upload & create session",
     "match_elements.group_by_show_all": "Show all ({{count}})",
     "match_elements.group_by_show_less": "Show less",
-    "match_elements.group_by_show_all_help":
-      "Tenant-specific attributes from this BIM model",
+    "match_elements.group_by_show_all_help": "Tenant-specific attributes from this BIM model",
     "match_elements.region_bim_models": "BIM model",
-    "match_elements.region_bim_models_help":
-      "Pick the source model — quantities are read from here",
+    "match_elements.region_bim_models_help": "Pick the source model — quantities are read from here",
     "match_elements.region_sessions": "Matching session",
-    "match_elements.region_sessions_help":
-      "Resume an existing run or start a new one",
+    "match_elements.region_sessions_help": "Resume an existing run or start a new one",
     "match_elements.region_settings": "Match settings",
-    "match_elements.region_settings_help":
-      "Tune how matches are found and what shows up below",
+    "match_elements.region_settings_help": "Tune how matches are found and what shows up below",
     "match_elements.session_confirmed": "confirmed",
-    "match_elements.region_lang_help":
-      "Project region resolves to this language → cwicr_{{lang}}_v3 collection",
+    "match_elements.region_lang_help": "Project region resolves to this language → cwicr_{{lang}}_v3 collection",
     "match_elements.project_settings": "Project settings",
-    "match_elements.project_settings_help":
-      "Open project settings (region, currency, locale, fx rates)",
+    "match_elements.project_settings_help": "Open project settings (region, currency, locale, fx rates)",
     "match_elements.vector_status_loading": "Checking vector DB…",
     "match_elements.vector_status_ready": "Vector DB ready",
-    "match_elements.vector_status_ready_detail":
-      "{{lang}} · {{rateCount}} rates · {{collection}}",
+    "match_elements.vector_status_ready_detail": "{{lang}} · {{rateCount}} rates · {{collection}}",
     "match_elements.vector_status_empty": "Vector DB empty",
-    "match_elements.vector_status_empty_detail":
-      "{{lang}} · {{collection}} loaded but 0 rates — vectorize on /costs",
+    "match_elements.vector_status_empty_detail": "{{lang}} · {{collection}} loaded but 0 rates — vectorize on /costs",
     "match_elements.vector_status_missing": "Collection not loaded",
-    "match_elements.vector_status_missing_detail":
-      '{{collection}} for language "{{lang}}" not in Qdrant — visit /costs to vectorize',
+    "match_elements.vector_status_missing_detail": "{{collection}} for language \"{{lang}}\" not in Qdrant — visit /costs to vectorize",
     "match_elements.vector_status_no_country": "Region/language unknown",
-    "match_elements.vector_status_no_country_detail":
-      "Set the project region in /projects/.../settings to pin the collection",
+    "match_elements.vector_status_no_country_detail": "Set the project region in /projects/.../settings to pin the collection",
     "match_elements.vector_status_non_qdrant": "Legacy LanceDB backend",
-    "match_elements.vector_status_non_qdrant_detail":
-      "Per-language collections only apply on Qdrant — current engine is LanceDB",
+    "match_elements.vector_status_non_qdrant_detail": "Per-language collections only apply on Qdrant — current engine is LanceDB",
     "match_elements.vector_status_disconnected": "Vector DB unreachable",
-    "match_elements.vector_status_disconnected_detail":
-      "Qdrant is not responding · {{error}}",
-    "match_elements.vector_status_disconnected_help":
-      "Qdrant is not responding — matchers will fall back to lexical only",
+    "match_elements.vector_status_disconnected_detail": "Qdrant is not responding · {{error}}",
+    "match_elements.vector_status_disconnected_help": "Qdrant is not responding — matchers will fall back to lexical only",
     "match_elements.vector_status_open_costs": "Open /costs",
-    "match_elements.lang_mismatch_title":
-      "Catalogue language does not match project",
-    "match_elements.lang_mismatch_detail":
-      "Project region {{region}} speaks {{projLang}}, but the bound catalogue {{catalogue}} is in {{boundLang}}. Match results will surface in the wrong language until you re-bind.",
+    "match_elements.lang_mismatch_title": "Catalogue language does not match project",
+    "match_elements.lang_mismatch_detail": "Project region {{region}} speaks {{projLang}}, but the bound catalogue {{catalogue}} is in {{boundLang}}. Match results will surface in the wrong language until you re-bind.",
     "match_elements.lang_mismatch_rebind": "Re-bind catalogue",
     "match_elements.lang_mismatch_open_costs": "Or load a {{lang}} catalogue",
     "match_elements.advisor_mismatch_title": "Switch to a {{lang}} catalogue",
-    "match_elements.advisor_mismatch_detail":
-      "Pick a {{lang}} catalogue below — your project speaks {{lang}}, so matches need to come from a same-language rate book.",
-    "match_elements.advisor_missing_title":
-      "{{lang}} vector collection not loaded",
-    "match_elements.advisor_missing_detail":
-      "Pick a ready catalogue below, or load a new one.",
+    "match_elements.advisor_mismatch_detail": "Pick a {{lang}} catalogue below — your project speaks {{lang}}, so matches need to come from a same-language rate book.",
+    "match_elements.advisor_missing_title": "{{lang}} vector collection not loaded",
+    "match_elements.advisor_missing_detail": "Pick a ready catalogue below, or load a new one.",
     "match_elements.advisor_empty_title": "Catalogue not vectorised yet",
-    "match_elements.advisor_empty_detail":
-      "Pick a different ready catalogue below, or vectorise the current one.",
+    "match_elements.advisor_empty_detail": "Pick a different ready catalogue below, or vectorise the current one.",
     "match_elements.advisor_loading": "Loading available catalogues…",
     "match_elements.advisor_region_match": "Best",
     "match_elements.advisor_rates_count": "{{n}} rates",
-    "match_elements.advisor_none_available":
-      "No {{lang}} catalogues are loaded yet. Visit /costs to import one.",
-    "match_elements.advisor_install_hint":
-      "No {{lang}} catalogues loaded yet. One-click install:",
+    "match_elements.advisor_none_available": "No {{lang}} catalogues are loaded yet. Visit /costs to import one.",
+    "match_elements.advisor_install_hint": "No {{lang}} catalogues loaded yet. One-click install:",
     "match_elements.advisor_install_size": "~{{mb}} MB · {{lang}}",
     "match_elements.advisor_browse_all": "All on Hugging Face",
     "match_elements.hero_eyebrow": "BIM → BOQ",
@@ -5596,17 +4990,12 @@ const resource = {
     "match_elements.step_4_help": "Write to BOQ",
     "match_elements.embedder_loading": "Checking language model…",
     "match_elements.embedder_required_title": "Free language model required",
-    "match_elements.embedder_required_body":
-      "OpenConstructionERP uses BGE-M3 — a free, open-source multilingual encoder by BAAI. It runs entirely on your machine. No API key. No cloud calls. Install once with one command:",
+    "match_elements.embedder_required_body": "OpenConstructionERP uses BGE-M3 — a free, open-source multilingual encoder by BAAI. It runs entirely on your machine. No API key. No cloud calls. Install once with one command:",
     "match_elements.embedder_loaded_title": "Language model ready",
-    "match_elements.embedder_loaded_caption":
-      "{{model}} · {{precision}} · ~{{size}} MB · {{license}} · {{n}}+ languages",
-    "match_elements.embedder_runtime_caption":
-      "Runtime: {{runtime}} · model_loaded={{loaded}}",
-    "match_elements.embedder_install_hint_after":
-      "After install, restart the backend.",
-    "match_elements.embedder_size_caption":
-      "~{{int8}} MB download (INT8) or ~{{fp32}} MB (FP32).",
+    "match_elements.embedder_loaded_caption": "{{model}} · {{precision}} · ~{{size}} MB · {{license}} · {{n}}+ languages",
+    "match_elements.embedder_runtime_caption": "Runtime: {{runtime}} · model_loaded={{loaded}}",
+    "match_elements.embedder_install_hint_after": "After install, restart the backend.",
+    "match_elements.embedder_size_caption": "~{{int8}} MB download (INT8) or ~{{fp32}} MB (FP32).",
     "match_elements.embedder_languages_caption": "{{n}}+ languages",
     "match_elements.embedder_runs_locally": "Runs locally",
     "match_elements.embedder_no_api_key": "No API key",
@@ -5617,10 +5006,8 @@ const resource = {
     "match_elements.analytics_title": "Match analytics",
     "match_elements.analytics_alerts_count": "{{n}} alert",
     "match_elements.analytics_alerts_count_plural": "{{n}} alerts",
-    "match_elements.analytics_caption":
-      "{{n}} searches · {{picks}} picks · pick rate {{rate}} · mean score {{score}} · last {{days}}d",
-    "match_elements.analytics_empty_caption":
-      "No searches yet in the last {{days}}d window — run /match-elements to populate.",
+    "match_elements.analytics_caption": "{{n}} searches · {{picks}} picks · pick rate {{rate}} · mean score {{score}} · last {{days}}d",
+    "match_elements.analytics_empty_caption": "No searches yet in the last {{days}}d window — run /match-elements to populate.",
     "match_elements.analytics_window_label": "Window",
     "match_elements.analytics_window_days": "{{n}}d",
     "match_elements.analytics_tile_searches": "Searches",
@@ -5661,18 +5048,14 @@ const resource = {
     "match_progress.title_running": "Đang so khớp",
     "match_progress.title_done": "Hoàn tất so khớp",
     "match_progress.title_error": "So khớp thất bại",
-    "match_progress.subtitle_running":
-      "We’re searching the catalogue with vector + lexical + region signals. Safe to leave open in a tab.",
-    "match_progress.subtitle_done":
-      "All stages green — handing over to the review panel.",
-    "match_progress.subtitle_error":
-      "The matcher couldn’t finish — try again or pick a different catalogue.",
+    "match_progress.subtitle_running": "We’re searching the catalogue with vector + lexical + region signals. Safe to leave open in a tab.",
+    "match_progress.subtitle_done": "All stages green — handing over to the review panel.",
+    "match_progress.subtitle_error": "The matcher couldn’t finish — try again or pick a different catalogue.",
     "match_progress.elapsed": "Đã trôi qua",
     "match_progress.overall_aria": "Overall match progress",
     "match_progress.headline_done": "All done — opening your results",
     "match_progress.headline_error": "Something went wrong",
-    "match_progress.headline_long":
-      "Almost done — large projects can take a minute",
+    "match_progress.headline_long": "Almost done — large projects can take a minute",
     "match_progress.stage_load": "Loading BIM elements",
     "match_progress.stage_embed": "Building embeddings",
     "match_progress.stage_vector": "Vector search (top candidates)",
@@ -5682,8 +5065,7 @@ const resource = {
     "match_progress.error_label": "Error details",
     "match_progress.error_fallback": "Unknown error",
     "match_progress.retry": "Try again",
-    "match_progress.long_hint":
-      "Still working — first runs on large BIM models take longer because vectors are warming up. Subsequent runs on the same project are much faster.",
+    "match_progress.long_hint": "Still working — first runs on large BIM models take longer because vectors are warming up. Subsequent runs on the same project are much faster.",
     "match_progress.toast_failed_title": "So khớp thất bại",
     "projects.team.strip_label": "Project team",
     "projects.team.empty": "No members yet",
@@ -5701,13 +5083,11 @@ const resource = {
     "projects.team.role.viewer": "Viewer",
     "projects.team.role.project_manager": "Project manager",
     "onboarding.company_property_developer": "Chủ đầu tư bất động sản",
-    "onboarding.company_property_developer_desc":
-      "Đội ngũ phát triển bất động sản",
+    "onboarding.company_property_developer_desc": "Đội ngũ phát triển bất động sản",
     "onboarding.explore_all_modules": "Khám phá tất cả {{count}} mô-đun",
     "boq.add_child_position": "Thêm hạng mục con",
     "boq.add_sub_section": "Thêm phần phụ",
-    "boq.ai_no_answer":
-      "Trợ lý không trả về câu trả lời. Vui lòng diễn đạt lại hoặc thử lại.",
+    "boq.ai_no_answer": "Trợ lý không trả về câu trả lời. Vui lòng diễn đạt lại hoặc thử lại.",
     "boq.compare_added": "Đã thêm",
     "boq.compare_against": "So sánh với",
     "boq.compare_btn": "So sánh",
@@ -5723,8 +5103,7 @@ const resource = {
     "boq.compare_qty": "Khối lượng",
     "boq.compare_rate": "Đơn giá",
     "boq.compare_removed": "Đã xóa",
-    "boq.compare_select_hint":
-      "Chọn một bảng tiên lượng khác ở trên để xem so sánh theo từng dòng.",
+    "boq.compare_select_hint": "Chọn một bảng tiên lượng khác ở trên để xem so sánh theo từng dòng.",
     "boq.compare_unchanged": "Không đổi",
     "boq.compare_ct_added": "Đã thêm",
     "boq.compare_ct_removed": "Đã xóa",
@@ -5741,8 +5120,7 @@ const resource = {
     "boq.model_link_agg_first": "Đầu tiên",
     "boq.model_link_create": "Tạo liên kết",
     "boq.model_link_created": "Đã tạo liên kết mô hình",
-    "boq.model_link_created_hint":
-      "Khối lượng chưa thay đổi — dùng «Làm mới từ mô hình» rồi Áp dụng để cập nhật.",
+    "boq.model_link_created_hint": "Khối lượng chưa thay đổi — dùng «Làm mới từ mô hình» rồi Áp dụng để cập nhật.",
     "boq.model_link_delete": "Xóa liên kết",
     "boq.model_link_delete_failed": "Không thể xóa liên kết mô hình",
     "boq.model_link_deleted": "Đã xóa liên kết mô hình",
@@ -5761,65 +5139,48 @@ const resource = {
     "boq.model_link_status_active": "Đã đồng bộ",
     "boq.model_link_status_stale": "Cũ",
     "boq.model_link_status_broken": "Đứt",
-    "boq.model_link_subtitle":
-      "Hạng mục {{ordinal}} — gắn khối lượng với phần tử mô hình BIM",
+    "boq.model_link_subtitle": "Hạng mục {{ordinal}} — gắn khối lượng với phần tử mô hình BIM",
     "boq.model_link_title": "Liên kết mô hình",
     "boq.model_link_version": "mô hình v{{v}}",
-    "boq.model_review_all_synced":
-      "Tất cả khối lượng đã liên kết đồng bộ với mô hình.",
+    "boq.model_review_all_synced": "Tất cả khối lượng đã liên kết đồng bộ với mô hình.",
     "boq.model_review_applied": "Đã áp dụng {{count}} cập nhật khối lượng",
     "boq.model_review_apply": "Áp dụng {{count}} đã chọn",
     "boq.model_review_apply_failed": "Áp dụng thất bại",
     "boq.model_review_btn": "Đồng bộ mô hình",
-    "boq.model_review_btn_hint":
-      "Lấy lại khối lượng từ mô hình BIM đã liên kết",
-    "boq.model_review_hint":
-      "Tính lại khối lượng đã gắn theo phiên bản mô hình mới nhất. Không có gì thay đổi cho đến khi bạn Áp dụng.",
+    "boq.model_review_btn_hint": "Lấy lại khối lượng từ mô hình BIM đã liên kết",
+    "boq.model_review_hint": "Tính lại khối lượng đã gắn theo phiên bản mô hình mới nhất. Không có gì thay đổi cho đến khi bạn Áp dụng.",
     "boq.model_review_missing": "Thiếu {{count}}",
-    "boq.model_review_no_links":
-      "Không có liên kết mô hình trong bảng tiên lượng này",
+    "boq.model_review_no_links": "Không có liên kết mô hình trong bảng tiên lượng này",
     "boq.model_review_refresh": "Làm mới từ mô hình",
     "boq.model_review_refresh_failed": "Làm mới từ mô hình thất bại",
     "boq.model_review_run": "Chạy làm mới để xem các thay đổi từ mô hình.",
     "boq.model_review_title": "Soát xét khối lượng từ mô hình",
-    "boq.position_added_edit_hint":
-      "Nhập mô tả, sau đó Tab qua đơn vị, khối lượng và đơn giá",
-    "boq.link_badge_instance":
-      "Bản liên kết của mã {{code}} — sửa định nghĩa sẽ làm nó khác đi",
+    "boq.position_added_edit_hint": "Nhập mô tả, sau đó Tab qua đơn vị, khối lượng và đơn giá",
+    "boq.link_badge_instance": "Bản liên kết của mã {{code}} — sửa định nghĩa sẽ làm nó khác đi",
     "boq.link_badge_master": "Bản gốc của mã {{code}} — đã liên kết {{count}}",
     "boq.link_master_badge": "Bản gốc",
-    "boq.link_propagated_msg":
-      "Đã cập nhật {{count}} hạng mục đã liên kết trong dự án này.",
+    "boq.link_propagated_msg": "Đã cập nhật {{count}} hạng mục đã liên kết trong dự án này.",
     "boq.link_propagated_title": "Đã lan truyền định nghĩa",
-    "boq.max_depth_reached_tooltip":
-      "Đã đạt độ sâu lồng tối đa {{max}} cấp — làm phẳng cấu trúc hoặc dùng ít cấp con hơn.",
-    "boq.resource_link_propagated_msg":
-      "Đã cập nhật tài nguyên dùng chung trên {{count}} hạng mục khác trong dự án này.",
+    "boq.max_depth_reached_tooltip": "Đã đạt độ sâu lồng tối đa {{max}} cấp — làm phẳng cấu trúc hoặc dùng ít cấp con hơn.",
+    "boq.resource_link_propagated_msg": "Đã cập nhật tài nguyên dùng chung trên {{count}} hạng mục khác trong dự án này.",
     "boq.resource_link_propagated_title": "Đã lan truyền định nghĩa tài nguyên",
     "boq.link_role_instance": "Bản liên kết",
     "boq.link_role_master": "Bản gốc (định nghĩa chuẩn)",
-    "boq.link_unlinked_msg":
-      "Chỉnh sửa của bạn đã làm thay đổi bản sao liên kết này nên nó không còn theo mã dùng chung. Nếu không cố ý tách, hãy đặt lại mã.",
+    "boq.link_unlinked_msg": "Chỉnh sửa của bạn đã làm thay đổi bản sao liên kết này nên nó không còn theo mã dùng chung. Nếu không cố ý tách, hãy đặt lại mã.",
     "boq.link_unlinked_title": "Hạng mục đã tách khỏi mã dùng chung",
-    "boq.linked_positions_count":
-      "{{total}} hạng mục dùng chung mã này ({{instances}} bản liên kết). Bản gốc là định nghĩa chuẩn; sửa nó sẽ lan truyền tới mọi bản trong dự án này.",
+    "boq.linked_positions_count": "{{total}} hạng mục dùng chung mã này ({{instances}} bản liên kết). Bản gốc là định nghĩa chuẩn; sửa nó sẽ lan truyền tới mọi bản trong dự án này.",
     "boq.linked_positions_error": "Không thể tải các hạng mục đã liên kết.",
-    "boq.linked_positions_none":
-      "Hạng mục này độc lập — không có hạng mục nào khác dùng chung mã của nó.",
-    "boq.linked_positions_subtitle":
-      "Mã {{code}} — đang xem từ hạng mục {{ordinal}}",
+    "boq.linked_positions_none": "Hạng mục này độc lập — không có hạng mục nào khác dùng chung mã của nó.",
+    "boq.linked_positions_subtitle": "Mã {{code}} — đang xem từ hạng mục {{ordinal}}",
     "boq.linked_positions_title": "Hạng mục đã liên kết",
     "boq.no_description": "(không có mô tả)",
     "boq.reuse_code_action": "Dùng lại mã hiện có…",
     "boq.reuse_code_existing": "Mã hiện có: {{codes}}",
-    "boq.reuse_code_msg":
-      "Đã tạo bản liên kết — {{count}} hạng mục dùng chung mã này. Khối lượng có thể chỉnh sửa độc lập.",
-    "boq.reuse_code_prompt":
-      "Nhập mã hiện có để dùng lại ở đây (định nghĩa và các hạng mục con được sao chép; khối lượng vẫn độc lập):",
+    "boq.reuse_code_msg": "Đã tạo bản liên kết — {{count}} hạng mục dùng chung mã này. Khối lượng có thể chỉnh sửa độc lập.",
+    "boq.reuse_code_prompt": "Nhập mã hiện có để dùng lại ở đây (định nghĩa và các hạng mục con được sao chép; khối lượng vẫn độc lập):",
     "boq.reuse_code_title": "Đã dùng lại mã {{code}}",
     "boq.show_linked": "Hiện hạng mục đã liên kết",
-    "boq.unlink_done_msg":
-      "Giữ mã {{code}}. Hạng mục này không còn theo mã dùng chung; giá trị của nó được giữ lại.",
+    "boq.unlink_done_msg": "Giữ mã {{code}}. Hạng mục này không còn theo mã dùng chung; giá trị của nó được giữ lại.",
     "boq.unlink_done_title": "Đã tách hạng mục",
     "boq.unlink_failed": "Tách hạng mục thất bại",
     "boq.unlink_this": "Tách hạng mục này",
@@ -5829,8 +5190,7 @@ const resource = {
     "login.community_sub": "Nhận trợ giúp & thảo luận",
     "login.brand_edit": "Tùy chỉnh logo",
     "login.brand_title": "Xây dựng thương hiệu trắng",
-    "login.brand_desc":
-      "Hiển thị trên màn hình đăng nhập này và toàn ứng dụng. Chỉ lưu trong trình duyệt này.",
+    "login.brand_desc": "Hiển thị trên màn hình đăng nhập này và toàn ứng dụng. Chỉ lưu trong trình duyệt này.",
     "login.brand_upload": "Tải logo lên",
     "login.brand_name_ph": "Tên công ty",
     "login.brand_reset": "Đặt lại về mặc định",
@@ -5842,10 +5202,8 @@ const resource = {
     "nav.phase_execution": "Thi công",
     "nav.phase_closure": "Chất lượng & Đóng dự án",
     "nav.clash_detection": "Phát hiện va chạm",
-    "schedule_advanced.master_hint":
-      "Chọn một tiến độ chính để biến nó thành kế hoạch làm việc cho các tab Giai đoạn, Look-Ahead, Hàng tuần và Ràng buộc. Dùng tác vụ dòng để đổi tên, đổi ngày dự kiến và trạng thái, hoặc xóa nó.",
-    "schedule_advanced.no_master_yet_desc":
-      "Tiến độ chính là kế hoạch ở cấp cao nhất, mà mọi kế hoạch giai đoạn, look-ahead và kế hoạch tuần đều tổng hợp vào. Tạo một cái để bắt đầu pull planning — bạn có thể đổi tên, đổi ngày, hoặc xóa nó bất cứ lúc nào.",
+    "schedule_advanced.master_hint": "Chọn một tiến độ chính để biến nó thành kế hoạch làm việc cho các tab Giai đoạn, Look-Ahead, Hàng tuần và Ràng buộc. Dùng tác vụ dòng để đổi tên, đổi ngày dự kiến và trạng thái, hoặc xóa nó.",
+    "schedule_advanced.no_master_yet_desc": "Tiến độ chính là kế hoạch ở cấp cao nhất, mà mọi kế hoạch giai đoạn, look-ahead và kế hoạch tuần đều tổng hợp vào. Tạo một cái để bắt đầu pull planning — bạn có thể đổi tên, đổi ngày, hoặc xóa nó bất cứ lúc nào.",
     "schedule_advanced.active_selection": "Kế hoạch làm việc",
     "schedule_advanced.master_status.active": "Đang hoạt động",
     "schedule_advanced.master_status.archived": "Đã lưu trữ",
@@ -5853,155 +5211,95 @@ const resource = {
     "schedule_advanced.master_updated": "Đã cập nhật tiến độ chính",
     "schedule_advanced.master_deleted": "Đã xóa tiến độ chính",
     "schedule_advanced.delete_master_title": "Xóa tiến độ chính?",
-    "schedule_advanced.delete_master_message":
-      '"{{name}}" and everything under it — phase plans, look-aheads, weekly work plans, commitments and baselines — will be permanently deleted. This cannot be undone.',
+    "schedule_advanced.delete_master_message": "\"{{name}}\" and everything under it — phase plans, look-aheads, weekly work plans, commitments and baselines — will be permanently deleted. This cannot be undone.",
     "schedule_advanced.err_master_name_required": "Cần tên tiến độ chính.",
     "schedule_advanced.master_name_placeholder": "vd. Tiến độ chính xây dựng",
-    "schedule_advanced.master_status_hint":
-      "Lưu trữ tiến độ để giữ lịch sử mà không dùng làm kế hoạch làm việc. Tiến độ đã lưu trữ có thể kích hoạt lại tại đây bất cứ lúc nào.",
-    "schedule_advanced.master_notes_placeholder":
-      "Phạm vi, tham chiếu hợp đồng, mốc quan trọng…",
+    "schedule_advanced.master_status_hint": "Lưu trữ tiến độ để giữ lịch sử mà không dùng làm kế hoạch làm việc. Tiến độ đã lưu trữ có thể kích hoạt lại tại đây bất cứ lúc nào.",
+    "schedule_advanced.master_notes_placeholder": "Phạm vi, tham chiếu hợp đồng, mốc quan trọng…",
     "files.cta.add_first_short": "Thêm tệp",
     "files.folder.files_count": "tệp",
     "files.folder.subfolders": "{{count}} thư mục",
     "files.folder.share": "{{pct}}% tổng dung lượng",
     "notifications.safety.incident_created": "Đã báo cáo sự cố an toàn",
-    "notifications.safety.incident_created_body":
-      "Sự cố {{incident_number}} ({{severity}}): {{description}}",
+    "notifications.safety.incident_created_body": "Sự cố {{incident_number}} ({{severity}}): {{description}}",
     "notifications.safety.high_risk_observation": "Quan sát an toàn rủi ro cao",
-    "notifications.safety.high_risk_body":
-      "Quan sát {{observation_number}} (rủi ro {{risk_score}}): {{description}}",
+    "notifications.safety.high_risk_body": "Quan sát {{observation_number}} (rủi ro {{risk_score}}): {{description}}",
     "notifications.bi.alert.title": "Cảnh báo dashboard kích hoạt",
-    "notifications.bi.alert.body":
-      "{{alert_name}} — {{kpi_code}} là {{value}} ({{condition}} ngưỡng {{threshold}}).",
+    "notifications.bi.alert.body": "{{alert_name}} — {{kpi_code}} là {{value}} ({{condition}} ngưỡng {{threshold}}).",
     "notifications.bi.report.title": "Báo cáo theo lịch đã sẵn sàng",
-    "notifications.bi.report.body":
-      "Báo cáo {{report_code}} được tạo với {{row_count}} dòng.",
+    "notifications.bi.report.body": "Báo cáo {{report_code}} được tạo với {{row_count}} dòng.",
     "notifications.supplier_catalogs.po.sent.title": "Đã gửi đơn hàng mua",
-    "notifications.supplier_catalogs.po.sent.body":
-      "Đã gửi đơn hàng cho nhà cung cấp {{vendor_id}} trị giá {{total}} {{currency}}.",
-    "notifications.supplier_catalogs.invoice.exception.title":
-      "Bất thường hóa đơn",
-    "notifications.supplier_catalogs.invoice.exception.body":
-      "Hóa đơn cho đơn hàng {{po_id}} cần rà soát: {{reason}}",
+    "notifications.supplier_catalogs.po.sent.body": "Đã gửi đơn hàng cho nhà cung cấp {{vendor_id}} trị giá {{total}} {{currency}}.",
+    "notifications.supplier_catalogs.invoice.exception.title": "Bất thường hóa đơn",
+    "notifications.supplier_catalogs.invoice.exception.body": "Hóa đơn cho đơn hàng {{po_id}} cần rà soát: {{reason}}",
     "notifications.supplier_catalogs.stock.low.title": "Cảnh báo tồn kho thấp",
-    "notifications.supplier_catalogs.stock.low.body":
-      "{{sku}}: còn {{available_qty}}, ở hoặc dưới điểm đặt hàng lại {{reorder_point}}.",
-    "notifications.supplier_catalogs.vendor.blacklisted.title":
-      "Nhà cung cấp bị đưa vào danh sách đen",
-    "notifications.supplier_catalogs.vendor.blacklisted.body":
-      "Nhà cung cấp {{code}} bị đưa vào danh sách đen: {{reason}}",
-    "notifications.supplier_catalogs.kyc.expired.title":
-      "Tài liệu tuân thủ nhà cung cấp hết hạn",
-    "notifications.supplier_catalogs.kyc.expired.body":
-      "{{doc_type}} đã hết hạn vào {{expires_on}}.",
-    "notifications.supplier_catalogs.kyc.expiring.title":
-      "Tài liệu tuân thủ nhà cung cấp sắp hết hạn",
-    "notifications.supplier_catalogs.kyc.expiring.body":
-      "{{doc_type}} hết hạn vào {{expires_on}} (còn {{days_until_expiry}} ngày).",
+    "notifications.supplier_catalogs.stock.low.body": "{{sku}}: còn {{available_qty}}, ở hoặc dưới điểm đặt hàng lại {{reorder_point}}.",
+    "notifications.supplier_catalogs.vendor.blacklisted.title": "Nhà cung cấp bị đưa vào danh sách đen",
+    "notifications.supplier_catalogs.vendor.blacklisted.body": "Nhà cung cấp {{code}} bị đưa vào danh sách đen: {{reason}}",
+    "notifications.supplier_catalogs.kyc.expired.title": "Tài liệu tuân thủ nhà cung cấp hết hạn",
+    "notifications.supplier_catalogs.kyc.expired.body": "{{doc_type}} đã hết hạn vào {{expires_on}}.",
+    "notifications.supplier_catalogs.kyc.expiring.title": "Tài liệu tuân thủ nhà cung cấp sắp hết hạn",
+    "notifications.supplier_catalogs.kyc.expiring.body": "{{doc_type}} hết hạn vào {{expires_on}} (còn {{days_until_expiry}} ngày).",
     "notifications.resources.cert_expiring.title": "Chứng chỉ sắp hết hạn",
-    "notifications.resources.cert_expiring.body":
-      "{{resource_name}} — {{cert_type}} hết hạn {{valid_until}} (còn {{days_left}} ngày).",
-    "notifications.resources.assignment_proposed.title":
-      "Đề xuất phân bổ tài nguyên",
-    "notifications.resources.assignment_proposed.body":
-      "Đề xuất cho công việc {{task}} bắt đầu {{start}}.",
-    "notifications.resources.assignment_confirmed.title":
-      "Xác nhận phân bổ tài nguyên",
-    "notifications.resources.assignment_confirmed.body":
-      "Đã xác nhận phân bổ cho công việc {{task}}.",
+    "notifications.resources.cert_expiring.body": "{{resource_name}} — {{cert_type}} hết hạn {{valid_until}} (còn {{days_left}} ngày).",
+    "notifications.resources.assignment_proposed.title": "Đề xuất phân bổ tài nguyên",
+    "notifications.resources.assignment_proposed.body": "Đề xuất cho công việc {{task}} bắt đầu {{start}}.",
+    "notifications.resources.assignment_confirmed.title": "Xác nhận phân bổ tài nguyên",
+    "notifications.resources.assignment_confirmed.body": "Đã xác nhận phân bổ cho công việc {{task}}.",
     "notifications.contracts.signed.title": "Đã ký hợp đồng",
-    "notifications.contracts.signed.body":
-      "Hợp đồng {{code}} đã ký giá trị {{value}} {{currency}}.",
-    "notifications.contracts.claim_submitted.title":
-      "Đã nộp khiếu nại hợp đồng",
-    "notifications.contracts.claim_submitted.body":
-      "Đã nộp khiếu nại trị giá {{amount}} {{currency}}.",
-    "notifications.contracts.claim_paid.title":
-      "Đã thanh toán khiếu nại hợp đồng",
-    "notifications.contracts.claim_paid.body":
-      "Khiếu nại đã thanh toán: {{amount}} {{currency}}.",
+    "notifications.contracts.signed.body": "Hợp đồng {{code}} đã ký giá trị {{value}} {{currency}}.",
+    "notifications.contracts.claim_submitted.title": "Đã nộp khiếu nại hợp đồng",
+    "notifications.contracts.claim_submitted.body": "Đã nộp khiếu nại trị giá {{amount}} {{currency}}.",
+    "notifications.contracts.claim_paid.title": "Đã thanh toán khiếu nại hợp đồng",
+    "notifications.contracts.claim_paid.body": "Khiếu nại đã thanh toán: {{amount}} {{currency}}.",
     "notifications.contracts.retention_released.title": "Đã giải tỏa giữ lại",
-    "notifications.contracts.retention_released.body":
-      "Hợp đồng {{contract_code}}: đã giải tỏa {{amount_released}}, còn {{remaining}}.",
+    "notifications.contracts.retention_released.body": "Hợp đồng {{contract_code}}: đã giải tỏa {{amount_released}}, còn {{remaining}}.",
     "notifications.crm.lead_qualified.title": "Lead đủ điều kiện",
-    "notifications.crm.lead_qualified.body":
-      "Lead {{name}} đã được đánh giá đủ điều kiện.",
+    "notifications.crm.lead_qualified.body": "Lead {{name}} đã được đánh giá đủ điều kiện.",
     "notifications.crm.opportunity_won.title": "Thắng cơ hội",
-    "notifications.crm.opportunity_won.body":
-      "{{name}} thắng — giá trị {{value}}.",
+    "notifications.crm.opportunity_won.body": "{{name}} thắng — giá trị {{value}}.",
     "notifications.crm.opportunity_scored.title": "Cơ hội đã chấm điểm",
-    "notifications.crm.opportunity_scored.body":
-      "{{title}} đạt {{score}} điểm (nhóm {{band}}).",
+    "notifications.crm.opportunity_scored.body": "{{title}} đạt {{score}} điểm (nhóm {{band}}).",
     "notifications.carbon.boq_position_assigned.title": "Đã gán hệ số các-bon",
-    "notifications.carbon.boq_position_assigned.body":
-      "Hạng mục BOQ {{boq_position_id}}: {{carbon_kg}} kg CO₂e ({{stage}}).",
-    "notifications.property_dev.buyer_contracted.title":
-      "Người mua ký hợp đồng",
-    "notifications.property_dev.buyer_contracted.body":
-      "{{buyer}} ký hợp đồng cho lô đất {{plot}}.",
+    "notifications.carbon.boq_position_assigned.body": "Hạng mục BOQ {{boq_position_id}}: {{carbon_kg}} kg CO₂e ({{stage}}).",
+    "notifications.property_dev.buyer_contracted.title": "Người mua ký hợp đồng",
+    "notifications.property_dev.buyer_contracted.body": "{{buyer}} ký hợp đồng cho lô đất {{plot}}.",
     "notifications.property_dev.handover_completed.title": "Hoàn tất bàn giao",
-    "notifications.property_dev.handover_completed.body":
-      "Đã hoàn tất bàn giao lô đất {{plot}}.",
+    "notifications.property_dev.handover_completed.body": "Đã hoàn tất bàn giao lô đất {{plot}}.",
     "notifications.property_dev.warranty_raised.title": "Nâng yêu cầu bảo hành",
-    "notifications.property_dev.warranty_raised.body":
-      "Yêu cầu bảo hành {{category}} đã nâng cho lô đất {{plot}}.",
+    "notifications.property_dev.warranty_raised.body": "Yêu cầu bảo hành {{category}} đã nâng cho lô đất {{plot}}.",
     "notifications.bid_management.invitation_sent.title": "Đã gửi thư mời thầu",
-    "notifications.bid_management.invitation_sent.body":
-      "Đã gửi thư mời cho gói {{package}}, hạn {{due}}.",
+    "notifications.bid_management.invitation_sent.body": "Đã gửi thư mời cho gói {{package}}, hạn {{due}}.",
     "notifications.bid_management.awarded.title": "Trúng thầu",
-    "notifications.bid_management.awarded.body":
-      "Trao gói {{package}} với giá {{amount}}.",
-    "notifications.schedule_advanced.constraint_cleared.title":
-      "Đã gỡ ràng buộc tiến độ",
-    "notifications.schedule_advanced.constraint_cleared.body":
-      "Công việc {{task}} không còn bị chặn.",
+    "notifications.bid_management.awarded.body": "Trao gói {{package}} với giá {{amount}}.",
+    "notifications.schedule_advanced.constraint_cleared.title": "Đã gỡ ràng buộc tiến độ",
+    "notifications.schedule_advanced.constraint_cleared.body": "Công việc {{task}} không còn bị chặn.",
     "notifications.daily_diary.signed.title": "Đã ký nhật ký công trường",
-    "notifications.daily_diary.signed.body":
-      "Nhật ký ngày {{date}} đã được ký.",
-    "notifications.service.ticket_dispatched.title":
-      "Đã điều phối phiếu dịch vụ",
-    "notifications.service.ticket_dispatched.body":
-      "Phiếu {{ticket_number}} đã điều phối (ưu tiên {{priority}}).",
-    "notifications.service.ticket_resolved.title":
-      "Đã giải quyết phiếu dịch vụ",
-    "notifications.service.ticket_resolved.body":
-      "Phiếu {{ticket_number}} đã được giải quyết.",
-    "notifications.service.work_order_billed.title":
-      "Đã lập hóa đơn lệnh sản xuất",
-    "notifications.service.work_order_billed.body":
-      "Lệnh sản xuất {{wo_number}} lập hóa đơn {{amount}} {{currency}}.",
+    "notifications.daily_diary.signed.body": "Nhật ký ngày {{date}} đã được ký.",
+    "notifications.service.ticket_dispatched.title": "Đã điều phối phiếu dịch vụ",
+    "notifications.service.ticket_dispatched.body": "Phiếu {{ticket_number}} đã điều phối (ưu tiên {{priority}}).",
+    "notifications.service.ticket_resolved.title": "Đã giải quyết phiếu dịch vụ",
+    "notifications.service.ticket_resolved.body": "Phiếu {{ticket_number}} đã được giải quyết.",
+    "notifications.service.work_order_billed.title": "Đã lập hóa đơn lệnh sản xuất",
+    "notifications.service.work_order_billed.body": "Lệnh sản xuất {{wo_number}} lập hóa đơn {{amount}} {{currency}}.",
     "notifications.subcontractors.prequal_submitted.title": "Đã nộp sơ tuyển",
-    "notifications.subcontractors.prequal_submitted.body":
-      "{{subcontractor_name}} đã nộp sơ tuyển.",
-    "notifications.subcontractors.payment_app_submitted.title":
-      "Đã nộp hồ sơ thanh toán",
-    "notifications.subcontractors.payment_app_submitted.body":
-      "Hồ sơ {{application_number}} đã nộp với giá trị {{net_amount}} {{currency}}.",
-    "notifications.subcontractors.retention_released.title":
-      "Đã giải tỏa giữ lại của nhà thầu phụ",
-    "notifications.subcontractors.retention_released.body":
-      "Giải tỏa giữ lại {{amount}} {{currency}}.",
+    "notifications.subcontractors.prequal_submitted.body": "{{subcontractor_name}} đã nộp sơ tuyển.",
+    "notifications.subcontractors.payment_app_submitted.title": "Đã nộp hồ sơ thanh toán",
+    "notifications.subcontractors.payment_app_submitted.body": "Hồ sơ {{application_number}} đã nộp với giá trị {{net_amount}} {{currency}}.",
+    "notifications.subcontractors.retention_released.title": "Đã giải tỏa giữ lại của nhà thầu phụ",
+    "notifications.subcontractors.retention_released.body": "Giải tỏa giữ lại {{amount}} {{currency}}.",
     "notifications.equipment.assigned.title": "Đã phân bổ thiết bị",
-    "notifications.equipment.assigned.body":
-      "{{equipment_code}} được phân bổ cho {{project_name}}.",
-    "notifications.equipment.damage_reported.title":
-      "Đã báo cáo hư hỏng thiết bị",
-    "notifications.equipment.damage_reported.body":
-      "Hư hỏng {{equipment_code}} được báo cáo ({{severity}}).",
+    "notifications.equipment.assigned.body": "{{equipment_code}} được phân bổ cho {{project_name}}.",
+    "notifications.equipment.damage_reported.title": "Đã báo cáo hư hỏng thiết bị",
+    "notifications.equipment.damage_reported.body": "Hư hỏng {{equipment_code}} được báo cáo ({{severity}}).",
     "notifications.portal.user_invited.title": "Đã mời người dùng cổng",
-    "notifications.portal.user_invited.body":
-      "{{portal_user_email}} được mời với vai trò {{portal_role}}.",
-    "match_elements.vector_status_disconnected_explainer":
-      'Semantic vector search is optional — it sharpens matches by meaning but needs a running Qdrant vector database. Use the "Vector database" panel below to start or install Qdrant natively (no Docker required), then retry.',
-    "match_elements.vector_status_disconnected_fallback":
-      "Bạn vẫn có thể tiếp tục: việc khớp tự động chuyển về tính điểm theo từ vựng (từ khóa) và dựa trên quy tắc khi cơ sở dữ liệu vector ngoại tuyến.",
+    "notifications.portal.user_invited.body": "{{portal_user_email}} được mời với vai trò {{portal_role}}.",
+    "match_elements.vector_status_disconnected_explainer": "Semantic vector search is optional — it sharpens matches by meaning but needs a running Qdrant vector database. Use the \"Vector database\" panel below to start or install Qdrant natively (no Docker required), then retry.",
+    "match_elements.vector_status_disconnected_fallback": "Bạn vẫn có thể tiếp tục: việc khớp tự động chuyển về tính điểm theo từ vựng (từ khóa) và dựa trên quy tắc khi cơ sở dữ liệu vector ngoại tuyến.",
     "match_elements.vector_status_retry": "Thử kết nối lại",
-    "match_elements.vector_status_open_costs_long":
-      "Mở công cụ cơ sở dữ liệu giá",
+    "match_elements.vector_status_open_costs_long": "Mở công cụ cơ sở dữ liệu giá",
     "match_elements.pipeline.title": "Pipeline khớp",
-    "match_elements.pipeline.subtitle":
-      "Bảy bước từ tệp CAD đến BOQ có giá — mọi bước đều hiển thị và có thể điều chỉnh",
+    "match_elements.pipeline.subtitle": "Bảy bước từ tệp CAD đến BOQ có giá — mọi bước đều hiển thị và có thể điều chỉnh",
     "match_elements.pipeline.done_suffix": "xong",
     "match_elements.pipeline.run_all": "Chạy tất cả giai đoạn",
     "match_elements.pipeline.running_all": "Đang chạy tất cả…",
@@ -6019,21 +5317,17 @@ const resource = {
     "match_elements.pipeline.status_error": "Lỗi",
     "match_elements.pipeline.status_stale": "Cần chạy lại",
     "match_elements.pipeline.status_skipped": "Đã bỏ qua",
-    "match_elements.pipeline.stale_hint":
-      "Một giai đoạn trước đã thay đổi — chạy lại bước này để làm mới kết quả.",
+    "match_elements.pipeline.stale_hint": "Một giai đoạn trước đã thay đổi — chạy lại bước này để làm mới kết quả.",
     "match_elements.pipeline.llm_badge": "LLM",
-    "match_elements.pipeline.llm_tunable":
-      "Tăng cường LLM — prompt có thể chỉnh",
+    "match_elements.pipeline.llm_tunable": "Tăng cường LLM — prompt có thể chỉnh",
     "match_elements.pipeline.group_by": "Nhóm theo khóa",
-    "match_elements.pipeline.group_by_hint":
-      "Cách nhau bằng dấu phẩy. RVT → category, type_name · IFC → ifc_class, predefined_type · DWG → layer, block_name",
+    "match_elements.pipeline.group_by_hint": "Cách nhau bằng dấu phẩy. RVT → category, type_name · IFC → ifc_class, predefined_type · DWG → layer, block_name",
     "match_elements.pipeline.method": "Phương pháp",
     "match_elements.pipeline.max_groups": "Số nhóm tối đa",
     "match_elements.pipeline.llm_provider": "Nhà cung cấp LLM",
     "match_elements.pipeline.prompt": "Prompt",
     "match_elements.pipeline.system": "system",
-    "match_elements.pipeline.system_readonly":
-      "Prompt hệ thống — chỉ đọc. Fork để chỉnh sửa và tùy chỉnh cho công ty bạn.",
+    "match_elements.pipeline.system_readonly": "Prompt hệ thống — chỉ đọc. Fork để chỉnh sửa và tùy chỉnh cho công ty bạn.",
     "match_elements.pipeline.system_prompt": "Prompt hệ thống",
     "match_elements.pipeline.user_template": "Mẫu người dùng",
     "match_elements.pipeline.variables": "Các biến mà giai đoạn này điền:",
@@ -6043,12 +5337,10 @@ const resource = {
     "match_elements.pipeline.revert": "Hoàn nguyên",
     "match_elements.pipeline.run_failed": "Giai đoạn chạy thất bại",
     "match_elements.pipeline.intro_title": "Mở pipeline khớp hiển thị",
-    "match_elements.pipeline.intro_blurb":
-      "Bảy bước từ tệp CAD đến BOQ có giá — Chuyển đổi, Tải, Lược đồ, Lọc, Nhóm, Khớp, Tổng hợp. Mọi bước hiển thị, có giải thích và điều chỉnh được (prompt, nhà cung cấp LLM, khóa nhóm).",
+    "match_elements.pipeline.intro_blurb": "Bảy bước từ tệp CAD đến BOQ có giá — Chuyển đổi, Tải, Lược đồ, Lọc, Nhóm, Khớp, Tổng hợp. Mọi bước hiển thị, có giải thích và điều chỉnh được (prompt, nhà cung cấp LLM, khóa nhóm).",
     "match_elements.pipeline.intro_cta": "Mở pipeline",
     "match_elements.pipeline.intro_resume": "Tiếp tục phiên gần nhất",
-    "match_elements.pipeline.busy_hint":
-      "Một giai đoạn đang chạy — đợi nó hoàn tất trước khi bắt đầu giai đoạn khác.",
+    "match_elements.pipeline.busy_hint": "Một giai đoạn đang chạy — đợi nó hoàn tất trước khi bắt đầu giai đoạn khác.",
     "match_elements.pipeline.step_convert": "Chuyển đổi",
     "match_elements.pipeline.step_load": "Tải",
     "match_elements.pipeline.step_schema": "Lược đồ",
@@ -6057,25 +5349,21 @@ const resource = {
     "match_elements.pipeline.step_match": "Khớp",
     "match_elements.pipeline.step_rollup": "Tổng hợp",
     "clash.title": "Phát hiện va chạm",
-    "clash.subtitle":
-      "Phát hiện giao cắt hình học và phối hợp khoảng hở giữa các mô hình BIM gộp — kèm ma trận va chạm và xuất BCF.",
+    "clash.subtitle": "Phát hiện giao cắt hình học và phối hợp khoảng hở giữa các mô hình BIM gộp — kèm ma trận va chạm và xuất BCF.",
     "clash.pick_project": "Chọn dự án",
     "clash.new_run": "Chạy va chạm mới",
     "clash.models": "Mô hình",
-    "clash.no_models":
-      "Không có mô hình BIM nào được phân tích trong dự án này.",
+    "clash.no_models": "Không có mô hình BIM nào được phân tích trong dự án này.",
     "clash.tolerance": "Dung sai (mm)",
     "clash.clearance": "Khoảng hở (mm)",
     "clash.mode": "Phạm vi kiểm tra",
     "clash.mode_cross": "Chỉ liên ngành",
     "clash.mode_all": "Mọi cặp",
     "clash.mode_sets": "Tập A vs Tập B (theo loại)",
-    "clash.sets_hint":
-      "Chỉ kiểm tra các cặp có một phần tử trong Tập A và một phần tử trong Tập B — ví dụ tất cả tường (A) với tất cả đường ống (B).",
+    "clash.sets_hint": "Chỉ kiểm tra các cặp có một phần tử trong Tập A và một phần tử trong Tập B — ví dụ tất cả tường (A) với tất cả đường ống (B).",
     "clash.set_a": "Tập A",
     "clash.set_b": "Tập B",
-    "clash.sets_required":
-      "Chọn ít nhất một loại hoặc bộ môn cho cả Tập A và Tập B.",
+    "clash.sets_required": "Chọn ít nhất một loại hoặc bộ môn cho cả Tập A và Tập B.",
     "clash.set_search": "Tìm loại / bộ môn…",
     "clash.set_empty": "Không có phần tử — chọn mô hình đã phân tích trước.",
     "clash.disciplines": "Bộ môn",
@@ -6089,8 +5377,7 @@ const resource = {
     "clash.status_saved": "Đã cập nhật trạng thái",
     "clash.bcf_done": "Đã xuất {{n}} va chạm sang BCF (bỏ qua {{s}})",
     "clash.empty_title": "Chưa chọn lần chạy va chạm",
-    "clash.empty_desc":
-      "Chọn các mô hình BIM bên trái và chạy phát hiện va chạm để xây dựng ma trận phối hợp.",
+    "clash.empty_desc": "Chọn các mô hình BIM bên trái và chạy phát hiện va chạm để xây dựng ma trận phối hợp.",
     "clash.kpi_total": "Tổng va chạm",
     "clash.kpi_hard": "Cứng",
     "clash.kpi_clearance": "Khoảng hở",
@@ -6106,11 +5393,9 @@ const resource = {
     "clash.no_match_title": "Không có va chạm khớp bộ lọc",
     "clash.no_match_desc": "Thử mở rộng hoặc xóa các bộ lọc đang dùng.",
     "clash.results_error": "Tải kết quả va chạm thất bại",
-    "clash.results_error_desc":
-      "Không thể tải kết quả va chạm. Điều này không có nghĩa các mô hình là sạch — vui lòng thử lại.",
+    "clash.results_error_desc": "Không thể tải kết quả va chạm. Điều này không có nghĩa các mô hình là sạch — vui lòng thử lại.",
     "clash.retry": "Thử lại",
-    "clash.capped_notice":
-      "Hiển thị {{loaded}} đầu trong {{total}} va chạm — tinh chỉnh bộ lọc để thu hẹp tập rà soát.",
+    "clash.capped_notice": "Hiển thị {{loaded}} đầu trong {{total}} va chạm — tinh chỉnh bộ lọc để thu hẹp tập rà soát.",
     "clash.results": "Kết quả va chạm",
     "clash.count_of": "{{shown}} trong {{total}}",
     "clash.search_ph": "Tìm theo tên phần tử…",
@@ -6151,23 +5436,18 @@ const resource = {
     "nav.pipelines": "Trình tạo Pipeline",
     "pipeline.untitled": "Pipeline không tiêu đề",
     "pipeline.empty.title": "Xây dựng tự động hóa đầu tiên của bạn",
-    "pipeline.empty.description":
-      "Kéo một trigger và một vài bước từ bảng màu bên trái, kết nối chúng, rồi nhấn Chạy.",
+    "pipeline.empty.description": "Kéo một trigger và một vài bước từ bảng màu bên trái, kết nối chúng, rồi nhấn Chạy.",
     "pipeline.toast.saved": "Đã lưu pipeline",
     "pipeline.toast.save_failed": "Không thể lưu pipeline",
     "pipeline.toast.run_failed": "Không thể bắt đầu chạy",
     "pipeline.explain.coming_soon_title": "Giải thích pipeline này",
-    "pipeline.explain.coming_soon_body":
-      "Chế độ xem dạng câu chuyện ngôn ngữ tự nhiên sẽ có ở phiên bản kế tiếp.",
+    "pipeline.explain.coming_soon_body": "Chế độ xem dạng câu chuyện ngôn ngữ tự nhiên sẽ có ở phiên bản kế tiếp.",
     "pipeline.tour.palette_title": "Chọn các bước",
-    "pipeline.tour.palette_body":
-      "Kéo một bước từ đây lên canvas, hoặc bấm vào để đặt ở giữa.",
+    "pipeline.tour.palette_body": "Kéo một bước từ đây lên canvas, hoặc bấm vào để đặt ở giữa.",
     "pipeline.tour.canvas_title": "Kết nối các bước",
-    "pipeline.tour.canvas_body":
-      "Kéo từ điểm đầu ra của một bước sang đầu vào của bước kế tiếp. Màu sắc cho biết kiểu dữ liệu.",
+    "pipeline.tour.canvas_body": "Kéo từ điểm đầu ra của một bước sang đầu vào của bước kế tiếp. Màu sắc cho biết kiểu dữ liệu.",
     "pipeline.tour.run_title": "Chạy",
-    "pipeline.tour.run_body":
-      "Nhấn Chạy để thực thi pipeline và xem từng bước sáng lên trực tiếp.",
+    "pipeline.tour.run_body": "Nhấn Chạy để thực thi pipeline và xem từng bước sáng lên trực tiếp.",
     "pipeline.toolbar.aria": "Thanh công cụ pipeline",
     "pipeline.toolbar.undo": "Hoàn tác",
     "pipeline.toolbar.redo": "Làm lại",
@@ -6183,12 +5463,11 @@ const resource = {
     "pipeline.palette.collapse": "Thu gọn bảng",
     "pipeline.palette.search": "Tìm bước",
     "pipeline.palette.search_ph": "Tìm…",
-    "pipeline.palette.no_match": 'No steps match "{{query}}"',
+    "pipeline.palette.no_match": "No steps match \"{{query}}\"",
     "pipeline.palette.none": "Không có loại nút khả dụng.",
     "pipeline.palette.module_chip": "Ảnh hưởng module {{module}}",
     "pipeline.palette.writes": "ghi",
-    "pipeline.palette.writes_chip":
-      "Bước này ghi dữ liệu — cần một gate trước đó",
+    "pipeline.palette.writes_chip": "Bước này ghi dữ liệu — cần một gate trước đó",
     "pipeline.palette.cat_trigger": "Nguồn / Trigger",
     "pipeline.palette.cat_source": "Lấy dữ liệu",
     "pipeline.palette.cat_transform": "Biến đổi",
@@ -6212,23 +5491,18 @@ const resource = {
     "pipeline.inspector.name_ph": "Tự động hóa của tôi",
     "pipeline.inspector.description": "Mô tả",
     "pipeline.inspector.published": "Đã xuất bản (có thể trigger)",
-    "pipeline.inspector.summary_stub":
-      'A plain-language summary of what this pipeline does will appear here. Use "Explain this pipeline" for the full story.',
+    "pipeline.inspector.summary_stub": "A plain-language summary of what this pipeline does will appear here. Use \"Explain this pipeline\" for the full story.",
     "pipeline.canvas.aria": "Canvas trình sửa pipeline",
-    "pipeline.canvas.hint":
-      "Kéo các bước từ bảng, kết nối cổng, rồi nhấn Chạy.",
-    "pipeline.canvas.legend_sr":
-      "Màu, hình dạng và nét đứt của cạnh cùng nhau mã hóa kiểu dữ liệu.",
+    "pipeline.canvas.hint": "Kéo các bước từ bảng, kết nối cổng, rồi nhấn Chạy.",
+    "pipeline.canvas.legend_sr": "Màu, hình dạng và nét đứt của cạnh cùng nhau mã hóa kiểu dữ liệu.",
     "pipeline.connect.incompatible_title": "Các bước này không thể kết nối",
-    "pipeline.connect.incompatible_body":
-      "Đầu ra này là {{from}}; đầu vào kia mong đợi {{to}}.",
+    "pipeline.connect.incompatible_body": "Đầu ra này là {{from}}; đầu vào kia mong đợi {{to}}.",
     "pipeline.node.rename": "Đổi tên nút",
     "pipeline.node.rename_hint": "Nhấp đúp để đổi tên",
     "pipeline.node.ai_badge": "AI",
     "pipeline.node.ai_confidence": "Gợi ý AI — rà soát điểm tin cậy",
     "pipeline.node.help": "Nút này làm gì",
-    "pipeline.node.help_generic":
-      "Cấu hình bước này trong Inspector. Nó nhận dữ liệu từ bước nối trước nó và chuyển kết quả tiếp.",
+    "pipeline.node.help_generic": "Cấu hình bước này trong Inspector. Nó nhận dữ liệu từ bước nối trước nó và chuyển kết quả tiếp.",
     "pipeline.node.collapse": "Thu gọn",
     "pipeline.node.expand": "Mở rộng",
     "pipeline.node.more_params": "+{{count}} nữa",
@@ -6249,8 +5523,7 @@ const resource = {
     "pipeline.dock.progress": "{{pct}}%",
     "pipeline.dock.tab_run": "Chạy",
     "pipeline.dock.tab_history": "Lịch sử",
-    "pipeline.dock.no_steps":
-      "Thêm bước và nhấn Chạy để xem dữ liệu chảy qua pipeline.",
+    "pipeline.dock.no_steps": "Thêm bước và nhấn Chạy để xem dữ liệu chảy qua pipeline.",
     "pipeline.dock.loading_history": "Đang tải lịch sử chạy…",
     "pipeline.dock.no_runs_title": "Chưa có lần chạy",
     "pipeline.dock.no_runs_desc": "Nhấn Chạy để xem dữ liệu chảy qua pipeline.",
@@ -6272,34 +5545,23 @@ const resource = {
     "pipeline.trigger.schedule": "Theo lịch",
     "pipeline.trigger.event": "Sự kiện",
     "pipeline.nodetype.trigger.manual": "Trigger thủ công",
-    "pipeline.nodetype.trigger.manual.desc":
-      "Bắt đầu pipeline từ lệnh REST. Không có đầu vào.",
+    "pipeline.nodetype.trigger.manual.desc": "Bắt đầu pipeline từ lệnh REST. Không có đầu vào.",
     "pipeline.nodetype.source.project": "Lấy dự án",
     "pipeline.nodetype.source.project.desc": "Tải id + tên dự án đã ràng buộc.",
     "pipeline.nodetype.source.boq": "Lấy hạng mục BOQ",
-    "pipeline.nodetype.source.boq.desc":
-      "Tải mọi hạng mục BOQ của dự án dưới dạng hàng (id + mẫu nhỏ).",
+    "pipeline.nodetype.source.boq.desc": "Tải mọi hạng mục BOQ của dự án dưới dạng hàng (id + mẫu nhỏ).",
     "pipeline.nodetype.transform.filter": "Lọc hàng",
-    "pipeline.nodetype.transform.filter.desc":
-      "Chỉ giữ các hàng khớp với phép thử trường/toán tử/giá trị đơn giản.",
+    "pipeline.nodetype.transform.filter.desc": "Chỉ giữ các hàng khớp với phép thử trường/toán tử/giá trị đơn giản.",
     "pipeline.nodetype.gate.validation": "Gate xác thực",
-    "pipeline.nodetype.gate.validation.desc":
-      "Chạy engine xác thực trên các hàng; dừng nếu gặp lỗi chặn.",
+    "pipeline.nodetype.gate.validation.desc": "Chạy engine xác thực trên các hàng; dừng nếu gặp lỗi chặn.",
     "pipeline.nodetype.action.export.excel": "Xuất sang Excel",
-    "pipeline.nodetype.action.export.excel.desc":
-      "Ghi các hàng vào tệp .xlsx (trả về tham chiếu tải xuống; không sửa đổi cơ sở dữ liệu).",
-    "pipeline.nodehelp.trigger.manual":
-      "Đây là nơi pipeline bắt đầu. Không có cài đặt — kết nối với một bước dữ liệu tiếp theo.",
-    "pipeline.nodehelp.source.project":
-      "Tải dự án mà pipeline này ràng buộc. Bỏ trống project id để dùng cái lấy từ URL trang.",
-    "pipeline.nodehelp.source.boq":
-      "Đọc mọi hạng mục BOQ của dự án. Chỉ id và bản xem nhỏ truyền giữa các bước; dữ liệu đầy đủ ở lại server.",
-    "pipeline.nodehelp.transform.filter":
-      "Chỉ giữ các hàng khớp với phép thử trường/toán tử/giá trị bạn đặt trong Inspector. Để trống trường để truyền tất cả.",
-    "pipeline.nodehelp.gate.validation":
-      "Chạy engine xác thực trên các hàng. Nếu có lỗi chặn, lần chạy dừng tại đây để các bước ghi sau không hành động trên dữ liệu xấu.",
-    "pipeline.nodehelp.action.export.excel":
-      "Ghi các hàng nhận được vào tệp Excel và trả về tham chiếu tải xuống. Không thay đổi dữ liệu nào.",
+    "pipeline.nodetype.action.export.excel.desc": "Ghi các hàng vào tệp .xlsx (trả về tham chiếu tải xuống; không sửa đổi cơ sở dữ liệu).",
+    "pipeline.nodehelp.trigger.manual": "Đây là nơi pipeline bắt đầu. Không có cài đặt — kết nối với một bước dữ liệu tiếp theo.",
+    "pipeline.nodehelp.source.project": "Tải dự án mà pipeline này ràng buộc. Bỏ trống project id để dùng cái lấy từ URL trang.",
+    "pipeline.nodehelp.source.boq": "Đọc mọi hạng mục BOQ của dự án. Chỉ id và bản xem nhỏ truyền giữa các bước; dữ liệu đầy đủ ở lại server.",
+    "pipeline.nodehelp.transform.filter": "Chỉ giữ các hàng khớp với phép thử trường/toán tử/giá trị bạn đặt trong Inspector. Để trống trường để truyền tất cả.",
+    "pipeline.nodehelp.gate.validation": "Chạy engine xác thực trên các hàng. Nếu có lỗi chặn, lần chạy dừng tại đây để các bước ghi sau không hành động trên dữ liệu xấu.",
+    "pipeline.nodehelp.action.export.excel": "Ghi các hàng nhận được vào tệp Excel và trả về tham chiếu tải xuống. Không thay đổi dữ liệu nào.",
     "pipeline.param.source.project.project_id": "Project id (tùy chọn)",
     "pipeline.param.source.boq.project_id": "Project id (tùy chọn)",
     "pipeline.param.transform.filter.field": "Trường",
@@ -6308,7 +5570,61 @@ const resource = {
     "pipeline.param.gate.validation.rule_sets": "Bộ quy tắc",
     "pipeline.param.action.export.excel.filename": "Tên tệp",
     "pipeline.param.action.export.excel.columns": "Cột",
-  },
+    "admin.audit_log_title": "Audit Log",
+    "admin.audit_log_subtitle": "Read-only timeline of every recorded change. Filter by user, module, action or date — open a row for the full payload.",
+    "admin.permissions.title": "Permissions Matrix",
+    "admin.permissions.subtitle": "Read-only view of every permission registered by every module, and which roles can use it. Admin always passes — locked cells indicate admin-only by design.",
+    "admin.permissions.search_placeholder": "Filter by module or permission key",
+    "admin.permissions.search_label": "Search permissions",
+    "admin.permissions.col_permission": "Permission",
+    "admin.permissions.role_viewer": "Viewer",
+    "admin.permissions.role_editor": "Editor",
+    "admin.permissions.role_member": "Member",
+    "admin.permissions.role_manager": "Manager",
+    "admin.permissions.role_admin": "Admin",
+    "admin.permissions.min_role_label": "min role",
+    "admin.permissions.module_count_one": "{{count}} permission",
+    "admin.permissions.module_count_other": "{{count}} permissions",
+    "admin.permissions.summary": "{{modules}} modules · {{permissions}} permissions",
+    "admin.permissions.empty_title": "No permissions registered",
+    "admin.permissions.empty_description": "No modules have registered permissions yet. They appear here as soon as a module loads.",
+    "admin.permissions.error_title": "Could not load permissions matrix",
+    "admin.permissions.error_unknown": "Unknown error",
+    "admin.permissions.legend_allowed": "allowed",
+    "admin.permissions.legend_denied": "denied",
+    "admin.permissions.legend_admin_bypass": "admin-only by design",
+    "admin.permissions.tooltip_allowed": "{{role}} can do {{key}} (min role: {{min}})",
+    "admin.permissions.tooltip_denied": "{{role}} cannot do {{key}} (min role: {{min}})",
+    "admin.permissions.tooltip_admin_bypass": "Admin-only by design — {{key}} requires admin",
+    "admin.permissions.subtitle_edit": "Click any cell to set the minimum role for that permission. Changes apply immediately and are audit-logged.",
+    "admin.permissions.edit_on": "Enable edit mode",
+    "admin.permissions.edit_off": "Done editing",
+    "admin.permissions.export_csv": "Export CSV",
+    "admin.permissions.role_filter_label": "Role",
+    "admin.permissions.role_filter_all": "All roles",
+    "admin.permissions.role_filter_denied_to": "Denied to {{role}}",
+    "admin.permissions.preset_label": "Reset to preset",
+    "admin.permissions.read_only_notice": "Read-only: admin role required to edit",
+    "admin.permissions.confirm_toggle_title": "Change permission?",
+    "admin.permissions.confirm_toggle_message": "Set \"{{key}}\" minimum role from {{from}} to {{to}}? This is audit-logged.",
+    "admin.permissions.confirm_toggle_confirm": "Change",
+    "admin.permissions.confirm_preset_title": "Apply preset?",
+    "admin.permissions.confirm_preset_message": "Reset every permission to the \"{{preset}}\" baseline? This rewrites the entire matrix and is audit-logged.",
+    "admin.permissions.confirm_preset_confirm": "Apply preset",
+    "admin.permissions.lockout_title": "Cannot demote admin permission",
+    "admin.permissions.lockout_message": "\"{{key}}\" must remain admin-only — lowering it would let non-admins edit the permissions matrix and lock you out.",
+    "admin.permissions.lockout_dismiss": "Got it",
+    "admin.permissions.toggle_success_title": "Permission updated",
+    "admin.permissions.toggle_success_message": "{{key}} → {{role}}",
+    "admin.permissions.toggle_error_title": "Update failed",
+    "admin.permissions.toggle_error": "Could not update permission",
+    "admin.permissions.preset_success_title": "Preset applied",
+    "admin.permissions.preset_success_message": "{{count}} permission(s) updated to \"{{preset}}\"",
+    "admin.permissions.preset_error_title": "Preset failed",
+    "admin.permissions.preset_error": "Could not apply preset",
+    "admin.permissions.noop_title": "No change",
+    "admin.permissions.noop_message": "{{key}} is already minimum {{role}}"
+  }
 } as { translation: Record<string, string> };
 
 export default resource;

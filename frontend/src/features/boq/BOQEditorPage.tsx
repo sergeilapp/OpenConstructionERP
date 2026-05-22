@@ -1,35 +1,16 @@
-import React, {
-  useState,
-  useCallback,
-  useMemo,
-  useRef,
-  useEffect,
-} from "react";
-import { useTranslation } from "react-i18next";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { useParams, useNavigate, useSearchParams } from "react-router-dom";
+import React, { useState, useCallback, useMemo, useRef, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 // lucide-react icons used by sub-components (BOQToolbar, BOQGrid, etc.) — none needed directly here
-import {
-  Database,
-  Download,
-  ExternalLink,
-  X,
-  Sparkles,
-  AlertTriangle as WarnTriangle,
-  Lock,
-  Copy,
-  Wallet,
-  Keyboard,
-  GitCompare,
-  RefreshCw,
-} from "lucide-react";
-import { Button, Badge, Breadcrumb } from "@/shared/ui";
-import { useProgressStore } from "@/shared/ui/GlobalProgress";
-import { apiGet, apiPost, triggerDownload } from "@/shared/lib/api";
-import { useToastStore } from "@/stores/useToastStore";
-import { useRecentStore } from "@/stores/useRecentStore";
-import { useAuthStore } from "@/stores/useAuthStore";
-import { useBIMLinkSelectionStore } from "@/stores/useBIMLinkSelectionStore";
+import { Database, Download, ExternalLink, X, Sparkles, AlertTriangle as WarnTriangle, Lock, Copy, Wallet, Keyboard, GitCompare, RefreshCw } from 'lucide-react';
+import { Button, Badge, Breadcrumb } from '@/shared/ui';
+import { useProgressStore } from '@/shared/ui/GlobalProgress';
+import { apiGet, apiPost, triggerDownload } from '@/shared/lib/api';
+import { useToastStore } from '@/stores/useToastStore';
+import { useRecentStore } from '@/stores/useRecentStore';
+import { useAuthStore } from '@/stores/useAuthStore';
+import { useBIMLinkSelectionStore } from '@/stores/useBIMLinkSelectionStore';
 import {
   boqApi,
   groupPositionsIntoSections,
@@ -44,33 +25,33 @@ import {
   type ActivityEntry,
   type CostAutocompleteItem,
   DEFAULT_MAX_NESTING_DEPTH,
-} from "./api";
-import { ApiError } from "@/shared/lib/api";
-import { projectsApi } from "@/features/projects/api";
-import { fetchBIMModels } from "@/features/bim/api";
+} from './api';
+import { ApiError } from '@/shared/lib/api';
+import { projectsApi } from '@/features/projects/api';
+import { fetchBIMModels } from '@/features/bim/api';
 // AutocompleteInput used in sub-components, not directly here
 // import { AutocompleteInput } from './AutocompleteInput';
-import { AIChatPanel } from "./AIChatPanel";
-import { AICostFinderPanel } from "./AICostFinderPanel";
-import { AISmartPanel } from "./AISmartPanel";
+import { AIChatPanel } from './AIChatPanel';
+import { AICostFinderPanel } from './AICostFinderPanel';
+import { AISmartPanel } from './AISmartPanel';
 // ClassificationPicker used in sub-components
 // import { ClassificationPicker } from './ClassificationPicker';
-import { VersionHistoryDrawer } from "./VersionHistoryDrawer";
-import { ModelLinkPanel } from "./ModelLinkPanel";
-import { ModelLinkReviewPanel } from "./ModelLinkReviewPanel";
-import { BOQCompareDrawer } from "./BOQCompareDrawer";
-import { CostBreakdownPanel } from "./CostBreakdownPanel";
-import { EstimateClassification } from "./EstimateClassification";
-import { ResourceSummary } from "./ResourceSummary";
-import { CommentDrawer, type CommentEntry } from "./CommentDrawer";
-import { SensitivityChart } from "./SensitivityChart";
-import { CostRiskPanel } from "./CostRiskPanel";
-import { MarkupPanel } from "./MarkupPanel";
-import BOQGrid from "./BOQGrid";
-import { exportBOQToExcel } from "./exportExcel";
-import { generateBOQPdf } from "./pdfReport";
-import type { BOQGridHandle } from "./BOQGrid";
-import { BatchActionBar } from "./BatchActionBar";
+import { VersionHistoryDrawer } from './VersionHistoryDrawer';
+import { ModelLinkPanel } from './ModelLinkPanel';
+import { ModelLinkReviewPanel } from './ModelLinkReviewPanel';
+import { BOQCompareDrawer } from './BOQCompareDrawer';
+import { CostBreakdownPanel } from './CostBreakdownPanel';
+import { EstimateClassification } from './EstimateClassification';
+import { ResourceSummary } from './ResourceSummary';
+import { CommentDrawer, type CommentEntry } from './CommentDrawer';
+import { SensitivityChart } from './SensitivityChart';
+import { CostRiskPanel } from './CostRiskPanel';
+import { MarkupPanel } from './MarkupPanel';
+import BOQGrid from './BOQGrid';
+import { exportBOQToExcel } from './exportExcel';
+import { generateBOQPdf } from './pdfReport';
+import type { BOQGridHandle } from './BOQGrid';
+import { BatchActionBar } from './BatchActionBar';
 // evaluateFormula used in BOQGrid, not directly here
 // import { evaluateFormula } from './grid/cellEditors';
 
@@ -90,34 +71,23 @@ import {
   computeQualityScore,
   type QualityBreakdown,
   type Tip,
-} from "./boqHelpers";
+} from './boqHelpers';
 
-import { BOQToolbar } from "./BOQToolbar";
-import { PriceReviewPanel } from "./PriceReviewPanel";
-import { ExcelPasteModal, type PastedRow } from "./ExcelPasteModal";
-import {
-  QualityScoreRing,
-  TipsPanel,
-  QuickAddFAB,
-  EmptyBOQOnboarding,
-  ExportWarningDialog,
-} from "./BOQSummaryPanel";
-import { ActivityPanel } from "./ActivityPanel";
-import { CostDatabaseSearchModal, AssemblyPickerModal } from "./BOQModals";
-import { CatalogPickerModal, type CatalogResource } from "./CatalogPickerModal";
-import { CustomColumnsDialog } from "./CustomColumnsDialog";
-import { BOQVariablesDialog } from "./BOQVariablesDialog";
-import { RenumberDialog } from "./RenumberDialog";
-import { LinkedPositionsModal } from "./LinkedPositionsModal";
+import { BOQToolbar } from './BOQToolbar';
+import { PriceReviewPanel } from './PriceReviewPanel';
+import { ExcelPasteModal, type PastedRow } from './ExcelPasteModal';
+import { QualityScoreRing, TipsPanel, QuickAddFAB, EmptyBOQOnboarding, ExportWarningDialog } from './BOQSummaryPanel';
+import { ActivityPanel } from './ActivityPanel';
+import { CostDatabaseSearchModal, AssemblyPickerModal } from './BOQModals';
+import { CatalogPickerModal, type CatalogResource } from './CatalogPickerModal';
+import { CustomColumnsDialog } from './CustomColumnsDialog';
+import { BOQVariablesDialog } from './BOQVariablesDialog';
+import { RenumberDialog } from './RenumberDialog';
+import { LinkedPositionsModal } from './LinkedPositionsModal';
 
 /* ── Re-exports for tests ────────────────────────────────────────────── */
 
-export {
-  getVatRate,
-  getLocaleForRegion,
-  getCurrencySymbol,
-  computeQualityScore,
-};
+export { getVatRate, getLocaleForRegion, getCurrencySymbol, computeQualityScore };
 export type { QualityBreakdown };
 
 /**
@@ -142,10 +112,10 @@ function computeNextSubOrdinal(all: Position[], parentOrdinal: string): string {
     if (!Number.isNaN(n) && n > maxSuffix) maxSuffix = n;
   }
   let next = (Math.floor(maxSuffix / 10) + 1) * 10;
-  let candidate = `${parentOrdinal}.${String(next).padStart(2, "0")}`;
+  let candidate = `${parentOrdinal}.${String(next).padStart(2, '0')}`;
   while (used.has(candidate)) {
     next += 10;
-    candidate = `${parentOrdinal}.${String(next).padStart(2, "0")}`;
+    candidate = `${parentOrdinal}.${String(next).padStart(2, '0')}`;
   }
   return candidate;
 }
@@ -160,12 +130,12 @@ export function BOQEditorPage() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [searchParams, setSearchParams] = useSearchParams();
-  const highlightPositionId = searchParams.get("highlight");
+  const highlightPositionId = searchParams.get('highlight');
 
   /* ── Data fetching ─────────────────────────────────────────────────── */
 
   const { data: boq, isLoading } = useQuery({
-    queryKey: ["boq", boqId],
+    queryKey: ['boq', boqId],
     queryFn: () => boqApi.get(boqId!),
     enabled: !!boqId,
     // Keep data fresh for 5 minutes — prevents refetch while user is
@@ -175,7 +145,7 @@ export function BOQEditorPage() {
     refetchOnWindowFocus: false,
     // Don't spin forever when the network drops — offlineStore (shared/lib/api.ts)
     // serves cached responses; bail out fast if we're offline and there's no cache.
-    networkMode: "offlineFirst",
+    networkMode: 'offlineFirst',
     retry: (count) => navigator.onLine && count < 2,
     select: (data) => ({
       ...data,
@@ -186,7 +156,7 @@ export function BOQEditorPage() {
   /* ── Load project for region/currency/locale settings ────────────── */
 
   const { data: project } = useQuery({
-    queryKey: ["project", boq?.project_id],
+    queryKey: ['project', boq?.project_id],
     queryFn: () => projectsApi.get(boq!.project_id),
     enabled: !!boq?.project_id,
   });
@@ -194,7 +164,7 @@ export function BOQEditorPage() {
   /* ── Fetch BIM models for the project (used for mini 3D preview) ─── */
 
   const { data: bimModelsData } = useQuery({
-    queryKey: ["bim-models", boq?.project_id],
+    queryKey: ['bim-models', boq?.project_id],
     queryFn: () => fetchBIMModels(boq!.project_id),
     enabled: !!boq?.project_id,
     staleTime: 10 * 60_000,
@@ -204,24 +174,13 @@ export function BOQEditorPage() {
   const bimModelId = useMemo(() => {
     const models = bimModelsData?.items;
     if (!models || models.length === 0) return null;
-    const ready = models.find(
-      (m) => m.status === "ready" && (m.element_count ?? 0) > 0,
-    );
+    const ready = models.find((m) => m.status === 'ready' && (m.element_count ?? 0) > 0);
     return ready?.id ?? null;
   }, [bimModelsData]);
 
-  const currencySymbol = useMemo(
-    () => getCurrencySymbol(project?.currency),
-    [project?.currency],
-  );
-  const currencyCode = useMemo(
-    () => getCurrencyCode(project?.currency),
-    [project?.currency],
-  );
-  const locale = useMemo(
-    () => getLocaleForRegion(project?.region),
-    [project?.region],
-  );
+  const currencySymbol = useMemo(() => getCurrencySymbol(project?.currency), [project?.currency]);
+  const currencyCode = useMemo(() => getCurrencyCode(project?.currency), [project?.currency]);
+  const locale = useMemo(() => getLocaleForRegion(project?.region), [project?.region]);
   /**
    * Project FX template (RFC 37 / Issue #93) — flatten to the shape BOQGrid
    * expects (`currency` + numeric `rate`). The API returns `code` and a
@@ -243,28 +202,28 @@ export function BOQEditorPage() {
   const boqCustomColumns = useMemo(() => {
     const raw = boq as unknown as Record<string, unknown> | undefined;
     const meta = raw?.metadata ?? raw?.metadata_;
-    if (!meta || typeof meta !== "object") return [];
-    return (
-      ((meta as Record<string, unknown>)
-        .custom_columns as import("./grid/columnDefs").CustomColumnDef[]) ?? []
-    );
+    if (!meta || typeof meta !== 'object') return [];
+    return (meta as Record<string, unknown>).custom_columns as import('./grid/columnDefs').CustomColumnDef[] ?? [];
   }, [boq]);
 
   // BOQ-scoped named variables ($GFA, $LABOR_RATE, …) — read from the same
   // metadata bag and forwarded to the grid so calculated custom columns
   // can resolve them. v2.7.0/E.
-  const boqVariables = useMemo<import("./api").BOQVariable[]>(() => {
+  const boqVariables = useMemo<import('./api').BOQVariable[]>(() => {
     const raw = boq as unknown as Record<string, unknown> | undefined;
     const meta = raw?.metadata ?? raw?.metadata_;
-    if (!meta || typeof meta !== "object") return [];
+    if (!meta || typeof meta !== 'object') return [];
     const vs = (meta as Record<string, unknown>).variables;
     if (!Array.isArray(vs)) return [];
-    return vs as import("./api").BOQVariable[];
+    return vs as import('./api').BOQVariable[];
   }, [boq]);
-  const fmt = useMemo(() => createFormatter(locale), [locale]);
+  const fmt = useMemo(
+    () => createFormatter(locale),
+    [locale],
+  );
 
   const { data: markupsData } = useQuery({
-    queryKey: ["boq-markups", boqId],
+    queryKey: ['boq-markups', boqId],
     queryFn: () => boqApi.getMarkups(boqId!),
     enabled: !!boqId,
     staleTime: 5 * 60_000,
@@ -282,7 +241,7 @@ export function BOQEditorPage() {
    * this deep and shows an i18n tooltip. Falls back to the mirrored
    * constant so the UI never blocks nesting the backend would accept. */
   const { data: boqLimits } = useQuery({
-    queryKey: ["boq-limits"],
+    queryKey: ['boq-limits'],
     queryFn: () => boqApi.getLimits(),
     staleTime: Infinity,
     refetchOnWindowFocus: false,
@@ -306,10 +265,9 @@ export function BOQEditorPage() {
   useEffect(() => {
     if (boq && boqId) {
       addRecent({
-        type: "boq",
+        type: 'boq',
         id: boqId,
-        title:
-          boq.name || t("boq.untitled", { defaultValue: "Untitled BOQ‌⁠‍" }),
+        title: boq.name || t('boq.untitled', { defaultValue: 'Untitled BOQ‌⁠‍' }),
         url: `/boq/${boqId}`,
       });
     }
@@ -334,9 +292,7 @@ export function BOQEditorPage() {
     // to the row the user is actively working in (clicked / focused) so
     // insert-below-selected works for the common click-then-add flow.
     if (selectedPositionIds.length === 1) {
-      return (
-        boq?.positions.find((p) => p.id === selectedPositionIds[0]) ?? null
-      );
+      return boq?.positions.find((p) => p.id === selectedPositionIds[0]) ?? null;
     }
     if (selectedPositionIds.length === 0 && activePositionId) {
       return boq?.positions.find((p) => p.id === activePositionId) ?? null;
@@ -366,9 +322,7 @@ export function BOQEditorPage() {
   /** Stable ref for trackedDelete — allows keyboard shortcut access before declaration. */
   const trackedDeleteRef = useRef<((id: string) => void) | null>(null);
   /** Stable ref for handleExport — allows keyboard shortcut access before declaration. */
-  const handleExportRef = useRef<
-    ((format: "excel" | "csv" | "pdf" | "gaeb") => void) | null
-  >(null);
+  const handleExportRef = useRef<((format: 'excel' | 'csv' | 'pdf' | 'gaeb') => void) | null>(null);
 
   // Derived booleans that re-evaluate when undoRedoVersion changes
   const canUndo = undoRedoVersion >= 0 && undoStackRef.current.length > 0;
@@ -378,13 +332,11 @@ export function BOQEditorPage() {
 
   /** Invalidate all BOQ-related queries after any data change. */
   const invalidateAll = useCallback(() => {
-    queryClient.invalidateQueries({ queryKey: ["boq", boqId] });
-    queryClient.invalidateQueries({ queryKey: ["boq-cost-breakdown", boqId] });
-    queryClient.invalidateQueries({
-      queryKey: ["boq-resource-summary", boqId],
-    });
-    queryClient.invalidateQueries({ queryKey: ["boq-markups", boqId] });
-    queryClient.invalidateQueries({ queryKey: ["boq-activity", boqId] });
+    queryClient.invalidateQueries({ queryKey: ['boq', boqId] });
+    queryClient.invalidateQueries({ queryKey: ['boq-cost-breakdown', boqId] });
+    queryClient.invalidateQueries({ queryKey: ['boq-resource-summary', boqId] });
+    queryClient.invalidateQueries({ queryKey: ['boq-markups', boqId] });
+    queryClient.invalidateQueries({ queryKey: ['boq-activity', boqId] });
   }, [queryClient, boqId]);
 
   /**
@@ -402,14 +354,10 @@ export function BOQEditorPage() {
   const invalidateSiblingsDebounced = useCallback(() => {
     if (siblingDebounceRef.current) clearTimeout(siblingDebounceRef.current);
     siblingDebounceRef.current = setTimeout(() => {
-      queryClient.invalidateQueries({
-        queryKey: ["boq-cost-breakdown", boqId],
-      });
-      queryClient.invalidateQueries({
-        queryKey: ["boq-resource-summary", boqId],
-      });
-      queryClient.invalidateQueries({ queryKey: ["boq-markups", boqId] });
-      queryClient.invalidateQueries({ queryKey: ["boq-activity", boqId] });
+      queryClient.invalidateQueries({ queryKey: ['boq-cost-breakdown', boqId] });
+      queryClient.invalidateQueries({ queryKey: ['boq-resource-summary', boqId] });
+      queryClient.invalidateQueries({ queryKey: ['boq-markups', boqId] });
+      queryClient.invalidateQueries({ queryKey: ['boq-activity', boqId] });
       siblingDebounceRef.current = null;
     }, 400);
   }, [queryClient, boqId]);
@@ -438,59 +386,45 @@ export function BOQEditorPage() {
         const gridApi = boqGridRef.current;
         if (gridApi) {
           try {
-            (
-              gridApi as unknown as { clearSelection: () => void }
-            ).clearSelection();
-          } catch {
-            /* ignore */
-          }
+            (gridApi as unknown as { clearSelection: () => void }).clearSelection();
+          } catch { /* ignore */ }
         }
       }, 500);
       // Issue #127 — when the create collided with an existing project code
       // and reuse applied, the backend returns a LINKED INSTANCE (its own
       // ordinal + own editable quantity) instead of a 409. Surface that
       // clearly so the user understands the code was reused, not rejected.
-      if (addedPosition.link_role === "instance") {
+      if (addedPosition.link_role === 'instance') {
         const sharedCount =
-          (typeof addedPosition.linked_instance_count === "number"
+          (typeof addedPosition.linked_instance_count === 'number'
             ? addedPosition.linked_instance_count
             : 0) + 1;
         addToast({
-          type: "success",
-          title: t("boq.reuse_code_title", {
-            defaultValue: "Reused code {{code}}‌⁠‍",
+          type: 'success',
+          title: t('boq.reuse_code_title', {
+            defaultValue: 'Reused code {{code}}‌⁠‍',
             code: addedPosition.reference_code ?? addedPosition.ordinal,
           }),
-          message: t("boq.reuse_code_msg", {
+          message: t('boq.reuse_code_msg', {
             defaultValue:
-              "Linked instance created — {{count}} positions share this code. Its quantity is independently editable.‌⁠‍",
+              'Linked instance created — {{count}} positions share this code. Its quantity is independently editable.‌⁠‍',
             count: sharedCount,
           }),
         });
       } else {
-        addToast({
-          type: "success",
-          title: t("boq.position_added", { defaultValue: "Position added‌⁠‍" }),
-          message: t("boq.position_added_edit_hint", {
-            defaultValue:
-              "Type the description, then Tab through unit, quantity & rate‌⁠‍",
-          }),
-        });
+        addToast({ type: 'success', title: t('boq.position_added', { defaultValue: 'Position added‌⁠‍' }), message: t('boq.position_added_edit_hint', { defaultValue: 'Type the description, then Tab through unit, quantity & rate‌⁠‍' }) });
         // Open the freshly-added leaf row directly in inline edit on its
         // Description cell so the user types straight away instead of
         // hunting for a cell to click. Skipped on undo/redo restore so a
         // recovered position never pops an unexpected editor.
         if (!isUndoRedoInProgressRef.current) {
-          setTimeout(
-            () => boqGridRef.current?.beginEditDescription(addedPosition.id),
-            250,
-          );
+          setTimeout(() => boqGridRef.current?.beginEditDescription(addedPosition.id), 250);
         }
       }
       // Record undo entry for the newly added position (skip if triggered by undo/redo)
       if (!isUndoRedoInProgressRef.current) {
         undoStackRef.current.push({
-          type: "add",
+          type: 'add',
           positionId: addedPosition.id,
           oldData: null,
           newData: null,
@@ -505,13 +439,7 @@ export function BOQEditorPage() {
       isUndoRedoInProgressRef.current = false;
     },
     onError: (err: Error) => {
-      addToast({
-        type: "error",
-        title: t("boq.add_failed", {
-          defaultValue: "Failed to add position‌⁠‍",
-        }),
-        message: err.message,
-      });
+      addToast({ type: 'error', title: t('boq.add_failed', { defaultValue: 'Failed to add position‌⁠‍' }), message: err.message });
     },
   });
 
@@ -531,17 +459,11 @@ export function BOQEditorPage() {
     //    Sibling rollups (cost-breakdown, resource-summary, markups,
     //    activity) refresh via a 400ms debounce so a burst of cell edits
     //    collapses into ONE refresh wave instead of 4 GETs per keystroke.
-    onMutate: async ({
-      id,
-      data,
-    }: {
-      id: string;
-      data: UpdatePositionData;
-    }) => {
-      await queryClient.cancelQueries({ queryKey: ["boq", boqId] });
-      const previous = queryClient.getQueryData(["boq", boqId]);
-      queryClient.setQueryData(["boq", boqId], (old: unknown) => {
-        if (!old || typeof old !== "object") return old;
+    onMutate: async ({ id, data }: { id: string; data: UpdatePositionData }) => {
+      await queryClient.cancelQueries({ queryKey: ['boq', boqId] });
+      const previous = queryClient.getQueryData(['boq', boqId]);
+      queryClient.setQueryData(['boq', boqId], (old: unknown) => {
+        if (!old || typeof old !== 'object') return old;
         const cur = old as { positions: Position[]; [k: string]: unknown };
         return {
           ...cur,
@@ -559,24 +481,18 @@ export function BOQEditorPage() {
               // takeoff link callers explicitly include the relevant key in
               // `data.metadata` so we preserve it in that case — that's the
               // signal the new value IS authoritative provenance.
-              const incomingMeta = (data.metadata ?? {}) as Record<
-                string,
-                unknown
-              >;
-              const preservesBim = "bim_qty_source" in incomingMeta;
-              const preservesPdf = "pdf_measurement_source" in incomingMeta;
-              const preservesDwg = "dwg_annotation_source" in incomingMeta;
+              const incomingMeta = (data.metadata ?? {}) as Record<string, unknown>;
+              const preservesBim = 'bim_qty_source' in incomingMeta;
+              const preservesPdf = 'pdf_measurement_source' in incomingMeta;
+              const preservesDwg = 'dwg_annotation_source' in incomingMeta;
               if (!preservesBim || !preservesPdf || !preservesDwg) {
-                const meta = { ...(next.metadata ?? {}) } as Record<
-                  string,
-                  unknown
-                >;
+                const meta = { ...(next.metadata ?? {}) } as Record<string, unknown>;
                 if (!preservesBim) delete meta.bim_qty_source;
                 if (!preservesPdf) delete meta.pdf_measurement_source;
                 if (!preservesDwg) delete meta.dwg_annotation_source;
                 next.metadata = meta;
               }
-              next.validation_status = "pending";
+              next.validation_status = 'pending';
             }
             return next;
           }),
@@ -589,14 +505,12 @@ export function BOQEditorPage() {
       // Avoids a full ['boq', boqId] refetch, which on large BOQs is the
       // single biggest source of edit-to-paint latency.
       const normalized = normalizePosition(updated);
-      queryClient.setQueryData(["boq", boqId], (old: unknown) => {
-        if (!old || typeof old !== "object") return old;
+      queryClient.setQueryData(['boq', boqId], (old: unknown) => {
+        if (!old || typeof old !== 'object') return old;
         const cur = old as { positions: Position[]; [k: string]: unknown };
         return {
           ...cur,
-          positions: cur.positions.map((p) =>
-            p.id === normalized.id ? normalized : p,
-          ),
+          positions: cur.positions.map((p) => (p.id === normalized.id ? normalized : p)),
         };
       });
       // Sibling rollups depend on totals; refresh them with a debounce so
@@ -617,20 +531,16 @@ export function BOQEditorPage() {
       // rows live elsewhere in the BOQ (possibly another section) so the
       // spliced single-position cache update above is NOT enough — pull a
       // fresh BOQ so every linked instance repaints with the new definition.
-      if (
-        prop &&
-        typeof prop.propagated_to === "number" &&
-        prop.propagated_to > 0
-      ) {
-        queryClient.invalidateQueries({ queryKey: ["boq", boqId] });
+      if (prop && typeof prop.propagated_to === 'number' && prop.propagated_to > 0) {
+        queryClient.invalidateQueries({ queryKey: ['boq', boqId] });
         addToast({
-          type: "info",
-          title: t("boq.link_propagated_title", {
-            defaultValue: "Definition propagated‌⁠‍",
+          type: 'info',
+          title: t('boq.link_propagated_title', {
+            defaultValue: 'Definition propagated‌⁠‍',
           }),
-          message: t("boq.link_propagated_msg", {
+          message: t('boq.link_propagated_msg', {
             defaultValue:
-              "Updated {{count}} linked position(s) across this project.‌⁠‍",
+              'Updated {{count}} linked position(s) across this project.‌⁠‍',
             count: prop.propagated_to,
           }),
         });
@@ -641,18 +551,18 @@ export function BOQEditorPage() {
       // rows are elsewhere in the BOQ, so refetch and inform the user.
       if (
         prop &&
-        typeof prop.resource_propagated_to === "number" &&
+        typeof prop.resource_propagated_to === 'number' &&
         prop.resource_propagated_to > 0
       ) {
-        queryClient.invalidateQueries({ queryKey: ["boq", boqId] });
+        queryClient.invalidateQueries({ queryKey: ['boq', boqId] });
         addToast({
-          type: "info",
-          title: t("boq.resource_link_propagated_title", {
-            defaultValue: "Resource definition propagated‌⁠‍",
+          type: 'info',
+          title: t('boq.resource_link_propagated_title', {
+            defaultValue: 'Resource definition propagated‌⁠‍',
           }),
-          message: t("boq.resource_link_propagated_msg", {
+          message: t('boq.resource_link_propagated_msg', {
             defaultValue:
-              "Updated the shared resource on {{count}} other position(s) across this project.‌⁠‍",
+              'Updated the shared resource on {{count}} other position(s) across this project.‌⁠‍',
             count: prop.resource_propagated_to,
           }),
         });
@@ -664,24 +574,24 @@ export function BOQEditorPage() {
       // longer follows the shared code (customer: "alertar al usuario").
       const warnings = Array.isArray(meta.boq_quality_warnings)
         ? (meta.boq_quality_warnings as unknown[]).filter(
-            (w): w is string => typeof w === "string",
+            (w): w is string => typeof w === 'string',
           )
         : [];
       const unlinkWarning = warnings.find((w) =>
-        w.toLowerCase().includes("unlinked it from code"),
+        w.toLowerCase().includes('unlinked it from code'),
       );
       if (prop?.unlinked || unlinkWarning) {
         addToast(
           {
-            type: "warning",
-            title: t("boq.link_unlinked_title", {
-              defaultValue: "Position unlinked from shared code‌⁠‍",
+            type: 'warning',
+            title: t('boq.link_unlinked_title', {
+              defaultValue: 'Position unlinked from shared code‌⁠‍',
             }),
             message:
               unlinkWarning ??
-              t("boq.link_unlinked_msg", {
+              t('boq.link_unlinked_msg', {
                 defaultValue:
-                  "Your edit changed this linked copy, so it no longer follows the shared code. If you did not mean to diverge it, change its code back instead.‌⁠‍",
+                  'Your edit changed this linked copy, so it no longer follows the shared code. If you did not mean to diverge it, change its code back instead.‌⁠‍',
               }),
           },
           { duration: 9000 },
@@ -691,15 +601,9 @@ export function BOQEditorPage() {
     onError: (err: Error, _vars, ctx) => {
       // Restore the snapshot synchronously — no refetch flicker.
       if (ctx?.previous !== undefined) {
-        queryClient.setQueryData(["boq", boqId], ctx.previous);
+        queryClient.setQueryData(['boq', boqId], ctx.previous);
       }
-      addToast({
-        type: "error",
-        title: t("boq.update_failed", {
-          defaultValue: "Failed to update position‌⁠‍",
-        }),
-        message: err.message,
-      });
+      addToast({ type: 'error', title: t('boq.update_failed', { defaultValue: 'Failed to update position‌⁠‍' }), message: err.message });
     },
   });
 
@@ -722,60 +626,44 @@ export function BOQEditorPage() {
     // optimistically removed but whose API call is still in flight.
     // Sidecar queries (rollups / activity feed) are safe to refresh.
     onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ["boq-cost-breakdown", boqId],
-      });
-      queryClient.invalidateQueries({
-        queryKey: ["boq-resource-summary", boqId],
-      });
-      queryClient.invalidateQueries({ queryKey: ["boq-markups", boqId] });
-      queryClient.invalidateQueries({ queryKey: ["boq-activity", boqId] });
+      queryClient.invalidateQueries({ queryKey: ['boq-cost-breakdown', boqId] });
+      queryClient.invalidateQueries({ queryKey: ['boq-resource-summary', boqId] });
+      queryClient.invalidateQueries({ queryKey: ['boq-markups', boqId] });
+      queryClient.invalidateQueries({ queryKey: ['boq-activity', boqId] });
     },
     onError: (err: Error) => {
       // The server rejected the delete — re-sync the BOQ so the row
       // reappears (otherwise the user sees a phantom-deleted position
       // that's still on the server).
-      queryClient.invalidateQueries({ queryKey: ["boq", boqId] });
-      addToast({
-        type: "error",
-        title: t("boq.delete_failed", {
-          defaultValue: "Failed to delete position",
-        }),
-        message: err.message,
-      });
+      queryClient.invalidateQueries({ queryKey: ['boq', boqId] });
+      addToast({ type: 'error', title: t('boq.delete_failed', { defaultValue: 'Failed to delete position' }), message: err.message });
     },
   });
 
   const [renumberDialogOpen, setRenumberDialogOpen] = useState(false);
 
   const renumberMutation = useMutation({
-    mutationFn: ({
-      scheme,
-      pad,
-    }: {
-      scheme: "gap10" | "gap100" | "sequential" | "dotted";
-      pad: boolean;
-    }) => boqApi.renumberPositions(boqId!, { scheme, pad }),
+    mutationFn: ({ scheme, pad }: { scheme: 'gap10' | 'gap100' | 'sequential' | 'dotted'; pad: boolean }) =>
+      boqApi.renumberPositions(boqId!, { scheme, pad }),
     onSuccess: (result) => {
       invalidateAll();
       setRenumberDialogOpen(false);
       addToast({
-        type: "success",
-        title: t("boq.renumber_done", {
-          defaultValue: "{{count}} positions renumbered",
+        type: 'success',
+        title: t('boq.renumber_done', {
+          defaultValue: '{{count}} positions renumbered',
           count: result.renumbered,
         }),
-        message: t("boq.renumber_done_hint", {
-          defaultValue:
-            "Order preserved — only ordinals were rewritten. Undo with Ctrl+Z is not supported for renumber.",
+        message: t('boq.renumber_done_hint', {
+          defaultValue: 'Order preserved — only ordinals were rewritten. Undo with Ctrl+Z is not supported for renumber.',
         }),
       });
     },
     onError: (err) => {
       addToast({
-        type: "error",
-        title: t("boq.renumber_failed", { defaultValue: "Renumber failed" }),
-        message: err instanceof Error ? err.message : "",
+        type: 'error',
+        title: t('boq.renumber_failed', { defaultValue: 'Renumber failed' }),
+        message: err instanceof Error ? err.message : '',
       });
     },
   });
@@ -786,13 +674,11 @@ export function BOQEditorPage() {
       invalidateAll();
       addToast(
         {
-          type: "success",
-          title: t("boq.locked_success", { defaultValue: "Estimate locked" }),
-          message: t("boq.locked_next", {
-            defaultValue: "Estimate locked. Create project budget?",
-          }),
+          type: 'success',
+          title: t('boq.locked_success', { defaultValue: 'Estimate locked' }),
+          message: t('boq.locked_next', { defaultValue: 'Estimate locked. Create project budget?' }),
           action: {
-            label: t("boq.create_budget", { defaultValue: "Create Budget" }),
+            label: t('boq.create_budget', { defaultValue: 'Create Budget' }),
             onClick: () => createBudgetMutation.mutate(),
           },
         },
@@ -801,9 +687,9 @@ export function BOQEditorPage() {
     },
     onError: (err) => {
       addToast({
-        type: "error",
-        title: t("boq.lock_failed", { defaultValue: "Lock failed" }),
-        message: err instanceof Error ? err.message : "",
+        type: 'error',
+        title: t('boq.lock_failed', { defaultValue: 'Lock failed' }),
+        message: err instanceof Error ? err.message : '',
       });
     },
   });
@@ -811,9 +697,9 @@ export function BOQEditorPage() {
   const handleLock = useCallback(() => {
     // Lock is irreversible without admin unlock — confirm before mutating (Bug 8).
     const ok = window.confirm(
-      t("boq.lock_confirm", {
+      t('boq.lock_confirm', {
         defaultValue:
-          "Lock this estimate?\n\nLocked estimates cannot be edited. Unlocking requires admin privileges.",
+          'Lock this estimate?\n\nLocked estimates cannot be edited. Unlocking requires admin privileges.',
       }),
     );
     if (!ok) return;
@@ -824,17 +710,10 @@ export function BOQEditorPage() {
     mutationFn: () => apiPost(`/v1/boq/boqs/${boqId}/unlock/`, {}),
     onSuccess: () => {
       invalidateAll();
-      addToast({
-        type: "success",
-        title: t("boq.unlocked_success", { defaultValue: "Estimate unlocked" }),
-      });
+      addToast({ type: 'success', title: t('boq.unlocked_success', { defaultValue: 'Estimate unlocked' }) });
     },
     onError: (err) => {
-      addToast({
-        type: "error",
-        title: t("boq.unlock_failed", { defaultValue: "Unlock failed" }),
-        message: err instanceof Error ? err.message : "",
-      });
+      addToast({ type: 'error', title: t('boq.unlock_failed', { defaultValue: 'Unlock failed' }), message: err instanceof Error ? err.message : '' });
     },
   });
 
@@ -843,25 +722,22 @@ export function BOQEditorPage() {
   }, [unlockMutation]);
 
   const createBudgetMutation = useMutation({
-    mutationFn: () =>
-      apiPost<{ created: number }>(`/v1/boq/boqs/${boqId}/create-budget/`, {}),
+    mutationFn: () => apiPost<{ created: number }>(`/v1/boq/boqs/${boqId}/create-budget/`, {}),
     onSuccess: (data) => {
       addToast({
-        type: "success",
-        title: t("boq.budget_created", { defaultValue: "Budget created" }),
-        message: t("boq.budget_created_desc", {
-          defaultValue: "{{count}} budget lines created from estimate",
+        type: 'success',
+        title: t('boq.budget_created', { defaultValue: 'Budget created' }),
+        message: t('boq.budget_created_desc', {
+          defaultValue: '{{count}} budget lines created from estimate',
           count: data.created ?? 0,
         }),
       });
     },
     onError: (err) => {
       addToast({
-        type: "error",
-        title: t("boq.budget_create_failed", {
-          defaultValue: "Budget creation failed",
-        }),
-        message: err instanceof Error ? err.message : "",
+        type: 'error',
+        title: t('boq.budget_create_failed', { defaultValue: 'Budget creation failed' }),
+        message: err instanceof Error ? err.message : '',
       });
     },
   });
@@ -871,13 +747,12 @@ export function BOQEditorPage() {
   }, [createBudgetMutation]);
 
   const createRevisionMutation = useMutation({
-    mutationFn: () =>
-      apiPost<{ id: string }>(`/v1/boq/boqs/${boqId}/create-revision/`, {}),
+    mutationFn: () => apiPost<{ id: string }>(`/v1/boq/boqs/${boqId}/create-revision/`, {}),
     onSuccess: (result) => {
       invalidateAll();
       addToast({
-        type: "success",
-        title: t("boq.revision_created", { defaultValue: "Revision created" }),
+        type: 'success',
+        title: t('boq.revision_created', { defaultValue: 'Revision created' }),
       });
       if (result?.id) {
         navigate(`/boq/${result.id}`);
@@ -885,11 +760,9 @@ export function BOQEditorPage() {
     },
     onError: (err) => {
       addToast({
-        type: "error",
-        title: t("boq.revision_failed", {
-          defaultValue: "Create revision failed",
-        }),
-        message: err instanceof Error ? err.message : "",
+        type: 'error',
+        title: t('boq.revision_failed', { defaultValue: 'Create revision failed' }),
+        message: err instanceof Error ? err.message : '',
       });
     },
   });
@@ -903,7 +776,7 @@ export function BOQEditorPage() {
   }, []);
 
   const handleRenumberApply = useCallback(
-    (scheme: "gap10" | "gap100" | "sequential" | "dotted", pad: boolean) => {
+    (scheme: 'gap10' | 'gap100' | 'sequential' | 'dotted', pad: boolean) => {
       renumberMutation.mutate({ scheme, pad });
     },
     [renumberMutation],
@@ -936,7 +809,7 @@ export function BOQEditorPage() {
 
       // Record undo entry
       undoStackRef.current.push({
-        type: "delete",
+        type: 'delete',
         positionId: posId,
         oldData: null,
         newData: null,
@@ -949,8 +822,8 @@ export function BOQEditorPage() {
       setUndoRedoVersion((v) => v + 1);
 
       // Optimistically remove the position from the query cache
-      queryClient.setQueryData(["boq", boqId], (old: unknown) => {
-        if (!old || typeof old !== "object") return old;
+      queryClient.setQueryData(['boq', boqId], (old: unknown) => {
+        if (!old || typeof old !== 'object') return old;
         const data = old as { positions: Position[]; [key: string]: unknown };
         return {
           ...data,
@@ -961,12 +834,10 @@ export function BOQEditorPage() {
       // Show undo toast with action button
       const toastId = addToast(
         {
-          type: "info",
-          title: t("boq.position_deleted", {
-            defaultValue: "Position deleted",
-          }),
+          type: 'info',
+          title: t('boq.position_deleted', { defaultValue: 'Position deleted' }),
           action: {
-            label: t("common.undo", { defaultValue: "Undo" }),
+            label: t('common.undo', { defaultValue: 'Undo' }),
             onClick: () => {
               const pending = pendingDeleteRef.current;
               if (pending && pending.toastId === toastId) {
@@ -974,12 +845,9 @@ export function BOQEditorPage() {
                 pendingDeleteRef.current = null;
 
                 // Restore the position in the query cache
-                queryClient.setQueryData(["boq", boqId], (old: unknown) => {
-                  if (!old || typeof old !== "object") return old;
-                  const data = old as {
-                    positions: Position[];
-                    [key: string]: unknown;
-                  };
+                queryClient.setQueryData(['boq', boqId], (old: unknown) => {
+                  if (!old || typeof old !== 'object') return old;
+                  const data = old as { positions: Position[]; [key: string]: unknown };
                   return {
                     ...data,
                     positions: [...data.positions, snapshot],
@@ -988,17 +856,12 @@ export function BOQEditorPage() {
 
                 // Remove the undo entry from the undo stack
                 const idx = undoStackRef.current.findIndex(
-                  (e) => e.type === "delete" && e.positionId === posId,
+                  (e) => e.type === 'delete' && e.positionId === posId,
                 );
                 if (idx !== -1) undoStackRef.current.splice(idx, 1);
                 setUndoRedoVersion((v) => v + 1);
 
-                addToast({
-                  type: "info",
-                  title: t("boq.position_restored", {
-                    defaultValue: "Position restored",
-                  }),
-                });
+                addToast({ type: 'info', title: t('boq.position_restored', { defaultValue: 'Position restored' }) });
               }
             },
           },
@@ -1014,21 +877,9 @@ export function BOQEditorPage() {
         }
       }, 5000);
 
-      pendingDeleteRef.current = {
-        timeoutId,
-        positionSnapshot: snapshot,
-        toastId,
-      };
+      pendingDeleteRef.current = { timeoutId, positionSnapshot: snapshot, toastId };
     },
-    [
-      deleteMutation,
-      boq?.positions,
-      queryClient,
-      boqId,
-      addToast,
-      removeToast,
-      t,
-    ],
+    [deleteMutation, boq?.positions, queryClient, boqId, addToast, removeToast, t],
   );
 
   // Bind ref so the keyboard handler can call trackedDelete without a
@@ -1044,8 +895,7 @@ export function BOQEditorPage() {
         // Fire the API call so the delete isn't silently lost.
         // Log failures — component is unmounting so toasts may not render.
         boqApi.deletePosition(pending.positionSnapshot.id).catch((err) => {
-          if (import.meta.env.DEV)
-            console.error("Failed to flush pending delete on unmount:", err);
+          if (import.meta.env.DEV) console.error('Failed to flush pending delete on unmount:', err);
         });
         pendingDeleteRef.current = null;
       }
@@ -1054,9 +904,7 @@ export function BOQEditorPage() {
 
   /* ── Collapsed sections state ──────────────────────────────────────── */
 
-  const [collapsedSections, setCollapsedSections] = useState<Set<string>>(
-    new Set(),
-  );
+  const [collapsedSections, setCollapsedSections] = useState<Set<string>>(new Set());
 
   const toggleSection = useCallback((sectionId: string) => {
     setCollapsedSections((prev) => {
@@ -1083,21 +931,17 @@ export function BOQEditorPage() {
   const [isExcelPasteImporting, setIsExcelPasteImporting] = useState(false);
   const [showShortcuts, setShowShortcuts] = useState(false);
   /** When set, the cost DB modal adds a resource to this position instead of creating a new position. */
-  const [costDbForPositionId, setCostDbForPositionId] = useState<string | null>(
-    null,
-  );
+  const [costDbForPositionId, setCostDbForPositionId] = useState<string | null>(null);
 
   /** Catalog picker modal state. */
   const [catalogPickerOpen, setCatalogPickerOpen] = useState(false);
-  const [catalogForPositionId, setCatalogForPositionId] = useState<
-    string | null
-  >(null);
+  const [catalogForPositionId, setCatalogForPositionId] = useState<string | null>(null);
 
   // Listen for "From Database" button clicks from child SectionBlock components
   useEffect(() => {
     const handler = () => setCostDbModalOpen(true);
-    document.addEventListener("openCostDbModal", handler);
-    return () => document.removeEventListener("openCostDbModal", handler);
+    document.addEventListener('openCostDbModal', handler);
+    return () => document.removeEventListener('openCostDbModal', handler);
   }, []);
 
   // Idle-time prefetch for the cost-DB modal aggregates. The modal calls
@@ -1114,16 +958,15 @@ export function BOQEditorPage() {
       if (cancelled) return;
       try {
         await queryClient.prefetchQuery({
-          queryKey: ["cost-regions-modal"],
-          queryFn: () => apiGet<string[]>("/v1/costs/regions/"),
+          queryKey: ['cost-regions-modal'],
+          queryFn: () => apiGet<string[]>('/v1/costs/regions/'),
           staleTime: 5 * 60 * 1000,
         });
         if (cancelled) return;
-        const regions =
-          queryClient.getQueryData<string[]>(["cost-regions-modal"]) ?? [];
+        const regions = queryClient.getQueryData<string[]>(['cost-regions-modal']) ?? [];
         const firstRegion = regions[0];
         if (firstRegion) {
-          const { fetchCategoryTree, fetchCostSearch } = await import("./api");
+          const { fetchCategoryTree, fetchCostSearch } = await import('./api');
           // Run the tree + first-page-search prefetches in parallel so we
           // amortize round-trip latency. The modal opens both queries
           // simultaneously when it mounts, and warming both here means
@@ -1131,12 +974,12 @@ export function BOQEditorPage() {
           // cache for the THREE heaviest calls (regions / tree / search).
           await Promise.all([
             queryClient.prefetchQuery({
-              queryKey: ["cost-tree", firstRegion, 2],
+              queryKey: ['cost-tree', firstRegion, 2],
               queryFn: () => fetchCategoryTree(firstRegion, 2),
               staleTime: 5 * 60 * 1000,
             }),
             queryClient.prefetchInfiniteQuery({
-              queryKey: ["cost-search", firstRegion, "", ""],
+              queryKey: ['cost-search', firstRegion, '', ''],
               initialPageParam: null as string | null,
               queryFn: () =>
                 fetchCostSearch({
@@ -1155,22 +998,19 @@ export function BOQEditorPage() {
       }
     };
     const w = window as Window & {
-      requestIdleCallback?: (
-        cb: () => void,
-        opts?: { timeout: number },
-      ) => number;
+      requestIdleCallback?: (cb: () => void, opts?: { timeout: number }) => number;
       cancelIdleCallback?: (handle: number) => void;
     };
     let idleId: number | undefined;
     let timeoutId: ReturnType<typeof setTimeout> | undefined;
-    if (typeof w.requestIdleCallback === "function") {
+    if (typeof w.requestIdleCallback === 'function') {
       idleId = w.requestIdleCallback(() => void run(), { timeout: 4000 });
     } else {
       timeoutId = setTimeout(() => void run(), 1500);
     }
     return () => {
       cancelled = true;
-      if (idleId !== undefined && typeof w.cancelIdleCallback === "function") {
+      if (idleId !== undefined && typeof w.cancelIdleCallback === 'function') {
         w.cancelIdleCallback(idleId);
       }
       if (timeoutId !== undefined) clearTimeout(timeoutId);
@@ -1182,51 +1022,34 @@ export function BOQEditorPage() {
   useEffect(() => {
     if (!highlightPositionId || !boq) return;
     const timer = setTimeout(() => {
-      const row = (document.querySelector(
-        `div.ag-row[row-id="${highlightPositionId}"]`,
-      ) ??
-        document.querySelector(
-          `tr[data-position-id="${highlightPositionId}"]`,
-        )) as HTMLElement | null;
+      const row = (
+        document.querySelector(`div.ag-row[row-id="${highlightPositionId}"]`) ??
+        document.querySelector(`tr[data-position-id="${highlightPositionId}"]`)
+      ) as HTMLElement | null;
       if (row) {
-        row.scrollIntoView({ behavior: "smooth", block: "center" });
-        row.classList.add(
-          "ring-2",
-          "ring-oe-blue",
-          "ring-inset",
-          "bg-oe-blue-subtle",
-        );
+        row.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        row.classList.add('ring-2', 'ring-oe-blue', 'ring-inset', 'bg-oe-blue-subtle');
         setTimeout(() => {
-          row.classList.remove(
-            "ring-2",
-            "ring-oe-blue",
-            "ring-inset",
-            "bg-oe-blue-subtle",
-          );
+          row.classList.remove('ring-2', 'ring-oe-blue', 'ring-inset', 'bg-oe-blue-subtle');
         }, 3000);
       }
-      setSearchParams(
-        (prev) => {
-          prev.delete("highlight");
-          return prev;
-        },
-        { replace: true },
-      );
+      setSearchParams((prev) => {
+        prev.delete('highlight');
+        return prev;
+      }, { replace: true });
     }, 500);
     return () => clearTimeout(timer);
   }, [highlightPositionId, boq, setSearchParams]);
 
   const aiChatContext = useMemo(
     () => ({
-      project_name: boq?.name ?? "Unnamed project",
+      project_name: boq?.name ?? 'Unnamed project',
       // Empty currency / standard means "tell the AI the project doesn't
       // carry one yet, so it can decline to make currency-specific
       // recommendations" — preferable to lying with EUR/din276 on a
       // project that's actually USD/MasterFormat.
-      currency: project?.currency ?? "",
-      standard:
-        ((project as unknown as Record<string, unknown>)
-          ?.classification_standard as string) ?? "",
+      currency: project?.currency ?? '',
+      standard: (project as unknown as Record<string, unknown>)?.classification_standard as string ?? '',
       existing_positions_count: boq?.positions.length ?? 0,
     }),
     [boq?.name, boq?.positions.length, project?.currency, project],
@@ -1243,13 +1066,9 @@ export function BOQEditorPage() {
 
   /** Wrap updateMutation to record an undo entry before applying. */
   const trackedUpdate = useCallback(
-    (
-      posId: string,
-      newData: UpdatePositionData,
-      oldData: UpdatePositionData,
-    ) => {
+    (posId: string, newData: UpdatePositionData, oldData: UpdatePositionData) => {
       undoStackRef.current.push({
-        type: "update",
+        type: 'update',
         positionId: posId,
         oldData,
         newData,
@@ -1278,9 +1097,9 @@ export function BOQEditorPage() {
       boqGridRef.current?.clearSelection();
       if (deleted > 0) {
         addToast({
-          type: "success",
-          title: t("boq.batch_deleted", {
-            defaultValue: "{{count}} positions deleted",
+          type: 'success',
+          title: t('boq.batch_deleted', {
+            defaultValue: '{{count}} positions deleted',
             count: String(deleted),
           } as Record<string, string>),
         });
@@ -1302,9 +1121,9 @@ export function BOQEditorPage() {
       setSelectedPositionIds([]);
       boqGridRef.current?.clearSelection();
       addToast({
-        type: "success",
-        title: t("boq.batch_unit_changed", {
-          defaultValue: "Unit changed to {{unit}} for {{count}} positions",
+        type: 'success',
+        title: t('boq.batch_unit_changed', {
+          defaultValue: 'Unit changed to {{unit}} for {{count}} positions',
           unit,
           count: String(ids.length),
         } as Record<string, string>),
@@ -1320,30 +1139,28 @@ export function BOQEditorPage() {
    * recomputed totals land immediately.
    */
   const handleBatchFactor = useCallback(
-    async (ids: string[], kind: "rate" | "quantity", factor: number) => {
+    async (ids: string[], kind: 'rate' | 'quantity', factor: number) => {
       if (!boqId || ids.length === 0) return;
       try {
         const result = await boqApi.bulkUpdatePositions(boqId, {
           ids,
-          ...(kind === "rate"
-            ? { rate_factor: factor }
-            : { quantity_factor: factor }),
+          ...(kind === 'rate' ? { rate_factor: factor } : { quantity_factor: factor }),
         });
-        queryClient.invalidateQueries({ queryKey: ["boq", boqId] });
-        queryClient.invalidateQueries({ queryKey: ["boq-activity", boqId] });
+        queryClient.invalidateQueries({ queryKey: ['boq', boqId] });
+        queryClient.invalidateQueries({ queryKey: ['boq-activity', boqId] });
         setSelectedPositionIds([]);
         boqGridRef.current?.clearSelection();
         addToast({
-          type: result.skipped === 0 ? "success" : "warning",
-          title: t("boq.batch_factor_done", {
-            defaultValue: "Updated {{count}} positions (factor {{factor}})",
+          type: result.skipped === 0 ? 'success' : 'warning',
+          title: t('boq.batch_factor_done', {
+            defaultValue: 'Updated {{count}} positions (factor {{factor}})',
             count: String(result.updated),
             factor: String(factor),
           } as Record<string, string>),
           message:
             result.skipped > 0
-              ? t("boq.batch_factor_skipped", {
-                  defaultValue: "{{count}} positions could not be updated.",
+              ? t('boq.batch_factor_skipped', {
+                  defaultValue: '{{count}} positions could not be updated.',
                   count: String(result.skipped),
                 } as Record<string, string>)
               : undefined,
@@ -1351,9 +1168,9 @@ export function BOQEditorPage() {
       } catch (e) {
         const msg = e instanceof ApiError ? e.message : String(e);
         addToast({
-          type: "error",
-          title: t("boq.batch_factor_failed", {
-            defaultValue: "Bulk update failed",
+          type: 'error',
+          title: t('boq.batch_factor_failed', {
+            defaultValue: 'Bulk update failed',
           }),
           message: msg,
         });
@@ -1374,8 +1191,8 @@ export function BOQEditorPage() {
       try {
         const classifications: Record<string, Record<string, string>> = {};
         for (const id of ids) {
-          const existing = (boq?.positions.find((p) => p.id === id)
-            ?.classification ?? {}) as Record<string, string>;
+          const existing = (boq?.positions.find((p) => p.id === id)?.classification ??
+            {}) as Record<string, string>;
           classifications[id] = { ...existing, [standard]: code };
         }
         // Fan out via the per-row PATCH so each row keeps its other-standard
@@ -1394,10 +1211,9 @@ export function BOQEditorPage() {
         setSelectedPositionIds([]);
         boqGridRef.current?.clearSelection();
         addToast({
-          type: "success",
-          title: t("boq.batch_class_done", {
-            defaultValue:
-              "Classification {{standard}}:{{code}} set on {{count}} positions",
+          type: 'success',
+          title: t('boq.batch_class_done', {
+            defaultValue: 'Classification {{standard}}:{{code}} set on {{count}} positions',
             standard,
             code,
             count: String(ids.length),
@@ -1406,9 +1222,9 @@ export function BOQEditorPage() {
       } catch (e) {
         const msg = e instanceof ApiError ? e.message : String(e);
         addToast({
-          type: "error",
-          title: t("boq.batch_class_failed", {
-            defaultValue: "Classification update failed",
+          type: 'error',
+          title: t('boq.batch_class_failed', {
+            defaultValue: 'Classification update failed',
           }),
           message: msg,
         });
@@ -1424,17 +1240,11 @@ export function BOQEditorPage() {
   }, []);
 
   /* ── Cross-highlight bridge to BIM viewer ───────────────────────── */
-  const setBOQLinkSelection = useBIMLinkSelectionStore(
-    (s) => s.setBOQSelection,
-  );
+  const setBOQLinkSelection = useBIMLinkSelectionStore((s) => s.setBOQSelection);
   const clearBIMLinkSelection = useBIMLinkSelectionStore((s) => s.clear);
-  const bimSelectedElementIds = useBIMLinkSelectionStore(
-    (s) => s.selectedBIMElementIds,
-  );
+  const bimSelectedElementIds = useBIMLinkSelectionStore((s) => s.selectedBIMElementIds);
   /** Position ID to scroll-to-and-flash when a BIM mesh click arrives. */
-  const [bimScrollTargetId, setBimScrollTargetId] = useState<
-    string | undefined
-  >(undefined);
+  const [bimScrollTargetId, setBimScrollTargetId] = useState<string | undefined>(undefined);
 
   const handleSelectionChanged = useCallback(
     (ids: string[]) => {
@@ -1480,13 +1290,13 @@ export function BOQEditorPage() {
     redoStackRef.current.push(entry);
     setUndoRedoVersion((v) => v + 1);
 
-    if (entry.type === "update" && entry.oldData) {
+    if (entry.type === 'update' && entry.oldData) {
       updateMutation.mutate({ id: entry.positionId, data: entry.oldData });
-    } else if (entry.type === "add") {
+    } else if (entry.type === 'add') {
       // Undo add = delete the position that was added
       isUndoRedoInProgressRef.current = true;
       deleteMutation.mutate(entry.positionId);
-    } else if (entry.type === "delete" && entry.positionSnapshot) {
+    } else if (entry.type === 'delete' && entry.positionSnapshot) {
       // Undo delete = re-create the position from snapshot
       isUndoRedoInProgressRef.current = true;
       const snap = entry.positionSnapshot;
@@ -1500,10 +1310,7 @@ export function BOQEditorPage() {
         parent_id: snap.parent_id || undefined,
       });
     }
-    addToast({
-      type: "info",
-      title: t("boq.undone", { defaultValue: "Undone" }),
-    });
+    addToast({ type: 'info', title: t('boq.undone', { defaultValue: 'Undone' }) });
   }, [updateMutation, deleteMutation, addMutation, boqId, addToast, t]);
 
   const handleRedo = useCallback(() => {
@@ -1512,9 +1319,9 @@ export function BOQEditorPage() {
     undoStackRef.current.push(entry);
     setUndoRedoVersion((v) => v + 1);
 
-    if (entry.type === "update" && entry.newData) {
+    if (entry.type === 'update' && entry.newData) {
       updateMutation.mutate({ id: entry.positionId, data: entry.newData });
-    } else if (entry.type === "add" && entry.positionSnapshot) {
+    } else if (entry.type === 'add' && entry.positionSnapshot) {
       // Redo add = re-create the position
       isUndoRedoInProgressRef.current = true;
       const snap = entry.positionSnapshot;
@@ -1527,15 +1334,12 @@ export function BOQEditorPage() {
         unit_rate: parseFloat(String(snap.unit_rate)) || 0,
         parent_id: snap.parent_id || undefined,
       });
-    } else if (entry.type === "delete") {
+    } else if (entry.type === 'delete') {
       // Redo delete = delete the position again
       isUndoRedoInProgressRef.current = true;
       deleteMutation.mutate(entry.positionId);
     }
-    addToast({
-      type: "info",
-      title: t("boq.redone", { defaultValue: "Redone" }),
-    });
+    addToast({ type: 'info', title: t('boq.redone', { defaultValue: 'Redone' }) });
   }, [updateMutation, deleteMutation, addMutation, boqId, addToast, t]);
 
   /** Container ref for keyboard shortcut listener. */
@@ -1544,55 +1348,49 @@ export function BOQEditorPage() {
   useEffect(() => {
     function handleKeyDown(e: KeyboardEvent) {
       // Skip shortcuts when user is editing a cell / input / textarea
-      const tag = (document.activeElement?.tagName ?? "").toLowerCase();
+      const tag = (document.activeElement?.tagName ?? '').toLowerCase();
       const isEditing =
-        tag === "input" ||
-        tag === "textarea" ||
-        tag === "select" ||
+        tag === 'input' || tag === 'textarea' || tag === 'select' ||
         (document.activeElement as HTMLElement)?.isContentEditable === true;
 
       // F1 — show shortcuts overlay (always works, even during editing)
-      if (e.key === "F1") {
+      if (e.key === 'F1') {
         e.preventDefault();
         setShowShortcuts((v) => !v);
         return;
       }
 
       // Ctrl+Shift+? — show shortcuts overlay (always works)
-      if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === "?") {
+      if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === '?') {
         e.preventDefault();
         setShowShortcuts((v) => !v);
         return;
       }
 
       // Ctrl+Z / Cmd+Z = Undo
-      if ((e.ctrlKey || e.metaKey) && !e.shiftKey && e.key === "z") {
+      if ((e.ctrlKey || e.metaKey) && !e.shiftKey && e.key === 'z') {
         e.preventDefault();
         handleUndo();
         return;
       }
       // Ctrl+Y / Ctrl+Shift+Z / Cmd+Shift+Z = Redo
       if (
-        ((e.ctrlKey || e.metaKey) && e.key === "y") ||
-        ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === "z") ||
-        ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === "Z")
+        ((e.ctrlKey || e.metaKey) && e.key === 'y') ||
+        ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === 'z') ||
+        ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === 'Z')
       ) {
         e.preventDefault();
         handleRedo();
         return;
       }
       // Ctrl+Shift+V = Paste from Excel modal
-      if (
-        (e.ctrlKey || e.metaKey) &&
-        e.shiftKey &&
-        (e.key === "V" || e.key === "v")
-      ) {
+      if ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === 'V' || e.key === 'v')) {
         e.preventDefault();
         setExcelPasteOpen(true);
         return;
       }
       // Ctrl+Enter / Cmd+Enter = Add new position
-      if ((e.ctrlKey || e.metaKey) && e.key === "Enter") {
+      if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
         e.preventDefault();
         addPositionRef.current?.();
         return;
@@ -1600,30 +1398,29 @@ export function BOQEditorPage() {
 
       // App-level Ctrl-shortcuts must fire even while editing a cell
       // (same as Ctrl+S in spreadsheets) — guard placed below them.
-      const k = e.key.toLowerCase();
-      const codeLetter = e.code.startsWith("Key")
-        ? e.code.slice(3).toLowerCase()
-        : "";
+      // #153 guard — e.key can be undefined for synthetic / IME events.
+      const k = (e.key ?? '').toLowerCase();
+      const codeLetter = (e.code ?? '').startsWith('Key') ? (e.code ?? '').slice(3).toLowerCase() : '';
       const isCmd = e.ctrlKey || e.metaKey;
 
       // Ctrl+E = Open export menu (use e.code so non-US keyboard layouts
       // still match — e.g. AZERTY where 'e' is at a different KeyE slot
       // but the physical key is the same).
-      if (isCmd && !e.shiftKey && (k === "e" || codeLetter === "e")) {
+      if (isCmd && !e.shiftKey && (k === 'e' || codeLetter === 'e')) {
         e.preventDefault();
         e.stopPropagation();
-        handleExportRef.current?.("excel");
+        handleExportRef.current?.('excel');
         return;
       }
       // Ctrl+I = Open import dialog
-      if (isCmd && !e.shiftKey && (k === "i" || codeLetter === "i")) {
+      if (isCmd && !e.shiftKey && (k === 'i' || codeLetter === 'i')) {
         e.preventDefault();
         e.stopPropagation();
         importInputRef.current?.click();
         return;
       }
       // Ctrl+L = Toggle lock/unlock
-      if (isCmd && !e.shiftKey && (k === "l" || codeLetter === "l")) {
+      if (isCmd && !e.shiftKey && (k === 'l' || codeLetter === 'l')) {
         e.preventDefault();
         e.stopPropagation();
         if (boq?.is_locked) {
@@ -1636,14 +1433,11 @@ export function BOQEditorPage() {
       // Ctrl+/ = Toggle AI chat panel. e.code can be 'Slash' (US) or
       // 'IntlRo'/'Minus' on other layouts — match e.key as primary and
       // e.code='Slash' as the layout-aware fallback.
-      if (isCmd && (e.key === "/" || e.code === "Slash")) {
+      if (isCmd && (e.key === '/' || e.code === 'Slash')) {
         e.preventDefault();
         e.stopPropagation();
         setAiChatOpen((prev) => {
-          if (!prev) {
-            setCostFinderOpen(false);
-            setSmartPanelOpen(false);
-          }
+          if (!prev) { setCostFinderOpen(false); setSmartPanelOpen(false); }
           return !prev;
         });
         return;
@@ -1655,10 +1449,7 @@ export function BOQEditorPage() {
       // Delete / Backspace = delete selected position(s). Fires the same
       // tracked-delete pipeline as the context menu / batch-bar, so undo
       // toast + 5s deferred API call still apply.
-      if (
-        (e.key === "Delete" || e.key === "Backspace") &&
-        selectedPositionIds.length > 0
-      ) {
+      if ((e.key === 'Delete' || e.key === 'Backspace') && selectedPositionIds.length > 0) {
         e.preventDefault();
         for (const id of selectedPositionIds) {
           trackedDeleteRef.current?.(id);
@@ -1667,7 +1458,7 @@ export function BOQEditorPage() {
       }
 
       // Ctrl+D = Duplicate selected position
-      if (isCmd && !e.shiftKey && (k === "d" || codeLetter === "d")) {
+      if (isCmd && !e.shiftKey && (k === 'd' || codeLetter === 'd')) {
         e.preventDefault();
         if (selectedPositionIds.length === 1) {
           duplicatePositionRef.current?.(selectedPositionIds[0]!);
@@ -1678,23 +1469,16 @@ export function BOQEditorPage() {
 
     // Use capture phase so AG Grid's cell-editor handlers can't swallow
     // these app-level shortcuts before we see them.
-    document.addEventListener("keydown", handleKeyDown, true);
-    return () => document.removeEventListener("keydown", handleKeyDown, true);
-  }, [
-    handleUndo,
-    handleRedo,
-    selectedPositionIds,
-    handleLock,
-    handleUnlock,
-    boq?.is_locked,
-  ]);
+    document.addEventListener('keydown', handleKeyDown, true);
+    return () => document.removeEventListener('keydown', handleKeyDown, true);
+  }, [handleUndo, handleRedo, selectedPositionIds, handleLock, handleUnlock, boq?.is_locked]);
 
   /* ── Activity panel ───────────────────────────────────────────────── */
 
   const [activityOpen, setActivityOpen] = useState(false);
 
   const { data: activityData } = useQuery({
-    queryKey: ["boq-activity", boqId],
+    queryKey: ['boq-activity', boqId],
     queryFn: () => boqApi.getActivity(boqId!),
     enabled: !!boqId,
     retry: (failCount, error) => {
@@ -1709,10 +1493,7 @@ export function BOQEditorPage() {
   /* ── Export / Version History state ─────────────────────────────────── */
 
   const [showVersionHistory, setShowVersionHistory] = useState(false);
-  const [exportWarning, setExportWarning] = useState<{
-    format: "excel" | "csv" | "pdf" | "gaeb";
-    score: number;
-  } | null>(null);
+  const [exportWarning, setExportWarning] = useState<{ format: 'excel' | 'csv' | 'pdf' | 'gaeb'; score: number } | null>(null);
   const [gaebPreviewOpen, setGaebPreviewOpen] = useState(false);
 
   /* ── Computed data ─────────────────────────────────────────────────── */
@@ -1726,23 +1507,18 @@ export function BOQEditorPage() {
   /* ── Position drag-and-drop reordering ─────────────────────────── */
 
   const reorderMutation = useMutation({
-    mutationFn: (positionIds: string[]) =>
-      boqApi.reorderPositions(boqId!, positionIds),
+    mutationFn: (positionIds: string[]) => boqApi.reorderPositions(boqId!, positionIds),
     onSuccess: () => {
       invalidateAll();
       addToast({
-        type: "success",
-        title: t("boq.positions_reordered", {
-          defaultValue: "Positions reordered",
-        }),
+        type: 'success',
+        title: t('boq.positions_reordered', { defaultValue: 'Positions reordered' }),
       });
     },
     onError: (e: Error) => {
       addToast({
-        type: "error",
-        title: t("boq.reorder_failed", {
-          defaultValue: "Failed to reorder positions",
-        }),
+        type: 'error',
+        title: t('boq.reorder_failed', { defaultValue: 'Failed to reorder positions' }),
         message: e.message,
       });
     },
@@ -1815,9 +1591,9 @@ export function BOQEditorPage() {
         await boqApi.deletePosition(sectionId, { cascade: true });
       } catch (err) {
         addToast({
-          type: "error",
-          title: t("boq.section_delete_failed", {
-            defaultValue: "Failed to delete section",
+          type: 'error',
+          title: t('boq.section_delete_failed', {
+            defaultValue: 'Failed to delete section',
           }),
           message: err instanceof Error ? err.message : undefined,
         });
@@ -1825,9 +1601,9 @@ export function BOQEditorPage() {
       }
       invalidateAll();
       addToast({
-        type: "success",
-        title: t("boq.section_deleted", {
-          defaultValue: "Section deleted with {{count}} positions",
+        type: 'success',
+        title: t('boq.section_deleted', {
+          defaultValue: 'Section deleted with {{count}} positions',
           count: descendantCount,
         }),
       });
@@ -1875,12 +1651,12 @@ export function BOQEditorPage() {
   const markupTotals = useMemo(() => {
     let running = directCost;
     return markups
-      .filter((m) => m.is_active !== false && m.category !== "tax")
+      .filter((m) => m.is_active !== false && m.category !== 'tax')
       .map((m) => {
         let amount = 0;
-        if (m.markup_type === "fixed") {
+        if (m.markup_type === 'fixed') {
           amount = m.fixed_amount ?? 0;
-        } else if (m.apply_to === "cumulative") {
+        } else if (m.apply_to === 'cumulative') {
           amount = running * (m.percentage / 100);
         } else {
           amount = directCost * (m.percentage / 100);
@@ -1917,26 +1693,21 @@ export function BOQEditorPage() {
    *  when the picked currency disappears from the project's FX rate list. */
   const displayCurrencyKey = boqId ? `boq:displayCurrency:${boqId}` : null;
   const [displayCurrency, setDisplayCurrencyState] = useState<string>(() => {
-    if (!displayCurrencyKey) return "";
+    if (!displayCurrencyKey) return '';
     try {
-      return localStorage.getItem(displayCurrencyKey) ?? "";
+      return localStorage.getItem(displayCurrencyKey) ?? '';
     } catch {
-      return "";
+      return '';
     }
   });
-  const setDisplayCurrency = useCallback(
-    (next: string) => {
-      setDisplayCurrencyState(next);
-      if (!displayCurrencyKey) return;
-      try {
-        if (next) localStorage.setItem(displayCurrencyKey, next);
-        else localStorage.removeItem(displayCurrencyKey);
-      } catch {
-        /* localStorage unavailable / quota — silently ignore */
-      }
-    },
-    [displayCurrencyKey],
-  );
+  const setDisplayCurrency = useCallback((next: string) => {
+    setDisplayCurrencyState(next);
+    if (!displayCurrencyKey) return;
+    try {
+      if (next) localStorage.setItem(displayCurrencyKey, next);
+      else localStorage.removeItem(displayCurrencyKey);
+    } catch { /* localStorage unavailable / quota — silently ignore */ }
+  }, [displayCurrencyKey]);
   const displayCurrencyMeta = useMemo(() => {
     if (!displayCurrency) return null;
     const fx = fxRates.find((f) => f.currency === displayCurrency);
@@ -1951,7 +1722,7 @@ export function BOQEditorPage() {
   useEffect(() => {
     if (!project) return;
     if (displayCurrency && !displayCurrencyMeta) {
-      setDisplayCurrency("");
+      setDisplayCurrency('');
     }
   }, [project, displayCurrency, displayCurrencyMeta, setDisplayCurrency]);
   // FX rates store rate-to-base, so converting from base → display is
@@ -1960,9 +1731,7 @@ export function BOQEditorPage() {
   const grossTotalDisplay = displayCurrencyMeta
     ? grossTotal / displayCurrencyMeta.rate
     : grossTotal;
-  const displaySymbol = displayCurrencyMeta
-    ? displayCurrencyMeta.currency
-    : currencySymbol;
+  const displaySymbol = displayCurrencyMeta ? displayCurrencyMeta.currency : currencySymbol;
 
   /* ── Quality score ───────────────────────────────────────────────── */
 
@@ -1978,10 +1747,10 @@ export function BOQEditorPage() {
     const sectionCount = grouped.sections.length;
     const positionCount = allPositions.filter((p) => !isSection(p)).length;
     const errorCount = allPositions.filter(
-      (p) => !isSection(p) && p.validation_status === "errors",
+      (p) => !isSection(p) && p.validation_status === 'errors',
     ).length;
     const warningCount = allPositions.filter(
-      (p) => !isSection(p) && p.validation_status === "warnings",
+      (p) => !isSection(p) && p.validation_status === 'warnings',
     ).length;
     return { sectionCount, positionCount, errorCount, warningCount };
   }, [boq?.positions, grouped.sections.length]);
@@ -1991,68 +1760,41 @@ export function BOQEditorPage() {
   const tips: Tip[] = useMemo(() => {
     const all: Tip[] = [
       {
-        id: "tip_sections",
-        text: t("boq.tip_sections", {
-          defaultValue:
-            "Add sections to organize your estimate (e.g., Foundations, Walls, Roof)",
-        }),
-        condition: "no_sections",
+        id: 'tip_sections',
+        text: t('boq.tip_sections', { defaultValue: 'Add sections to organize your estimate (e.g., Foundations, Walls, Roof)' }),
+        condition: 'no_sections',
       },
       {
-        id: "tip_keyboard",
-        text: t("boq.tip_tab", {
-          defaultValue: "Use Tab to move between fields, Enter to save changes",
-        }),
-        condition: "always",
+        id: 'tip_keyboard',
+        text: t('boq.tip_tab', { defaultValue: 'Use Tab to move between fields, Enter to save changes' }),
+        condition: 'always',
       },
       {
-        id: "tip_context_menu",
-        text: t("boq.tip_menu", {
-          defaultValue:
-            "Click the (...) menu on a section to add positions or delete it",
-        }),
-        condition: "always",
+        id: 'tip_context_menu',
+        text: t('boq.tip_menu', { defaultValue: 'Click the (...) menu on a section to add positions or delete it' }),
+        condition: 'always',
       },
       {
-        id: "tip_markups",
-        text: t("boq.tip_markups", {
-          defaultValue:
-            "Add markups for overhead costs and profit using the Markups section below the table",
-        }),
-        condition: "no_markups",
+        id: 'tip_markups',
+        text: t('boq.tip_markups', { defaultValue: 'Add markups for overhead costs and profit using the Markups section below the table' }),
+        condition: 'no_markups',
       },
       {
-        id: "tip_descriptions",
-        text: t("boq.tip_autocomplete", {
-          defaultValue:
-            "Fill in descriptions for all positions — start typing to see suggestions from the cost database",
-        }),
-        condition: "has_empty_descriptions",
+        id: 'tip_descriptions',
+        text: t('boq.tip_autocomplete', { defaultValue: 'Fill in descriptions for all positions — start typing to see suggestions from the cost database' }),
+        condition: 'has_empty_descriptions',
       },
     ];
 
     const sectionCount = grouped.sections.length;
-    const items = (boq?.positions ?? []).filter(
-      (p) =>
-        p.unit &&
-        p.unit.trim() !== "" &&
-        p.unit.trim().toLowerCase() !== "section",
-    );
-    const hasEmptyDescs = items.some(
-      (p) => !p.description || p.description.trim() === "",
-    );
+    const items = (boq?.positions ?? []).filter((p) => p.unit && p.unit.trim() !== '' && p.unit.trim().toLowerCase() !== 'section');
+    const hasEmptyDescs = items.some((p) => !p.description || p.description.trim() === '');
 
     return all.filter((tip) => {
-      if (tip.condition === "always") return true;
-      if (tip.condition === "no_sections" && sectionCount === 0) return true;
-      if (
-        tip.condition === "no_markups" &&
-        markups.length === 0 &&
-        items.length > 0
-      )
-        return true;
-      if (tip.condition === "has_empty_descriptions" && hasEmptyDescs)
-        return true;
+      if (tip.condition === 'always') return true;
+      if (tip.condition === 'no_sections' && sectionCount === 0) return true;
+      if (tip.condition === 'no_markups' && markups.length === 0 && items.length > 0) return true;
+      if (tip.condition === 'has_empty_descriptions' && hasEmptyDescs) return true;
       return false;
     });
   }, [boq?.positions, markups, grouped.sections.length, t]);
@@ -2060,26 +1802,14 @@ export function BOQEditorPage() {
   /* ── Handlers ──────────────────────────────────────────────────────── */
 
   const sectionMutation = useMutation({
-    mutationFn: (data: {
-      ordinal: string;
-      description: string;
-      parent_id?: string | null;
-    }) => boqApi.addSection(boqId!, data),
+    mutationFn: (data: { ordinal: string; description: string; parent_id?: string | null }) =>
+      boqApi.addSection(boqId!, data),
     onSuccess: () => {
       invalidateAll();
-      addToast({
-        type: "success",
-        title: t("boq.section_added", { defaultValue: "Section added" }),
-      });
+      addToast({ type: 'success', title: t('boq.section_added', { defaultValue: 'Section added' }) });
     },
     onError: (err: Error) => {
-      addToast({
-        type: "error",
-        title: t("boq.section_add_failed", {
-          defaultValue: "Failed to add section",
-        }),
-        message: err.message,
-      });
+      addToast({ type: 'error', title: t('boq.section_add_failed', { defaultValue: 'Failed to add section' }), message: err.message });
     },
   });
 
@@ -2095,26 +1825,22 @@ export function BOQEditorPage() {
       if (!boqId) return;
       const all = boq?.positions ?? [];
       const parent = all.find((p) => p.id === parentSectionId);
-      const parentOrdinal = parent?.ordinal ?? "01";
+      const parentOrdinal = parent?.ordinal ?? '01';
       const ordinal = computeNextSubOrdinal(all, parentOrdinal);
-      sectionMutation.mutate({
-        ordinal,
-        description: "",
-        parent_id: parentSectionId,
-      });
+      sectionMutation.mutate({ ordinal, description: '', parent_id: parentSectionId });
     },
     [boqId, boq?.positions, sectionMutation],
   );
 
   /** Section name modal */
   const [showSectionModal, setShowSectionModal] = useState(false);
-  const [sectionNameInput, setSectionNameInput] = useState("");
+  const [sectionNameInput, setSectionNameInput] = useState('');
   /**
    * Issue #136 — chosen parent for the new section ('' = top level).
    * Pre-fillable so the section row's "Add sub-section" action can open
    * this same modal with the parent already selected.
    */
-  const [sectionParentInput, setSectionParentInput] = useState<string>("");
+  const [sectionParentInput, setSectionParentInput] = useState<string>('');
 
   /**
    * Issue #136 — every existing section offered as a parent, indented by
@@ -2127,21 +1853,19 @@ export function BOQEditorPage() {
     return all
       .filter((p) => isSection(p))
       .sort((a, b) =>
-        (a.ordinal || "").localeCompare(b.ordinal || "", undefined, {
-          numeric: true,
-        }),
+        (a.ordinal || '').localeCompare(b.ordinal || '', undefined, { numeric: true }),
       )
       .map((p) => {
         const depth0 = getPositionDepth(p, map); // 0-based ancestor count
         const childTier = depth0 + 2; // parent tier (depth0+1) + 1 for the child
         const name = (
           p.description ||
-          t("boq.untitled_section", { defaultValue: "Untitled section" })
+          t('boq.untitled_section', { defaultValue: 'Untitled section' })
         ).slice(0, 48);
         return {
           id: p.id,
           disabled: childTier > maxNestingDepth,
-          label: `${"  ".repeat(Math.min(depth0, 7))}${p.ordinal || ""}  ${name}`,
+          label: `${'  '.repeat(Math.min(depth0, 7))}${p.ordinal || ''}  ${name}`,
         };
       });
   }, [boq?.positions, maxNestingDepth, t]);
@@ -2151,8 +1875,8 @@ export function BOQEditorPage() {
       if (!boqId) return;
       // Callers wired as onClick={onAddSection} pass a MouseEvent — only a
       // real string id preselects a parent; anything else = top level.
-      const pid = typeof parentSectionId === "string" ? parentSectionId : "";
-      setSectionNameInput("");
+      const pid = typeof parentSectionId === 'string' ? parentSectionId : '';
+      setSectionNameInput('');
       setSectionParentInput(pid);
       setShowSectionModal(true);
     },
@@ -2161,26 +1885,22 @@ export function BOQEditorPage() {
 
   const handleConfirmAddSection = useCallback(() => {
     if (!boqId) return;
-    const pid = sectionParentInput || "";
+    const pid = sectionParentInput || '';
     if (pid) {
       // Nested section — collision-free ordinal under the parent
       // (shared with handleAddSubSection).
       const all = boq?.positions ?? [];
       const parent = all.find((p) => p.id === pid);
-      const parentOrdinal = parent?.ordinal ?? "01";
+      const parentOrdinal = parent?.ordinal ?? '01';
       const ordinal = computeNextSubOrdinal(all, parentOrdinal);
-      sectionMutation.mutate({
-        ordinal,
-        description: sectionNameInput || "",
-        parent_id: pid,
-      });
+      sectionMutation.mutate({ ordinal, description: sectionNameInput || '', parent_id: pid });
     } else {
-      const ordinal = String(grouped.sections.length + 1).padStart(2, "0");
-      sectionMutation.mutate({ ordinal, description: sectionNameInput || "" });
+      const ordinal = String(grouped.sections.length + 1).padStart(2, '0');
+      sectionMutation.mutate({ ordinal, description: sectionNameInput || '' });
     }
     setShowSectionModal(false);
-    setSectionNameInput("");
-    setSectionParentInput("");
+    setSectionNameInput('');
+    setSectionParentInput('');
   }, [
     boqId,
     boq?.positions,
@@ -2207,10 +1927,7 @@ export function BOQEditorPage() {
        * sibling ordinal (parsed) and add 10 — that way ordinals stay sorted
        * even if previous ones were manually edited. */
 
-      const nextChildOrdinal = (
-        parentOrdinal: string,
-        siblings: Position[],
-      ): string => {
+      const nextChildOrdinal = (parentOrdinal: string, siblings: Position[]): string => {
         // Pick the largest numeric suffix among siblings (e.g. "01.30" → 30)
         let maxSuffix = 0;
         const prefix = `${parentOrdinal}.`;
@@ -2220,7 +1937,7 @@ export function BOQEditorPage() {
           if (!isNaN(suffix) && suffix > maxSuffix) maxSuffix = suffix;
         }
         const nextSuffix = maxSuffix + 10;
-        return `${parentOrdinal}.${String(nextSuffix).padStart(2, "0")}`;
+        return `${parentOrdinal}.${String(nextSuffix).padStart(2, '0')}`;
       };
 
       /* Issue #139 — when inserting *between* two siblings, pick an ordinal
@@ -2230,15 +1947,10 @@ export function BOQEditorPage() {
        * to fit a clean value — the caller then falls back to the gap-of-10
        * append ordinal (placement stays correct via sort_order regardless). */
       const splitOrdinal = (ord: string): [string, string] => {
-        const dot = ord.lastIndexOf(".");
-        return dot === -1
-          ? ["", ord]
-          : [ord.slice(0, dot + 1), ord.slice(dot + 1)];
+        const dot = ord.lastIndexOf('.');
+        return dot === -1 ? ['', ord] : [ord.slice(0, dot + 1), ord.slice(dot + 1)];
       };
-      const interpolateOrdinal = (
-        prev: string,
-        next: string,
-      ): string | null => {
+      const interpolateOrdinal = (prev: string, next: string): string | null => {
         const [pPre, pNum] = splitOrdinal(prev);
         const [nPre, nNum] = splitOrdinal(next);
         if (pPre !== nPre) return null;
@@ -2248,7 +1960,7 @@ export function BOQEditorPage() {
         const mid = Math.floor((a + b) / 2);
         if (mid <= a || mid >= b) return null;
         const width = Math.max(pNum.length, nNum.length);
-        return `${pPre}${String(mid).padStart(width, "0")}`;
+        return `${pPre}${String(mid).padStart(width, '0')}`;
       };
 
       // Issue #134 — when invoked without an explicit parent (the
@@ -2279,16 +1991,11 @@ export function BOQEditorPage() {
         // Find the sibling rendered immediately after the selected leaf
         // (siblings ordered by sort_order, then ordinal — mirrors the grid).
         const siblings = allPositions
-          .filter(
-            (p) =>
-              (p.parent_id ?? null) === (selectedPosition.parent_id ?? null),
-          )
+          .filter((p) => (p.parent_id ?? null) === (selectedPosition.parent_id ?? null))
           .sort((a, b) =>
             a.sort_order !== b.sort_order
               ? a.sort_order - b.sort_order
-              : (a.ordinal ?? "").localeCompare(b.ordinal ?? "", undefined, {
-                  numeric: true,
-                }),
+              : (a.ordinal ?? '').localeCompare(b.ordinal ?? '', undefined, { numeric: true }),
           );
         const selIdx = siblings.findIndex((p) => p.id === selectedPosition.id);
         const nextSibling = selIdx >= 0 ? siblings[selIdx + 1] : undefined;
@@ -2304,7 +2011,7 @@ export function BOQEditorPage() {
           const parentSection = parentId
             ? allPositions.find((p) => p.id === parentId)
             : undefined;
-          const parentOrdinal = parentSection?.ordinal ?? "01";
+          const parentOrdinal = parentSection?.ordinal ?? '01';
           ordinal = parentId
             ? nextChildOrdinal(
                 parentOrdinal,
@@ -2313,18 +2020,15 @@ export function BOQEditorPage() {
             : (() => {
                 let maxTop = 0;
                 for (const p of allPositions) {
-                  const num = parseInt(p.ordinal ?? "", 10);
+                  const num = parseInt(p.ordinal ?? '', 10);
                   if (!isNaN(num) && num > maxTop) maxTop = num;
                 }
-                return String((Math.floor(maxTop / 10) + 1) * 10).padStart(
-                  4,
-                  "0",
-                );
+                return String((Math.floor(maxTop / 10) + 1) * 10).padStart(4, '0');
               })();
         }
       } else if (parentId) {
         const parentSection = allPositions.find((p) => p.id === parentId);
-        const parentOrdinal = parentSection?.ordinal ?? "01";
+        const parentOrdinal = parentSection?.ordinal ?? '01';
         const siblings = allPositions.filter((p) => p.parent_id === parentId);
         ordinal = nextChildOrdinal(parentOrdinal, siblings);
       } else {
@@ -2332,27 +2036,24 @@ export function BOQEditorPage() {
         const lastSection = grouped.sections[grouped.sections.length - 1];
         if (lastSection) {
           parentId = lastSection.section.id;
-          ordinal = nextChildOrdinal(
-            lastSection.section.ordinal,
-            lastSection.children,
-          );
+          ordinal = nextChildOrdinal(lastSection.section.ordinal, lastSection.children);
         } else {
           // No sections — generate a unique top-level ordinal in 4-digit gap-of-10
           let maxTop = 0;
           for (const p of allPositions) {
-            const num = parseInt(p.ordinal ?? "", 10);
+            const num = parseInt(p.ordinal ?? '', 10);
             if (!isNaN(num) && num > maxTop) maxTop = num;
           }
           const next = (Math.floor(maxTop / 10) + 1) * 10;
-          ordinal = String(next).padStart(4, "0");
+          ordinal = String(next).padStart(4, '0');
         }
       }
 
       addMutation.mutate({
         boq_id: boqId,
         ordinal,
-        description: "",
-        unit: "m2",
+        description: '',
+        unit: 'm2',
         quantity: 0,
         unit_rate: 0,
         parent_id: parentId,
@@ -2363,10 +2064,9 @@ export function BOQEditorPage() {
         after_position_id: afterPositionId ?? null,
       });
       addToast({
-        type: "info",
-        title: t("boq.empty_position_quality_hint", {
-          defaultValue:
-            "Empty position lowers Quality Score until quantity & rate are filled",
+        type: 'info',
+        title: t('boq.empty_position_quality_hint', {
+          defaultValue: 'Empty position lowers Quality Score until quantity & rate are filled',
         }),
       });
     },
@@ -2393,17 +2093,17 @@ export function BOQEditorPage() {
       ).sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
       const code = window
         .prompt(
-          t("boq.reuse_code_prompt", {
+          t('boq.reuse_code_prompt', {
             defaultValue:
-              "Enter an existing code to reuse it here (its definition & sub-items are copied; quantity stays independent):",
+              'Enter an existing code to reuse it here (its definition & sub-items are copied; quantity stays independent):',
           }) +
             (known.length > 0
-              ? `\n\n${t("boq.reuse_code_existing", {
-                  defaultValue: "Existing codes: {{codes}}",
-                  codes: known.slice(0, 40).join(", "),
+              ? `\n\n${t('boq.reuse_code_existing', {
+                  defaultValue: 'Existing codes: {{codes}}',
+                  codes: known.slice(0, 40).join(', '),
                 })}`
-              : ""),
-          "",
+              : ''),
+          '',
         )
         ?.trim();
       if (!code) return;
@@ -2425,23 +2125,23 @@ export function BOQEditorPage() {
       // a reused code; this is just the create payload's required field.
       let maxTop = 0;
       for (const p of allPositions) {
-        const num = parseInt(p.ordinal ?? "", 10);
+        const num = parseInt(p.ordinal ?? '', 10);
         if (!isNaN(num) && num > maxTop) maxTop = num;
       }
       const provisionalOrdinal = String(
         (Math.floor(maxTop / 10) + 1) * 10,
-      ).padStart(4, "0");
+      ).padStart(4, '0');
 
       addMutation.mutate({
         boq_id: boqId,
         ordinal: provisionalOrdinal,
-        description: "",
-        unit: "m2",
+        description: '',
+        unit: 'm2',
         quantity: 0,
         unit_rate: 0,
         parent_id: targetParent,
         reference_code: code,
-        link_mode: "link",
+        link_mode: 'link',
       });
     },
     [boqId, boq, grouped, selectedPosition, addMutation, t],
@@ -2456,7 +2156,7 @@ export function BOQEditorPage() {
   const handleShowLinks = useCallback(
     (positionId: string) => {
       const pos = (boq?.positions ?? []).find((p) => p.id === positionId);
-      setLinksModalFor({ id: positionId, ordinal: pos?.ordinal ?? "" });
+      setLinksModalFor({ id: positionId, ordinal: pos?.ordinal ?? '' });
     },
     [boq],
   );
@@ -2471,7 +2171,7 @@ export function BOQEditorPage() {
   const handleModelLink = useCallback(
     (positionId: string) => {
       const pos = (boq?.positions ?? []).find((p) => p.id === positionId);
-      setModelLinkFor({ id: positionId, ordinal: pos?.ordinal ?? "" });
+      setModelLinkFor({ id: positionId, ordinal: pos?.ordinal ?? '' });
     },
     [boq],
   );
@@ -2488,24 +2188,24 @@ export function BOQEditorPage() {
       invalidateAll();
       setLinksModalFor(null);
       addToast({
-        type: "success",
-        title: t("boq.unlink_done_title", {
-          defaultValue: "Position unlinked‌⁠‍",
+        type: 'success',
+        title: t('boq.unlink_done_title', {
+          defaultValue: 'Position unlinked‌⁠‍',
         }),
-        message: t("boq.unlink_done_msg", {
+        message: t('boq.unlink_done_msg', {
           defaultValue:
-            "Code {{code}} kept. This position no longer follows the shared code; its values were preserved.‌⁠‍",
+            'Code {{code}} kept. This position no longer follows the shared code; its values were preserved.‌⁠‍',
           code: updated.reference_code ?? updated.ordinal,
         }),
       });
     },
     onError: (err) => {
       addToast({
-        type: "error",
-        title: t("boq.unlink_failed", {
-          defaultValue: "Failed to unlink position‌⁠‍",
+        type: 'error',
+        title: t('boq.unlink_failed', {
+          defaultValue: 'Failed to unlink position‌⁠‍',
         }),
-        message: err instanceof Error ? err.message : "",
+        message: err instanceof Error ? err.message : '',
       });
     },
   });
@@ -2522,9 +2222,9 @@ export function BOQEditorPage() {
 
   /** Actually perform the export (download file). */
   const doExport = useCallback(
-    async (format: "excel" | "csv" | "pdf" | "gaeb") => {
+    async (format: 'excel' | 'csv' | 'pdf' | 'gaeb') => {
       // Client-side Excel export via SheetJS
-      if (format === "excel" && positions.length > 0) {
+      if (format === 'excel' && positions.length > 0) {
         try {
           const markupTotalsForExport = markupTotals.map((m) => ({
             name: m.name,
@@ -2532,13 +2232,11 @@ export function BOQEditorPage() {
             amount: m.amount,
           }));
           await exportBOQToExcel({
-            boqTitle: boq?.name ?? "BOQ",
+            boqTitle: boq?.name ?? 'BOQ',
             projectName: project?.name,
             classificationStandard: project?.classification_standard,
             region: project?.region,
-            currency:
-              ((boq as unknown as Record<string, unknown>)
-                ?.currency as string) ?? "\u20ac",
+            currency: (boq as unknown as Record<string, unknown>)?.currency as string ?? '\u20ac',
             positions,
             markupTotals: markupTotalsForExport,
             netTotal,
@@ -2546,12 +2244,7 @@ export function BOQEditorPage() {
             vatAmount,
             grossTotal,
           });
-          addToast({
-            type: "success",
-            title: t("boq.file_downloaded", {
-              defaultValue: "File downloaded",
-            }),
-          });
+          addToast({ type: 'success', title: t('boq.file_downloaded', { defaultValue: 'File downloaded' }) });
           return;
         } catch {
           // Fall through to server-side export
@@ -2562,11 +2255,7 @@ export function BOQEditorPage() {
       // browser memory issues — let the server handle them with a simplified report)
       const LARGE_BOQ_THRESHOLD = 500;
       const nonSectionPositions = positions.filter((p) => !isSection(p));
-      if (
-        format === "pdf" &&
-        nonSectionPositions.length > 0 &&
-        nonSectionPositions.length <= LARGE_BOQ_THRESHOLD
-      ) {
+      if (format === 'pdf' && nonSectionPositions.length > 0 && nonSectionPositions.length <= LARGE_BOQ_THRESHOLD) {
         try {
           const markupTotalsForExport = markupTotals.map((m) => ({
             name: m.name,
@@ -2574,7 +2263,7 @@ export function BOQEditorPage() {
             amount: m.amount,
           }));
           generateBOQPdf({
-            boqTitle: boq?.name ?? "BOQ",
+            boqTitle: boq?.name ?? 'BOQ',
             projectName: project?.name,
             date: new Date().toISOString(),
             currency: currencySymbol,
@@ -2587,12 +2276,7 @@ export function BOQEditorPage() {
             grossTotal,
             locale,
           });
-          addToast({
-            type: "success",
-            title: t("boq.file_downloaded", {
-              defaultValue: "File downloaded",
-            }),
-          });
+          addToast({ type: 'success', title: t('boq.file_downloaded', { defaultValue: 'File downloaded' }) });
           return;
         } catch {
           // Fall through to server-side export
@@ -2606,23 +2290,12 @@ export function BOQEditorPage() {
       if (r.ok) {
         const blob = await r.blob();
         const extensions: Record<string, string> = {
-          excel: "xlsx",
-          csv: "csv",
-          pdf: "pdf",
-          gaeb: "xml",
+          excel: 'xlsx', csv: 'csv', pdf: 'pdf', gaeb: 'xml',
         };
-        triggerDownload(
-          blob,
-          `${boq?.name ?? "boq"}.${extensions[format] ?? format}`,
-        );
-        addToast({
-          type: "success",
-          title: t("boq.file_downloaded", { defaultValue: "File downloaded" }),
-        });
+        triggerDownload(blob, `${boq?.name ?? 'boq'}.${extensions[format] ?? format}`);
+        addToast({ type: 'success', title: t('boq.file_downloaded', { defaultValue: 'File downloaded' }) });
       } else {
-        let errorMsg = t("boq.export_failed", {
-          defaultValue: "Export failed",
-        });
+        let errorMsg = t('boq.export_failed', { defaultValue: 'Export failed' });
         try {
           const errBody = await r.json();
           if (errBody?.detail) {
@@ -2631,7 +2304,7 @@ export function BOQEditorPage() {
         } catch {
           // Response was not JSON — use default message
         }
-        addToast({ type: "error", title: errorMsg });
+        addToast({ type: 'error', title: errorMsg });
       }
     },
     [boqId, boq, positions, markups, directCost, netTotal, addToast, t],
@@ -2639,9 +2312,9 @@ export function BOQEditorPage() {
 
   /** Pre-export validation check: warn if quality < 60%, GAEB preview before export. */
   const handleExport = useCallback(
-    (format: "excel" | "csv" | "pdf" | "gaeb") => {
+    (format: 'excel' | 'csv' | 'pdf' | 'gaeb') => {
       // Show GAEB confirmation dialog before quality check
-      if (format === "gaeb") {
+      if (format === 'gaeb') {
         setGaebPreviewOpen(true);
         return;
       }
@@ -2662,16 +2335,14 @@ export function BOQEditorPage() {
     setGaebPreviewOpen(false);
     const score = qualityBreakdown.score;
     if (score < 60) {
-      setExportWarning({ format: "gaeb", score });
+      setExportWarning({ format: 'gaeb', score });
     } else {
-      doExport("gaeb");
+      doExport('gaeb');
     }
   }, [qualityBreakdown.score, doExport]);
 
   const [isValidating, setIsValidating] = useState(false);
-  const [lastValidationScore, setLastValidationScore] = useState<number | null>(
-    null,
-  );
+  const [lastValidationScore, setLastValidationScore] = useState<number | null>(null);
 
   const handleValidate = useCallback(async () => {
     const token = useAuthStore.getState().accessToken;
@@ -2679,89 +2350,50 @@ export function BOQEditorPage() {
     useProgressStore.getState().start();
     try {
       const r = await fetch(`/api/v1/boq/boqs/${boqId}/validate/`, {
-        method: "POST",
+        method: 'POST',
         headers: token ? { Authorization: `Bearer ${token}` } : {},
       });
       const result = await r.json();
-      const scoreNum =
-        typeof result?.score === "number"
-          ? Math.round(result.score * 100)
-          : null;
+      const scoreNum = typeof result?.score === 'number' ? Math.round(result.score * 100) : null;
       setLastValidationScore(scoreNum);
-      const errors: Array<{ rule_id: string; message: string }> =
-        result?.errors ?? [];
-      const warnings: Array<{ rule_id: string; message: string }> =
-        result?.warnings ?? [];
+      const errors: Array<{ rule_id: string; message: string }> = result?.errors ?? [];
+      const warnings: Array<{ rule_id: string; message: string }> = result?.warnings ?? [];
       const passed: number = result?.passed?.length ?? 0;
 
-      const toastType =
-        errors.length > 0
-          ? "error"
-          : warnings.length > 0
-            ? "warning"
-            : "success";
+      const toastType = errors.length > 0 ? 'error' : warnings.length > 0 ? 'warning' : 'success';
 
       // Build human-readable summary
       const parts: string[] = [];
       if (scoreNum != null) {
-        parts.push(
-          t("boq.validation_score", {
-            defaultValue: "Quality score: {{score}}%",
-            score: scoreNum,
-          }),
-        );
+        parts.push(t('boq.validation_score', { defaultValue: 'Quality score: {{score}}%', score: scoreNum }));
       }
       if (errors.length > 0) {
-        parts.push(
-          t("boq.validation_errors", {
-            defaultValue: "{{count}} errors found",
-            count: errors.length,
-          }),
-        );
+        parts.push(t('boq.validation_errors', { defaultValue: '{{count}} errors found', count: errors.length }));
         // Show first 2 error messages
-        errors.slice(0, 2).forEach((e) => parts.push(`  — ${e.message}`));
+        errors.slice(0, 2).forEach(e => parts.push(`  — ${e.message}`));
       }
       if (warnings.length > 0) {
-        parts.push(
-          t("boq.validation_warnings", {
-            defaultValue: "{{count}} warnings",
-            count: warnings.length,
-          }),
-        );
+        parts.push(t('boq.validation_warnings', { defaultValue: '{{count}} warnings', count: warnings.length }));
       }
       if (errors.length === 0 && warnings.length === 0) {
-        parts.push(
-          t("boq.validation_all_passed", {
-            defaultValue: "All {{count}} checks passed",
-            count: passed,
-          }),
-        );
+        parts.push(t('boq.validation_all_passed', { defaultValue: 'All {{count}} checks passed', count: passed }));
       }
 
       addToast({
         type: toastType,
-        title:
-          toastType === "success"
-            ? t("boq.validation_passed", { defaultValue: "Validation passed" })
-            : toastType === "warning"
-              ? t("boq.validation_warnings_title", {
-                  defaultValue: "Validation warnings",
-                })
-              : t("boq.validation_errors_title", {
-                  defaultValue: "Validation errors",
-                }),
-        message: parts.join("\n"),
+        title: toastType === 'success'
+          ? t('boq.validation_passed', { defaultValue: 'Validation passed' })
+          : toastType === 'warning'
+            ? t('boq.validation_warnings_title', { defaultValue: 'Validation warnings' })
+            : t('boq.validation_errors_title', { defaultValue: 'Validation errors' }),
+        message: parts.join('\n'),
       });
       invalidateAll();
     } catch {
       addToast({
-        type: "error",
-        title: t("boq.validation_failed", {
-          defaultValue: "Validation failed",
-        }),
-        message: t("boq.validation_failed_hint", {
-          defaultValue: "Could not connect to validation service.",
-        }),
+        type: 'error',
+        title: t('boq.validation_failed', { defaultValue: 'Validation failed' }),
+        message: t('boq.validation_failed_hint', { defaultValue: 'Could not connect to validation service.' }),
       });
     } finally {
       setIsValidating(false);
@@ -2794,63 +2426,44 @@ export function BOQEditorPage() {
       // Build informative summary
       const parts: string[] = [];
       if (enrichedCount > 0) {
-        parts.push(
-          t("boq.recalc_enriched", {
-            defaultValue: "{{count}} positions matched to cost database",
-            count: enrichedCount,
-          }),
-        );
+        parts.push(t('boq.recalc_enriched', {
+          defaultValue: '{{count}} positions matched to cost database',
+          count: enrichedCount,
+        }));
       }
       if (result.updated > 0) {
-        parts.push(
-          t("boq.recalc_updated", {
-            defaultValue: "{{count}} unit rates recalculated from resources",
-            count: result.updated,
-          }),
-        );
+        parts.push(t('boq.recalc_updated', {
+          defaultValue: '{{count}} unit rates recalculated from resources',
+          count: result.updated,
+        }));
       }
       if (result.skipped > 0) {
-        parts.push(
-          t("boq.recalc_skipped", {
-            defaultValue:
-              "{{count}} positions without cost data (manual rates kept)",
-            count: result.skipped,
-          }),
-        );
+        parts.push(t('boq.recalc_skipped', {
+          defaultValue: '{{count}} positions without cost data (manual rates kept)',
+          count: result.skipped,
+        }));
       }
 
       const hasChanges = enrichedCount > 0 || result.updated > 0;
       addToast({
-        type: hasChanges ? "success" : "info",
+        type: hasChanges ? 'success' : 'info',
         title: hasChanges
-          ? t("boq.recalculate_complete", { defaultValue: "Rates updated" })
-          : t("boq.recalculate_no_changes", {
-              defaultValue: "No changes needed",
-            }),
-        message:
-          parts.join(". ") ||
-          t("boq.recalculate_all_manual", {
-            defaultValue:
-              "All positions use manual rates — add resources from cost database to enable automatic rate calculation.",
-          }),
+          ? t('boq.recalculate_complete', { defaultValue: 'Rates updated' })
+          : t('boq.recalculate_no_changes', { defaultValue: 'No changes needed' }),
+        message: parts.join('. ') || t('boq.recalculate_all_manual', {
+          defaultValue: 'All positions use manual rates — add resources from cost database to enable automatic rate calculation.',
+        }),
       });
       invalidateAll();
     } catch (err) {
       // Surface the actual error to the console so the user can see why
       // recalculate failed (auth, 404, 500…) instead of a generic toast.
-      console.error("[Update Rates] recalculate failed:", err);
+      console.error('[Update Rates] recalculate failed:', err);
       const detail = err instanceof Error ? err.message : String(err);
       addToast({
-        type: "error",
-        title: t("boq.recalculate_failed", {
-          defaultValue: "Recalculation failed",
-        }),
-        message:
-          detail ||
-          t("boq.recalculate_failed_hint", {
-            defaultValue:
-              "Check that the backend is running and cost database is loaded.",
-          }),
+        type: 'error',
+        title: t('boq.recalculate_failed', { defaultValue: 'Recalculation failed' }),
+        message: detail || t('boq.recalculate_failed_hint', { defaultValue: 'Check that the backend is running and cost database is loaded.' }),
       });
     } finally {
       setIsRecalculating(false);
@@ -2864,65 +2477,51 @@ export function BOQEditorPage() {
 
   // "s" shortcut → save / recalculate rates (when not typing in an input)
   useEffect(() => {
-    const INTERACTIVE = new Set(["INPUT", "TEXTAREA", "SELECT"]);
+    const INTERACTIVE = new Set(['INPUT', 'TEXTAREA', 'SELECT']);
     const handler = (e: KeyboardEvent) => {
       const el = document.activeElement;
-      if (
-        el &&
-        (INTERACTIVE.has(el.tagName) || (el as HTMLElement).isContentEditable)
-      )
-        return;
+      if (el && (INTERACTIVE.has(el.tagName) || (el as HTMLElement).isContentEditable)) return;
       if (e.ctrlKey || e.altKey || e.metaKey || e.shiftKey) return;
-      if (e.key === "s") {
+      if (e.key === 's') {
         e.preventDefault();
         handleRecalculate();
       }
     };
-    document.addEventListener("keydown", handler);
-    return () => document.removeEventListener("keydown", handler);
+    document.addEventListener('keydown', handler);
+    return () => document.removeEventListener('keydown', handler);
   }, [handleRecalculate]);
 
   /* ── Excel paste handler ──────────────────────────────────────────── */
 
-  const handleExcelPaste = useCallback(
-    async (rows: PastedRow[]) => {
-      if (!boqId || rows.length === 0) return;
-      setIsExcelPasteImporting(true);
-      try {
-        const items = rows.map((r) => ({
-          boq_id: boqId,
-          ordinal: r.ordinal,
-          description: r.description,
-          unit: r.unit,
-          quantity: r.quantity,
-          unit_rate: r.unit_rate,
-        }));
-        await apiPost(`/v1/boq/boqs/${boqId}/positions/bulk/`, { items });
-        addToast({
-          type: "success",
-          title: t("boq.paste_import_success", {
-            defaultValue: "Imported successfully",
-          }),
-          message: t("boq.paste_import_count", {
-            defaultValue: "{{count}} positions added to BOQ",
-            count: rows.length,
-          }),
-        });
-        setExcelPasteOpen(false);
-        invalidateAll();
-      } catch {
-        addToast({
-          type: "error",
-          title: t("boq.paste_import_failed", {
-            defaultValue: "Import failed",
-          }),
-        });
-      } finally {
-        setIsExcelPasteImporting(false);
-      }
-    },
-    [boqId, addToast, t, invalidateAll],
-  );
+  const handleExcelPaste = useCallback(async (rows: PastedRow[]) => {
+    if (!boqId || rows.length === 0) return;
+    setIsExcelPasteImporting(true);
+    try {
+      const items = rows.map((r) => ({
+        boq_id: boqId,
+        ordinal: r.ordinal,
+        description: r.description,
+        unit: r.unit,
+        quantity: r.quantity,
+        unit_rate: r.unit_rate,
+      }));
+      await apiPost(`/v1/boq/boqs/${boqId}/positions/bulk/`, { items });
+      addToast({
+        type: 'success',
+        title: t('boq.paste_import_success', { defaultValue: 'Imported successfully' }),
+        message: t('boq.paste_import_count', { defaultValue: '{{count}} positions added to BOQ', count: rows.length }),
+      });
+      setExcelPasteOpen(false);
+      invalidateAll();
+    } catch {
+      addToast({
+        type: 'error',
+        title: t('boq.paste_import_failed', { defaultValue: 'Import failed' }),
+      });
+    } finally {
+      setIsExcelPasteImporting(false);
+    }
+  }, [boqId, addToast, t, invalidateAll]);
 
   /* ── Resource management ────────────────────────────────────────────── */
 
@@ -2931,17 +2530,14 @@ export function BOQEditorPage() {
     (positionId: string, resourceIndex: number) => {
       const pos = boq?.positions.find((p) => p.id === positionId);
       if (!pos) return;
-      const resources = [
-        ...((pos.metadata?.resources ?? []) as Array<Record<string, unknown>>),
-      ];
+      const resources = [...((pos.metadata?.resources ?? []) as Array<Record<string, unknown>>)];
       if (resourceIndex < 0 || resourceIndex >= resources.length) return;
       resources.splice(resourceIndex, 1);
       const newMeta = { ...pos.metadata, resources };
       // Recalculate unit_rate from remaining resources
       let computedRate = 0;
       for (const r of resources) {
-        computedRate +=
-          ((r.quantity as number) ?? 0) * ((r.unit_rate as number) ?? 0);
+        computedRate += ((r.quantity as number) ?? 0) * ((r.unit_rate as number) ?? 0);
       }
       computedRate = Math.round(computedRate * 100) / 100;
       updateMutation.mutate({
@@ -2961,16 +2557,10 @@ export function BOQEditorPage() {
    *  follow-up wrote the stale `name` back). This function takes a field map
    *  and merges everything into one PATCH. */
   const handleUpdateResourceFields = useCallback(
-    (
-      positionId: string,
-      resourceIndex: number,
-      fields: Record<string, number | string>,
-    ) => {
+    (positionId: string, resourceIndex: number, fields: Record<string, number | string>) => {
       const pos = boq?.positions.find((p) => p.id === positionId);
       if (!pos) return;
-      const resources = [
-        ...((pos.metadata?.resources ?? []) as Array<Record<string, unknown>>),
-      ];
+      const resources = [...((pos.metadata?.resources ?? []) as Array<Record<string, unknown>>)];
       if (resourceIndex < 0 || resourceIndex >= resources.length) return;
       resources[resourceIndex] = { ...resources[resourceIndex], ...fields };
       const rQty = (resources[resourceIndex].quantity as number) ?? 0;
@@ -2979,9 +2569,7 @@ export function BOQEditorPage() {
       const newMeta = { ...pos.metadata, resources };
       let resourceTotal = 0;
       for (const r of resources) {
-        resourceTotal +=
-          (r.total as number) ??
-          ((r.quantity as number) ?? 0) * ((r.unit_rate as number) ?? 0);
+        resourceTotal += (r.total as number) ?? (((r.quantity as number) ?? 0) * ((r.unit_rate as number) ?? 0));
       }
       const derivedUnitRate = Math.round(resourceTotal * 10000) / 10000;
       updateMutation.mutate({
@@ -2994,12 +2582,7 @@ export function BOQEditorPage() {
 
   /** Single-field shim — delegates to the batched implementation. */
   const handleUpdateResource = useCallback(
-    (
-      positionId: string,
-      resourceIndex: number,
-      field: string,
-      value: number | string,
-    ) => {
+    (positionId: string, resourceIndex: number, field: string, value: number | string) => {
       handleUpdateResourceFields(positionId, resourceIndex, { [field]: value });
     },
     [handleUpdateResourceFields],
@@ -3012,27 +2595,15 @@ export function BOQEditorPage() {
    *  ``unit_rate`` is NOT recomputed — custom fields don't feed into the
    *  derived rate. */
   const handleUpdateResourceCustomField = useCallback(
-    (
-      positionId: string,
-      resourceIndex: number,
-      fieldName: string,
-      value: number | string,
-    ) => {
+    (positionId: string, resourceIndex: number, fieldName: string, value: number | string) => {
       const pos = boq?.positions.find((p) => p.id === positionId);
       if (!pos) return;
-      const resources = [
-        ...((pos.metadata?.resources ?? []) as Array<Record<string, unknown>>),
-      ];
+      const resources = [...((pos.metadata?.resources ?? []) as Array<Record<string, unknown>>)];
       if (resourceIndex < 0 || resourceIndex >= resources.length) return;
       const res = { ...resources[resourceIndex] };
-      const resMeta =
-        (res.metadata as Record<string, unknown> | undefined) ?? {};
-      const cf =
-        (resMeta.custom_fields as Record<string, unknown> | undefined) ?? {};
-      res.metadata = {
-        ...resMeta,
-        custom_fields: { ...cf, [fieldName]: value },
-      };
+      const resMeta = (res.metadata as Record<string, unknown> | undefined) ?? {};
+      const cf = (resMeta.custom_fields as Record<string, unknown> | undefined) ?? {};
+      res.metadata = { ...resMeta, custom_fields: { ...cf, [fieldName]: value } };
       resources[resourceIndex] = res;
       const newMeta = { ...pos.metadata, resources };
       updateMutation.mutate({ id: positionId, data: { metadata: newMeta } });
@@ -3045,34 +2616,23 @@ export function BOQEditorPage() {
     async (positionId: string, resourceIndex: number) => {
       const pos = boq?.positions.find((p) => p.id === positionId);
       if (!pos) return;
-      const resources = (pos.metadata?.resources ?? []) as Array<
-        Record<string, unknown>
-      >;
+      const resources = (pos.metadata?.resources ?? []) as Array<Record<string, unknown>>;
       const res = resources[resourceIndex];
       if (!res) return;
       try {
-        const code = `MY-${((res.type as string) ?? "OTH").toUpperCase().slice(0, 3)}-${Date.now().toString(36).toUpperCase()}`;
-        await apiPost("/v1/catalog/", {
+        const code = `MY-${((res.type as string) ?? 'OTH').toUpperCase().slice(0, 3)}-${Date.now().toString(36).toUpperCase()}`;
+        await apiPost('/v1/catalog/', {
           resource_code: code,
           name: res.name,
-          resource_type: res.type || "material",
-          category:
-            ((res.type as string) ?? "other").charAt(0).toUpperCase() +
-            ((res.type as string) ?? "other").slice(1),
+          resource_type: res.type || 'material',
+          category: ((res.type as string) ?? 'other').charAt(0).toUpperCase() + ((res.type as string) ?? 'other').slice(1),
           unit: res.unit,
           base_price: res.unit_rate,
           min_price: res.unit_rate,
           max_price: res.unit_rate,
-          currency:
-            currencySymbol === "€"
-              ? "EUR"
-              : currencySymbol === "£"
-                ? "GBP"
-                : currencySymbol === "$"
-                  ? "USD"
-                  : "EUR",
-          source: "boq_import",
-          region: "CUSTOM",
+          currency: currencySymbol === '€' ? 'EUR' : currencySymbol === '£' ? 'GBP' : currencySymbol === '$' ? 'USD' : 'EUR',
+          source: 'boq_import',
+          region: 'CUSTOM',
           specifications: {
             source_position: pos.description,
             source_boq_id: boqId,
@@ -3081,18 +2641,14 @@ export function BOQEditorPage() {
           metadata: {},
         });
         addToast({
-          type: "success",
-          title: t("boq.saved_to_catalog", {
-            defaultValue: "Saved to catalog",
-          }),
+          type: 'success',
+          title: t('boq.saved_to_catalog', { defaultValue: 'Saved to catalog' }),
           message: res.name as string,
         });
       } catch {
         addToast({
-          type: "error",
-          title: t("boq.save_to_catalog_failed", {
-            defaultValue: "Save failed",
-          }),
+          type: 'error',
+          title: t('boq.save_to_catalog_failed', { defaultValue: 'Save failed' }),
         });
       }
     },
@@ -3113,15 +2669,11 @@ export function BOQEditorPage() {
       const pos = boq?.positions.find((p) => p.id === positionId);
       if (!pos) return;
       const meta = (pos.metadata ?? {}) as Record<string, unknown>;
-      const variants =
-        (meta.cost_item_variants as
-          | Array<Record<string, unknown>>
-          | undefined) ?? [];
+      const variants = (meta.cost_item_variants as Array<Record<string, unknown>> | undefined) ?? [];
       const chosenCode = (meta.variant as string | undefined) ?? null;
       const chosen =
-        (chosenCode
-          ? variants.find((v) => (v.code as string) === chosenCode)
-          : null) ?? variants[0];
+        (chosenCode ? variants.find((v) => (v.code as string) === chosenCode) : null) ??
+        variants[0];
       if (!chosen) return;
       const trimmed = customName.trim();
       if (!trimmed) return;
@@ -3130,32 +2682,25 @@ export function BOQEditorPage() {
       // position) → BOQ symbol fallback. The catalog should keep the
       // article in its native currency, not the project base — that
       // matches the rest of the variant pipeline.
-      const posMetaCurrency =
-        (meta.currency as string | undefined) || undefined;
+      const posMetaCurrency = (meta.currency as string | undefined) || undefined;
       const catalogCurrency =
         (chosen.currency as string | undefined) ||
         posMetaCurrency ||
-        (currencySymbol === "€"
-          ? "EUR"
-          : currencySymbol === "£"
-            ? "GBP"
-            : currencySymbol === "$"
-              ? "USD"
-              : "EUR");
+        (currencySymbol === '€' ? 'EUR' : currencySymbol === '£' ? 'GBP' : currencySymbol === '$' ? 'USD' : 'EUR');
       const code = `MY-VAR-${Date.now().toString(36).toUpperCase()}`;
       try {
-        await apiPost("/v1/catalog/", {
+        await apiPost('/v1/catalog/', {
           resource_code: code,
           name: trimmed,
-          resource_type: "material",
-          category: "Variant",
+          resource_type: 'material',
+          category: 'Variant',
           unit: pos.unit,
           base_price: chosen.price ?? pos.unit_rate,
           min_price: chosen.price ?? pos.unit_rate,
           max_price: chosen.price ?? pos.unit_rate,
           currency: catalogCurrency,
-          source: "boq_variant_promote",
-          region: "CUSTOM",
+          source: 'boq_variant_promote',
+          region: 'CUSTOM',
           specifications: {
             source_position: pos.description,
             source_boq_id: boqId,
@@ -3165,18 +2710,14 @@ export function BOQEditorPage() {
           metadata: {},
         });
         addToast({
-          type: "success",
-          title: t("boq.saved_to_catalog", {
-            defaultValue: "Saved to catalog",
-          }),
+          type: 'success',
+          title: t('boq.saved_to_catalog', { defaultValue: 'Saved to catalog' }),
           message: trimmed,
         });
       } catch {
         addToast({
-          type: "error",
-          title: t("boq.save_to_catalog_failed", {
-            defaultValue: "Save failed",
-          }),
+          type: 'error',
+          title: t('boq.save_to_catalog_failed', { defaultValue: 'Save failed' }),
         });
       }
     },
@@ -3202,22 +2743,22 @@ export function BOQEditorPage() {
         // React Query cache invalidation — the BOQ-with-positions query is
         // the source of truth for the grid, so re-fetching it picks up the
         // server-stamped variant_snapshot + recomputed totals.
-        await queryClient.invalidateQueries({ queryKey: ["boq", boqId] });
+        await queryClient.invalidateQueries({ queryKey: ['boq', boqId] });
         addToast({
-          type: "success",
-          title: t("boq.variant_resource_repicked", {
-            defaultValue: "Variant updated: {{label}}",
+          type: 'success',
+          title: t('boq.variant_resource_repicked', {
+            defaultValue: 'Variant updated: {{label}}',
             label: variantCode,
           }),
           message: updated?.description as string | undefined,
         });
       } catch (err) {
         const detail =
-          err instanceof ApiError ? err.message : "Variant re-pick failed";
+          err instanceof ApiError ? err.message : 'Variant re-pick failed';
         addToast({
-          type: "error",
-          title: t("boq.variant_resource_repick_failed", {
-            defaultValue: "Variant re-pick failed",
+          type: 'error',
+          title: t('boq.variant_resource_repick_failed', {
+            defaultValue: 'Variant re-pick failed',
           }),
           message: detail,
         });
@@ -3227,21 +2768,21 @@ export function BOQEditorPage() {
   );
 
   /** Open cost DB modal in "add resource to position" mode. */
-  const handleOpenCostDbForPosition = useCallback((positionId: string) => {
-    setCostDbForPositionId(positionId);
-    setCostDbModalOpen(true);
-  }, []);
+  const handleOpenCostDbForPosition = useCallback(
+    (positionId: string) => {
+      setCostDbForPositionId(positionId);
+      setCostDbModalOpen(true);
+    },
+    [],
+  );
 
   /** When a cost item is selected and we're in "add resource" mode, add it as a resource. */
   const handleCostDbAddResource = useCallback(
     (
       item: CostAutocompleteItem,
       picked?:
-        | {
-            kind: "variant";
-            variant: { label: string; price: number; index: number };
-          }
-        | { kind: "default"; strategy: "mean" | "median" },
+        | { kind: 'variant'; variant: { label: string; price: number; index: number } }
+        | { kind: 'default'; strategy: 'mean' | 'median' },
     ) => {
       if (!costDbForPositionId) return;
       const pos = boq?.positions.find((p) => p.id === costDbForPositionId);
@@ -3276,11 +2817,10 @@ export function BOQEditorPage() {
       // BOQ base. ``itemCurrency`` is omitted (not falsified) when the
       // catalog row didn't supply one — that lets the existing baseCurrency
       // fallback still apply for purely manual rows.
-      const itemCurrency =
-        item.currency && item.currency.trim() ? item.currency : undefined;
+      const itemCurrency = item.currency && item.currency.trim() ? item.currency : undefined;
       const currencyStamp = itemCurrency ? { currency: itemCurrency } : {};
 
-      if (picked?.kind === "variant") {
+      if (picked?.kind === 'variant') {
         const v = picked.variant;
         // Resource name resolution priority (matches BOQModals + cellRenderers):
         //   1. ``v.full_label`` — backend-composed ``common_start + variable_part``,
@@ -3295,116 +2835,98 @@ export function BOQEditorPage() {
         //      "Realizzazione di piattaforme... Bandstahl warmgewalzt..." mess
         //      the user reported (dev DB pos 01.045 / 01.046).
         const fullVariant = itemVariants?.find((x) => x.label === v.label);
-        const commonBase = (itemVariantStats?.common_start ?? "").trim();
-        const labelTrim = (v.label || "").trim();
+        const commonBase = (itemVariantStats?.common_start ?? '').trim();
+        const labelTrim = (v.label || '').trim();
         const labelStartsWithBase =
           commonBase.length > 0 &&
           labelTrim.length > 0 &&
           labelTrim.toLowerCase().startsWith(commonBase.toLowerCase());
         const resolvedName =
-          (fullVariant?.full_label || "").trim() ||
+          (fullVariant?.full_label || '').trim() ||
           (commonBase && labelTrim && !labelStartsWithBase
             ? `${commonBase} ${labelTrim}`.trim()
             : labelTrim) ||
           item.description;
-        newResources = [
-          {
-            name: resolvedName,
-            code: item.code,
-            type: "material",
-            unit: item.unit,
-            quantity: 1,
-            unit_rate: v.price,
-            total: v.price,
-            variant: { label: v.label, price: v.price, index: v.index },
-            ...currencyStamp,
-            ...variantCache,
-          },
-        ];
-      } else if (picked?.kind === "default") {
-        newResources = [
-          {
-            name: item.description,
-            code: item.code,
-            type: "material",
-            unit: item.unit,
-            quantity: 1,
-            unit_rate: item.rate,
-            total: item.rate,
-            variant_default: picked.strategy,
-            ...currencyStamp,
-            ...variantCache,
-          },
-        ];
+        newResources = [{
+          name: resolvedName,
+          code: item.code,
+          type: 'material',
+          unit: item.unit,
+          quantity: 1,
+          unit_rate: v.price,
+          total: v.price,
+          variant: { label: v.label, price: v.price, index: v.index },
+          ...currencyStamp,
+          ...variantCache,
+        }];
+      } else if (picked?.kind === 'default') {
+        newResources = [{
+          name: item.description,
+          code: item.code,
+          type: 'material',
+          unit: item.unit,
+          quantity: 1,
+          unit_rate: item.rate,
+          total: item.rate,
+          variant_default: picked.strategy,
+          ...currencyStamp,
+          ...variantCache,
+        }];
       } else {
-        newResources =
-          components.length > 0
-            ? components.map((c) => {
-                // Per-component variant catalog (v2.6.30+): when a component
-                // carries its OWN ``available_variants`` slot, forward it so
-                // the BOQ resource row exposes its dedicated re-pick pill.
-                // A position can host MANY independent variant components
-                // (e.g. concrete grade + rebar type + formwork type) — each
-                // gets its own picker without affecting the others.
-                const compVariants = c.available_variants;
-                const compStats = c.available_variant_stats;
-                const hasCompVariants =
-                  Array.isArray(compVariants) &&
-                  compVariants.length >= 2 &&
-                  compStats != null;
-                // Auto-default to the median variant so the user has a
-                // working price out of the box. The amber provenance bar +
-                // the per-resource pill make it discoverable for refinement.
-                const defaultStrategy: "median" | undefined = hasCompVariants
-                  ? "median"
-                  : undefined;
-                return {
-                  name: c.name,
-                  code: c.code || "",
-                  type: c.type || "other",
-                  unit: c.unit,
-                  quantity: c.quantity,
-                  unit_rate: c.unit_rate,
-                  total: c.cost || c.quantity * c.unit_rate,
-                  ...(defaultStrategy
-                    ? { variant_default: defaultStrategy }
-                    : {}),
-                  ...(hasCompVariants
-                    ? {
-                        available_variants: compVariants,
-                        available_variant_stats: compStats,
-                      }
-                    : {}),
-                  ...currencyStamp,
-                };
-              })
-            : [
-                {
-                  name: item.description,
-                  code: item.code,
-                  type: "material",
-                  unit: item.unit,
-                  quantity: 1,
-                  unit_rate: item.rate,
-                  total: item.rate,
-                  // No variant marker here, but we still cache the variants if
-                  // the item has them — that lets the user "promote" a plain
-                  // single-rate resource into an explicit variant pick later
-                  // via the row's re-pick pill.
-                  ...currencyStamp,
-                  ...variantCache,
-                },
-              ];
+        newResources = components.length > 0
+          ? components.map((c) => {
+              // Per-component variant catalog (v2.6.30+): when a component
+              // carries its OWN ``available_variants`` slot, forward it so
+              // the BOQ resource row exposes its dedicated re-pick pill.
+              // A position can host MANY independent variant components
+              // (e.g. concrete grade + rebar type + formwork type) — each
+              // gets its own picker without affecting the others.
+              const compVariants = c.available_variants;
+              const compStats = c.available_variant_stats;
+              const hasCompVariants =
+                Array.isArray(compVariants) &&
+                compVariants.length >= 2 &&
+                compStats != null;
+              // Auto-default to the median variant so the user has a
+              // working price out of the box. The amber provenance bar +
+              // the per-resource pill make it discoverable for refinement.
+              const defaultStrategy: 'median' | undefined = hasCompVariants
+                ? 'median'
+                : undefined;
+              return {
+                name: c.name,
+                code: c.code || '',
+                type: c.type || 'other',
+                unit: c.unit,
+                quantity: c.quantity,
+                unit_rate: c.unit_rate,
+                total: c.cost || c.quantity * c.unit_rate,
+                ...(defaultStrategy ? { variant_default: defaultStrategy } : {}),
+                ...(hasCompVariants
+                  ? {
+                      available_variants: compVariants,
+                      available_variant_stats: compStats,
+                    }
+                  : {}),
+                ...currencyStamp,
+              };
+            })
+          : [{
+              name: item.description, code: item.code, type: 'material',
+              unit: item.unit, quantity: 1, unit_rate: item.rate,
+              total: item.rate,
+              // No variant marker here, but we still cache the variants if
+              // the item has them — that lets the user "promote" a plain
+              // single-rate resource into an explicit variant pick later
+              // via the row's re-pick pill.
+              ...currencyStamp,
+              ...variantCache,
+            }];
       }
 
-      const existingResources = [
-        ...((pos.metadata?.resources ?? []) as Array<Record<string, unknown>>),
-      ];
+      const existingResources = [...((pos.metadata?.resources ?? []) as Array<Record<string, unknown>>)];
       const merged = [...existingResources, ...newResources];
-      const newMeta: Record<string, unknown> = {
-        ...pos.metadata,
-        resources: merged,
-      };
+      const newMeta: Record<string, unknown> = { ...pos.metadata, resources: merged };
       // Carry the scope-of-work bullets from the catalog over to the
       // BOQ position so the grid's (i) hint shows what work is included
       // in the freshly applied rate. Only overwrite when the position
@@ -3413,18 +2935,14 @@ export function BOQEditorPage() {
       if (
         Array.isArray(sowFromCatalog) &&
         sowFromCatalog.length > 0 &&
-        !(
-          Array.isArray(pos.metadata?.scope_of_work) &&
-          (pos.metadata?.scope_of_work as unknown[]).length > 0
-        )
+        !(Array.isArray(pos.metadata?.scope_of_work) && (pos.metadata?.scope_of_work as unknown[]).length > 0)
       ) {
         newMeta.scope_of_work = sowFromCatalog;
       }
       // Recalculate unit_rate
       let computedRate = 0;
       for (const r of merged) {
-        computedRate +=
-          ((r.quantity as number) ?? 0) * ((r.unit_rate as number) ?? 0);
+        computedRate += ((r.quantity as number) ?? 0) * ((r.unit_rate as number) ?? 0);
       }
       computedRate = Math.round(computedRate * 100) / 100;
       updateMutation.mutate({
@@ -3433,25 +2951,25 @@ export function BOQEditorPage() {
       });
       setCostDbForPositionId(null);
       setCostDbModalOpen(false);
-      const successMsg =
-        picked?.kind === "variant"
-          ? t("boq.variant_resource_added", {
-              defaultValue: "Resource added: {{label}}",
-              label: picked.variant.label,
-            })
-          : t("boq.resources_added", {
-              defaultValue: "Resources added to position",
-            });
-      addToast({ type: "success", title: successMsg });
+      const successMsg = picked?.kind === 'variant'
+        ? t('boq.variant_resource_added', {
+            defaultValue: 'Resource added: {{label}}',
+            label: picked.variant.label,
+          })
+        : t('boq.resources_added', { defaultValue: 'Resources added to position' });
+      addToast({ type: 'success', title: successMsg });
     },
     [costDbForPositionId, boq?.positions, updateMutation, addToast, t],
   );
 
   /** Open catalog picker modal in "add resource to position" mode. */
-  const handleOpenCatalogForPosition = useCallback((positionId: string) => {
-    setCatalogForPositionId(positionId);
-    setCatalogPickerOpen(true);
-  }, []);
+  const handleOpenCatalogForPosition = useCallback(
+    (positionId: string) => {
+      setCatalogForPositionId(positionId);
+      setCatalogPickerOpen(true);
+    },
+    [],
+  );
 
   /** When a catalog resource is selected, add it as a resource to the target position. */
   const handleCatalogSelect = useCallback(
@@ -3470,24 +2988,21 @@ export function BOQEditorPage() {
         total: catalogRes.base_price || 0,
       };
 
-      const existing = [
-        ...((pos.metadata?.resources ?? []) as Array<Record<string, unknown>>),
-      ];
+      const existing = [...((pos.metadata?.resources ?? []) as Array<Record<string, unknown>>)];
       existing.push(newResource);
 
       // Recalculate unit_rate from all resources
       let newRate = 0;
       for (const r of existing) {
-        newRate +=
-          ((r.quantity as number) ?? 0) * ((r.unit_rate as number) ?? 0);
+        newRate += ((r.quantity as number) ?? 0) * ((r.unit_rate as number) ?? 0);
       }
       newRate = Math.round(newRate * 100) / 100;
 
       // Optimistic cache write: reflect the new resource instantly in the grid.
       // Without this, the user sees no feedback until the server round-trip
       // completes, and onMutate in updateMutation skips non-quantity payloads.
-      queryClient.setQueryData(["boq", boqId], (old: unknown) => {
-        if (!old || typeof old !== "object") return old;
+      queryClient.setQueryData(['boq', boqId], (old: unknown) => {
+        if (!old || typeof old !== 'object') return old;
         const cur = old as { positions: Position[]; [k: string]: unknown };
         return {
           ...cur,
@@ -3515,21 +3030,11 @@ export function BOQEditorPage() {
       setCatalogPickerOpen(false);
       setCatalogForPositionId(null);
       addToast({
-        type: "success",
-        title: t("boq.resource_added_from_catalog", {
-          defaultValue: "Resource added from catalog",
-        }),
+        type: 'success',
+        title: t('boq.resource_added_from_catalog', { defaultValue: 'Resource added from catalog' }),
       });
     },
-    [
-      catalogForPositionId,
-      boq,
-      boqId,
-      queryClient,
-      updateMutation,
-      addToast,
-      t,
-    ],
+    [catalogForPositionId, boq, boqId, queryClient, updateMutation, addToast, t],
   );
 
   /** Add a manual resource (not from database) to a position. */
@@ -3552,7 +3057,7 @@ export function BOQEditorPage() {
         name: resource.name,
         // Issue #133 — persist the reusable code so it stays
         // referenceable for future reuse / collision detection.
-        code: (resource.code ?? "").trim(),
+        code: (resource.code ?? '').trim(),
         type: resource.type,
         unit: resource.unit,
         quantity: resource.quantity,
@@ -3560,27 +3065,18 @@ export function BOQEditorPage() {
         ...(resource.currency ? { currency: resource.currency } : {}),
         total: Math.round(resource.quantity * resource.unit_rate * 100) / 100,
       };
-      const existing = [
-        ...((pos.metadata?.resources ?? []) as Array<Record<string, unknown>>),
-      ];
+      const existing = [...((pos.metadata?.resources ?? []) as Array<Record<string, unknown>>)];
       const merged = [...existing, newRes];
       let computedRate = 0;
       for (const r of merged) {
-        computedRate +=
-          ((r.quantity as number) ?? 0) * ((r.unit_rate as number) ?? 0);
+        computedRate += ((r.quantity as number) ?? 0) * ((r.unit_rate as number) ?? 0);
       }
       computedRate = Math.round(computedRate * 100) / 100;
       updateMutation.mutate({
         id: positionId,
-        data: {
-          unit_rate: computedRate,
-          metadata: { ...pos.metadata, resources: merged },
-        },
+        data: { unit_rate: computedRate, metadata: { ...pos.metadata, resources: merged } },
       });
-      addToast({
-        type: "success",
-        title: t("boq.resource_added", { defaultValue: "Resource added" }),
-      });
+      addToast({ type: 'success', title: t('boq.resource_added', { defaultValue: 'Resource added' }) });
     },
     [boq?.positions, updateMutation, addToast, t],
   );
@@ -3609,16 +3105,12 @@ export function BOQEditorPage() {
       if (!boqId) return;
       const pos = boq?.positions.find((p) => p.id === positionId);
       if (!pos) return;
-      const siblings =
-        boq?.positions.filter((p) => p.parent_id === pos.parent_id) ?? [];
-      const lastSibOrdinal =
-        siblings.length > 0
-          ? siblings[siblings.length - 1]!.ordinal
-          : pos.ordinal;
-      const parts = lastSibOrdinal.split(".");
-      const lastNum = parseInt(parts[parts.length - 1] || "0", 10) + 1;
-      parts[parts.length - 1] = String(lastNum).padStart(2, "0");
-      const newOrdinal = parts.join(".");
+      const siblings = boq?.positions.filter((p) => p.parent_id === pos.parent_id) ?? [];
+      const lastSibOrdinal = siblings.length > 0 ? siblings[siblings.length - 1]!.ordinal : pos.ordinal;
+      const parts = lastSibOrdinal.split('.');
+      const lastNum = parseInt(parts[parts.length - 1] || '0', 10) + 1;
+      parts[parts.length - 1] = String(lastNum).padStart(2, '0');
+      const newOrdinal = parts.join('.');
       addMutation.mutate({
         boq_id: boqId,
         ordinal: newOrdinal,
@@ -3627,16 +3119,9 @@ export function BOQEditorPage() {
         quantity: pos.quantity,
         unit_rate: pos.unit_rate,
         parent_id: pos.parent_id ?? undefined,
-        ...(pos.metadata
-          ? ({ metadata: pos.metadata } as Record<string, unknown>)
-          : {}),
+        ...(pos.metadata ? { metadata: pos.metadata } as Record<string, unknown> : {}),
       } as CreatePositionData);
-      addToast({
-        type: "success",
-        title: t("boq.position_duplicated", {
-          defaultValue: "Position duplicated",
-        }),
-      });
+      addToast({ type: 'success', title: t('boq.position_duplicated', { defaultValue: 'Position duplicated' }) });
     },
     [boqId, boq?.positions, addMutation, addToast, t],
   );
@@ -3657,23 +3142,19 @@ export function BOQEditorPage() {
   useEffect(() => {
     if (!showVectorSetup) return;
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setShowVectorSetup(false);
+      if (e.key === 'Escape') setShowVectorSetup(false);
     };
-    document.addEventListener("keydown", onKey);
-    return () => document.removeEventListener("keydown", onKey);
+    document.addEventListener('keydown', onKey);
+    return () => document.removeEventListener('keydown', onKey);
   }, [showVectorSetup]);
 
   const { data: vectorStatus } = useQuery({
-    queryKey: ["vector-status"],
-    queryFn: () =>
-      apiGet<{
-        connected: boolean;
-        engine?: string;
-        cost_collection?: {
-          vectors_count: number;
-          points_count: number;
-        } | null;
-      }>("/v1/costs/vector/status/"),
+    queryKey: ['vector-status'],
+    queryFn: () => apiGet<{
+      connected: boolean;
+      engine?: string;
+      cost_collection?: { vectors_count: number; points_count: number } | null;
+    }>('/v1/costs/vector/status/'),
     staleTime: 60_000,
     retry: false,
   });
@@ -3689,26 +3170,19 @@ export function BOQEditorPage() {
   const handleIndexNow = useCallback(async () => {
     setVectorIndexing(true);
     try {
-      await apiPost("/v1/costs/vector/index/");
-      queryClient.invalidateQueries({ queryKey: ["vector-status"] });
+      await apiPost('/v1/costs/vector/index/');
+      queryClient.invalidateQueries({ queryKey: ['vector-status'] });
       addToast({
-        type: "success",
-        title: t("boq.vector_indexed", {
-          defaultValue: "Vector Database Ready",
-        }),
-        message: t("boq.vector_indexed_msg", {
-          defaultValue: "Cost database indexed. AI features are now available.",
-        }),
+        type: 'success',
+        title: t('boq.vector_indexed', { defaultValue: 'Vector Database Ready' }),
+        message: t('boq.vector_indexed_msg', { defaultValue: 'Cost database indexed. AI features are now available.' }),
       });
       setShowVectorSetup(false);
     } catch {
       addToast({
-        type: "error",
-        title: t("boq.vector_index_error", { defaultValue: "Indexing Failed" }),
-        message: t("boq.vector_index_error_msg", {
-          defaultValue:
-            "Failed to index the cost database. Try importing a database first.",
-        }),
+        type: 'error',
+        title: t('boq.vector_index_error', { defaultValue: 'Indexing Failed' }),
+        message: t('boq.vector_index_error_msg', { defaultValue: 'Failed to index the cost database. Try importing a database first.' }),
       });
     } finally {
       setVectorIndexing(false);
@@ -3729,33 +3203,21 @@ export function BOQEditorPage() {
         });
         if (result.suggested_rate > 0) {
           // AI proposes, human confirms — show toast with Apply action button
-          const rateStr = fmtWithCurrency(
-            result.suggested_rate,
-            locale,
-            currencyCode,
-          );
+          const rateStr = fmtWithCurrency(result.suggested_rate, locale, currencyCode);
           const conf = Math.round(result.confidence * 100);
           addToast(
             {
-              type: "info",
-              title: t("boq.ai_rate_suggestion", {
-                defaultValue: "AI Rate Suggestion",
-              }),
+              type: 'info',
+              title: t('boq.ai_rate_suggestion', { defaultValue: 'AI Rate Suggestion' }),
               message: `${rateStr} (${conf}%, ${result.matches.length} matches)`,
               action: {
-                label: t("boq.apply_rate", { defaultValue: "Apply" }),
+                label: t('boq.apply_rate', { defaultValue: 'Apply' }),
                 onClick: () => {
                   updateMutation.mutate({
                     id: positionId,
                     data: { unit_rate: result.suggested_rate },
                   });
-                  addToast({
-                    type: "success",
-                    title: t("boq.rate_applied", {
-                      defaultValue: "Rate Applied",
-                    }),
-                    message: rateStr,
-                  });
+                  addToast({ type: 'success', title: t('boq.rate_applied', { defaultValue: 'Rate Applied' }), message: rateStr });
                 },
               },
             },
@@ -3763,39 +3225,21 @@ export function BOQEditorPage() {
           );
         } else {
           addToast({
-            type: "warning",
-            title: t("boq.ai_no_rate", { defaultValue: "No Rate Found" }),
-            message: t("boq.ai_no_rate_msg", {
-              defaultValue: "No similar items found in the cost database.",
-            }),
+            type: 'warning',
+            title: t('boq.ai_no_rate', { defaultValue: 'No Rate Found' }),
+            message: t('boq.ai_no_rate_msg', { defaultValue: 'No similar items found in the cost database.' }),
           });
         }
       } catch (err) {
         const detail = err instanceof Error ? err.message : String(err);
         addToast({
-          type: "error",
-          title: t("boq.ai_rate_error", {
-            defaultValue: "Rate suggestion failed",
-          }),
-          message: detail.includes("API")
-            ? detail
-            : t("boq.ai_error_generic", {
-                defaultValue:
-                  "Could not connect to AI service. Check that the embedding model is available.",
-              }),
+          type: 'error',
+          title: t('boq.ai_rate_error', { defaultValue: 'Rate suggestion failed' }),
+          message: detail.includes('API') ? detail : t('boq.ai_error_generic', { defaultValue: 'Could not connect to AI service. Check that the embedding model is available.' }),
         });
       }
     },
-    [
-      boq?.positions,
-      project?.region,
-      currencySymbol,
-      fmt,
-      updateMutation,
-      addToast,
-      t,
-      ensureVectorDB,
-    ],
+    [boq?.positions, project?.region, currencySymbol, fmt, updateMutation, addToast, t, ensureVectorDB],
   );
 
   const handleClassify = useCallback(
@@ -3808,9 +3252,7 @@ export function BOQEditorPage() {
         // _resolve_classification_order picks region-native default.
         // Hardcoding 'din276' here forced DACH classification on every
         // unset US/UK/LATAM project.
-        const projectStandard =
-          ((project as unknown as Record<string, unknown>)
-            ?.classification_standard as string) ?? "";
+        const projectStandard = (project as unknown as Record<string, unknown>)?.classification_standard as string ?? '';
         const result = await boqApi.classify({
           description: pos.description,
           unit: pos.unit,
@@ -3823,10 +3265,8 @@ export function BOQEditorPage() {
             classification[s.standard] = s.code;
           }
           addToast({
-            type: "info",
-            title: t("boq.ai_classification", {
-              defaultValue: "AI Classification",
-            }),
+            type: 'info',
+            title: t('boq.ai_classification', { defaultValue: 'AI Classification' }),
             message: `${top.standard.toUpperCase()}: ${top.code} — ${top.label} (${Math.round(top.confidence * 100)}%)`,
           });
           updateMutation.mutate({
@@ -3835,29 +3275,17 @@ export function BOQEditorPage() {
           });
         } else {
           addToast({
-            type: "warning",
-            title: t("boq.ai_no_classification", {
-              defaultValue: "No Classification Found",
-            }),
-            message: t("boq.ai_no_classification_msg", {
-              defaultValue:
-                "Could not determine classification from cost database.",
-            }),
+            type: 'warning',
+            title: t('boq.ai_no_classification', { defaultValue: 'No Classification Found' }),
+            message: t('boq.ai_no_classification_msg', { defaultValue: 'Could not determine classification from cost database.' }),
           });
         }
       } catch (err) {
         const detail = err instanceof Error ? err.message : String(err);
         addToast({
-          type: "error",
-          title: t("boq.ai_classify_error", {
-            defaultValue: "Classification failed",
-          }),
-          message: detail.includes("API")
-            ? detail
-            : t("boq.ai_error_generic", {
-                defaultValue:
-                  "Could not connect to AI service. Check that the embedding model is available.",
-              }),
+          type: 'error',
+          title: t('boq.ai_classify_error', { defaultValue: 'Classification failed' }),
+          message: detail.includes('API') ? detail : t('boq.ai_error_generic', { defaultValue: 'Could not connect to AI service. Check that the embedding model is available.' }),
         });
       }
     },
@@ -3870,12 +3298,7 @@ export function BOQEditorPage() {
   const handleCancelAnomalies = useCallback(() => {
     anomalyAbortRef.current?.abort();
     setIsCheckingAnomalies(false);
-    addToast({
-      type: "info",
-      title: t("boq.anomaly_cancelled", {
-        defaultValue: "Price check cancelled",
-      }),
-    });
+    addToast({ type: 'info', title: t('boq.anomaly_cancelled', { defaultValue: 'Price check cancelled' }) });
   }, [addToast, t]);
 
   const handleCheckAnomalies = useCallback(async () => {
@@ -3892,10 +3315,7 @@ export function BOQEditorPage() {
     useProgressStore.getState().start();
     try {
       const result = await boqApi.checkAnomalies(boqId);
-      const map = new Map<
-        string,
-        { severity: string; message: string; suggestion: number }
-      >();
+      const map = new Map<string, { severity: string; message: string; suggestion: number }>();
       for (const a of result.anomalies) {
         map.set(a.position_id, {
           severity: a.severity,
@@ -3906,38 +3326,27 @@ export function BOQEditorPage() {
       setAnomalyMap(map);
       if (result.anomalies.length > 0) {
         addToast({
-          type: "warning",
-          title: t("boq.anomalies_found", {
-            defaultValue: "Pricing Anomalies Found",
-          }),
-          message: t("boq.anomalies_count", {
-            defaultValue: "{{count}} anomalies detected in {{total}} positions",
+          type: 'warning',
+          title: t('boq.anomalies_found', { defaultValue: 'Pricing Anomalies Found' }),
+          message: t('boq.anomalies_count', {
+            defaultValue: '{{count}} anomalies detected in {{total}} positions',
             count: result.anomalies.length,
             total: result.positions_checked,
           }),
         });
       } else {
         addToast({
-          type: "success",
-          title: t("boq.no_anomalies", { defaultValue: "No Anomalies" }),
-          message: t("boq.all_rates_normal", {
-            defaultValue: "All rates are within normal market range.",
-          }),
+          type: 'success',
+          title: t('boq.no_anomalies', { defaultValue: 'No Anomalies' }),
+          message: t('boq.all_rates_normal', { defaultValue: 'All rates are within normal market range.' }),
         });
       }
     } catch (err) {
       const detail = err instanceof Error ? err.message : String(err);
       addToast({
-        type: "error",
-        title: t("boq.anomaly_check_error", {
-          defaultValue: "Anomaly check failed",
-        }),
-        message: detail.includes("API")
-          ? detail
-          : t("boq.ai_error_generic", {
-              defaultValue:
-                "Could not connect to AI service. Check that the embedding model is available.",
-            }),
+        type: 'error',
+        title: t('boq.anomaly_check_error', { defaultValue: 'Anomaly check failed' }),
+        message: detail.includes('API') ? detail : t('boq.ai_error_generic', { defaultValue: 'Could not connect to AI service. Check that the embedding model is available.' }),
       });
     } finally {
       clearTimeout(timeout);
@@ -3953,11 +3362,11 @@ export function BOQEditorPage() {
     (positionId: string, rate: number, source: string) => {
       updateMutation.mutate({
         id: positionId,
-        data: { unit_rate: rate, source: "cost_database" },
+        data: { unit_rate: rate, source: 'cost_database' },
       });
       addToast({
-        type: "success",
-        title: t("boq.cost_finder_applied", { defaultValue: "Rate Applied" }),
+        type: 'success',
+        title: t('boq.cost_finder_applied', { defaultValue: 'Rate Applied' }),
         message: `${fmtWithCurrency(rate, locale, currencyCode)} (${source})`,
       });
     },
@@ -3968,9 +3377,9 @@ export function BOQEditorPage() {
     (data: CreatePositionData) => {
       addMutation.mutate(data);
       addToast({
-        type: "success",
-        title: t("boq.cost_finder_added", { defaultValue: "Position Added" }),
-        message: data.description?.slice(0, 60) ?? "",
+        type: 'success',
+        title: t('boq.cost_finder_added', { defaultValue: 'Position Added' }),
+        message: data.description?.slice(0, 60) ?? '',
       });
     },
     [addMutation, addToast, t],
@@ -3988,10 +3397,8 @@ export function BOQEditorPage() {
         return next;
       });
       addToast({
-        type: "success",
-        title: t("boq.anomaly_rate_applied", {
-          defaultValue: "Suggested Rate Applied",
-        }),
+        type: 'success',
+        title: t('boq.anomaly_rate_applied', { defaultValue: 'Suggested Rate Applied' }),
         message: fmtWithCurrency(suggestedRate, locale, currencyCode),
       });
     },
@@ -4020,9 +3427,9 @@ export function BOQEditorPage() {
     const count = anomalyMap.size;
     setAnomalyMap(new Map());
     addToast({
-      type: "success",
-      title: t("boq.all_anomalies_resolved", {
-        defaultValue: "All {{count}} suggested rates applied",
+      type: 'success',
+      title: t('boq.all_anomalies_resolved', {
+        defaultValue: 'All {{count}} suggested rates applied',
         count,
       }),
     });
@@ -4039,17 +3446,16 @@ export function BOQEditorPage() {
       setIsImporting(true);
       const token = useAuthStore.getState().accessToken;
       const form = new FormData();
-      form.append("file", file);
+      form.append('file', file);
 
       // GAEB DA XML files (.x81/.x83/.x84/.xml) have a dedicated parser on
       // the backend (``/import/gaeb/``) that understands the GAEB-specific
       // structure — namespace-agnostic, X81/X83/X84 schema-aware. Smart
       // import doesn't recognise these, so the file would be silently
       // rejected. Route by extension before posting.
-      const ext = (file.name.split(".").pop() ?? "").toLowerCase();
-      const isGaeb =
-        ["x81", "x83", "x84"].includes(ext) ||
-        (ext === "xml" && /\.(x8[134]|gaeb)\.xml$/i.test(file.name));
+      const ext = (file.name.split('.').pop() ?? '').toLowerCase();
+      const isGaeb = ['x81', 'x83', 'x84'].includes(ext) ||
+        (ext === 'xml' && /\.(x8[134]|gaeb)\.xml$/i.test(file.name));
       const endpoint = isGaeb
         ? `/api/v1/boq/boqs/${boqId}/import/gaeb/`
         : `/api/v1/boq/boqs/${boqId}/import/smart/`;
@@ -4058,19 +3464,14 @@ export function BOQEditorPage() {
       // can take 30+ seconds for large XLSX/PDF/CAD files, and without this
       // toast the UI looks frozen (Bug 2).
       addToast({
-        type: "info",
-        title: t("boq.import_started", {
-          defaultValue: "Importing {{name}}…",
-          name: file.name,
-        }),
+        type: 'info',
+        title: t('boq.import_started', { defaultValue: 'Importing {{name}}…', name: file.name }),
         message: isGaeb
-          ? t("boq.import_started_gaeb_hint", {
-              defaultValue:
-                "Parsing GAEB XML — namespace-agnostic, X81/X83/X84 supported.",
+          ? t('boq.import_started_gaeb_hint', {
+              defaultValue: 'Parsing GAEB XML — namespace-agnostic, X81/X83/X84 supported.',
             })
-          : t("boq.import_started_hint", {
-              defaultValue:
-                "Large files (PDF / CAD / 1000+ rows) may take up to 60 seconds.",
+          : t('boq.import_started_hint', {
+              defaultValue: 'Large files (PDF / CAD / 1000+ rows) may take up to 60 seconds.',
             }),
       });
 
@@ -4081,7 +3482,7 @@ export function BOQEditorPage() {
 
       try {
         const res = await fetch(endpoint, {
-          method: "POST",
+          method: 'POST',
           headers: token ? { Authorization: `Bearer ${token}` } : {},
           body: form,
           signal: controller.signal,
@@ -4089,10 +3490,8 @@ export function BOQEditorPage() {
         clearTimeout(timeoutId);
 
         if (!res.ok) {
-          const body = await res
-            .json()
-            .catch(() => ({ detail: res.statusText }));
-          throw new Error(body.detail || "Import failed");
+          const body = await res.json().catch(() => ({ detail: res.statusText }));
+          throw new Error(body.detail || 'Import failed');
         }
 
         const result: {
@@ -4111,24 +3510,21 @@ export function BOQEditorPage() {
         } = await res.json();
 
         let methodLabel: string;
-        if (isGaeb || result.source_format === "gaeb") {
-          const sectionCount = Array.isArray(result.sections)
-            ? result.sections.length
-            : 0;
-          methodLabel = ` (GAEB XML, ${sectionCount} section${sectionCount === 1 ? "" : "s"}${result.currency ? `, ${result.currency}` : ""})`;
-        } else if (result.method === "cad_ai") {
-          methodLabel = ` (CAD + ${result.model_used ?? "AI"}, ${result.cad_elements ?? 0} elements)`;
-        } else if (result.method === "ai") {
-          methodLabel = ` (AI: ${result.model_used ?? "auto"})`;
+        if (isGaeb || result.source_format === 'gaeb') {
+          const sectionCount = Array.isArray(result.sections) ? result.sections.length : 0;
+          methodLabel = ` (GAEB XML, ${sectionCount} section${sectionCount === 1 ? '' : 's'}${result.currency ? `, ${result.currency}` : ''})`;
+        } else if (result.method === 'cad_ai') {
+          methodLabel = ` (CAD + ${result.model_used ?? 'AI'}, ${result.cad_elements ?? 0} elements)`;
+        } else if (result.method === 'ai') {
+          methodLabel = ` (AI: ${result.model_used ?? 'auto'})`;
         } else {
-          methodLabel = " (direct)";
+          methodLabel = ' (direct)';
         }
         // GAEB returns ``skipped`` instead of ``total_items`` — derive a
         // reasonable denominator so the toast reads cleanly for both shapes.
-        const denominator =
-          result.total_items ?? result.imported + (result.skipped ?? 0);
+        const denominator = result.total_items ?? (result.imported + (result.skipped ?? 0));
         addToast({
-          type: result.imported > 0 ? "success" : "warning",
+          type: result.imported > 0 ? 'success' : 'warning',
           title: `Imported ${result.imported} of ${denominator} items${methodLabel}`,
           message:
             result.errors.length > 0
@@ -4139,19 +3535,15 @@ export function BOQEditorPage() {
         invalidateAll();
       } catch (err) {
         clearTimeout(timeoutId);
-        const isTimeout =
-          err instanceof DOMException && err.name === "AbortError";
+        const isTimeout = err instanceof DOMException && err.name === 'AbortError';
         addToast({
-          type: "error",
-          title: t("boq.import_failed", { defaultValue: "Import failed" }),
+          type: 'error',
+          title: t('boq.import_failed', { defaultValue: 'Import failed' }),
           message: isTimeout
-            ? t("boq.import_timeout", {
-                defaultValue:
-                  "Server did not respond within 90 seconds. The file may be too large — try splitting it.",
+            ? t('boq.import_timeout', {
+                defaultValue: 'Server did not respond within 90 seconds. The file may be too large — try splitting it.',
               })
-            : err instanceof Error
-              ? err.message
-              : "Unknown error",
+            : err instanceof Error ? err.message : 'Unknown error',
         });
       } finally {
         setIsImporting(false);
@@ -4164,7 +3556,7 @@ export function BOQEditorPage() {
     (e: React.ChangeEvent<HTMLInputElement>) => {
       const file = e.target.files?.[0];
       if (file) handleImportFile(file);
-      e.target.value = "";
+      e.target.value = '';
     },
     [handleImportFile],
   );
@@ -4173,77 +3565,21 @@ export function BOQEditorPage() {
   const hasPositions = boq ? boq.positions.length > 0 : false;
 
   const boqFooterRows = useMemo(() => {
-    type FooterRow = {
-      _isFooter: true;
-      _footerType: string;
-      id: string;
-      description: string;
-      total: number;
-      ordinal: string;
-      unit: string;
-      quantity: number;
-      unit_rate: number;
-    };
+    type FooterRow = { _isFooter: true; _footerType: string; id: string; description: string; total: number; ordinal: string; unit: string; quantity: number; unit_rate: number };
     const rows: FooterRow[] = [];
     if (!hasPositions) return rows;
-    const base = {
-      _isFooter: true as const,
-      ordinal: "",
-      unit: "",
-      quantity: 0,
-      unit_rate: 0,
-    };
-    rows.push({
-      ...base,
-      _footerType: "direct_cost",
-      id: "_direct_cost",
-      description: t("boq.direct_cost", { defaultValue: "DIRECT COST" }),
-      total: directCost,
-    });
+    const base = { _isFooter: true as const, ordinal: '', unit: '', quantity: 0, unit_rate: 0 };
+    rows.push({ ...base, _footerType: 'direct_cost', id: '_direct_cost', description: t('boq.direct_cost', { defaultValue: 'DIRECT COST' }), total: directCost });
     for (const m of markupTotals) {
-      rows.push({
-        ...base,
-        _footerType: `markup_${m.id}`,
-        id: `_markup_${m.id}`,
-        description: `${m.name} ${fmt.format(m.percentage)}%`,
-        total: m.amount,
-      });
+      rows.push({ ...base, _footerType: `markup_${m.id}`, id: `_markup_${m.id}`, description: `${m.name} ${fmt.format(m.percentage)}%`, total: m.amount });
     }
-    rows.push({
-      ...base,
-      _footerType: "net_total",
-      id: "_net_total",
-      description: t("boq.net_total", { defaultValue: "NET TOTAL" }),
-      total: netTotal,
-    });
+    rows.push({ ...base, _footerType: 'net_total', id: '_net_total', description: t('boq.net_total', { defaultValue: 'NET TOTAL' }), total: netTotal });
     if (vatRate > 0) {
-      rows.push({
-        ...base,
-        _footerType: "vat",
-        id: "_vat",
-        description: `${t("boq.vat", { defaultValue: "VAT" })} ${fmt.format(vatRate * 100)}%`,
-        total: vatAmount,
-      });
-      rows.push({
-        ...base,
-        _footerType: "gross_total",
-        id: "_gross_total",
-        description: t("boq.gross_total", { defaultValue: "GROSS TOTAL" }),
-        total: grossTotal,
-      });
+      rows.push({ ...base, _footerType: 'vat', id: '_vat', description: `${t('boq.vat', { defaultValue: 'VAT' })} ${fmt.format(vatRate * 100)}%`, total: vatAmount });
+      rows.push({ ...base, _footerType: 'gross_total', id: '_gross_total', description: t('boq.gross_total', { defaultValue: 'GROSS TOTAL' }), total: grossTotal });
     }
     return rows;
-  }, [
-    hasPositions,
-    directCost,
-    markupTotals,
-    netTotal,
-    vatRate,
-    vatAmount,
-    grossTotal,
-    t,
-    fmt,
-  ]);
+  }, [hasPositions, directCost, markupTotals, netTotal, vatRate, vatAmount, grossTotal, t, fmt]);
 
   /** Handle cost suggestion selected from AG Grid autocomplete editor */
   const handleGridSelectSuggestion = useCallback(
@@ -4252,19 +3588,11 @@ export function BOQEditorPage() {
       if (!pos) return;
       const components = item.components || [];
       const resources = components.map((c) => ({
-        name: c.name,
-        code: c.code || "",
-        type: c.type || "other",
-        unit: c.unit,
-        quantity: c.quantity,
-        unit_rate: c.unit_rate,
+        name: c.name, code: c.code || '', type: c.type || 'other',
+        unit: c.unit, quantity: c.quantity, unit_rate: c.unit_rate,
         total: c.cost || c.quantity * c.unit_rate,
       }));
-      const newMeta: Record<string, unknown> = {
-        ...pos.metadata,
-        cost_item_code: item.code,
-        source: "cost_database",
-      };
+      const newMeta: Record<string, unknown> = { ...pos.metadata, cost_item_code: item.code, source: 'cost_database' };
       if (resources.length > 0) newMeta.resources = resources;
       // Carry through the scope-of-work bullets from the catalog so the
       // BOQ grid can surface them as a readable (i) hint next to the
@@ -4278,21 +3606,12 @@ export function BOQEditorPage() {
       }
       let computedRate = item.rate;
       if (resources.length > 0) {
-        computedRate = resources.reduce(
-          (s, r) => s + (r.total || r.quantity * r.unit_rate),
-          0,
-        );
+        computedRate = resources.reduce((s, r) => s + (r.total || r.quantity * r.unit_rate), 0);
         computedRate = Math.round(computedRate * 100) / 100;
       }
       updateMutation.mutate({
         id: positionId,
-        data: {
-          description: item.description,
-          unit: item.unit,
-          unit_rate: computedRate,
-          classification: item.classification || {},
-          metadata: newMeta,
-        },
+        data: { description: item.description, unit: item.unit, unit_rate: computedRate, classification: item.classification || {}, metadata: newMeta },
       });
     },
     [boq?.positions, updateMutation],
@@ -4304,47 +3623,17 @@ export function BOQEditorPage() {
       const pos = boq?.positions.find((p) => p.id === positionId);
       if (!pos) return;
       try {
-        const resources =
-          (pos.metadata?.resources as Array<{
-            name: string;
-            code?: string;
-            type: string;
-            unit: string;
-            quantity: number;
-            unit_rate: number;
-          }>) || [];
-        await apiPost("/v1/costs/", {
+        const resources = (pos.metadata?.resources as Array<{ name: string; code?: string; type: string; unit: string; quantity: number; unit_rate: number }>) || [];
+        await apiPost('/v1/costs/', {
           code: `MY-${Date.now().toString(36).toUpperCase()}`,
-          description: pos.description,
-          unit: pos.unit,
-          rate: pos.unit_rate,
-          source: "custom",
-          region: "CUSTOM",
-          components: resources.map((r) => ({
-            name: r.name,
-            code: r.code || "",
-            type: r.type,
-            unit: r.unit,
-            quantity: r.quantity,
-            unit_rate: r.unit_rate,
-            cost: r.quantity * r.unit_rate,
-          })),
-          metadata: {
-            saved_from_boq: true,
-            saved_date: new Date().toISOString(),
-          },
+          description: pos.description, unit: pos.unit, rate: pos.unit_rate,
+          source: 'custom', region: 'CUSTOM',
+          components: resources.map((r) => ({ name: r.name, code: r.code || '', type: r.type, unit: r.unit, quantity: r.quantity, unit_rate: r.unit_rate, cost: r.quantity * r.unit_rate })),
+          metadata: { saved_from_boq: true, saved_date: new Date().toISOString() },
         });
-        addToast({
-          type: "success",
-          title: t("boq.saved_to_database", {
-            defaultValue: "Saved to My Database",
-          }),
-        });
+        addToast({ type: 'success', title: t('boq.saved_to_database', { defaultValue: 'Saved to My Database' }) });
       } catch {
-        addToast({
-          type: "error",
-          title: t("boq.save_failed", { defaultValue: "Failed to save" }),
-        });
+        addToast({ type: 'error', title: t('boq.save_failed', { defaultValue: 'Failed to save' }) });
       }
     },
     [boq?.positions, t, addToast],
@@ -4357,38 +3646,29 @@ export function BOQEditorPage() {
       if (!pos) return;
 
       try {
-        const resources =
-          (pos.metadata?.resources as Array<{
-            name: string;
-            code?: string;
-            type?: string;
-            unit: string;
-            quantity: number;
-            unit_rate: number;
-            total?: number;
-          }>) || [];
+        const resources = (pos.metadata?.resources as Array<{
+          name: string; code?: string; type?: string; unit: string;
+          quantity: number; unit_rate: number; total?: number;
+        }>) || [];
 
         // Create the assembly via the API
-        const assemblyCode = `FROM-BOQ-${(pos.ordinal || "").replace(/[^a-zA-Z0-9]/g, "-") || Date.now().toString(36).toUpperCase()}`;
-        const assemblyResp = await apiPost<{ id: string; name: string }>(
-          "/v1/assemblies/",
-          {
-            code: assemblyCode,
-            name: pos.description || "Assembly from BOQ",
-            unit: pos.unit || "m2",
-            category: "custom",
-            bid_factor: 1.0,
-          },
-        );
+        const assemblyCode = `FROM-BOQ-${(pos.ordinal || '').replace(/[^a-zA-Z0-9]/g, '-') || Date.now().toString(36).toUpperCase()}`;
+        const assemblyResp = await apiPost<{ id: string; name: string }>('/v1/assemblies/', {
+          code: assemblyCode,
+          name: pos.description || 'Assembly from BOQ',
+          unit: pos.unit || 'm2',
+          category: 'custom',
+          bid_factor: 1.0,
+        });
 
         // Add components from resources
         for (let i = 0; i < resources.length; i++) {
           const r = resources[i]!;
           await apiPost(`/v1/assemblies/${assemblyResp.id}/components/`, {
-            description: r.name || "",
+            description: r.name || '',
             factor: 1.0,
             quantity: r.quantity || 1,
-            unit: r.unit || pos.unit || "m2",
+            unit: r.unit || pos.unit || 'm2',
             unit_cost: r.unit_rate || 0,
           });
         }
@@ -4396,27 +3676,23 @@ export function BOQEditorPage() {
         // If no resources, add a single component from the position itself
         if (resources.length === 0) {
           await apiPost(`/v1/assemblies/${assemblyResp.id}/components/`, {
-            description: pos.description || "Main item",
+            description: pos.description || 'Main item',
             factor: 1.0,
             quantity: 1,
-            unit: pos.unit || "m2",
+            unit: pos.unit || 'm2',
             unit_cost: pos.unit_rate || 0,
           });
         }
 
         addToast({
-          type: "success",
-          title: t("boq.saved_as_assembly", {
-            defaultValue: "Saved as Assembly",
-          }),
+          type: 'success',
+          title: t('boq.saved_as_assembly', { defaultValue: 'Saved as Assembly' }),
           message: assemblyResp.name,
         });
       } catch {
         addToast({
-          type: "error",
-          title: t("boq.save_as_assembly_failed", {
-            defaultValue: "Failed to create assembly",
-          }),
+          type: 'error',
+          title: t('boq.save_as_assembly_failed', { defaultValue: 'Failed to create assembly' }),
         });
       }
     },
@@ -4449,26 +3725,24 @@ export function BOQEditorPage() {
   );
 
   /** Comment drawer state */
-  const [commentPositionId, setCommentPositionId] = useState<string | null>(
-    null,
-  );
-  const userEmail = useAuthStore((s) => s.userEmail) ?? "";
+  const [commentPositionId, setCommentPositionId] = useState<string | null>(null);
+  const userEmail = useAuthStore((s) => s.userEmail) ?? '';
   const userRole = useAuthStore((s) => s.userRole);
-  const isManager = userRole === "admin" || userRole === "manager";
+  const isManager = userRole === 'admin' || userRole === 'manager';
 
-  const handleAddComment = useCallback((positionId: string) => {
-    setCommentPositionId(positionId);
-  }, []);
+  const handleAddComment = useCallback(
+    (positionId: string) => {
+      setCommentPositionId(positionId);
+    },
+    [],
+  );
 
   const handleSaveComments = useCallback(
     (positionId: string, updatedComments: CommentEntry[]) => {
       const pos = boq?.positions.find((p) => p.id === positionId);
       if (!pos) return;
       // Store new array format; also keep legacy `comment` field for backward compat
-      const lastText =
-        updatedComments.length > 0
-          ? updatedComments[updatedComments.length - 1]!.text
-          : undefined;
+      const lastText = updatedComments.length > 0 ? updatedComments[updatedComments.length - 1]!.text : undefined;
       updateMutation.mutate({
         id: positionId,
         data: {
@@ -4508,9 +3782,7 @@ export function BOQEditorPage() {
   if (!boq) {
     return (
       <div className="w-full py-16 text-center">
-        <p className="text-content-secondary">
-          {t("boq.not_found", { defaultValue: "BOQ not found" })}
-        </p>
+        <p className="text-content-secondary">{t('boq.not_found', { defaultValue: 'BOQ not found' })}</p>
       </div>
     );
   }
@@ -4527,10 +3799,8 @@ export function BOQEditorPage() {
       <Breadcrumb
         className="mb-5"
         items={[
-          ...(project
-            ? [{ label: project.name, to: `/projects/${project.id}` }]
-            : []),
-          { label: t("boq.title", "Bill of Quantities"), to: "/boq" },
+          ...(project ? [{ label: project.name, to: `/projects/${project.id}` }] : []),
+          { label: t('boq.title', 'Bill of Quantities'), to: '/boq' },
           { label: boq.name },
         ]}
       />
@@ -4538,113 +3808,74 @@ export function BOQEditorPage() {
       {/* ── Header bar ─────────────────────────────────────────────────── */}
       <div className="mb-4 space-y-2">
         <div className="flex items-center gap-3 min-w-0">
-          <h1 className="text-xl font-bold text-content-primary truncate">
-            {boq.name}
-          </h1>
+          <h1 className="text-xl font-bold text-content-primary truncate">{boq.name}</h1>
           <Badge
             variant={
-              boq.status === "final"
-                ? "success"
-                : boq.status === "draft"
-                  ? "blue"
-                  : "neutral"
+              boq.status === 'final' ? 'success' : boq.status === 'draft' ? 'blue' : 'neutral'
             }
             size="md"
           >
-            {boq.status === "draft"
-              ? t("boq.draft", { defaultValue: "draft" })
-              : boq.status === "final"
-                ? t("boq.final", { defaultValue: "final" })
-                : boq.status}
+            {boq.status === 'draft' ? t('boq.draft', { defaultValue: 'draft' }) : boq.status === 'final' ? t('boq.final', { defaultValue: 'final' }) : boq.status}
           </Badge>
           {boq.is_locked && (
             <Badge variant="warning" size="sm" className="ml-2">
-              <Lock size={12} className="mr-1" />{" "}
-              {t("boq.locked", { defaultValue: "LOCKED" })}
+              <Lock size={12} className="mr-1" /> {t('boq.locked', { defaultValue: 'LOCKED' })}
             </Badge>
           )}
           {boq.estimate_type && (
             <Badge variant="neutral" size="sm" className="ml-2">
-              {t(`boq.estimate_type_${boq.estimate_type}`, {
-                defaultValue: boq.estimate_type,
-              })}
+              {t(`boq.estimate_type_${boq.estimate_type}`, { defaultValue: boq.estimate_type })}
             </Badge>
           )}
         </div>
         <div className="flex items-center gap-2">
           {boq.description && (
-            <p className="text-sm text-content-secondary truncate flex-1">
-              {boq.description}
-            </p>
+            <p className="text-sm text-content-secondary truncate flex-1">{boq.description}</p>
           )}
           <div className="flex items-center gap-2 flex-shrink-0">
             {!boq.is_locked && isManager && (
-              <Button
-                variant="secondary"
-                size="sm"
-                onClick={handleLock}
-                disabled={lockMutation.isPending}
-                title={t("boq.lock_tooltip", {
-                  defaultValue:
-                    "Lock prevents edits. Create a revision to make changes to a locked estimate.",
-                })}
-              >
+              <Button variant="secondary" size="sm" onClick={handleLock} disabled={lockMutation.isPending} title={t('boq.lock_tooltip', { defaultValue: 'Lock prevents edits. Create a revision to make changes to a locked estimate.' })}>
                 <Lock size={14} className="mr-1" />
-                {t("boq.lock", { defaultValue: "Lock Estimate" })}
+                {t('boq.lock', { defaultValue: 'Lock Estimate' })}
               </Button>
             )}
             {boq.is_locked && isManager && (
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={handleUnlock}
-                disabled={unlockMutation.isPending}
-              >
+              <Button variant="ghost" size="sm" onClick={handleUnlock} disabled={unlockMutation.isPending}>
                 <Lock size={14} className="mr-1" />
-                {t("boq.unlock", { defaultValue: "Unlock" })}
+                {t('boq.unlock', { defaultValue: 'Unlock' })}
               </Button>
             )}
             {boq.is_locked && (
-              <Button
-                variant="secondary"
-                size="sm"
-                onClick={handleCreateBudget}
-                disabled={createBudgetMutation.isPending}
-              >
+              <Button variant="secondary" size="sm" onClick={handleCreateBudget} disabled={createBudgetMutation.isPending}>
                 <Wallet size={14} className="mr-1" />
-                {t("boq.create_budget", { defaultValue: "Create Budget" })}
+                {t('boq.create_budget', { defaultValue: 'Create Budget' })}
               </Button>
             )}
             <Button
               variant="ghost"
               size="sm"
               onClick={() => setModelReviewOpen(true)}
-              title={t("boq.model_review_btn_hint", {
-                defaultValue: "Re-pull quantities from linked BIM models",
+              title={t('boq.model_review_btn_hint', {
+                defaultValue: 'Re-pull quantities from linked BIM models',
               })}
             >
               <RefreshCw size={14} className="mr-1" />
-              {t("boq.model_review_btn", { defaultValue: "Model sync" })}
+              {t('boq.model_review_btn', { defaultValue: 'Model sync' })}
             </Button>
             <Button
               variant="ghost"
               size="sm"
               onClick={() => setCompareOpen(true)}
-              title={t("boq.compare_btn_hint", {
-                defaultValue: "Compare this estimate against another BOQ",
+              title={t('boq.compare_btn_hint', {
+                defaultValue: 'Compare this estimate against another BOQ',
               })}
             >
               <GitCompare size={14} className="mr-1" />
-              {t("boq.compare_btn", { defaultValue: "Compare" })}
+              {t('boq.compare_btn', { defaultValue: 'Compare' })}
             </Button>
-            <Button
-              variant="secondary"
-              size="sm"
-              onClick={handleCreateRevision}
-              disabled={createRevisionMutation.isPending}
-            >
+            <Button variant="secondary" size="sm" onClick={handleCreateRevision} disabled={createRevisionMutation.isPending}>
               <Copy size={14} className="mr-1" />
-              {t("boq.create_revision", { defaultValue: "Create Revision" })}
+              {t('boq.create_revision', { defaultValue: 'Create Revision' })}
             </Button>
           </div>
         </div>
@@ -4675,68 +3906,45 @@ export function BOQEditorPage() {
           aiChatOpen={aiChatOpen}
           onToggleAiChat={() => {
             setAiChatOpen((prev) => !prev);
-            if (!aiChatOpen) {
-              setCostFinderOpen(false);
-              setSmartPanelOpen(false);
-            }
+            if (!aiChatOpen) { setCostFinderOpen(false); setSmartPanelOpen(false); }
           }}
           costFinderOpen={costFinderOpen}
           onToggleCostFinder={() => {
             setCostFinderOpen((prev) => !prev);
-            if (!costFinderOpen) {
-              setAiChatOpen(false);
-              setSmartPanelOpen(false);
-            }
+            if (!costFinderOpen) { setAiChatOpen(false); setSmartPanelOpen(false); }
           }}
           smartPanelOpen={smartPanelOpen}
           onToggleSmartPanel={() => {
             setSmartPanelOpen((prev) => !prev);
-            if (!smartPanelOpen) {
-              setAiChatOpen(false);
-              setCostFinderOpen(false);
-            }
+            if (!smartPanelOpen) { setAiChatOpen(false); setCostFinderOpen(false); }
           }}
           onCheckAnomalies={handleCheckAnomalies}
-          onCancelAnomalies={
-            isCheckingAnomalies ? handleCancelAnomalies : undefined
-          }
+          onCancelAnomalies={isCheckingAnomalies ? handleCancelAnomalies : undefined}
           anomalyCount={anomalyMap.size}
-          onAcceptAllAnomalies={
-            anomalyMap.size > 0 ? handleAcceptAllAnomalies : undefined
-          }
+          onAcceptAllAnomalies={anomalyMap.size > 0 ? handleAcceptAllAnomalies : undefined}
           onManageColumns={() => setCustomColumnsOpen(true)}
           customColumnCount={boqCustomColumns.length}
           onManageVariables={() => setVariablesOpen(true)}
           onRenumber={handleRenumber}
           isRenumbering={renumberMutation.isPending}
           hasPositions={hasPositions}
-          qualityScoreRing={
-            <QualityScoreRing
-              score={qualityBreakdown.score}
-              breakdown={qualityBreakdown}
-              t={t}
-            />
-          }
+          qualityScoreRing={<QualityScoreRing score={qualityBreakdown.score} breakdown={qualityBreakdown} t={t} />}
           onShowShortcuts={() => setShowShortcuts(true)}
-          summary={
-            hasPositions
-              ? {
-                  sectionCount: miniSummaryStats.sectionCount,
-                  positionCount: miniSummaryStats.positionCount,
-                  errorCount: miniSummaryStats.errorCount,
-                  warningCount: miniSummaryStats.warningCount,
-                  currencySymbol,
-                  currencyCode,
-                  fxRates,
-                  displayCurrency,
-                  onChangeDisplayCurrency: setDisplayCurrency,
-                  grossTotal,
-                  grossTotalDisplay,
-                  displaySymbol,
-                  displayRate: displayCurrencyMeta?.rate ?? null,
-                }
-              : null
-          }
+          summary={hasPositions ? {
+            sectionCount: miniSummaryStats.sectionCount,
+            positionCount: miniSummaryStats.positionCount,
+            errorCount: miniSummaryStats.errorCount,
+            warningCount: miniSummaryStats.warningCount,
+            currencySymbol,
+            currencyCode,
+            fxRates,
+            displayCurrency,
+            onChangeDisplayCurrency: setDisplayCurrency,
+            grossTotal,
+            grossTotalDisplay,
+            displaySymbol,
+            displayRate: displayCurrencyMeta?.rate ?? null,
+          } : null}
         />
       </div>
 
@@ -4759,78 +3967,71 @@ export function BOQEditorPage() {
         // keeps its own internal horizontal scrollbar, which is what the
         // user expects (toolbar and headers stay aligned with the page).
         <div className="mb-2 min-w-0">
-          <BOQGrid
-            ref={boqGridRef}
-            positions={boq.positions}
-            onUpdatePosition={trackedUpdate}
-            onDeletePosition={trackedDelete}
-            onAddPosition={handleAddPosition}
-            onSelectSuggestion={handleGridSelectSuggestion}
-            onSaveToDatabase={handleGridSaveToDatabase}
-            onAddComment={handleAddComment}
-            onFormulaApplied={handleGridFormulaApplied}
-            onReorderPositions={handleReorderPositions}
-            onReorderSections={handleReorderSections}
-            onDeleteSection={handleDeleteSection}
-            collapsedSections={collapsedSections}
-            onToggleSection={toggleSection}
-            highlightPositionId={
-              newPositionId ?? bimScrollTargetId ?? undefined
-            }
-            currencySymbol={currencySymbol}
-            currencyCode={currencyCode}
-            fxRates={fxRates}
-            displayCurrency={
-              displayCurrencyMeta
-                ? {
-                    code: displayCurrencyMeta.currency,
-                    rate: displayCurrencyMeta.rate,
-                  }
-                : null
-            }
-            onOpenFxRateSettings={
-              boq?.project_id
-                ? () =>
-                    navigate(`/projects/${boq.project_id}/settings#fx-rates`)
-                : undefined
-            }
-            locale={locale}
-            footerRows={boqFooterRows}
-            onSelectionChanged={handleSelectionChanged}
-            onActiveRowChange={handleActiveRowChange}
-            onRemoveResource={handleRemoveResource}
-            onUpdateResource={handleUpdateResource}
-            onUpdateResourceFields={handleUpdateResourceFields}
-            onUpdateResourceCustomField={handleUpdateResourceCustomField}
-            onSaveResourceToCatalog={handleSaveResourceToCatalog}
-            onSaveVariantHeaderToCatalog={handleSaveVariantHeaderToCatalog}
-            onRepickResourceVariant={handleRepickResourceVariant}
-            onOpenCostDbForPosition={handleOpenCostDbForPosition}
-            onOpenCatalogForPosition={handleOpenCatalogForPosition}
-            onAddManualResource={handleAddManualResource}
-            onLookupResourceByCode={handleLookupResourceByCode}
-            onDuplicatePosition={handleDuplicatePosition}
-            onReuseCode={handleReuseCode}
-            onAddChildPosition={(parentId) => handleAddPosition(parentId)}
-            onAddSubSection={handleAddSubSection}
-            maxNestingDepth={maxNestingDepth}
-            onShowLinks={handleShowLinks}
-            onUnlinkPosition={handleUnlinkPosition}
-            onModelLink={handleModelLink}
-            onSuggestRate={handleSuggestRate}
-            onClassify={handleClassify}
-            onCheckAnomalies={handleCheckAnomalies}
-            anomalyMap={anomalyMap}
-            onApplyAnomalySuggestion={handleApplyAnomalySuggestion}
-            onSaveAsAssembly={handleSaveAsAssembly}
-            customColumns={boqCustomColumns}
-            boqVariables={boqVariables}
-            bimModelId={bimModelId}
-            onHighlightBIMElements={(elementIds) => {
-              setBOQLinkSelection(null, elementIds);
-            }}
-          />
-        </div>
+        <BOQGrid
+          ref={boqGridRef}
+          positions={boq.positions}
+          onUpdatePosition={trackedUpdate}
+          onDeletePosition={trackedDelete}
+          onAddPosition={handleAddPosition}
+          onSelectSuggestion={handleGridSelectSuggestion}
+          onSaveToDatabase={handleGridSaveToDatabase}
+          onAddComment={handleAddComment}
+          onFormulaApplied={handleGridFormulaApplied}
+          onReorderPositions={handleReorderPositions}
+          onReorderSections={handleReorderSections}
+          onDeleteSection={handleDeleteSection}
+          collapsedSections={collapsedSections}
+          onToggleSection={toggleSection}
+          highlightPositionId={newPositionId ?? bimScrollTargetId ?? undefined}
+          currencySymbol={currencySymbol}
+          currencyCode={currencyCode}
+          fxRates={fxRates}
+          displayCurrency={
+            displayCurrencyMeta
+              ? { code: displayCurrencyMeta.currency, rate: displayCurrencyMeta.rate }
+              : null
+          }
+          onOpenFxRateSettings={
+            boq?.project_id
+              ? () => navigate(`/projects/${boq.project_id}/settings#fx-rates`)
+              : undefined
+          }
+          locale={locale}
+          footerRows={boqFooterRows}
+          onSelectionChanged={handleSelectionChanged}
+          onActiveRowChange={handleActiveRowChange}
+          onRemoveResource={handleRemoveResource}
+          onUpdateResource={handleUpdateResource}
+          onUpdateResourceFields={handleUpdateResourceFields}
+          onUpdateResourceCustomField={handleUpdateResourceCustomField}
+          onSaveResourceToCatalog={handleSaveResourceToCatalog}
+          onSaveVariantHeaderToCatalog={handleSaveVariantHeaderToCatalog}
+          onRepickResourceVariant={handleRepickResourceVariant}
+          onOpenCostDbForPosition={handleOpenCostDbForPosition}
+          onOpenCatalogForPosition={handleOpenCatalogForPosition}
+          onAddManualResource={handleAddManualResource}
+          onLookupResourceByCode={handleLookupResourceByCode}
+          onDuplicatePosition={handleDuplicatePosition}
+          onReuseCode={handleReuseCode}
+          onAddChildPosition={(parentId) => handleAddPosition(parentId)}
+          onAddSubSection={handleAddSubSection}
+          maxNestingDepth={maxNestingDepth}
+          onShowLinks={handleShowLinks}
+          onUnlinkPosition={handleUnlinkPosition}
+          onModelLink={handleModelLink}
+          onSuggestRate={handleSuggestRate}
+          onClassify={handleClassify}
+          onCheckAnomalies={handleCheckAnomalies}
+          anomalyMap={anomalyMap}
+          onApplyAnomalySuggestion={handleApplyAnomalySuggestion}
+          onSaveAsAssembly={handleSaveAsAssembly}
+          customColumns={boqCustomColumns}
+          boqVariables={boqVariables}
+          bimModelId={bimModelId}
+          onHighlightBIMElements={(elementIds) => {
+            setBOQLinkSelection(null, elementIds);
+          }}
+        /></div>
       ) : (
         <div className="rounded-xl border border-border-light bg-surface-elevated shadow-xs overflow-hidden p-8">
           <EmptyBOQOnboarding
@@ -4872,39 +4073,19 @@ export function BOQEditorPage() {
       )}
 
       {/* ── Resource Summary ──────────────────────────────────────────── */}
-      {boqId && hasPositions && (
-        <div className="mt-6">
-          <ResourceSummary boqId={boqId} locale={locale} />
-        </div>
-      )}
+      {boqId && hasPositions && <div className="mt-6"><ResourceSummary boqId={boqId} locale={locale} /></div>}
 
       {/* ── Cost Breakdown Panel ─────────────────────────────────────── */}
-      {boqId && hasPositions && (
-        <div className="mt-6">
-          <CostBreakdownPanel boqId={boqId} locale={locale} />
-        </div>
-      )}
+      {boqId && hasPositions && <div className="mt-6"><CostBreakdownPanel boqId={boqId} locale={locale} /></div>}
 
       {/* ── AACE Estimate Classification ──────────────────────────────── */}
-      {boqId && hasPositions && (
-        <div className="mt-6">
-          <EstimateClassification boqId={boqId} />
-        </div>
-      )}
+      {boqId && hasPositions && <div className="mt-6"><EstimateClassification boqId={boqId} /></div>}
 
       {/* ── Sensitivity Analysis (Tornado Chart) ──────────────────────── */}
-      {boqId && hasPositions && (
-        <div className="mt-6">
-          <SensitivityChart boqId={boqId} locale={locale} />
-        </div>
-      )}
+      {boqId && hasPositions && <div className="mt-6"><SensitivityChart boqId={boqId} locale={locale} /></div>}
 
       {/* ── Monte Carlo Cost Risk ─────────────────────────────────────── */}
-      {boqId && hasPositions && (
-        <div className="mt-6">
-          <CostRiskPanel boqId={boqId} locale={locale} />
-        </div>
-      )}
+      {boqId && hasPositions && <div className="mt-6"><CostRiskPanel boqId={boqId} locale={locale} /></div>}
 
       {/* ── Activity Log Panel ────────────────────────────────────────── */}
       <ActivityPanel
@@ -4946,10 +4127,8 @@ export function BOQEditorPage() {
         onUpdatePosition={(posId, data) => {
           updateMutation.mutate({ id: posId, data });
           addToast({
-            type: "success",
-            title: t("boq.ai_applied", {
-              defaultValue: "AI Suggestion Applied",
-            }),
+            type: 'success',
+            title: t('boq.ai_applied', { defaultValue: 'AI Suggestion Applied' }),
           });
         }}
         onAddPosition={handleCostFinderAddPosition}
@@ -4970,59 +4149,45 @@ export function BOQEditorPage() {
             setCostDbModalOpen(false);
             setCostDbForPositionId(null);
             invalidateAll();
-            addToast({
-              type: "success",
-              title: t("boq.positions_added", {
-                defaultValue: "Positions added from cost database",
-              }),
-            });
+            addToast({ type: 'success', title: t('boq.positions_added', { defaultValue: 'Positions added from cost database' }) });
           }}
-          onSelectForResources={
-            costDbForPositionId
-              ? (item, picked) => {
-                  handleCostDbAddResource(
-                    {
-                      code: item.code,
-                      description: item.description,
-                      unit: item.unit,
-                      rate: item.rate,
-                      // Forward the catalog currency so the resource entry keeps
-                      // its native currency (the picker + repick endpoint then
-                      // honour it instead of silently coercing to the BOQ base).
-                      currency: item.currency,
-                      classification: item.classification || {},
-                      components: (item.components || []).map((c) => {
-                        // Forward per-component variant catalog (v2.6.30+).
-                        // Backend stamps ``available_variants`` /
-                        // ``available_variant_stats`` on each abstract-resource
-                        // component slot — see ``costs/router.py`` `_extract_components`.
-                        const av = c.available_variants;
-                        const avs = c.available_variant_stats;
-                        return {
-                          name: c.name,
-                          code: c.code,
-                          unit: c.unit,
-                          quantity: c.quantity,
-                          unit_rate: c.unit_rate,
-                          cost: c.cost,
-                          type: c.type,
-                          ...(Array.isArray(av) && av.length >= 2
-                            ? { available_variants: av }
-                            : {}),
-                          ...(avs != null
-                            ? { available_variant_stats: avs }
-                            : {}),
-                        };
-                      }),
-                      // v2.6.26+: forward the variant catalog so the resource entry
-                      // can cache ``available_variants`` for later re-pick.
-                      metadata_: item.metadata_,
-                    },
-                    picked,
-                  );
-                }
-              : undefined
-          }
+          onSelectForResources={costDbForPositionId ? (item, picked) => {
+            handleCostDbAddResource({
+              code: item.code,
+              description: item.description,
+              unit: item.unit,
+              rate: item.rate,
+              // Forward the catalog currency so the resource entry keeps
+              // its native currency (the picker + repick endpoint then
+              // honour it instead of silently coercing to the BOQ base).
+              currency: item.currency,
+              classification: item.classification || {},
+              components: (item.components || []).map((c) => {
+                // Forward per-component variant catalog (v2.6.30+).
+                // Backend stamps ``available_variants`` /
+                // ``available_variant_stats`` on each abstract-resource
+                // component slot — see ``costs/router.py`` `_extract_components`.
+                const av = c.available_variants;
+                const avs = c.available_variant_stats;
+                return {
+                  name: c.name,
+                  code: c.code,
+                  unit: c.unit,
+                  quantity: c.quantity,
+                  unit_rate: c.unit_rate,
+                  cost: c.cost,
+                  type: c.type,
+                  ...(Array.isArray(av) && av.length >= 2
+                    ? { available_variants: av }
+                    : {}),
+                  ...(avs != null ? { available_variant_stats: avs } : {}),
+                };
+              }),
+              // v2.6.26+: forward the variant catalog so the resource entry
+              // can cache ``available_variants`` for later re-pick.
+              metadata_: item.metadata_,
+            }, picked);
+          } : undefined}
         />
       )}
 
@@ -5034,7 +4199,7 @@ export function BOQEditorPage() {
           onApplied={() => {
             setAssemblyModalOpen(false);
             invalidateAll();
-            addToast({ type: "success", title: "Assembly applied to BOQ" });
+            addToast({ type: 'success', title: 'Assembly applied to BOQ' });
           }}
         />
       )}
@@ -5083,84 +4248,35 @@ export function BOQEditorPage() {
 
       {/* ── Update Rates Confirmation Dialog ────────────────────────── */}
       {showRecalcConfirm && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-lg animate-fade-in"
-          onClick={() => setShowRecalcConfirm(false)}
-        >
-          <div
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="boq-recalc-confirm-title"
-            className="w-full max-w-md mx-4 rounded-2xl bg-surface-primary shadow-2xl border border-border-light overflow-hidden animate-scale-in"
-            onClick={(e) => e.stopPropagation()}
-          >
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-lg animate-fade-in" onClick={() => setShowRecalcConfirm(false)}>
+          <div role="dialog" aria-modal="true" aria-labelledby="boq-recalc-confirm-title" className="w-full max-w-md mx-4 rounded-2xl bg-surface-primary shadow-2xl border border-border-light overflow-hidden animate-scale-in" onClick={(e) => e.stopPropagation()}>
             <div className="px-6 py-5">
               <div className="flex items-center gap-3 mb-3">
                 <div className="h-10 w-10 rounded-xl bg-blue-50 dark:bg-blue-950/30 flex items-center justify-center">
                   <Database size={20} className="text-oe-blue" />
                 </div>
                 <div>
-                  <h3
-                    id="boq-recalc-confirm-title"
-                    className="text-base font-semibold"
-                  >
-                    {t("boq.recalc_confirm_title", {
-                      defaultValue: "Update Unit Rates",
-                    })}
-                  </h3>
-                  <p className="text-xs text-content-secondary">
-                    {t("boq.recalc_confirm_subtitle", {
-                      defaultValue: "Match positions to cost database",
-                    })}
-                  </p>
+                  <h3 id="boq-recalc-confirm-title" className="text-base font-semibold">{t('boq.recalc_confirm_title', { defaultValue: 'Update Unit Rates' })}</h3>
+                  <p className="text-xs text-content-secondary">{t('boq.recalc_confirm_subtitle', { defaultValue: 'Match positions to cost database' })}</p>
                 </div>
               </div>
               <div className="space-y-2 text-sm text-content-secondary">
-                <p>
-                  {t("boq.recalc_confirm_step1", {
-                    defaultValue:
-                      "1. Search cost database for matching items by description",
-                  })}
-                </p>
-                <p>
-                  {t("boq.recalc_confirm_step2", {
-                    defaultValue:
-                      "2. Attach resource breakdowns (materials, labor, equipment)",
-                  })}
-                </p>
-                <p>
-                  {t("boq.recalc_confirm_step3", {
-                    defaultValue:
-                      "3. Recalculate unit rates from resource components",
-                  })}
-                </p>
+                <p>{t('boq.recalc_confirm_step1', { defaultValue: '1. Search cost database for matching items by description' })}</p>
+                <p>{t('boq.recalc_confirm_step2', { defaultValue: '2. Attach resource breakdowns (materials, labor, equipment)' })}</p>
+                <p>{t('boq.recalc_confirm_step3', { defaultValue: '3. Recalculate unit rates from resource components' })}</p>
               </div>
               <div className="mt-3 rounded-lg bg-amber-50 dark:bg-amber-950/20 border border-amber-200/50 dark:border-amber-800/30 px-3 py-2">
                 <p className="text-xs text-amber-700 dark:text-amber-300">
-                  {t("boq.recalc_confirm_warning", {
-                    defaultValue:
-                      "Positions with manual rates that have no match in the cost database will not be changed.",
-                  })}
+                  {t('boq.recalc_confirm_warning', { defaultValue: 'Positions with manual rates that have no match in the cost database will not be changed.' })}
                 </p>
               </div>
             </div>
             <div className="flex items-center justify-end gap-2 px-6 py-4 border-t border-border-light bg-surface-secondary/30">
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setShowRecalcConfirm(false)}
-              >
-                {t("common.cancel", { defaultValue: "Cancel" })}
+              <Button variant="ghost" size="sm" onClick={() => setShowRecalcConfirm(false)}>
+                {t('common.cancel', { defaultValue: 'Cancel' })}
               </Button>
-              <Button
-                variant="primary"
-                size="sm"
-                onClick={doRecalculate}
-                loading={isRecalculating}
-              >
-                {t("boq.recalc_confirm_button", {
-                  defaultValue: "Update Rates",
-                })}
+              <Button variant="primary" size="sm" onClick={doRecalculate} loading={isRecalculating}>
+                {t('boq.recalc_confirm_button', { defaultValue: 'Update Rates' })}
               </Button>
             </div>
           </div>
@@ -5181,34 +4297,29 @@ export function BOQEditorPage() {
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between mb-4">
-              <h3
-                id="boq-gaeb-export-title"
-                className="text-sm font-semibold text-content-primary"
-              >
-                {t("boq.gaeb_export_title", {
-                  defaultValue: "Export GAEB XML (X83)",
-                })}
+              <h3 id="boq-gaeb-export-title" className="text-sm font-semibold text-content-primary">
+                {t('boq.gaeb_export_title', { defaultValue: 'Export GAEB XML (X83)' })}
               </h3>
               <button
                 onClick={() => setGaebPreviewOpen(false)}
                 className="p-1 rounded-lg text-content-tertiary hover:bg-surface-secondary transition-colors"
-                aria-label={t("common.close", { defaultValue: "Close" })}
+                aria-label={t('common.close', { defaultValue: 'Close' })}
               >
                 <X size={16} />
               </button>
             </div>
 
             <p className="text-xs text-content-secondary leading-relaxed mb-4">
-              {t("boq.gaeb_export_desc", {
+              {t('boq.gaeb_export_desc', {
                 defaultValue:
-                  "This will export your BOQ as GAEB XML 3.3 format, compatible with standard tender workflows.",
+                  'This will export your BOQ as GAEB XML 3.3 format, compatible with standard tender workflows.',
               })}
             </p>
 
             <div className="rounded-lg bg-surface-secondary p-3 mb-5 space-y-1.5">
               <div className="flex items-center justify-between text-xs">
                 <span className="text-content-tertiary">
-                  {t("boq.gaeb_positions", { defaultValue: "Positions" })}
+                  {t('boq.gaeb_positions', { defaultValue: 'Positions' })}
                 </span>
                 <span className="font-medium text-content-primary">
                   {positions.filter((p) => !isSection(p)).length}
@@ -5216,7 +4327,7 @@ export function BOQEditorPage() {
               </div>
               <div className="flex items-center justify-between text-xs">
                 <span className="text-content-tertiary">
-                  {t("boq.gaeb_grand_total", { defaultValue: "Grand Total" })}
+                  {t('boq.gaeb_grand_total', { defaultValue: 'Grand Total' })}
                 </span>
                 <span className="font-medium text-content-primary">
                   {fmt.format(grossTotal)} {currencySymbol}
@@ -5225,15 +4336,11 @@ export function BOQEditorPage() {
             </div>
 
             <div className="flex justify-end gap-2">
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setGaebPreviewOpen(false)}
-              >
-                {t("common.cancel", { defaultValue: "Cancel" })}
+              <Button variant="ghost" size="sm" onClick={() => setGaebPreviewOpen(false)}>
+                {t('common.cancel', { defaultValue: 'Cancel' })}
               </Button>
               <Button variant="primary" size="sm" onClick={confirmGaebExport}>
-                {t("boq.export", { defaultValue: "Export" })}
+                {t('boq.export', { defaultValue: 'Export' })}
               </Button>
             </div>
           </div>
@@ -5315,9 +4422,9 @@ export function BOQEditorPage() {
         onApply={handleRenumberApply}
         isApplying={renumberMutation.isPending}
         samplePositions={(boq?.positions ?? []).slice(0, 30).map((p) => ({
-          ordinal: p.ordinal ?? "",
-          description: p.description ?? "",
-          unit: p.unit ?? "",
+          ordinal: p.ordinal ?? '',
+          description: p.description ?? '',
+          unit: p.unit ?? '',
           parent_id: p.parent_id ?? null,
         }))}
       />
@@ -5337,10 +4444,7 @@ export function BOQEditorPage() {
 
       {/* ── Section Name Modal ────────────────────────────────────── */}
       {showSectionModal && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40"
-          onClick={() => setShowSectionModal(false)}
-        >
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40" onClick={() => setShowSectionModal(false)}>
           <div
             role="dialog"
             aria-modal="true"
@@ -5348,32 +4452,25 @@ export function BOQEditorPage() {
             className="bg-surface-elevated rounded-xl border border-border-light shadow-lg w-96 p-5 animate-scale-in"
             onClick={(e) => e.stopPropagation()}
           >
-            <h3
-              id="boq-add-section-title"
-              className="text-sm font-semibold text-content-primary mb-3"
-            >
-              {t("boq.add_section", { defaultValue: "Add Section" })}
+            <h3 id="boq-add-section-title" className="text-sm font-semibold text-content-primary mb-3">
+              {t('boq.add_section', { defaultValue: 'Add Section' })}
             </h3>
             <input
               type="text"
               value={sectionNameInput}
               onChange={(e) => setSectionNameInput(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") handleConfirmAddSection();
-              }}
+              onKeyDown={(e) => { if (e.key === 'Enter') handleConfirmAddSection(); }}
               className="w-full rounded-lg border border-border-light bg-surface-primary px-3 py-2 text-sm text-content-primary placeholder:text-content-tertiary focus:outline-none focus:ring-2 focus:ring-oe-blue/30 focus:border-oe-blue"
-              placeholder={t("boq.section_name_placeholder", {
-                defaultValue: "e.g. Structural Works, MEP, Finishes...",
-              })}
+              placeholder={t('boq.section_name_placeholder', { defaultValue: 'e.g. Structural Works, MEP, Finishes...' })}
               autoFocus
             />
             {/* Issue #136 — explicit parent picker so a sub-section at any
                 level (up to the {{max}} cap) can be created right here,
                 without hunting for the row right-click menu. */}
             <label className="block text-[11px] font-medium text-content-secondary mt-3 mb-1">
-              {t("boq.section_parent", { defaultValue: "Parent section" })}
+              {t('boq.section_parent', { defaultValue: 'Parent section' })}
               <span className="text-content-tertiary font-normal ml-1">
-                ({t("common.optional", { defaultValue: "optional" })})
+                ({t('common.optional', { defaultValue: 'optional' })})
               </span>
             </label>
             <select
@@ -5382,23 +4479,21 @@ export function BOQEditorPage() {
               className="w-full rounded-lg border border-border-light bg-surface-primary px-3 py-2 text-sm text-content-primary focus:outline-none focus:ring-2 focus:ring-oe-blue/30 focus:border-oe-blue"
             >
               <option value="">
-                {t("boq.section_parent_top", {
-                  defaultValue: "— Top level (no parent) —",
-                })}
+                {t('boq.section_parent_top', { defaultValue: '— Top level (no parent) —' })}
               </option>
               {sectionParentChoices.map((c) => (
                 <option key={c.id} value={c.id} disabled={c.disabled}>
                   {c.label}
                   {c.disabled
-                    ? ` · ${t("boq.section_parent_max", { defaultValue: "max depth" })}`
-                    : ""}
+                    ? ` · ${t('boq.section_parent_max', { defaultValue: 'max depth' })}`
+                    : ''}
                 </option>
               ))}
             </select>
             <p className="text-[11px] text-content-tertiary mt-1">
-              {t("boq.section_parent_hint", {
+              {t('boq.section_parent_hint', {
                 defaultValue:
-                  "Leave empty for a top-level section, or pick a parent to nest it (up to {{max}} levels).",
+                  'Leave empty for a top-level section, or pick a parent to nest it (up to {{max}} levels).',
                 max: maxNestingDepth,
               })}
             </p>
@@ -5407,13 +4502,13 @@ export function BOQEditorPage() {
                 onClick={() => setShowSectionModal(false)}
                 className="px-3 py-1.5 text-xs font-medium rounded-lg text-content-secondary hover:bg-surface-secondary transition-colors"
               >
-                {t("common.cancel", { defaultValue: "Cancel" })}
+                {t('common.cancel', { defaultValue: 'Cancel' })}
               </button>
               <button
                 onClick={handleConfirmAddSection}
                 className="px-3 py-1.5 text-xs font-medium rounded-lg bg-oe-blue text-white hover:bg-oe-blue-hover transition-colors"
               >
-                {t("common.add", { defaultValue: "Add" })}
+                {t('common.add', { defaultValue: 'Add' })}
               </button>
             </div>
           </div>
@@ -5421,143 +4516,75 @@ export function BOQEditorPage() {
       )}
 
       {/* ── Comment Drawer ──────────────────────────────────────────── */}
-      {commentPositionId &&
-        (() => {
-          const pos = boq?.positions.find((p) => p.id === commentPositionId);
-          if (!pos) return null;
-          return (
-            <CommentDrawer
-              positionId={commentPositionId}
-              positionOrdinal={pos.ordinal ?? ""}
-              positionDescription={pos.description ?? ""}
-              metadata={(pos.metadata ?? {}) as Record<string, unknown>}
-              currentUserEmail={userEmail}
-              onSave={handleSaveComments}
-              onClose={() => setCommentPositionId(null)}
-            />
-          );
-        })()}
+      {commentPositionId && (() => {
+        const pos = boq?.positions.find((p) => p.id === commentPositionId);
+        if (!pos) return null;
+        return (
+          <CommentDrawer
+            positionId={commentPositionId}
+            positionOrdinal={pos.ordinal ?? ''}
+            positionDescription={pos.description ?? ''}
+            metadata={(pos.metadata ?? {}) as Record<string, unknown>}
+            currentUserEmail={userEmail}
+            onSave={handleSaveComments}
+            onClose={() => setCommentPositionId(null)}
+          />
+        );
+      })()}
 
       {/* ── Keyboard Shortcuts Overlay ──────────────────────────────── */}
       {showShortcuts && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center"
-          role="dialog"
-          aria-label={t("boq.keyboard_shortcuts", {
-            defaultValue: "Keyboard Shortcuts",
-          })}
-        >
-          <div
-            className="absolute inset-0 bg-black/70 backdrop-blur-lg"
-            onClick={() => setShowShortcuts(false)}
-          />
+        <div className="fixed inset-0 z-50 flex items-center justify-center" role="dialog" aria-label={t('boq.keyboard_shortcuts', { defaultValue: 'Keyboard Shortcuts' })}>
+          <div className="absolute inset-0 bg-black/70 backdrop-blur-lg" onClick={() => setShowShortcuts(false)} />
           <div className="relative z-10 rounded-xl bg-surface-primary shadow-2xl border border-border-light p-6 max-w-md w-full animate-scale-in">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-2">
                 <Keyboard size={18} className="text-content-tertiary" />
                 <h3 className="text-base font-semibold text-content-primary">
-                  {t("boq.keyboard_shortcuts", {
-                    defaultValue: "Keyboard Shortcuts",
-                  })}
+                  {t('boq.keyboard_shortcuts', { defaultValue: 'Keyboard Shortcuts' })}
                 </h3>
               </div>
               <button
                 onClick={() => setShowShortcuts(false)}
                 className="p-1.5 rounded-lg text-content-tertiary hover:text-content-primary hover:bg-surface-secondary transition-colors"
-                aria-label={t("common.close", { defaultValue: "Close" })}
+                aria-label={t('common.close', { defaultValue: 'Close' })}
               >
                 <X size={16} />
               </button>
             </div>
             <div className="grid grid-cols-[auto_1fr] gap-y-2.5 gap-x-4 text-sm">
-              <kbd className="inline-flex items-center rounded border border-border-light bg-surface-secondary px-1.5 py-0.5 text-xs font-mono">
-                {t("boq.shortcut_ctrl_enter", { defaultValue: "Ctrl+Enter" })}
-              </kbd>
-              <span className="text-content-secondary">
-                {t("boq.shortcut_new_position", {
-                  defaultValue: "New Position",
-                })}
-              </span>
+              <kbd className="inline-flex items-center rounded border border-border-light bg-surface-secondary px-1.5 py-0.5 text-xs font-mono">{t('boq.shortcut_ctrl_enter', { defaultValue: 'Ctrl+Enter' })}</kbd>
+              <span className="text-content-secondary">{t('boq.shortcut_new_position', { defaultValue: 'New Position' })}</span>
 
-              <kbd className="inline-flex items-center rounded border border-border-light bg-surface-secondary px-1.5 py-0.5 text-xs font-mono">
-                {t("boq.shortcut_ctrl_d", { defaultValue: "Ctrl+D" })}
-              </kbd>
-              <span className="text-content-secondary">
-                {t("boq.shortcut_duplicate", {
-                  defaultValue: "Duplicate Position",
-                })}
-              </span>
+              <kbd className="inline-flex items-center rounded border border-border-light bg-surface-secondary px-1.5 py-0.5 text-xs font-mono">{t('boq.shortcut_ctrl_d', { defaultValue: 'Ctrl+D' })}</kbd>
+              <span className="text-content-secondary">{t('boq.shortcut_duplicate', { defaultValue: 'Duplicate Position' })}</span>
 
-              <kbd className="inline-flex items-center rounded border border-border-light bg-surface-secondary px-1.5 py-0.5 text-xs font-mono">
-                {t("boq.shortcut_ctrl_e", { defaultValue: "Ctrl+E" })}
-              </kbd>
-              <span className="text-content-secondary">
-                {t("boq.shortcut_export", { defaultValue: "Export" })}
-              </span>
+              <kbd className="inline-flex items-center rounded border border-border-light bg-surface-secondary px-1.5 py-0.5 text-xs font-mono">{t('boq.shortcut_ctrl_e', { defaultValue: 'Ctrl+E' })}</kbd>
+              <span className="text-content-secondary">{t('boq.shortcut_export', { defaultValue: 'Export' })}</span>
 
-              <kbd className="inline-flex items-center rounded border border-border-light bg-surface-secondary px-1.5 py-0.5 text-xs font-mono">
-                {t("boq.shortcut_ctrl_i", { defaultValue: "Ctrl+I" })}
-              </kbd>
-              <span className="text-content-secondary">
-                {t("boq.shortcut_import", { defaultValue: "Import" })}
-              </span>
+              <kbd className="inline-flex items-center rounded border border-border-light bg-surface-secondary px-1.5 py-0.5 text-xs font-mono">{t('boq.shortcut_ctrl_i', { defaultValue: 'Ctrl+I' })}</kbd>
+              <span className="text-content-secondary">{t('boq.shortcut_import', { defaultValue: 'Import' })}</span>
 
-              <kbd className="inline-flex items-center rounded border border-border-light bg-surface-secondary px-1.5 py-0.5 text-xs font-mono">
-                {t("boq.shortcut_ctrl_l", { defaultValue: "Ctrl+L" })}
-              </kbd>
-              <span className="text-content-secondary">
-                {t("boq.shortcut_lock", {
-                  defaultValue: "Lock / Unlock Estimate",
-                })}
-              </span>
+              <kbd className="inline-flex items-center rounded border border-border-light bg-surface-secondary px-1.5 py-0.5 text-xs font-mono">{t('boq.shortcut_ctrl_l', { defaultValue: 'Ctrl+L' })}</kbd>
+              <span className="text-content-secondary">{t('boq.shortcut_lock', { defaultValue: 'Lock / Unlock Estimate' })}</span>
 
-              <kbd className="inline-flex items-center rounded border border-border-light bg-surface-secondary px-1.5 py-0.5 text-xs font-mono">
-                {t("boq.shortcut_ctrl_z", { defaultValue: "Ctrl+Z" })}
-              </kbd>
-              <span className="text-content-secondary">
-                {t("boq.shortcut_undo", { defaultValue: "Undo" })}
-              </span>
+              <kbd className="inline-flex items-center rounded border border-border-light bg-surface-secondary px-1.5 py-0.5 text-xs font-mono">{t('boq.shortcut_ctrl_z', { defaultValue: 'Ctrl+Z' })}</kbd>
+              <span className="text-content-secondary">{t('boq.shortcut_undo', { defaultValue: 'Undo' })}</span>
 
-              <kbd className="inline-flex items-center rounded border border-border-light bg-surface-secondary px-1.5 py-0.5 text-xs font-mono">
-                {t("boq.shortcut_ctrl_y", { defaultValue: "Ctrl+Y" })}
-              </kbd>
-              <span className="text-content-secondary">
-                {t("boq.shortcut_redo", { defaultValue: "Redo" })}
-              </span>
+              <kbd className="inline-flex items-center rounded border border-border-light bg-surface-secondary px-1.5 py-0.5 text-xs font-mono">{t('boq.shortcut_ctrl_y', { defaultValue: 'Ctrl+Y' })}</kbd>
+              <span className="text-content-secondary">{t('boq.shortcut_redo', { defaultValue: 'Redo' })}</span>
 
-              <kbd className="inline-flex items-center rounded border border-border-light bg-surface-secondary px-1.5 py-0.5 text-xs font-mono">
-                {t("boq.shortcut_ctrl_slash", { defaultValue: "Ctrl+/" })}
-              </kbd>
-              <span className="text-content-secondary">
-                {t("boq.shortcut_ai_chat", { defaultValue: "Toggle AI Chat" })}
-              </span>
+              <kbd className="inline-flex items-center rounded border border-border-light bg-surface-secondary px-1.5 py-0.5 text-xs font-mono">{t('boq.shortcut_ctrl_slash', { defaultValue: 'Ctrl+/' })}</kbd>
+              <span className="text-content-secondary">{t('boq.shortcut_ai_chat', { defaultValue: 'Toggle AI Chat' })}</span>
 
-              <kbd className="inline-flex items-center rounded border border-border-light bg-surface-secondary px-1.5 py-0.5 text-xs font-mono">
-                {t("boq.shortcut_ctrl_shift_v", {
-                  defaultValue: "Ctrl+Shift+V",
-                })}
-              </kbd>
-              <span className="text-content-secondary">
-                {t("boq.shortcut_paste_excel", {
-                  defaultValue: "Paste from Excel",
-                })}
-              </span>
+              <kbd className="inline-flex items-center rounded border border-border-light bg-surface-secondary px-1.5 py-0.5 text-xs font-mono">{t('boq.shortcut_ctrl_shift_v', { defaultValue: 'Ctrl+Shift+V' })}</kbd>
+              <span className="text-content-secondary">{t('boq.shortcut_paste_excel', { defaultValue: 'Paste from Excel' })}</span>
 
-              <kbd className="inline-flex items-center rounded border border-border-light bg-surface-secondary px-1.5 py-0.5 text-xs font-mono">
-                {t("boq.shortcut_del", { defaultValue: "Del" })}
-              </kbd>
-              <span className="text-content-secondary">
-                {t("boq.shortcut_delete", { defaultValue: "Delete Selected" })}
-              </span>
+              <kbd className="inline-flex items-center rounded border border-border-light bg-surface-secondary px-1.5 py-0.5 text-xs font-mono">{t('boq.shortcut_del', { defaultValue: 'Del' })}</kbd>
+              <span className="text-content-secondary">{t('boq.shortcut_delete', { defaultValue: 'Delete Selected' })}</span>
 
-              <kbd className="inline-flex items-center rounded border border-border-light bg-surface-secondary px-1.5 py-0.5 text-xs font-mono">
-                {t("boq.shortcut_f1", { defaultValue: "F1" })}
-              </kbd>
-              <span className="text-content-secondary">
-                {t("boq.shortcut_show_shortcuts", {
-                  defaultValue: "Show Shortcuts",
-                })}
-              </span>
+              <kbd className="inline-flex items-center rounded border border-border-light bg-surface-secondary px-1.5 py-0.5 text-xs font-mono">{t('boq.shortcut_f1', { defaultValue: 'F1' })}</kbd>
+              <span className="text-content-secondary">{t('boq.shortcut_show_shortcuts', { defaultValue: 'Show Shortcuts' })}</span>
             </div>
           </div>
         </div>
@@ -5566,15 +4593,12 @@ export function BOQEditorPage() {
       {/* ── Vector DB Setup Dialog ───────────────────────────────────── */}
       {showVectorSetup && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-          <div
-            className="absolute inset-0 bg-black/70 backdrop-blur-lg"
-            onClick={() => setShowVectorSetup(false)}
-          />
+          <div className="absolute inset-0 bg-black/70 backdrop-blur-lg" onClick={() => setShowVectorSetup(false)} />
           <div className="relative w-full max-w-md rounded-2xl border border-border-light bg-surface-elevated shadow-2xl animate-form-scale-in">
             <button
               onClick={() => setShowVectorSetup(false)}
               className="absolute top-3 right-3 p-1.5 rounded-lg text-content-tertiary hover:text-content-primary hover:bg-surface-secondary transition-colors"
-              aria-label={t("common.close", { defaultValue: "Close" })}
+              aria-label={t('common.close', { defaultValue: 'Close' })}
             >
               <X size={16} />
             </button>
@@ -5586,14 +4610,10 @@ export function BOQEditorPage() {
                 </div>
                 <div>
                   <h3 className="text-base font-semibold text-content-primary">
-                    {t("boq.vector_setup_title", {
-                      defaultValue: "AI Features Setup",
-                    })}
+                    {t('boq.vector_setup_title', { defaultValue: 'AI Features Setup' })}
                   </h3>
                   <p className="text-xs text-content-tertiary">
-                    {t("boq.vector_setup_subtitle", {
-                      defaultValue: "One-time setup required",
-                    })}
+                    {t('boq.vector_setup_subtitle', { defaultValue: 'One-time setup required' })}
                   </p>
                 </div>
               </div>
@@ -5601,9 +4621,8 @@ export function BOQEditorPage() {
 
             <div className="px-6 pb-4">
               <p className="text-sm text-content-secondary leading-relaxed mb-4">
-                {t("boq.vector_setup_desc", {
-                  defaultValue:
-                    "AI rate suggestions, classification, and anomaly detection require a vector-indexed cost database. This is a one-time setup that takes about 30 seconds.",
+                {t('boq.vector_setup_desc', {
+                  defaultValue: 'AI rate suggestions, classification, and anomaly detection require a vector-indexed cost database. This is a one-time setup that takes about 30 seconds.',
                 })}
               </p>
 
@@ -5620,18 +4639,12 @@ export function BOQEditorPage() {
                   <div className="min-w-0 flex-1">
                     <div className="text-sm font-medium text-content-primary">
                       {vectorIndexing
-                        ? t("boq.vector_indexing", {
-                            defaultValue: "Indexing...",
-                          })
-                        : t("boq.vector_index_now", {
-                            defaultValue: "Index existing cost database",
-                          })}
+                        ? t('boq.vector_indexing', { defaultValue: 'Indexing...' })
+                        : t('boq.vector_index_now', { defaultValue: 'Index existing cost database' })
+                      }
                     </div>
                     <div className="text-xs text-content-tertiary">
-                      {t("boq.vector_index_desc", {
-                        defaultValue:
-                          "Build vector index from your imported cost items (~30s)",
-                      })}
+                      {t('boq.vector_index_desc', { defaultValue: 'Build vector index from your imported cost items (~30s)' })}
                     </div>
                   </div>
                   {vectorIndexing && (
@@ -5641,10 +4654,7 @@ export function BOQEditorPage() {
 
                 {/* Option 2: Go to import page */}
                 <button
-                  onClick={() => {
-                    setShowVectorSetup(false);
-                    navigate("/costs/import");
-                  }}
+                  onClick={() => { setShowVectorSetup(false); navigate('/costs/import'); }}
                   className="flex w-full items-center gap-3 rounded-xl border border-border-light px-4 py-3 text-left hover:bg-surface-secondary transition-colors group"
                 >
                   <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-blue-500/10 group-hover:bg-blue-500/20 transition-colors">
@@ -5652,41 +4662,29 @@ export function BOQEditorPage() {
                   </div>
                   <div className="min-w-0 flex-1">
                     <div className="text-sm font-medium text-content-primary">
-                      {t("boq.vector_download", {
-                        defaultValue: "Download cost database first",
-                      })}
+                      {t('boq.vector_download', { defaultValue: 'Download cost database first' })}
                     </div>
                     <div className="text-xs text-content-tertiary">
-                      {t("boq.vector_download_desc", {
-                        defaultValue:
-                          "Import CWICR databases (55,000+ items, 9 regions)",
-                      })}
+                      {t('boq.vector_download_desc', { defaultValue: 'Import CWICR databases (55,000+ items, 9 regions)' })}
                     </div>
                   </div>
-                  <ExternalLink
-                    size={14}
-                    className="shrink-0 text-content-quaternary group-hover:text-content-tertiary"
-                  />
+                  <ExternalLink size={14} className="shrink-0 text-content-quaternary group-hover:text-content-tertiary" />
                 </button>
               </div>
 
               {/* Status info */}
               <div className="mt-4 flex items-start gap-2 rounded-lg bg-surface-secondary/80 px-3 py-2">
-                <WarnTriangle
-                  size={13}
-                  className="text-amber-500 shrink-0 mt-0.5"
-                />
+                <WarnTriangle size={13} className="text-amber-500 shrink-0 mt-0.5" />
                 <p className="text-xs text-content-tertiary leading-relaxed">
                   {vectorStatus?.cost_collection
-                    ? t("boq.vector_status_partial", {
-                        defaultValue:
-                          "Vector DB has {{count}} items indexed. Minimum ~100 items needed for AI features.",
+                    ? t('boq.vector_status_partial', {
+                        defaultValue: 'Vector DB has {{count}} items indexed. Minimum ~100 items needed for AI features.',
                         count: vectorStatus.cost_collection.vectors_count,
                       })
-                    : t("boq.vector_status_empty", {
-                        defaultValue:
-                          "No vector database found. Import a cost database or index your existing cost items.",
-                      })}
+                    : t('boq.vector_status_empty', {
+                        defaultValue: 'No vector database found. Import a cost database or index your existing cost items.',
+                      })
+                  }
                 </p>
               </div>
             </div>

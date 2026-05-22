@@ -2,40 +2,29 @@
 // Regenerate with: node --experimental-strip-types scripts/split-i18n-fallbacks.mjs
 
 const resource = {
-  translation: {
-    "about.ai_desc":
-      "OpenConstructionERP 包含可选的 AI 工具——从文字描述快速估算、智能造价建议和工程量清单对话助手。这些功能需要您选择的服务商（Anthropic、OpenAI、Google）的 API 密钥。AI 始终是可选的：只有在您配置后才会激活，您可以决定发送哪些数据。没有 API 密钥时，所有其他功能均可完全离线使用。",
+  "translation": {
+    "about.ai_desc": "OpenConstructionERP 包含可选的 AI 工具——从文字描述快速估算、智能造价建议和工程量清单对话助手。这些功能需要您选择的服务商（Anthropic、OpenAI、Google）的 API 密钥。AI 始终是可选的：只有在您配置后才会激活，您可以决定发送哪些数据。没有 API 密钥时，所有其他功能均可完全离线使用。",
     "about.ai_title": "关于 AI 功能",
     "about.cap.boq": "工程量清单",
-    "about.cap.boq_desc":
-      "创建详细的工程量清单，包含层级分部、清单项、组合单价、费率（间接费、利润、增值税）和自动汇总。支持 DIN 276、NRM 1/2、MasterFormat 及自定义分类体系。",
+    "about.cap.boq_desc": "创建详细的工程量清单，包含层级分部、清单项、组合单价、费率（间接费、利润、增值税）和自动汇总。支持 DIN 276、NRM 1/2、MasterFormat 及自定义分类体系。",
     "about.cap.catalog": "资源目录",
-    "about.cap.catalog_desc":
-      "7,000+ 资源——材料、设备、人工、操作人员和公用设施。从目录项构建可复用的组合单价（综合费率），并直接应用于工程量清单项。",
+    "about.cap.catalog_desc": "7,000+ 资源——材料、设备、人工、操作人员和公用设施。从目录项构建可复用的组合单价（综合费率），并直接应用于工程量清单项。",
     "about.cap.costmodel": "5D 造价模型",
-    "about.cap.costmodel_desc":
-      "通过挣值管理（SPI、CPI）跟踪预算，S 曲线可视化、现金流预测、造价快照和假设情景建模，助力科学决策。",
+    "about.cap.costmodel_desc": "通过挣值管理（SPI、CPI）跟踪预算，S 曲线可视化、现金流预测、造价快照和假设情景建模，助力科学决策。",
     "about.cap.costs": "造价数据库",
-    "about.cap.costs_desc":
-      "55,000+ 造价条目，覆盖 11 个地区数据库，涵盖 DACH、英国、北美、中东等地区。可添加自有费率、从 Excel 导入或从头构建自定义数据库。",
+    "about.cap.costs_desc": "55,000+ 造价条目，覆盖 11 个地区数据库，涵盖 DACH、英国、北美、中东等地区。可添加自有费率、从 Excel 导入或从头构建自定义数据库。",
     "about.cap.import": "导入与导出",
-    "about.cap.import_desc":
-      "全面支持 GAEB XML（X83）、Excel 和 CSV 导入/导出。生成专业 PDF 报告。与您现有的工具和工作流程无缝集成。",
+    "about.cap.import_desc": "全面支持 GAEB XML（X83）、Excel 和 CSV 导入/导出。生成专业 PDF 报告。与您现有的工具和工作流程无缝集成。",
     "about.cap.schedule": "4D 施工进度计划",
-    "about.cap.schedule_desc":
-      "创建施工进度计划，包含 CPM 关键路径计算、交互式甘特图、蒙特卡洛风险分析、资源分配，以及从工程量清单自动生成工序。",
+    "about.cap.schedule_desc": "创建施工进度计划，包含 CPM 关键路径计算、交互式甘特图、蒙特卡洛风险分析、资源分配，以及从工程量清单自动生成工序。",
     "about.cap.tendering": "招投标管理",
-    "about.cap.tendering_desc":
-      "创建招标包，包含范围和清单项，分发给分包商，收集并逐项对比报价（价格对照表），基于数据做出定标决策。",
+    "about.cap.tendering_desc": "创建招标包，包含范围和清单项，分发给分包商，收集并逐项对比报价（价格对照表），基于数据做出定标决策。",
     "about.cap.validation": "质量校验",
-    "about.cap.validation_desc":
-      "内置质量引擎自动检查缺失工程量、零单价、重复清单项、分类合规性和费率异常——配有红绿灯仪表盘。",
+    "about.cap.validation_desc": "内置质量引擎自动检查缺失工程量、零单价、重复清单项、分类合规性和费率异常——配有红绿灯仪表盘。",
     "about.capabilities_title": "功能概览",
     "about.close": "知道了",
-    "about.intro":
-      "OpenConstructionERP 是一个现代化的工程造价管理平台。它涵盖完整的估算工作流程——从创建工程量清单到招投标和报价对比。面向全球专业人士设计，支持国际标准，提供 20 种语言。",
-    "about.intro2":
-      "与传统商业软件不同，OpenConstructionERP 完全在您的电脑上运行。您的项目数据从不离开您的设备——您拥有完全的所有权和控制权。源代码是开放且可审计的，因此您始终清楚软件的运作方式。",
+    "about.intro": "OpenConstructionERP 是一个现代化的工程造价管理平台。它涵盖完整的估算工作流程——从创建工程量清单到招投标和报价对比。面向全球专业人士设计，支持国际标准，提供 20 种语言。",
+    "about.intro2": "与传统商业软件不同，OpenConstructionERP 完全在您的电脑上运行。您的项目数据从不离开您的设备——您拥有完全的所有权和控制权。源代码是开放且可审计的，因此您始终清楚软件的运作方式。",
     "about.numbers_title": "平台数据",
     "about.stat.costs": "造价条目",
     "about.stat.free": "免费开源",
@@ -52,15 +41,11 @@ const resource = {
     "about.who.qsurveyor": "工料测量师",
     "about.who.students": "学生与教育工作者",
     "about.who.subs": "分包商",
-    "about.who_desc":
-      "OpenConstructionERP 面向所有参与工程造价管理的人员——无论您从事住宅项目还是大型基础设施，是企业内部人员还是外部顾问。",
+    "about.who_desc": "OpenConstructionERP 面向所有参与工程造价管理的人员——无论您从事住宅项目还是大型基础设施，是企业内部人员还是外部顾问。",
     "about.who_title": "适用人群",
-    "about.why_1":
-      "工程造价数据是企业最有价值的资产之一。使用专有软件时，您的数据往往被锁定在您无法控制的格式中。如果供应商提价、变更条款或停止产品——您可能失去多年的工作成果。",
-    "about.why_2":
-      "OpenConstructionERP 采用不同的方式。您的数据以开放格式（SQLite、JSON、CSV）存储在您自己的硬件上。您可以随时导出所有内容。源代码在 AGPL-3.0 下公开可审计，因此没有隐藏的数据传输、没有遥测、没有意外。",
-    "about.why_3":
-      "平台采用模块化设计——只安装您需要的功能。社区模块扩展功能而不臃肿核心。由于在本地运行，即使处理大型项目也能离线工作且性能出色。",
+    "about.why_1": "工程造价数据是企业最有价值的资产之一。使用专有软件时，您的数据往往被锁定在您无法控制的格式中。如果供应商提价、变更条款或停止产品——您可能失去多年的工作成果。",
+    "about.why_2": "OpenConstructionERP 采用不同的方式。您的数据以开放格式（SQLite、JSON、CSV）存储在您自己的硬件上。您可以随时导出所有内容。源代码在 AGPL-3.0 下公开可审计，因此没有隐藏的数据传输、没有遥测、没有意外。",
+    "about.why_3": "平台采用模块化设计——只安装您需要的功能。社区模块扩展功能而不臃肿核心。由于在本地运行，即使处理大型项目也能离线工作且性能出色。",
     "about.why_title": "为什么开源很重要",
     "ai.analyze_photo": "分析照片",
     "ai.area": "面积（m²）",
@@ -68,8 +53,7 @@ const resource = {
     "ai.boq_name_placeholder": "为此清单命名...",
     "ai.boq_saved": "工程量清单保存成功",
     "ai.building_type": "建筑类型",
-    "ai.cad_info":
-      "CAD/BIM 文件（.rvt、.ifc、.dwg、.dgn）需要安装 DDC 转换器。将提取构件并用于生成造价估算。从 GitHub 下载转换器并放置在 ~/.openestimator/converters/ 目录下。",
+    "ai.cad_info": "CAD/BIM 文件（.rvt、.ifc、.dwg、.dgn）需要安装 DDC 转换器。将提取构件并用于生成造价估算。从 GitHub 下载转换器并放置在 ~/.openestimator/converters/ 目录下。",
     "ai.choose_project": "-- 选择项目 --",
     "ai.col_description": "描述",
     "ai.col_pos": "序号",
@@ -105,10 +89,8 @@ const resource = {
     "ai.location_placeholder": "例如：北京",
     "ai.new_estimate": "新建估算",
     "ai.parse_import": "解析并导入",
-    "ai.paste_info":
-      "自动识别制表符分隔、分号或逗号分隔的数据。AI 将解析并将您的数据结构化为估算条目。",
-    "ai.paste_placeholder":
-      "在此粘贴您的清单数据（来自 Excel、Word 或任何表格）...\n\n示例：\n序号\\t描述\\t单位\\t工程量\\t单价\n01.01\\t土方开挖\\tm3\\t250\\t18.50\n01.02\\t混凝土 C30/37\\tm3\\t120\\t145.00\n01.03\\t钢筋 BSt 500\\tkg\\t12000\\t1.85",
+    "ai.paste_info": "自动识别制表符分隔、分号或逗号分隔的数据。AI 将解析并将您的数据结构化为估算条目。",
+    "ai.paste_placeholder": "在此粘贴您的清单数据（来自 Excel、Word 或任何表格）...\n\n示例：\n序号\\t描述\\t单位\\t工程量\\t单价\n01.01\\t土方开挖\\tm3\\t250\\t18.50\n01.02\\t混凝土 C30/37\\tm3\\t120\\t145.00\n01.03\\t钢筋 BSt 500\\tkg\\t12000\\t1.85",
     "ai.pdf_hint": "上传 PDF 格式的清单文件、技术规范或图纸。",
     "ai.powered_by": "由 {{model}} 提供支持",
     "ai.results": "估算结果",
@@ -117,8 +99,7 @@ const resource = {
     "ai.save_failed": "保存清单失败",
     "ai.save_to_boq": "保存为清单",
     "ai.select_project": "选择项目",
-    "ai.setup_required_desc":
-      "添加 Anthropic Claude、OpenAI 或 Google Gemini 的 API 密钥，以便从文字、照片、PDF 和 CAD 文件生成估算。",
+    "ai.setup_required_desc": "添加 Anthropic Claude、OpenAI 或 Google Gemini 的 API 密钥，以便从文字、照片、PDF 和 CAD 文件生成估算。",
     "ai.setup_required_title": "连接 AI 以开始使用",
     "ai.standard_label": "标准",
     "ai.supported_formats": "支持格式：{{formats}}",
@@ -156,8 +137,7 @@ const resource = {
     "app.tagline": "专业工程造价估算平台",
     "assemblies.assemblies_found": "个组合单价",
     "assemblies.description": "常见建筑构件的可复用造价配方",
-    "assemblies.what_are_assemblies":
-      '组合单价是将多种资源（材料、人工、设备）组合为单一综合费率的可复用造价配方。例如，"钢筋混凝土墙"组合单价包含混凝土、钢筋、模板和人工。将组合单价应用于工程量清单项可自动填充各组成费用。',
+    "assemblies.what_are_assemblies": "组合单价是将多种资源（材料、人工、设备）组合为单一综合费率的可复用造价配方。例如，\"钢筋混凝土墙\"组合单价包含混凝土、钢筋、模板和人工。将组合单价应用于工程量清单项可自动填充各组成费用。",
     "assemblies.new_assembly": "新建组合单价",
     "assemblies.no_results": "未找到组合单价",
     "assemblies.no_results_hint": "请尝试调整搜索条件或筛选器",
@@ -203,8 +183,7 @@ const resource = {
     "boq.aace_methodology": "方法论",
     "boq.aace_metrics": "分类指标",
     "boq.aace_positions": "清单项",
-    "boq.aace_reference":
-      "基于 AACE 国际推荐规程 18R-97。分类根据工程量清单完整性指标自动检测。",
+    "boq.aace_reference": "基于 AACE 国际推荐规程 18R-97。分类根据工程量清单完整性指标自动检测。",
     "boq.aace_to": "至",
     "boq.aace_with_classification": "含分类编码",
     "boq.aace_with_rates": "含综合单价",
@@ -223,16 +202,14 @@ const resource = {
     "boq.adding": "正在添加...",
     "boq.ai_assistant": "AI 助手",
     "boq.ai_chat_error": "AI 请求失败，请重试。",
-    "boq.ai_hint":
-      '可以要求我生成清单项。例如："添加一栋 5 层办公楼的机电安装项目"',
+    "boq.ai_hint": "可以要求我生成清单项。例如：\"添加一栋 5 层办公楼的机电安装项目\"",
     "boq.ai_placeholder": "描述需要生成的清单项...",
     "boq.ai_welcome": "可以要求我生成工程量清单项。例如：",
     "boq.all_projects": "所有项目",
     "boq.all_statuses": "所有状态",
     "boq.area_m2": "面积（m²）",
     "boq.back_to_project": "返回项目",
-    "boq.toolbar_hint":
-      "使用工具栏添加分部和清单项、从造价数据库或组合单价导入、导出至 GAEB/PDF/Excel，或运行 AI 估算。净值 = 清单项合计之和。费率以百分比形式应用。总计 = 净值 + 费率 + 增值税。",
+    "boq.toolbar_hint": "使用工具栏添加分部和清单项、从造价数据库或组合单价导入、导出至 GAEB/PDF/Excel，或运行 AI 估算。净值 = 清单项合计之和。费率以百分比形式应用。总计 = 净值 + 费率 + 增值税。",
     "boq.boq_created": "清单已创建",
     "boq.boq_name": "清单名称",
     "boq.cancel_compare": "取消对比",
@@ -305,7 +282,7 @@ const resource = {
     "boq.duplicate_failed": "复制失败",
     "boq.duplicated": "清单已复制",
     "boq.editor": "清单编辑器",
-    "boq.empty_section": '此分部暂无条目。点击"添加清单项"以添加。',
+    "boq.empty_section": "此分部暂无条目。点击\"添加清单项\"以添加。",
     "boq.enter_description": "输入描述...",
     "boq.estimated_total": "估算总价",
     "boq.estimates": "估算",
@@ -339,8 +316,7 @@ const resource = {
     "boq.no_boqs_hint": "请先创建项目，然后添加工程量清单",
     "boq.no_items_found": "未找到匹配条目",
     "boq.no_positions": "暂无清单项。请先添加分部开始。",
-    "boq.no_resources":
-      "未分配资源。从自动补全建议中选择带 ⚡ 图标的造价条目以自动填充。",
+    "boq.no_resources": "未分配资源。从自动补全建议中选择带 ⚡ 图标的造价条目以自动填充。",
     "boq.no_results": "无匹配的估算",
     "boq.no_results_hint": "请尝试调整搜索条件或筛选器",
     "boq.no_section": "无分部（顶层）",
@@ -380,8 +356,7 @@ const resource = {
     "boq.recalculate": "重新计算",
     "boq.recalculate_complete": "重新计算完成",
     "boq.recalculate_failed": "重新计算失败",
-    "boq.recalculate_summary":
-      "已重新计算：{{sections}} 个分部，{{positions}} 个清单项",
+    "boq.recalculate_summary": "已重新计算：{{sections}} 个分部，{{positions}} 个清单项",
     "boq.recent_activity": "最近动态",
     "boq.redo": "重做 (Ctrl+Y)",
     "boq.redone": "已重做",
@@ -457,8 +432,7 @@ const resource = {
     "boq.step_add_positions": "添加清单项",
     "boq.step_add_positions_desc": "在每个分部添加包含描述和单位的行项目",
     "boq.step_add_sections": "添加分部",
-    "boq.step_add_sections_desc":
-      "将您的估算按分部组织（例如：基础、墙体、屋面）",
+    "boq.step_add_sections_desc": "将您的估算按分部组织（例如：基础、墙体、屋面）",
     "boq.step_review": "审查汇总",
     "boq.step_review_desc": "添加间接费和利润的费率，然后审查总计",
     "boq.step_set_quantities": "设置工程量",
@@ -471,10 +445,8 @@ const resource = {
     "boq.templates": "清单模板",
     "boq.templates_coming_soon": "模板即将推出",
     "boq.templates_coming_soon_desc": "模板选择器将在未来版本中提供。",
-    "boq.templates_subtitle":
-      "从适合您建筑类型的专业模板开始。选择模板、设置面积，即可即时生成完整的工程量清单。",
-    "boq.tip_autocomplete":
-      "为所有清单项填写描述——开始输入即可查看造价数据库的建议",
+    "boq.templates_subtitle": "从适合您建筑类型的专业模板开始。选择模板、设置面积，即可即时生成完整的工程量清单。",
+    "boq.tip_autocomplete": "为所有清单项填写描述——开始输入即可查看造价数据库的建议",
     "boq.tip_markups": "使用表格下方的费率部分添加间接费和利润的费率",
     "boq.tip_menu": "点击分部的 (...) 菜单以添加清单项或删除分部",
     "boq.tip_sections": "添加分部来组织您的估算（例如：基础、墙体、屋面）",
@@ -546,8 +518,7 @@ const resource = {
     "catalog.delete_failed": "删除失败",
     "catalog.delete_region": "删除地区",
     "catalog.empty_hint": "导入地区目录以填充资源，或从造价条目中提取。",
-    "catalog.empty_with_regions":
-      "没有匹配当前筛选条件的资源。请尝试更改类型或地区。",
+    "catalog.empty_with_regions": "没有匹配当前筛选条件的资源。请尝试更改类型或地区。",
     "catalog.import": "导入",
     "catalog.import_failed": "导入失败",
     "catalog.import_region": "导入地区",
@@ -560,8 +531,7 @@ const resource = {
     "catalog.loaded": "已加载",
     "catalog.my_catalog": "我的目录",
     "catalog.my_catalog_empty": "您的目录为空",
-    "catalog.my_catalog_empty_desc":
-      "添加您自己的材料、设备和人工费率。自定义资源可用于组合单价并应用于工程量清单项。",
+    "catalog.my_catalog_empty_desc": "添加您自己的材料、设备和人工费率。自定义资源可用于组合单价并应用于工程量清单项。",
     "catalog.name": "名称",
     "catalog.no_results": "未找到资源",
     "catalog.no_results_hint": "请尝试调整搜索条件或筛选器",
@@ -578,8 +548,7 @@ const resource = {
     "catalog.resources_imported": "项资源已导入",
     "catalog.resources_removed": "项资源已删除",
     "catalog.search_hint": "浏览材料、设备、人工和操作人员",
-    "catalog.what_is_catalog":
-      "按地区组织的材料、人工、设备和操作人员费率。从模块安装地区目录，然后用于构建组合单价或直接添加到工程量清单项。",
+    "catalog.what_is_catalog": "按地区组织的材料、人工、设备和操作人员费率。从模块安装地区目录，然后用于构建组合单价或直接添加到工程量清单项。",
     "catalog.search_in": "搜索范围",
     "catalog.search_placeholder": "按名称或编码搜索...",
     "catalog.selected": "已选中",
@@ -604,14 +573,12 @@ const resource = {
     "command_palette.action_run_validation": "运行校验",
     "command_palette.action_import_database": "导入数据库",
     "error.something_wrong": "出现错误",
-    "error.unexpected_error":
-      "渲染此页面时发生意外错误。您可以尝试重新加载或返回仪表盘。",
+    "error.unexpected_error": "渲染此页面时发生意外错误。您可以尝试重新加载或返回仪表盘。",
     "error.details": "错误详情",
     "error.try_again": "重试",
     "error.go_dashboard": "前往仪表盘",
     "error.not_found": "页面未找到",
-    "error.not_found_desc":
-      "您查找的页面不存在或已移动。请检查网址或返回仪表盘。",
+    "error.not_found_desc": "您查找的页面不存在或已移动。请检查网址或返回仪表盘。",
     "error.go_back": "返回",
     "common.archive": "归档",
     "common.back": "返回",
@@ -712,8 +679,7 @@ const resource = {
     "costmodel.s_curve": "S 曲线（挣值管理）",
     "costmodel.s_curve_chart": "S 曲线图",
     "costmodel.title": "5D 造价模型",
-    "costmodel.what_is_5d":
-      "5D 造价管理为您的项目添加费用随时间的跟踪。通过 S 曲线图监控预算与实际支出，跟踪挣值（SPI = 进度效率，CPI = 费用效率——两者 >= 1.0 表示健康），并运行假设情景预测结果。",
+    "costmodel.what_is_5d": "5D 造价管理为您的项目添加费用随时间的跟踪。通过 S 曲线图监控预算与实际支出，跟踪挣值（SPI = 进度效率，CPI = 费用效率——两者 >= 1.0 表示健康），并运行假设情景预测结果。",
     "costmodel.total": "合计",
     "costmodel.total_budget": "总预算",
     "costmodel.variance": "偏差",
@@ -728,8 +694,7 @@ const resource = {
     "costmodel.whatif_material": "材料费",
     "costmodel.whatif_original_bac": "原始 BAC",
     "costmodel.whatif_reset": "重置",
-    "costmodel.whatif_scenario_name":
-      "假设情景：材料 {{material}}% 人工 {{labor}}% 工期 {{duration}}%",
+    "costmodel.whatif_scenario_name": "假设情景：材料 {{material}}% 人工 {{labor}}% 工期 {{duration}}%",
     "costmodel.whatif_title": "假设情景分析",
     "costs.add_database": "导入",
     "costs.add_item": "添加条目",
@@ -767,8 +732,7 @@ const resource = {
     "costs.import_and_more": "以及其他 {{count}} 个错误",
     "costs.import_another": "导入其他文件",
     "costs.import_click_to_change": "点击选择其他文件",
-    "costs.import_columns_hint":
-      "列自动检测。接受的表头：编码、描述、单位、费率/价格/造价、货币、DIN 276/分类。",
+    "costs.import_columns_hint": "列自动检测。接受的表头：编码、描述、单位、费率/价格/造价、货币、DIN 276/分类。",
     "costs.import_complete": "导入完成",
     "costs.import_database": "导入数据库",
     "costs.import_drop_here": "将文件拖放到此处",
@@ -779,8 +743,7 @@ const resource = {
     "costs.import_file_too_large": "文件过大",
     "costs.import_first_hint": "导入地区造价数据库，开始搜索 55,000+ 条目。",
     "costs.import_format_csv": "CSV (.csv)，列相同",
-    "costs.import_format_excel":
-      "Excel (.xlsx)，包含列：编码、描述、单位、费率",
+    "costs.import_format_excel": "Excel (.xlsx)，包含列：编码、描述、单位、费率",
     "costs.import_formats_title": "支持的格式",
     "costs.import_go_to_database": "前往造价数据库",
     "costs.import_imported": "已导入",
@@ -812,8 +775,7 @@ const resource = {
     "costs.region_cleared": "地区已清除",
     "costs.results_found": "条结果",
     "costs.search_hint": "按描述或编码搜索造价条目",
-    "costs.what_is_cost_db":
-      "材料、人工和设备的单价及综合价格。从模块导入地区数据库（CWICR、BKI、RSMeans）或添加自定义费率。开启 AI 语义搜索可使用自然语言查询。",
+    "costs.what_is_cost_db": "材料、人工和设备的单价及综合价格。从模块导入地区数据库（CWICR、BKI、RSMeans）或添加自定义费率。开启 AI 语义搜索可使用自然语言查询。",
     "costs.search_placeholder": "按描述或编码搜索...",
     "costs.semantic_placeholder": "描述您的需求（AI 查找相似项）...",
     "costs.showing": "显示",
@@ -822,8 +784,7 @@ const resource = {
     "dashboard.add_api_keys": "添加 API 密钥",
     "dashboard.ai_providers": "AI 服务商",
     "dashboard.analytics": "分析",
-    "dashboard.kpi_hint":
-      "所有项目的汇总。数值会随着您添加估算和进度活动而更新。",
+    "dashboard.kpi_hint": "所有项目的汇总。数值会随着您添加估算和进度活动而更新。",
     "dashboard.api_server": "API 服务器",
     "dashboard.boq_status": "清单状态",
     "dashboard.completed": "已完成",
@@ -901,11 +862,9 @@ const resource = {
     "documents.drop_hint": "拖放文件到此处，或点击上传",
     "documents.drop_hint_types": "PDF、图片、Excel、DWG、IFC — 任何文件类型",
     "documents.empty": "暂无文档",
-    "documents.empty_hint":
-      "上传您的第一个文件 — 图纸、合同、照片或任何项目文档。",
+    "documents.empty_hint": "上传您的第一个文件 — 图纸、合同、照片或任何项目文档。",
     "documents.select_project": "选择项目",
-    "documents.select_project_hint":
-      "请先使用页面顶部的项目切换器选择一个项目。",
+    "documents.select_project_hint": "请先使用页面顶部的项目切换器选择一个项目。",
     "documents.sort_date": "按日期",
     "documents.sort_name": "按名称",
     "documents.sort_size": "按大小",
@@ -921,39 +880,31 @@ const resource = {
     "login.benefit.ai": "AI 辅助估算",
     "login.benefit.ai_desc": "智能建议，附带置信度评分。您做决定，AI 辅助。",
     "login.benefit.allinone": "清单 + 4D + 5D + 招投标",
-    "login.benefit.allinone_desc":
-      "从造价估算到报价对比，一个工具完成完整工作流程。",
+    "login.benefit.allinone_desc": "从造价估算到报价对比，一个工具完成完整工作流程。",
     "login.benefit.free": "人人免费",
     "login.benefit.free_desc": "无许可费。无限制。由造价师打造，为造价师服务。",
     "login.benefit.local": "数据留在您的电脑上",
-    "login.benefit.local_desc":
-      "无云端。无第三方服务器。完全掌控您的项目数据。",
+    "login.benefit.local_desc": "无云端。无第三方服务器。完全掌控您的项目数据。",
     "login.benefit.open_source": "100% 开源",
     "login.benefit.open_source_desc": "代码透明。无供应商锁定。随时导出一切。",
     "login.benefit.standards": "国际标准",
-    "login.benefit.standards_desc":
-      "全球11个区域数据库中超过55,000+个成本项目。",
-    "login.hero_desc":
-      "专业清单编制、4D 进度管理、5D 造价模型和招投标——尽在一个开源平台。",
+    "login.benefit.standards_desc": "全球11个区域数据库中超过55,000+个成本项目。",
+    "login.hero_desc": "专业清单编制、4D 进度管理、5D 造价模型和招投标——尽在一个开源平台。",
     "login.hero_highlight": "全新定义",
     "login.hero_title": "工程造价估算，",
     "login.open_source_badge": "首个开源建筑ERP",
     "dashboard.open_source_badge": "首个开源建筑ERP",
     "login.learn_more": "了解更多关于平台的信息",
-    "login.privacy":
-      "所有数据均在您的设备上本地处理和存储。不会发送到外部服务器。您始终拥有您的数据。",
-    "login.privacy_ai":
-      "如果您使用内置 AI 工具，部分数据可能会发送到您配置的 AI 服务商（OpenAI、Anthropic 等）。您可以控制使用哪个服务商以及共享哪些数据。",
+    "login.privacy": "所有数据均在您的设备上本地处理和存储。不会发送到外部服务器。您始终拥有您的数据。",
+    "login.privacy_ai": "如果您使用内置 AI 工具，部分数据可能会发送到您配置的 AI 服务商（OpenAI、Anthropic 等）。您可以控制使用哪个服务商以及共享哪些数据。",
     "marketplace.active": "已激活",
     "marketplace.available": "可用模块",
     "marketplace.builtin": "内置",
     "marketplace.builtin_message": "此模块已内置于您的安装中，可直接使用。",
     "marketplace.catalog_imported": "目录已导入",
-    "marketplace.catalog_imported_message":
-      "{{region}} 已导入 {{imported}} 项资源，跳过 {{skipped}} 项。",
+    "marketplace.catalog_imported_message": "{{region}} 已导入 {{imported}} 项资源，跳过 {{skipped}} 项。",
     "marketplace.demo_installed": "演示已安装",
-    "marketplace.demo_installed_message":
-      "已创建 {{name}}，包含完整的清单、进度计划、预算和招投标。",
+    "marketplace.demo_installed_message": "已创建 {{name}}，包含完整的清单、进度计划、预算和招投标。",
     "marketplace.free": "免费",
     "marketplace.import_failed": "导入失败",
     "marketplace.imported": "已导入",
@@ -973,10 +924,8 @@ const resource = {
     "marketplace.no_results_hint": "请尝试调整搜索条件或分类筛选。",
     "marketplace.rules": "条规则",
     "marketplace.search_placeholder": "搜索模块...",
-    "marketplace.subtitle":
-      "浏览并安装造价数据库、AI 工具、CAD 转换器等附加模块。",
-    "marketplace.description":
-      "使用地区造价数据库、资源目录（CWICR）、AI 向量搜索索引、语言包、演示项目和集成来扩展 OpenEstimate。安装模块即可激活——随时可卸载。",
+    "marketplace.subtitle": "浏览并安装造价数据库、AI 工具、CAD 转换器等附加模块。",
+    "marketplace.description": "使用地区造价数据库、资源目录（CWICR）、AI 向量搜索索引、语言包、演示项目和集成来扩展 OpenEstimate。安装模块即可激活——随时可卸载。",
     "marketplace.title": "模块市场",
     "marketplace.uninstall": "卸载",
     "marketplace.unknown_region": "未知地区",
@@ -994,10 +943,10 @@ const resource = {
     "nav.equipment": "设备与车队",
     "nav.resources": "资源与人员",
     "nav.service": "服务与维护",
-    "nav.portal": "分包商门户",
+    "nav.portal": "分包门户",
     "nav.crm": "客户关系管理 (CRM)",
     "nav.contracts": "合同",
-    "nav.subcontractors": "分包商",
+    "nav.subcontractors": "分包商目录",
     "nav.bid_management": "投标管理",
     "nav.variations": "变更单",
     "nav.supplier_catalogs": "供应商目录",
@@ -1009,17 +958,21 @@ const resource = {
     "nav.bi_dashboards": "BI 仪表板",
     "nav.match_elements": "元素匹配 → 成本",
     "nav.group_operations": "现场运营",
-    "nav.group_operations_desc":
-      "现场日常运营 — 服务工单、设备、日志、分包商门户、资源",
+    "nav.group_operations_desc": "现场日常运营 — 服务工单、设备、日志、分包商门户、资源",
     "nav.group_commercial": "商务",
-    "nav.group_commercial_desc":
-      "商务线 — 客户关系、合同、投标、变更、供应商、房地产开发",
+    "nav.group_commercial_desc": "商务线 — 客户关系、合同、投标、变更、供应商、房地产开发",
     "nav.group_bi": "分析",
     "nav.group_bi_desc": "基于数据仓库投影的 BI 仪表板",
-    "nav.group_estimation": "造价估算",
-    "nav.group_estimation_desc": "核心工具：项目、清单、造价和组合单价",
+    "nav.group_analytics": "分析与报告",
+    "nav.group_analytics_desc": "跨模块报告、BI 仪表板和数据仓库投影",
+    "nav.group_estimation": "估算工作",
+    "nav.group_estimation_desc": "项目估算 — 工程量清单、BIM 匹配造价、AI 估算、分析",
+    "nav.group_catalogues": "目录与参考",
+    "nav.group_catalogues_desc": "造价数据库、区域目录、组合单价模板",
     "nav.group_databases": "数据库",
     "nav.group_takeoff": "工程量计算",
+    "nav.group_cad_bim_analytics": "模型协调",
+    "nav.group_cad_bim_analytics_desc": "联合体、碰撞检测、规则包和协调中心",
     "nav.group_cad_bim": "CAD / BIM & BI",
     "nav.takeoff_overview": "概览",
     "nav.pdf_takeoff": "PDF工程量",
@@ -1079,10 +1032,8 @@ const resource = {
     "requirements.notes": "备注",
     "requirements.notes_placeholder": "附加说明或上下文...",
     "requirements.import_text": "从文本导入",
-    "requirements.import_text_desc":
-      "粘贴需求规格。每行格式：实体 | 属性 | 约束类型 | 值 | 单位 | 类别 | 优先级",
-    "requirements.import_placeholder":
-      "墙 | 厚度 | min | 200 | mm | 结构 | 必须\n屋顶 | U值 | max | 0.20 | W/m²K | 热工 | 必须",
+    "requirements.import_text_desc": "粘贴需求规格。每行格式：实体 | 属性 | 约束类型 | 值 | 单位 | 类别 | 优先级",
+    "requirements.import_placeholder": "墙 | 厚度 | min | 200 | mm | 结构 | 必须\n屋顶 | U值 | max | 0.20 | W/m²K | 热工 | 必须",
     "requirements.set_created": "需求集已创建",
     "requirements.new_set": "新建需求集",
     "requirements.set_name_placeholder": "例如：结构需求第一阶段",
@@ -1116,21 +1067,18 @@ const resource = {
     "requirements.click_to_upload_csv": "点击上传CSV文件",
     "requirements.click_to_upload_json": "点击上传JSON文件",
     "requirements.csv_loaded": "已从CSV加载 {{count}} 行",
-    "requirements.csv_parse_error":
-      "CSV必须包含标题：entity、attribute、constraint_value",
+    "requirements.csv_parse_error": "CSV必须包含标题：entity、attribute、constraint_value",
     "requirements.export": "导出",
     "requirements.export_csv": "导出CSV",
     "requirements.export_excel": "导出Excel",
     "requirements.export_json": "导出JSON",
     "requirements.exported": "需求已导出",
     "requirements.import_count": "正在导入 {{count}} 条需求...",
-    "requirements.import_csv_desc":
-      "上传包含以下列的CSV文件：entity、attribute、constraint_value",
+    "requirements.import_csv_desc": "上传包含以下列的CSV文件：entity、attribute、constraint_value",
     "requirements.import_json_desc": "上传需求对象的JSON数组",
     "requirements.import_requirements": "导入需求",
     "requirements.json_loaded": "已从JSON加载 {{count}} 个项目",
-    "requirements.json_parse_error":
-      "JSON必须是包含entity、attribute、constraint_value的对象数组",
+    "requirements.json_parse_error": "JSON必须是包含entity、attribute、constraint_value的对象数组",
     "requirements.preview": "预览",
     "requirements.regex_hint": "输入正则表达式模式，例如 ^F[0-9]+$",
     "requirements.regex_invalid": "无效模式",
@@ -1373,8 +1321,7 @@ const resource = {
     "files.preview.title": "文件详情",
     "files.preview.empty": "选择一个文件以查看详情。",
     "files.no_project_title": "无活动项目",
-    "files.no_project_desc":
-      "从仪表板选择一个项目，即可在一个地方查看其所有文档、照片、BIM 与 DWG 文件。",
+    "files.no_project_desc": "从仪表板选择一个项目，即可在一个地方查看其所有文档、照片、BIM 与 DWG 文件。",
     "files.go_to_projects": "前往项目",
     "files.empty_category": "暂无{{category}}",
     "files.cta.add_first": "添加第一个{{category}}",
@@ -1441,11 +1388,9 @@ const resource = {
     "files.upload_too_large": "文件过大",
     "files.upload_too_large_msg": "{{count}} 个文件超过 100 MB 限制并已跳过。",
     "files.export.title": "导出项目包",
-    "files.export.intro":
-      "选择要包含的内容。较小的包传输更快;较大的包保留更多。",
+    "files.export.intro": "选择要包含的内容。较小的包传输更快;较大的包保留更多。",
     "files.export.scope_metadata": "仅元数据",
-    "files.export.scope_metadata_hint":
-      "邮件友好。工程量、表格和链接 — 不含附件。",
+    "files.export.scope_metadata_hint": "邮件友好。工程量、表格和链接 — 不含附件。",
     "files.export.scope_documents": "文档",
     "files.export.scope_documents_hint": "附加上传的文档和照片(含缩略图)。",
     "files.export.scope_bim": "BIM 模型",
@@ -1480,13 +1425,11 @@ const resource = {
     "files.import.mode_merge": "合并到现有项目",
     "files.import.mode_merge_hint": "向所选项目添加行。已存在的 ID 将被跳过。",
     "files.import.mode_replace": "替换现有项目",
-    "files.import.mode_replace_hint":
-      "清除所选项目中由包管理的行,然后导入。具破坏性。",
+    "files.import.mode_replace_hint": "清除所选项目中由包管理的行,然后导入。具破坏性。",
     "files.import.rename": "新项目名称(可选)",
     "files.import.target_project": "目标项目",
     "files.import.pick_project": "— 选择一个项目 —",
-    "files.import.destructive_warn":
-      "此操作将在导入前永久删除目标项目中由包管理的行,无法撤销。",
+    "files.import.destructive_warn": "此操作将在导入前永久删除目标项目中由包管理的行,无法撤销。",
     "files.import.confirm": "导入",
     "files.import.result_done": "导入完成",
     "files.import.imported": "已导入",
@@ -1506,8 +1449,7 @@ const resource = {
     "files.email.paste_into_email": "邮件正文示例",
     "files.email.open_mail_client": "打开邮件客户端",
     "files.email.sample_subject": "文件: {{name}}",
-    "files.email.sample_body":
-      "您好,\n\n这是您要的文件 — {{name}} ({{size}})。\n下载链接(过期时间 {{expires}}):\n{{url}}\n\n— 来自 OpenConstructionERP",
+    "files.email.sample_body": "您好,\n\n这是您要的文件 — {{name}} ({{size}})。\n下载链接(过期时间 {{expires}}):\n{{url}}\n\n— 来自 OpenConstructionERP",
     "photos.title": "项目照片",
     "photos.upload": "上传照片",
     "photos.upload_hint": "拖放照片或点击浏览",
@@ -1539,8 +1481,7 @@ const resource = {
     "onboarding.ai_title": "AI 服务商（可选）",
     "onboarding.api_key": "API 密钥",
     "onboarding.api_key_placeholder": "在此粘贴您的 API 密钥...",
-    "onboarding.cost_db_hint":
-      "您可以稍后在造价数据库 → 导入中添加更多数据库。",
+    "onboarding.cost_db_hint": "您可以稍后在造价数据库 → 导入中添加更多数据库。",
     "onboarding.cost_db_subtitle": "加载定额库以获得准确的估算。选择您的地区：",
     "onboarding.cost_db_title": "造价数据库",
     "onboarding.create_error": "创建项目失败",
@@ -1551,8 +1492,7 @@ const resource = {
     "onboarding.get_started": "开始使用",
     "onboarding.items_loaded": "条目已加载",
     "onboarding.loading_database": "正在导入数据库...",
-    "onboarding.loading_database_hint":
-      "正在加载约 55,000 条数据。大约需要 1-3 分钟。",
+    "onboarding.loading_database_hint": "正在加载约 55,000 条数据。大约需要 1-3 分钟。",
     "onboarding.project_created": "项目已创建！",
     "onboarding.project_created_msg": "您的工作区已就绪。让我们",
     "onboarding.project_error": "创建项目失败",
@@ -1568,8 +1508,7 @@ const resource = {
     "onboarding.test_connection": "测试连接",
     "onboarding.testing": "正在测试...",
     "onboarding.welcome_hint": "免费开源。无需信用卡。",
-    "onboarding.welcome_subtitle":
-      "专业工程造价估算平台。\n几个简单步骤即可设置您的工作区。",
+    "onboarding.welcome_subtitle": "专业工程造价估算平台。\n几个简单步骤即可设置您的工作区。",
     "onboarding.welcome_title": "欢迎使用 OpenConstructionERP",
     "onboarding.tour_step": "导览步骤",
     "onboarding.step_label": "步骤",
@@ -1578,20 +1517,15 @@ const resource = {
     "onboarding.next": "下一步",
     "onboarding.finish": "完成",
     "onboarding.step1.title": "导航侧边栏",
-    "onboarding.step1.description":
-      "侧边栏可快速访问所有模块：项目、估算、造价数据库、进度计划等。",
+    "onboarding.step1.description": "侧边栏可快速访问所有模块：项目、估算、造价数据库、进度计划等。",
     "onboarding.step2.title": "项目",
-    "onboarding.step2.description":
-      "从这里开始创建您的第一个项目。每个项目集中管理清单、进度计划和文档。",
+    "onboarding.step2.description": "从这里开始创建您的第一个项目。每个项目集中管理清单、进度计划和文档。",
     "onboarding.step3.title": "工程量清单",
-    "onboarding.step3.description":
-      "使用清单编辑器创建详细估算——层级清单项、组合单价和实时费用汇总。",
+    "onboarding.step3.description": "使用清单编辑器创建详细估算——层级清单项、组合单价和实时费用汇总。",
     "onboarding.step4.title": "造价数据库",
-    "onboarding.step4.description":
-      "浏览和管理造价费率数据库，包括内置的 CWICR（55,000+ 条目，9 种语言）。",
+    "onboarding.step4.description": "浏览和管理造价费率数据库，包括内置的 CWICR（55,000+ 条目，9 种语言）。",
     "onboarding.step5.title": "简洁 / 高级模式",
-    "onboarding.step5.description":
-      "在简洁模式（基本工具）和高级模式（包含招投标和进度管理的全部功能）之间切换。",
+    "onboarding.step5.description": "在简洁模式（基本工具）和高级模式（包含招投标和进度管理的全部功能）之间切换。",
     "projects.4d_schedule": "4D 进度计划",
     "projects.5d_budget": "5D 预算",
     "projects.active": "活跃",
@@ -1623,8 +1557,7 @@ const resource = {
     "projects.name_placeholder": "例如：市中心办公大楼",
     "projects.new_boq": "新建清单",
     "projects.new_project": "新建项目",
-    "projects.create_hint":
-      "地区决定可用的造价数据库和增值税税率。分类标准定义费用结构：DACH 国家使用 DIN 276，英国使用 NRM，美国/加拿大使用 MasterFormat，大洋洲使用 UniFormat。货币设定清单中所有定价。",
+    "projects.create_hint": "地区决定可用的造价数据库和增值税税率。分类标准定义费用结构：DACH 国家使用 DIN 276，英国使用 NRM，美国/加拿大使用 MasterFormat，大洋洲使用 UniFormat。货币设定清单中所有定价。",
     "projects.no_boqs": "暂无清单",
     "projects.no_boqs_desc": "创建工程量清单以开始对此项目进行造价估算。",
     "projects.no_budget": "暂无预算数据",
@@ -1651,8 +1584,7 @@ const resource = {
     "projects.projects_label": "个项目",
     "projects.region": "地区",
     "projects.regional_factor": "地区调整系数",
-    "projects.regional_factor_hint":
-      "将所有费率乘以此系数（例如：慕尼黑 = 1.12，柏林 = 1.05）",
+    "projects.regional_factor_hint": "将所有费率乘以此系数（例如：慕尼黑 = 1.12，柏林 = 1.05）",
     "projects.remaining": "剩余",
     "projects.schedule_subtitle": "项目进度计划与时间线",
     "projects.search_placeholder": "搜索项目...",
@@ -1681,14 +1613,11 @@ const resource = {
     "quantities.how_it_works": "工作原理",
     "quantities.manual_desc": "需要直接添加工程量？前往清单编辑器。",
     "quantities.manual_title": "快速手动输入",
-    "quantities.method_ai_desc":
-      "描述您的建筑，AI 将生成包含估算体量和费用的工程量清单。",
+    "quantities.method_ai_desc": "描述您的建筑，AI 将生成包含估算体量和费用的工程量清单。",
     "quantities.method_ai_title": "AI 文字输入",
-    "quantities.method_cad_desc":
-      "导入 DWG、RVT、IFC 或 DGN 文件，直接从三维模型提取工程量。",
+    "quantities.method_cad_desc": "导入 DWG、RVT、IFC 或 DGN 文件，直接从三维模型提取工程量。",
     "quantities.method_cad_title": "CAD / BIM 模型",
-    "quantities.method_pdf_desc":
-      "上传 PDF 格式的施工图纸，通过 AI 算量自动提取工程量。",
+    "quantities.method_pdf_desc": "上传 PDF 格式的施工图纸，通过 AI 算量自动提取工程量。",
     "quantities.method_pdf_title": "PDF 图纸",
     "quantities.open": "打开",
     "quantities.open_boq": "打开清单编辑器",
@@ -1698,23 +1627,19 @@ const resource = {
     "quantities.step2_title": "AI 提取工程量",
     "quantities.step3_desc": "验证结果并将其添加到您的工程量清单。",
     "quantities.step3_title": "审核并添加到清单",
-    "quantities.subtitle":
-      "从 AI 文字输入、PDF 图纸或 CAD/BIM 模型收集项目工程量",
+    "quantities.subtitle": "从 AI 文字输入、PDF 图纸或 CAD/BIM 模型收集项目工程量",
     "quantities.converter_title": "CAD/BIM 转换工作原理",
-    "quantities.converter_desc":
-      "上传您的 CAD/BIM 文件（.rvt、.ifc、.dwg、.dgn），DDC 转换器将所有构件提取为结构化表格——墙体、楼板、柱、门、窗——包含计算的体积、面积和工程量。AI 然后将这些构件映射到造价条目并自动生成完整的工程量清单。",
+    "quantities.converter_desc": "上传您的 CAD/BIM 文件（.rvt、.ifc、.dwg、.dgn），DDC 转换器将所有构件提取为结构化表格——墙体、楼板、柱、门、窗——包含计算的体积、面积和工程量。AI 然后将这些构件映射到造价条目并自动生成完整的工程量清单。",
     "quantities.download_converters": "下载 DDC 转换器",
     "quantities.converter_path": "安装到：~/.openestimator/converters/",
     "quantities.title": "工程量计算",
     "reports.5d_report": "5D 造价报告",
     "reports.5d_report_desc": "预算与实际分析，包含 S 曲线和造价预测。",
     "reports.boq_report": "清单报告",
-    "reports.boq_report_desc":
-      "完整的工程量清单，包含分部、清单项、费率和合计。可导出为 PDF 或 Excel。",
+    "reports.boq_report_desc": "完整的工程量清单，包含分部、清单项、费率和合计。可导出为 PDF 或 Excel。",
     "reports.coming_soon": "即将推出",
     "reports.cost_report": "造价报告",
-    "reports.cost_report_desc":
-      "按类别的费用分解，包含汇总图表和详细造价分析。",
+    "reports.cost_report_desc": "按类别的费用分解，包含汇总图表和详细造价分析。",
     "reports.download_error": "报告生成失败",
     "reports.download_format": "下载 {{format}}",
     "reports.download_success": "报告下载成功",
@@ -1723,17 +1648,14 @@ const resource = {
     "reports.no_boqs": "此项目中暂无清单",
     "reports.no_projects": "暂无可用项目",
     "reports.schedule_report": "进度报告",
-    "reports.schedule_report_desc":
-      "甘特图，包含项目时间线、里程碑和关键路径。",
+    "reports.schedule_report_desc": "甘特图，包含项目时间线、里程碑和关键路径。",
     "reports.select_boq_first": "请先选择项目和清单",
     "reports.select_project_first": "请先选择项目",
     "reports.subtitle": "为您的项目生成专业报告",
-    "reports.guide_desc":
-      "清单报告 = 包含合计的详细工程量清单。造价报告 = 按类别的费用分解。GAEB XML = 德国招标格式（.x83），用于分包商数据交换。校验 = 合规检查结果。进度 = 甘特图活动汇总。5D = 预算与实际造价曲线。",
+    "reports.guide_desc": "清单报告 = 包含合计的详细工程量清单。造价报告 = 按类别的费用分解。GAEB XML = 德国招标格式（.x83），用于分包商数据交换。校验 = 合规检查结果。进度 = 甘特图活动汇总。5D = 预算与实际造价曲线。",
     "reports.title": "报告",
     "reports.validation_report": "校验报告",
-    "reports.validation_report_desc":
-      "基于 DIN 276、NRM 或 MasterFormat 标准的合规检查报告。",
+    "reports.validation_report_desc": "基于 DIN 276、NRM 或 MasterFormat 标准的合规检查报告。",
     "schedule.activity": "活动",
     "schedule.activity_name": "活动名称",
     "schedule.activity_name_placeholder": "例如：基础施工",
@@ -1759,8 +1681,7 @@ const resource = {
     "schedule.fifty_pct_confidence": "50% 置信度",
     "schedule.generate": "生成",
     "schedule.generate_from_boq": "从清单生成",
-    "schedule.generate_from_boq_description":
-      "选择一份清单以自动生成进度活动。每个清单分部将创建一个活动，工期按费用比例分配。",
+    "schedule.generate_from_boq_description": "选择一份清单以自动生成进度活动。每个清单分部将创建一个活动，工期按费用比例分配。",
     "schedule.in_progress": "进行中",
     "schedule.mean_label": "均值（关键路径）",
     "schedule.ninetyfive_pct_confidence": "95% 置信度",
@@ -1785,8 +1706,7 @@ const resource = {
     "schedule.status_draft": "草稿",
     "schedule.std_dev_label": "标准差",
     "schedule.subtitle": "选择项目以查看和管理其施工进度计划",
-    "schedule.what_is_4d":
-      "4D 进度管理将工程量清单项与项目时间线关联。创建活动、设置依赖关系，并在甘特图上可视化进度。关键路径分析突出显示直接影响项目结束日期的活动。活动类型：任务 = 工作项，里程碑 = 零工期的检查点，摘要 = 分组标题。",
+    "schedule.what_is_4d": "4D 进度管理将工程量清单项与项目时间线关联。创建活动、设置依赖关系，并在甘特图上可视化进度。关键路径分析突出显示直接影响项目结束日期的活动。活动类型：任务 = 工作项，里程碑 = 零工期的检查点，摘要 = 分组标题。",
     "schedule.title": "4D 进度计划",
     "schedule.total_activities": "合计",
     "schedule.type_milestone": "里程碑",
@@ -1802,8 +1722,7 @@ const resource = {
     "settings.active": "已激活",
     "settings.ai_api_key": "API 密钥",
     "settings.ai_connected": "已连接",
-    "settings.ai_desc_anthropic":
-      "Claude 3.5 Sonnet / Opus——最适合工程造价估算",
+    "settings.ai_desc_anthropic": "Claude 3.5 Sonnet / Opus——最适合工程造价估算",
     "settings.ai_desc_gemini": "Gemini 1.5 Pro——多模态能力",
     "settings.ai_desc_openai": "GPT-4o / GPT-4 Turbo——广泛支持",
     "settings.ai_error": "连接错误",
@@ -1841,8 +1760,7 @@ const resource = {
     "settings.sign_out": "退出登录",
     "settings.status": "状态",
     "settings.subtitle": "管理您的账户和偏好设置",
-    "settings.ai_guidance":
-      "AI 功能（估算、算量分析、语义搜索）需要 API 密钥。推荐使用 Anthropic Claude 以获得最佳准确度。密钥加密存储，绝不会离开您的服务器。",
+    "settings.ai_guidance": "AI 功能（估算、算量分析、语义搜索）需要 API 密钥。推荐使用 Anthropic Claude 以获得最佳准确度。密钥加密存储，绝不会离开您的服务器。",
     "settings.theme_dark": "深色",
     "settings.theme_light": "浅色",
     "settings.theme_system": "跟随系统",
@@ -1904,8 +1822,7 @@ const resource = {
     "sustainability.boq": "工程量清单",
     "sustainability.breakdown_title": "按材料分解",
     "sustainability.calculate": "计算",
-    "sustainability.empty_desc":
-      '在上方选择项目和清单，然后点击"计算"以根据材料类型分析 CO2 排放。',
+    "sustainability.empty_desc": "在上方选择项目和清单，然后点击\"计算\"以根据材料类型分析 CO2 排放。",
     "sustainability.empty_title": "CO2 碳足迹分析",
     "sustainability.export_pdf": "导出 CO2 报告 PDF",
     "sustainability.material": "材料",
@@ -1938,8 +1855,7 @@ const resource = {
     "takeoff.just_now": "刚才",
     "takeoff.minutes_ago": "{{count}} 分钟前",
     "takeoff.no_documents": "未上传文档",
-    "takeoff.no_documents_description":
-      "上传 PDF 施工图纸，开始使用 AI 提取工程量。",
+    "takeoff.no_documents_description": "上传 PDF 施工图纸，开始使用 AI 提取工程量。",
     "takeoff.pages": "页",
     "takeoff.pdf_limit": ".pdf 文件，最大 {{size}}MB",
     "takeoff.quick_measurements": "快速测量",
@@ -1954,8 +1870,7 @@ const resource = {
     "takeoff.select_project_placeholder": "选择项目...",
     "takeoff.selected": "已选中",
     "takeoff.subtitle": "上传施工图纸以提取工程量",
-    "takeoff.workflow_desc":
-      "上传 PDF 图纸 → AI 分析页面并提取构件（墙体、楼板、门等）及工程量 → 审核结果并调整 → 将选中项添加到清单。置信度评分：绿色（>80%）= 高置信度，黄色（50-80%）= 建议审核，红色（<50%）= 需要人工核实。",
+    "takeoff.workflow_desc": "上传 PDF 图纸 → AI 分析页面并提取构件（墙体、楼板、门等）及工程量 → 审核结果并调整 → 将选中项添加到清单。置信度评分：绿色（>80%）= 高置信度，黄色（50-80%）= 建议审核，红色（<50%）= 需要人工核实。",
     "takeoff.summary": "汇总",
     "takeoff.title": "PDF 算量",
     "takeoff.total_quantity": "合计",
@@ -2006,8 +1921,7 @@ const resource = {
     "tendering.source_boq": "来源清单",
     "tendering.submit_bid": "提交报价",
     "tendering.title": "招投标",
-    "tendering.workflow_desc":
-      "招投标工作流程：草稿（准备招标包）→ 已发布（发送给投标人）→ 收集中（接收报价）→ 评审中（逐项对比报价）→ 已定标（选定中标方）。从清单创建招标包，添加分包商报价，然后使用对比表找出最优报价。添加 2 份以上报价即可查看逐项分析。",
+    "tendering.workflow_desc": "招投标工作流程：草稿（准备招标包）→ 已发布（发送给投标人）→ 收集中（接收报价）→ 评审中（逐项对比报价）→ 已定标（选定中标方）。从清单创建招标包，添加分包商报价，然后使用对比表找出最优报价。添加 2 份以上报价即可查看逐项分析。",
     "tendering.total": "合计",
     "tendering.total_amount": "总金额",
     "tendering.vs_budget": "与预算对比",
@@ -2363,16 +2277,13 @@ const resource = {
     "notifications.boq.created.title": "工程量清单已创建",
     "notifications.boq.created.body": "您的工程量清单 '{{boq_name}}' 已保存。",
     "notifications.meeting.action_assigned.title": "已为您分配行动项",
-    "notifications.meeting.action_assigned.body":
-      "来自会议 {{meeting_number}}: {{description}}",
+    "notifications.meeting.action_assigned.body": "来自会议 {{meeting_number}}: {{description}}",
     "notifications.cde.state_transitioned.title": "文档状态已更改",
-    "notifications.cde.state_transitioned.body":
-      "容器已转换为 '{{new_state}}'。",
+    "notifications.cde.state_transitioned.body": "容器已转换为 '{{new_state}}'。",
     "notifications.rfi.assigned.title": "RFI 已分配给您",
     "notifications.rfi.assigned.body": "{{code}} — {{title}}",
     "notifications.rfi.responded.title": "RFI 已收到回复",
-    "notifications.rfi.responded.body":
-      "您的请求 {{code}} ({{title}}) 已有回复。",
+    "notifications.rfi.responded.body": "您的请求 {{code}} ({{title}}) 已有回复。",
     "notifications.risk.assigned.title": "风险已分配给您",
     "notifications.risk.assigned.body": "{{code}} — {{title}}",
     "notifications.submittal.submitted.title": "Submittal 等待审核",
@@ -2380,19 +2291,15 @@ const resource = {
     "notifications.submittal.approved.title": "Submittal 已批准",
     "notifications.submittal.approved.body": "{{code}} — {{title}}",
     "notifications.submittal.rejected.title": "Submittal 已拒绝",
-    "notifications.submittal.rejected.body":
-      "{{code}} ({{title}})。原因：{{reason}}",
+    "notifications.submittal.rejected.body": "{{code}} ({{title}})。原因：{{reason}}",
     "notifications.submittal.revise_resubmit.title": "Submittal 需要修订",
-    "notifications.submittal.revise_resubmit.body":
-      "{{code}} ({{title}})。原因：{{reason}}",
+    "notifications.submittal.revise_resubmit.body": "{{code}} ({{title}})。原因：{{reason}}",
     "notifications.transmittal.issued.title": "Transmittal 已发给您",
     "notifications.transmittal.issued.body": "{{code}} — {{title}}",
     "notifications.transmittal.acknowledged.title": "Transmittal 已确认",
-    "notifications.transmittal.acknowledged.body":
-      "接收方已确认 {{code}} ({{title}})。",
+    "notifications.transmittal.acknowledged.body": "接收方已确认 {{code}} ({{title}})。",
     "notifications.transmittal.responded.title": "Transmittal 已收到回复",
-    "notifications.transmittal.responded.body":
-      "{{code}} ({{title}})。{{response_summary}}",
+    "notifications.transmittal.responded.body": "{{code}} ({{title}})。{{response_summary}}",
     "procurement.amount": "Amount",
     "procurement.delivery_date": "交货日期",
     "procurement.goods_receipts": "收货单",
@@ -2506,8 +2413,7 @@ const resource = {
     "settings.regional_subtitle": "格式、单位和本地化偏好",
     "settings.regional_title": "区域设置",
     "settings.restart_onboarding": "打开设置向导",
-    "settings.setup_wizard_subtitle":
-      "重新运行初始设置以更改语言、安装数据库、目录或演示项目",
+    "settings.setup_wizard_subtitle": "重新运行初始设置以更改语言、安装数据库、目录或演示项目",
     "settings.setup_wizard_title": "设置向导",
     "settings.time_days_ago": "{{count}}d ago",
     "settings.time_hours_ago": "{{count}}h ago",
@@ -2681,24 +2587,19 @@ const resource = {
     "modules.cat_regional": "地区标准",
     "modules.cat_regional_desc": "各国 BOQ 导入/导出格式及分类标准",
     "modules.community_title": "构建自定义模块",
-    "modules.community_desc":
-      "OpenConstructionERP 具有模块化插件架构。任何人都可以创建自定义模块——成本数据库、地区标准、CAD 转换器、分析仪表板、外部系统集成或任何其他功能。您的模块将出现在「模块」部分，可供任意用户安装。",
+    "modules.community_desc": "OpenConstructionERP 具有模块化插件架构。任何人都可以创建自定义模块——成本数据库、地区标准、CAD 转换器、分析仪表板、外部系统集成或任何其他功能。您的模块将出现在「模块」部分，可供任意用户安装。",
     "modules.community_type_data": "数据模块",
-    "modules.community_type_data_desc":
-      "地区成本数据库、资源目录、材料库、分类标准（DIN、NRM、SNIP 等）",
+    "modules.community_type_data_desc": "地区成本数据库、资源目录、材料库、分类标准（DIN、NRM、SNIP 等）",
     "modules.community_type_integration": "集成",
-    "modules.community_type_integration_desc":
-      "通过 API 与 SAP、Procore、MS Project、BIM 360、PlanRadar、Primavera 或任何外部系统连接",
+    "modules.community_type_integration_desc": "通过 API 与 SAP、Procore、MS Project、BIM 360、PlanRadar、Primavera 或任何外部系统连接",
     "modules.community_type_tools": "工具与分析",
-    "modules.community_type_tools_desc":
-      "自定义报告、仪表板、计算器、格式转换器、AI 模型或任何专业建筑工具",
-    "modules.community_how":
-      "每个模块是一个带有 manifest.py 文件的 Python 包。创建您的模块，在本地测试，然后与社区共享。即使您只有一个想法——发送文字说明，我们将帮助您实现。",
+    "modules.community_type_tools_desc": "自定义报告、仪表板、计算器、格式转换器、AI 模型或任何专业建筑工具",
+    "modules.community_how": "每个模块是一个带有 manifest.py 文件的 Python 包。创建您的模块，在本地测试，然后与社区共享。即使您只有一个想法——发送文字说明，我们将帮助您实现。",
     "modules.community_submit_email": "通过邮件提交模块",
     "modules.community_submit_github": "在 GitHub 上提议",
     "modules.community_telegram": "在 Telegram 中讨论",
     "nav.cad_bim_explorer": "CAD-BIM BI 浏览器",
-    "nav.bim_viewer": "BIM 3D 查看器",
+    "nav.bim_viewer": "BIM 3D 工程量计算",
     "nav.bim_rules": "BIM 规则",
     "nav.quantity_rules": "工程量规则",
     "nav.assets": "资产台账",
@@ -2715,8 +2616,7 @@ const resource = {
     "bim.loading_geometry": "正在加载 3D 几何体…",
     "bim.loading_finalising": "正在完成场景…",
     "bim.loading_streaming": "正在从服务器流式传输几何体…",
-    "bim.loading_parsing":
-      "正在解析 3D 几何体 — 大型模型 (>50 MB) 可能需要 20-60 秒；请勿刷新页面",
+    "bim.loading_parsing": "正在解析 3D 几何体 — 大型模型 (>50 MB) 可能需要 20-60 秒；请勿刷新页面",
     "bim.loading_navigate_hint": "您可以浏览其他页面 — 加载将在后台继续",
     "bim.no_models": "暂未上传模型",
     "bim.no_project": "未选择项目",
@@ -2744,11 +2644,13 @@ const resource = {
     "bim.properties": "属性",
     "bim.disciplines": "专业",
     "nav.group_overview": "概览",
-    "nav.group_ai_estimation": "AI 与估算",
+    "nav.group_ai_estimation": "AI 与工具",
+    "nav.group_ai_estimation_desc": "AI 代理、顾问、ERP 聊天 — AI 估算已移至「估算工作」",
     "nav.group_finance": "财务与采购",
     "nav.group_communication": "沟通协作",
     "nav.group_documentation": "文档管理",
-    "nav.group_quality": "质量与安全",
+    "nav.group_quality": "质量",
+    "nav.group_safety": "安全与HSE",
     "nav.group_field": "现场与报告",
     "nav.group_quality_risk": "质量与风险",
     "nav.about": "关于",
@@ -2790,26 +2692,20 @@ const resource = {
     "onboarding.step_modules": "模块",
     "onboarding.step_mode": "模式",
     "onboarding.company_type_title": "您的企业类型是？",
-    "onboarding.company_type_subtitle":
-      "我们将为您的工作流程预配置最合适的模块组合。",
+    "onboarding.company_type_subtitle": "我们将为您的工作流程预配置最合适的模块组合。",
     "onboarding.company_general_contractor": "总承包商",
-    "onboarding.company_general_contractor_desc":
-      "我们承接项目——估算、采购、现场管理",
+    "onboarding.company_general_contractor_desc": "我们承接项目——估算、采购、现场管理",
     "onboarding.company_estimator": "估算师 / 造价咨询",
     "onboarding.company_estimator_desc": "我们专注于造价估算和工程量计算",
     "onboarding.company_project_management": "项目管理公司",
-    "onboarding.company_project_management_desc":
-      "我们管理大型项目——计划、沟通、文档",
+    "onboarding.company_project_management_desc": "我们管理大型项目——计划、沟通、文档",
     "onboarding.company_architecture": "建筑 / 工程设计院",
-    "onboarding.company_architecture_desc":
-      "我们设计建筑——BIM、文档、公共数据环境",
+    "onboarding.company_architecture_desc": "我们设计建筑——BIM、文档、公共数据环境",
     "onboarding.company_full_enterprise": "全功能企业",
-    "onboarding.company_full_enterprise_desc":
-      "我们需要全部功能——完整建设生命周期",
+    "onboarding.company_full_enterprise_desc": "我们需要全部功能——完整建设生命周期",
     "onboarding.modules_label": "个模块",
     "onboarding.modules_title": "确认模块配置",
-    "onboarding.modules_subtitle":
-      "已根据您的企业类型预选。可自由开启或关闭任意模块。",
+    "onboarding.modules_subtitle": "已根据您的企业类型预选。可自由开启或关闭任意模块。",
     "onboarding.modules_active": "个模块已启用",
     "onboarding.mod_group_core": "核心估算",
     "onboarding.mod_group_takeoff": "工程量计算与 AI",
@@ -2867,24 +2763,19 @@ const resource = {
     "support.button_tooltip": "支持本项目 — 点星、分享或发送案例研究",
     "support.button_aria": "支持我们",
     "support.modal_title": "帮助 OpenConstructionERP 成长",
-    "support.modal_subtitle":
-      "我们以开源方式构建并免费提供每项功能。您一些小小的行动能让开发持续下去 — 它们零成本却意义重大。",
+    "support.modal_subtitle": "我们以开源方式构建并免费提供每项功能。您一些小小的行动能让开发持续下去 — 它们零成本却意义重大。",
     "support.action_star_title": "在 GitHub 上点星",
-    "support.action_star_body":
-      "30 秒。星标是新的建筑团队发现本项目的方式,也是我们为下一个版本争取时间的方式。",
+    "support.action_star_body": "30 秒。星标是新的建筑团队发现本项目的方式,也是我们为下一个版本争取时间的方式。",
     "support.action_share_title": "分享给您的团队或人脉",
-    "support.action_share_body":
-      "在 LinkedIn 或 X / Twitter 上的一条帖子可触达数十位估价师、计划师和 BIM 经理。帮助我们把开源建筑软件推向世界。",
+    "support.action_share_body": "在 LinkedIn 或 X / Twitter 上的一条帖子可触达数十位估价师、计划师和 BIM 经理。帮助我们把开源建筑软件推向世界。",
     "support.share_twitter": "发布到 X",
     "support.share_linkedin": "发布到 LinkedIn",
     "support.share_copy": "复制文字 + 链接",
     "support.share_copied": "已复制!",
     "support.action_case_study_title": "有案例研究、视频或文章吗?",
     "support.action_case_study_tag": "我们帮您扩散",
-    "support.action_case_study_body":
-      "向我们展示您如何使用 OpenConstructionERP — 视频、案例研究或 LinkedIn 文章。您可以直接发送链接,或在帖子中标记 @DataDrivenConstruction — 我们会看到并通过新闻通讯和社交渠道再次分享,数以万计的建筑专业人士和资深行业专家关注着我们的工作。链接邮箱: ",
-    "support.thanks":
-      "谢谢。每一颗星、每一次分享和每一个故事都真正让本项目存活下去 — 用 ❤️ 为建筑业社区构建。",
+    "support.action_case_study_body": "向我们展示您如何使用 OpenConstructionERP — 视频、案例研究或 LinkedIn 文章。您可以直接发送链接,或在帖子中标记 @DataDrivenConstruction — 我们会看到并通过新闻通讯和社交渠道再次分享,数以万计的建筑专业人士和资深行业专家关注着我们的工作。链接邮箱: ",
+    "support.thanks": "谢谢。每一颗星、每一次分享和每一个故事都真正让本项目存活下去 — 用 ❤️ 为建筑业社区构建。",
     "onboarding.mod_group_estimation": "估算",
     "onboarding.mod_group_ai": "AI",
     "onboarding.mod_group_bim_advanced": "BIM 与 3D",
@@ -2907,26 +2798,21 @@ const resource = {
     "onboarding.mod_bim_requirements": "BIM 要求",
     "onboarding.mod_bim_requirements_desc": "定义和验证模型要求 (IDS / EIR)",
     "onboarding.mod_match_elements": "匹配构件",
-    "onboarding.mod_match_elements_desc":
-      "AI 辅助的 BIM-成本构件匹配与置信度评分",
+    "onboarding.mod_match_elements_desc": "AI 辅助的 BIM-成本构件匹配与置信度评分",
     "onboarding.mod_opencde_api": "OpenCDE API",
-    "onboarding.mod_opencde_api_desc":
-      "兼容 OpenCDE 的 API,用于 BCF + Documents + Foundation",
+    "onboarding.mod_opencde_api_desc": "兼容 OpenCDE 的 API,用于 BCF + Documents + Foundation",
     "onboarding.mod_erp_chat": "ERP 聊天",
     "onboarding.mod_erp_chat_desc": "应用内 AI 聊天助手,具备完整 ERP 上下文",
     "onboarding.mod_compliance_ai": "合规 AI",
     "onboarding.mod_compliance_ai_desc": "基于 LLM 的法规合规性检查",
     "onboarding.mod_schedule_advanced": "高级进度计划",
-    "onboarding.mod_schedule_advanced_desc":
-      "Last Planner System,含周前瞻和 PPC",
+    "onboarding.mod_schedule_advanced_desc": "Last Planner System,含周前瞻和 PPC",
     "onboarding.mod_eac": "EAC 引擎",
     "onboarding.mod_eac_desc": "完工估算与滚动预测",
     "onboarding.mod_bid_management": "投标管理",
-    "onboarding.mod_bid_management_desc":
-      "管理外发投标、定价策略、中标/失标跟踪",
+    "onboarding.mod_bid_management_desc": "管理外发投标、定价策略、中标/失标跟踪",
     "onboarding.mod_contracts": "合同",
-    "onboarding.mod_contracts_desc":
-      "合同类型引擎 (FIDIC、NEC、JCT、总价、T&M)",
+    "onboarding.mod_contracts_desc": "合同类型引擎 (FIDIC、NEC、JCT、总价、T&M)",
     "onboarding.mod_variations": "变更",
     "onboarding.mod_variations_desc": "现场计量变更与审批工作流",
     "onboarding.mod_crm": "CRM",
@@ -2938,8 +2824,7 @@ const resource = {
     "onboarding.mod_service": "服务与维护",
     "onboarding.mod_service_desc": "交付后服务请求、保修、维护",
     "onboarding.mod_equipment": "设备与车队",
-    "onboarding.mod_equipment_desc":
-      "机械、工具、车辆 — 利用率、维护、租赁费率",
+    "onboarding.mod_equipment_desc": "机械、工具、车辆 — 利用率、维护、租赁费率",
     "onboarding.mod_resources": "资源",
     "onboarding.mod_resources_desc": "人工、材料、设备资源计划",
     "onboarding.mod_daily_diary": "施工日志",
@@ -2951,8 +2836,7 @@ const resource = {
     "onboarding.mod_notifications": "通知",
     "onboarding.mod_notifications_desc": "应用内、邮件和 webhook 通知",
     "onboarding.mod_hse_advanced": "高级 HSE",
-    "onboarding.mod_hse_advanced_desc":
-      "高级健康、安全、环境 — 班前会、JHA、审计",
+    "onboarding.mod_hse_advanced_desc": "高级健康、安全、环境 — 班前会、JHA、审计",
     "onboarding.mod_qms": "质量管理体系",
     "onboarding.mod_qms_desc": "符合 ISO 9001 的 QMS — 程序、审计、KPI",
     "onboarding.mod_compliance": "合规 DSL",
@@ -2964,19 +2848,15 @@ const resource = {
     "onboarding.mod_bi_dashboards": "BI 仪表板",
     "onboarding.mod_bi_dashboards_desc": "跨模块交互式分析,支持下钻",
     "onboarding.mod_enterprise_workflows": "企业工作流",
-    "onboarding.mod_enterprise_workflows_desc":
-      "适用于大型组织的基于 FSM 的自定义审批工作流",
+    "onboarding.mod_enterprise_workflows_desc": "适用于大型组织的基于 FSM 的自定义审批工作流",
     "onboarding.mod_full_evm": "完整 EVM",
-    "onboarding.mod_full_evm_desc":
-      "完整挣值管理 — PV/EV/AC、SPI/CPI、CV/SV、ETC/EAC",
+    "onboarding.mod_full_evm_desc": "完整挣值管理 — PV/EV/AC、SPI/CPI、CV/SV、ETC/EAC",
     "onboarding.mod_rfq_bidding": "RFQ 与竞标",
     "onboarding.mod_rfq_bidding_desc": "多轮 RFQ 工作流、密封投标、电子拍卖",
     "onboarding.mod_integrations": "集成",
-    "onboarding.mod_integrations_desc":
-      "通过 n8n 集成 Webhooks、SAP、Procore、MS Project",
+    "onboarding.mod_integrations_desc": "通过 n8n 集成 Webhooks、SAP、Procore、MS Project",
     "onboarding.mod_dach_pack": "区域包 — DACH (DE/AT/CH)",
-    "onboarding.mod_dach_pack_desc":
-      "适用于 DACH (DE/AT/CH) 的标准、分类、货币、格式",
+    "onboarding.mod_dach_pack_desc": "适用于 DACH (DE/AT/CH) 的标准、分类、货币、格式",
     "onboarding.mod_uk_pack": "区域包 — 英国",
     "onboarding.mod_uk_pack_desc": "适用于英国的标准、分类、货币、格式",
     "onboarding.mod_us_pack": "区域包 — 美国",
@@ -2984,16 +2864,13 @@ const resource = {
     "onboarding.mod_india_pack": "区域包 — 印度",
     "onboarding.mod_india_pack_desc": "适用于印度的标准、分类、货币、格式",
     "onboarding.mod_middle_east_pack": "区域包 — 中东与海湾合作委员会",
-    "onboarding.mod_middle_east_pack_desc":
-      "适用于中东与海湾合作委员会的标准、分类、货币、格式",
+    "onboarding.mod_middle_east_pack_desc": "适用于中东与海湾合作委员会的标准、分类、货币、格式",
     "onboarding.mod_latam_pack": "区域包 — 拉丁美洲",
     "onboarding.mod_latam_pack_desc": "适用于拉丁美洲的标准、分类、货币、格式",
     "onboarding.mod_asia_pac_pack": "区域包 — 亚太",
-    "onboarding.mod_asia_pac_pack_desc":
-      "适用于亚太地区的标准、分类、货币、格式",
+    "onboarding.mod_asia_pac_pack_desc": "适用于亚太地区的标准、分类、货币、格式",
     "onboarding.mod_russia_pack": "区域包 — 俄罗斯与独联体",
-    "onboarding.mod_russia_pack_desc":
-      "适用于俄罗斯与独联体的标准、分类、货币、格式",
+    "onboarding.mod_russia_pack_desc": "适用于俄罗斯与独联体的标准、分类、货币、格式",
     "onboarding.mod_users": "用户与 Auth",
     "onboarding.mod_users_desc": "用户账号、角色、JWT、API 密钥",
     "onboarding.mod_teams": "团队",
@@ -3009,8 +2886,7 @@ const resource = {
     "onboarding.mod_admin": "管理控制台",
     "onboarding.mod_admin_desc": "运维端点、QA 管道、系统维护",
     "onboarding.mod_i18n_foundation": "i18n 基础",
-    "onboarding.mod_i18n_foundation_desc":
-      "27 种语言的 i18n 运行时,使用懒加载语言块",
+    "onboarding.mod_i18n_foundation_desc": "27 种语言的 i18n 运行时,使用懒加载语言块",
     "onboarding.mod_collaboration_locks": "协作锁",
     "onboarding.mod_collaboration_locks_desc": "用于多用户编辑的乐观锁和悲观锁",
     "onboarding.mod_architecture_map": "架构图",
@@ -3025,11 +2901,9 @@ const resource = {
     "onboarding.summary_modules": "已启用模块",
     "onboarding.summary_mode": "界面模式",
     "reports.cash_flow": "现金流预测",
-    "reports.cash_flow_desc":
-      "基于 S 曲线的月度现金流预测——计划支出与实际支出对比。",
+    "reports.cash_flow_desc": "基于 S 曲线的月度现金流预测——计划支出与实际支出对比。",
     "reports.change_order_register": "变更单台账",
-    "reports.change_order_register_desc":
-      "包含累计费用和进度影响的完整范围变更台账。",
+    "reports.change_order_register_desc": "包含累计费用和进度影响的完整范围变更台账。",
     "reports.tender_comparison": "招标对比",
     "reports.tender_comparison_desc": "分包商报价横向对比及偏差分析。",
     "reports.risk_register": "风险台账",
@@ -3053,8 +2927,7 @@ const resource = {
     "cde.transmittals_badge_aria": "与此容器关联的 {{count}} 个传递单",
     "cde.transmittals_drawer_title": "携带此容器的传递单",
     "cde.approval_modal_title": "关口 B 审批签署",
-    "cde.approval_modal_body":
-      "将 {{code}} 从「共享」提升至「已发布」需要签署审批（ISO 19650）。您的签名和意见将记录在审计日志中。",
+    "cde.approval_modal_body": "将 {{code}} 从「共享」提升至「已发布」需要签署审批（ISO 19650）。您的签名和意见将记录在审计日志中。",
     "cde.approval_field_signature": "签名",
     "cde.approval_field_comments": "意见",
     "cde.approval_signature_placeholder": "全名 / 缩写",
@@ -3199,11 +3072,9 @@ const resource = {
     "dashboard.quick_start": "快速估算",
     "dashboard.run_setup": "运行设置向导",
     "dashboard.total_budget_all": "总预算",
-    "dashboard.welcome_body":
-      "本项目由社区构建和维护。您的支持有助于我们增加新功能、地区数据库，并保持对所有人免费。",
+    "dashboard.welcome_body": "本项目由社区构建和维护。您的支持有助于我们增加新功能、地区数据库，并保持对所有人免费。",
     "dashboard.welcome_consult": "专业咨询",
-    "dashboard.welcome_consult_desc":
-      "全球范围内的定制部署、培训和企业解决方案",
+    "dashboard.welcome_consult_desc": "全球范围内的定制部署、培训和企业解决方案",
     "dashboard.welcome_desc": "从安装演示项目或创建您自己的项目开始。",
     "dashboard.welcome_sponsor": "成为赞助商",
     "dashboard.welcome_sponsor_desc": "资助新功能开发，使项目对所有人保持免费",
@@ -3252,8 +3123,7 @@ const resource = {
     "analytics.total_projects": "项目总数",
     "analytics.with_budget": "{{count}} 个含预算",
     "backup.confirm_replace_btn": "替换全部数据",
-    "backup.confirm_replace_message":
-      "此操作将用备份内容替换所有现有数据，不可撤销。",
+    "backup.confirm_replace_message": "此操作将用备份内容替换所有现有数据，不可撤销。",
     "backup.confirm_replace_title": "替换全部数据？",
     "backup.drop_zone_hint": ".zip 备份文件",
     "backup.drop_zone_label": "将备份文件拖放至此处或点击浏览",
@@ -3347,8 +3217,7 @@ const resource = {
     "changeorders.type_removed": "删除",
     "changeorders.unit_placeholder": "m2、m3、件...",
     "changeorders.workflow": "工作流程",
-    "changeorders.workflow_desc":
-      "变更单工作流程：草稿（准备范围变更）→ 已提交（送审）→ 已审批或已拒绝。每张变更单跟踪费用影响和进度影响天数。添加明细以详细说明变更内容——原始工程量/费率与新工程量/费率。费用变化自动计算。",
+    "changeorders.workflow_desc": "变更单工作流程：草稿（准备范围变更）→ 已提交（送审）→ 已审批或已拒绝。每张变更单跟踪费用影响和进度影响天数。添加明细以详细说明变更内容——原始工程量/费率与新工程量/费率。费用变化自动计算。",
     "explorer.analysis_name": "名称",
     "explorer.apply_pivot": "应用",
     "explorer.bar": "柱状图",
@@ -3365,8 +3234,7 @@ const resource = {
     "explorer.conversion_failed": "转换失败",
     "explorer.converters": "CAD 转换器",
     "explorer.converters_desc": "DDC 社区转换器，用于提取 BIM 构件数据",
-    "explorer.converters_external_hint":
-      "CAD 转换器需要在服务器上安装 DDC cad2data 工具",
+    "explorer.converters_external_hint": "CAD 转换器需要在服务器上安装 DDC cad2data 工具",
     "explorer.converting": "正在转换 {{name}}...",
     "explorer.converting_msg": "正在转换...",
     "explorer.count": "数量",
@@ -3390,8 +3258,7 @@ const resource = {
     "explorer.heatmap": "切换数值热图",
     "explorer.heatmap_short": "热图",
     "explorer.installed": "已安装",
-    "explorer.invalid_format":
-      "不支持的文件格式。请使用 RVT、IFC、DWG 或 DGN。",
+    "explorer.invalid_format": "不支持的文件格式。请使用 RVT、IFC、DWG 或 DGN。",
     "explorer.like_describe": "类似 df.describe()",
     "explorer.max": "最大值",
     "explorer.mean": "平均值",
@@ -3418,18 +3285,15 @@ const resource = {
     "explorer.save_permanently": "永久保存",
     "explorer.save_to_project": "保存至项目（BIM Hub）",
     "explorer.save_to_project_btn": "保存至项目",
-    "explorer.save_to_project_desc":
-      "在选定项目中创建包含所有提取构件的 BIM 模型。",
+    "explorer.save_to_project_desc": "在选定项目中创建包含所有提取构件的 BIM 模型。",
     "explorer.saved": "分析已永久保存",
     "explorer.saved_to_project": "已保存至 BIM Hub",
-    "explorer.saved_to_project_msg":
-      "构件已保存至 BIM Hub。在 BIM 查看器中查看。",
+    "explorer.saved_to_project_msg": "构件已保存至 BIM Hub。在 BIM 查看器中查看。",
     "explorer.search_all": "搜索所有列...",
     "explorer.select_columns_for_chart": "选择分组依据列和数值列以生成图表。",
     "explorer.select_project": "选择项目...",
     "explorer.selected": "已选",
-    "explorer.session_expired_desc":
-      "CAD 会话有效期 24 小时。请重新上传文件以继续。",
+    "explorer.session_expired_desc": "CAD 会话有效期 24 小时。请重新上传文件以继续。",
     "explorer.session_expired_title": "会话已过期或未找到",
     "explorer.setup_guide": "配置指南",
     "explorer.sparse_columns": "稀疏列（<10%）",
@@ -3464,8 +3328,7 @@ const resource = {
     "explorer.save_view": "保存视图",
     "explorer.save_view_prompt": "为此视图命名",
     "explorer.saved_views": "已保存视图",
-    "explorer.no_saved_views":
-      "暂无已保存视图。保存您的筛选器、图表和数据透视配置以备后用。",
+    "explorer.no_saved_views": "暂无已保存视图。保存您的筛选器、图表和数据透视配置以备后用。",
     "explorer.load_view": "加载",
     "explorer.delete_view": "删除",
     "explorer.view_saved": "视图已保存",
@@ -3514,8 +3377,7 @@ const resource = {
     "fieldreports.import": "导入",
     "fieldreports.import_btn": "导入",
     "fieldreports.import_reports": "导入现场报告",
-    "fieldreports.import_result":
-      "导入：{{imported}} 条，跳过：{{skipped}} 条，错误：{{errors}} 条",
+    "fieldreports.import_result": "导入：{{imported}} 条，跳过：{{skipped}} 条，错误：{{errors}} 条",
     "fieldreports.list_view": "列表",
     "fieldreports.new_report": "新建报告",
     "fieldreports.no_match": "无匹配报告",
@@ -3662,30 +3524,22 @@ const resource = {
     "bim.disc_structural": "结构",
     "bim.discipline_label": "专业",
     "bim.getting_started": "BIM 查看器",
-    "bim.getting_started_desc":
-      "从 CAD 转换器上传构件数据（CSV/Excel）和可选的 3D 几何体（DAE），在 3D 中可视化建筑模型。构件可与 BOQ 子项关联以进行工程量核验。",
+    "bim.getting_started_desc": "从 CAD 转换器上传构件数据（CSV/Excel）和可选的 3D 几何体（DAE），在 3D 中可视化建筑模型。构件可与 BOQ 子项关联以进行工程量核验。",
     "bim.hide_upload": "关闭",
     "bim.landing_drop_here": "将文件拖放至此",
-    "bim.landing_feat_3d_desc":
-      "交互式 Three.js 查看器，支持楼层筛选、专业着色和构件选择。",
+    "bim.landing_feat_3d_desc": "交互式 Three.js 查看器，支持楼层筛选、专业着色和构件选择。",
     "bim.landing_feat_3d_title": "3D 可视化",
-    "bim.landing_feat_boq_desc":
-      "将 BIM 构件与费用项关联，实现工程量自动核验和 5D 算量。",
+    "bim.landing_feat_boq_desc": "将 BIM 构件与费用项关联，实现工程量自动核验和 5D 算量。",
     "bim.landing_feat_boq_title": "BOQ 关联",
-    "bim.landing_feat_compare_desc":
-      "比较版本以自动检测新增、删除和修改的构件。",
+    "bim.landing_feat_compare_desc": "比较版本以自动检测新增、删除和修改的构件。",
     "bim.landing_feat_compare_title": "模型对比",
-    "bim.landing_feat_extract_desc":
-      "墙体、楼板、柱、梁、MEP——含属性、面积、体积和分类。",
+    "bim.landing_feat_extract_desc": "墙体、楼板、柱、梁、MEP——含属性、面积、体积和分类。",
     "bim.landing_feat_extract_title": "构件提取",
-    "bim.landing_feat_format_desc":
-      "IFC 即时处理；RVT 通过 DDC cad2data；CSV/Excel 用于预转换数据。",
+    "bim.landing_feat_format_desc": "IFC 即时处理；RVT 通过 DDC cad2data；CSV/Excel 用于预转换数据。",
     "bim.landing_feat_format_title": "格式无关",
-    "bim.landing_feat_qty_desc":
-      "定义规则以提取面积、体积和长度——一次应用于整个模型。",
+    "bim.landing_feat_qty_desc": "定义规则以提取面积、体积和长度——一次应用于整个模型。",
     "bim.landing_feat_qty_title": "工程量映射",
-    "bim.landing_hero_subtitle":
-      "上传 IFC 或 Revit 文件以可视化建筑构件、提取工程量并关联至工程量清单。",
+    "bim.landing_hero_subtitle": "上传 IFC 或 Revit 文件以可视化建筑构件、提取工程量并关联至工程量清单。",
     "bim.landing_hero_title": "BIM 3D 查看器",
     "bim.landing_processing": "处理中...",
     "bim.landing_size_hint": "IFC、Revit、CSV 或 Excel · 最大 500 MB",
@@ -3698,11 +3552,9 @@ const resource = {
     "bim.overlay_delete_btn": "删除",
     "bim.overlay_error_desc": "无法提取构件。请先转换为 IFC 或手动上传数据。",
     "bim.overlay_error_title": "处理失败",
-    "bim.overlay_needs_converter_desc":
-      "{{format}} 文件需要 DDC cad2data 进行提取。请先转换为 IFC，或上传预转换数据。",
+    "bim.overlay_needs_converter_desc": "{{format}} 文件需要 DDC cad2data 进行提取。请先转换为 IFC，或上传预转换数据。",
     "bim.overlay_needs_converter_title": "需要转换器",
-    "bim.overlay_processing_desc":
-      "正在从 {{format}} 文件中提取构件，可能需要片刻。",
+    "bim.overlay_processing_desc": "正在从 {{format}} 文件中提取构件，可能需要片刻。",
     "bim.overlay_processing_title": "正在处理模型...",
     "bim.overlay_upload_converted_btn": "上传转换后数据",
     "bim.show_upload": "上传 BIM 数据",
@@ -3740,8 +3592,7 @@ const resource = {
     "bim.upload_depth_standard": "标准 · 主要类别（快速）",
     "bim.upload_depth_medium": "中等 · 扩展类别（均衡）",
     "bim.upload_depth_complete": "完整 · 所有类别（慢速）",
-    "bim.upload_depth_help":
-      "控制提取的 Revit 类别数量。构件 ID 和完整属性始终保留。",
+    "bim.upload_depth_help": "控制提取的 Revit 类别数量。构件 ID 和完整属性始终保留。",
     "bim.upload_discipline_label": "专业",
     "bim.upload_drop_here": "将文件拖放至此",
     "bim.upload_generate_pdf_label": "同时将项目图纸导出为 PDF（后台）",
@@ -3851,8 +3702,7 @@ const resource = {
     "settings.tm_showing": "显示 {{count}} / {{total}} 个键",
     "punch.stat_avg_close": "平均关闭天数",
     "match_elements.title": "匹配构件",
-    "match_elements.subtitle":
-      "将 BIM 构件 → CWICR 项目映射。BIM 已上线;DWG / PDF / 照片将在后续阶段推出。",
+    "match_elements.subtitle": "将 BIM 构件 → CWICR 项目映射。BIM 已上线;DWG / PDF / 照片将在后续阶段推出。",
     "match_elements.select_project": "选择项目…",
     "match_elements.source.bim_live": "BIM(在线)",
     "match_elements.library": "模板库",
@@ -3867,8 +3717,7 @@ const resource = {
     "match_elements.loading_groups": "加载分组中…",
     "match_elements.no_groups": "尚无分组 — 导入 BIM 模型以填充此项目。",
     "match_elements.loading_detail": "加载详情中…",
-    "match_elements.footer":
-      "阶段 A.10–A.12 — 多选批量操作、阈值确认、无匹配流程和租户模板库已上线。可拖拽芯片和 3D 高亮将在阶段 B 推出。",
+    "match_elements.footer": "阶段 A.10–A.12 — 多选批量操作、阈值确认、无匹配流程和租户模板库已上线。可拖拽芯片和 3D 高亮将在阶段 B 推出。",
     "match_elements.aria.select_all": "选择所有可见分组",
     "match_elements.aria.select_group": "选择 {{key}}",
     "match_elements.col.group": "分组",
@@ -3895,11 +3744,9 @@ const resource = {
     "match_elements.action.confirm_selected": "确认 {{count}} 项 ≥ {{thr}}",
     "match_elements.action.confirm_all": "全部确认 ≥ {{thr}}",
     "match_elements.action.skip_n": "跳过 {{count}} 项(待定)",
-    "match_elements.busy.run_selected":
-      "正在对 {{count}} 个所选项运行 {{method}} 匹配器…",
+    "match_elements.busy.run_selected": "正在对 {{count}} 个所选项运行 {{method}} 匹配器…",
     "match_elements.busy.run_all": "正在对所有分组运行 {{method}} 匹配器…",
-    "match_elements.busy.bulk_confirm_selected":
-      "批量确认 {{count}} 个所选项 ≥ {{thr}}…",
+    "match_elements.busy.bulk_confirm_selected": "批量确认 {{count}} 个所选项 ≥ {{thr}}…",
     "match_elements.busy.bulk_confirm_all": "批量确认匹配 ≥ {{thr}}…",
     "match_elements.busy.mark_tbd": "将 {{count}} 个分组标记为待定…",
     "match_elements.alert.confirmed": "已确认 {{count}} 个分组",
@@ -3912,8 +3759,7 @@ const resource = {
     "match_elements.detail.col.unit_rate": "单位 · 单价",
     "match_elements.detail.col.conf": "置信度",
     "match_elements.detail.confirm": "确认",
-    "match_elements.detail.element_ids_count":
-      "{{count}} 个构件 ID。3D 高亮在阶段 A.12 上线。",
+    "match_elements.detail.element_ids_count": "{{count}} 个构件 ID。3D 高亮在阶段 A.12 上线。",
     "match_elements.detail.and_more": "…还有 {{count}} 个",
     "match_elements.detail.building_preview": "构建预览中…",
     "match_elements.detail.auto_loaded_resources": "自动加载的资源:",
@@ -3923,13 +3769,11 @@ const resource = {
     "match_elements.tab.apply": "应用预览",
     "match_elements.no_match.heading": "无匹配 — 选择操作",
     "match_elements.no_match.custom.title": "创建自定义项目",
-    "match_elements.no_match.custom.sub":
-      "添加项目专属的位置,包含描述、单位和单价。",
+    "match_elements.no_match.custom.sub": "添加项目专属的位置,包含描述、单位和单价。",
     "match_elements.no_match.rfq.title": "发送至招标",
     "match_elements.no_match.rfq.sub": "标记为招标 — 向分包商请求报价。",
     "match_elements.no_match.tbd.title": "标记为待定",
-    "match_elements.no_match.tbd.sub":
-      "暂存该分组,稍后回顾。在解决之前不计入 BOQ 总额。",
+    "match_elements.no_match.tbd.sub": "暂存该分组,稍后回顾。在解决之前不计入 BOQ 总额。",
     "match_elements.no_match.placeholder.description": "项目描述",
     "match_elements.no_match.placeholder.unit": "单位",
     "match_elements.no_match.placeholder.rate": "单价",
@@ -3939,16 +3783,14 @@ const resource = {
     "match_elements.templates.count": "{{count}} 个签名",
     "match_elements.templates.loading": "加载模板库中…",
     "match_elements.templates.empty": "尚无已保存的模板。",
-    "match_elements.templates.empty_hint":
-      "启用「保存到模板库」的已确认匹配会显示在这里,并在未来项目中传播。",
+    "match_elements.templates.empty_hint": "启用「保存到模板库」的已确认匹配会显示在这里,并在未来项目中传播。",
     "match_elements.templates.unnamed": "(未命名)",
     "match_elements.templates.sig": "签名:{{prefix}}…",
     "match_elements.templates.used": "已使用",
     "match_elements.templates.last": "上次使用 {{date}}",
     "match_elements.templates.remove_confirm": "从模板库中移除此模板?",
     "match_elements.templates.remove_title": "从模板库移除",
-    "match_elements.templates.footer":
-      "模板按租户作用域。已确认的签名会在未来项目中自动建议匹配。",
+    "match_elements.templates.footer": "模板按租户作用域。已确认的签名会在未来项目中自动建议匹配。",
     "match_elements.no_project_title": "未选择活动项目。",
     "match_elements.no_project_hint": "在标题中打开项目选择器,或访问",
     "match_elements.active_project": "活动项目",
@@ -3959,19 +3801,16 @@ const resource = {
     "match_elements.new_text.button": "从文本",
     "match_elements.new_text.button_title": "粘贴描述 — 每行一项",
     "match_elements.new_text.title": "新建会话 — 粘贴描述",
-    "match_elements.new_text.hint":
-      "每行一项。每行成为一个分组；语义搜索找到最接近的 CWICR 价格。任何语言均可 — 多语言编码器处理跨语言查询。",
+    "match_elements.new_text.hint": "每行一项。每行成为一个分组；语义搜索找到最接近的 CWICR 价格。任何语言均可 — 多语言编码器处理跨语言查询。",
     "match_elements.new_text.name_label": "会话名称（可选）",
     "match_elements.new_text.name_placeholder": "例如 第三季度快速估算",
     "match_elements.new_text.lines_label": "描述（每行一项）",
-    "match_elements.new_text.lines_placeholder":
-      "Stahlbetonwand C30/37, d=240mm\nленточный фундамент 800x600\nconcrete slab 200mm",
+    "match_elements.new_text.lines_placeholder": "Stahlbetonwand C30/37, d=240mm\nленточный фундамент 800x600\nconcrete slab 200mm",
     "match_elements.new_text.create": "创建会话",
     "match_elements.new_excel.button": "从 Excel 工程量清单",
     "match_elements.new_excel.button_title": "上传 .xlsx 工程量清单",
     "match_elements.new_excel.title": "从 Excel 工程量清单新建会话",
-    "match_elements.new_excel.hint":
-      "上传至少包含「描述」列的 .xlsx 文件（或其本地化等效项 — Description、Beschreibung、Описание、Descripción 等）。可选列：数量、单位、代码、类别。可识别带十进制逗号的数量。",
+    "match_elements.new_excel.hint": "上传至少包含「描述」列的 .xlsx 文件（或其本地化等效项 — Description、Beschreibung、Описание、Descripción 等）。可选列：数量、单位、代码、类别。可识别带十进制逗号的数量。",
     "match_elements.new_excel.name_label": "会话名称（可选）",
     "match_elements.new_excel.name_placeholder": "例如 投标清单 rev 3",
     "match_elements.new_excel.drop": "将 .xlsx 拖放到此处或点击浏览",
@@ -3983,20 +3822,16 @@ const resource = {
     "match_elements.legend_low": "低",
     "match_elements.col.suggested": "建议成本",
     "match_elements.subtractive_hint": "减项 / 不计费",
-    "match_elements.detail.opening_warning":
-      "宿主存在洞口但毛量 == 净量(IFC 导出错误)",
+    "match_elements.detail.opening_warning": "宿主存在洞口但毛量 == 净量(IFC 导出错误)",
     "match_elements.detail.candidate_no_id": "候选项无数据库 ID — 无法确认",
     "match_elements.detail.apply_total": "合计",
     "match_elements.auto_confirm_threshold": "自动确认阈值",
-    "match_elements.auto_confirm_help":
-      "高于或等于此分数的建议匹配将自动确认。",
+    "match_elements.auto_confirm_help": "高于或等于此分数的建议匹配将自动确认。",
     "match_elements.use_net": "使用净量(扣除洞口)",
-    "match_elements.use_net_help":
-      "关闭 = 使用毛量。默认从宿主数量中扣除 IfcOpeningElement / IfcRelVoidsElement。",
+    "match_elements.use_net_help": "关闭 = 使用毛量。默认从宿主数量中扣除 IfcOpeningElement / IfcRelVoidsElement。",
     "match_elements.trade_filter": "按专业筛选",
     "match_elements.stage_label": "施工阶段",
-    "match_elements.stage_help":
-      "将匹配项锁定到单个 OmniClass 阶段。留空可搜索所有阶段。",
+    "match_elements.stage_help": "将匹配项锁定到单个 OmniClass 阶段。留空可搜索所有阶段。",
     "match_elements.stage_any": "任意阶段",
     "match_elements.stage.02_Demolition": "拆除",
     "match_elements.stage.03_Earthwork": "土方工程",
@@ -4019,8 +3854,7 @@ const resource = {
     "match_elements.action.apply": "应用到工程量清单 ({{n}})",
     "match_elements.action.apply_title": "将已确认匹配写入项目工程量清单",
     "match_elements.busy.applying": "正在将已确认分组应用到工程量清单…",
-    "match_elements.alert.applied":
-      "创建了 {{n}} 项工程量清单项 · 合计 {{total}} {{ccy}}",
+    "match_elements.alert.applied": "创建了 {{n}} 项工程量清单项 · 合计 {{total}} {{ccy}}",
     "match_elements.visible_groups": "可见 {{n}} 项",
     "match_elements.selected_count": "已选择 {{n}} 项",
     "match_elements.trade.architectural": "建筑",
@@ -4038,8 +3872,7 @@ const resource = {
     "nav.request_custom_module_hint": "缺少什么吗？告诉我们您的需求",
     "modules.dev_guide": "构建模块 — 开发者指南",
     "boq.accept": "接受",
-    "boq.accept_all_anomaly_suggestions":
-      "Accept All Suggested Rates ({{count}})",
+    "boq.accept_all_anomaly_suggestions": "Accept All Suggested Rates ({{count}})",
     "boq.add_all_failed": "Could not add any of the {{count}} positions",
     "boq.add_as_resources": "Add {{count}} as resources",
     "boq.add_column_btn": "添加列",
@@ -4061,68 +3894,54 @@ const resource = {
     "boq.ai_applied": "AI Suggestion Applied",
     "boq.ai_apply_description": "Apply Enhanced Description",
     "boq.ai_apply_rate": "Apply Escalated Rate",
-    "boq.ai_assistant_tooltip":
-      "Describe what you need in plain text — AI creates BOQ positions with realistic pricing.",
+    "boq.ai_assistant_tooltip": "Describe what you need in plain text — AI creates BOQ positions with realistic pricing.",
     "boq.ai_chat_short": "AI Chat",
     "boq.ai_classification": "AI Classification",
     "boq.ai_classify_error": "Classification failed",
     "boq.ai_connected_via": "Connected via {{provider}}",
-    "boq.ai_enhance_subtitle":
-      "Add technical specs, standards, material grades",
+    "boq.ai_enhance_subtitle": "Add technical specs, standards, material grades",
     "boq.ai_enhance_title": "Enhance Description",
-    "boq.ai_error_generic":
-      "Could not connect to AI service. Check that the embedding model is available.",
+    "boq.ai_error_generic": "Could not connect to AI service. Check that the embedding model is available.",
     "boq.ai_escalate_subtitle": "Adjust rate for inflation and market changes",
     "boq.ai_escalate_title": "Escalate Rate",
     "boq.ai_escalated": "Escalated",
     "boq.ai_factor_labor": "Labor",
     "boq.ai_factor_material": "Material",
     "boq.ai_factor_region": "Regional",
-    "boq.ai_generated_summary":
-      "Generated {{count}} positions totalling {{total}} {{currency}}.‌⁠‍",
+    "boq.ai_generated_summary": "Generated {{count}} positions totalling {{total}} {{currency}}.‌⁠‍",
     "boq.ai_global_actions": "BOQ-level Actions",
     "boq.ai_missing_items": "Missing Items",
     "boq.ai_no_classification": "No Classification Found",
-    "boq.ai_no_classification_msg":
-      "Could not determine classification from cost database.",
-    "boq.ai_no_prereqs":
-      "No missing items found — BOQ looks complete for this position.",
+    "boq.ai_no_classification_msg": "Could not determine classification from cost database.",
+    "boq.ai_no_prereqs": "No missing items found — BOQ looks complete for this position.",
     "boq.ai_no_rate": "No Rate Found",
     "boq.ai_no_rate_msg": "No similar items found in the cost database.",
-    "boq.ai_no_selection":
-      "Select a position in the grid for per-position AI actions‌⁠‍",
+    "boq.ai_no_selection": "Select a position in the grid for per-position AI actions‌⁠‍",
     "boq.ai_not_configured": "AI not configured‌⁠‍",
-    "boq.ai_not_configured_desc":
-      "Add your API key in Settings to use AI Smart Actions.‌⁠‍",
+    "boq.ai_not_configured_desc": "Add your API key in Settings to use AI Smart Actions.‌⁠‍",
     "boq.ai_original": "Original",
     "boq.ai_position_actions": "Position Actions",
-    "boq.ai_prereqs_subtitle":
-      "Find missing prerequisites, companions, successors",
+    "boq.ai_prereqs_subtitle": "Find missing prerequisites, companions, successors",
     "boq.ai_prereqs_title": "Suggest Related Items",
     "boq.ai_rate_error": "Rate suggestion failed",
     "boq.ai_rate_suggestion": "AI Rate Suggestion",
     "boq.ai_scope_score": "Completeness Score",
-    "boq.ai_scope_subtitle":
-      "Find missing trades, work packages, critical items",
+    "boq.ai_scope_subtitle": "Find missing trades, work packages, critical items",
     "boq.ai_scope_title": "Check Scope Completeness",
     "boq.ai_selected_position": "Selected Position‌⁠‍",
-    "boq.ai_smart_footer":
-      "Powered by your AI provider (Settings > AI). Results are suggestions — always review.",
+    "boq.ai_smart_footer": "Powered by your AI provider (Settings > AI). Results are suggestions — always review.",
     "boq.ai_smart_panel": "AI Smart Actions‌⁠‍",
-    "boq.ai_smart_tooltip":
-      "Enhance descriptions, find missing items, check scope completeness, escalate rates to current prices.",
+    "boq.ai_smart_tooltip": "Enhance descriptions, find missing items, check scope completeness, escalate rates to current prices.",
     "boq.ai_specs": "Specifications",
     "boq.all_anomalies_resolved": "All {{count}} suggested rates applied",
     "boq.all_rates_normal": "All rates are within normal market range.",
     "boq.anomalies_badge": "Anomalies ({{count}})",
-    "boq.anomalies_count":
-      "{{count}} anomalies detected in {{total}} positions",
+    "boq.anomalies_count": "{{count}} anomalies detected in {{total}} positions",
     "boq.anomalies_found": "Pricing Anomalies Found",
     "boq.anomaly_cancelled": "Price check cancelled",
     "boq.anomaly_check_error": "Anomaly check failed",
     "boq.anomaly_rate_applied": "Suggested Rate Applied",
-    "boq.anomaly_tip":
-      "Compares each unit rate against median market rates from the cost database. Flags overpriced and underpriced positions.",
+    "boq.anomaly_tip": "Compares each unit rate against median market rates from the cost database. Flags overpriced and underpriced positions.",
     "boq.applied": "Applied",
     "boq.apply_all_suggestions": "Apply All‌⁠‍",
     "boq.apply_defaults_failed": "Failed to apply template",
@@ -4136,27 +3955,22 @@ const resource = {
     "boq.autocomplete_tooltip_rate_per_unit": "Rate per unit‌⁠‍",
     "boq.autocomplete_tooltip_tab_to_insert": "Tab or Enter to insert‌⁠‍",
     "boq.autocomplete_tooltip_unit": "/",
-    "boq.autocomplete_tooltip_variants_available":
-      "${variantCount} variants available",
+    "boq.autocomplete_tooltip_variants_available": "${variantCount} variants available",
     "boq.batch_actions": "Batch actions‌⁠‍",
     "boq.batch_change_unit": "Change unit‌⁠‍",
     "boq.batch_clear_selection": "Clear selection",
     "boq.batch_delete": "Delete selected‌⁠‍",
     "boq.batch_delete_confirm": "Delete {{count}} positions",
-    "boq.batch_delete_confirm_message":
-      "Are you sure you want to delete {{count}} selected positions? This action cannot be undone.",
+    "boq.batch_delete_confirm_message": "Are you sure you want to delete {{count}} selected positions? This action cannot be undone.",
     "boq.batch_delete_confirm_title": "Delete positions",
     "boq.batch_deleted": "{{count}} positions deleted",
-    "boq.batch_unit_changed":
-      "Unit changed to {{unit}} for {{count}} positions",
+    "boq.batch_unit_changed": "Unit changed to {{unit}} for {{count}} positions",
     "boq.bim_agg_distinct_label": "{{n}} values",
-    "boq.bim_agg_distinct_title":
-      "Per-element value — summing is meaningless, so each unique value is listed. Click one to apply it.",
+    "boq.bim_agg_distinct_title": "Per-element value — summing is meaningless, so each unique value is listed. Click one to apply it.",
     "boq.bim_agg_sum_title": "Summed across all linked elements",
     "boq.bim_collapse_sums": "Show only headline quantities",
     "boq.bim_expand_sums": "Show all numeric values from BIM",
-    "boq.bim_link_tooltip":
-      "{{count}} BIM element(s) linked — click to preview",
+    "boq.bim_link_tooltip": "{{count}} BIM element(s) linked — click to preview",
     "boq.bim_properties": "Properties",
     "boq.bim_props_show_all_title": "Include every numeric property from BIM",
     "boq.bim_props_show_basic_title": "Hide non-quantity properties",
@@ -4183,22 +3997,19 @@ const resource = {
     "boq.column_calc_invalid_formula": "Formula has a syntax error",
     "boq.column_calc_needs_formula": "Calculated column needs a formula",
     "boq.column_decimals": "Decimals",
-    "boq.column_delete_confirm":
-      'Remove the "{{name}}" column? Existing values in positions are preserved but no longer shown.',
+    "boq.column_delete_confirm": "Remove the \"{{name}}\" column? Existing values in positions are preserved but no longer shown.",
     "boq.column_delete_confirm_title": "Remove column?",
     "boq.column_delete_failed": "Could not remove column‌⁠‍",
     "boq.column_formula": "Formula",
     "boq.column_name": "Column name",
-    "boq.column_name_duplicate": 'A column named "{{name}}" already exists',
+    "boq.column_name_duplicate": "A column named \"{{name}}\" already exists",
     "boq.column_name_invalid": "Column name is invalid",
-    "boq.column_name_invalid_hint":
-      "Use letters (any script), numbers and spaces. Must start with a letter.",
+    "boq.column_name_invalid_hint": "Use letters (any script), numbers and spaces. Must start with a letter.",
     "boq.column_name_placeholder": "e.g. Supplier, Notes, PO Number",
-    "boq.column_name_reserved": '"{{name}}" is a reserved column name',
+    "boq.column_name_reserved": "\"{{name}}\" is a reserved column name",
     "boq.column_options": "Options (comma or newline separated)",
     "boq.column_removed": "Column removed‌⁠‍",
-    "boq.column_select_needs_options":
-      "Select column needs at least one option",
+    "boq.column_select_needs_options": "Select column needs at least one option",
     "boq.column_test_formula": "Test",
     "boq.column_test_result": "Result:",
     "boq.column_type": "类型",
@@ -4218,17 +4029,13 @@ const resource = {
     "boq.cost_finder_components": "{{count}} components",
     "boq.cost_finder_error": "Search failed. Check vector database.",
     "boq.cost_finder_for_position": "For: {{description}}",
-    "boq.cost_finder_no_query":
-      "Enter a description to search the cost database",
+    "boq.cost_finder_no_query": "Enter a description to search the cost database",
     "boq.cost_finder_no_results": "No matching items found",
     "boq.cost_finder_results_count": "{{count}} results ({{ms}}ms)",
-    "boq.cost_finder_search_placeholder":
-      "Search cost items by description...‌⁠‍",
+    "boq.cost_finder_search_placeholder": "Search cost items by description...‌⁠‍",
     "boq.cost_finder_title": "AI Cost Finder‌⁠‍",
-    "boq.cost_finder_tooltip":
-      "Search 55,000+ cost items by description. Find materials, labor, and equipment rates from regional databases.",
-    "boq.cost_risk_error":
-      "Failed to load cost risk analysis. Please try again.",
+    "boq.cost_finder_tooltip": "Search 55,000+ cost items by description. Find materials, labor, and equipment rates from regional databases.",
+    "boq.cost_risk_error": "Failed to load cost risk analysis. Please try again.",
     "boq.create_budget": "Create Budget",
     "boq.create_failed": "Failed to create BOQ",
     "boq.create_revision": "Create Revision",
@@ -4238,10 +4045,8 @@ const resource = {
     "boq.currency_group_world": "World currencies",
     "boq.current": "Current‌⁠‍",
     "boq.custom_columns": "Custom Columns",
-    "boq.custom_columns_hint":
-      "Custom columns appear in the BOQ grid before the actions column. Values are stored per position and exported with the BOQ. Removing a column hides it but preserves the underlying data.",
-    "boq.custom_columns_subtitle":
-      "Add your own fields — supplier, notes, procurement info…",
+    "boq.custom_columns_hint": "Custom columns appear in the BOQ grid before the actions column. Values are stored per position and exported with the BOQ. Removing a column hides it but preserves the underlying data.",
+    "boq.custom_columns_subtitle": "Add your own fields — supplier, notes, procurement info…",
     "boq.delete_section": "Delete section with all positions",
     "boq.display_base": "Base",
     "boq.display_currency_aria": "Choose currency for grand total display",
@@ -4250,8 +4055,7 @@ const resource = {
     "boq.duplicate_position": "Duplicate Position",
     "boq.dwg_link_tooltip_v2": "DWG drawing — click for details & navigation",
     "boq.element_count": "{{count}} element(s)",
-    "boq.empty_position_quality_hint":
-      "Empty position lowers Quality Score until quantity & rate are filled",
+    "boq.empty_position_quality_hint": "Empty position lowers Quality Score until quantity & rate are filled",
     "boq.errors": "errors",
     "boq.estimate_type_budget": "预算",
     "boq.estimate_type_conceptual": "Conceptual",
@@ -4264,35 +4068,28 @@ const resource = {
     "boq.expand_resources": "Expand Resources",
     "boq.expand_section": "Expand Section",
     "boq.export_anyway": "Export Anyway",
-    "boq.export_quality_warning_desc":
-      "Your estimate has a quality score below 60%. Missing quantities, zero prices, or incomplete descriptions may affect the exported document. Consider reviewing the estimate before exporting.",
+    "boq.export_quality_warning_desc": "Your estimate has a quality score below 60%. Missing quantities, zero prices, or incomplete descriptions may affect the exported document. Consider reviewing the estimate before exporting.",
     "boq.filled": "filled",
     "boq.filtered_from": "filtered from {{total}}",
     "boq.fx_rate_global_badge": "GLOBAL",
     "boq.fx_rate_input": "FX rate {{from}}→{{to}}",
     "boq.fx_rate_label": "FX rate",
     "boq.fx_rate_project_badge": "PROJECT",
-    "boq.gaeb_export_desc":
-      "This will export your BOQ as GAEB XML 3.3 format, compatible with standard tender workflows.",
+    "boq.gaeb_export_desc": "This will export your BOQ as GAEB XML 3.3 format, compatible with standard tender workflows.",
     "boq.gaeb_export_title": "Export GAEB XML (X83)",
     "boq.gaeb_grand_total": "Grand Total",
     "boq.gaeb_positions": "Positions",
-    "boq.grand_total_conversion_tooltip_v2":
-      'Whole BOQ rendered in {{disp}} at rate {{rate}} ({{base}} → {{disp}}). View-only — server keeps base values. Switch to "Base" to edit prices.',
+    "boq.grand_total_conversion_tooltip_v2": "Whole BOQ rendered in {{disp}} at rate {{rate}} ({{base}} → {{disp}}). View-only — server keeps base values. Switch to \"Base\" to edit prices.",
     "boq.grid_settings": "Grid Settings",
     "boq.ignore": "Ignore",
-    "boq.import_catalog_hint":
-      "Import a resource catalog from Settings or the Catalog page",
+    "boq.import_catalog_hint": "Import a resource catalog from Settings or the Catalog page",
     "boq.import_database_cta": "Import a database",
     "boq.import_file": "Import File",
     "boq.import_rows": "Import {{count}} rows",
     "boq.import_started": "Importing {{name}}…",
-    "boq.import_started_gaeb_hint":
-      "Parsing GAEB XML — namespace-agnostic, X81/X83/X84 supported.",
-    "boq.import_started_hint":
-      "Large files (PDF / CAD / 1000+ rows) may take up to 60 seconds.",
-    "boq.import_timeout":
-      "Server did not respond within 90 seconds. The file may be too large — try splitting it.",
+    "boq.import_started_gaeb_hint": "Parsing GAEB XML — namespace-agnostic, X81/X83/X84 supported.",
+    "boq.import_started_hint": "Large files (PDF / CAD / 1000+ rows) may take up to 60 seconds.",
+    "boq.import_timeout": "Server did not respond within 90 seconds. The file may be too large — try splitting it.",
     "boq.import_tooltip": "Import GAEB, Excel, or CSV into this BOQ",
     "boq.inline_edit_number": "Edit value",
     "boq.inline_edit_text": "Edit text",
@@ -4303,16 +4100,13 @@ const resource = {
     "boq.link_finance": "View Budget",
     "boq.link_validation": "Run Validation",
     "boq.linked_geometry": "Linked Geometry",
-    "boq.list_subtitle_count":
-      "{{boqCount}} estimates across {{projectCount}} projects",
+    "boq.list_subtitle_count": "{{boqCount}} estimates across {{projectCount}} projects",
     "boq.loading_element_data": "Loading element data...",
     "boq.loading_full_properties": "Loading full properties…",
     "boq.lock": "Lock Estimate",
-    "boq.lock_confirm":
-      "Lock this estimate?nnLocked estimates cannot be edited. Unlocking requires admin privileges.",
+    "boq.lock_confirm": "Lock this estimate?nnLocked estimates cannot be edited. Unlocking requires admin privileges.",
     "boq.lock_failed": "Lock failed",
-    "boq.lock_tooltip":
-      "Lock prevents edits. Create a revision to make changes to a locked estimate.",
+    "boq.lock_tooltip": "Lock prevents edits. Create a revision to make changes to a locked estimate.",
     "boq.locked": "LOCKED",
     "boq.locked_next": "Estimate locked. Create project budget?",
     "boq.locked_success": "Estimate locked",
@@ -4323,8 +4117,7 @@ const resource = {
     "boq.markup_delete_failed": "Failed to delete markup‌⁠‍",
     "boq.markup_update_failed": "Failed to update markup‌⁠‍",
     "boq.mvp.apply_to_remaining": "Apply to remaining {{count}}",
-    "boq.mvp.apply_to_remaining_hint":
-      "Re-use these picks for all other multi-variant items in this batch",
+    "boq.mvp.apply_to_remaining_hint": "Re-use these picks for all other multi-variant items in this batch",
     "boq.mvp.subtitle": "{{count}} resource needs a choice‌⁠‍",
     "boq.mvp.toast_applied": "{{count}} variant chosen",
     "boq.mvp.toast_apply_to_remaining": "Applied picks to {{count}} more item",
@@ -4334,64 +4127,52 @@ const resource = {
     "boq.no_boqs_in_project": "No BOQs in this project.",
     "boq.no_catalog_results": "No resources match your search",
     "boq.no_changes": "No changes",
-    "boq.no_custom_columns":
-      "No custom columns yet. Pick a preset below or add your own.",
-    "boq.no_databases_help":
-      "There's no cost-rate database on this server, so search has nothing to show. Import a free CWICR pack — 30 regional databases are one click away.",
+    "boq.no_custom_columns": "No custom columns yet. Pick a preset below or add your own.",
+    "boq.no_databases_help": "There's no cost-rate database on this server, so search has nothing to show. Import a free CWICR pack — 30 regional databases are one click away.",
     "boq.no_databases_title": "No cost database installed yet",
     "boq.no_numeric_found": "No numeric values in this element",
     "boq.no_numeric_quantities": "No numeric quantities",
-    "boq.no_quantities_hint_button":
-      'No quantities — press "Show all" above to surface every BIM property',
+    "boq.no_quantities_hint_button": "No quantities — press \"Show all\" above to surface every BIM property",
     "boq.no_snapshots": "No snapshots yet",
     "boq.open_in_bim": "Open in BIM",
-    "boq.open_in_bim_title":
-      "Open in 3D viewer with the linked element pre-selected",
+    "boq.open_in_bim_title": "Open in 3D viewer with the linked element pre-selected",
     "boq.open_in_bim_viewer": "Open in BIM Viewer",
     "boq.options": "options",
     "boq.pagination_range": "{{from}}–{{to}} of {{total}} estimates",
     "boq.partial": "Partial",
     "boq.paste_columns": "Columns‌⁠‍",
     "boq.paste_detected": "{{count}} rows detected‌⁠‍",
-    "boq.paste_excel_hint":
-      "Copy rows from Excel or Google Sheets and paste below‌⁠‍",
+    "boq.paste_excel_hint": "Copy rows from Excel or Google Sheets and paste below‌⁠‍",
     "boq.paste_failed": "Could not paste — invalid data or read-only cells‌⁠‍",
     "boq.paste_from_excel": "Paste from Excel",
     "boq.paste_from_excel_short": "Paste",
     "boq.paste_import_count": "{{count}} positions added to BOQ",
     "boq.paste_import_failed": "Import failed",
     "boq.paste_import_success": "Imported successfully",
-    "boq.paste_no_data":
-      "No valid rows detected. Make sure data is tab-separated.",
-    "boq.paste_placeholder":
-      "Paste tab-separated data here...nnExample:nDescriptiontUnittQtytRatenConcrete foundationtm3t120t185.00nRebar B500Stkgt2400t1.45‌⁠‍",
+    "boq.paste_no_data": "No valid rows detected. Make sure data is tab-separated.",
+    "boq.paste_placeholder": "Paste tab-separated data here...nnExample:nDescriptiontUnittQtytRatenConcrete foundationtm3t120t185.00nRebar B500Stkgt2400t1.45‌⁠‍",
     "boq.paste_showing": "Showing first 50 of {{total}} rows",
     "boq.pdf_link_tooltip_v2": "PDF takeoff — click for details & navigation",
     "boq.per_unit": "per {{unit}}",
     "boq.pick_from_catalog": "Pick from Catalog‌⁠‍",
-    "boq.pick_from_catalog_desc":
-      "Search and add a resource from the catalog to this position‌⁠‍",
+    "boq.pick_from_catalog_desc": "Search and add a resource from the catalog to this position‌⁠‍",
     "boq.pick_qty_from_bim": "Pick quantity from BIM",
     "boq.pos": "Pos",
     "boq.position_deleted": "Position deleted",
     "boq.position_duplicated": "Position duplicated",
     "boq.position_restored": "Position restored",
     "boq.position_variant_v_label": "Expand resources",
-    "boq.position_variant_v_tooltip":
-      "This position carries a variant resource — click to expand the resource panel.",
+    "boq.position_variant_v_tooltip": "This position carries a variant resource — click to expand the resource panel.",
     "boq.positions_removed": "{{count}} pos removed",
     "boq.positions_reordered": "Positions reordered",
     "boq.positions_short": "pos.",
-    "boq.preset_already_applied":
-      "All columns from this preset already exist‌⁠‍",
-    "boq.preset_applied": '{{count}} columns added from "{{name}}" preset',
+    "boq.preset_already_applied": "All columns from this preset already exist‌⁠‍",
+    "boq.preset_applied": "{{count}} columns added from \"{{name}}\" preset",
     "boq.preset_partial": "Preset partially applied",
     "boq.preset_regional": "Regional standards",
     "boq.preset_universal": "Quick start with a preset",
-    "boq.preview_total_hint":
-      "Catalog-rate × quantity for the selection. Variant picks may adjust this.",
-    "boq.price_review_desc":
-      "Review each suggestion below. Accept to update the rate, or ignore to keep your current price.‌⁠‍",
+    "boq.preview_total_hint": "Catalog-rate × quantity for the selection. Variant picks may adjust this.",
+    "boq.price_review_desc": "Review each suggestion below. Accept to update the rate, or ignore to keep your current price.‌⁠‍",
     "boq.price_review_title": "Price Check Results‌⁠‍",
     "boq.quality_ai_menu": "Quality & AI",
     "boq.quality_ai_menu_tip": "All quality & AI tools",
@@ -4400,40 +4181,29 @@ const resource = {
     "boq.quantity_for_item": "Quantity for {{item}}",
     "boq.quantity_short": "Qty",
     "boq.rate_applied": "Rate Applied",
-    "boq.rate_from_resources":
-      "Rate is calculated from resources. Edit individual resources to change.‌⁠‍",
+    "boq.rate_from_resources": "Rate is calculated from resources. Edit individual resources to change.‌⁠‍",
     "boq.recalc_confirm_button": "Update Rates",
-    "boq.recalc_confirm_step1":
-      "1. Search cost database for matching items by description",
-    "boq.recalc_confirm_step2":
-      "2. Attach resource breakdowns (materials, labor, equipment)",
-    "boq.recalc_confirm_step3":
-      "3. Recalculate unit rates from resource components",
+    "boq.recalc_confirm_step1": "1. Search cost database for matching items by description",
+    "boq.recalc_confirm_step2": "2. Attach resource breakdowns (materials, labor, equipment)",
+    "boq.recalc_confirm_step3": "3. Recalculate unit rates from resource components",
     "boq.recalc_confirm_subtitle": "Match positions to cost database",
     "boq.recalc_confirm_title": "Update Unit Rates",
-    "boq.recalc_confirm_warning":
-      "Positions with manual rates that have no match in the cost database will not be changed.",
+    "boq.recalc_confirm_warning": "Positions with manual rates that have no match in the cost database will not be changed.",
     "boq.recalc_enriched": "{{count}} positions matched to cost database",
-    "boq.recalc_skipped":
-      "{{count}} positions without cost data (manual rates kept)",
+    "boq.recalc_skipped": "{{count}} positions without cost data (manual rates kept)",
     "boq.recalc_updated": "{{count}} unit rates recalculated from resources",
-    "boq.recalculate_all_manual":
-      "All positions use manual rates — add resources from cost database to enable automatic rate calculation.",
-    "boq.recalculate_failed_hint":
-      "Check that the backend is running and cost database is loaded.",
+    "boq.recalculate_all_manual": "All positions use manual rates — add resources from cost database to enable automatic rate calculation.",
+    "boq.recalculate_failed_hint": "Check that the backend is running and cost database is loaded.",
     "boq.recalculate_no_changes": "No changes needed",
-    "boq.recalculate_tip":
-      "Matches positions to cost database, attaches resource breakdowns (materials, labor, equipment), and recalculates unit rates from components.",
+    "boq.recalculate_tip": "Matches positions to cost database, attaches resource breakdowns (materials, labor, equipment), and recalculates unit rates from components.",
     "boq.recalculating": "Updating...",
     "boq.remove_resource": "Remove Resource",
     "boq.renumber": "Renumber Positions",
     "boq.renumber_apply": "Apply renumbering",
-    "boq.renumber_dialog_subtitle":
-      "Pick a numbering scheme. The current order is preserved — only ordinals are rewritten.‌⁠‍",
+    "boq.renumber_dialog_subtitle": "Pick a numbering scheme. The current order is preserved — only ordinals are rewritten.‌⁠‍",
     "boq.renumber_dialog_title": "Renumber positions‌⁠‍",
     "boq.renumber_done": "{{count}} positions renumbered",
-    "boq.renumber_done_hint":
-      "Order preserved — only ordinals were rewritten. Undo with Ctrl+Z is not supported for renumber.",
+    "boq.renumber_done_hint": "Order preserved — only ordinals were rewritten. Undo with Ctrl+Z is not supported for renumber.",
     "boq.renumber_failed": "Renumber failed",
     "boq.renumber_no_preview": "No positions to preview yet.",
     "boq.renumber_pad": "Zero-pad section numbers‌⁠‍",
@@ -4441,19 +4211,14 @@ const resource = {
     "boq.renumber_pad_on": "Sections will be 01, 02, 03 (two-digit padded)‌⁠‍",
     "boq.renumber_preview": "Preview (first 5 positions)",
     "boq.renumber_scheme_dotted": "Short decimal",
-    "boq.renumber_scheme_dotted_desc":
-      "Short-form decimal numbering common in NRM-style measurement.",
+    "boq.renumber_scheme_dotted_desc": "Short-form decimal numbering common in NRM-style measurement.",
     "boq.renumber_scheme_gap10": "Gap of 10",
-    "boq.renumber_scheme_gap10_desc":
-      "Leaves room to insert positions like 01.15 between 01.10 and 01.20 later. Standard German tender output.",
+    "boq.renumber_scheme_gap10_desc": "Leaves room to insert positions like 01.15 between 01.10 and 01.20 later. Standard German tender output.",
     "boq.renumber_scheme_gap100": "Gap of 100",
-    "boq.renumber_scheme_gap100_desc":
-      "Even more headroom for very large BOQs that may grow significantly post-tender.",
+    "boq.renumber_scheme_gap100_desc": "Even more headroom for very large BOQs that may grow significantly post-tender.",
     "boq.renumber_scheme_sequential": "Sequential",
-    "boq.renumber_scheme_sequential_desc":
-      "Compact, traditional numbering. Best for fixed-scope BOQs that won't get extra positions later.",
-    "boq.renumber_warning":
-      "This overwrites any manually edited position numbers. The current display order is preserved — only ordinals change.",
+    "boq.renumber_scheme_sequential_desc": "Compact, traditional numbering. Best for fixed-scope BOQs that won't get extra positions later.",
+    "boq.renumber_warning": "This overwrites any manually edited position numbers. The current display order is preserved — only ordinals change.",
     "boq.renumbering": "Renumbering...",
     "boq.reorder_failed": "Failed to reorder positions",
     "boq.resource_added": "Resource added",
@@ -4461,41 +4226,28 @@ const resource = {
     "boq.resource_catalog_code": "Catalogue code: {{code}}",
     "boq.resource_currency": "货币",
     "boq.resource_currency_add_custom": "Add custom: {{code}}",
-    "boq.resource_currency_custom":
-      "Custom currency: {{code}} (not in project FX or ISO 4217 list)",
-    "boq.resource_currency_hint":
-      "Currency for this resource. Defaults to project base currency.",
-    "boq.resource_currency_no_match":
-      "No matches — type at least 2 letters to add a custom code.",
+    "boq.resource_currency_custom": "Custom currency: {{code}} (not in project FX or ISO 4217 list)",
+    "boq.resource_currency_hint": "Currency for this resource. Defaults to project base currency.",
+    "boq.resource_currency_no_match": "No matches — type at least 2 letters to add a custom code.",
     "boq.resource_currency_pick": "Currency — {{symbol}} {{code}}",
     "boq.resource_currency_search": "Type or search (e.g. EUR, MYC)",
     "boq.resource_customised": "Customised resource — no catalogue code",
-    "boq.resource_is_variant_badge":
-      "Variant resource — multiple price options available",
+    "boq.resource_is_variant_badge": "Variant resource — multiple price options available",
     "boq.resource_name": "名称",
     "boq.resource_name_placeholder": "e.g. Concrete C30/37",
-    "boq.resource_no_fx_rate":
-      "No FX rate configured for {{code}} — total shown in {{code}}",
-    "boq.resource_no_fx_rate_click":
-      "No FX rate configured for {{code}} — click to set one in Project Settings",
+    "boq.resource_no_fx_rate": "No FX rate configured for {{code}} — total shown in {{code}}",
+    "boq.resource_no_fx_rate_click": "No FX rate configured for {{code}} — click to set one in Project Settings",
     "boq.resource_no_fx_short": "set FX",
-    "boq.resource_total_in_base":
-      "{{foreign}} ≈ {{base}} (1 {{code}} = {{rate}} {{baseCode}})",
+    "boq.resource_total_in_base": "{{foreign}} ≈ {{base}} (1 {{code}} = {{rate}} {{baseCode}})",
     "boq.resource_type": "类型",
     "boq.resource_type_variant_chip": "Variant",
-    "boq.resource_type_variant_tooltip":
-      "Variant resource — pick from {{base}} catalog. Click to reclassify resource type.",
-    "boq.resource_variant_bar_tooltip_default":
-      "Auto-default ({{strategy}}){{captured}} — click pill to refine.",
-    "boq.resource_variant_bar_tooltip_picked":
-      "Explicit variant: {{label}}{{captured}}",
+    "boq.resource_type_variant_tooltip": "Variant resource — pick from {{base}} catalog. Click to reclassify resource type.",
+    "boq.resource_variant_bar_tooltip_default": "Auto-default ({{strategy}}){{captured}} — click pill to refine.",
+    "boq.resource_variant_bar_tooltip_picked": "Explicit variant: {{label}}{{captured}}",
     "boq.resource_variant_pill": "▾ {{count}}",
-    "boq.resource_variant_pill_tooltip_default":
-      "Auto-applied with {{strategy}} rate. {{count}} options ({{range}}). Click to refine.",
-    "boq.resource_variant_pill_tooltip_picked":
-      "Variant: {{label}} @ {{price}} {{currency}}{{delta}}. Click to switch.",
-    "boq.resource_variant_pill_tooltip_unset":
-      "{{count}} priced variants available ({{range}}). Click to pick one.",
+    "boq.resource_variant_pill_tooltip_default": "Auto-applied with {{strategy}} rate. {{count}} options ({{range}}). Click to refine.",
+    "boq.resource_variant_pill_tooltip_picked": "Variant: {{label}} @ {{price}} {{currency}}{{delta}}. Click to switch.",
+    "boq.resource_variant_pill_tooltip_unset": "{{count}} priced variants available ({{range}}). Click to pick one.",
     "boq.resources_added": "Resources added to position",
     "boq.resources_total": "Resources total",
     "boq.restore": "Restore",
@@ -4503,25 +4255,19 @@ const resource = {
     "boq.restore_snapshot": "Restore this version",
     "boq.revision_created": "Revision created",
     "boq.revision_failed": "Create revision failed",
-    "boq.rs_abc_pill_tooltip":
-      "Class {{cls}} · {{pct}}% of project resource cost",
+    "boq.rs_abc_pill_tooltip": "Class {{cls}} · {{pct}}% of project resource cost",
     "boq.rs_col_abc": "ABC %",
-    "boq.rs_col_abc_tooltip":
-      "Pareto / ABC analysis — A items make up ~80% of cost, B ~15%, C ~5%. Click to highlight bucket boundaries.",
+    "boq.rs_col_abc_tooltip": "Pareto / ABC analysis — A items make up ~80% of cost, B ~15%, C ~5%. Click to highlight bucket boundaries.",
     "boq.rs_error": "Failed to load resource summary.",
-    "boq.rs_save_variant_to_catalog":
-      "Save as a regular article in your catalog",
+    "boq.rs_save_variant_to_catalog": "Save as a regular article in your catalog",
     "boq.rs_show_all": "Show all {{count}} resources",
     "boq.rs_show_less": "Show less",
     "boq.rs_variant_applied_to_n": "Applied to {{count}} position(s)‌⁠‍",
     "boq.rs_variant_pill_mixed": "Mixed · {{count}} options",
-    "boq.rs_variant_pill_mixed_tooltip":
-      "Different variants picked across positions. Click to choose one for all.",
+    "boq.rs_variant_pill_mixed_tooltip": "Different variants picked across positions. Click to choose one for all.",
     "boq.rs_variant_pill_options": "▾ {{count}} options",
-    "boq.rs_variant_pill_picked_tooltip":
-      "Variant: {{label}}. Click to switch (applies to all positions).",
-    "boq.rs_variant_pill_unset_tooltip":
-      "{{count}} priced variants available. Click to pick one for all positions.",
+    "boq.rs_variant_pill_picked_tooltip": "Variant: {{label}}. Click to switch (applies to all positions).",
+    "boq.rs_variant_pill_unset_tooltip": "{{count}} priced variants available. Click to pick one for all positions.",
     "boq.save_as_assembly": "Save as Assembly",
     "boq.save_as_assembly_failed": "Failed to create assembly",
     "boq.save_snapshot": "Save snapshot",
@@ -4530,10 +4276,8 @@ const resource = {
     "boq.saved_as_assembly": "Saved as Assembly",
     "boq.saved_to_catalog": "Saved to catalog",
     "boq.scope_of_work_label": "What work is included in this rate",
-    "boq.search_and_add_resources":
-      "Search cost items to add as resources to position",
-    "boq.search_catalog_resources":
-      "Search resources by name, code, or category...‌⁠‍",
+    "boq.search_and_add_resources": "Search cost items to add as resources to position",
+    "boq.search_catalog_resources": "Search resources by name, code, or category...‌⁠‍",
     "boq.section_add_failed": "Failed to add section",
     "boq.section_child_count": "{{count}} item",
     "boq.section_deleted": "Section deleted with {{count}} positions",
@@ -4541,8 +4285,7 @@ const resource = {
     "boq.section_optional": "Section (optional)",
     "boq.select_boq": "Select BOQ...",
     "boq.select_classification": "Classification...‌⁠‍",
-    "boq.sensitivity_error":
-      "Failed to load sensitivity analysis. Please try again.‌⁠‍",
+    "boq.sensitivity_error": "Failed to load sensitivity analysis. Please try again.‌⁠‍",
     "boq.set_as_quantity": "Set as qty",
     "boq.set_as_quantity_title": "Push this value into the BOQ quantity field",
     "boq.shortcut_ai_chat": "Toggle AI Chat",
@@ -4571,8 +4314,7 @@ const resource = {
     "boq.show_shortcuts": "Keyboard Shortcuts (F1)",
     "boq.snapshot_created": "Snapshot saved‌⁠‍",
     "boq.snapshot_failed": "Failed to save snapshot‌⁠‍",
-    "boq.snapshot_hint":
-      "Type a label above and click Save to create your first snapshot.",
+    "boq.snapshot_hint": "Type a label above and click Save to create your first snapshot.",
     "boq.snapshot_label": "Snapshot label (optional)...",
     "boq.snapshot_restored": "Snapshot restored‌⁠‍",
     "boq.snapshots_error": "Failed to load version history.",
@@ -4583,11 +4325,9 @@ const resource = {
     "boq.source_dwg": "DWG drawing",
     "boq.source_id_label": "Item id",
     "boq.source_measurement_label": "Measurement",
-    "boq.source_no_measurement":
-      "Measurement data not stored locally — open the source to view details.",
+    "boq.source_no_measurement": "Measurement data not stored locally — open the source to view details.",
     "boq.source_open": "Open source",
-    "boq.source_open_title":
-      "Open the source document in its viewer, focused on this item",
+    "boq.source_open_title": "Open the source document in its viewer, focused on this item",
     "boq.source_pdf": "PDF takeoff",
     "boq.source_pdf_page": "Page {{page}}",
     "boq.status_draft": "Draft",
@@ -4595,25 +4335,20 @@ const resource = {
     "boq.suggest_rate": "Suggest Rate",
     "boq.suggested": "Suggested‌⁠‍",
     "boq.toolbar_quality": "Quality",
-    "boq.toolbar_summary_aria":
-      "{{sections}} sections · {{positions}} positions",
+    "boq.toolbar_summary_aria": "{{sections}} sections · {{positions}} positions",
     "boq.try_different_search": "Try a different search term or filter",
     "boq.unit_options": "Unit options",
     "boq.unit_rate_variant_pill": "u25BE {{count}} options",
-    "boq.unit_rate_variant_pill_tooltip_default":
-      "Auto-applied with {{strategy}} rate ({{count}} options, {{range}}). Click to refine.",
-    "boq.unit_rate_variant_pill_tooltip_picked":
-      "Currently: {{label}}. Click to switch to a different variant.",
-    "boq.unit_rate_variant_pill_tooltip_unset":
-      "{{count}} priced variants available ({{range}}). Click to pick one.",
+    "boq.unit_rate_variant_pill_tooltip_default": "Auto-applied with {{strategy}} rate ({{count}} options, {{range}}). Click to refine.",
+    "boq.unit_rate_variant_pill_tooltip_picked": "Currently: {{label}}. Click to switch to a different variant.",
+    "boq.unit_rate_variant_pill_tooltip_unset": "{{count}} priced variants available ({{range}}). Click to pick one.",
     "boq.unlock": "Unlock",
     "boq.unlock_failed": "Unlock failed",
     "boq.unlocked_success": "Estimate unlocked",
     "boq.untitled": "Untitled BOQ‌⁠‍",
     "boq.untitled_section": "(untitled)",
     "boq.update_failed": "Failed to update position‌⁠‍",
-    "boq.validate_tip":
-      "Checks for missing descriptions, zero quantities, pricing gaps, classification compliance, and duplicate positions.",
+    "boq.validate_tip": "Checks for missing descriptions, zero quantities, pricing gaps, classification compliance, and duplicate positions.",
     "boq.validating": "Checking...",
     "boq.validation_all_passed": "All {{count}} checks passed",
     "boq.validation_errors": "{{count}} errors found",
@@ -4630,64 +4365,48 @@ const resource = {
     "boq.variables_description": "描述",
     "boq.variables_description_placeholder": "Optional note",
     "boq.variables_empty": "No variables yet. Add the first one below.‌⁠‍",
-    "boq.variables_help":
-      "Define named values you can reference in formulas. e.g. set $GFA = 1500, then write =$GFA * 0.15 in any quantity or rate cell.‌⁠‍",
+    "boq.variables_help": "Define named values you can reference in formulas. e.g. set $GFA = 1500, then write =$GFA * 0.15 in any quantity or rate cell.‌⁠‍",
     "boq.variables_name": "名称",
     "boq.variables_saved": "Variables saved‌⁠‍",
     "boq.variables_title": "BOQ variables‌⁠‍",
     "boq.variables_type": "类型",
     "boq.variables_value": "Value",
-    "boq.variant_default_applied_msg":
-      "Click the row in the BOQ to choose a specific variant.",
+    "boq.variant_default_applied_msg": "Click the row in the BOQ to choose a specific variant.",
     "boq.variant_default_applied_title": "Applied with average price",
     "boq.variant_default_pill": "Default u00B7 refine u25BE",
-    "boq.variant_default_pill_tooltip":
-      "Auto-applied with the {{strategy}} rate. Click the unit_rate cell to pick a specific variant.",
+    "boq.variant_default_pill_tooltip": "Auto-applied with the {{strategy}} rate. Click the unit_rate cell to pick a specific variant.",
     "boq.variant_default_pill_with_count": "Abstract u00B7 {{count}} options",
-    "boq.variant_header_code_tooltip":
-      "Abstract variant resource — inherits the position quantity",
-    "boq.variant_header_pill_tooltip":
-      "Choose / switch a price variant for this abstract resource",
-    "boq.variant_header_qty_edit_tooltip":
-      "Double-click to edit quantity (synced with the position).",
-    "boq.variant_header_type_tooltip":
-      "Click to pick a price variant from the catalog",
+    "boq.variant_header_code_tooltip": "Abstract variant resource — inherits the position quantity",
+    "boq.variant_header_pill_tooltip": "Choose / switch a price variant for this abstract resource",
+    "boq.variant_header_qty_edit_tooltip": "Double-click to edit quantity (synced with the position).",
+    "boq.variant_header_type_tooltip": "Click to pick a price variant from the catalog",
     "boq.variant_resource_added": "Resource added: {{label}}",
     "boq.variant_resource_repick_failed": "Variant re-pick failed",
     "boq.variant_resource_repicked": "Variant updated: {{label}}",
     "boq.vector_download": "Download cost database first",
-    "boq.vector_download_desc":
-      "Import CWICR databases (55,000+ items, 9 regions)",
-    "boq.vector_index_desc":
-      "Build vector index from your imported cost items (~30s)",
+    "boq.vector_download_desc": "Import CWICR databases (55,000+ items, 9 regions)",
+    "boq.vector_index_desc": "Build vector index from your imported cost items (~30s)",
     "boq.vector_index_error": "Indexing Failed",
-    "boq.vector_index_error_msg":
-      "Failed to index the cost database. Try importing a database first.",
+    "boq.vector_index_error_msg": "Failed to index the cost database. Try importing a database first.",
     "boq.vector_index_now": "Index existing cost database",
     "boq.vector_indexed": "Vector Database Ready",
-    "boq.vector_indexed_msg":
-      "Cost database indexed. AI features are now available.",
+    "boq.vector_indexed_msg": "Cost database indexed. AI features are now available.",
     "boq.vector_indexing": "Indexing...",
-    "boq.vector_setup_desc":
-      "AI rate suggestions, classification, and anomaly detection require a vector-indexed cost database. This is a one-time setup that takes about 30 seconds.",
+    "boq.vector_setup_desc": "AI rate suggestions, classification, and anomaly detection require a vector-indexed cost database. This is a one-time setup that takes about 30 seconds.",
     "boq.vector_setup_subtitle": "One-time setup required",
     "boq.vector_setup_title": "AI Features Setup",
-    "boq.vector_status_empty":
-      "No vector database found. Import a cost database or index your existing cost items.",
-    "boq.vector_status_partial":
-      "Vector DB has {{count}} items indexed. Minimum ~100 items needed for AI features.",
+    "boq.vector_status_empty": "No vector database found. Import a cost database or index your existing cost items.",
+    "boq.vector_status_partial": "Vector DB has {{count}} items indexed. Minimum ~100 items needed for AI features.",
     "boq.version_history": "Version History‌⁠‍",
     "boq.view_comments": "Comments ({{count}})",
     "boq.view_in_bim": "View in BIM 3D ({{count}})",
     "boq.view_in_cost_db": "View in Cost Database",
-    "boq.warn_lump_sum":
-      "Lump sum — quantity × rate may not match expected total",
+    "boq.warn_lump_sum": "Lump sum — quantity × rate may not match expected total",
     "boq.warn_zero_rate": "No rate — review before commit",
     "boq.warnings": "warnings",
     "compliance.tab_label": "合规",
     "compliance.page.title": "Compliance documents",
-    "compliance.page.subtitle":
-      "Track insurance, permits, bonds and certifications with expiry reminders.",
+    "compliance.page.subtitle": "Track insurance, permits, bonds and certifications with expiry reminders.",
     "compliance.page.new": "New document",
     "compliance.modal.create_title": "New compliance document",
     "compliance.modal.create_submit": "Create document",
@@ -4718,10 +4437,8 @@ const resource = {
     "compliance.status.expired": "Expired",
     "compliance.status.cancelled": "Cancelled",
     "compliance.status.void": "Void",
-    "compliance.doc_type.insurance_general_liability":
-      "General liability insurance",
-    "compliance.doc_type.insurance_workers_comp":
-      "Workers' compensation insurance",
+    "compliance.doc_type.insurance_general_liability": "General liability insurance",
+    "compliance.doc_type.insurance_workers_comp": "Workers' compensation insurance",
     "compliance.doc_type.insurance_auto": "Auto insurance",
     "compliance.doc_type.insurance_umbrella": "Umbrella insurance",
     "compliance.doc_type.permit_building": "Building permit",
@@ -4735,11 +4452,9 @@ const resource = {
     "compliance.doc_type.certification_other": "Other certification",
     "compliance.doc_type.other": "Other",
     "compliance.empty.title": "No compliance documents yet",
-    "compliance.empty.description":
-      "Track insurance policies, permits, bonds and certifications. Get a warning before each one expires.",
+    "compliance.empty.description": "Track insurance policies, permits, bonds and certifications. Get a warning before each one expires.",
     "compliance.empty.no_project_title": "Open a project",
-    "compliance.empty.no_project_description":
-      "Compliance documents are scoped to a project — open one first.",
+    "compliance.empty.no_project_description": "Compliance documents are scoped to a project — open one first.",
     "compliance.toast.created": "Compliance document created.",
     "compliance.toast.create_failed": "Failed to create compliance document.",
     "compliance.toast.deleted": "Compliance document deleted.",
@@ -4762,8 +4477,7 @@ const resource = {
     "costs.base_cost": "Base cost",
     "costs.base_year": "Base year‌⁠‍",
     "costs.categories_title": "Categories",
-    "costs.clear_all_confirm_body":
-      "This will permanently remove all {{count}} CWICR cost items. You can re-import them later.",
+    "costs.clear_all_confirm_body": "This will permanently remove all {{count}} CWICR cost items. You can re-import them later.",
     "costs.clear_all_confirm_title": "Clear all {{count}} databases?",
     "costs.clear_filters": "Clear all",
     "costs.code_placeholder": "e.g. WALL-001",
@@ -4771,8 +4485,7 @@ const resource = {
     "costs.component_labor": "Labor",
     "costs.component_material": "Material",
     "costs.confirm_delete": "Delete this custom cost item?",
-    "costs.confirm_delete_region":
-      "Delete all cost items for {{region}}? This cannot be undone.",
+    "costs.confirm_delete_region": "Delete all cost items for {{region}}? This cannot be undone.",
     "costs.confirm_delete_title": "Delete cost item?",
     "costs.cost_items_count": "55,000+ cost items",
     "costs.custom_label": "Custom",
@@ -4790,30 +4503,23 @@ const resource = {
     "costs.cwicr_match.mode_label": "Mode",
     "costs.cwicr_match.mode_lexical": "Lexical‌⁠‍",
     "costs.cwicr_match.mode_semantic": "Semantic‌⁠‍",
-    "costs.cwicr_match.placeholder":
-      "Describe the work item (e.g. reinforced concrete wall)‌⁠‍",
+    "costs.cwicr_match.placeholder": "Describe the work item (e.g. reinforced concrete wall)‌⁠‍",
     "costs.cwicr_match.query_label": "Query",
     "costs.cwicr_match.search": "搜索",
     "costs.cwicr_match.title": "CWICR rate match‌⁠‍",
-    "costs.db_downloading":
-      "Downloading and indexing cost items with full resource breakdown. This is a one-time setup.",
+    "costs.db_downloading": "Downloading and indexing cost items with full resource breakdown. This is a one-time setup.",
     "costs.db_installed": "Database installed successfully‌⁠‍",
     "costs.db_installing": "Installing {{name}}...",
-    "costs.db_saved_offline":
-      "Cost items are saved locally and available offline.",
-    "costs.description_placeholder":
-      "e.g. Reinforced concrete wall C30/37, 25cm",
+    "costs.db_saved_offline": "Cost items are saved locally and available offline.",
+    "costs.description_placeholder": "e.g. Reinforced concrete wall C30/37, 25cm",
     "costs.duplicates_skipped": "duplicates skipped",
-    "costs.empty_pick_region_above":
-      "Pick a region card above and click Install to load a regional cost database.",
+    "costs.empty_pick_region_above": "Pick a region card above and click Install to load a regional cost database.",
     "costs.equipment": "设备",
     "costs.escalated_cost": "Escalated cost",
     "costs.escalation": "Escalation",
     "costs.escalation_calculator": "Cost Escalation Calculator‌⁠‍",
-    "costs.escalation_desc":
-      "Adjust costs for inflation using published construction indices‌⁠‍",
-    "costs.escalation_disclaimer":
-      "Based on published indices. Verify with project-specific data.",
+    "costs.escalation_desc": "Adjust costs for inflation using published construction indices‌⁠‍",
+    "costs.escalation_disclaimer": "Based on published indices. Verify with project-specific data.",
     "costs.escalation_factor": "Factor",
     "costs.filters_active": "filters active",
     "costs.is_now_active": "is now the active database‌⁠‍",
@@ -4832,26 +4538,21 @@ const resource = {
     "costs.n_items_selected": "{{count}} items selected",
     "costs.n_positions_will_be_created": "{{count}} positions will be created",
     "costs.n_selected": "{{count}} selected",
-    "costs.no_databases_installed":
-      "No databases installed yet. Pick a region above to install.",
+    "costs.no_databases_installed": "No databases installed yet. Pick a region above to install.",
     "costs.no_favourites": "No favourites yet",
-    "costs.no_favourites_hint":
-      "Click the star icon on any cost item to add it to your favourites",
+    "costs.no_favourites_hint": "Click the star icon on any cost item to add it to your favourites",
     "costs.no_recent": "No recently used items",
-    "costs.no_recent_hint":
-      "Items you add to BOQ will appear here for quick access",
+    "costs.no_recent_hint": "Items you add to BOQ will appear here for quick access",
     "costs.one_time_download": "One-time download",
     "costs.phase_complete": "Complete",
     "costs.phase_extracting": "Extracting resources & cost breakdown...",
     "costs.phase_finalizing": "Finalizing...",
     "costs.phase_reading": "Reading Parquet file...",
     "costs.phase_writing": "Writing to local database...",
-    "costs.positions_created_hint":
-      "Positions created with unit rates from cost database",
+    "costs.positions_created_hint": "Positions created with unit rates from cost database",
     "costs.region_filter_count": "{{shown}} of {{total}}‌⁠‍",
-    "costs.region_filter_no_results": 'No regions match "{{q}}"',
-    "costs.region_filter_placeholder":
-      "Filter by country, city, currency or language…‌⁠‍",
+    "costs.region_filter_no_results": "No regions match \"{{q}}\"",
+    "costs.region_filter_placeholder": "Filter by country, city, currency or language…‌⁠‍",
     "costs.region_plural": "regions",
     "costs.region_singular": "region",
     "costs.remove_from_favourites": "Remove from favourites",
@@ -4884,14 +4585,12 @@ const resource = {
     "costs.variant_sort_price_asc": "Price ↑",
     "costs.variant_sort_price_desc": "Price ↓",
     "costs.variant_use_average": "Use average rate",
-    "costs.variant_use_default_tooltip":
-      "Apply the average rate without picking a specific variant. You can refine later by clicking the row.",
+    "costs.variant_use_default_tooltip": "Apply the average rate without picking a specific variant. You can refine later by clicking the row.",
     "costs.variant_use_median": "Use median rate",
     "costs.vec_indexing_all": "Generating vectors for all regions...",
     "costs.vec_indexing_region": "Generating vectors for {{name}}...",
     "costs.vec_phase_checking": "Checking pre-built vectors on GitHub...",
-    "costs.vec_phase_embedding":
-      "Generating 384d embeddings from cost items...",
+    "costs.vec_phase_embedding": "Generating 384d embeddings from cost items...",
     "costs.vec_phase_indexing": "Indexing into LanceDB and refreshing stats...",
     "costs.vec_phase_model": "Loading embedding model (first-time only)...",
     "costs.vec_phase_progress": "Step {{step}} of 4",
@@ -4904,8 +4603,7 @@ const resource = {
     "files.activity.title": "活动",
     "files.activity.open": "View activity history",
     "files.activity.empty_title": "No activity yet",
-    "files.activity.empty_hint":
-      "Uploads, renames, and other changes will show up here.",
+    "files.activity.empty_hint": "Uploads, renames, and other changes will show up here.",
     "files.activity.error_title": "Couldn't load activity",
     "files.activity.error_hint": "Check your connection and try again.",
     "files.activity.actor_unknown": "未知用户",
@@ -4919,8 +4617,7 @@ const resource = {
     "files.activity.action.cde_state_changed": "CDE state changed",
     "files.permissions.manage": "Manage access",
     "files.permissions.title": "Folder access",
-    "files.permissions.subtitle":
-      "Restrict who can see and edit files in {{folder}}.",
+    "files.permissions.subtitle": "Restrict who can see and edit files in {{folder}}.",
     "files.permissions.empty": "All project members can access this folder.",
     "files.permissions.list_title": "Current access",
     "files.permissions.grant_title": "Grant access",
@@ -4935,15 +4632,12 @@ const resource = {
     "files.permissions.revoke": "Revoke",
     "files.permissions.revoke_confirm": "Revoke access for {{name}}?",
     "files.permissions.lock_tooltip": "Restricted: {{count}} member can access",
-    "files.permissions.lock_tooltip_plural":
-      "Restricted: {{count}} members can access",
+    "files.permissions.lock_tooltip_plural": "Restricted: {{count}} members can access",
     "files.permissions.error_grant": "Could not grant access.",
     "files.permissions.error_revoke": "Could not revoke access.",
-    "files.permissions.error_duplicate":
-      "This member already has access at this level.",
+    "files.permissions.error_duplicate": "This member already has access at this level.",
     "share.page.title": "Shared file",
-    "share.page.subtitle":
-      "Someone shared a file with you via OpenConstructionERP.",
+    "share.page.subtitle": "Someone shared a file with you via OpenConstructionERP.",
     "share.page.filename_label": "File",
     "share.page.password_prompt": "Enter the password to download.",
     "share.page.password_placeholder": "密码",
@@ -4958,85 +4652,59 @@ const resource = {
     "share.page.loading": "Loading link…",
     "share.page.ready_title": "Ready to download",
     "share.page.ready_body": "Click the button below to download the file.",
-    "files.bulk.delete_all_failed":
-      "None of the {{count}} selected file(s) could be deleted.",
+    "files.bulk.delete_all_failed": "None of the {{count}} selected file(s) could be deleted.",
     "files.bulk.delete_partial": "{{deleted}} of {{total}} deleted",
-    "files.bulk.delete_partial_detail":
-      "{{failed}} file(s) could not be deleted.",
-    "onboarding.mode_simple_desc":
-      "I'm getting started — show me the essentials. A clean interface with the most important features.",
-    "onboarding.mode_advanced_desc":
-      "I'm experienced — show me everything. Full professional toolset with all options visible.",
-    "project_intelligence.ai.cost_advisor_title":
-      "Cost Intelligence Advisor‌⁠‍",
-    "project_intelligence.ai_not_configured_desc":
-      "Connect an AI provider (Anthropic Claude, OpenAI, or Google Gemini) to get personalized, context-aware recommendations for your project. Without AI, you still see rule-based analysis below.",
-    "project_intelligence.ai_not_configured_title":
-      "AI provider not connected‌⁠‍",
+    "files.bulk.delete_partial_detail": "{{failed}} file(s) could not be deleted.",
+    "onboarding.mode_simple_desc": "I'm getting started — show me the essentials. A clean interface with the most important features.",
+    "onboarding.mode_advanced_desc": "I'm experienced — show me everything. Full professional toolset with all options visible.",
+    "project_intelligence.ai.cost_advisor_title": "Cost Intelligence Advisor‌⁠‍",
+    "project_intelligence.ai_not_configured_desc": "Connect an AI provider (Anthropic Claude, OpenAI, or Google Gemini) to get personalized, context-aware recommendations for your project. Without AI, you still see rule-based analysis below.",
+    "project_intelligence.ai_not_configured_title": "AI provider not connected‌⁠‍",
     "project_intelligence.analytics.cost_drivers": "Cost drivers‌⁠‍",
-    "project_intelligence.analytics.cost_drivers_sub":
-      "Top 5 line items by total cost‌⁠‍",
+    "project_intelligence.analytics.cost_drivers_sub": "Top 5 line items by total cost‌⁠‍",
     "project_intelligence.analytics.errors": "errors",
     "project_intelligence.analytics.no_data": "No data yet‌⁠‍",
     "project_intelligence.analytics.price_volatility": "Price volatility‌⁠‍",
-    "project_intelligence.analytics.price_volatility_sub":
-      "Bid total spread across vendors‌⁠‍",
+    "project_intelligence.analytics.price_volatility_sub": "Bid total spread across vendors‌⁠‍",
     "project_intelligence.analytics.schedule_cost": "Schedule ↔ cost",
     "project_intelligence.analytics.schedule_cost_sub": "Labour cost by phase",
     "project_intelligence.analytics.scope_coverage": "Scope coverage",
-    "project_intelligence.analytics.scope_coverage_ratio":
-      "{{current}} of {{baseline}} lines",
-    "project_intelligence.analytics.scope_coverage_sub":
-      "BOQ line count vs baseline",
+    "project_intelligence.analytics.scope_coverage_ratio": "{{current}} of {{baseline}} lines",
+    "project_intelligence.analytics.scope_coverage_sub": "BOQ line count vs baseline",
     "project_intelligence.analytics.validation_live": "Real-time validation",
-    "project_intelligence.analytics.validation_live_sub":
-      "Rule pass count (updates every 60s)",
-    "project_intelligence.analytics.vendor_concentration":
-      "Vendor concentration",
-    "project_intelligence.analytics.vendor_concentration_sub":
-      "Top 3 bidders’ share",
+    "project_intelligence.analytics.validation_live_sub": "Rule pass count (updates every 60s)",
+    "project_intelligence.analytics.vendor_concentration": "Vendor concentration",
+    "project_intelligence.analytics.vendor_concentration_sub": "Top 3 bidders’ share",
     "project_intelligence.analytics.warnings": "warnings",
     "project_intelligence.analyzing": "Analyzing project...‌⁠‍",
     "project_intelligence.analyzing_project": "Analyzing project...",
     "project_intelligence.ask_placeholder": "Ask about this project...",
     "project_intelligence.auth_error": "Session expired‌⁠‍",
-    "project_intelligence.auth_hint":
-      "Please refresh the page or sign in again to continue.",
+    "project_intelligence.auth_hint": "Please refresh the page or sign in again to continue.",
     "project_intelligence.back_to_rec": "Back to recommendations‌⁠‍",
-    "project_intelligence.chat_error":
-      "Sorry, I could not process your question. Please try again.‌⁠‍",
-    "project_intelligence.chat_prompt":
-      'Ask any question about this project. For example: "Why is my score so low?" or "What should I do first?"',
+    "project_intelligence.chat_error": "Sorry, I could not process your question. Please try again.‌⁠‍",
+    "project_intelligence.chat_prompt": "Ask any question about this project. For example: \"Why is my score so low?\" or \"What should I do first?\"",
     "project_intelligence.chat_toggle": "Toggle chat‌⁠‍",
     "project_intelligence.critical_gaps": "Critical Gaps",
     "project_intelligence.enable_failed": "Could not enable the module",
     "project_intelligence.enable_module": "Enable module",
     "project_intelligence.enabling": "Enabling…",
-    "project_intelligence.gaps.dollar_impact":
-      "{{count}} items missing prices → ~{{amount}} cost uncertainty",
+    "project_intelligence.gaps.dollar_impact": "{{count}} items missing prices → ~{{amount}} cost uncertainty",
     "project_intelligence.go_to_ai_settings": "Settings — AI Configuration",
     "project_intelligence.kpi.budget_variance": "Budget variance‌⁠‍",
     "project_intelligence.kpi.risk_adjusted_cost": "Risk-adjusted cost‌⁠‍",
-    "project_intelligence.kpi.risk_sub":
-      "±{{band}} (90% CI, {{count}} anomalies)",
+    "project_intelligence.kpi.risk_sub": "±{{band}} (90% CI, {{count}} anomalies)",
     "project_intelligence.kpi.schedule_health": "Schedule health‌⁠‍",
     "project_intelligence.kpi.schedule_sub": "Activities on baseline‌⁠‍",
-    "project_intelligence.kpi.variance_sub":
-      "Budget {{budget}} · Current {{current}}‌⁠‍",
+    "project_intelligence.kpi.variance_sub": "Budget {{budget}} · Current {{current}}‌⁠‍",
     "project_intelligence.load_error": "Could not load analysis",
-    "project_intelligence.module_disabled_ask_admin":
-      "Ask an admin to enable this module to continue.",
-    "project_intelligence.module_disabled_body":
-      "This dashboard runs against the optional Project Intelligence module. It is currently disabled on this server, so the AI advisor, gap detector and analytics grid have nothing to query.",
-    "project_intelligence.module_disabled_footnote":
-      "No data is collected while the module is off. Enabling is reversible from the Modules page.",
-    "project_intelligence.module_disabled_title":
-      "Project Intelligence is turned off",
-    "project_intelligence.no_gaps_desc":
-      "Your project has no critical issues. Keep refining to tighten variance.",
+    "project_intelligence.module_disabled_ask_admin": "Ask an admin to enable this module to continue.",
+    "project_intelligence.module_disabled_body": "This dashboard runs against the optional Project Intelligence module. It is currently disabled on this server, so the AI advisor, gap detector and analytics grid have nothing to query.",
+    "project_intelligence.module_disabled_footnote": "No data is collected while the module is off. Enabling is reversible from the Modules page.",
+    "project_intelligence.module_disabled_title": "Project Intelligence is turned off",
+    "project_intelligence.no_gaps_desc": "Your project has no critical issues. Keep refining to tighten variance.",
     "project_intelligence.no_gaps_title": "No critical gaps",
-    "project_intelligence.no_recommendations":
-      "No recommendations available yet. Try refreshing the analysis.",
+    "project_intelligence.no_recommendations": "No recommendations available yet. Try refreshing the analysis.",
     "project_intelligence.open_modules_page": "Open Modules page",
     "project_intelligence.page_title_v191": "Estimation Dashboard‌⁠‍",
     "project_intelligence.readiness_title": "Estimation readiness",
@@ -5045,24 +4713,18 @@ const resource = {
     "project_intelligence.role_estimator": "Estimator",
     "project_intelligence.role_explorer": "Explorer",
     "project_intelligence.role_manager": "Manager",
-    "project_intelligence.score_tooltip_v191":
-      "Score weighting (RFC 25): BOQ 40%, Cost Model 30%, Validation 20%, Risk 10%.",
-    "project_intelligence.select_domain":
-      "Select a domain tab above to see detailed metrics.‌⁠‍",
+    "project_intelligence.score_tooltip_v191": "Score weighting (RFC 25): BOQ 40%, Cost Model 30%, Validation 20%, Risk 10%.",
+    "project_intelligence.select_domain": "Select a domain tab above to see detailed metrics.‌⁠‍",
     "project_intelligence.show_more_gaps": "{{count}} more",
     "project_intelligence.thinking": "Thinking...",
     "project_intelligence.unnamed": "Unnamed Project",
-    "project_intelligence.v191_header_desc":
-      "Cost variance, anomalies, bid analytics — refreshed every 60s.",
-    "project_intelligence.v191_select_prompt":
-      "Select a project from the header to see its cost variance, anomalies, and bid analytics.‌⁠‍",
+    "project_intelligence.v191_header_desc": "Cost variance, anomalies, bid analytics — refreshed every 60s.",
+    "project_intelligence.v191_select_prompt": "Select a project from the header to see its cost variance, anomalies, and bid analytics.‌⁠‍",
     "projects.photos.tab_label": "照片",
     "projects.photos.no_project": "No active project",
-    "projects.photos.no_project_desc":
-      "Open a project to view and upload photos.",
+    "projects.photos.no_project_desc": "Open a project to view and upload photos.",
     "projects.photos.empty_title": "No photos yet",
-    "projects.photos.empty_desc":
-      "Upload site photos to keep visual records alongside the project.",
+    "projects.photos.empty_desc": "Upload site photos to keep visual records alongside the project.",
     "projects.photos.upload_cta": "Upload photos",
     "projects.photos.search_placeholder": "Search filename…",
     "projects.photos.search_aria": "Search photos by filename",
@@ -5082,8 +4744,7 @@ const resource = {
     "takeoff.markup.close": "关闭",
     "takeoff.markup.comments_drawer": "Markup comments",
     "takeoff.markup.comments_title": "评论",
-    "takeoff.markup.comments_empty":
-      "No comments yet — be the first to add one.",
+    "takeoff.markup.comments_empty": "No comments yet — be the first to add one.",
     "takeoff.markup.comments_load_failed": "Could not load comments.",
     "takeoff.markup.comment_added": "Comment added",
     "takeoff.markup.comment_deleted": "Comment deleted",
@@ -5093,8 +4754,7 @@ const resource = {
     "takeoff.markup.comment_placeholder": "Write a comment...",
     "takeoff.markup.comment_hint": "Ctrl/Cmd+Enter to send",
     "takeoff.markup.comment_send": "Send",
-    "tendering.award_confirm":
-      "Award this contract to {{company}}? This action cannot be undone.",
+    "tendering.award_confirm": "Award this contract to {{company}}? This action cannot be undone.",
     "tendering.award_confirm_title": "Award contract?",
     "tendering.bid_count": "{{count}} bids‌⁠‍",
     "tendering.close_package": "关闭",
@@ -5104,10 +4764,8 @@ const resource = {
     "tendering.evaluate": "Evaluate Bids",
     "tendering.exported": "Comparison exported",
     "tendering.mark_awarded": "Mark Awarded",
-    "tendering.no_packages_description":
-      "Create a tender from a BOQ to start collecting bids",
-    "tendering.select_project_desc":
-      "Select a project and create a tender from a BOQ to get started",
+    "tendering.no_packages_description": "Create a tender from a BOQ to start collecting bids",
+    "tendering.select_project_desc": "Select a project and create a tender from a BOQ to get started",
     "tendering.select_project_first": "Select a project first",
     "tendering.select_project_title": "Select a project",
     "tendering.start_collecting": "Start Collecting",
@@ -5123,8 +4781,7 @@ const resource = {
     "tendering.status_submitted": "Submitted",
     "conflict.panel_aria_label": "Conflict resolution panel",
     "conflict.panel_title": "Merge Conflict Detected",
-    "conflict.panel_subtitle":
-      "A remote collaborator edited the same field. Choose how to resolve.",
+    "conflict.panel_subtitle": "A remote collaborator edited the same field. Choose how to resolve.",
     "conflict.changed_by": "Changed by",
     "conflict.your_version": "Your version",
     "conflict.their_version": "Their version",
@@ -5138,18 +4795,14 @@ const resource = {
     "conflict.conflict_number": "Conflict",
     "conflict.next": "Next",
     "finance.approve_failed": "Failed to approve invoice",
-    "finance.boq_tip_desc":
-      'Go to your BOQ → Lock the estimate → Click "Create Budget from Estimate" to auto-populate budget lines.',
+    "finance.boq_tip_desc": "Go to your BOQ → Lock the estimate → Click \"Create Budget from Estimate\" to auto-populate budget lines.",
     "finance.boq_tip_title": "提示：",
     "finance.budget_create_failed": "Failed to create budget line",
     "finance.budget_created": "Budget line created successfully",
-    "finance.budget_file_hint":
-      "Columns: WBS Code, Category, Original Budget, Notes",
+    "finance.budget_file_hint": "Columns: WBS Code, Category, Original Budget, Notes",
     "finance.budget_line": "预算",
-    "finance.budget_notes_placeholder":
-      "e.g., Includes contingency for weather delays",
-    "finance.budgets_explanation":
-      "Project budget tracks original vs actual costs by WBS category. Variance is highlighted green when under budget, red when over.",
+    "finance.budget_notes_placeholder": "e.g., Includes contingency for weather delays",
+    "finance.budgets_explanation": "Project budget tracks original vs actual costs by WBS category. Variance is highlighted green when under budget, red when over.",
     "finance.cat_equipment": "设备",
     "finance.cat_labor": "Labor",
     "finance.cat_material": "Material",
@@ -5163,10 +4816,8 @@ const resource = {
     "finance.create_snapshot": "Create Snapshot",
     "finance.currency": "货币",
     "finance.direction": "Direction",
-    "finance.drop_budget_file":
-      "Drop Excel or CSV file here, or click to browse",
-    "finance.evm_explanation":
-      "Earned Value Management (EVM) compares planned progress with actual performance. SPI > 1.0 = ahead of schedule. CPI > 1.0 = under budget. Create snapshots periodically to track trends over time.",
+    "finance.drop_budget_file": "Drop Excel or CSV file here, or click to browse",
+    "finance.evm_explanation": "Earned Value Management (EVM) compares planned progress with actual performance. SPI > 1.0 = ahead of schedule. CPI > 1.0 = under budget. Create snapshots periodically to track trends over time.",
     "finance.evm_hint_cost": "cost efficiency",
     "finance.evm_hint_forecast": "forecast total cost",
     "finance.evm_hint_schedule": "schedule efficiency",
@@ -5180,14 +4831,11 @@ const resource = {
     "finance.import": "Import",
     "finance.import_btn": "Import",
     "finance.import_budgets": "Import Budgets",
-    "finance.import_result":
-      "Imported: {{imported}}, Skipped: {{skipped}}, Errors: {{errors}}",
+    "finance.import_result": "Imported: {{imported}}, Skipped: {{skipped}}, Errors: {{errors}}",
     "finance.invoice_create_failed": "Failed to create invoice",
     "finance.invoice_created": "Invoice created successfully",
-    "finance.invoice_desc_placeholder":
-      "e.g., Progress payment for concrete works - Phase 2",
-    "finance.invoices_explanation":
-      "Track all project invoices in one place. Payable = invoices from subcontractors/vendors. Receivable = invoices you send to clients. Mark invoices as paid to auto-generate payment records.",
+    "finance.invoice_desc_placeholder": "e.g., Progress payment for concrete works - Phase 2",
+    "finance.invoices_explanation": "Track all project invoices in one place. Payable = invoices from subcontractors/vendors. Receivable = invoices you send to clients. Mark invoices as paid to auto-generate payment records.",
     "finance.invoices_export_failed": "Failed to export invoices",
     "finance.invoices_export_success": "Invoices exported successfully",
     "finance.link_to_boq": "BOQ Estimate‌⁠‍",
@@ -5195,15 +4843,12 @@ const resource = {
     "finance.new_invoice": "New Invoice",
     "finance.no_budget_match": "No matching budget lines",
     "finance.no_invoices_match": "No matching invoices",
-    "finance.no_invoices_match_desc":
-      "Try adjusting your search or status filter.",
+    "finance.no_invoices_match_desc": "Try adjusting your search or status filter.",
     "finance.notes": "Notes / Description",
     "finance.pay_failed": "Failed to mark invoice as paid",
     "finance.payable_desc": "Invoice you need to pay",
-    "finance.payable_receivable_tooltip":
-      "Payable = invoices you owe to vendors. Receivable = invoices clients owe to you.",
-    "finance.payments_explanation":
-      "Payment records are created when invoices are marked as paid.",
+    "finance.payable_receivable_tooltip": "Payable = invoices you owe to vendors. Receivable = invoices clients owe to you.",
+    "finance.payments_explanation": "Payment records are created when invoices are marked as paid.",
     "finance.receivable_desc": "Invoice you're sending",
     "finance.search_client": "Search client...",
     "finance.search_vendor": "Search vendor...",
@@ -5234,19 +4879,15 @@ const resource = {
     "notification.task_assigned_title": "New task assigned",
     "notification.task_assigned_body": "{{task_title}}",
     "notification.invoice_approved_title": "Invoice approved",
-    "notification.invoice_approved_body":
-      "Invoice {{invoice_number}} — {{amount_total}} {{currency_code}}",
+    "notification.invoice_approved_body": "Invoice {{invoice_number}} — {{amount_total}} {{currency_code}}",
     "notification.inspection_scheduled_title": "Inspection scheduled",
-    "notification.inspection_scheduled_body":
-      "{{inspection_number}} — {{title}} on {{inspection_date}}",
+    "notification.inspection_scheduled_body": "{{inspection_number}} — {{title}} on {{inspection_date}}",
     "notification.submittal_status_changed_title": "Submittal status changed",
-    "notification.submittal_status_changed_body":
-      "{{submittal_number}} ({{title}}) — {{new_status}}",
+    "notification.submittal_status_changed_body": "{{submittal_number}} ({{title}}) — {{new_status}}",
     "notification.meeting_scheduled_title": "Meeting scheduled",
     "notification.meeting_scheduled_body": "{{title}} on {{meeting_date}}",
     "notification.ncr_created_title": "Non-conformance raised",
-    "notification.ncr_created_body":
-      "NCR {{ncr_number}} — {{title}} ({{severity}})",
+    "notification.ncr_created_body": "NCR {{ncr_number}} — {{title}} ({{severity}})",
     "notification.document_uploaded_title": "Document uploaded",
     "notification.document_uploaded_body": "{{document_name}}",
     "procurement.add_item": "添加项目",
@@ -5267,8 +4908,7 @@ const resource = {
     "procurement.no_gr_match": "No matching goods receipts",
     "procurement.no_po_match": "No matching purchase orders",
     "procurement.notes": "Notes",
-    "procurement.notes_placeholder":
-      "Optional notes or special instructions...",
+    "procurement.notes_placeholder": "Optional notes or special instructions...",
     "procurement.payment_terms": "Payment Terms",
     "procurement.po_created": "Purchase order created",
     "procurement.po_type": "PO Type",
@@ -5279,87 +4919,60 @@ const resource = {
     "procurement.subtotal": "Subtotal",
     "procurement.tax": "Tax",
     "procurement.total": "Total",
-    "bim.upload_generate_pdf_help":
-      "Exports the sheets the designer prepared inside the model as a single PDF into Documents. Runs after the model is ready — upload is not delayed.",
+    "bim.upload_generate_pdf_help": "Exports the sheets the designer prepared inside the model as a single PDF into Documents. Runs after the model is ready — upload is not delayed.",
     "match_elements.info.button_aria": "How matching works",
     "match_elements.info.button_title": "How matching works",
     "match_elements.info.dialog_aria": "How matching works",
     "match_elements.info.title": "How matching works",
     "match_elements.info.bullet_upload": "Upload your BIM model or BoQ.",
-    "match_elements.info.bullet_extract":
-      "We extract elements: descriptions, units, quantities, regions, classification.",
-    "match_elements.info.bullet_search":
-      "Each element is searched against the selected cost catalogue using vector similarity + lexical hints + region/unit boost.",
-    "match_elements.info.bullet_shortlist":
-      "You get a confidence-scored shortlist per element — pick the best, edit quantity if needed.",
-    "match_elements.info.bullet_save":
-      "Save the session — you can revisit, edit, and export it as BoQ later.",
-    "match_elements.info.footer":
-      "Saved sessions live in the list on this page.",
+    "match_elements.info.bullet_extract": "We extract elements: descriptions, units, quantities, regions, classification.",
+    "match_elements.info.bullet_search": "Each element is searched against the selected cost catalogue using vector similarity + lexical hints + region/unit boost.",
+    "match_elements.info.bullet_shortlist": "You get a confidence-scored shortlist per element — pick the best, edit quantity if needed.",
+    "match_elements.info.bullet_save": "Save the session — you can revisit, edit, and export it as BoQ later.",
+    "match_elements.info.footer": "Saved sessions live in the list on this page.",
     "match_elements.group_by_show_all": "Show all ({{count}})",
     "match_elements.group_by_show_less": "Show less",
-    "match_elements.group_by_show_all_help":
-      "Tenant-specific attributes from this BIM model",
+    "match_elements.group_by_show_all_help": "Tenant-specific attributes from this BIM model",
     "match_elements.region_bim_models": "BIM model",
-    "match_elements.region_bim_models_help":
-      "Pick the source model — quantities are read from here",
+    "match_elements.region_bim_models_help": "Pick the source model — quantities are read from here",
     "match_elements.region_sessions": "Matching session",
-    "match_elements.region_sessions_help":
-      "Resume an existing run or start a new one",
+    "match_elements.region_sessions_help": "Resume an existing run or start a new one",
     "match_elements.region_settings": "Match settings",
-    "match_elements.region_settings_help":
-      "Tune how matches are found and what shows up below",
+    "match_elements.region_settings_help": "Tune how matches are found and what shows up below",
     "match_elements.session_confirmed": "confirmed",
-    "match_elements.region_lang_help":
-      "Project region resolves to this language → cwicr_{{lang}}_v3 collection",
+    "match_elements.region_lang_help": "Project region resolves to this language → cwicr_{{lang}}_v3 collection",
     "match_elements.project_settings": "Project settings",
-    "match_elements.project_settings_help":
-      "Open project settings (region, currency, locale, fx rates)",
+    "match_elements.project_settings_help": "Open project settings (region, currency, locale, fx rates)",
     "match_elements.vector_status_loading": "Checking vector DB…",
     "match_elements.vector_status_ready": "Vector DB ready",
-    "match_elements.vector_status_ready_detail":
-      "{{lang}} · {{rateCount}} rates · {{collection}}",
+    "match_elements.vector_status_ready_detail": "{{lang}} · {{rateCount}} rates · {{collection}}",
     "match_elements.vector_status_empty": "Vector DB empty",
-    "match_elements.vector_status_empty_detail":
-      "{{lang}} · {{collection}} loaded but 0 rates — vectorize on /costs",
+    "match_elements.vector_status_empty_detail": "{{lang}} · {{collection}} loaded but 0 rates — vectorize on /costs",
     "match_elements.vector_status_missing": "Collection not loaded",
-    "match_elements.vector_status_missing_detail":
-      '{{collection}} for language "{{lang}}" not in Qdrant — visit /costs to vectorize',
+    "match_elements.vector_status_missing_detail": "{{collection}} for language \"{{lang}}\" not in Qdrant — visit /costs to vectorize",
     "match_elements.vector_status_no_country": "Region/language unknown",
-    "match_elements.vector_status_no_country_detail":
-      "Set the project region in /projects/.../settings to pin the collection",
+    "match_elements.vector_status_no_country_detail": "Set the project region in /projects/.../settings to pin the collection",
     "match_elements.vector_status_non_qdrant": "Legacy LanceDB backend",
-    "match_elements.vector_status_non_qdrant_detail":
-      "Per-language collections only apply on Qdrant — current engine is LanceDB",
+    "match_elements.vector_status_non_qdrant_detail": "Per-language collections only apply on Qdrant — current engine is LanceDB",
     "match_elements.vector_status_disconnected": "Vector DB unreachable",
-    "match_elements.vector_status_disconnected_detail":
-      "Qdrant is not responding · {{error}}",
-    "match_elements.vector_status_disconnected_help":
-      "Qdrant is not responding — matchers will fall back to lexical only",
+    "match_elements.vector_status_disconnected_detail": "Qdrant is not responding · {{error}}",
+    "match_elements.vector_status_disconnected_help": "Qdrant is not responding — matchers will fall back to lexical only",
     "match_elements.vector_status_open_costs": "Open /costs",
-    "match_elements.lang_mismatch_title":
-      "Catalogue language does not match project",
-    "match_elements.lang_mismatch_detail":
-      "Project region {{region}} speaks {{projLang}}, but the bound catalogue {{catalogue}} is in {{boundLang}}. Match results will surface in the wrong language until you re-bind.",
+    "match_elements.lang_mismatch_title": "Catalogue language does not match project",
+    "match_elements.lang_mismatch_detail": "Project region {{region}} speaks {{projLang}}, but the bound catalogue {{catalogue}} is in {{boundLang}}. Match results will surface in the wrong language until you re-bind.",
     "match_elements.lang_mismatch_rebind": "Re-bind catalogue",
     "match_elements.lang_mismatch_open_costs": "Or load a {{lang}} catalogue",
     "match_elements.advisor_mismatch_title": "Switch to a {{lang}} catalogue",
-    "match_elements.advisor_mismatch_detail":
-      "Pick a {{lang}} catalogue below — your project speaks {{lang}}, so matches need to come from a same-language rate book.",
-    "match_elements.advisor_missing_title":
-      "{{lang}} vector collection not loaded",
-    "match_elements.advisor_missing_detail":
-      "Pick a ready catalogue below, or load a new one.",
+    "match_elements.advisor_mismatch_detail": "Pick a {{lang}} catalogue below — your project speaks {{lang}}, so matches need to come from a same-language rate book.",
+    "match_elements.advisor_missing_title": "{{lang}} vector collection not loaded",
+    "match_elements.advisor_missing_detail": "Pick a ready catalogue below, or load a new one.",
     "match_elements.advisor_empty_title": "Catalogue not vectorised yet",
-    "match_elements.advisor_empty_detail":
-      "Pick a different ready catalogue below, or vectorise the current one.",
+    "match_elements.advisor_empty_detail": "Pick a different ready catalogue below, or vectorise the current one.",
     "match_elements.advisor_loading": "Loading available catalogues…",
     "match_elements.advisor_region_match": "Best",
     "match_elements.advisor_rates_count": "{{n}} rates",
-    "match_elements.advisor_none_available":
-      "No {{lang}} catalogues are loaded yet. Visit /costs to import one.",
-    "match_elements.advisor_install_hint":
-      "No {{lang}} catalogues loaded yet. One-click install:",
+    "match_elements.advisor_none_available": "No {{lang}} catalogues are loaded yet. Visit /costs to import one.",
+    "match_elements.advisor_install_hint": "No {{lang}} catalogues loaded yet. One-click install:",
     "match_elements.advisor_install_size": "~{{mb}} MB · {{lang}}",
     "match_elements.advisor_browse_all": "All on Hugging Face",
     "match_elements.hero_eyebrow": "BIM → BOQ",
@@ -5377,17 +4990,12 @@ const resource = {
     "match_elements.step_4_help": "Write to BOQ",
     "match_elements.embedder_loading": "Checking language model…",
     "match_elements.embedder_required_title": "Free language model required",
-    "match_elements.embedder_required_body":
-      "OpenConstructionERP uses BGE-M3 — a free, open-source multilingual encoder by BAAI. It runs entirely on your machine. No API key. No cloud calls. Install once with one command:",
+    "match_elements.embedder_required_body": "OpenConstructionERP uses BGE-M3 — a free, open-source multilingual encoder by BAAI. It runs entirely on your machine. No API key. No cloud calls. Install once with one command:",
     "match_elements.embedder_loaded_title": "Language model ready",
-    "match_elements.embedder_loaded_caption":
-      "{{model}} · {{precision}} · ~{{size}} MB · {{license}} · {{n}}+ languages",
-    "match_elements.embedder_runtime_caption":
-      "Runtime: {{runtime}} · model_loaded={{loaded}}",
-    "match_elements.embedder_install_hint_after":
-      "After install, restart the backend.",
-    "match_elements.embedder_size_caption":
-      "~{{int8}} MB download (INT8) or ~{{fp32}} MB (FP32).",
+    "match_elements.embedder_loaded_caption": "{{model}} · {{precision}} · ~{{size}} MB · {{license}} · {{n}}+ languages",
+    "match_elements.embedder_runtime_caption": "Runtime: {{runtime}} · model_loaded={{loaded}}",
+    "match_elements.embedder_install_hint_after": "After install, restart the backend.",
+    "match_elements.embedder_size_caption": "~{{int8}} MB download (INT8) or ~{{fp32}} MB (FP32).",
     "match_elements.embedder_languages_caption": "{{n}}+ languages",
     "match_elements.embedder_runs_locally": "Runs locally",
     "match_elements.embedder_no_api_key": "No API key",
@@ -5398,10 +5006,8 @@ const resource = {
     "match_elements.analytics_title": "Match analytics",
     "match_elements.analytics_alerts_count": "{{n}} alert",
     "match_elements.analytics_alerts_count_plural": "{{n}} alerts",
-    "match_elements.analytics_caption":
-      "{{n}} searches · {{picks}} picks · pick rate {{rate}} · mean score {{score}} · last {{days}}d",
-    "match_elements.analytics_empty_caption":
-      "No searches yet in the last {{days}}d window — run /match-elements to populate.",
+    "match_elements.analytics_caption": "{{n}} searches · {{picks}} picks · pick rate {{rate}} · mean score {{score}} · last {{days}}d",
+    "match_elements.analytics_empty_caption": "No searches yet in the last {{days}}d window — run /match-elements to populate.",
     "match_elements.analytics_window_label": "Window",
     "match_elements.analytics_window_days": "{{n}}d",
     "match_elements.analytics_tile_searches": "Searches",
@@ -5442,18 +5048,14 @@ const resource = {
     "match_progress.title_running": "正在匹配",
     "match_progress.title_done": "匹配完成",
     "match_progress.title_error": "匹配失败",
-    "match_progress.subtitle_running":
-      "We’re searching the catalogue with vector + lexical + region signals. Safe to leave open in a tab.",
-    "match_progress.subtitle_done":
-      "All stages green — handing over to the review panel.",
-    "match_progress.subtitle_error":
-      "The matcher couldn’t finish — try again or pick a different catalogue.",
+    "match_progress.subtitle_running": "We’re searching the catalogue with vector + lexical + region signals. Safe to leave open in a tab.",
+    "match_progress.subtitle_done": "All stages green — handing over to the review panel.",
+    "match_progress.subtitle_error": "The matcher couldn’t finish — try again or pick a different catalogue.",
     "match_progress.elapsed": "已用时间",
     "match_progress.overall_aria": "Overall match progress",
     "match_progress.headline_done": "All done — opening your results",
     "match_progress.headline_error": "Something went wrong",
-    "match_progress.headline_long":
-      "Almost done — large projects can take a minute",
+    "match_progress.headline_long": "Almost done — large projects can take a minute",
     "match_progress.stage_load": "Loading BIM elements",
     "match_progress.stage_embed": "Building embeddings",
     "match_progress.stage_vector": "Vector search (top candidates)",
@@ -5463,8 +5065,7 @@ const resource = {
     "match_progress.error_label": "Error details",
     "match_progress.error_fallback": "Unknown error",
     "match_progress.retry": "Try again",
-    "match_progress.long_hint":
-      "Still working — first runs on large BIM models take longer because vectors are warming up. Subsequent runs on the same project are much faster.",
+    "match_progress.long_hint": "Still working — first runs on large BIM models take longer because vectors are warming up. Subsequent runs on the same project are much faster.",
     "match_progress.toast_failed_title": "匹配失败",
     "projects.team.strip_label": "Project team",
     "projects.team.empty": "No members yet",
@@ -5519,8 +5120,7 @@ const resource = {
     "boq.model_link_agg_first": "首项",
     "boq.model_link_create": "创建关联",
     "boq.model_link_created": "已创建模型关联",
-    "boq.model_link_created_hint":
-      "数量尚未更新——请使用“从模型刷新”再“应用”以拉取数据。",
+    "boq.model_link_created_hint": "数量尚未更新——请使用“从模型刷新”再“应用”以拉取数据。",
     "boq.model_link_delete": "删除关联",
     "boq.model_link_delete_failed": "无法移除模型关联",
     "boq.model_link_deleted": "已移除模型关联",
@@ -5539,8 +5139,7 @@ const resource = {
     "boq.model_link_status_active": "已同步",
     "boq.model_link_status_stale": "已过期",
     "boq.model_link_status_broken": "已断开",
-    "boq.model_link_subtitle":
-      "清单项 {{ordinal}} — 将其数量绑定到 BIM 模型构件",
+    "boq.model_link_subtitle": "清单项 {{ordinal}} — 将其数量绑定到 BIM 模型构件",
     "boq.model_link_title": "模型关联",
     "boq.model_link_version": "模型 v{{v}}",
     "boq.model_review_all_synced": "所有关联数量均与模型同步。",
@@ -5549,51 +5148,39 @@ const resource = {
     "boq.model_review_apply_failed": "应用失败",
     "boq.model_review_btn": "模型同步",
     "boq.model_review_btn_hint": "从关联的 BIM 模型重新拉取数量",
-    "boq.model_review_hint":
-      "依据最新模型版本重新计算关联数量。在点击“应用”之前不会发生变更。",
+    "boq.model_review_hint": "依据最新模型版本重新计算关联数量。在点击“应用”之前不会发生变更。",
     "boq.model_review_missing": "{{count}} 项缺失",
     "boq.model_review_no_links": "本工程量清单中无模型关联",
     "boq.model_review_refresh": "从模型刷新",
     "boq.model_review_refresh_failed": "从模型刷新失败",
     "boq.model_review_run": "执行刷新以查看模型驱动的变更。",
     "boq.model_review_title": "模型数量复核",
-    "boq.position_added_edit_hint":
-      "输入描述,然后使用 Tab 依次切换单位、数量与单价",
-    "boq.link_badge_instance":
-      "代码 {{code}} 的关联实例 — 编辑其定义会使其分歧",
+    "boq.position_added_edit_hint": "输入描述,然后使用 Tab 依次切换单位、数量与单价",
+    "boq.link_badge_instance": "代码 {{code}} 的关联实例 — 编辑其定义会使其分歧",
     "boq.link_badge_master": "代码 {{code}} 的主项 — 已关联 {{count}} 项",
     "boq.link_master_badge": "主项",
     "boq.link_propagated_msg": "已在本项目中更新 {{count}} 个关联清单项。",
     "boq.link_propagated_title": "定义已传播",
-    "boq.max_depth_reached_tooltip":
-      "已达到最大嵌套层级 {{max}} — 请扁平化结构或减少子层级。",
-    "boq.resource_link_propagated_msg":
-      "共享资源已在本项目中另 {{count}} 个清单项上更新。",
+    "boq.max_depth_reached_tooltip": "已达到最大嵌套层级 {{max}} — 请扁平化结构或减少子层级。",
+    "boq.resource_link_propagated_msg": "共享资源已在本项目中另 {{count}} 个清单项上更新。",
     "boq.resource_link_propagated_title": "资源定义已传播",
     "boq.link_role_instance": "关联实例",
     "boq.link_role_master": "主项(基准定义)",
-    "boq.link_unlinked_msg":
-      "您的编辑改变了该关联副本,因此它不再遵循共享代码。如不打算让其分歧,请将代码改回原值。",
+    "boq.link_unlinked_msg": "您的编辑改变了该关联副本,因此它不再遵循共享代码。如不打算让其分歧,请将代码改回原值。",
     "boq.link_unlinked_title": "清单项已与共享代码解除关联",
-    "boq.linked_positions_count":
-      "{{total}} 个清单项共享此代码({{instances}} 个关联实例)。主项为基准定义;编辑主项会传播至本项目中所有实例。",
+    "boq.linked_positions_count": "{{total}} 个清单项共享此代码({{instances}} 个关联实例)。主项为基准定义;编辑主项会传播至本项目中所有实例。",
     "boq.linked_positions_error": "无法加载关联清单项。",
-    "boq.linked_positions_none":
-      "此清单项为独立项 — 没有其他清单项共享其代码。",
-    "boq.linked_positions_subtitle":
-      "代码 {{code}} — 从清单项 {{ordinal}} 查看",
+    "boq.linked_positions_none": "此清单项为独立项 — 没有其他清单项共享其代码。",
+    "boq.linked_positions_subtitle": "代码 {{code}} — 从清单项 {{ordinal}} 查看",
     "boq.linked_positions_title": "关联清单项",
     "boq.no_description": "(无描述)",
     "boq.reuse_code_action": "复用已有代码…",
     "boq.reuse_code_existing": "已有代码:{{codes}}",
-    "boq.reuse_code_msg":
-      "已创建关联实例 — {{count}} 个清单项共享此代码。其数量可独立编辑。",
-    "boq.reuse_code_prompt":
-      "输入一个已有代码以在此复用(其定义与子项被复制;数量保持独立):",
+    "boq.reuse_code_msg": "已创建关联实例 — {{count}} 个清单项共享此代码。其数量可独立编辑。",
+    "boq.reuse_code_prompt": "输入一个已有代码以在此复用(其定义与子项被复制;数量保持独立):",
     "boq.reuse_code_title": "已复用代码 {{code}}",
     "boq.show_linked": "显示关联清单项",
-    "boq.unlink_done_msg":
-      "保留代码 {{code}}。此清单项不再遵循共享代码;其值已保留。",
+    "boq.unlink_done_msg": "保留代码 {{code}}。此清单项不再遵循共享代码;其值已保留。",
     "boq.unlink_done_title": "清单项已解除关联",
     "boq.unlink_failed": "解除清单项关联失败",
     "boq.unlink_this": "解除此清单项关联",
@@ -5615,10 +5202,8 @@ const resource = {
     "nav.phase_execution": "执行",
     "nav.phase_closure": "质量与收尾",
     "nav.clash_detection": "碰撞检查",
-    "schedule_advanced.master_hint":
-      "选择一个主进度计划,将其作为“阶段”“前瞻”“周计划”“约束”等选项卡的工作计划。可通过行操作重命名、修改计划日期与状态,或删除。",
-    "schedule_advanced.no_master_yet_desc":
-      "主进度计划是顶层计划,所有阶段计划、前瞻与周工作计划都汇总到它。创建一个以开始拉动式计划——可随时重命名、调整日期或删除。",
+    "schedule_advanced.master_hint": "选择一个主进度计划,将其作为“阶段”“前瞻”“周计划”“约束”等选项卡的工作计划。可通过行操作重命名、修改计划日期与状态,或删除。",
+    "schedule_advanced.no_master_yet_desc": "主进度计划是顶层计划,所有阶段计划、前瞻与周工作计划都汇总到它。创建一个以开始拉动式计划——可随时重命名、调整日期或删除。",
     "schedule_advanced.active_selection": "工作计划",
     "schedule_advanced.master_status.active": "活动",
     "schedule_advanced.master_status.archived": "归档",
@@ -5626,140 +5211,95 @@ const resource = {
     "schedule_advanced.master_updated": "主进度计划已更新",
     "schedule_advanced.master_deleted": "主进度计划已删除",
     "schedule_advanced.delete_master_title": "是否删除主进度计划?",
-    "schedule_advanced.delete_master_message":
-      "“{{name}}” 及其下的所有内容——阶段计划、前瞻、周计划、承诺与基线——将被永久删除。此操作无法撤销。",
+    "schedule_advanced.delete_master_message": "“{{name}}” 及其下的所有内容——阶段计划、前瞻、周计划、承诺与基线——将被永久删除。此操作无法撤销。",
     "schedule_advanced.err_master_name_required": "主进度计划名称为必填项。",
     "schedule_advanced.master_name_placeholder": "如:施工主进度计划",
-    "schedule_advanced.master_status_hint":
-      "归档某个进度计划可保留其历史而不作为工作计划。已归档的计划可随时在此重新启用。",
+    "schedule_advanced.master_status_hint": "归档某个进度计划可保留其历史而不作为工作计划。已归档的计划可随时在此重新启用。",
     "schedule_advanced.master_notes_placeholder": "范围、合同参考、关键里程碑…",
     "files.cta.add_first_short": "添加文件",
     "files.folder.files_count": "文件",
     "files.folder.subfolders": "{{count}} 个文件夹",
     "files.folder.share": "占总存储 {{pct}}%",
     "notifications.safety.incident_created": "已报告安全事故",
-    "notifications.safety.incident_created_body":
-      "事故 {{incident_number}}({{severity}}):{{description}}",
+    "notifications.safety.incident_created_body": "事故 {{incident_number}}({{severity}}):{{description}}",
     "notifications.safety.high_risk_observation": "高风险安全观察",
-    "notifications.safety.high_risk_body":
-      "观察 {{observation_number}}(风险 {{risk_score}}):{{description}}",
+    "notifications.safety.high_risk_body": "观察 {{observation_number}}(风险 {{risk_score}}):{{description}}",
     "notifications.bi.alert.title": "看板告警已触发",
-    "notifications.bi.alert.body":
-      "{{alert_name}} — {{kpi_code}} 为 {{value}}({{condition}} 阈值 {{threshold}})。",
+    "notifications.bi.alert.body": "{{alert_name}} — {{kpi_code}} 为 {{value}}({{condition}} 阈值 {{threshold}})。",
     "notifications.bi.report.title": "定时报表已就绪",
-    "notifications.bi.report.body":
-      "报表 {{report_code}} 已生成,共 {{row_count}} 行。",
+    "notifications.bi.report.body": "报表 {{report_code}} 已生成,共 {{row_count}} 行。",
     "notifications.supplier_catalogs.po.sent.title": "采购订单已发送",
-    "notifications.supplier_catalogs.po.sent.body":
-      "已向供应商 {{vendor_id}} 发送采购订单,金额 {{total}} {{currency}}。",
+    "notifications.supplier_catalogs.po.sent.body": "已向供应商 {{vendor_id}} 发送采购订单,金额 {{total}} {{currency}}。",
     "notifications.supplier_catalogs.invoice.exception.title": "发票异常",
-    "notifications.supplier_catalogs.invoice.exception.body":
-      "采购订单 {{po_id}} 的发票需要复核:{{reason}}",
+    "notifications.supplier_catalogs.invoice.exception.body": "采购订单 {{po_id}} 的发票需要复核:{{reason}}",
     "notifications.supplier_catalogs.stock.low.title": "库存不足提醒",
-    "notifications.supplier_catalogs.stock.low.body":
-      "{{sku}}:剩余 {{available_qty}},已达到或低于再订货点 {{reorder_point}}。",
-    "notifications.supplier_catalogs.vendor.blacklisted.title":
-      "供应商被列入黑名单",
-    "notifications.supplier_catalogs.vendor.blacklisted.body":
-      "供应商 {{code}} 已被列入黑名单:{{reason}}",
+    "notifications.supplier_catalogs.stock.low.body": "{{sku}}:剩余 {{available_qty}},已达到或低于再订货点 {{reorder_point}}。",
+    "notifications.supplier_catalogs.vendor.blacklisted.title": "供应商被列入黑名单",
+    "notifications.supplier_catalogs.vendor.blacklisted.body": "供应商 {{code}} 已被列入黑名单:{{reason}}",
     "notifications.supplier_catalogs.kyc.expired.title": "供应商合规文档已过期",
-    "notifications.supplier_catalogs.kyc.expired.body":
-      "{{doc_type}} 已于 {{expires_on}} 过期。",
-    "notifications.supplier_catalogs.kyc.expiring.title":
-      "供应商合规文档即将过期",
-    "notifications.supplier_catalogs.kyc.expiring.body":
-      "{{doc_type}} 将于 {{expires_on}} 过期(剩余 {{days_until_expiry}} 天)。",
+    "notifications.supplier_catalogs.kyc.expired.body": "{{doc_type}} 已于 {{expires_on}} 过期。",
+    "notifications.supplier_catalogs.kyc.expiring.title": "供应商合规文档即将过期",
+    "notifications.supplier_catalogs.kyc.expiring.body": "{{doc_type}} 将于 {{expires_on}} 过期(剩余 {{days_until_expiry}} 天)。",
     "notifications.resources.cert_expiring.title": "资质即将过期",
-    "notifications.resources.cert_expiring.body":
-      "{{resource_name}} — {{cert_type}} 于 {{valid_until}} 到期(剩余 {{days_left}} 天)。",
+    "notifications.resources.cert_expiring.body": "{{resource_name}} — {{cert_type}} 于 {{valid_until}} 到期(剩余 {{days_left}} 天)。",
     "notifications.resources.assignment_proposed.title": "已提出资源分配建议",
-    "notifications.resources.assignment_proposed.body":
-      "针对任务 {{task}} 自 {{start}} 起的建议分配。",
+    "notifications.resources.assignment_proposed.body": "针对任务 {{task}} 自 {{start}} 起的建议分配。",
     "notifications.resources.assignment_confirmed.title": "资源分配已确认",
-    "notifications.resources.assignment_confirmed.body":
-      "任务 {{task}} 的分配已确认。",
+    "notifications.resources.assignment_confirmed.body": "任务 {{task}} 的分配已确认。",
     "notifications.contracts.signed.title": "合同已签订",
-    "notifications.contracts.signed.body":
-      "合同 {{code}} 签订金额 {{value}} {{currency}}。",
+    "notifications.contracts.signed.body": "合同 {{code}} 签订金额 {{value}} {{currency}}。",
     "notifications.contracts.claim_submitted.title": "已提交合同索赔",
-    "notifications.contracts.claim_submitted.body":
-      "已提交 {{amount}} {{currency}} 的索赔。",
+    "notifications.contracts.claim_submitted.body": "已提交 {{amount}} {{currency}} 的索赔。",
     "notifications.contracts.claim_paid.title": "合同索赔已支付",
-    "notifications.contracts.claim_paid.body":
-      "已支付索赔:{{amount}} {{currency}}。",
+    "notifications.contracts.claim_paid.body": "已支付索赔:{{amount}} {{currency}}。",
     "notifications.contracts.retention_released.title": "质保金已释放",
-    "notifications.contracts.retention_released.body":
-      "合同 {{contract_code}}:已释放 {{amount_released}},剩余 {{remaining}}。",
+    "notifications.contracts.retention_released.body": "合同 {{contract_code}}:已释放 {{amount_released}},剩余 {{remaining}}。",
     "notifications.crm.lead_qualified.title": "线索已合格化",
     "notifications.crm.lead_qualified.body": "线索 {{name}} 已合格化。",
     "notifications.crm.opportunity_won.title": "商机赢单",
-    "notifications.crm.opportunity_won.body":
-      "{{name}} 赢单 — 价值 {{value}}。",
+    "notifications.crm.opportunity_won.body": "{{name}} 赢单 — 价值 {{value}}。",
     "notifications.crm.opportunity_scored.title": "商机已评分",
-    "notifications.crm.opportunity_scored.body":
-      "{{title}} 评分 {{score}}(区间 {{band}})。",
+    "notifications.crm.opportunity_scored.body": "{{title}} 评分 {{score}}(区间 {{band}})。",
     "notifications.carbon.boq_position_assigned.title": "已分配碳因子",
-    "notifications.carbon.boq_position_assigned.body":
-      "清单项 {{boq_position_id}}:{{carbon_kg}} kg CO₂e({{stage}})。",
+    "notifications.carbon.boq_position_assigned.body": "清单项 {{boq_position_id}}:{{carbon_kg}} kg CO₂e({{stage}})。",
     "notifications.property_dev.buyer_contracted.title": "买家已签约",
-    "notifications.property_dev.buyer_contracted.body":
-      "{{buyer}} 已签约地块 {{plot}}。",
+    "notifications.property_dev.buyer_contracted.body": "{{buyer}} 已签约地块 {{plot}}。",
     "notifications.property_dev.handover_completed.title": "交付完成",
-    "notifications.property_dev.handover_completed.body":
-      "地块 {{plot}} 交付完成。",
+    "notifications.property_dev.handover_completed.body": "地块 {{plot}} 交付完成。",
     "notifications.property_dev.warranty_raised.title": "已提出保修索赔",
-    "notifications.property_dev.warranty_raised.body":
-      "地块 {{plot}} 的 {{category}} 保修索赔已提出。",
+    "notifications.property_dev.warranty_raised.body": "地块 {{plot}} 的 {{category}} 保修索赔已提出。",
     "notifications.bid_management.invitation_sent.title": "投标邀请已发出",
-    "notifications.bid_management.invitation_sent.body":
-      "{{package}} 的邀请已发出,截止 {{due}}。",
+    "notifications.bid_management.invitation_sent.body": "{{package}} 的邀请已发出,截止 {{due}}。",
     "notifications.bid_management.awarded.title": "已中标",
-    "notifications.bid_management.awarded.body":
-      "{{package}} 以 {{amount}} 中标。",
-    "notifications.schedule_advanced.constraint_cleared.title":
-      "进度约束已解除",
-    "notifications.schedule_advanced.constraint_cleared.body":
-      "任务 {{task}} 不再被阻塞。",
+    "notifications.bid_management.awarded.body": "{{package}} 以 {{amount}} 中标。",
+    "notifications.schedule_advanced.constraint_cleared.title": "进度约束已解除",
+    "notifications.schedule_advanced.constraint_cleared.body": "任务 {{task}} 不再被阻塞。",
     "notifications.daily_diary.signed.title": "施工日志已签署",
     "notifications.daily_diary.signed.body": "{{date}} 的日志已签署。",
     "notifications.service.ticket_dispatched.title": "服务工单已派发",
-    "notifications.service.ticket_dispatched.body":
-      "工单 {{ticket_number}} 已派发(优先级 {{priority}})。",
+    "notifications.service.ticket_dispatched.body": "工单 {{ticket_number}} 已派发(优先级 {{priority}})。",
     "notifications.service.ticket_resolved.title": "服务工单已解决",
-    "notifications.service.ticket_resolved.body":
-      "工单 {{ticket_number}} 已解决。",
+    "notifications.service.ticket_resolved.body": "工单 {{ticket_number}} 已解决。",
     "notifications.service.work_order_billed.title": "工作单已开具账单",
-    "notifications.service.work_order_billed.body":
-      "工作单 {{wo_number}} 已开具账单 {{amount}} {{currency}}。",
+    "notifications.service.work_order_billed.body": "工作单 {{wo_number}} 已开具账单 {{amount}} {{currency}}。",
     "notifications.subcontractors.prequal_submitted.title": "已提交资格预审",
-    "notifications.subcontractors.prequal_submitted.body":
-      "{{subcontractor_name}} 已提交资格预审。",
-    "notifications.subcontractors.payment_app_submitted.title":
-      "付款申请已提交",
-    "notifications.subcontractors.payment_app_submitted.body":
-      "申请 {{application_number}} 已提交,金额 {{net_amount}} {{currency}}。",
-    "notifications.subcontractors.retention_released.title":
-      "分包商质保金已释放",
-    "notifications.subcontractors.retention_released.body":
-      "已释放质保金:{{amount}} {{currency}}。",
+    "notifications.subcontractors.prequal_submitted.body": "{{subcontractor_name}} 已提交资格预审。",
+    "notifications.subcontractors.payment_app_submitted.title": "付款申请已提交",
+    "notifications.subcontractors.payment_app_submitted.body": "申请 {{application_number}} 已提交,金额 {{net_amount}} {{currency}}。",
+    "notifications.subcontractors.retention_released.title": "分包商质保金已释放",
+    "notifications.subcontractors.retention_released.body": "已释放质保金:{{amount}} {{currency}}。",
     "notifications.equipment.assigned.title": "设备已分配",
-    "notifications.equipment.assigned.body":
-      "{{equipment_code}} 已分配至 {{project_name}}。",
+    "notifications.equipment.assigned.body": "{{equipment_code}} 已分配至 {{project_name}}。",
     "notifications.equipment.damage_reported.title": "已报告设备损坏",
-    "notifications.equipment.damage_reported.body":
-      "{{equipment_code}} 损坏报告({{severity}})。",
+    "notifications.equipment.damage_reported.body": "{{equipment_code}} 损坏报告({{severity}})。",
     "notifications.portal.user_invited.title": "已邀请门户用户",
-    "notifications.portal.user_invited.body":
-      "已邀请 {{portal_user_email}} 作为 {{portal_role}}。",
-    "match_elements.vector_status_disconnected_explainer":
-      "语义向量检索为可选项 — 它按语义优化匹配,但需要运行中的 Qdrant 向量数据库。请使用下方“向量数据库”面板原生启动或安装 Qdrant(无需 Docker),然后重试。",
-    "match_elements.vector_status_disconnected_fallback":
-      "您仍可继续:当向量数据库离线时,匹配会自动回退到词法(关键词)和基于规则的评分。",
+    "notifications.portal.user_invited.body": "已邀请 {{portal_user_email}} 作为 {{portal_role}}。",
+    "match_elements.vector_status_disconnected_explainer": "语义向量检索为可选项 — 它按语义优化匹配,但需要运行中的 Qdrant 向量数据库。请使用下方“向量数据库”面板原生启动或安装 Qdrant(无需 Docker),然后重试。",
+    "match_elements.vector_status_disconnected_fallback": "您仍可继续:当向量数据库离线时,匹配会自动回退到词法(关键词)和基于规则的评分。",
     "match_elements.vector_status_retry": "重试连接",
     "match_elements.vector_status_open_costs_long": "打开价格数据库工具",
     "match_elements.pipeline.title": "匹配流水线",
-    "match_elements.pipeline.subtitle":
-      "从 CAD 文件到计价清单共七步 — 每一步都可见、可调",
+    "match_elements.pipeline.subtitle": "从 CAD 文件到计价清单共七步 — 每一步都可见、可调",
     "match_elements.pipeline.done_suffix": "已完成",
     "match_elements.pipeline.run_all": "运行全部阶段",
     "match_elements.pipeline.running_all": "正在运行全部…",
@@ -5777,20 +5317,17 @@ const resource = {
     "match_elements.pipeline.status_error": "出错",
     "match_elements.pipeline.status_stale": "需要重新运行",
     "match_elements.pipeline.status_skipped": "已跳过",
-    "match_elements.pipeline.stale_hint":
-      "上一阶段已更改 — 请重新运行此步以刷新输出。",
+    "match_elements.pipeline.stale_hint": "上一阶段已更改 — 请重新运行此步以刷新输出。",
     "match_elements.pipeline.llm_badge": "LLM",
     "match_elements.pipeline.llm_tunable": "LLM 增强 — Prompt 可编辑",
     "match_elements.pipeline.group_by": "按键分组",
-    "match_elements.pipeline.group_by_hint":
-      "用逗号分隔。RVT → category, type_name · IFC → ifc_class, predefined_type · DWG → layer, block_name",
+    "match_elements.pipeline.group_by_hint": "用逗号分隔。RVT → category, type_name · IFC → ifc_class, predefined_type · DWG → layer, block_name",
     "match_elements.pipeline.method": "方法",
     "match_elements.pipeline.max_groups": "最大分组数",
     "match_elements.pipeline.llm_provider": "LLM 提供方",
     "match_elements.pipeline.prompt": "Prompt",
     "match_elements.pipeline.system": "system",
-    "match_elements.pipeline.system_readonly":
-      "系统 Prompt — 只读。Fork 之后即可编辑并适配贵公司。",
+    "match_elements.pipeline.system_readonly": "系统 Prompt — 只读。Fork 之后即可编辑并适配贵公司。",
     "match_elements.pipeline.system_prompt": "系统 Prompt",
     "match_elements.pipeline.user_template": "用户模板",
     "match_elements.pipeline.variables": "该阶段填充的变量:",
@@ -5800,12 +5337,10 @@ const resource = {
     "match_elements.pipeline.revert": "还原",
     "match_elements.pipeline.run_failed": "阶段运行失败",
     "match_elements.pipeline.intro_title": "打开可视化匹配流水线",
-    "match_elements.pipeline.intro_blurb":
-      "从 CAD 文件到计价清单共七步 — 转换、加载、Schema、筛选、分组、匹配、汇总。每一步均可见、可解释、可调(Prompt、LLM 提供方、分组键)。",
+    "match_elements.pipeline.intro_blurb": "从 CAD 文件到计价清单共七步 — 转换、加载、Schema、筛选、分组、匹配、汇总。每一步均可见、可解释、可调(Prompt、LLM 提供方、分组键)。",
     "match_elements.pipeline.intro_cta": "打开流水线",
     "match_elements.pipeline.intro_resume": "继续上次会话",
-    "match_elements.pipeline.busy_hint":
-      "已有阶段正在运行 — 请等其完成后再启动其他。",
+    "match_elements.pipeline.busy_hint": "已有阶段正在运行 — 请等其完成后再启动其他。",
     "match_elements.pipeline.step_convert": "转换",
     "match_elements.pipeline.step_load": "加载",
     "match_elements.pipeline.step_schema": "Schema",
@@ -5814,8 +5349,7 @@ const resource = {
     "match_elements.pipeline.step_match": "匹配",
     "match_elements.pipeline.step_rollup": "汇总",
     "clash.title": "碰撞检查",
-    "clash.subtitle":
-      "跨联合 BIM 模型的几何干涉与净距协调 — 含碰撞矩阵与 BCF 导出。",
+    "clash.subtitle": "跨联合 BIM 模型的几何干涉与净距协调 — 含碰撞矩阵与 BCF 导出。",
     "clash.pick_project": "选择一个项目",
     "clash.new_run": "新建碰撞检查",
     "clash.models": "模型",
@@ -5826,8 +5360,7 @@ const resource = {
     "clash.mode_cross": "仅跨专业",
     "clash.mode_all": "全部成对",
     "clash.mode_sets": "集合 A vs. 集合 B(按类型)",
-    "clash.sets_hint":
-      "仅检测一个构件在集合 A、另一个在集合 B 的组合 — 例如所有墙(A)对所有管道(B)。",
+    "clash.sets_hint": "仅检测一个构件在集合 A、另一个在集合 B 的组合 — 例如所有墙(A)对所有管道(B)。",
     "clash.set_a": "集合 A",
     "clash.set_b": "集合 B",
     "clash.sets_required": "请为集合 A 和 B 各选择至少一种类型或专业。",
@@ -5860,11 +5393,9 @@ const resource = {
     "clash.no_match_title": "无碰撞匹配当前筛选条件",
     "clash.no_match_desc": "请放宽或清除当前筛选。",
     "clash.results_error": "无法加载碰撞结果",
-    "clash.results_error_desc":
-      "碰撞结果未能加载。这并不意味着模型干净 — 请重试。",
+    "clash.results_error_desc": "碰撞结果未能加载。这并不意味着模型干净 — 请重试。",
     "clash.retry": "重试",
-    "clash.capped_notice":
-      "显示前 {{loaded}} 条/共 {{total}} 条碰撞 — 请精炼筛选以缩小范围。",
+    "clash.capped_notice": "显示前 {{loaded}} 条/共 {{total}} 条碰撞 — 请精炼筛选以缩小范围。",
     "clash.results": "碰撞结果",
     "clash.count_of": "{{shown}} / {{total}}",
     "clash.search_ph": "按构件名称搜索…",
@@ -5905,8 +5436,7 @@ const resource = {
     "nav.pipelines": "流水线构建器",
     "pipeline.untitled": "未命名流水线",
     "pipeline.empty.title": "构建您的首个自动化",
-    "pipeline.empty.description":
-      "从左侧组件面板拖入触发器和若干步骤,连接它们后按“运行”。",
+    "pipeline.empty.description": "从左侧组件面板拖入触发器和若干步骤,连接它们后按“运行”。",
     "pipeline.toast.saved": "流水线已保存",
     "pipeline.toast.save_failed": "无法保存流水线",
     "pipeline.toast.run_failed": "无法启动运行",
@@ -5915,8 +5445,7 @@ const resource = {
     "pipeline.tour.palette_title": "选择步骤",
     "pipeline.tour.palette_body": "从此处把步骤拖到画布上,或点击将其放入中部。",
     "pipeline.tour.canvas_title": "连接步骤",
-    "pipeline.tour.canvas_body":
-      "从一个步骤的输出点拖到下一个步骤的输入。颜色表示数据类型。",
+    "pipeline.tour.canvas_body": "从一个步骤的输出点拖到下一个步骤的输入。颜色表示数据类型。",
     "pipeline.tour.run_title": "运行",
     "pipeline.tour.run_body": "按“运行”启动流水线,并实时观察每一步亮起。",
     "pipeline.toolbar.aria": "流水线工具栏",
@@ -5962,21 +5491,18 @@ const resource = {
     "pipeline.inspector.name_ph": "我的自动化",
     "pipeline.inspector.description": "描述",
     "pipeline.inspector.published": "已发布(可被触发)",
-    "pipeline.inspector.summary_stub":
-      "此流水线的通俗摘要将显示在此。请使用“解释此流水线”获取完整描述。",
+    "pipeline.inspector.summary_stub": "此流水线的通俗摘要将显示在此。请使用“解释此流水线”获取完整描述。",
     "pipeline.canvas.aria": "流水线编辑画布",
     "pipeline.canvas.hint": "从组件面板拖入步骤,连接它们的端口,然后按“运行”。",
     "pipeline.canvas.legend_sr": "连线的颜色、形状与虚实共同表示数据类型。",
     "pipeline.connect.incompatible_title": "这两个步骤无法连接",
-    "pipeline.connect.incompatible_body":
-      "此输出为 {{from}};该输入需要 {{to}}。",
+    "pipeline.connect.incompatible_body": "此输出为 {{from}};该输入需要 {{to}}。",
     "pipeline.node.rename": "重命名节点",
     "pipeline.node.rename_hint": "双击重命名",
     "pipeline.node.ai_badge": "AI",
     "pipeline.node.ai_confidence": "AI 建议 — 请查看置信度",
     "pipeline.node.help": "此节点的功能",
-    "pipeline.node.help_generic":
-      "在属性面板中配置此步骤。它接收来自上一连接步骤的数据并向后传递结果。",
+    "pipeline.node.help_generic": "在属性面板中配置此步骤。它接收来自上一连接步骤的数据并向后传递结果。",
     "pipeline.node.collapse": "折叠",
     "pipeline.node.expand": "展开",
     "pipeline.node.more_params": "+ 另外 {{count}} 项",
@@ -6019,34 +5545,23 @@ const resource = {
     "pipeline.trigger.schedule": "定时",
     "pipeline.trigger.event": "事件",
     "pipeline.nodetype.trigger.manual": "手动触发器",
-    "pipeline.nodetype.trigger.manual.desc":
-      "通过 REST 调用启动流水线。无输入。",
+    "pipeline.nodetype.trigger.manual.desc": "通过 REST 调用启动流水线。无输入。",
     "pipeline.nodetype.source.project": "获取项目",
     "pipeline.nodetype.source.project.desc": "加载绑定项目的 id 与名称。",
     "pipeline.nodetype.source.boq": "获取工程量清单项",
-    "pipeline.nodetype.source.boq.desc":
-      "把项目所有工程量清单项作为行加载(ids + 小样本)。",
+    "pipeline.nodetype.source.boq.desc": "把项目所有工程量清单项作为行加载(ids + 小样本)。",
     "pipeline.nodetype.transform.filter": "筛选行",
-    "pipeline.nodetype.transform.filter.desc":
-      "仅保留满足 字段/运算符/值 测试的行。",
+    "pipeline.nodetype.transform.filter.desc": "仅保留满足 字段/运算符/值 测试的行。",
     "pipeline.nodetype.gate.validation": "校验 Gate",
-    "pipeline.nodetype.gate.validation.desc":
-      "对行运行校验引擎;遇阻塞性错误停止运行。",
+    "pipeline.nodetype.gate.validation.desc": "对行运行校验引擎;遇阻塞性错误停止运行。",
     "pipeline.nodetype.action.export.excel": "导出到 Excel",
-    "pipeline.nodetype.action.export.excel.desc":
-      "将行写入 .xlsx 文件(返回下载引用;不修改数据库)。",
-    "pipeline.nodehelp.trigger.manual":
-      "流水线的起点。无配置 — 下一步请连接到一个数据步骤。",
-    "pipeline.nodehelp.source.project":
-      "加载该流水线绑定的项目。留空 project_id 即使用页面 URL 中的项目。",
-    "pipeline.nodehelp.source.boq":
-      "读取项目所有工程量清单项。各步骤之间只传递 ids 与小预览;完整数据保留在服务器上。",
-    "pipeline.nodehelp.transform.filter":
-      "仅保留在属性面板中通过 字段/运算符/值 测试的行。字段为空即放行所有。",
-    "pipeline.nodehelp.gate.validation":
-      "对行运行校验引擎。若存在阻塞性错误,运行在此停止,使其后写入步骤永不作用于坏数据。",
-    "pipeline.nodehelp.action.export.excel":
-      "将传入行写入 Excel 文件并返回下载引用。不修改数据。",
+    "pipeline.nodetype.action.export.excel.desc": "将行写入 .xlsx 文件(返回下载引用;不修改数据库)。",
+    "pipeline.nodehelp.trigger.manual": "流水线的起点。无配置 — 下一步请连接到一个数据步骤。",
+    "pipeline.nodehelp.source.project": "加载该流水线绑定的项目。留空 project_id 即使用页面 URL 中的项目。",
+    "pipeline.nodehelp.source.boq": "读取项目所有工程量清单项。各步骤之间只传递 ids 与小预览;完整数据保留在服务器上。",
+    "pipeline.nodehelp.transform.filter": "仅保留在属性面板中通过 字段/运算符/值 测试的行。字段为空即放行所有。",
+    "pipeline.nodehelp.gate.validation": "对行运行校验引擎。若存在阻塞性错误,运行在此停止,使其后写入步骤永不作用于坏数据。",
+    "pipeline.nodehelp.action.export.excel": "将传入行写入 Excel 文件并返回下载引用。不修改数据。",
     "pipeline.param.source.project.project_id": "项目 id(可选)",
     "pipeline.param.source.boq.project_id": "项目 id(可选)",
     "pipeline.param.transform.filter.field": "字段",
@@ -6055,7 +5570,61 @@ const resource = {
     "pipeline.param.gate.validation.rule_sets": "规则集",
     "pipeline.param.action.export.excel.filename": "文件名",
     "pipeline.param.action.export.excel.columns": "列",
-  },
+    "admin.audit_log_title": "Audit Log",
+    "admin.audit_log_subtitle": "Read-only timeline of every recorded change. Filter by user, module, action or date — open a row for the full payload.",
+    "admin.permissions.title": "Permissions Matrix",
+    "admin.permissions.subtitle": "Read-only view of every permission registered by every module, and which roles can use it. Admin always passes — locked cells indicate admin-only by design.",
+    "admin.permissions.search_placeholder": "Filter by module or permission key",
+    "admin.permissions.search_label": "Search permissions",
+    "admin.permissions.col_permission": "Permission",
+    "admin.permissions.role_viewer": "Viewer",
+    "admin.permissions.role_editor": "Editor",
+    "admin.permissions.role_member": "Member",
+    "admin.permissions.role_manager": "Manager",
+    "admin.permissions.role_admin": "Admin",
+    "admin.permissions.min_role_label": "min role",
+    "admin.permissions.module_count_one": "{{count}} permission",
+    "admin.permissions.module_count_other": "{{count}} permissions",
+    "admin.permissions.summary": "{{modules}} modules · {{permissions}} permissions",
+    "admin.permissions.empty_title": "No permissions registered",
+    "admin.permissions.empty_description": "No modules have registered permissions yet. They appear here as soon as a module loads.",
+    "admin.permissions.error_title": "Could not load permissions matrix",
+    "admin.permissions.error_unknown": "Unknown error",
+    "admin.permissions.legend_allowed": "allowed",
+    "admin.permissions.legend_denied": "denied",
+    "admin.permissions.legend_admin_bypass": "admin-only by design",
+    "admin.permissions.tooltip_allowed": "{{role}} can do {{key}} (min role: {{min}})",
+    "admin.permissions.tooltip_denied": "{{role}} cannot do {{key}} (min role: {{min}})",
+    "admin.permissions.tooltip_admin_bypass": "Admin-only by design — {{key}} requires admin",
+    "admin.permissions.subtitle_edit": "Click any cell to set the minimum role for that permission. Changes apply immediately and are audit-logged.",
+    "admin.permissions.edit_on": "Enable edit mode",
+    "admin.permissions.edit_off": "Done editing",
+    "admin.permissions.export_csv": "Export CSV",
+    "admin.permissions.role_filter_label": "Role",
+    "admin.permissions.role_filter_all": "All roles",
+    "admin.permissions.role_filter_denied_to": "Denied to {{role}}",
+    "admin.permissions.preset_label": "Reset to preset",
+    "admin.permissions.read_only_notice": "Read-only: admin role required to edit",
+    "admin.permissions.confirm_toggle_title": "Change permission?",
+    "admin.permissions.confirm_toggle_message": "Set \"{{key}}\" minimum role from {{from}} to {{to}}? This is audit-logged.",
+    "admin.permissions.confirm_toggle_confirm": "Change",
+    "admin.permissions.confirm_preset_title": "Apply preset?",
+    "admin.permissions.confirm_preset_message": "Reset every permission to the \"{{preset}}\" baseline? This rewrites the entire matrix and is audit-logged.",
+    "admin.permissions.confirm_preset_confirm": "Apply preset",
+    "admin.permissions.lockout_title": "Cannot demote admin permission",
+    "admin.permissions.lockout_message": "\"{{key}}\" must remain admin-only — lowering it would let non-admins edit the permissions matrix and lock you out.",
+    "admin.permissions.lockout_dismiss": "Got it",
+    "admin.permissions.toggle_success_title": "Permission updated",
+    "admin.permissions.toggle_success_message": "{{key}} → {{role}}",
+    "admin.permissions.toggle_error_title": "Update failed",
+    "admin.permissions.toggle_error": "Could not update permission",
+    "admin.permissions.preset_success_title": "Preset applied",
+    "admin.permissions.preset_success_message": "{{count}} permission(s) updated to \"{{preset}}\"",
+    "admin.permissions.preset_error_title": "Preset failed",
+    "admin.permissions.preset_error": "Could not apply preset",
+    "admin.permissions.noop_title": "No change",
+    "admin.permissions.noop_message": "{{key}} is already minimum {{role}}"
+  }
 } as { translation: Record<string, string> };
 
 export default resource;

@@ -120,10 +120,7 @@ async def list_epd(
     service: CarbonService = Depends(_get_service),
 ) -> list[EPDRecordResponse]:
     items, _ = await service.list_epds(
-        material_class=material_class,
-        region=region,
-        offset=offset,
-        limit=limit,
+        material_class=material_class, region=region, offset=offset, limit=limit,
     )
     return [EPDRecordResponse.model_validate(i) for i in items]
 
@@ -192,10 +189,7 @@ async def list_factors(
     service: CarbonService = Depends(_get_service),
 ) -> list[MaterialCarbonFactorResponse]:
     items, _ = await service.list_factors(
-        cost_item_id=cost_item_id,
-        region=region,
-        offset=offset,
-        limit=limit,
+        cost_item_id=cost_item_id, region=region, offset=offset, limit=limit,
     )
     return [MaterialCarbonFactorResponse.model_validate(i) for i in items]
 
@@ -273,9 +267,12 @@ async def create_inventory(
 @router.get("/inventories/{inventory_id}", response_model=CarbonInventoryResponse)
 async def get_inventory(
     inventory_id: uuid.UUID,
-    _user: CurrentUserId = None,  # type: ignore[assignment]
+    user_id: CurrentUserId,
+    session: SessionDep,
     service: CarbonService = Depends(_get_service),
 ) -> CarbonInventoryResponse:
+    project_id = await service.get_inventory_project_id(inventory_id)
+    await verify_project_access(project_id, user_id, session)
     inv = await service.get_inventory(inventory_id)
     return CarbonInventoryResponse.model_validate(inv)
 
@@ -284,9 +281,13 @@ async def get_inventory(
 async def update_inventory(
     inventory_id: uuid.UUID,
     data: CarbonInventoryUpdate,
+    user_id: CurrentUserId,
+    session: SessionDep,
     _perm: None = Depends(RequirePermission("carbon.update")),
     service: CarbonService = Depends(_get_service),
 ) -> CarbonInventoryResponse:
+    project_id = await service.get_inventory_project_id(inventory_id)
+    await verify_project_access(project_id, user_id, session)
     inv = await service.update_inventory(inventory_id, data)
     return CarbonInventoryResponse.model_validate(inv)
 
@@ -294,19 +295,27 @@ async def update_inventory(
 @router.delete("/inventories/{inventory_id}", status_code=204)
 async def delete_inventory(
     inventory_id: uuid.UUID,
+    user_id: CurrentUserId,
+    session: SessionDep,
     _perm: None = Depends(RequirePermission("carbon.delete")),
     service: CarbonService = Depends(_get_service),
 ) -> None:
+    project_id = await service.get_inventory_project_id(inventory_id)
+    await verify_project_access(project_id, user_id, session)
     await service.delete_inventory(inventory_id)
 
 
 @router.post("/inventories/{inventory_id}/finalize", response_model=CarbonInventoryResponse)
 async def finalize_inventory(
     inventory_id: uuid.UUID,
+    user_id: CurrentUserId,
+    session: SessionDep,
     status_value: str = Query(default="baseline", pattern=r"^(baseline|current)$"),
     _perm: None = Depends(RequirePermission("carbon.finalize_inventory")),
     service: CarbonService = Depends(_get_service),
 ) -> CarbonInventoryResponse:
+    project_id = await service.get_inventory_project_id(inventory_id)
+    await verify_project_access(project_id, user_id, session)
     inv = await service.finalize_inventory(inventory_id, status_value=status_value)
     return CarbonInventoryResponse.model_validate(inv)
 
@@ -314,9 +323,12 @@ async def finalize_inventory(
 @router.get("/inventories/{inventory_id}/totals", response_model=InventoryTotalsResponse)
 async def inventory_totals(
     inventory_id: uuid.UUID,
-    _user: CurrentUserId = None,  # type: ignore[assignment]
+    user_id: CurrentUserId,
+    session: SessionDep,
     service: CarbonService = Depends(_get_service),
 ) -> InventoryTotalsResponse:
+    project_id = await service.get_inventory_project_id(inventory_id)
+    await verify_project_access(project_id, user_id, session)
     totals = await service.compute_inventory_totals_fresh(inventory_id)
     return InventoryTotalsResponse(
         inventory_id=inventory_id,
@@ -342,12 +354,20 @@ async def inventory_totals(
 )
 async def inventory_alternatives(
     inventory_id: uuid.UUID,
+    user_id: CurrentUserId,
+    session: SessionDep,
     entry_id: uuid.UUID = Query(...),
-    _user: CurrentUserId = None,  # type: ignore[assignment]
     service: CarbonService = Depends(_get_service),
 ) -> AlternativeComparisonResponse:
-    # inventory_id kept for clarity / URL stability; entry already constrains it
-    _ = inventory_id
+    project_id = await service.get_inventory_project_id(inventory_id)
+    await verify_project_access(project_id, user_id, session)
+    # Defence-in-depth: entry must belong to the inventory in the URL.
+    entry = await service.get_embodied_entry(entry_id)
+    if entry.inventory_id != inventory_id:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Entry not found in this inventory",
+        )
     payload = await service.alternatives_for_entry(entry_id)
     options = [AlternativeMaterialOption(**opt) for opt in payload["options"]]
     return AlternativeComparisonResponse(
@@ -367,17 +387,17 @@ async def inventory_alternatives(
 )
 async def list_embodied(
     inventory_id: uuid.UUID,
+    user_id: CurrentUserId,
+    session: SessionDep,
     stage: str | None = Query(default=None),
     offset: int = Query(default=0, ge=0),
     limit: int = Query(default=500, ge=1, le=2000),
-    _user: CurrentUserId = None,  # type: ignore[assignment]
     service: CarbonService = Depends(_get_service),
 ) -> list[EmbodiedCarbonEntryResponse]:
+    project_id = await service.get_inventory_project_id(inventory_id)
+    await verify_project_access(project_id, user_id, session)
     items, _ = await service.list_embodied_entries(
-        inventory_id,
-        stage=stage,
-        offset=offset,
-        limit=limit,
+        inventory_id, stage=stage, offset=offset, limit=limit,
     )
     return [EmbodiedCarbonEntryResponse.model_validate(i) for i in items]
 
@@ -390,9 +410,13 @@ async def list_embodied(
 async def create_embodied(
     inventory_id: uuid.UUID,
     data: EmbodiedCarbonEntryCreate,
+    user_id: CurrentUserId,
+    session: SessionDep,
     _perm: None = Depends(RequirePermission("carbon.create")),
     service: CarbonService = Depends(_get_service),
 ) -> EmbodiedCarbonEntryResponse:
+    project_id = await service.get_inventory_project_id(inventory_id)
+    await verify_project_access(project_id, user_id, session)
     if data.inventory_id != inventory_id:
         data = data.model_copy(update={"inventory_id": inventory_id})
     entry = await service.create_embodied_entry(data)
@@ -406,10 +430,16 @@ async def create_embodied(
 async def bulk_create_embodied(
     inventory_id: uuid.UUID,
     body: EmbodiedBulkCreate,
+    user_id: CurrentUserId,
+    session: SessionDep,
     _perm: None = Depends(RequirePermission("carbon.create")),
     service: CarbonService = Depends(_get_service),
 ) -> dict[str, int | str]:
-    entries = [e.model_copy(update={"inventory_id": inventory_id}) for e in body.entries]
+    project_id = await service.get_inventory_project_id(inventory_id)
+    await verify_project_access(project_id, user_id, session)
+    entries = [
+        e.model_copy(update={"inventory_id": inventory_id}) for e in body.entries
+    ]
     n = await service.bulk_create_embodied(inventory_id, entries)
     return {"inventory_id": str(inventory_id), "created": n}
 
@@ -418,9 +448,13 @@ async def bulk_create_embodied(
 async def update_embodied(
     entry_id: uuid.UUID,
     data: EmbodiedCarbonEntryUpdate,
+    user_id: CurrentUserId,
+    session: SessionDep,
     _perm: None = Depends(RequirePermission("carbon.update")),
     service: CarbonService = Depends(_get_service),
 ) -> EmbodiedCarbonEntryResponse:
+    project_id = await service.get_embodied_project_id(entry_id)
+    await verify_project_access(project_id, user_id, session)
     entry = await service.update_embodied_entry(entry_id, data)
     return EmbodiedCarbonEntryResponse.model_validate(entry)
 
@@ -428,9 +462,13 @@ async def update_embodied(
 @router.delete("/embodied/{entry_id}", status_code=204)
 async def delete_embodied(
     entry_id: uuid.UUID,
+    user_id: CurrentUserId,
+    session: SessionDep,
     _perm: None = Depends(RequirePermission("carbon.delete")),
     service: CarbonService = Depends(_get_service),
 ) -> None:
+    project_id = await service.get_embodied_project_id(entry_id)
+    await verify_project_access(project_id, user_id, session)
     await service.delete_embodied_entry(entry_id)
 
 
@@ -440,9 +478,12 @@ async def delete_embodied(
 @router.get("/inventories/{inventory_id}/scope1", response_model=list[Scope1EntryResponse])
 async def list_scope1(
     inventory_id: uuid.UUID,
-    _user: CurrentUserId = None,  # type: ignore[assignment]
+    user_id: CurrentUserId,
+    session: SessionDep,
     service: CarbonService = Depends(_get_service),
 ) -> list[Scope1EntryResponse]:
+    project_id = await service.get_inventory_project_id(inventory_id)
+    await verify_project_access(project_id, user_id, session)
     items, _ = await service.list_scope1(inventory_id)
     return [Scope1EntryResponse.model_validate(i) for i in items]
 
@@ -450,9 +491,14 @@ async def list_scope1(
 @router.post("/scope1", response_model=Scope1EntryResponse, status_code=201)
 async def create_scope1(
     data: Scope1EntryCreate,
+    user_id: CurrentUserId,
+    session: SessionDep,
     _perm: None = Depends(RequirePermission("carbon.create")),
     service: CarbonService = Depends(_get_service),
 ) -> Scope1EntryResponse:
+    # inventory_id arrives in the BODY — must verify project ownership.
+    project_id = await service.get_inventory_project_id(data.inventory_id)
+    await verify_project_access(project_id, user_id, session)
     entry = await service.create_scope1(data)
     return Scope1EntryResponse.model_validate(entry)
 
@@ -461,9 +507,13 @@ async def create_scope1(
 async def update_scope1(
     entry_id: uuid.UUID,
     data: Scope1EntryUpdate,
+    user_id: CurrentUserId,
+    session: SessionDep,
     _perm: None = Depends(RequirePermission("carbon.update")),
     service: CarbonService = Depends(_get_service),
 ) -> Scope1EntryResponse:
+    project_id = await service.get_scope1_project_id(entry_id)
+    await verify_project_access(project_id, user_id, session)
     entry = await service.update_scope1(entry_id, data)
     return Scope1EntryResponse.model_validate(entry)
 
@@ -471,9 +521,13 @@ async def update_scope1(
 @router.delete("/scope1/{entry_id}", status_code=204)
 async def delete_scope1(
     entry_id: uuid.UUID,
+    user_id: CurrentUserId,
+    session: SessionDep,
     _perm: None = Depends(RequirePermission("carbon.delete")),
     service: CarbonService = Depends(_get_service),
 ) -> None:
+    project_id = await service.get_scope1_project_id(entry_id)
+    await verify_project_access(project_id, user_id, session)
     await service.delete_scope1(entry_id)
 
 
@@ -483,9 +537,12 @@ async def delete_scope1(
 @router.get("/inventories/{inventory_id}/scope2", response_model=list[Scope2EntryResponse])
 async def list_scope2(
     inventory_id: uuid.UUID,
-    _user: CurrentUserId = None,  # type: ignore[assignment]
+    user_id: CurrentUserId,
+    session: SessionDep,
     service: CarbonService = Depends(_get_service),
 ) -> list[Scope2EntryResponse]:
+    project_id = await service.get_inventory_project_id(inventory_id)
+    await verify_project_access(project_id, user_id, session)
     items, _ = await service.list_scope2(inventory_id)
     return [Scope2EntryResponse.model_validate(i) for i in items]
 
@@ -493,9 +550,13 @@ async def list_scope2(
 @router.post("/scope2", response_model=Scope2EntryResponse, status_code=201)
 async def create_scope2(
     data: Scope2EntryCreate,
+    user_id: CurrentUserId,
+    session: SessionDep,
     _perm: None = Depends(RequirePermission("carbon.create")),
     service: CarbonService = Depends(_get_service),
 ) -> Scope2EntryResponse:
+    project_id = await service.get_inventory_project_id(data.inventory_id)
+    await verify_project_access(project_id, user_id, session)
     entry = await service.create_scope2(data)
     return Scope2EntryResponse.model_validate(entry)
 
@@ -504,9 +565,13 @@ async def create_scope2(
 async def update_scope2(
     entry_id: uuid.UUID,
     data: Scope2EntryUpdate,
+    user_id: CurrentUserId,
+    session: SessionDep,
     _perm: None = Depends(RequirePermission("carbon.update")),
     service: CarbonService = Depends(_get_service),
 ) -> Scope2EntryResponse:
+    project_id = await service.get_scope2_project_id(entry_id)
+    await verify_project_access(project_id, user_id, session)
     entry = await service.update_scope2(entry_id, data)
     return Scope2EntryResponse.model_validate(entry)
 
@@ -514,9 +579,13 @@ async def update_scope2(
 @router.delete("/scope2/{entry_id}", status_code=204)
 async def delete_scope2(
     entry_id: uuid.UUID,
+    user_id: CurrentUserId,
+    session: SessionDep,
     _perm: None = Depends(RequirePermission("carbon.delete")),
     service: CarbonService = Depends(_get_service),
 ) -> None:
+    project_id = await service.get_scope2_project_id(entry_id)
+    await verify_project_access(project_id, user_id, session)
     await service.delete_scope2(entry_id)
 
 
@@ -526,9 +595,12 @@ async def delete_scope2(
 @router.get("/inventories/{inventory_id}/scope3", response_model=list[Scope3EntryResponse])
 async def list_scope3(
     inventory_id: uuid.UUID,
-    _user: CurrentUserId = None,  # type: ignore[assignment]
+    user_id: CurrentUserId,
+    session: SessionDep,
     service: CarbonService = Depends(_get_service),
 ) -> list[Scope3EntryResponse]:
+    project_id = await service.get_inventory_project_id(inventory_id)
+    await verify_project_access(project_id, user_id, session)
     items, _ = await service.list_scope3(inventory_id)
     return [Scope3EntryResponse.model_validate(i) for i in items]
 
@@ -536,9 +608,13 @@ async def list_scope3(
 @router.post("/scope3", response_model=Scope3EntryResponse, status_code=201)
 async def create_scope3(
     data: Scope3EntryCreate,
+    user_id: CurrentUserId,
+    session: SessionDep,
     _perm: None = Depends(RequirePermission("carbon.create")),
     service: CarbonService = Depends(_get_service),
 ) -> Scope3EntryResponse:
+    project_id = await service.get_inventory_project_id(data.inventory_id)
+    await verify_project_access(project_id, user_id, session)
     entry = await service.create_scope3(data)
     return Scope3EntryResponse.model_validate(entry)
 
@@ -547,9 +623,13 @@ async def create_scope3(
 async def update_scope3(
     entry_id: uuid.UUID,
     data: Scope3EntryUpdate,
+    user_id: CurrentUserId,
+    session: SessionDep,
     _perm: None = Depends(RequirePermission("carbon.update")),
     service: CarbonService = Depends(_get_service),
 ) -> Scope3EntryResponse:
+    project_id = await service.get_scope3_project_id(entry_id)
+    await verify_project_access(project_id, user_id, session)
     entry = await service.update_scope3(entry_id, data)
     return Scope3EntryResponse.model_validate(entry)
 
@@ -557,9 +637,13 @@ async def update_scope3(
 @router.delete("/scope3/{entry_id}", status_code=204)
 async def delete_scope3(
     entry_id: uuid.UUID,
+    user_id: CurrentUserId,
+    session: SessionDep,
     _perm: None = Depends(RequirePermission("carbon.delete")),
     service: CarbonService = Depends(_get_service),
 ) -> None:
+    project_id = await service.get_scope3_project_id(entry_id)
+    await verify_project_access(project_id, user_id, session)
     await service.delete_scope3(entry_id)
 
 
@@ -595,9 +679,13 @@ async def create_target(
 async def update_target(
     target_id: uuid.UUID,
     data: CarbonTargetUpdate,
+    user_id: CurrentUserId,
+    session: SessionDep,
     _perm: None = Depends(RequirePermission("carbon.set_targets")),
     service: CarbonService = Depends(_get_service),
 ) -> CarbonTargetResponse:
+    project_id = await service.get_target_project_id(target_id)
+    await verify_project_access(project_id, user_id, session)
     target = await service.update_target(target_id, data)
     return CarbonTargetResponse.model_validate(target)
 
@@ -605,19 +693,26 @@ async def update_target(
 @router.delete("/targets/{target_id}", status_code=204)
 async def delete_target(
     target_id: uuid.UUID,
+    user_id: CurrentUserId,
+    session: SessionDep,
     _perm: None = Depends(RequirePermission("carbon.delete")),
     service: CarbonService = Depends(_get_service),
 ) -> None:
+    project_id = await service.get_target_project_id(target_id)
+    await verify_project_access(project_id, user_id, session)
     await service.delete_target(target_id)
 
 
 @router.get("/targets/{target_id}/progress", response_model=TargetProgressResponse)
 async def target_progress(
     target_id: uuid.UUID,
+    user_id: CurrentUserId,
+    session: SessionDep,
     as_of_date: date | None = Query(default=None),
-    _user: CurrentUserId = None,  # type: ignore[assignment]
     service: CarbonService = Depends(_get_service),
 ) -> TargetProgressResponse:
+    project_id = await service.get_target_project_id(target_id)
+    await verify_project_access(project_id, user_id, session)
     payload = await service.target_progress(target_id, as_of_date=as_of_date)
     return TargetProgressResponse(**payload)
 
@@ -654,9 +749,13 @@ async def create_report(
 async def update_report(
     report_id: uuid.UUID,
     data: SustainabilityReportUpdate,
+    user_id: CurrentUserId,
+    session: SessionDep,
     _perm: None = Depends(RequirePermission("carbon.update")),
     service: CarbonService = Depends(_get_service),
 ) -> SustainabilityReportResponse:
+    project_id = await service.get_report_project_id(report_id)
+    await verify_project_access(project_id, user_id, session)
     report = await service.update_report(report_id, data)
     return SustainabilityReportResponse.model_validate(report)
 
@@ -664,9 +763,13 @@ async def update_report(
 @router.delete("/reports/{report_id}", status_code=204)
 async def delete_report(
     report_id: uuid.UUID,
+    user_id: CurrentUserId,
+    session: SessionDep,
     _perm: None = Depends(RequirePermission("carbon.delete")),
     service: CarbonService = Depends(_get_service),
 ) -> None:
+    project_id = await service.get_report_project_id(report_id)
+    await verify_project_access(project_id, user_id, session)
     await service.delete_report(report_id)
 
 
@@ -718,14 +821,12 @@ async def ingest_epd_by_identifier(
     identifier = payload.get("identifier")
     if not identifier:
         raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="identifier is required",
+            status_code=status.HTTP_400_BAD_REQUEST, detail="identifier is required",
         )
     gwp = payload.get("gwp_a1a3")
     if gwp is None:
         raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="gwp_a1a3 is required",
+            status_code=status.HTTP_400_BAD_REQUEST, detail="gwp_a1a3 is required",
         )
     product_name = payload.get("product_name") or ""
     material_class = payload.get("material_class") or ""
@@ -748,8 +849,7 @@ async def ingest_epd_by_identifier(
         )
     except ValueError as exc:
         raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail=str(exc),
+            status_code=status.HTTP_400_BAD_REQUEST, detail=str(exc),
         ) from exc
     return {
         "id": str(record.id),
@@ -784,6 +884,8 @@ async def lookup_grid_factor(
 async def assign_boq_position(
     inventory_id: uuid.UUID,
     payload: dict,
+    user_id: CurrentUserId,
+    session: SessionDep,
     _perm: None = Depends(RequirePermission("carbon.create")),
     service: CarbonService = Depends(_get_service),
 ) -> dict:
@@ -812,6 +914,10 @@ async def assign_boq_position(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="quantity and quantity_unit are required",
         )
+    # IDOR gate: assignment writes into the inventory, so the caller must own
+    # the inventory's project — not just have carbon.create somewhere.
+    project_id = await service.get_inventory_project_id(inventory_id)
+    await verify_project_access(project_id, user_id, session)
     stage = payload.get("stage") or "a1a3"
     density = payload.get("density_kg_per_m3")
     entry = await service.assign_boq_position_carbon(

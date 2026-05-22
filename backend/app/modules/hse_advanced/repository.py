@@ -41,7 +41,11 @@ class _BaseRepo:
         return obj
 
     async def update_fields(self, item_id: uuid.UUID, **fields: object) -> None:
-        stmt = update(self.model).where(self.model.id == item_id).values(**fields)
+        stmt = (
+            update(self.model)
+            .where(self.model.id == item_id)
+            .values(**fields)
+        )
         await self.session.execute(stmt)
         await self.session.flush()
         self.session.expire_all()
@@ -64,8 +68,12 @@ class InvestigationRepository(_BaseRepo):
     async def list_for_incident(
         self, incident_ref: uuid.UUID, *, offset: int = 0, limit: int = 50
     ) -> tuple[list[HSEIncidentInvestigation], int]:
-        base = select(HSEIncidentInvestigation).where(HSEIncidentInvestigation.incident_ref == incident_ref)
-        total = (await self.session.execute(select(func.count()).select_from(base.subquery()))).scalar_one()
+        base = select(HSEIncidentInvestigation).where(
+            HSEIncidentInvestigation.incident_ref == incident_ref
+        )
+        total = (
+            await self.session.execute(select(func.count()).select_from(base.subquery()))
+        ).scalar_one()
         stmt = base.order_by(HSEIncidentInvestigation.started_at.desc()).offset(offset).limit(limit)
         rows = (await self.session.execute(stmt)).scalars().all()
         return list(rows), total
@@ -96,8 +104,7 @@ class InvestigationRepository(_BaseRepo):
                 "SELECT id FROM oe_safety_incident WHERE project_id = :pid",
             )
             result = await self.session.execute(
-                incident_ids_stmt,
-                {"pid": str(project_id)},
+                incident_ids_stmt, {"pid": str(project_id)},
             )
             incident_ids = [row[0] for row in result.all()]
         except Exception:
@@ -117,7 +124,11 @@ class InvestigationRepository(_BaseRepo):
                 select(func.count()).select_from(base.subquery()),
             )
         ).scalar_one()
-        stmt = base.order_by(HSEIncidentInvestigation.started_at.desc()).offset(offset).limit(limit)
+        stmt = (
+            base.order_by(HSEIncidentInvestigation.started_at.desc())
+            .offset(offset)
+            .limit(limit)
+        )
         rows = (await self.session.execute(stmt)).scalars().all()
         return list(rows), total
 
@@ -141,7 +152,9 @@ class JSARepository(_BaseRepo):
         base = select(JobSafetyAnalysis).where(JobSafetyAnalysis.project_id == project_id)
         if status is not None:
             base = base.where(JobSafetyAnalysis.status == status)
-        total = (await self.session.execute(select(func.count()).select_from(base.subquery()))).scalar_one()
+        total = (
+            await self.session.execute(select(func.count()).select_from(base.subquery()))
+        ).scalar_one()
         stmt = base.order_by(JobSafetyAnalysis.created_at.desc()).offset(offset).limit(limit)
         rows = (await self.session.execute(stmt)).scalars().all()
         return list(rows), total
@@ -169,7 +182,9 @@ class PermitRepository(_BaseRepo):
             base = base.where(PermitToWork.status == status)
         if permit_type is not None:
             base = base.where(PermitToWork.permit_type == permit_type)
-        total = (await self.session.execute(select(func.count()).select_from(base.subquery()))).scalar_one()
+        total = (
+            await self.session.execute(select(func.count()).select_from(base.subquery()))
+        ).scalar_one()
         stmt = base.order_by(PermitToWork.work_start.desc()).offset(offset).limit(limit)
         rows = (await self.session.execute(stmt)).scalars().all()
         return list(rows), total
@@ -213,7 +228,9 @@ class ToolboxTalkRepository(_BaseRepo):
         limit: int = 50,
     ) -> tuple[list[ToolboxTalk], int]:
         base = select(ToolboxTalk).where(ToolboxTalk.project_id == project_id)
-        total = (await self.session.execute(select(func.count()).select_from(base.subquery()))).scalar_one()
+        total = (
+            await self.session.execute(select(func.count()).select_from(base.subquery()))
+        ).scalar_one()
         stmt = base.order_by(ToolboxTalk.conducted_at.desc()).offset(offset).limit(limit)
         rows = (await self.session.execute(stmt)).scalars().all()
         return list(rows), total
@@ -229,7 +246,9 @@ class ToolboxTalkRepository(_BaseRepo):
             ToolboxTalk.conducted_at >= first,
             ToolboxTalk.conducted_at < last,
         )
-        total = (await self.session.execute(select(func.count()).select_from(base.subquery()))).scalar_one()
+        total = (
+            await self.session.execute(select(func.count()).select_from(base.subquery()))
+        ).scalar_one()
         return int(total or 0)
 
 
@@ -239,7 +258,9 @@ class ToolboxAttendanceRepository(_BaseRepo):
     model = ToolboxAttendance
 
     async def list_for_talk(self, talk_id: uuid.UUID) -> list[ToolboxAttendance]:
-        stmt = select(ToolboxAttendance).where(ToolboxAttendance.toolbox_talk_id == talk_id)
+        stmt = select(ToolboxAttendance).where(
+            ToolboxAttendance.toolbox_talk_id == talk_id
+        )
         return list((await self.session.execute(stmt)).scalars().all())
 
 
@@ -253,15 +274,23 @@ class ToolboxTopicRepository(_BaseRepo):
         *,
         offset: int = 0,
         limit: int = 100,
-        active_only: bool = True,
+        is_active: bool | None = True,
         language: str | None = None,
+        # Legacy alias retained so older callers / test stubs don't break.
+        active_only: bool | None = None,
     ) -> tuple[list[ToolboxTopic], int]:
+        if active_only is not None:
+            is_active = True if active_only else None
         base = select(ToolboxTopic)
-        if active_only:
+        if is_active is True:
             base = base.where(ToolboxTopic.is_active.is_(True))
+        elif is_active is False:
+            base = base.where(ToolboxTopic.is_active.is_(False))
         if language:
             base = base.where(ToolboxTopic.language == language)
-        total = (await self.session.execute(select(func.count()).select_from(base.subquery()))).scalar_one()
+        total = (
+            await self.session.execute(select(func.count()).select_from(base.subquery()))
+        ).scalar_one()
         stmt = base.order_by(ToolboxTopic.code).offset(offset).limit(limit)
         rows = (await self.session.execute(stmt)).scalars().all()
         return list(rows), total
@@ -292,7 +321,9 @@ class PPEIssueRepository(_BaseRepo):
             base = base.where(PPEIssue.recipient_user_id == recipient_user_id)
         if status is not None:
             base = base.where(PPEIssue.status == status)
-        total = (await self.session.execute(select(func.count()).select_from(base.subquery()))).scalar_one()
+        total = (
+            await self.session.execute(select(func.count()).select_from(base.subquery()))
+        ).scalar_one()
         stmt = base.order_by(PPEIssue.issued_at.desc()).offset(offset).limit(limit)
         rows = (await self.session.execute(stmt)).scalars().all()
         return list(rows), total
@@ -317,7 +348,9 @@ class AuditRepository(_BaseRepo):
         base = select(SafetyAudit).where(SafetyAudit.project_id == project_id)
         if status is not None:
             base = base.where(SafetyAudit.status == status)
-        total = (await self.session.execute(select(func.count()).select_from(base.subquery()))).scalar_one()
+        total = (
+            await self.session.execute(select(func.count()).select_from(base.subquery()))
+        ).scalar_one()
         stmt = base.order_by(SafetyAudit.conducted_at.desc()).offset(offset).limit(limit)
         rows = (await self.session.execute(stmt)).scalars().all()
         return list(rows), total
@@ -352,7 +385,9 @@ class CAPARepository(_BaseRepo):
         base = select(CorrectiveAction).where(CorrectiveAction.project_id == project_id)
         if status is not None:
             base = base.where(CorrectiveAction.status == status)
-        total = (await self.session.execute(select(func.count()).select_from(base.subquery()))).scalar_one()
+        total = (
+            await self.session.execute(select(func.count()).select_from(base.subquery()))
+        ).scalar_one()
         stmt = base.order_by(CorrectiveAction.target_date.asc()).offset(offset).limit(limit)
         rows = (await self.session.execute(stmt)).scalars().all()
         return list(rows), total
@@ -398,7 +433,9 @@ class CertificationRepository(_BaseRepo):
             base = base.where(SafetyCertification.owner_user_id == owner_user_id)
         if status is not None:
             base = base.where(SafetyCertification.status == status)
-        total = (await self.session.execute(select(func.count()).select_from(base.subquery()))).scalar_one()
+        total = (
+            await self.session.execute(select(func.count()).select_from(base.subquery()))
+        ).scalar_one()
         stmt = base.order_by(SafetyCertification.valid_until.asc()).offset(offset).limit(limit)
         rows = (await self.session.execute(stmt)).scalars().all()
         return list(rows), total
@@ -426,18 +463,32 @@ class JSATemplateRepository(_BaseRepo):
         *,
         trade: str | None = None,
         region: str | None = None,
-        active_only: bool = True,
+        is_active: bool | None = True,
         offset: int = 0,
         limit: int = 100,
+        # Legacy alias retained so test stubs / older callers don't break.
+        active_only: bool | None = None,
     ) -> tuple[list[JSATemplate], int]:
+        if active_only is not None:
+            is_active = True if active_only else None
         base = select(JSATemplate)
         if trade is not None:
             base = base.where(JSATemplate.trade == trade)
         if region is not None:
             base = base.where(JSATemplate.region == region)
-        if active_only:
+        if is_active is True:
             base = base.where(JSATemplate.is_active.is_(True))
-        total = (await self.session.execute(select(func.count()).select_from(base.subquery()))).scalar_one()
-        stmt = base.order_by(JSATemplate.trade.asc(), JSATemplate.name.asc()).offset(offset).limit(limit)
+        elif is_active is False:
+            base = base.where(JSATemplate.is_active.is_(False))
+        total = (
+            await self.session.execute(
+                select(func.count()).select_from(base.subquery())
+            )
+        ).scalar_one()
+        stmt = (
+            base.order_by(JSATemplate.trade.asc(), JSATemplate.name.asc())
+            .offset(offset)
+            .limit(limit)
+        )
         rows = (await self.session.execute(stmt)).scalars().all()
         return list(rows), total

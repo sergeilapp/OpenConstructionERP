@@ -59,7 +59,8 @@ def _validate_fx_rates(
         value = normalised
     if not isinstance(value, list):
         raise ValueError(
-            "fx_rates must be a list of {code, rate, label} dicts or a {code: rate} mapping",
+            "fx_rates must be a list of {code, rate, label} dicts "
+            "or a {code: rate} mapping",
         )
     seen: set[str] = set()
     cleaned: list[dict[str, Any]] = []
@@ -198,7 +199,8 @@ def _normalise_currency(value: str | None) -> str | None:
         return ""
     if not _CURRENCY_CODE_RE.match(cleaned):
         raise ValueError(
-            f"currency: '{value}' is not a 3-letter currency code (e.g. EUR, USD, GBP, JPY). Leave empty if undecided."
+            f"currency: '{value}' is not a 3-letter currency code "
+            "(e.g. EUR, USD, GBP, JPY). Leave empty if undecided."
         )
     return cleaned
 
@@ -222,7 +224,9 @@ def _validate_money(value: str | None, field_name: str) -> str | None:
     try:
         amount = Decimal(cleaned)
     except (InvalidOperation, ValueError) as exc:
-        raise ValueError(f"{field_name}: '{value}' is not a valid number") from exc
+        raise ValueError(
+            f"{field_name}: '{value}' is not a valid number"
+        ) from exc
     if amount < 0:
         raise ValueError(f"{field_name} must be >= 0 (got {value})")
     return cleaned
@@ -245,7 +249,9 @@ def _validate_percentage(value: str | None, field_name: str) -> str | None:
     try:
         pct = Decimal(cleaned)
     except (InvalidOperation, ValueError) as exc:
-        raise ValueError(f"{field_name}: '{value}' is not a valid number") from exc
+        raise ValueError(
+            f"{field_name}: '{value}' is not a valid number"
+        ) from exc
     if pct < 0 or pct > 100:
         raise ValueError(f"{field_name} must be between 0 and 100 (got {value})")
     return cleaned
@@ -283,9 +289,13 @@ class ProjectCreate(BaseModel):
         """
         trimmed = v.strip()
         if not trimmed:
-            raise ValueError("Project name must contain at least one non-whitespace character.")
+            raise ValueError(
+                "Project name must contain at least one non-whitespace character."
+            )
         if _HTML_TAG_RE.search(trimmed):
-            raise ValueError("Project name contains HTML tags. Use plain text only.")
+            raise ValueError(
+                "Project name contains HTML tags. Use plain text only."
+            )
         return trimmed
 
     description: str = Field(
@@ -305,7 +315,6 @@ class ProjectCreate(BaseModel):
         from app.core.sanitize import strip_dangerous_html
 
         return strip_dangerous_html(v)
-
     region: str = Field(
         default="",
         max_length=100,
@@ -324,7 +333,9 @@ class ProjectCreate(BaseModel):
         description="ISO 4217 currency code (e.g. EUR, GBP, USD). User must choose, no default bias",
         examples=["EUR"],
     )
-    locale: str = Field(default="en", max_length=10, description="UI locale code (e.g. en, de, fr)")
+    locale: str = Field(
+        default="en", max_length=10, description="UI locale code (e.g. en, de, fr)"
+    )
     validation_rule_sets: list[str] = Field(
         default_factory=lambda: ["boq_quality"],
         description="List of validation rule set IDs to apply (e.g. boq_quality, din276, gaeb)",
@@ -360,7 +371,8 @@ class ProjectCreate(BaseModel):
         default=None,
         max_length=10,
         description=(
-            "Per-project VAT override as decimal-string percentage (e.g. '21'). Null means use the regional template."
+            "Per-project VAT override as decimal-string percentage (e.g. '21'). "
+            "Null means use the regional template."
         ),
     )
     custom_units: list[str] | None = Field(
@@ -446,7 +458,6 @@ class ProjectUpdate(BaseModel):
         from app.core.sanitize import strip_dangerous_html
 
         return strip_dangerous_html(v)
-
     region: str | None = Field(default=None, max_length=100)
     classification_standard: str | None = Field(default=None, max_length=100)
     currency: str | None = Field(default=None, max_length=10)
@@ -510,9 +521,13 @@ class ProjectUpdate(BaseModel):
             return None
         trimmed = v.strip()
         if not trimmed:
-            raise ValueError("Project name must contain at least one non-whitespace character.")
+            raise ValueError(
+                "Project name must contain at least one non-whitespace character."
+            )
         if _HTML_TAG_RE.search(trimmed):
-            raise ValueError("Project name contains HTML tags. Use plain text only.")
+            raise ValueError(
+                "Project name contains HTML tags. Use plain text only."
+            )
         return trimmed
 
     @field_validator("currency", mode="after")
@@ -770,7 +785,9 @@ def _validate_classifier(value: str) -> str:
 
     cleaned = value.strip().lower()
     if cleaned not in MATCH_ALLOWED_CLASSIFIERS:
-        raise ValueError(f"classifier must be one of {sorted(MATCH_ALLOWED_CLASSIFIERS)}; got '{value}'")
+        raise ValueError(
+            f"classifier must be one of {sorted(MATCH_ALLOWED_CLASSIFIERS)}; got '{value}'"
+        )
     return cleaned
 
 
@@ -780,7 +797,9 @@ def _validate_mode(value: str) -> str:
 
     cleaned = value.strip().lower()
     if cleaned not in MATCH_ALLOWED_MODES:
-        raise ValueError(f"mode must be one of {sorted(MATCH_ALLOWED_MODES)}; got '{value}'")
+        raise ValueError(
+            f"mode must be one of {sorted(MATCH_ALLOWED_MODES)}; got '{value}'"
+        )
     return cleaned
 
 
@@ -816,7 +835,10 @@ def _validate_sources(value: list[str]) -> list[str]:
         if not token:
             continue
         if token not in MATCH_ALLOWED_SOURCES:
-            raise ValueError(f"sources_enabled: '{entry}' is not one of {sorted(MATCH_ALLOWED_SOURCES)}")
+            raise ValueError(
+                f"sources_enabled: '{entry}' is not one of "
+                f"{sorted(MATCH_ALLOWED_SOURCES)}"
+            )
         if token in seen:
             continue
         seen.add(token)
@@ -828,7 +850,9 @@ def _validate_target_language(value: str) -> str:
     """Validate ISO-639 two-letter language code (case-insensitive)."""
     cleaned = value.strip().lower()
     if not _LANGUAGE_CODE_RE.match(cleaned):
-        raise ValueError(f"target_language must be a 2-letter ISO-639 code; got '{value}'")
+        raise ValueError(
+            f"target_language must be a 2-letter ISO-639 code; got '{value}'"
+        )
     return cleaned
 
 
@@ -930,9 +954,7 @@ class MatchProjectSettingsUpdate(BaseModel):
     model_config = ConfigDict(str_strip_whitespace=True)
 
     target_language: str | None = Field(
-        default=None,
-        min_length=2,
-        max_length=8,
+        default=None, min_length=2, max_length=8,
     )
     classifier: str | None = None
     auto_link_threshold: float | None = Field(default=None, ge=0.0, le=1.0)
@@ -1044,3 +1066,100 @@ class FocusModePatch(BaseModel):
     """Master switch for the numbered/greyed sidebar mode."""
 
     focus_mode_enabled: bool
+
+
+class ProjectModulePresence(BaseModel):
+    """‌⁠‍Per-module "has any data?" booleans for one project.
+
+    Used by the frontend sidebar to dim/grey modules that have no rows
+    for the current project. Every field is a single boolean — keeping
+    the response shape literal (vs. a free-form dict) so the
+    openapi-typescript client gets a strongly typed surface.
+
+    Rules of the road:
+
+    * ``True``  — at least one row exists in that module's primary
+                  project-scoped table.
+    * ``False`` — either zero rows, OR the underlying table is missing
+                  (fresh DB / migration not yet applied). Endpoint must
+                  never 500 because one module is unwired.
+
+    Module keys mirror the frontend sidebar slugs.
+    """
+
+    # ``populate_by_name=True`` lets ``model_validate({"5d": ...})``
+    # resolve the alias. ``from_attributes=True`` keeps the usual
+    # ORM-friendly behaviour the rest of the schemas use.
+    model_config = ConfigDict(from_attributes=True, populate_by_name=True)
+
+    # ── Estimation & BIM ──
+    boq: bool = False
+    takeoff: bool = False
+    clash: bool = False
+    bim: bool = False
+    costs: bool = False
+    match_elements: bool = False
+    assemblies: bool = False
+    smart_views: bool = False
+    bim_requirements: bool = False
+    bcf: bool = False
+
+    # ── Planning & Field ──
+    schedule: bool = False
+    tasks: bool = False
+    # JSON requires keys be valid Python identifiers — store as ``five_d``
+    # in Python and serialise to ``"5d"`` (sidebar key) on the wire.
+    five_d: bool = Field(default=False, alias="5d")
+    risk: bool = False
+    field_reports: bool = False
+    daily_diary: bool = False
+    equipment: bool = False
+    resources: bool = False
+    service: bool = False
+    portal: bool = False
+
+    # ── Commercial ──
+    finance: bool = False
+    procurement: bool = False
+    tendering: bool = False
+    changeorders: bool = False
+    crm: bool = False
+    contracts: bool = False
+    subcontractors: bool = False
+    bid_management: bool = False
+    variations: bool = False
+    supplier_catalogs: bool = False
+    property_dev: bool = False
+
+    # ── Communication & Docs ──
+    contacts: bool = False
+    meetings: bool = False
+    rfi: bool = False
+    submittals: bool = False
+    transmittals: bool = False
+    correspondence: bool = False
+    assets: bool = False
+    cde: bool = False
+    photos: bool = False
+    markups: bool = False
+    reports: bool = False
+    bi_dashboards: bool = False
+
+    # ── Quality, HSE & Compliance ──
+    validation: bool = False
+    inspections: bool = False
+    ncr: bool = False
+    punchlist: bool = False
+    qms: bool = False
+    safety: bool = False
+    hse_advanced: bool = False
+    carbon: bool = False
+
+    # ── AI & Analytics ──
+    ai_estimate: bool = False
+    ai_agents: bool = False
+    advisor: bool = False
+    estimation_dashboard: bool = False
+    erp_chat: bool = False
+
+
