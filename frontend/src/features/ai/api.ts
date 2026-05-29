@@ -169,6 +169,8 @@ export const aiApi = {
   testConnection: (provider: AIProvider) =>
     apiPost<AITestResult, { provider: AIProvider }>('/v1/ai/settings/test/', { provider }),
 
+  getModels: () => apiGet<{ id: string; name: string }[]>('/v1/ai/models/'),
+
   /**
    * Generate a BOQ estimate from a text description.
    *

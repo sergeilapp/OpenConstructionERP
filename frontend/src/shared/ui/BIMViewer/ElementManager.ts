@@ -283,6 +283,7 @@ function getDisciplineColor(discipline: string | null | undefined): number {
   // `discipline === undefined`; previous code crashed in toLowerCase().
   if (!discipline) return DEFAULT_COLOR;
   const key = discipline.toLowerCase().replace(/[\s-]/g, "_");
+  return DISCIPLINE_COLORS[key] ?? DEFAULT_COLOR;
 }
 
 /* ── Category Colors (for placeholder boxes) ─────────────────────────── */
@@ -2072,8 +2073,8 @@ export class ElementManager {
     for (const [, mesh] of this.meshMap) {
       const data = mesh.userData as { elementData?: BIMElementData };
       const elDiscipline = (data.elementData?.discipline ?? "").toLowerCase();
-      const target_lower = (discipline ?? "").toLowerCase();
-      if (elDiscipline && elDiscipline === target_lower) {
+      if (elDiscipline && elDiscipline === target) {
+        mesh.visible = visible;
       }
     }
   }
