@@ -207,6 +207,12 @@ export const REGION_MAP: Record<string, RegionInfo> = {
     flag: "za",
     currency: "ZAR",
   },
+  "BEDROCK-MAIN": {
+    label: "Bedrock Siteworks (USD)",
+    name: "Bedrock Siteworks",
+    flag: "us",
+    currency: "USD",
+  },
   CUSTOM: {
     label: "My Database",
     name: "My Database",

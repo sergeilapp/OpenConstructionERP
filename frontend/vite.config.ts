@@ -178,7 +178,7 @@ export default defineConfig({
         // runs; 8000 was the pre-v4 default and was kept until a stale
         // v3.11.0 process living on it caused /bim/federations Create to
         // return "Not Found" (the federations route only exists in v4+).
-        target: 'http://127.0.0.1:9090',
+        target: 'http://127.0.0.1:8000',
         changeOrigin: true,
         // 30 minutes. Catalogue v3 installs (`/costs/catalogues-v3/{id}/install`)
         // download a 200–500 MB snapshot from Hugging Face, stream it

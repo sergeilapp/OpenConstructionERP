@@ -38,6 +38,14 @@ for i in {1..15}; do
     sleep 1
 done
 
+# Sanity check: vite proxy target must match backend port
+PROXY_PORT=$(grep -oP "target: 'http://127.0.0.1:\K[0-9]+" frontend/vite.config.ts)
+if [ "$PROXY_PORT" != "8000" ]; then
+    echo "  ERROR: frontend/vite.config.ts proxies to port $PROXY_PORT but backend is on 8000"
+    echo "  Fix: update the proxy target in frontend/vite.config.ts to match."
+    exit 1
+fi
+
 # Start frontend
 echo "[3/3] Starting Frontend (vite)..."
 (
