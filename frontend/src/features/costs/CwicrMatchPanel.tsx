@@ -438,3 +438,5 @@ export function CwicrMatchPanel(props: CwicrMatchPanelProps) {
         />
       )}
     </div>
+  );
+}
