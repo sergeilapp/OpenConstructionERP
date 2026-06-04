@@ -1,0 +1,23 @@
+{
+  "manifest_version": "1.0",
+  "generated_at": "2026-06-03T00:00:00-04:00",
+  "package_name": "TCG Review Slice Import 1",
+  "package_path": "OCERP/bedrock_tcg_review_slice_import_1/",
+  "review_only": true,
+  "import_instructions": "Small draft package for OCERP visual/testing import. Use dry-run first. This is not the final TCG import package.",
+  "provenance": {
+    "contact_id": 24929,
+    "model_job_group_id": "tcg_24929_model_job",
+    "member_job_ids": [38396, 38522],
+    "source_docs": [
+      "app-bedrock/docs/TCG-project/tcg_proposed_composite_costitems_v4.md",
+      "app-bedrock/docs/TCG-project/tcg_demo_review_notes.md"
+    ]
+  },
+  "summary": {
+    "catalog_resources": 16,
+    "cost_items": 5,
+    "assemblies": 1,
+    "scope": "Stormwater/French drain and utility trenching review slice"
+  }
+}

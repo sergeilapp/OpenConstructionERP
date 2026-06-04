@@ -237,3 +237,6 @@ _verify_out.txt
 
 # Ad-hoc QA scratch output (never commit)
 _qa_tmp/
+
+# Large binary data packages
+*.zip

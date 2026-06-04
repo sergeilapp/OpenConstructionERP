@@ -1,0 +1,23 @@
+[
+  {
+    "code": "TCG-ASM-STORMWATER-FRENCH-DRAIN-DRAFT",
+    "name": "TCG Stormwater French Drain Draft Assembly",
+    "description": "Review-only assembly grouping the draft stormwater CostItems: delivery, placement, and filtration scope.",
+    "unit": "LS",
+    "category": "Stormwater",
+    "classification": { "masterformat": "33 00 00", "collection": "Stormwater", "category": "Sitework", "department": "Utilities", "section": "French Drain" },
+    "total_rate": 93877.95,
+    "currency": "USD",
+    "bid_factor": 1.0,
+    "regional_factors": {},
+    "is_template": true,
+    "tags": ["tcg_review_slice", "review_only", "assembly", "stormwater"],
+    "components": [
+      { "cost_item_code": "TCG-DELIVER-57-STONE-FD", "description": "Deliver #57 stone for French drain", "factor": 1.0, "quantity": 863.8, "unit": "t", "unit_cost": 79.57, "resource_type": null, "total": 68732.57, "metadata": { "component_source": "cost_item", "source_job_id": 38396 } },
+      { "cost_item_code": "TCG-DELIVER-SAND-FD", "description": "Deliver sand for French drain", "factor": 1.0, "quantity": 78.0, "unit": "CY", "unit_cost": 63.21, "resource_type": null, "total": 4930.0, "metadata": { "component_source": "cost_item", "source_job_id": 38396 } },
+      { "cost_item_code": "TCG-PLACE-AGGREGATE-FD", "description": "Place aggregate layers for French drain", "factor": 1.0, "quantity": 1.0, "unit": "LS", "unit_cost": 12015.0, "resource_type": null, "total": 12015.0, "metadata": { "component_source": "cost_item", "labor_allocation_review": true } },
+      { "cost_item_code": "TCG-STORMWATER-DRAINAGE-FILTRATION-SCOPE", "description": "Stormwater filtration fabric, observation pipe, equipment, and specialty labor", "factor": 1.0, "quantity": 1.0, "unit": "LS", "unit_cost": 8200.0, "resource_type": null, "total": 8200.0, "metadata": { "component_source": "cost_item", "source_job_id": 38396 } }
+    ],
+    "metadata": { "source": "bedrock_tcg_review_slice_import_1", "region": "BEDROCK-TCG-REVIEW", "review_only": true, "draft_import_reason": "Partial review import to validate sum-of-parts structure in OCERP" }
+  }
+]

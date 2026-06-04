@@ -1,0 +1,352 @@
+{
+  "generated_at": "2026-06-02T12:32:05-04:00",
+  "review_only": true,
+  "provenance": {
+    "contact_id": 24929,
+    "model_job_group_id": "tcg_24929_model_job",
+    "member_job_ids": [
+      38254,
+      38304,
+      38396,
+      38447,
+      38522,
+      38577,
+      38578
+    ]
+  },
+  "notes": [
+    {
+      "masterformat_code": "00 00 00",
+      "line_number": 5,
+      "description": "jobs.additional_price_description.#38304",
+      "classification": "scope_description",
+      "source_evidence": "jobs.additional_price_description 38304 (job 38304)",
+      "assembly_candidate": "erosion_control_site_stabilization",
+      "note_type": "scope_note"
+    },
+    {
+      "masterformat_code": "00 00 00",
+      "line_number": 6,
+      "description": "jobs.additional_price_description.#38396",
+      "classification": "scope_description",
+      "source_evidence": "jobs.additional_price_description 38396 (job 38396)",
+      "assembly_candidate": "stormwater_drainage_filtration",
+      "note_type": "scope_note"
+    },
+    {
+      "masterformat_code": "00 00 00",
+      "line_number": 7,
+      "description": "jobs.additional_price_description.#38447",
+      "classification": "scope_description",
+      "source_evidence": "jobs.additional_price_description 38447 (job 38447)",
+      "assembly_candidate": "utility_trenching_conduit",
+      "note_type": "scope_note"
+    },
+    {
+      "masterformat_code": "02 00 00",
+      "line_number": 11,
+      "description": "estimate_payment_schedules.description.#3720",
+      "classification": "scope_description",
+      "source_evidence": "estimate_payment_schedules.description 3720 (job 38304)",
+      "assembly_candidate": "demolition_disposal",
+      "note_type": "scope_note"
+    },
+    {
+      "masterformat_code": "02 00 00",
+      "line_number": 12,
+      "description": "estimate_payment_schedules.description.#3723",
+      "classification": "scope_description",
+      "source_evidence": "estimate_payment_schedules.description 3723 (job 38304)",
+      "assembly_candidate": null,
+      "note_type": "scope_note"
+    },
+    {
+      "masterformat_code": "03 00 00",
+      "line_number": 5,
+      "description": "estimate_payment_schedules.description.#3724",
+      "classification": "scope_description",
+      "source_evidence": "estimate_payment_schedules.description 3724 (job 38304)",
+      "assembly_candidate": null,
+      "note_type": "scope_note"
+    },
+    {
+      "masterformat_code": "03 00 00",
+      "line_number": 6,
+      "description": "estimate_payment_schedules.description.#3729",
+      "classification": "scope_description",
+      "source_evidence": "estimate_payment_schedules.description 3729 (job 38304)",
+      "assembly_candidate": "concrete_curb_paving_repair",
+      "note_type": "scope_note"
+    },
+    {
+      "masterformat_code": "03 00 00",
+      "line_number": 7,
+      "description": "jobs.contract_description_override.#38447",
+      "classification": "scope_description",
+      "source_evidence": "jobs.contract_description_override 38447 (job 38447)",
+      "assembly_candidate": "utility_trenching_conduit",
+      "note_type": "scope_note"
+    },
+    {
+      "masterformat_code": "03 00 00",
+      "line_number": 8,
+      "description": "jobs.description.#38577",
+      "classification": "scope_description",
+      "source_evidence": "jobs.description 38577 (job 38577)",
+      "assembly_candidate": null,
+      "note_type": "scope_note"
+    },
+    {
+      "masterformat_code": "31 00 00",
+      "line_number": 28,
+      "description": "estimate_payment_schedules.description.#3718",
+      "classification": "scope_description",
+      "source_evidence": "estimate_payment_schedules.description 3718 (job 38304)",
+      "assembly_candidate": "erosion_control_site_stabilization",
+      "note_type": "scope_note"
+    },
+    {
+      "masterformat_code": "31 00 00",
+      "line_number": 29,
+      "description": "estimate_payment_schedules.description.#3719",
+      "classification": "scope_description",
+      "source_evidence": "estimate_payment_schedules.description 3719 (job 38304)",
+      "assembly_candidate": "erosion_control_site_stabilization",
+      "note_type": "scope_note"
+    },
+    {
+      "masterformat_code": "31 00 00",
+      "line_number": 30,
+      "description": "estimate_payment_schedules.description.#3721",
+      "classification": "scope_description",
+      "source_evidence": "estimate_payment_schedules.description 3721 (job 38304)",
+      "assembly_candidate": "mass_earthwork_excavation_fill",
+      "note_type": "scope_note"
+    },
+    {
+      "masterformat_code": "31 00 00",
+      "line_number": 31,
+      "description": "estimate_payment_schedules.description.#3722",
+      "classification": "scope_description",
+      "source_evidence": "estimate_payment_schedules.description 3722 (job 38304)",
+      "assembly_candidate": null,
+      "note_type": "scope_note"
+    },
+    {
+      "masterformat_code": "31 00 00",
+      "line_number": 32,
+      "description": "jobs.additional_price_description.#38254",
+      "classification": "scope_description",
+      "source_evidence": "jobs.additional_price_description 38254 (job 38254)",
+      "assembly_candidate": "erosion_control_site_stabilization",
+      "note_type": "scope_note"
+    },
+    {
+      "masterformat_code": "31 00 00",
+      "line_number": 33,
+      "description": "jobs.additional_price_description.#38578",
+      "classification": "scope_description",
+      "source_evidence": "jobs.additional_price_description 38578 (job 38578)",
+      "assembly_candidate": "mass_earthwork_excavation_fill",
+      "note_type": "scope_note"
+    },
+    {
+      "masterformat_code": "31 00 00",
+      "line_number": 34,
+      "description": "jobs.contract_description_override.#38254",
+      "classification": "scope_description",
+      "source_evidence": "jobs.contract_description_override 38254 (job 38254)",
+      "assembly_candidate": "erosion_control_site_stabilization",
+      "note_type": "scope_note"
+    },
+    {
+      "masterformat_code": "31 00 00",
+      "line_number": 35,
+      "description": "jobs.contract_description_override.#38304",
+      "classification": "scope_description",
+      "source_evidence": "jobs.contract_description_override 38304 (job 38304)",
+      "assembly_candidate": "erosion_control_site_stabilization",
+      "note_type": "scope_note"
+    },
+    {
+      "masterformat_code": "31 00 00",
+      "line_number": 36,
+      "description": "jobs.contract_description_override.#38396",
+      "classification": "scope_description",
+      "source_evidence": "jobs.contract_description_override 38396 (job 38396)",
+      "assembly_candidate": "erosion_control_site_stabilization",
+      "note_type": "scope_note"
+    },
+    {
+      "masterformat_code": "31 00 00",
+      "line_number": 37,
+      "description": "jobs.contract_description_override.#38577",
+      "classification": "scope_description",
+      "source_evidence": "jobs.contract_description_override 38577 (job 38577)",
+      "assembly_candidate": "erosion_control_site_stabilization",
+      "note_type": "scope_note"
+    },
+    {
+      "masterformat_code": "31 00 00",
+      "line_number": 38,
+      "description": "jobs.contract_description_override.#38578",
+      "classification": "scope_description",
+      "source_evidence": "jobs.contract_description_override 38578 (job 38578)",
+      "assembly_candidate": "erosion_control_site_stabilization",
+      "note_type": "scope_note"
+    },
+    {
+      "masterformat_code": "31 00 00",
+      "line_number": 39,
+      "description": "jobs.description.#38522",
+      "classification": "scope_description",
+      "source_evidence": "jobs.description 38522 (job 38522)",
+      "assembly_candidate": "utility_trenching_conduit",
+      "note_type": "scope_note"
+    },
+    {
+      "masterformat_code": "33 00 00",
+      "line_number": 24,
+      "description": "estimate_payment_schedules.description.#3725",
+      "classification": "scope_description",
+      "source_evidence": "estimate_payment_schedules.description 3725 (job 38304)",
+      "assembly_candidate": "utility_trenching_conduit",
+      "note_type": "scope_note"
+    },
+    {
+      "masterformat_code": "33 00 00",
+      "line_number": 25,
+      "description": "estimate_payment_schedules.description.#3728",
+      "classification": "scope_description",
+      "source_evidence": "estimate_payment_schedules.description 3728 (job 38304)",
+      "assembly_candidate": "utility_trenching_conduit",
+      "note_type": "scope_note"
+    },
+    {
+      "masterformat_code": "33 00 00",
+      "line_number": 26,
+      "description": "jobs.additional_price_description.#38522",
+      "classification": "scope_description",
+      "source_evidence": "jobs.additional_price_description 38522 (job 38522)",
+      "assembly_candidate": "utility_trenching_conduit",
+      "note_type": "scope_note"
+    },
+    {
+      "masterformat_code": "33 00 00",
+      "line_number": 27,
+      "description": "jobs.additional_price_description.#38577",
+      "classification": "scope_description",
+      "source_evidence": "jobs.additional_price_description 38577 (job 38577)",
+      "assembly_candidate": "stormwater_drainage_filtration",
+      "note_type": "scope_note"
+    },
+    {
+      "masterformat_code": "33 00 00",
+      "line_number": 28,
+      "description": "jobs.contract_description_override.#38522",
+      "classification": "scope_description",
+      "source_evidence": "jobs.contract_description_override 38522 (job 38522)",
+      "assembly_candidate": "utility_trenching_conduit",
+      "note_type": "scope_note"
+    },
+    {
+      "masterformat_code": "33 00 00",
+      "line_number": 29,
+      "description": "jobs.description.#38304",
+      "classification": "scope_description",
+      "source_evidence": "jobs.description 38304 (job 38304)",
+      "assembly_candidate": "utility_trenching_conduit",
+      "note_type": "scope_note"
+    },
+    {
+      "masterformat_code": "33 00 00",
+      "line_number": 30,
+      "description": "jobs.description.#38396",
+      "classification": "scope_description",
+      "source_evidence": "jobs.description 38396 (job 38396)",
+      "assembly_candidate": "utility_trenching_conduit",
+      "note_type": "scope_note"
+    },
+    {
+      "masterformat_code": "33 00 00",
+      "line_number": 31,
+      "description": "jobs.description.#38447",
+      "classification": "scope_description",
+      "source_evidence": "jobs.description 38447 (job 38447)",
+      "assembly_candidate": "utility_trenching_conduit",
+      "note_type": "scope_note"
+    },
+    {
+      "masterformat_code": "33 00 00",
+      "line_number": 32,
+      "description": "jobs.description.#38578",
+      "classification": "scope_description",
+      "source_evidence": "jobs.description 38578 (job 38578)",
+      "assembly_candidate": "utility_trenching_conduit",
+      "note_type": "scope_note"
+    },
+    {
+      "masterformat_code": "33 00 00",
+      "line_number": 33,
+      "description": "jobs.preparation_material.#38254",
+      "classification": "scope_description",
+      "source_evidence": "jobs.preparation_material 38254 (job 38254)",
+      "assembly_candidate": "stormwater_drainage_filtration",
+      "note_type": "scope_note"
+    },
+    {
+      "masterformat_code": "33 00 00",
+      "line_number": 34,
+      "description": "jobs.preparation_material.#38304",
+      "classification": "scope_description",
+      "source_evidence": "jobs.preparation_material 38304 (job 38304)",
+      "assembly_candidate": "stormwater_drainage_filtration",
+      "note_type": "scope_note"
+    },
+    {
+      "masterformat_code": "33 00 00",
+      "line_number": 35,
+      "description": "jobs.preparation_material.#38396",
+      "classification": "scope_description",
+      "source_evidence": "jobs.preparation_material 38396 (job 38396)",
+      "assembly_candidate": "stormwater_drainage_filtration",
+      "note_type": "scope_note"
+    },
+    {
+      "masterformat_code": "33 00 00",
+      "line_number": 36,
+      "description": "jobs.preparation_material.#38447",
+      "classification": "scope_description",
+      "source_evidence": "jobs.preparation_material 38447 (job 38447)",
+      "assembly_candidate": "stormwater_drainage_filtration",
+      "note_type": "scope_note"
+    },
+    {
+      "masterformat_code": "33 00 00",
+      "line_number": 37,
+      "description": "jobs.preparation_material.#38522",
+      "classification": "scope_description",
+      "source_evidence": "jobs.preparation_material 38522 (job 38522)",
+      "assembly_candidate": "stormwater_drainage_filtration",
+      "note_type": "scope_note"
+    },
+    {
+      "masterformat_code": "33 00 00",
+      "line_number": 38,
+      "description": "jobs.preparation_material.#38577",
+      "classification": "scope_description",
+      "source_evidence": "jobs.preparation_material 38577 (job 38577)",
+      "assembly_candidate": "stormwater_drainage_filtration",
+      "note_type": "scope_note"
+    },
+    {
+      "masterformat_code": "33 00 00",
+      "line_number": 39,
+      "description": "jobs.preparation_material.#38578",
+      "classification": "scope_description",
+      "source_evidence": "jobs.preparation_material 38578 (job 38578)",
+      "assembly_candidate": "stormwater_drainage_filtration",
+      "note_type": "scope_note"
+    }
+  ]
+}

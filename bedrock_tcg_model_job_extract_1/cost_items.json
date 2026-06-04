@@ -1,0 +1,2547 @@
+[
+  {
+    "code": "TCG-DRAIN_STONE-SUPPLY",
+    "name": "Supply Drain Stone",
+    "unit": "TON",
+    "rate": 50.0,
+    "rate_display": "$50.00/TON",
+    "masterformat_code": "02 00 00",
+    "scope_description": "Material supply of Drain Stone delivered to site",
+    "component_completeness": {
+      "material": {
+        "status": "present",
+        "note": "Material cost per TON"
+      },
+      "labor": {
+        "status": "not_required",
+        "note": "Material supply only; placement labor is a separate CostItem or component"
+      },
+      "equipment": {
+        "status": "deferred",
+        "note": "Hauling from quarry is a separate CostItem (TCG-HAUL-DRAIN-STONE)"
+      },
+      "subcontractor": {
+        "status": "not_required",
+        "note": "In-house supply"
+      }
+    },
+    "reuse_potential": "High — same material types appear across multiple jobs",
+    "adjustability": "Unit price per TON is estimator-adjustable; source quarry may change rate",
+    "provenance": {
+      "evidence_count": 1,
+      "total_quantity": 92.0,
+      "total_extended": 4600.0,
+      "job_ids": [
+        38304
+      ],
+      "masterformat_codes": [
+        "02 00 00"
+      ],
+      "contact_id": 24929,
+      "model_job_group_id": "tcg_24929_model_job",
+      "member_job_ids": [
+        38254,
+        38304,
+        38396,
+        38447,
+        38522,
+        38577,
+        38578
+      ]
+    },
+    "components": [
+      {
+        "type": "material",
+        "name": "Supply Ballast (1 1/2\" - 2 1/2\") Drain Stone, 8.0\" thick",
+        "unit": "TON",
+        "quantity": 92.0,
+        "unit_rate": 50.0,
+        "provenance": {
+          "source_evidence": "SitePreparationMaterial 3207 (job 38304)",
+          "job_ids": [
+            38304
+          ],
+          "masterformat_code": "02 00 00",
+          "line_number": 5
+        }
+      }
+    ],
+    "tags": [
+      "tcg_draft",
+      "review_only"
+    ],
+    "review_status": "draft"
+  },
+  {
+    "code": "TCG-_57_STONE-SUPPLY",
+    "name": "Supply #57 Stone",
+    "unit": "TON",
+    "rate": 50.0,
+    "rate_display": "$50.00/TON",
+    "masterformat_code": "31 00 00",
+    "scope_description": "Material supply of #57 Stone delivered to site",
+    "component_completeness": {
+      "material": {
+        "status": "present",
+        "note": "Material cost per TON"
+      },
+      "labor": {
+        "status": "not_required",
+        "note": "Material supply only; placement labor is a separate CostItem or component"
+      },
+      "equipment": {
+        "status": "deferred",
+        "note": "Hauling from quarry is a separate CostItem (TCG-HAUL-#57-STONE)"
+      },
+      "subcontractor": {
+        "status": "not_required",
+        "note": "In-house supply"
+      }
+    },
+    "reuse_potential": "High — same material types appear across multiple jobs",
+    "adjustability": "Unit price per TON is estimator-adjustable; source quarry may change rate",
+    "provenance": {
+      "evidence_count": 3,
+      "total_quantity": 1121.0,
+      "total_extended": 56050.0,
+      "job_ids": [
+        38577,
+        38396
+      ],
+      "masterformat_codes": [
+        "31 00 00",
+        "33 00 00"
+      ],
+      "contact_id": 24929,
+      "model_job_group_id": "tcg_24929_model_job",
+      "member_job_ids": [
+        38254,
+        38304,
+        38396,
+        38447,
+        38522,
+        38577,
+        38578
+      ]
+    },
+    "components": [
+      {
+        "type": "material",
+        "name": "Supply #57 (2B) (3/4\" - 1\" clean stone), 12.0\" thick",
+        "unit": "TON",
+        "quantity": 92.0,
+        "unit_rate": 50.0,
+        "provenance": {
+          "source_evidence": "SitePreparationMaterial 3111 (job 38577)",
+          "job_ids": [
+            38577
+          ],
+          "masterformat_code": "31 00 00",
+          "line_number": 14
+        }
+      },
+      {
+        "type": "material",
+        "name": "Supply #57 (2B) (3/4\" - 1\" clean stone), 4.0\" thick",
+        "unit": "TON",
+        "quantity": 165.2,
+        "unit_rate": 50.0,
+        "provenance": {
+          "source_evidence": "SitePreparationMaterial 3110 (job 38577)",
+          "job_ids": [
+            38577
+          ],
+          "masterformat_code": "31 00 00",
+          "line_number": 15
+        }
+      },
+      {
+        "type": "material",
+        "name": "Supply #57 (2B) (3/4\" - 1\" clean stone), 24.0\" thick",
+        "unit": "TON",
+        "quantity": 863.8,
+        "unit_rate": 50.0,
+        "provenance": {
+          "source_evidence": "SitePreparationMaterial 3016 (job 38396)",
+          "job_ids": [
+            38396
+          ],
+          "masterformat_code": "33 00 00",
+          "line_number": 10
+        }
+      }
+    ],
+    "tags": [
+      "tcg_draft",
+      "review_only"
+    ],
+    "review_status": "draft"
+  },
+  {
+    "code": "TCG-SAND-SUPPLY",
+    "name": "Supply Sand",
+    "unit": "CY",
+    "rate": 125.0,
+    "rate_display": "$125.00/CY",
+    "masterformat_code": "31 00 00",
+    "scope_description": "Material supply of Sand delivered to site",
+    "component_completeness": {
+      "material": {
+        "status": "present",
+        "note": "Material cost per CY"
+      },
+      "labor": {
+        "status": "not_required",
+        "note": "Material supply only; placement labor is a separate CostItem or component"
+      },
+      "equipment": {
+        "status": "deferred",
+        "note": "Hauling from quarry is a separate CostItem (TCG-HAUL-SAND)"
+      },
+      "subcontractor": {
+        "status": "not_required",
+        "note": "In-house supply"
+      }
+    },
+    "reuse_potential": "High — same material types appear across multiple jobs",
+    "adjustability": "Unit price per CY is estimator-adjustable; source quarry may change rate",
+    "provenance": {
+      "evidence_count": 2,
+      "total_quantity": 98.0,
+      "total_extended": 12250.0,
+      "job_ids": [
+        38578,
+        38396
+      ],
+      "masterformat_codes": [
+        "31 00 00",
+        "33 00 00"
+      ],
+      "contact_id": 24929,
+      "model_job_group_id": "tcg_24929_model_job",
+      "member_job_ids": [
+        38254,
+        38304,
+        38396,
+        38447,
+        38522,
+        38577,
+        38578
+      ]
+    },
+    "components": [
+      {
+        "type": "material",
+        "name": "Supply Sand, 24.0\" thick",
+        "unit": "CY",
+        "quantity": 20.0,
+        "unit_rate": 125.0,
+        "provenance": {
+          "source_evidence": "SitePreparationMaterial 3112 (job 38578)",
+          "job_ids": [
+            38578
+          ],
+          "masterformat_code": "31 00 00",
+          "line_number": 16
+        }
+      },
+      {
+        "type": "material",
+        "name": "Supply Sand, 3.0\" thick",
+        "unit": "CY",
+        "quantity": 78.0,
+        "unit_rate": 125.0,
+        "provenance": {
+          "source_evidence": "SitePreparationMaterial 3015 (job 38396)",
+          "job_ids": [
+            38396
+          ],
+          "masterformat_code": "33 00 00",
+          "line_number": 11
+        }
+      }
+    ],
+    "tags": [
+      "tcg_draft",
+      "review_only"
+    ],
+    "review_status": "draft"
+  },
+  {
+    "code": "TCG-DRAIN_STONE-HAUL",
+    "name": "Haul Drain Stone From Quarry",
+    "unit": "LOAD",
+    "rate": 985.0,
+    "rate_display": "$985.00/LOAD",
+    "masterformat_code": "02 00 00",
+    "scope_description": "Truck hauling of Drain Stone from quarry to job site",
+    "component_completeness": {
+      "material": {
+        "status": "not_required",
+        "note": "Hauling only; material supply is a separate CostItem"
+      },
+      "labor": {
+        "status": "deferred",
+        "note": "Driver labor may be embedded in truck cost or tracked as separate labor component"
+      },
+      "equipment": {
+        "status": "present",
+        "note": "Truck cost per LOAD"
+      },
+      "subcontractor": {
+        "status": "not_required",
+        "note": "In-house trucking"
+      }
+    },
+    "reuse_potential": "High — same quarry routes and material types appear across jobs",
+    "adjustability": "Rate per LOAD varies by distance, fuel cost, and truck type",
+    "provenance": {
+      "evidence_count": 1,
+      "total_quantity": 4.0,
+      "total_extended": 3940.0,
+      "job_ids": [
+        38304
+      ],
+      "masterformat_codes": [
+        "02 00 00"
+      ],
+      "contact_id": 24929,
+      "model_job_group_id": "tcg_24929_model_job",
+      "member_job_ids": [
+        38254,
+        38304,
+        38396,
+        38447,
+        38522,
+        38577,
+        38578
+      ]
+    },
+    "components": [
+      {
+        "type": "equipment",
+        "name": "Haul Ballast (1 1/2\" - 2 1/2\") Drain Stone from quarry",
+        "unit": "LOAD",
+        "quantity": 4.0,
+        "unit_rate": 985.0,
+        "provenance": {
+          "source_evidence": "SitePreparationMaterial 3207 hauling (job 38304)",
+          "job_ids": [
+            38304
+          ],
+          "masterformat_code": "02 00 00",
+          "line_number": 2
+        }
+      }
+    ],
+    "tags": [
+      "tcg_draft",
+      "review_only"
+    ],
+    "review_status": "draft"
+  },
+  {
+    "code": "TCG-_57_STONE-HAUL",
+    "name": "Haul #57 Stone From Quarry",
+    "unit": "LOAD",
+    "rate": 954.6,
+    "rate_display": "$954.60/LOAD",
+    "masterformat_code": "31 00 00",
+    "scope_description": "Truck hauling of #57 Stone from quarry to job site",
+    "component_completeness": {
+      "material": {
+        "status": "not_required",
+        "note": "Hauling only; material supply is a separate CostItem"
+      },
+      "labor": {
+        "status": "deferred",
+        "note": "Driver labor may be embedded in truck cost or tracked as separate labor component"
+      },
+      "equipment": {
+        "status": "present",
+        "note": "Truck cost per LOAD"
+      },
+      "subcontractor": {
+        "status": "not_required",
+        "note": "In-house trucking"
+      }
+    },
+    "reuse_potential": "High — same quarry routes and material types appear across jobs",
+    "adjustability": "Rate per LOAD varies by distance, fuel cost, and truck type",
+    "provenance": {
+      "evidence_count": 3,
+      "total_quantity": 50.0,
+      "total_extended": 47730.0,
+      "job_ids": [
+        38577,
+        38396
+      ],
+      "masterformat_codes": [
+        "31 00 00",
+        "33 00 00"
+      ],
+      "contact_id": 24929,
+      "model_job_group_id": "tcg_24929_model_job",
+      "member_job_ids": [
+        38254,
+        38304,
+        38396,
+        38447,
+        38522,
+        38577,
+        38578
+      ]
+    },
+    "components": [
+      {
+        "type": "equipment",
+        "name": "Haul #57 (2B) (3/4\" - 1\" clean stone) from quarry",
+        "unit": "LOAD",
+        "quantity": 8.0,
+        "unit_rate": 985.0,
+        "provenance": {
+          "source_evidence": "SitePreparationMaterial 3110 hauling (job 38577)",
+          "job_ids": [
+            38577
+          ],
+          "masterformat_code": "31 00 00",
+          "line_number": 4
+        }
+      },
+      {
+        "type": "equipment",
+        "name": "Haul #57 (2B) (3/4\" - 1\" clean stone) from quarry",
+        "unit": "LOAD",
+        "quantity": 4.0,
+        "unit_rate": 985.0,
+        "provenance": {
+          "source_evidence": "SitePreparationMaterial 3111 hauling (job 38577)",
+          "job_ids": [
+            38577
+          ],
+          "masterformat_code": "31 00 00",
+          "line_number": 5
+        }
+      },
+      {
+        "type": "equipment",
+        "name": "Haul #57 (2B) (3/4\" - 1\" clean stone) from quarry",
+        "unit": "LOAD",
+        "quantity": 38.0,
+        "unit_rate": 945.0,
+        "provenance": {
+          "source_evidence": "SitePreparationMaterial 3016 hauling (job 38396)",
+          "job_ids": [
+            38396
+          ],
+          "masterformat_code": "33 00 00",
+          "line_number": 3
+        }
+      }
+    ],
+    "tags": [
+      "tcg_draft",
+      "review_only"
+    ],
+    "review_status": "draft"
+  },
+  {
+    "code": "TCG-SAND-HAUL",
+    "name": "Haul Sand From Quarry",
+    "unit": "LOAD",
+    "rate": 769.0,
+    "rate_display": "$769.00/LOAD",
+    "masterformat_code": "31 00 00",
+    "scope_description": "Truck hauling of Sand from quarry to job site",
+    "component_completeness": {
+      "material": {
+        "status": "not_required",
+        "note": "Hauling only; material supply is a separate CostItem"
+      },
+      "labor": {
+        "status": "deferred",
+        "note": "Driver labor may be embedded in truck cost or tracked as separate labor component"
+      },
+      "equipment": {
+        "status": "present",
+        "note": "Truck cost per LOAD"
+      },
+      "subcontractor": {
+        "status": "not_required",
+        "note": "In-house trucking"
+      }
+    },
+    "reuse_potential": "High — same quarry routes and material types appear across jobs",
+    "adjustability": "Rate per LOAD varies by distance, fuel cost, and truck type",
+    "provenance": {
+      "evidence_count": 2,
+      "total_quantity": 5.0,
+      "total_extended": 3845.0,
+      "job_ids": [
+        38578,
+        38396
+      ],
+      "masterformat_codes": [
+        "31 00 00",
+        "33 00 00"
+      ],
+      "contact_id": 24929,
+      "model_job_group_id": "tcg_24929_model_job",
+      "member_job_ids": [
+        38254,
+        38304,
+        38396,
+        38447,
+        38522,
+        38577,
+        38578
+      ]
+    },
+    "components": [
+      {
+        "type": "equipment",
+        "name": "Haul Sand from quarry",
+        "unit": "LOAD",
+        "quantity": 1.0,
+        "unit_rate": 865.0,
+        "provenance": {
+          "source_evidence": "SitePreparationMaterial 3112 hauling (job 38578)",
+          "job_ids": [
+            38578
+          ],
+          "masterformat_code": "31 00 00",
+          "line_number": 6
+        }
+      },
+      {
+        "type": "equipment",
+        "name": "Haul Sand from quarry",
+        "unit": "LOAD",
+        "quantity": 4.0,
+        "unit_rate": 745.0,
+        "provenance": {
+          "source_evidence": "SitePreparationMaterial 3015 hauling (job 38396)",
+          "job_ids": [
+            38396
+          ],
+          "masterformat_code": "33 00 00",
+          "line_number": 4
+        }
+      }
+    ],
+    "tags": [
+      "tcg_draft",
+      "review_only"
+    ],
+    "review_status": "draft"
+  },
+  {
+    "code": "TCG-FILL_DIRT-HAUL",
+    "name": "Haul Fill Dirt From Quarry",
+    "unit": "LOAD",
+    "rate": 349.26,
+    "rate_display": "$349.26/LOAD",
+    "masterformat_code": "31 00 00",
+    "scope_description": "Truck hauling of Fill Dirt from quarry to job site",
+    "component_completeness": {
+      "material": {
+        "status": "not_required",
+        "note": "Hauling only; material supply is a separate CostItem"
+      },
+      "labor": {
+        "status": "deferred",
+        "note": "Driver labor may be embedded in truck cost or tracked as separate labor component"
+      },
+      "equipment": {
+        "status": "present",
+        "note": "Truck cost per LOAD"
+      },
+      "subcontractor": {
+        "status": "not_required",
+        "note": "In-house trucking"
+      }
+    },
+    "reuse_potential": "High — same quarry routes and material types appear across jobs",
+    "adjustability": "Rate per LOAD varies by distance, fuel cost, and truck type",
+    "provenance": {
+      "evidence_count": 2,
+      "total_quantity": 141.0,
+      "total_extended": 49245.0,
+      "job_ids": [
+        38254,
+        38396
+      ],
+      "masterformat_codes": [
+        "31 00 00",
+        "33 00 00"
+      ],
+      "contact_id": 24929,
+      "model_job_group_id": "tcg_24929_model_job",
+      "member_job_ids": [
+        38254,
+        38304,
+        38396,
+        38447,
+        38522,
+        38577,
+        38578
+      ]
+    },
+    "components": [
+      {
+        "type": "equipment",
+        "name": "Haul fill material (Fill Dirt (Compactabile)) from quarry",
+        "unit": "LOAD",
+        "quantity": 98.0,
+        "unit_rate": 395.0,
+        "provenance": {
+          "source_evidence": "SitePreparationJobCalculator#fill_truck_cost (job 38254)",
+          "job_ids": [
+            38254
+          ],
+          "masterformat_code": "31 00 00",
+          "line_number": 7
+        }
+      },
+      {
+        "type": "equipment",
+        "name": "Haul fill material (Fill Dirt (Compactabile)) from quarry",
+        "unit": "LOAD",
+        "quantity": 43.0,
+        "unit_rate": 245.0,
+        "provenance": {
+          "source_evidence": "SitePreparationJobCalculator#fill_truck_cost (job 38396)",
+          "job_ids": [
+            38396
+          ],
+          "masterformat_code": "33 00 00",
+          "line_number": 5
+        }
+      }
+    ],
+    "tags": [
+      "tcg_draft",
+      "review_only"
+    ],
+    "review_status": "draft"
+  },
+  {
+    "code": "TCG-EQUIP-DRIVING-HAULING-PER-MI",
+    "name": "Equipment — Driving/Hauling Per Mile",
+    "unit": "MI",
+    "rate": 4.97,
+    "rate_display": "$4.97/MI",
+    "masterformat_code": "02 00 00",
+    "scope_description": "Equipment driving/hauling cost per mile across all TCG job segments",
+    "component_completeness": {
+      "material": {
+        "status": "not_required",
+        "note": "Equipment-only CostItem"
+      },
+      "labor": {
+        "status": "deferred",
+        "note": "Driver labor cost is a separate labor component"
+      },
+      "equipment": {
+        "status": "present",
+        "note": "Truck driving/operating cost per mile"
+      },
+      "subcontractor": {
+        "status": "not_required",
+        "note": "In-house equipment"
+      }
+    },
+    "reuse_potential": "High — this pattern repeats across all job segments",
+    "adjustability": "Rate per MI varies by truck type, fuel, and distance; estimator should confirm per job",
+    "provenance": {
+      "evidence_count": 7,
+      "total_miles": 2352.0,
+      "total_cost": 11697.0,
+      "job_ids": [
+        38304,
+        38447,
+        38254,
+        38577,
+        38578,
+        38396,
+        38522
+      ],
+      "masterformat_codes": [
+        "02 00 00",
+        "03 00 00",
+        "31 00 00",
+        "33 00 00"
+      ],
+      "contact_id": 24929,
+      "model_job_group_id": "tcg_24929_model_job",
+      "member_job_ids": [
+        38254,
+        38304,
+        38396,
+        38447,
+        38522,
+        38577,
+        38578
+      ]
+    },
+    "components": [
+      {
+        "type": "equipment",
+        "name": "Driving/hauling equipment",
+        "unit": "MI",
+        "quantity": 168.0,
+        "unit_rate": 735.0,
+        "provenance": {
+          "source_evidence": "DrivingCalculator#truck_cost (job 38304)",
+          "job_ids": [
+            38304
+          ],
+          "masterformat_code": "02 00 00",
+          "line_number": 1
+        }
+      },
+      {
+        "type": "equipment",
+        "name": "Driving/hauling equipment",
+        "unit": "MI",
+        "quantity": 84.0,
+        "unit_rate": 367.5,
+        "provenance": {
+          "source_evidence": "DrivingCalculator#truck_cost (job 38447)",
+          "job_ids": [
+            38447
+          ],
+          "masterformat_code": "03 00 00",
+          "line_number": 1
+        }
+      },
+      {
+        "type": "equipment",
+        "name": "Driving/hauling equipment",
+        "unit": "MI",
+        "quantity": 420.0,
+        "unit_rate": 3097.5,
+        "provenance": {
+          "source_evidence": "DrivingCalculator#truck_cost (job 38254)",
+          "job_ids": [
+            38254
+          ],
+          "masterformat_code": "31 00 00",
+          "line_number": 1
+        }
+      },
+      {
+        "type": "equipment",
+        "name": "Driving/hauling equipment",
+        "unit": "MI",
+        "quantity": 336.0,
+        "unit_rate": 1512.0,
+        "provenance": {
+          "source_evidence": "DrivingCalculator#truck_cost (job 38577)",
+          "job_ids": [
+            38577
+          ],
+          "masterformat_code": "31 00 00",
+          "line_number": 2
+        }
+      },
+      {
+        "type": "equipment",
+        "name": "Driving/hauling equipment",
+        "unit": "MI",
+        "quantity": 840.0,
+        "unit_rate": 3780.0,
+        "provenance": {
+          "source_evidence": "DrivingCalculator#truck_cost (job 38578)",
+          "job_ids": [
+            38578
+          ],
+          "masterformat_code": "31 00 00",
+          "line_number": 3
+        }
+      },
+      {
+        "type": "equipment",
+        "name": "Driving/hauling equipment",
+        "unit": "MI",
+        "quantity": 168.0,
+        "unit_rate": 735.0,
+        "provenance": {
+          "source_evidence": "DrivingCalculator#truck_cost (job 38396)",
+          "job_ids": [
+            38396
+          ],
+          "masterformat_code": "33 00 00",
+          "line_number": 1
+        }
+      },
+      {
+        "type": "equipment",
+        "name": "Driving/hauling equipment",
+        "unit": "MI",
+        "quantity": 336.0,
+        "unit_rate": 1470.0,
+        "provenance": {
+          "source_evidence": "DrivingCalculator#truck_cost (job 38522)",
+          "job_ids": [
+            38522
+          ],
+          "masterformat_code": "33 00 00",
+          "line_number": 2
+        }
+      }
+    ],
+    "tags": [
+      "tcg_draft",
+      "review_only"
+    ],
+    "review_status": "draft"
+  },
+  {
+    "code": "TCG-ADDON_7_02_00_00-ADDON",
+    "name": "parsed addon job 38304 6",
+    "unit": "LS",
+    "rate": 0,
+    "rate_display": "$8800.00 LS",
+    "masterformat_code": "02 00 00",
+    "scope_description": "Addon item classified as equipment_component — parsed addon job 38304 6",
+    "component_completeness": {
+      "material": {
+        "status": "not_required",
+        "note": "Addon is a equipment_component by atomic meaning"
+      },
+      "labor": {
+        "status": "deferred",
+        "note": "No separate labor identified in addon; may be embedded"
+      },
+      "equipment": {
+        "status": "present",
+        "note": "Addon is a equipment_component by atomic meaning"
+      },
+      "subcontractor": {
+        "status": "not_required",
+        "note": "No subcontractor identified in addon"
+      }
+    },
+    "reuse_potential": "Low to medium — addon is job-specific but may represent a recurring cost type",
+    "adjustability": "Lump-sum amount; estimator should review for reasonableness",
+    "provenance": {
+      "source_evidence": "parsed_addon:job_38304:6",
+      "extended_amount": 8800.0,
+      "job_ids": [
+        38304
+      ],
+      "confidence": "needs_phase_5_or_estimator_review",
+      "contact_id": 24929,
+      "model_job_group_id": "tcg_24929_model_job",
+      "member_job_ids": [
+        38254,
+        38304,
+        38396,
+        38447,
+        38522,
+        38577,
+        38578
+      ]
+    },
+    "components": [
+      {
+        "type": "equipment",
+        "name": "parsed addon job 38304 6",
+        "unit": "LS",
+        "quantity": 1.0,
+        "unit_rate": 8800.0,
+        "provenance": {
+          "source_evidence": "parsed_addon:job_38304:6",
+          "job_ids": [
+            38304
+          ],
+          "masterformat_code": "02 00 00",
+          "line_number": 7
+        }
+      }
+    ],
+    "tags": [
+      "tcg_draft",
+      "review_only"
+    ],
+    "review_status": "draft"
+  },
+  {
+    "code": "TCG-ADDON_8_02_00_00-ADDON",
+    "name": "parsed addon job 38304 7",
+    "unit": "LS",
+    "rate": 0,
+    "rate_display": "$2700.00 LS",
+    "masterformat_code": "02 00 00",
+    "scope_description": "Addon item classified as equipment_component — parsed addon job 38304 7",
+    "component_completeness": {
+      "material": {
+        "status": "not_required",
+        "note": "Addon is a equipment_component by atomic meaning"
+      },
+      "labor": {
+        "status": "deferred",
+        "note": "No separate labor identified in addon; may be embedded"
+      },
+      "equipment": {
+        "status": "present",
+        "note": "Addon is a equipment_component by atomic meaning"
+      },
+      "subcontractor": {
+        "status": "not_required",
+        "note": "No subcontractor identified in addon"
+      }
+    },
+    "reuse_potential": "Low to medium — addon is job-specific but may represent a recurring cost type",
+    "adjustability": "Lump-sum amount; estimator should review for reasonableness",
+    "provenance": {
+      "source_evidence": "parsed_addon:job_38304:7",
+      "extended_amount": 2700.0,
+      "job_ids": [
+        38304
+      ],
+      "confidence": "needs_phase_5_or_estimator_review",
+      "contact_id": 24929,
+      "model_job_group_id": "tcg_24929_model_job",
+      "member_job_ids": [
+        38254,
+        38304,
+        38396,
+        38447,
+        38522,
+        38577,
+        38578
+      ]
+    },
+    "components": [
+      {
+        "type": "equipment",
+        "name": "parsed addon job 38304 7",
+        "unit": "LS",
+        "quantity": 1.0,
+        "unit_rate": 2700.0,
+        "provenance": {
+          "source_evidence": "parsed_addon:job_38304:7",
+          "job_ids": [
+            38304
+          ],
+          "masterformat_code": "02 00 00",
+          "line_number": 8
+        }
+      }
+    ],
+    "tags": [
+      "tcg_draft",
+      "review_only"
+    ],
+    "review_status": "draft"
+  },
+  {
+    "code": "TCG-ADDON_9_02_00_00-ADDON",
+    "name": "parsed addon job 38304 8",
+    "unit": "LS",
+    "rate": 0,
+    "rate_display": "$3150.00 LS",
+    "masterformat_code": "02 00 00",
+    "scope_description": "Addon item classified as equipment_component — parsed addon job 38304 8",
+    "component_completeness": {
+      "material": {
+        "status": "not_required",
+        "note": "Addon is a equipment_component by atomic meaning"
+      },
+      "labor": {
+        "status": "deferred",
+        "note": "No separate labor identified in addon; may be embedded"
+      },
+      "equipment": {
+        "status": "present",
+        "note": "Addon is a equipment_component by atomic meaning"
+      },
+      "subcontractor": {
+        "status": "not_required",
+        "note": "No subcontractor identified in addon"
+      }
+    },
+    "reuse_potential": "Low to medium — addon is job-specific but may represent a recurring cost type",
+    "adjustability": "Lump-sum amount; estimator should review for reasonableness",
+    "provenance": {
+      "source_evidence": "parsed_addon:job_38304:8",
+      "extended_amount": 3150.0,
+      "job_ids": [
+        38304
+      ],
+      "confidence": "needs_phase_5_or_estimator_review",
+      "contact_id": 24929,
+      "model_job_group_id": "tcg_24929_model_job",
+      "member_job_ids": [
+        38254,
+        38304,
+        38396,
+        38447,
+        38522,
+        38577,
+        38578
+      ]
+    },
+    "components": [
+      {
+        "type": "equipment",
+        "name": "parsed addon job 38304 8",
+        "unit": "LS",
+        "quantity": 1.0,
+        "unit_rate": 3150.0,
+        "provenance": {
+          "source_evidence": "parsed_addon:job_38304:8",
+          "job_ids": [
+            38304
+          ],
+          "masterformat_code": "02 00 00",
+          "line_number": 9
+        }
+      }
+    ],
+    "tags": [
+      "tcg_draft",
+      "review_only"
+    ],
+    "review_status": "draft"
+  },
+  {
+    "code": "TCG-ADDON_10_02_00_00-ADDON",
+    "name": "parsed addon job 38304 9",
+    "unit": "LS",
+    "rate": 0,
+    "rate_display": "$2800.00 LS",
+    "masterformat_code": "02 00 00",
+    "scope_description": "Addon item classified as equipment_component — parsed addon job 38304 9",
+    "component_completeness": {
+      "material": {
+        "status": "not_required",
+        "note": "Addon is a equipment_component by atomic meaning"
+      },
+      "labor": {
+        "status": "deferred",
+        "note": "No separate labor identified in addon; may be embedded"
+      },
+      "equipment": {
+        "status": "present",
+        "note": "Addon is a equipment_component by atomic meaning"
+      },
+      "subcontractor": {
+        "status": "not_required",
+        "note": "No subcontractor identified in addon"
+      }
+    },
+    "reuse_potential": "Low to medium — addon is job-specific but may represent a recurring cost type",
+    "adjustability": "Lump-sum amount; estimator should review for reasonableness",
+    "provenance": {
+      "source_evidence": "parsed_addon:job_38304:9",
+      "extended_amount": 2800.0,
+      "job_ids": [
+        38304
+      ],
+      "confidence": "needs_phase_5_or_estimator_review",
+      "contact_id": 24929,
+      "model_job_group_id": "tcg_24929_model_job",
+      "member_job_ids": [
+        38254,
+        38304,
+        38396,
+        38447,
+        38522,
+        38577,
+        38578
+      ]
+    },
+    "components": [
+      {
+        "type": "equipment",
+        "name": "parsed addon job 38304 9",
+        "unit": "LS",
+        "quantity": 1.0,
+        "unit_rate": 2800.0,
+        "provenance": {
+          "source_evidence": "parsed_addon:job_38304:9",
+          "job_ids": [
+            38304
+          ],
+          "masterformat_code": "02 00 00",
+          "line_number": 10
+        }
+      }
+    ],
+    "tags": [
+      "tcg_draft",
+      "review_only"
+    ],
+    "review_status": "draft"
+  },
+  {
+    "code": "TCG-ADDON_4_03_00_00-ADDON",
+    "name": "parsed addon job 38447 1",
+    "unit": "LS",
+    "rate": 0,
+    "rate_display": "$3800.00 LS",
+    "masterformat_code": "03 00 00",
+    "scope_description": "Addon item classified as material_component — parsed addon job 38447 1",
+    "component_completeness": {
+      "material": {
+        "status": "present",
+        "note": "Addon is a material_component by atomic meaning"
+      },
+      "labor": {
+        "status": "deferred",
+        "note": "No separate labor identified in addon; may be embedded"
+      },
+      "equipment": {
+        "status": "not_required",
+        "note": "Addon is a material_component by atomic meaning"
+      },
+      "subcontractor": {
+        "status": "not_required",
+        "note": "No subcontractor identified in addon"
+      }
+    },
+    "reuse_potential": "Low to medium — addon is job-specific but may represent a recurring cost type",
+    "adjustability": "Lump-sum amount; estimator should review for reasonableness",
+    "provenance": {
+      "source_evidence": "parsed_addon:job_38447:1",
+      "extended_amount": 3800.0,
+      "job_ids": [
+        38447
+      ],
+      "confidence": "needs_phase_5_or_estimator_review",
+      "contact_id": 24929,
+      "model_job_group_id": "tcg_24929_model_job",
+      "member_job_ids": [
+        38254,
+        38304,
+        38396,
+        38447,
+        38522,
+        38577,
+        38578
+      ]
+    },
+    "components": [
+      {
+        "type": "material",
+        "name": "parsed addon job 38447 1",
+        "unit": "LS",
+        "quantity": 1.0,
+        "unit_rate": 3800.0,
+        "provenance": {
+          "source_evidence": "parsed_addon:job_38447:1",
+          "job_ids": [
+            38447
+          ],
+          "masterformat_code": "03 00 00",
+          "line_number": 4
+        }
+      }
+    ],
+    "tags": [
+      "tcg_draft",
+      "review_only"
+    ],
+    "review_status": "draft"
+  },
+  {
+    "code": "TCG-ADDON_20_31_00_00-ADDON",
+    "name": "parsed addon job 38254 1",
+    "unit": "LS",
+    "rate": 0,
+    "rate_display": "$3200.00 LS",
+    "masterformat_code": "31 00 00",
+    "scope_description": "Addon item classified as material_component — parsed addon job 38254 1",
+    "component_completeness": {
+      "material": {
+        "status": "present",
+        "note": "Addon is a material_component by atomic meaning"
+      },
+      "labor": {
+        "status": "deferred",
+        "note": "No separate labor identified in addon; may be embedded"
+      },
+      "equipment": {
+        "status": "not_required",
+        "note": "Addon is a material_component by atomic meaning"
+      },
+      "subcontractor": {
+        "status": "not_required",
+        "note": "No subcontractor identified in addon"
+      }
+    },
+    "reuse_potential": "Low to medium — addon is job-specific but may represent a recurring cost type",
+    "adjustability": "Lump-sum amount; estimator should review for reasonableness",
+    "provenance": {
+      "source_evidence": "parsed_addon:job_38254:1",
+      "extended_amount": 3200.0,
+      "job_ids": [
+        38254
+      ],
+      "confidence": "needs_phase_5_or_estimator_review",
+      "contact_id": 24929,
+      "model_job_group_id": "tcg_24929_model_job",
+      "member_job_ids": [
+        38254,
+        38304,
+        38396,
+        38447,
+        38522,
+        38577,
+        38578
+      ]
+    },
+    "components": [
+      {
+        "type": "material",
+        "name": "parsed addon job 38254 1",
+        "unit": "LS",
+        "quantity": 1.0,
+        "unit_rate": 3200.0,
+        "provenance": {
+          "source_evidence": "parsed_addon:job_38254:1",
+          "job_ids": [
+            38254
+          ],
+          "masterformat_code": "31 00 00",
+          "line_number": 20
+        }
+      }
+    ],
+    "tags": [
+      "tcg_draft",
+      "review_only"
+    ],
+    "review_status": "draft"
+  },
+  {
+    "code": "TCG-ADDON_21_31_00_00-ADDON",
+    "name": "parsed addon job 38254 2",
+    "unit": "LS",
+    "rate": 0,
+    "rate_display": "$3000.00 LS",
+    "masterformat_code": "31 00 00",
+    "scope_description": "Addon item classified as equipment_component — parsed addon job 38254 2",
+    "component_completeness": {
+      "material": {
+        "status": "not_required",
+        "note": "Addon is a equipment_component by atomic meaning"
+      },
+      "labor": {
+        "status": "deferred",
+        "note": "No separate labor identified in addon; may be embedded"
+      },
+      "equipment": {
+        "status": "present",
+        "note": "Addon is a equipment_component by atomic meaning"
+      },
+      "subcontractor": {
+        "status": "not_required",
+        "note": "No subcontractor identified in addon"
+      }
+    },
+    "reuse_potential": "Low to medium — addon is job-specific but may represent a recurring cost type",
+    "adjustability": "Lump-sum amount; estimator should review for reasonableness",
+    "provenance": {
+      "source_evidence": "parsed_addon:job_38254:2",
+      "extended_amount": 3000.0,
+      "job_ids": [
+        38254
+      ],
+      "confidence": "needs_phase_5_or_estimator_review",
+      "contact_id": 24929,
+      "model_job_group_id": "tcg_24929_model_job",
+      "member_job_ids": [
+        38254,
+        38304,
+        38396,
+        38447,
+        38522,
+        38577,
+        38578
+      ]
+    },
+    "components": [
+      {
+        "type": "equipment",
+        "name": "parsed addon job 38254 2",
+        "unit": "LS",
+        "quantity": 1.0,
+        "unit_rate": 3000.0,
+        "provenance": {
+          "source_evidence": "parsed_addon:job_38254:2",
+          "job_ids": [
+            38254
+          ],
+          "masterformat_code": "31 00 00",
+          "line_number": 21
+        }
+      }
+    ],
+    "tags": [
+      "tcg_draft",
+      "review_only"
+    ],
+    "review_status": "draft"
+  },
+  {
+    "code": "TCG-ADDON_23_31_00_00-ADDON",
+    "name": "parsed addon job 38304 2",
+    "unit": "LS",
+    "rate": 0,
+    "rate_display": "$4000.00 LS",
+    "masterformat_code": "31 00 00",
+    "scope_description": "Addon item classified as material_component — parsed addon job 38304 2",
+    "component_completeness": {
+      "material": {
+        "status": "present",
+        "note": "Addon is a material_component by atomic meaning"
+      },
+      "labor": {
+        "status": "deferred",
+        "note": "No separate labor identified in addon; may be embedded"
+      },
+      "equipment": {
+        "status": "not_required",
+        "note": "Addon is a material_component by atomic meaning"
+      },
+      "subcontractor": {
+        "status": "not_required",
+        "note": "No subcontractor identified in addon"
+      }
+    },
+    "reuse_potential": "Low to medium — addon is job-specific but may represent a recurring cost type",
+    "adjustability": "Lump-sum amount; estimator should review for reasonableness",
+    "provenance": {
+      "source_evidence": "parsed_addon:job_38304:2",
+      "extended_amount": 4000.0,
+      "job_ids": [
+        38304
+      ],
+      "confidence": "needs_phase_5_or_estimator_review",
+      "contact_id": 24929,
+      "model_job_group_id": "tcg_24929_model_job",
+      "member_job_ids": [
+        38254,
+        38304,
+        38396,
+        38447,
+        38522,
+        38577,
+        38578
+      ]
+    },
+    "components": [
+      {
+        "type": "material",
+        "name": "parsed addon job 38304 2",
+        "unit": "LS",
+        "quantity": 1.0,
+        "unit_rate": 4000.0,
+        "provenance": {
+          "source_evidence": "parsed_addon:job_38304:2",
+          "job_ids": [
+            38304
+          ],
+          "masterformat_code": "31 00 00",
+          "line_number": 23
+        }
+      }
+    ],
+    "tags": [
+      "tcg_draft",
+      "review_only"
+    ],
+    "review_status": "draft"
+  },
+  {
+    "code": "TCG-ADDON_24_31_00_00-ADDON",
+    "name": "parsed addon job 38304 3",
+    "unit": "LS",
+    "rate": 0,
+    "rate_display": "$2000.00 LS",
+    "masterformat_code": "31 00 00",
+    "scope_description": "Addon item classified as material_component — parsed addon job 38304 3",
+    "component_completeness": {
+      "material": {
+        "status": "present",
+        "note": "Addon is a material_component by atomic meaning"
+      },
+      "labor": {
+        "status": "deferred",
+        "note": "No separate labor identified in addon; may be embedded"
+      },
+      "equipment": {
+        "status": "not_required",
+        "note": "Addon is a material_component by atomic meaning"
+      },
+      "subcontractor": {
+        "status": "not_required",
+        "note": "No subcontractor identified in addon"
+      }
+    },
+    "reuse_potential": "Low to medium — addon is job-specific but may represent a recurring cost type",
+    "adjustability": "Lump-sum amount; estimator should review for reasonableness",
+    "provenance": {
+      "source_evidence": "parsed_addon:job_38304:3",
+      "extended_amount": 2000.0,
+      "job_ids": [
+        38304
+      ],
+      "confidence": "needs_phase_5_or_estimator_review",
+      "contact_id": 24929,
+      "model_job_group_id": "tcg_24929_model_job",
+      "member_job_ids": [
+        38254,
+        38304,
+        38396,
+        38447,
+        38522,
+        38577,
+        38578
+      ]
+    },
+    "components": [
+      {
+        "type": "material",
+        "name": "parsed addon job 38304 3",
+        "unit": "LS",
+        "quantity": 1.0,
+        "unit_rate": 2000.0,
+        "provenance": {
+          "source_evidence": "parsed_addon:job_38304:3",
+          "job_ids": [
+            38304
+          ],
+          "masterformat_code": "31 00 00",
+          "line_number": 24
+        }
+      }
+    ],
+    "tags": [
+      "tcg_draft",
+      "review_only"
+    ],
+    "review_status": "draft"
+  },
+  {
+    "code": "TCG-ADDON_25_31_00_00-ADDON",
+    "name": "parsed addon job 38304 4",
+    "unit": "LS",
+    "rate": 0,
+    "rate_display": "$600.00 LS",
+    "masterformat_code": "31 00 00",
+    "scope_description": "Addon item classified as material_component — parsed addon job 38304 4",
+    "component_completeness": {
+      "material": {
+        "status": "present",
+        "note": "Addon is a material_component by atomic meaning"
+      },
+      "labor": {
+        "status": "deferred",
+        "note": "No separate labor identified in addon; may be embedded"
+      },
+      "equipment": {
+        "status": "not_required",
+        "note": "Addon is a material_component by atomic meaning"
+      },
+      "subcontractor": {
+        "status": "not_required",
+        "note": "No subcontractor identified in addon"
+      }
+    },
+    "reuse_potential": "Low to medium — addon is job-specific but may represent a recurring cost type",
+    "adjustability": "Lump-sum amount; estimator should review for reasonableness",
+    "provenance": {
+      "source_evidence": "parsed_addon:job_38304:4",
+      "extended_amount": 600.0,
+      "job_ids": [
+        38304
+      ],
+      "confidence": "needs_phase_5_or_estimator_review",
+      "contact_id": 24929,
+      "model_job_group_id": "tcg_24929_model_job",
+      "member_job_ids": [
+        38254,
+        38304,
+        38396,
+        38447,
+        38522,
+        38577,
+        38578
+      ]
+    },
+    "components": [
+      {
+        "type": "material",
+        "name": "parsed addon job 38304 4",
+        "unit": "LS",
+        "quantity": 1.0,
+        "unit_rate": 600.0,
+        "provenance": {
+          "source_evidence": "parsed_addon:job_38304:4",
+          "job_ids": [
+            38304
+          ],
+          "masterformat_code": "31 00 00",
+          "line_number": 25
+        }
+      }
+    ],
+    "tags": [
+      "tcg_draft",
+      "review_only"
+    ],
+    "review_status": "draft"
+  },
+  {
+    "code": "TCG-ADDON_26_31_00_00-ADDON",
+    "name": "parsed addon job 38447 2",
+    "unit": "LS",
+    "rate": 0,
+    "rate_display": "$800.00 LS",
+    "masterformat_code": "31 00 00",
+    "scope_description": "Addon item classified as material_component — parsed addon job 38447 2",
+    "component_completeness": {
+      "material": {
+        "status": "present",
+        "note": "Addon is a material_component by atomic meaning"
+      },
+      "labor": {
+        "status": "deferred",
+        "note": "No separate labor identified in addon; may be embedded"
+      },
+      "equipment": {
+        "status": "not_required",
+        "note": "Addon is a material_component by atomic meaning"
+      },
+      "subcontractor": {
+        "status": "not_required",
+        "note": "No subcontractor identified in addon"
+      }
+    },
+    "reuse_potential": "Low to medium — addon is job-specific but may represent a recurring cost type",
+    "adjustability": "Lump-sum amount; estimator should review for reasonableness",
+    "provenance": {
+      "source_evidence": "parsed_addon:job_38447:2",
+      "extended_amount": 800.0,
+      "job_ids": [
+        38447
+      ],
+      "confidence": "needs_phase_5_or_estimator_review",
+      "contact_id": 24929,
+      "model_job_group_id": "tcg_24929_model_job",
+      "member_job_ids": [
+        38254,
+        38304,
+        38396,
+        38447,
+        38522,
+        38577,
+        38578
+      ]
+    },
+    "components": [
+      {
+        "type": "material",
+        "name": "parsed addon job 38447 2",
+        "unit": "LS",
+        "quantity": 1.0,
+        "unit_rate": 800.0,
+        "provenance": {
+          "source_evidence": "parsed_addon:job_38447:2",
+          "job_ids": [
+            38447
+          ],
+          "masterformat_code": "31 00 00",
+          "line_number": 26
+        }
+      }
+    ],
+    "tags": [
+      "tcg_draft",
+      "review_only"
+    ],
+    "review_status": "draft"
+  },
+  {
+    "code": "TCG-ADDON_27_31_00_00-ADDON",
+    "name": "parsed addon job 38578 1",
+    "unit": "LS",
+    "rate": 0,
+    "rate_display": "$15000.00 LS",
+    "masterformat_code": "31 00 00",
+    "scope_description": "Addon item classified as equipment_component — parsed addon job 38578 1",
+    "component_completeness": {
+      "material": {
+        "status": "not_required",
+        "note": "Addon is a equipment_component by atomic meaning"
+      },
+      "labor": {
+        "status": "deferred",
+        "note": "No separate labor identified in addon; may be embedded"
+      },
+      "equipment": {
+        "status": "present",
+        "note": "Addon is a equipment_component by atomic meaning"
+      },
+      "subcontractor": {
+        "status": "not_required",
+        "note": "No subcontractor identified in addon"
+      }
+    },
+    "reuse_potential": "Low to medium — addon is job-specific but may represent a recurring cost type",
+    "adjustability": "Lump-sum amount; estimator should review for reasonableness",
+    "provenance": {
+      "source_evidence": "parsed_addon:job_38578:1",
+      "extended_amount": 15000.0,
+      "job_ids": [
+        38578
+      ],
+      "confidence": "needs_phase_5_or_estimator_review",
+      "contact_id": 24929,
+      "model_job_group_id": "tcg_24929_model_job",
+      "member_job_ids": [
+        38254,
+        38304,
+        38396,
+        38447,
+        38522,
+        38577,
+        38578
+      ]
+    },
+    "components": [
+      {
+        "type": "equipment",
+        "name": "parsed addon job 38578 1",
+        "unit": "LS",
+        "quantity": 1.0,
+        "unit_rate": 15000.0,
+        "provenance": {
+          "source_evidence": "parsed_addon:job_38578:1",
+          "job_ids": [
+            38578
+          ],
+          "masterformat_code": "31 00 00",
+          "line_number": 27
+        }
+      }
+    ],
+    "tags": [
+      "tcg_draft",
+      "review_only"
+    ],
+    "review_status": "draft"
+  },
+  {
+    "code": "TCG-ADDON_14_33_00_00-ADDON",
+    "name": "parsed addon job 38396 1",
+    "unit": "LS",
+    "rate": 0,
+    "rate_display": "$2400.00 LS",
+    "masterformat_code": "33 00 00",
+    "scope_description": "Addon item classified as material_component — parsed addon job 38396 1",
+    "component_completeness": {
+      "material": {
+        "status": "present",
+        "note": "Addon is a material_component by atomic meaning"
+      },
+      "labor": {
+        "status": "deferred",
+        "note": "No separate labor identified in addon; may be embedded"
+      },
+      "equipment": {
+        "status": "not_required",
+        "note": "Addon is a material_component by atomic meaning"
+      },
+      "subcontractor": {
+        "status": "not_required",
+        "note": "No subcontractor identified in addon"
+      }
+    },
+    "reuse_potential": "Low to medium — addon is job-specific but may represent a recurring cost type",
+    "adjustability": "Lump-sum amount; estimator should review for reasonableness",
+    "provenance": {
+      "source_evidence": "parsed_addon:job_38396:1",
+      "extended_amount": 2400.0,
+      "job_ids": [
+        38396
+      ],
+      "confidence": "needs_phase_5_or_estimator_review",
+      "contact_id": 24929,
+      "model_job_group_id": "tcg_24929_model_job",
+      "member_job_ids": [
+        38254,
+        38304,
+        38396,
+        38447,
+        38522,
+        38577,
+        38578
+      ]
+    },
+    "components": [
+      {
+        "type": "material",
+        "name": "parsed addon job 38396 1",
+        "unit": "LS",
+        "quantity": 1.0,
+        "unit_rate": 2400.0,
+        "provenance": {
+          "source_evidence": "parsed_addon:job_38396:1",
+          "job_ids": [
+            38396
+          ],
+          "masterformat_code": "33 00 00",
+          "line_number": 14
+        }
+      }
+    ],
+    "tags": [
+      "tcg_draft",
+      "review_only"
+    ],
+    "review_status": "draft"
+  },
+  {
+    "code": "TCG-ADDON_15_33_00_00-ADDON",
+    "name": "parsed addon job 38396 2",
+    "unit": "LS",
+    "rate": 0,
+    "rate_display": "$1100.00 LS",
+    "masterformat_code": "33 00 00",
+    "scope_description": "Addon item classified as material_component — parsed addon job 38396 2",
+    "component_completeness": {
+      "material": {
+        "status": "present",
+        "note": "Addon is a material_component by atomic meaning"
+      },
+      "labor": {
+        "status": "deferred",
+        "note": "No separate labor identified in addon; may be embedded"
+      },
+      "equipment": {
+        "status": "not_required",
+        "note": "Addon is a material_component by atomic meaning"
+      },
+      "subcontractor": {
+        "status": "not_required",
+        "note": "No subcontractor identified in addon"
+      }
+    },
+    "reuse_potential": "Low to medium — addon is job-specific but may represent a recurring cost type",
+    "adjustability": "Lump-sum amount; estimator should review for reasonableness",
+    "provenance": {
+      "source_evidence": "parsed_addon:job_38396:2",
+      "extended_amount": 1100.0,
+      "job_ids": [
+        38396
+      ],
+      "confidence": "needs_phase_5_or_estimator_review",
+      "contact_id": 24929,
+      "model_job_group_id": "tcg_24929_model_job",
+      "member_job_ids": [
+        38254,
+        38304,
+        38396,
+        38447,
+        38522,
+        38577,
+        38578
+      ]
+    },
+    "components": [
+      {
+        "type": "material",
+        "name": "parsed addon job 38396 2",
+        "unit": "LS",
+        "quantity": 1.0,
+        "unit_rate": 1100.0,
+        "provenance": {
+          "source_evidence": "parsed_addon:job_38396:2",
+          "job_ids": [
+            38396
+          ],
+          "masterformat_code": "33 00 00",
+          "line_number": 15
+        }
+      }
+    ],
+    "tags": [
+      "tcg_draft",
+      "review_only"
+    ],
+    "review_status": "draft"
+  },
+  {
+    "code": "TCG-ADDON_16_33_00_00-ADDON",
+    "name": "parsed addon job 38396 3",
+    "unit": "LS",
+    "rate": 0,
+    "rate_display": "$2000.00 LS",
+    "masterformat_code": "33 00 00",
+    "scope_description": "Addon item classified as equipment_component — parsed addon job 38396 3",
+    "component_completeness": {
+      "material": {
+        "status": "not_required",
+        "note": "Addon is a equipment_component by atomic meaning"
+      },
+      "labor": {
+        "status": "deferred",
+        "note": "No separate labor identified in addon; may be embedded"
+      },
+      "equipment": {
+        "status": "present",
+        "note": "Addon is a equipment_component by atomic meaning"
+      },
+      "subcontractor": {
+        "status": "not_required",
+        "note": "No subcontractor identified in addon"
+      }
+    },
+    "reuse_potential": "Low to medium — addon is job-specific but may represent a recurring cost type",
+    "adjustability": "Lump-sum amount; estimator should review for reasonableness",
+    "provenance": {
+      "source_evidence": "parsed_addon:job_38396:3",
+      "extended_amount": 2000.0,
+      "job_ids": [
+        38396
+      ],
+      "confidence": "needs_phase_5_or_estimator_review",
+      "contact_id": 24929,
+      "model_job_group_id": "tcg_24929_model_job",
+      "member_job_ids": [
+        38254,
+        38304,
+        38396,
+        38447,
+        38522,
+        38577,
+        38578
+      ]
+    },
+    "components": [
+      {
+        "type": "equipment",
+        "name": "parsed addon job 38396 3",
+        "unit": "LS",
+        "quantity": 1.0,
+        "unit_rate": 2000.0,
+        "provenance": {
+          "source_evidence": "parsed_addon:job_38396:3",
+          "job_ids": [
+            38396
+          ],
+          "masterformat_code": "33 00 00",
+          "line_number": 16
+        }
+      }
+    ],
+    "tags": [
+      "tcg_draft",
+      "review_only"
+    ],
+    "review_status": "draft"
+  },
+  {
+    "code": "TCG-ADDON_17_33_00_00-ADDON",
+    "name": "parsed addon job 38522 1",
+    "unit": "LS",
+    "rate": 0,
+    "rate_display": "$12000.00 LS",
+    "masterformat_code": "33 00 00",
+    "scope_description": "Addon item classified as material_component — parsed addon job 38522 1",
+    "component_completeness": {
+      "material": {
+        "status": "present",
+        "note": "Addon is a material_component by atomic meaning"
+      },
+      "labor": {
+        "status": "deferred",
+        "note": "No separate labor identified in addon; may be embedded"
+      },
+      "equipment": {
+        "status": "not_required",
+        "note": "Addon is a material_component by atomic meaning"
+      },
+      "subcontractor": {
+        "status": "not_required",
+        "note": "No subcontractor identified in addon"
+      }
+    },
+    "reuse_potential": "Low to medium — addon is job-specific but may represent a recurring cost type",
+    "adjustability": "Lump-sum amount; estimator should review for reasonableness",
+    "provenance": {
+      "source_evidence": "parsed_addon:job_38522:1",
+      "extended_amount": 12000.0,
+      "job_ids": [
+        38522
+      ],
+      "confidence": "needs_phase_5_or_estimator_review",
+      "contact_id": 24929,
+      "model_job_group_id": "tcg_24929_model_job",
+      "member_job_ids": [
+        38254,
+        38304,
+        38396,
+        38447,
+        38522,
+        38577,
+        38578
+      ]
+    },
+    "components": [
+      {
+        "type": "material",
+        "name": "parsed addon job 38522 1",
+        "unit": "LS",
+        "quantity": 1.0,
+        "unit_rate": 12000.0,
+        "provenance": {
+          "source_evidence": "parsed_addon:job_38522:1",
+          "job_ids": [
+            38522
+          ],
+          "masterformat_code": "33 00 00",
+          "line_number": 17
+        }
+      }
+    ],
+    "tags": [
+      "tcg_draft",
+      "review_only"
+    ],
+    "review_status": "draft"
+  },
+  {
+    "code": "TCG-ADDON_18_33_00_00-ADDON",
+    "name": "parsed addon job 38522 2",
+    "unit": "LS",
+    "rate": 0,
+    "rate_display": "$4000.00 LS",
+    "masterformat_code": "33 00 00",
+    "scope_description": "Addon item classified as material_component — parsed addon job 38522 2",
+    "component_completeness": {
+      "material": {
+        "status": "present",
+        "note": "Addon is a material_component by atomic meaning"
+      },
+      "labor": {
+        "status": "deferred",
+        "note": "No separate labor identified in addon; may be embedded"
+      },
+      "equipment": {
+        "status": "not_required",
+        "note": "Addon is a material_component by atomic meaning"
+      },
+      "subcontractor": {
+        "status": "not_required",
+        "note": "No subcontractor identified in addon"
+      }
+    },
+    "reuse_potential": "Low to medium — addon is job-specific but may represent a recurring cost type",
+    "adjustability": "Lump-sum amount; estimator should review for reasonableness",
+    "provenance": {
+      "source_evidence": "parsed_addon:job_38522:2",
+      "extended_amount": 4000.0,
+      "job_ids": [
+        38522
+      ],
+      "confidence": "needs_phase_5_or_estimator_review",
+      "contact_id": 24929,
+      "model_job_group_id": "tcg_24929_model_job",
+      "member_job_ids": [
+        38254,
+        38304,
+        38396,
+        38447,
+        38522,
+        38577,
+        38578
+      ]
+    },
+    "components": [
+      {
+        "type": "material",
+        "name": "parsed addon job 38522 2",
+        "unit": "LS",
+        "quantity": 1.0,
+        "unit_rate": 4000.0,
+        "provenance": {
+          "source_evidence": "parsed_addon:job_38522:2",
+          "job_ids": [
+            38522
+          ],
+          "masterformat_code": "33 00 00",
+          "line_number": 18
+        }
+      }
+    ],
+    "tags": [
+      "tcg_draft",
+      "review_only"
+    ],
+    "review_status": "draft"
+  },
+  {
+    "code": "TCG-ADDON_19_33_00_00-ADDON",
+    "name": "parsed addon job 38522 3",
+    "unit": "LS",
+    "rate": 0,
+    "rate_display": "$2500.00 LS",
+    "masterformat_code": "33 00 00",
+    "scope_description": "Addon item classified as material_component — parsed addon job 38522 3",
+    "component_completeness": {
+      "material": {
+        "status": "present",
+        "note": "Addon is a material_component by atomic meaning"
+      },
+      "labor": {
+        "status": "deferred",
+        "note": "No separate labor identified in addon; may be embedded"
+      },
+      "equipment": {
+        "status": "not_required",
+        "note": "Addon is a material_component by atomic meaning"
+      },
+      "subcontractor": {
+        "status": "not_required",
+        "note": "No subcontractor identified in addon"
+      }
+    },
+    "reuse_potential": "Low to medium — addon is job-specific but may represent a recurring cost type",
+    "adjustability": "Lump-sum amount; estimator should review for reasonableness",
+    "provenance": {
+      "source_evidence": "parsed_addon:job_38522:3",
+      "extended_amount": 2500.0,
+      "job_ids": [
+        38522
+      ],
+      "confidence": "needs_phase_5_or_estimator_review",
+      "contact_id": 24929,
+      "model_job_group_id": "tcg_24929_model_job",
+      "member_job_ids": [
+        38254,
+        38304,
+        38396,
+        38447,
+        38522,
+        38577,
+        38578
+      ]
+    },
+    "components": [
+      {
+        "type": "material",
+        "name": "parsed addon job 38522 3",
+        "unit": "LS",
+        "quantity": 1.0,
+        "unit_rate": 2500.0,
+        "provenance": {
+          "source_evidence": "parsed_addon:job_38522:3",
+          "job_ids": [
+            38522
+          ],
+          "masterformat_code": "33 00 00",
+          "line_number": 19
+        }
+      }
+    ],
+    "tags": [
+      "tcg_draft",
+      "review_only"
+    ],
+    "review_status": "draft"
+  },
+  {
+    "code": "TCG-ADDON_20_33_00_00-ADDON",
+    "name": "parsed addon job 38522 4",
+    "unit": "LS",
+    "rate": 0,
+    "rate_display": "$8400.00 LS",
+    "masterformat_code": "33 00 00",
+    "scope_description": "Addon item classified as material_component — parsed addon job 38522 4",
+    "component_completeness": {
+      "material": {
+        "status": "present",
+        "note": "Addon is a material_component by atomic meaning"
+      },
+      "labor": {
+        "status": "deferred",
+        "note": "No separate labor identified in addon; may be embedded"
+      },
+      "equipment": {
+        "status": "not_required",
+        "note": "Addon is a material_component by atomic meaning"
+      },
+      "subcontractor": {
+        "status": "not_required",
+        "note": "No subcontractor identified in addon"
+      }
+    },
+    "reuse_potential": "Low to medium — addon is job-specific but may represent a recurring cost type",
+    "adjustability": "Lump-sum amount; estimator should review for reasonableness",
+    "provenance": {
+      "source_evidence": "parsed_addon:job_38522:4",
+      "extended_amount": 8400.0,
+      "job_ids": [
+        38522
+      ],
+      "confidence": "needs_phase_5_or_estimator_review",
+      "contact_id": 24929,
+      "model_job_group_id": "tcg_24929_model_job",
+      "member_job_ids": [
+        38254,
+        38304,
+        38396,
+        38447,
+        38522,
+        38577,
+        38578
+      ]
+    },
+    "components": [
+      {
+        "type": "material",
+        "name": "parsed addon job 38522 4",
+        "unit": "LS",
+        "quantity": 1.0,
+        "unit_rate": 8400.0,
+        "provenance": {
+          "source_evidence": "parsed_addon:job_38522:4",
+          "job_ids": [
+            38522
+          ],
+          "masterformat_code": "33 00 00",
+          "line_number": 20
+        }
+      }
+    ],
+    "tags": [
+      "tcg_draft",
+      "review_only"
+    ],
+    "review_status": "draft"
+  },
+  {
+    "code": "TCG-ADDON_21_33_00_00-ADDON",
+    "name": "parsed addon job 38522 5",
+    "unit": "LS",
+    "rate": 0,
+    "rate_display": "$6500.00 LS",
+    "masterformat_code": "33 00 00",
+    "scope_description": "Addon item classified as material_component — parsed addon job 38522 5",
+    "component_completeness": {
+      "material": {
+        "status": "present",
+        "note": "Addon is a material_component by atomic meaning"
+      },
+      "labor": {
+        "status": "deferred",
+        "note": "No separate labor identified in addon; may be embedded"
+      },
+      "equipment": {
+        "status": "not_required",
+        "note": "Addon is a material_component by atomic meaning"
+      },
+      "subcontractor": {
+        "status": "not_required",
+        "note": "No subcontractor identified in addon"
+      }
+    },
+    "reuse_potential": "Low to medium — addon is job-specific but may represent a recurring cost type",
+    "adjustability": "Lump-sum amount; estimator should review for reasonableness",
+    "provenance": {
+      "source_evidence": "parsed_addon:job_38522:5",
+      "extended_amount": 6500.0,
+      "job_ids": [
+        38522
+      ],
+      "confidence": "needs_phase_5_or_estimator_review",
+      "contact_id": 24929,
+      "model_job_group_id": "tcg_24929_model_job",
+      "member_job_ids": [
+        38254,
+        38304,
+        38396,
+        38447,
+        38522,
+        38577,
+        38578
+      ]
+    },
+    "components": [
+      {
+        "type": "material",
+        "name": "parsed addon job 38522 5",
+        "unit": "LS",
+        "quantity": 1.0,
+        "unit_rate": 6500.0,
+        "provenance": {
+          "source_evidence": "parsed_addon:job_38522:5",
+          "job_ids": [
+            38522
+          ],
+          "masterformat_code": "33 00 00",
+          "line_number": 21
+        }
+      }
+    ],
+    "tags": [
+      "tcg_draft",
+      "review_only"
+    ],
+    "review_status": "draft"
+  },
+  {
+    "code": "TCG-ADDON_22_33_00_00-ADDON",
+    "name": "parsed addon job 38522 6",
+    "unit": "LS",
+    "rate": 0,
+    "rate_display": "$2500.00 LS",
+    "masterformat_code": "33 00 00",
+    "scope_description": "Addon item classified as equipment_component — parsed addon job 38522 6",
+    "component_completeness": {
+      "material": {
+        "status": "not_required",
+        "note": "Addon is a equipment_component by atomic meaning"
+      },
+      "labor": {
+        "status": "deferred",
+        "note": "No separate labor identified in addon; may be embedded"
+      },
+      "equipment": {
+        "status": "present",
+        "note": "Addon is a equipment_component by atomic meaning"
+      },
+      "subcontractor": {
+        "status": "not_required",
+        "note": "No subcontractor identified in addon"
+      }
+    },
+    "reuse_potential": "Low to medium — addon is job-specific but may represent a recurring cost type",
+    "adjustability": "Lump-sum amount; estimator should review for reasonableness",
+    "provenance": {
+      "source_evidence": "parsed_addon:job_38522:6",
+      "extended_amount": 2500.0,
+      "job_ids": [
+        38522
+      ],
+      "confidence": "needs_phase_5_or_estimator_review",
+      "contact_id": 24929,
+      "model_job_group_id": "tcg_24929_model_job",
+      "member_job_ids": [
+        38254,
+        38304,
+        38396,
+        38447,
+        38522,
+        38577,
+        38578
+      ]
+    },
+    "components": [
+      {
+        "type": "equipment",
+        "name": "parsed addon job 38522 6",
+        "unit": "LS",
+        "quantity": 1.0,
+        "unit_rate": 2500.0,
+        "provenance": {
+          "source_evidence": "parsed_addon:job_38522:6",
+          "job_ids": [
+            38522
+          ],
+          "masterformat_code": "33 00 00",
+          "line_number": 22
+        }
+      }
+    ],
+    "tags": [
+      "tcg_draft",
+      "review_only"
+    ],
+    "review_status": "draft"
+  },
+  {
+    "code": "TCG-ADDON_23_33_00_00-ADDON",
+    "name": "parsed addon job 38577 1",
+    "unit": "LS",
+    "rate": 0,
+    "rate_display": "$2320.98 LS",
+    "masterformat_code": "33 00 00",
+    "scope_description": "Addon item classified as material_component — parsed addon job 38577 1",
+    "component_completeness": {
+      "material": {
+        "status": "present",
+        "note": "Addon is a material_component by atomic meaning"
+      },
+      "labor": {
+        "status": "deferred",
+        "note": "No separate labor identified in addon; may be embedded"
+      },
+      "equipment": {
+        "status": "not_required",
+        "note": "Addon is a material_component by atomic meaning"
+      },
+      "subcontractor": {
+        "status": "not_required",
+        "note": "No subcontractor identified in addon"
+      }
+    },
+    "reuse_potential": "Low to medium — addon is job-specific but may represent a recurring cost type",
+    "adjustability": "Lump-sum amount; estimator should review for reasonableness",
+    "provenance": {
+      "source_evidence": "parsed_addon:job_38577:1",
+      "extended_amount": 2320.98,
+      "job_ids": [
+        38577
+      ],
+      "confidence": "needs_phase_5_or_estimator_review",
+      "contact_id": 24929,
+      "model_job_group_id": "tcg_24929_model_job",
+      "member_job_ids": [
+        38254,
+        38304,
+        38396,
+        38447,
+        38522,
+        38577,
+        38578
+      ]
+    },
+    "components": [
+      {
+        "type": "material",
+        "name": "parsed addon job 38577 1",
+        "unit": "LS",
+        "quantity": 1.0,
+        "unit_rate": 2320.98,
+        "provenance": {
+          "source_evidence": "parsed_addon:job_38577:1",
+          "job_ids": [
+            38577
+          ],
+          "masterformat_code": "33 00 00",
+          "line_number": 23
+        }
+      }
+    ],
+    "tags": [
+      "tcg_draft",
+      "review_only"
+    ],
+    "review_status": "draft"
+  },
+  {
+    "code": "TCG-SUBCONTRACT-22-31_00_00",
+    "name": "Subcontracted Work — parsed addon job 38304 1",
+    "unit": "LS",
+    "rate": 4000.0,
+    "rate_display": "$4000.00/LS",
+    "masterformat_code": "31 00 00",
+    "scope_description": "Subcontracted scope — atomic meaning: subcontractor_component",
+    "component_completeness": {
+      "material": {
+        "status": "not_required",
+        "note": "Subcontractor provides own materials"
+      },
+      "labor": {
+        "status": "not_required",
+        "note": "Subcontractor provides own labor"
+      },
+      "equipment": {
+        "status": "not_required",
+        "note": "Subcontractor provides own equipment"
+      },
+      "subcontractor": {
+        "status": "present",
+        "note": "Full subcontractor component"
+      }
+    },
+    "reuse_potential": "Medium — subcontractor scope may repeat",
+    "adjustability": "Subcontractor bid amount; estimator should verify scope coverage",
+    "provenance": {
+      "source_evidence": "parsed_addon:job_38304:1",
+      "job_ids": [
+        38304
+      ],
+      "confidence": "needs_phase_5_or_estimator_review",
+      "contact_id": 24929,
+      "model_job_group_id": "tcg_24929_model_job",
+      "member_job_ids": [
+        38254,
+        38304,
+        38396,
+        38447,
+        38522,
+        38577,
+        38578
+      ]
+    },
+    "components": [
+      {
+        "type": "subcontractor",
+        "name": "parsed addon job 38304 1",
+        "unit": "LS",
+        "quantity": 1.0,
+        "unit_rate": 4000.0,
+        "provenance": {
+          "source_evidence": "parsed_addon:job_38304:1",
+          "job_ids": [
+            38304
+          ],
+          "masterformat_code": "31 00 00",
+          "line_number": 22
+        }
+      }
+    ],
+    "tags": [
+      "tcg_draft",
+      "review_only"
+    ],
+    "review_status": "draft"
+  },
+  {
+    "code": "TCG-SUBCONTRACT-2-32_00_00",
+    "name": "Subcontracted Work — parsed addon job 38447 3",
+    "unit": "LS",
+    "rate": 9800.0,
+    "rate_display": "$9800.00/LS",
+    "masterformat_code": "32 00 00",
+    "scope_description": "Subcontracted scope — atomic meaning: subcontractor_component",
+    "component_completeness": {
+      "material": {
+        "status": "not_required",
+        "note": "Subcontractor provides own materials"
+      },
+      "labor": {
+        "status": "not_required",
+        "note": "Subcontractor provides own labor"
+      },
+      "equipment": {
+        "status": "not_required",
+        "note": "Subcontractor provides own equipment"
+      },
+      "subcontractor": {
+        "status": "present",
+        "note": "Full subcontractor component"
+      }
+    },
+    "reuse_potential": "Medium — subcontractor scope may repeat",
+    "adjustability": "Subcontractor bid amount; estimator should verify scope coverage",
+    "provenance": {
+      "source_evidence": "parsed_addon:job_38447:3",
+      "job_ids": [
+        38447
+      ],
+      "confidence": "needs_phase_5_or_estimator_review",
+      "contact_id": 24929,
+      "model_job_group_id": "tcg_24929_model_job",
+      "member_job_ids": [
+        38254,
+        38304,
+        38396,
+        38447,
+        38522,
+        38577,
+        38578
+      ]
+    },
+    "components": [
+      {
+        "type": "subcontractor",
+        "name": "parsed addon job 38447 3",
+        "unit": "LS",
+        "quantity": 1.0,
+        "unit_rate": 9800.0,
+        "provenance": {
+          "source_evidence": "parsed_addon:job_38447:3",
+          "job_ids": [
+            38447
+          ],
+          "masterformat_code": "32 00 00",
+          "line_number": 2
+        }
+      }
+    ],
+    "tags": [
+      "tcg_draft",
+      "review_only"
+    ],
+    "review_status": "draft"
+  },
+  {
+    "code": "TCG-SUBCONTRACT-3-32_00_00",
+    "name": "Subcontracted Work — parsed addon job 38447 4",
+    "unit": "LS",
+    "rate": 1500.0,
+    "rate_display": "$1500.00/LS",
+    "masterformat_code": "32 00 00",
+    "scope_description": "Subcontracted scope — atomic meaning: subcontractor_component",
+    "component_completeness": {
+      "material": {
+        "status": "not_required",
+        "note": "Subcontractor provides own materials"
+      },
+      "labor": {
+        "status": "not_required",
+        "note": "Subcontractor provides own labor"
+      },
+      "equipment": {
+        "status": "not_required",
+        "note": "Subcontractor provides own equipment"
+      },
+      "subcontractor": {
+        "status": "present",
+        "note": "Full subcontractor component"
+      }
+    },
+    "reuse_potential": "Medium — subcontractor scope may repeat",
+    "adjustability": "Subcontractor bid amount; estimator should verify scope coverage",
+    "provenance": {
+      "source_evidence": "parsed_addon:job_38447:4",
+      "job_ids": [
+        38447
+      ],
+      "confidence": "needs_phase_5_or_estimator_review",
+      "contact_id": 24929,
+      "model_job_group_id": "tcg_24929_model_job",
+      "member_job_ids": [
+        38254,
+        38304,
+        38396,
+        38447,
+        38522,
+        38577,
+        38578
+      ]
+    },
+    "components": [
+      {
+        "type": "subcontractor",
+        "name": "parsed addon job 38447 4",
+        "unit": "LS",
+        "quantity": 1.0,
+        "unit_rate": 1500.0,
+        "provenance": {
+          "source_evidence": "parsed_addon:job_38447:4",
+          "job_ids": [
+            38447
+          ],
+          "masterformat_code": "32 00 00",
+          "line_number": 3
+        }
+      }
+    ],
+    "tags": [
+      "tcg_draft",
+      "review_only"
+    ],
+    "review_status": "draft"
+  }
+]

@@ -1,0 +1,913 @@
+[
+  {
+    "code": "TCG-ASM-EROSION_CONTROL_SITE_STABILIZATION",
+    "name": "Erosion Control Site Stabilization",
+    "description": "Assembly grouping for erosion control site stabilization scope",
+    "masterformat_codes": [
+      "00 00 00",
+      "02 00 00",
+      "31 00 00"
+    ],
+    "total_extended_amount": 13800.0,
+    "components": [
+      {
+        "type": "cost_item",
+        "code": null,
+        "description": "jobs.additional_price_description.#38304",
+        "atomic_meaning": "scope_description",
+        "quantity": 1.0,
+        "unit": "LS",
+        "extended_amount": 0.0,
+        "masterformat_code": "00 00 00"
+      },
+      {
+        "type": "cost_item",
+        "code": null,
+        "description": "Scheduled truck entries (labor schedule)",
+        "atomic_meaning": "equipment_component",
+        "quantity": 2.0,
+        "unit": "LOAD",
+        "extended_amount": 0.0,
+        "masterformat_code": "02 00 00"
+      },
+      {
+        "type": "cost_item",
+        "code": null,
+        "description": "Site labor (scheduled)",
+        "atomic_meaning": "labor_component",
+        "quantity": 118.0,
+        "unit": "HR",
+        "extended_amount": 0.0,
+        "masterformat_code": "02 00 00"
+      },
+      {
+        "type": "cost_item",
+        "code": null,
+        "description": "Scheduled truck entries (labor schedule)",
+        "atomic_meaning": "equipment_component",
+        "quantity": 5.0,
+        "unit": "LOAD",
+        "extended_amount": 0.0,
+        "masterformat_code": "31 00 00"
+      },
+      {
+        "type": "cost_item",
+        "code": null,
+        "description": "Site labor (scheduled)",
+        "atomic_meaning": "labor_component",
+        "quantity": 188.0,
+        "unit": "HR",
+        "extended_amount": 0.0,
+        "masterformat_code": "31 00 00"
+      },
+      {
+        "type": "cost_item",
+        "code": null,
+        "description": "parsed addon job 38254 1",
+        "atomic_meaning": "material_component",
+        "quantity": 1.0,
+        "unit": "LS",
+        "extended_amount": 3200.0,
+        "masterformat_code": "31 00 00"
+      },
+      {
+        "type": "cost_item",
+        "code": null,
+        "description": "parsed addon job 38304 1",
+        "atomic_meaning": "subcontractor_component",
+        "quantity": 1.0,
+        "unit": "LS",
+        "extended_amount": 4000.0,
+        "masterformat_code": "31 00 00"
+      },
+      {
+        "type": "cost_item",
+        "code": null,
+        "description": "parsed addon job 38304 2",
+        "atomic_meaning": "material_component",
+        "quantity": 1.0,
+        "unit": "LS",
+        "extended_amount": 4000.0,
+        "masterformat_code": "31 00 00"
+      },
+      {
+        "type": "cost_item",
+        "code": null,
+        "description": "parsed addon job 38304 3",
+        "atomic_meaning": "material_component",
+        "quantity": 1.0,
+        "unit": "LS",
+        "extended_amount": 2000.0,
+        "masterformat_code": "31 00 00"
+      },
+      {
+        "type": "cost_item",
+        "code": null,
+        "description": "parsed addon job 38304 4",
+        "atomic_meaning": "material_component",
+        "quantity": 1.0,
+        "unit": "LS",
+        "extended_amount": 600.0,
+        "masterformat_code": "31 00 00"
+      },
+      {
+        "type": "cost_item",
+        "code": null,
+        "description": "estimate_payment_schedules.description.#3718",
+        "atomic_meaning": "scope_description",
+        "quantity": 1.0,
+        "unit": "LS",
+        "extended_amount": 0.0,
+        "masterformat_code": "31 00 00"
+      },
+      {
+        "type": "cost_item",
+        "code": null,
+        "description": "estimate_payment_schedules.description.#3719",
+        "atomic_meaning": "scope_description",
+        "quantity": 1.0,
+        "unit": "LS",
+        "extended_amount": 0.0,
+        "masterformat_code": "31 00 00"
+      },
+      {
+        "type": "cost_item",
+        "code": null,
+        "description": "jobs.additional_price_description.#38254",
+        "atomic_meaning": "scope_description",
+        "quantity": 1.0,
+        "unit": "LS",
+        "extended_amount": 0.0,
+        "masterformat_code": "31 00 00"
+      },
+      {
+        "type": "cost_item",
+        "code": null,
+        "description": "jobs.contract_description_override.#38254",
+        "atomic_meaning": "scope_description",
+        "quantity": 1.0,
+        "unit": "LS",
+        "extended_amount": 0.0,
+        "masterformat_code": "31 00 00"
+      },
+      {
+        "type": "cost_item",
+        "code": null,
+        "description": "jobs.contract_description_override.#38304",
+        "atomic_meaning": "scope_description",
+        "quantity": 1.0,
+        "unit": "LS",
+        "extended_amount": 0.0,
+        "masterformat_code": "31 00 00"
+      },
+      {
+        "type": "cost_item",
+        "code": null,
+        "description": "jobs.contract_description_override.#38396",
+        "atomic_meaning": "scope_description",
+        "quantity": 1.0,
+        "unit": "LS",
+        "extended_amount": 0.0,
+        "masterformat_code": "31 00 00"
+      },
+      {
+        "type": "cost_item",
+        "code": null,
+        "description": "jobs.contract_description_override.#38577",
+        "atomic_meaning": "scope_description",
+        "quantity": 1.0,
+        "unit": "LS",
+        "extended_amount": 0.0,
+        "masterformat_code": "31 00 00"
+      },
+      {
+        "type": "cost_item",
+        "code": null,
+        "description": "jobs.contract_description_override.#38578",
+        "atomic_meaning": "scope_description",
+        "quantity": 1.0,
+        "unit": "LS",
+        "extended_amount": 0.0,
+        "masterformat_code": "31 00 00"
+      }
+    ],
+    "design_note": "Proposed assembly based on assembly_candidate tags on BOQ items. Review membership and confirm all required CostItems exist before promoting to OCERP assembly.",
+    "tags": [
+      "tcg_draft",
+      "review_only"
+    ],
+    "review_status": "draft"
+  },
+  {
+    "code": "TCG-ASM-STORMWATER_DRAINAGE_FILTRATION",
+    "name": "Stormwater Drainage Filtration",
+    "description": "Assembly grouping for stormwater drainage filtration scope",
+    "masterformat_codes": [
+      "00 00 00",
+      "31 00 00",
+      "33 00 00"
+    ],
+    "total_extended_amount": 9920.98,
+    "components": [
+      {
+        "type": "cost_item",
+        "code": null,
+        "description": "jobs.additional_price_description.#38396",
+        "atomic_meaning": "scope_description",
+        "quantity": 1.0,
+        "unit": "LS",
+        "extended_amount": 0.0,
+        "masterformat_code": "00 00 00"
+      },
+      {
+        "type": "cost_item",
+        "code": null,
+        "description": "Scheduled truck entries (labor schedule)",
+        "atomic_meaning": "equipment_component",
+        "quantity": 4.0,
+        "unit": "LOAD",
+        "extended_amount": 0.0,
+        "masterformat_code": "31 00 00"
+      },
+      {
+        "type": "cost_item",
+        "code": null,
+        "description": "Site labor (scheduled)",
+        "atomic_meaning": "labor_component",
+        "quantity": 114.0,
+        "unit": "HR",
+        "extended_amount": 0.0,
+        "masterformat_code": "31 00 00"
+      },
+      {
+        "type": "cost_item",
+        "code": null,
+        "description": "parsed addon job 38396 2",
+        "atomic_meaning": "material_component",
+        "quantity": 1.0,
+        "unit": "LS",
+        "extended_amount": 1100.0,
+        "masterformat_code": "33 00 00"
+      },
+      {
+        "type": "cost_item",
+        "code": null,
+        "description": "parsed addon job 38522 5",
+        "atomic_meaning": "material_component",
+        "quantity": 1.0,
+        "unit": "LS",
+        "extended_amount": 6500.0,
+        "masterformat_code": "33 00 00"
+      },
+      {
+        "type": "cost_item",
+        "code": null,
+        "description": "parsed addon job 38577 1",
+        "atomic_meaning": "material_component",
+        "quantity": 1.0,
+        "unit": "LS",
+        "extended_amount": 2320.98,
+        "masterformat_code": "33 00 00"
+      },
+      {
+        "type": "cost_item",
+        "code": null,
+        "description": "jobs.additional_price_description.#38577",
+        "atomic_meaning": "scope_description",
+        "quantity": 1.0,
+        "unit": "LS",
+        "extended_amount": 0.0,
+        "masterformat_code": "33 00 00"
+      },
+      {
+        "type": "cost_item",
+        "code": null,
+        "description": "jobs.preparation_material.#38254",
+        "atomic_meaning": "scope_description",
+        "quantity": 1.0,
+        "unit": "LS",
+        "extended_amount": 0.0,
+        "masterformat_code": "33 00 00"
+      },
+      {
+        "type": "cost_item",
+        "code": null,
+        "description": "jobs.preparation_material.#38304",
+        "atomic_meaning": "scope_description",
+        "quantity": 1.0,
+        "unit": "LS",
+        "extended_amount": 0.0,
+        "masterformat_code": "33 00 00"
+      },
+      {
+        "type": "cost_item",
+        "code": null,
+        "description": "jobs.preparation_material.#38396",
+        "atomic_meaning": "scope_description",
+        "quantity": 1.0,
+        "unit": "LS",
+        "extended_amount": 0.0,
+        "masterformat_code": "33 00 00"
+      },
+      {
+        "type": "cost_item",
+        "code": null,
+        "description": "jobs.preparation_material.#38447",
+        "atomic_meaning": "scope_description",
+        "quantity": 1.0,
+        "unit": "LS",
+        "extended_amount": 0.0,
+        "masterformat_code": "33 00 00"
+      },
+      {
+        "type": "cost_item",
+        "code": null,
+        "description": "jobs.preparation_material.#38522",
+        "atomic_meaning": "scope_description",
+        "quantity": 1.0,
+        "unit": "LS",
+        "extended_amount": 0.0,
+        "masterformat_code": "33 00 00"
+      },
+      {
+        "type": "cost_item",
+        "code": null,
+        "description": "jobs.preparation_material.#38577",
+        "atomic_meaning": "scope_description",
+        "quantity": 1.0,
+        "unit": "LS",
+        "extended_amount": 0.0,
+        "masterformat_code": "33 00 00"
+      },
+      {
+        "type": "cost_item",
+        "code": null,
+        "description": "jobs.preparation_material.#38578",
+        "atomic_meaning": "scope_description",
+        "quantity": 1.0,
+        "unit": "LS",
+        "extended_amount": 0.0,
+        "masterformat_code": "33 00 00"
+      }
+    ],
+    "design_note": "Proposed assembly based on assembly_candidate tags on BOQ items. Review membership and confirm all required CostItems exist before promoting to OCERP assembly.",
+    "tags": [
+      "tcg_draft",
+      "review_only"
+    ],
+    "review_status": "draft"
+  },
+  {
+    "code": "TCG-ASM-UTILITY_TRENCHING_CONDUIT",
+    "name": "Utility Trenching Conduit",
+    "description": "Assembly grouping for utility trenching conduit scope",
+    "masterformat_codes": [
+      "00 00 00",
+      "03 00 00",
+      "31 00 00",
+      "32 00 00",
+      "33 00 00"
+    ],
+    "total_extended_amount": 28400.0,
+    "components": [
+      {
+        "type": "cost_item",
+        "code": null,
+        "description": "jobs.additional_price_description.#38447",
+        "atomic_meaning": "scope_description",
+        "quantity": 1.0,
+        "unit": "LS",
+        "extended_amount": 0.0,
+        "masterformat_code": "00 00 00"
+      },
+      {
+        "type": "cost_item",
+        "code": null,
+        "description": "jobs.contract_description_override.#38447",
+        "atomic_meaning": "scope_description",
+        "quantity": 1.0,
+        "unit": "LS",
+        "extended_amount": 0.0,
+        "masterformat_code": "03 00 00"
+      },
+      {
+        "type": "cost_item",
+        "code": null,
+        "description": "jobs.description.#38522",
+        "atomic_meaning": "scope_description",
+        "quantity": 1.0,
+        "unit": "LS",
+        "extended_amount": 0.0,
+        "masterformat_code": "31 00 00"
+      },
+      {
+        "type": "cost_item",
+        "code": null,
+        "description": "parsed addon job 38447 4",
+        "atomic_meaning": "subcontractor_component",
+        "quantity": 1.0,
+        "unit": "LS",
+        "extended_amount": 1500.0,
+        "masterformat_code": "32 00 00"
+      },
+      {
+        "type": "cost_item",
+        "code": null,
+        "description": "Scheduled truck entries (labor schedule)",
+        "atomic_meaning": "equipment_component",
+        "quantity": 2.0,
+        "unit": "LOAD",
+        "extended_amount": 0.0,
+        "masterformat_code": "33 00 00"
+      },
+      {
+        "type": "cost_item",
+        "code": null,
+        "description": "Scheduled truck entries (labor schedule)",
+        "atomic_meaning": "equipment_component",
+        "quantity": 4.0,
+        "unit": "LOAD",
+        "extended_amount": 0.0,
+        "masterformat_code": "33 00 00"
+      },
+      {
+        "type": "cost_item",
+        "code": null,
+        "description": "Site labor (scheduled)",
+        "atomic_meaning": "labor_component",
+        "quantity": 109.0,
+        "unit": "HR",
+        "extended_amount": 0.0,
+        "masterformat_code": "33 00 00"
+      },
+      {
+        "type": "cost_item",
+        "code": null,
+        "description": "Site labor (scheduled)",
+        "atomic_meaning": "labor_component",
+        "quantity": 115.0,
+        "unit": "HR",
+        "extended_amount": 0.0,
+        "masterformat_code": "33 00 00"
+      },
+      {
+        "type": "cost_item",
+        "code": null,
+        "description": "parsed addon job 38522 1",
+        "atomic_meaning": "material_component",
+        "quantity": 1.0,
+        "unit": "LS",
+        "extended_amount": 12000.0,
+        "masterformat_code": "33 00 00"
+      },
+      {
+        "type": "cost_item",
+        "code": null,
+        "description": "parsed addon job 38522 2",
+        "atomic_meaning": "material_component",
+        "quantity": 1.0,
+        "unit": "LS",
+        "extended_amount": 4000.0,
+        "masterformat_code": "33 00 00"
+      },
+      {
+        "type": "cost_item",
+        "code": null,
+        "description": "parsed addon job 38522 3",
+        "atomic_meaning": "material_component",
+        "quantity": 1.0,
+        "unit": "LS",
+        "extended_amount": 2500.0,
+        "masterformat_code": "33 00 00"
+      },
+      {
+        "type": "cost_item",
+        "code": null,
+        "description": "parsed addon job 38522 4",
+        "atomic_meaning": "material_component",
+        "quantity": 1.0,
+        "unit": "LS",
+        "extended_amount": 8400.0,
+        "masterformat_code": "33 00 00"
+      },
+      {
+        "type": "cost_item",
+        "code": null,
+        "description": "estimate_payment_schedules.description.#3725",
+        "atomic_meaning": "scope_description",
+        "quantity": 1.0,
+        "unit": "LS",
+        "extended_amount": 0.0,
+        "masterformat_code": "33 00 00"
+      },
+      {
+        "type": "cost_item",
+        "code": null,
+        "description": "estimate_payment_schedules.description.#3728",
+        "atomic_meaning": "scope_description",
+        "quantity": 1.0,
+        "unit": "LS",
+        "extended_amount": 0.0,
+        "masterformat_code": "33 00 00"
+      },
+      {
+        "type": "cost_item",
+        "code": null,
+        "description": "jobs.additional_price_description.#38522",
+        "atomic_meaning": "scope_description",
+        "quantity": 1.0,
+        "unit": "LS",
+        "extended_amount": 0.0,
+        "masterformat_code": "33 00 00"
+      },
+      {
+        "type": "cost_item",
+        "code": null,
+        "description": "jobs.contract_description_override.#38522",
+        "atomic_meaning": "scope_description",
+        "quantity": 1.0,
+        "unit": "LS",
+        "extended_amount": 0.0,
+        "masterformat_code": "33 00 00"
+      },
+      {
+        "type": "cost_item",
+        "code": null,
+        "description": "jobs.description.#38304",
+        "atomic_meaning": "scope_description",
+        "quantity": 1.0,
+        "unit": "LS",
+        "extended_amount": 0.0,
+        "masterformat_code": "33 00 00"
+      },
+      {
+        "type": "cost_item",
+        "code": null,
+        "description": "jobs.description.#38396",
+        "atomic_meaning": "scope_description",
+        "quantity": 1.0,
+        "unit": "LS",
+        "extended_amount": 0.0,
+        "masterformat_code": "33 00 00"
+      },
+      {
+        "type": "cost_item",
+        "code": null,
+        "description": "jobs.description.#38447",
+        "atomic_meaning": "scope_description",
+        "quantity": 1.0,
+        "unit": "LS",
+        "extended_amount": 0.0,
+        "masterformat_code": "33 00 00"
+      },
+      {
+        "type": "cost_item",
+        "code": null,
+        "description": "jobs.description.#38578",
+        "atomic_meaning": "scope_description",
+        "quantity": 1.0,
+        "unit": "LS",
+        "extended_amount": 0.0,
+        "masterformat_code": "33 00 00"
+      }
+    ],
+    "design_note": "Proposed assembly based on assembly_candidate tags on BOQ items. Review membership and confirm all required CostItems exist before promoting to OCERP assembly.",
+    "tags": [
+      "tcg_draft",
+      "review_only"
+    ],
+    "review_status": "draft"
+  },
+  {
+    "code": "TCG-ASM-MATERIAL_HAULING_FROM_QUARRY",
+    "name": "Material Hauling From Quarry",
+    "description": "Assembly grouping for material hauling from quarry scope",
+    "masterformat_codes": [
+      "02 00 00",
+      "31 00 00",
+      "33 00 00"
+    ],
+    "total_extended_amount": 128415.0,
+    "components": [
+      {
+        "type": "cost_item",
+        "code": null,
+        "description": "Haul Ballast (1 1/2\" - 2 1/2\") Drain Stone from quarry",
+        "atomic_meaning": "equipment_component",
+        "quantity": 4.0,
+        "unit": "LOAD",
+        "extended_amount": 3940.0,
+        "masterformat_code": "02 00 00"
+      },
+      {
+        "type": "cost_item",
+        "code": null,
+        "description": "Supply Ballast (1 1/2\" - 2 1/2\") Drain Stone, 8.0\" thick",
+        "atomic_meaning": "material_component",
+        "quantity": 92.0,
+        "unit": "TON",
+        "extended_amount": 4600.0,
+        "masterformat_code": "02 00 00"
+      },
+      {
+        "type": "cost_item",
+        "code": null,
+        "description": "Haul #57 (2B) (3/4\" - 1\" clean stone) from quarry",
+        "atomic_meaning": "equipment_component",
+        "quantity": 8.0,
+        "unit": "LOAD",
+        "extended_amount": 7880.0,
+        "masterformat_code": "31 00 00"
+      },
+      {
+        "type": "cost_item",
+        "code": null,
+        "description": "Haul #57 (2B) (3/4\" - 1\" clean stone) from quarry",
+        "atomic_meaning": "equipment_component",
+        "quantity": 4.0,
+        "unit": "LOAD",
+        "extended_amount": 3940.0,
+        "masterformat_code": "31 00 00"
+      },
+      {
+        "type": "cost_item",
+        "code": null,
+        "description": "Haul Sand from quarry",
+        "atomic_meaning": "equipment_component",
+        "quantity": 1.0,
+        "unit": "LOAD",
+        "extended_amount": 865.0,
+        "masterformat_code": "31 00 00"
+      },
+      {
+        "type": "cost_item",
+        "code": null,
+        "description": "Supply #57 (2B) (3/4\" - 1\" clean stone), 12.0\" thick",
+        "atomic_meaning": "material_component",
+        "quantity": 92.0,
+        "unit": "TON",
+        "extended_amount": 4600.0,
+        "masterformat_code": "31 00 00"
+      },
+      {
+        "type": "cost_item",
+        "code": null,
+        "description": "Supply #57 (2B) (3/4\" - 1\" clean stone), 4.0\" thick",
+        "atomic_meaning": "material_component",
+        "quantity": 165.2,
+        "unit": "TON",
+        "extended_amount": 8260.0,
+        "masterformat_code": "31 00 00"
+      },
+      {
+        "type": "cost_item",
+        "code": null,
+        "description": "Supply Sand, 24.0\" thick",
+        "atomic_meaning": "material_component",
+        "quantity": 20.0,
+        "unit": "CY",
+        "extended_amount": 2500.0,
+        "masterformat_code": "31 00 00"
+      },
+      {
+        "type": "cost_item",
+        "code": null,
+        "description": "Haul #57 (2B) (3/4\" - 1\" clean stone) from quarry",
+        "atomic_meaning": "equipment_component",
+        "quantity": 38.0,
+        "unit": "LOAD",
+        "extended_amount": 35910.0,
+        "masterformat_code": "33 00 00"
+      },
+      {
+        "type": "cost_item",
+        "code": null,
+        "description": "Haul Sand from quarry",
+        "atomic_meaning": "equipment_component",
+        "quantity": 4.0,
+        "unit": "LOAD",
+        "extended_amount": 2980.0,
+        "masterformat_code": "33 00 00"
+      },
+      {
+        "type": "cost_item",
+        "code": null,
+        "description": "Supply #57 (2B) (3/4\" - 1\" clean stone), 24.0\" thick",
+        "atomic_meaning": "material_component",
+        "quantity": 863.8,
+        "unit": "TON",
+        "extended_amount": 43190.0,
+        "masterformat_code": "33 00 00"
+      },
+      {
+        "type": "cost_item",
+        "code": null,
+        "description": "Supply Sand, 3.0\" thick",
+        "atomic_meaning": "material_component",
+        "quantity": 78.0,
+        "unit": "CY",
+        "extended_amount": 9750.0,
+        "masterformat_code": "33 00 00"
+      }
+    ],
+    "design_note": "Proposed assembly based on assembly_candidate tags on BOQ items. Review membership and confirm all required CostItems exist before promoting to OCERP assembly.",
+    "tags": [
+      "tcg_draft",
+      "review_only"
+    ],
+    "review_status": "draft"
+  },
+  {
+    "code": "TCG-ASM-DEMOLITION_DISPOSAL",
+    "name": "Demolition Disposal",
+    "description": "Assembly grouping for demolition disposal scope",
+    "masterformat_codes": [
+      "02 00 00"
+    ],
+    "total_extended_amount": 14650.0,
+    "components": [
+      {
+        "type": "cost_item",
+        "code": null,
+        "description": "parsed addon job 38304 6",
+        "atomic_meaning": "equipment_component",
+        "quantity": 1.0,
+        "unit": "LS",
+        "extended_amount": 8800.0,
+        "masterformat_code": "02 00 00"
+      },
+      {
+        "type": "cost_item",
+        "code": null,
+        "description": "parsed addon job 38304 7",
+        "atomic_meaning": "equipment_component",
+        "quantity": 1.0,
+        "unit": "LS",
+        "extended_amount": 2700.0,
+        "masterformat_code": "02 00 00"
+      },
+      {
+        "type": "cost_item",
+        "code": null,
+        "description": "parsed addon job 38304 8",
+        "atomic_meaning": "equipment_component",
+        "quantity": 1.0,
+        "unit": "LS",
+        "extended_amount": 3150.0,
+        "masterformat_code": "02 00 00"
+      },
+      {
+        "type": "cost_item",
+        "code": null,
+        "description": "estimate_payment_schedules.description.#3720",
+        "atomic_meaning": "scope_description",
+        "quantity": 1.0,
+        "unit": "LS",
+        "extended_amount": 0.0,
+        "masterformat_code": "02 00 00"
+      }
+    ],
+    "design_note": "Proposed assembly based on assembly_candidate tags on BOQ items. Review membership and confirm all required CostItems exist before promoting to OCERP assembly.",
+    "tags": [
+      "tcg_draft",
+      "review_only"
+    ],
+    "review_status": "draft"
+  },
+  {
+    "code": "TCG-ASM-CONCRETE_CURB_PAVING_REPAIR",
+    "name": "Concrete Curb Paving Repair",
+    "description": "Assembly grouping for concrete curb paving repair scope",
+    "masterformat_codes": [
+      "03 00 00",
+      "32 00 00"
+    ],
+    "total_extended_amount": 9800.0,
+    "components": [
+      {
+        "type": "cost_item",
+        "code": null,
+        "description": "Scheduled truck entries (labor schedule)",
+        "atomic_meaning": "equipment_component",
+        "quantity": 1.0,
+        "unit": "LOAD",
+        "extended_amount": 0.0,
+        "masterformat_code": "03 00 00"
+      },
+      {
+        "type": "cost_item",
+        "code": null,
+        "description": "Site labor (scheduled)",
+        "atomic_meaning": "labor_component",
+        "quantity": 42.0,
+        "unit": "HR",
+        "extended_amount": 0.0,
+        "masterformat_code": "03 00 00"
+      },
+      {
+        "type": "cost_item",
+        "code": null,
+        "description": "estimate_payment_schedules.description.#3729",
+        "atomic_meaning": "scope_description",
+        "quantity": 1.0,
+        "unit": "LS",
+        "extended_amount": 0.0,
+        "masterformat_code": "03 00 00"
+      },
+      {
+        "type": "cost_item",
+        "code": null,
+        "description": "parsed addon job 38447 3",
+        "atomic_meaning": "subcontractor_component",
+        "quantity": 1.0,
+        "unit": "LS",
+        "extended_amount": 9800.0,
+        "masterformat_code": "32 00 00"
+      }
+    ],
+    "design_note": "Proposed assembly based on assembly_candidate tags on BOQ items. Review membership and confirm all required CostItems exist before promoting to OCERP assembly.",
+    "tags": [
+      "tcg_draft",
+      "review_only"
+    ],
+    "review_status": "draft"
+  },
+  {
+    "code": "TCG-ASM-MASS_EARTHWORK_EXCAVATION_FILL",
+    "name": "Mass Earthwork Excavation Fill",
+    "description": "Assembly grouping for mass earthwork excavation fill scope",
+    "masterformat_codes": [
+      "31 00 00",
+      "33 00 00"
+    ],
+    "total_extended_amount": 65045.0,
+    "components": [
+      {
+        "type": "cost_item",
+        "code": null,
+        "description": "Haul fill material (Fill Dirt (Compactabile)) from quarry",
+        "atomic_meaning": "equipment_component",
+        "quantity": 98.0,
+        "unit": "LOAD",
+        "extended_amount": 38710.0,
+        "masterformat_code": "31 00 00"
+      },
+      {
+        "type": "cost_item",
+        "code": null,
+        "description": "parsed addon job 38447 2",
+        "atomic_meaning": "material_component",
+        "quantity": 1.0,
+        "unit": "LS",
+        "extended_amount": 800.0,
+        "masterformat_code": "31 00 00"
+      },
+      {
+        "type": "cost_item",
+        "code": null,
+        "description": "parsed addon job 38578 1",
+        "atomic_meaning": "equipment_component",
+        "quantity": 1.0,
+        "unit": "LS",
+        "extended_amount": 15000.0,
+        "masterformat_code": "31 00 00"
+      },
+      {
+        "type": "cost_item",
+        "code": null,
+        "description": "estimate_payment_schedules.description.#3721",
+        "atomic_meaning": "scope_description",
+        "quantity": 1.0,
+        "unit": "LS",
+        "extended_amount": 0.0,
+        "masterformat_code": "31 00 00"
+      },
+      {
+        "type": "cost_item",
+        "code": null,
+        "description": "jobs.additional_price_description.#38578",
+        "atomic_meaning": "scope_description",
+        "quantity": 1.0,
+        "unit": "LS",
+        "extended_amount": 0.0,
+        "masterformat_code": "31 00 00"
+      },
+      {
+        "type": "cost_item",
+        "code": null,
+        "description": "Haul fill material (Fill Dirt (Compactabile)) from quarry",
+        "atomic_meaning": "equipment_component",
+        "quantity": 43.0,
+        "unit": "LOAD",
+        "extended_amount": 10535.0,
+        "masterformat_code": "33 00 00"
+      }
+    ],
+    "design_note": "Proposed assembly based on assembly_candidate tags on BOQ items. Review membership and confirm all required CostItems exist before promoting to OCERP assembly.",
+    "tags": [
+      "tcg_draft",
+      "review_only"
+    ],
+    "review_status": "draft"
+  }
+]

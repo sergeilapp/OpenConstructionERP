@@ -1,0 +1,944 @@
+[
+  {
+    "candidate_code": "BED-CONC-SLAB-4IN",
+    "v2_code": "BED-CONC-SLAB-4IN-INSTALLED",
+    "candidate_name": "Concrete slab - 4 in thick, reinforced, vapor barrier, choose PSI",
+    "proposed_ocerp_layer": "CostItem",
+    "unit": "sf",
+    "source_calculator_methods": [
+      "ConcreteJobCalculator",
+      "attempt1 concrete sampling"
+    ],
+    "recent_usage_count": 121,
+    "component_resource_codes": [
+      "MAT-CONCRETE-PRICE-PER-YARD",
+      "MAT-CONCRETE-WIRE-4-X-8-COST",
+      "MAT-CONCRETE-REBAR-PRICE-PER-FOOT",
+      "MAT-CONCRETE-VAPOR-BARRIER-ROLL-COST",
+      "LAB-CONCRETE-LABORER-RATE"
+    ],
+    "quantity_formula": "component quantities preserved from attempt-1 validated extract; formulas documented in v2 report",
+    "sampling_basis": "attempt-1 sampling plus v2 recent usage priority table",
+    "validation_status": "static_validated",
+    "design_decision": "cost_item_installed_work",
+    "notes": "Admitted by v2 CostItem checklist."
+  },
+  {
+    "candidate_code": "BED-CONC-SLAB-6IN",
+    "v2_code": "BED-CONC-SLAB-6IN-INSTALLED",
+    "candidate_name": "Concrete slab - 6 in thick, reinforced, vapor barrier, choose PSI",
+    "proposed_ocerp_layer": "CostItem",
+    "unit": "sf",
+    "source_calculator_methods": [
+      "ConcreteJobCalculator",
+      "attempt1 concrete sampling"
+    ],
+    "recent_usage_count": 121,
+    "component_resource_codes": [
+      "MAT-CONCRETE-PRICE-PER-YARD",
+      "MAT-CONCRETE-WIRE-4-X-8-COST",
+      "MAT-CONCRETE-REBAR-PRICE-PER-FOOT",
+      "MAT-CONCRETE-VAPOR-BARRIER-ROLL-COST",
+      "LAB-CONCRETE-LABORER-RATE"
+    ],
+    "quantity_formula": "component quantities preserved from attempt-1 validated extract; formulas documented in v2 report",
+    "sampling_basis": "attempt-1 sampling plus v2 recent usage priority table",
+    "validation_status": "static_validated",
+    "design_decision": "cost_item_installed_work",
+    "notes": "Admitted by v2 CostItem checklist."
+  },
+  {
+    "candidate_code": "BED-CONC-SLAB-8IN",
+    "v2_code": "BED-CONC-SLAB-8IN-INSTALLED",
+    "candidate_name": "Concrete slab - 8 in thick, reinforced, vapor barrier, choose PSI",
+    "proposed_ocerp_layer": "CostItem",
+    "unit": "sf",
+    "source_calculator_methods": [
+      "ConcreteJobCalculator",
+      "attempt1 concrete sampling"
+    ],
+    "recent_usage_count": 121,
+    "component_resource_codes": [
+      "MAT-CONCRETE-PRICE-PER-YARD",
+      "MAT-CONCRETE-WIRE-4-X-8-COST",
+      "MAT-CONCRETE-REBAR-PRICE-PER-FOOT",
+      "MAT-CONCRETE-VAPOR-BARRIER-ROLL-COST",
+      "LAB-CONCRETE-LABORER-RATE"
+    ],
+    "quantity_formula": "component quantities preserved from attempt-1 validated extract; formulas documented in v2 report",
+    "sampling_basis": "attempt-1 sampling plus v2 recent usage priority table",
+    "validation_status": "static_validated",
+    "design_decision": "cost_item_installed_work",
+    "notes": "Admitted by v2 CostItem checklist."
+  },
+  {
+    "candidate_code": "BED-CONC-FOOTER",
+    "v2_code": "BED-CONC-FOOTER-INSTALLED",
+    "candidate_name": "Concrete footer - reinforced trench, choose PSI",
+    "proposed_ocerp_layer": "CostItem",
+    "unit": "lf",
+    "source_calculator_methods": [
+      "ConcreteJobCalculator",
+      "attempt1 concrete sampling"
+    ],
+    "recent_usage_count": 0,
+    "component_resource_codes": [
+      "MAT-CONCRETE-PRICE-PER-YARD",
+      "MAT-CONCRETE-REBAR-PRICE-PER-FOOT",
+      "MAT-CONCRETE-WIRE-4-X-8-COST"
+    ],
+    "quantity_formula": "component quantities preserved from attempt-1 validated extract; formulas documented in v2 report",
+    "sampling_basis": "attempt-1 sampling plus v2 recent usage priority table",
+    "validation_status": "static_validated",
+    "design_decision": "cost_item_installed_work",
+    "notes": "Admitted by v2 CostItem checklist."
+  },
+  {
+    "candidate_code": "BED-CONC-BLOCK-6IN",
+    "v2_code": "BED-CONC-CMU-BLOCK-6IN-PER-LF",
+    "candidate_name": "Concrete block wall - 6in block (per course)",
+    "proposed_ocerp_layer": "CostItem",
+    "unit": "lf",
+    "source_calculator_methods": [
+      "ConcreteJobCalculator",
+      "attempt1 concrete sampling"
+    ],
+    "recent_usage_count": 56,
+    "component_resource_codes": [
+      "MAT-CONCRETE-CEMENT-BLOCK-6-COST"
+    ],
+    "quantity_formula": "component quantities preserved from attempt-1 validated extract; formulas documented in v2 report",
+    "sampling_basis": "attempt-1 sampling plus v2 recent usage priority table",
+    "validation_status": "static_validated",
+    "design_decision": "cost_item_conversion",
+    "notes": "Admitted by v2 CostItem checklist."
+  },
+  {
+    "candidate_code": "BED-CONC-BLOCK-8IN",
+    "v2_code": "BED-CONC-CMU-BLOCK-8IN-PER-LF",
+    "candidate_name": "Concrete block wall - 8in block (per course)",
+    "proposed_ocerp_layer": "CostItem",
+    "unit": "lf",
+    "source_calculator_methods": [
+      "ConcreteJobCalculator",
+      "attempt1 concrete sampling"
+    ],
+    "recent_usage_count": 56,
+    "component_resource_codes": [
+      "MAT-CONCRETE-CEMENT-BLOCK-8-COST"
+    ],
+    "quantity_formula": "component quantities preserved from attempt-1 validated extract; formulas documented in v2 report",
+    "sampling_basis": "attempt-1 sampling plus v2 recent usage priority table",
+    "validation_status": "static_validated",
+    "design_decision": "cost_item_conversion",
+    "notes": "Admitted by v2 CostItem checklist."
+  },
+  {
+    "candidate_code": "BED-CONC-BLOCK-10IN",
+    "v2_code": "BED-CONC-CMU-BLOCK-10IN-PER-LF",
+    "candidate_name": "Concrete block wall - 10in block (per course)",
+    "proposed_ocerp_layer": "CostItem",
+    "unit": "lf",
+    "source_calculator_methods": [
+      "ConcreteJobCalculator",
+      "attempt1 concrete sampling"
+    ],
+    "recent_usage_count": 56,
+    "component_resource_codes": [
+      "MAT-CONCRETE-CEMENT-BLOCK-10-COST"
+    ],
+    "quantity_formula": "component quantities preserved from attempt-1 validated extract; formulas documented in v2 report",
+    "sampling_basis": "attempt-1 sampling plus v2 recent usage priority table",
+    "validation_status": "static_validated",
+    "design_decision": "cost_item_conversion",
+    "notes": "Admitted by v2 CostItem checklist."
+  },
+  {
+    "candidate_code": "BED-CONC-BLOCK-12IN",
+    "v2_code": "BED-CONC-CMU-BLOCK-12IN-PER-LF",
+    "candidate_name": "Concrete block wall - 12in block (per course)",
+    "proposed_ocerp_layer": "CostItem",
+    "unit": "lf",
+    "source_calculator_methods": [
+      "ConcreteJobCalculator",
+      "attempt1 concrete sampling"
+    ],
+    "recent_usage_count": 56,
+    "component_resource_codes": [
+      "MAT-CONCRETE-CEMENT-BLOCK-12-COST"
+    ],
+    "quantity_formula": "component quantities preserved from attempt-1 validated extract; formulas documented in v2 report",
+    "sampling_basis": "attempt-1 sampling plus v2 recent usage priority table",
+    "validation_status": "static_validated",
+    "design_decision": "cost_item_conversion",
+    "notes": "Admitted by v2 CostItem checklist."
+  },
+  {
+    "candidate_code": "BED-CONC-PIER",
+    "v2_code": "BED-CONC-PIER-INSTALLED",
+    "candidate_name": "Concrete pier - 18in diameter, reinforced, choose PSI",
+    "proposed_ocerp_layer": "CostItem",
+    "unit": "ea",
+    "source_calculator_methods": [
+      "ConcreteJobCalculator",
+      "attempt1 concrete sampling"
+    ],
+    "recent_usage_count": 0,
+    "component_resource_codes": [
+      "MAT-CONCRETE-PRICE-PER-YARD",
+      "MAT-CONCRETE-REBAR-PRICE-PER-FOOT"
+    ],
+    "quantity_formula": "component quantities preserved from attempt-1 validated extract; formulas documented in v2 report",
+    "sampling_basis": "attempt-1 sampling plus v2 recent usage priority table",
+    "validation_status": "static_validated",
+    "design_decision": "cost_item_installed_work",
+    "notes": "Admitted by v2 CostItem checklist."
+  },
+  {
+    "candidate_code": "BED-CONC-APRON",
+    "v2_code": "BED-CONC-APRON-INSTALLED",
+    "candidate_name": "Concrete apron - 4in thick, reinforced, choose PSI",
+    "proposed_ocerp_layer": "CostItem",
+    "unit": "sf",
+    "source_calculator_methods": [
+      "ConcreteJobCalculator",
+      "attempt1 concrete sampling"
+    ],
+    "recent_usage_count": 27,
+    "component_resource_codes": [
+      "MAT-CONCRETE-PRICE-PER-YARD",
+      "MAT-CONCRETE-REBAR-PRICE-PER-FOOT"
+    ],
+    "quantity_formula": "component quantities preserved from attempt-1 validated extract; formulas documented in v2 report",
+    "sampling_basis": "attempt-1 sampling plus v2 recent usage priority table",
+    "validation_status": "static_validated",
+    "design_decision": "cost_item_installed_work",
+    "notes": "Admitted by v2 CostItem checklist."
+  },
+  {
+    "candidate_code": "BED-CONC-EDGE",
+    "v2_code": "BED-CONC-EDGE-INSTALLED",
+    "candidate_name": "Graduated slab edge - thickened, choose PSI",
+    "proposed_ocerp_layer": "CostItem",
+    "unit": "lf",
+    "source_calculator_methods": [
+      "ConcreteJobCalculator",
+      "attempt1 concrete sampling"
+    ],
+    "recent_usage_count": 0,
+    "component_resource_codes": [
+      "MAT-CONCRETE-PRICE-PER-YARD"
+    ],
+    "quantity_formula": "component quantities preserved from attempt-1 validated extract; formulas documented in v2 report",
+    "sampling_basis": "attempt-1 sampling plus v2 recent usage priority table",
+    "validation_status": "static_validated",
+    "design_decision": "cost_item_conversion",
+    "notes": "Admitted by v2 CostItem checklist."
+  },
+  {
+    "candidate_code": "BED-CONC-CORE-FILL",
+    "v2_code": "BED-CONC-CORE-FILL-INSTALLED",
+    "candidate_name": "Block core fill - concrete and rebar, choose PSI",
+    "proposed_ocerp_layer": "CostItem",
+    "unit": "lf",
+    "source_calculator_methods": [
+      "ConcreteJobCalculator",
+      "attempt1 concrete sampling"
+    ],
+    "recent_usage_count": 56,
+    "component_resource_codes": [
+      "MAT-CONCRETE-PRICE-PER-YARD",
+      "MAT-CONCRETE-REBAR-PRICE-PER-FOOT"
+    ],
+    "quantity_formula": "component quantities preserved from attempt-1 validated extract; formulas documented in v2 report",
+    "sampling_basis": "attempt-1 sampling plus v2 recent usage priority table",
+    "validation_status": "static_validated",
+    "design_decision": "cost_item_installed_work",
+    "notes": "Admitted by v2 CostItem checklist."
+  },
+  {
+    "candidate_code": "BED-CONC-TOP-BLOCK",
+    "v2_code": "BED-CONC-CMU-TOP-BLOCK-PER-LF",
+    "candidate_name": "Top solid block course",
+    "proposed_ocerp_layer": "CostItem",
+    "unit": "lf",
+    "source_calculator_methods": [
+      "ConcreteJobCalculator",
+      "attempt1 concrete sampling"
+    ],
+    "recent_usage_count": 56,
+    "component_resource_codes": [
+      "MAT-CONCRETE-CEMENT-BLOCK-6-COST"
+    ],
+    "quantity_formula": "component quantities preserved from attempt-1 validated extract; formulas documented in v2 report",
+    "sampling_basis": "attempt-1 sampling plus v2 recent usage priority table",
+    "validation_status": "static_validated",
+    "design_decision": "cost_item_conversion",
+    "notes": "Admitted by v2 CostItem checklist."
+  },
+  {
+    "candidate_code": "BED-CONC-DRIVING",
+    "v2_code": "BED-MATERIAL-HAULING-CONCRETE-TON-MI-REVIEW",
+    "candidate_name": "Driving labor and truck cost per trip",
+    "proposed_ocerp_layer": "CostItem",
+    "unit": "trip",
+    "source_calculator_methods": [
+      "ConcreteJobCalculator",
+      "DrivingCalculator"
+    ],
+    "recent_usage_count": 0,
+    "component_resource_codes": [
+      "LAB-DRIVING-LABORER-RATE",
+      "EQP-TRUCK-DUAL-AXLE-TIME",
+      "EQP-TRUCK-DUAL-AXLE-MILE"
+    ],
+    "quantity_formula": "component quantities preserved from attempt-1 validated extract; formulas documented in v2 report",
+    "sampling_basis": "attempt-1 sampling plus v2 recent usage priority table",
+    "validation_status": "static_validated",
+    "design_decision": "cost_item_installed_work",
+    "notes": "Admitted by v2 CostItem checklist."
+  },
+  {
+    "candidate_code": "BED-CONC-LABOR",
+    "v2_code": null,
+    "candidate_name": "Working labor (on-site crew) per hour",
+    "proposed_ocerp_layer": "none",
+    "unit": "hr",
+    "source_calculator_methods": [
+      "ConcreteJobCalculator",
+      "attempt1 concrete sampling"
+    ],
+    "recent_usage_count": 0,
+    "component_resource_codes": [
+      "LAB-CONCRETE-LABORER-RATE"
+    ],
+    "quantity_formula": "component quantities preserved from attempt-1 validated extract; formulas documented in v2 report",
+    "sampling_basis": "attempt-1 sampling plus v2 recent usage priority table",
+    "validation_status": "rejected_alias",
+    "design_decision": "delete_alias",
+    "notes": "Rejected pure alias; use CatalogResource LAB-CONCRETE-LABORER-RATE directly."
+  },
+  {
+    "candidate_code": "BED-CONC-ACCESS",
+    "v2_code": null,
+    "candidate_name": "Distance from access point (linear foot of access path)",
+    "proposed_ocerp_layer": "none",
+    "unit": "lf",
+    "source_calculator_methods": [
+      "ConcreteJobCalculator",
+      "attempt1 concrete sampling"
+    ],
+    "recent_usage_count": 0,
+    "component_resource_codes": [
+      "MAT-DISTANCE-FROM-ACCESS-COST-PER-FOOT"
+    ],
+    "quantity_formula": "component quantities preserved from attempt-1 validated extract; formulas documented in v2 report",
+    "sampling_basis": "attempt-1 sampling plus v2 recent usage priority table",
+    "validation_status": "rejected_alias",
+    "design_decision": "delete_alias",
+    "notes": "Rejected pure alias; use CatalogResource MAT-DISTANCE-FROM-ACCESS-COST-PER-FOOT directly."
+  },
+  {
+    "candidate_code": "BED-CONC-MAT-GATHER",
+    "v2_code": null,
+    "candidate_name": "Material gathering labor per hour",
+    "proposed_ocerp_layer": "none",
+    "unit": "hr",
+    "source_calculator_methods": [
+      "ConcreteJobCalculator",
+      "attempt1 concrete sampling"
+    ],
+    "recent_usage_count": 0,
+    "component_resource_codes": [
+      "LAB-CONCRETE-LABORER-RATE"
+    ],
+    "quantity_formula": "component quantities preserved from attempt-1 validated extract; formulas documented in v2 report",
+    "sampling_basis": "attempt-1 sampling plus v2 recent usage priority table",
+    "validation_status": "rejected_alias",
+    "design_decision": "delete_alias",
+    "notes": "Rejected pure alias; use CatalogResource LAB-CONCRETE-LABORER-RATE directly."
+  },
+  {
+    "candidate_code": "BED-ROCK-STONE",
+    "v2_code": null,
+    "candidate_name": "Stone (per ton)",
+    "proposed_ocerp_layer": "none",
+    "unit": "ton",
+    "source_calculator_methods": [
+      "RockPadCalculator",
+      "MaterialCalculator"
+    ],
+    "recent_usage_count": 332,
+    "component_resource_codes": [
+      "MAT-CONCRETE-ROCK-PER-TON"
+    ],
+    "quantity_formula": "component quantities preserved from attempt-1 validated extract; formulas documented in v2 report",
+    "sampling_basis": "attempt-1 sampling plus v2 recent usage priority table",
+    "validation_status": "rejected_alias",
+    "design_decision": "delete_alias",
+    "notes": "Rejected pure alias; use CatalogResource MAT-CONCRETE-ROCK-PER-TON directly."
+  },
+  {
+    "candidate_code": "BED-ROCK-BOARD",
+    "v2_code": null,
+    "candidate_name": "Board (per linear foot)",
+    "proposed_ocerp_layer": "none",
+    "unit": "lf",
+    "source_calculator_methods": [
+      "RockPadCalculator",
+      "MaterialCalculator"
+    ],
+    "recent_usage_count": 332,
+    "component_resource_codes": [
+      "MAT-ROCKPAD-BOARD-COST-PER-FOOT"
+    ],
+    "quantity_formula": "component quantities preserved from attempt-1 validated extract; formulas documented in v2 report",
+    "sampling_basis": "attempt-1 sampling plus v2 recent usage priority table",
+    "validation_status": "rejected_alias",
+    "design_decision": "delete_alias",
+    "notes": "Rejected pure alias; use CatalogResource MAT-ROCKPAD-BOARD-COST-PER-FOOT directly."
+  },
+  {
+    "candidate_code": "BED-ROCK-REBAR",
+    "v2_code": null,
+    "candidate_name": "Rebar piece (each)",
+    "proposed_ocerp_layer": "none",
+    "unit": "ea",
+    "source_calculator_methods": [
+      "RockPadCalculator",
+      "MaterialCalculator"
+    ],
+    "recent_usage_count": 332,
+    "component_resource_codes": [
+      "MAT-ROCKPAD-REBAR-PIECE"
+    ],
+    "quantity_formula": "component quantities preserved from attempt-1 validated extract; formulas documented in v2 report",
+    "sampling_basis": "attempt-1 sampling plus v2 recent usage priority table",
+    "validation_status": "rejected_alias",
+    "design_decision": "delete_alias",
+    "notes": "Rejected pure alias; use CatalogResource MAT-ROCKPAD-REBAR-PIECE directly."
+  },
+  {
+    "candidate_code": "BED-ROCK-EROSION-CONTROL",
+    "v2_code": null,
+    "candidate_name": "Erosion control wire (per linear foot)",
+    "proposed_ocerp_layer": "none",
+    "unit": "lf",
+    "source_calculator_methods": [
+      "RockPadCalculator",
+      "MaterialCalculator"
+    ],
+    "recent_usage_count": 332,
+    "component_resource_codes": [
+      "MAT-ROCKPAD-EROSION-CONTROL-WIRE-PRICE"
+    ],
+    "quantity_formula": "component quantities preserved from attempt-1 validated extract; formulas documented in v2 report",
+    "sampling_basis": "attempt-1 sampling plus v2 recent usage priority table",
+    "validation_status": "rejected_alias",
+    "design_decision": "delete_alias",
+    "notes": "Rejected pure alias; use CatalogResource MAT-ROCKPAD-EROSION-CONTROL-WIRE-PRICE directly."
+  },
+  {
+    "candidate_code": "BED-ROCK-EXCAVATION",
+    "v2_code": "BED-ROCK-EXCAVATION-INSTALLED",
+    "candidate_name": "Excavation (per square foot)",
+    "proposed_ocerp_layer": "CostItem",
+    "unit": "sf",
+    "source_calculator_methods": [
+      "RockPadCalculator",
+      "MaterialCalculator"
+    ],
+    "recent_usage_count": 332,
+    "component_resource_codes": [
+      "LAB-ROCKPAD-LABORER-RATE"
+    ],
+    "quantity_formula": "component quantities preserved from attempt-1 validated extract; formulas documented in v2 report",
+    "sampling_basis": "attempt-1 sampling plus v2 recent usage priority table",
+    "validation_status": "static_validated",
+    "design_decision": "cost_item_conversion",
+    "notes": "Admitted by v2 CostItem checklist."
+  },
+  {
+    "candidate_code": "BED-ROCK-FILL-DIRT",
+    "v2_code": "BED-FILL-DIRT-DELIVERED-ROCKPAD",
+    "candidate_name": "Fill dirt (per ton)",
+    "proposed_ocerp_layer": "CostItem",
+    "unit": "ton",
+    "source_calculator_methods": [
+      "RockPadCalculator",
+      "MaterialCalculator"
+    ],
+    "recent_usage_count": 332,
+    "component_resource_codes": [
+      "MAT-PREP-FILL-DIRT-AGGREGATE",
+      "EQP-TRUCK-COST-PER-MILE"
+    ],
+    "quantity_formula": "component quantities preserved from attempt-1 validated extract; formulas documented in v2 report",
+    "sampling_basis": "attempt-1 sampling plus v2 recent usage priority table",
+    "validation_status": "static_validated",
+    "design_decision": "cost_item_installed_work",
+    "notes": "Admitted by v2 CostItem checklist."
+  },
+  {
+    "candidate_code": "BED-ROCK-DRIVING",
+    "v2_code": "BED-MATERIAL-HAULING-ROCKPAD-TON-MI-REVIEW",
+    "candidate_name": "Driving labor and truck cost per trip",
+    "proposed_ocerp_layer": "CostItem",
+    "unit": "trip",
+    "source_calculator_methods": [
+      "RockPadCalculator",
+      "MaterialCalculator"
+    ],
+    "recent_usage_count": 332,
+    "component_resource_codes": [
+      "LAB-DRIVING-LABORER-RATE",
+      "EQP-TRUCK-DUAL-AXLE-TIME",
+      "EQP-TRUCK-DUAL-AXLE-MILE"
+    ],
+    "quantity_formula": "component quantities preserved from attempt-1 validated extract; formulas documented in v2 report",
+    "sampling_basis": "attempt-1 sampling plus v2 recent usage priority table",
+    "validation_status": "static_validated",
+    "design_decision": "cost_item_installed_work",
+    "notes": "Admitted by v2 CostItem checklist."
+  },
+  {
+    "candidate_code": "BED-ROCK-LABOR",
+    "v2_code": null,
+    "candidate_name": "Working labor (on-site crew) per hour",
+    "proposed_ocerp_layer": "none",
+    "unit": "hr",
+    "source_calculator_methods": [
+      "RockPadCalculator",
+      "MaterialCalculator"
+    ],
+    "recent_usage_count": 332,
+    "component_resource_codes": [
+      "LAB-ROCKPAD-LABORER-RATE"
+    ],
+    "quantity_formula": "component quantities preserved from attempt-1 validated extract; formulas documented in v2 report",
+    "sampling_basis": "attempt-1 sampling plus v2 recent usage priority table",
+    "validation_status": "rejected_alias",
+    "design_decision": "delete_alias",
+    "notes": "Rejected pure alias; use CatalogResource LAB-ROCKPAD-LABORER-RATE directly."
+  },
+  {
+    "candidate_code": "BED-ROCK-ACCESS",
+    "v2_code": null,
+    "candidate_name": "Distance from access point (linear foot of access path)",
+    "proposed_ocerp_layer": "none",
+    "unit": "lf",
+    "source_calculator_methods": [
+      "RockPadCalculator",
+      "MaterialCalculator"
+    ],
+    "recent_usage_count": 332,
+    "component_resource_codes": [
+      "MAT-DISTANCE-FROM-ACCESS-COST-PER-FOOT"
+    ],
+    "quantity_formula": "component quantities preserved from attempt-1 validated extract; formulas documented in v2 report",
+    "sampling_basis": "attempt-1 sampling plus v2 recent usage priority table",
+    "validation_status": "rejected_alias",
+    "design_decision": "delete_alias",
+    "notes": "Rejected pure alias; use CatalogResource MAT-DISTANCE-FROM-ACCESS-COST-PER-FOOT directly."
+  },
+  {
+    "candidate_code": "BED-ROCK-MAT-GATHER",
+    "v2_code": null,
+    "candidate_name": "Material gathering labor per hour",
+    "proposed_ocerp_layer": "none",
+    "unit": "hr",
+    "source_calculator_methods": [
+      "RockPadCalculator",
+      "MaterialCalculator"
+    ],
+    "recent_usage_count": 332,
+    "component_resource_codes": [
+      "LAB-ROCKPAD-LABORER-RATE"
+    ],
+    "quantity_formula": "component quantities preserved from attempt-1 validated extract; formulas documented in v2 report",
+    "sampling_basis": "attempt-1 sampling plus v2 recent usage priority table",
+    "validation_status": "rejected_alias",
+    "design_decision": "delete_alias",
+    "notes": "Rejected pure alias; use CatalogResource LAB-ROCKPAD-LABORER-RATE directly."
+  },
+  {
+    "candidate_code": "BED-PREP-EXCAVATION",
+    "v2_code": "BED-PREP-EXCAVATION-INSTALLED",
+    "candidate_name": "Excavation (per square foot)",
+    "proposed_ocerp_layer": "CostItem",
+    "unit": "sf",
+    "source_calculator_methods": [
+      "SitePreparationJobCalculator",
+      "MaterialCalculator"
+    ],
+    "recent_usage_count": 388,
+    "component_resource_codes": [
+      "LAB-PREPARATION-LABORER-RATE"
+    ],
+    "quantity_formula": "component quantities preserved from attempt-1 validated extract; formulas documented in v2 report",
+    "sampling_basis": "attempt-1 sampling plus v2 recent usage priority table",
+    "validation_status": "static_validated",
+    "design_decision": "cost_item_conversion",
+    "notes": "Admitted by v2 CostItem checklist."
+  },
+  {
+    "candidate_code": "BED-PREP-BOARD",
+    "v2_code": null,
+    "candidate_name": "6x6 border board (per linear foot)",
+    "proposed_ocerp_layer": "none",
+    "unit": "lf",
+    "source_calculator_methods": [
+      "SitePreparationJobCalculator",
+      "MaterialCalculator"
+    ],
+    "recent_usage_count": 388,
+    "component_resource_codes": [
+      "MAT-PREPARATION-BOARD-COST-PER-FOOT-6X6"
+    ],
+    "quantity_formula": "component quantities preserved from attempt-1 validated extract; formulas documented in v2 report",
+    "sampling_basis": "attempt-1 sampling plus v2 recent usage priority table",
+    "validation_status": "rejected_alias",
+    "design_decision": "delete_alias",
+    "notes": "Rejected pure alias; use CatalogResource MAT-PREPARATION-BOARD-COST-PER-FOOT-6X6 directly."
+  },
+  {
+    "candidate_code": "BED-PREP-REBAR",
+    "v2_code": null,
+    "candidate_name": "Rebar reinforcement (per linear foot)",
+    "proposed_ocerp_layer": "none",
+    "unit": "lf",
+    "source_calculator_methods": [
+      "SitePreparationJobCalculator",
+      "MaterialCalculator"
+    ],
+    "recent_usage_count": 388,
+    "component_resource_codes": [
+      "MAT-PREPARATION-REBAR-PRICE-PER-FOOT"
+    ],
+    "quantity_formula": "component quantities preserved from attempt-1 validated extract; formulas documented in v2 report",
+    "sampling_basis": "attempt-1 sampling plus v2 recent usage priority table",
+    "validation_status": "rejected_alias",
+    "design_decision": "delete_alias",
+    "notes": "Rejected pure alias; use CatalogResource MAT-PREPARATION-REBAR-PRICE-PER-FOOT directly."
+  },
+  {
+    "candidate_code": "BED-PREP-WIRE",
+    "v2_code": "BED-WIRE-MESH-INSTALLED",
+    "candidate_name": "Wire mesh reinforcement (per square foot)",
+    "proposed_ocerp_layer": "CostItem",
+    "unit": "sf",
+    "source_calculator_methods": [
+      "SitePreparationJobCalculator",
+      "MaterialCalculator"
+    ],
+    "recent_usage_count": 388,
+    "component_resource_codes": [
+      "MAT-PREPARATION-WIRE-4-X-8-COST"
+    ],
+    "quantity_formula": "component quantities preserved from attempt-1 validated extract; formulas documented in v2 report",
+    "sampling_basis": "attempt-1 sampling plus v2 recent usage priority table",
+    "validation_status": "static_validated",
+    "design_decision": "cost_item_conversion",
+    "notes": "Admitted by v2 CostItem checklist."
+  },
+  {
+    "candidate_code": "BED-PREP-VAPOR",
+    "v2_code": "BED-VAPOR-BARRIER-INSTALLED",
+    "candidate_name": "Vapor barrier (per square foot)",
+    "proposed_ocerp_layer": "CostItem",
+    "unit": "sf",
+    "source_calculator_methods": [
+      "SitePreparationJobCalculator",
+      "MaterialCalculator"
+    ],
+    "recent_usage_count": 388,
+    "component_resource_codes": [
+      "MAT-PREPARATION-VAPOR-BARRIER-ROLL-COST"
+    ],
+    "quantity_formula": "component quantities preserved from attempt-1 validated extract; formulas documented in v2 report",
+    "sampling_basis": "attempt-1 sampling plus v2 recent usage priority table",
+    "validation_status": "static_validated",
+    "design_decision": "cost_item_conversion",
+    "notes": "Admitted by v2 CostItem checklist."
+  },
+  {
+    "candidate_code": "BED-PREP-FABRIC",
+    "v2_code": "BED-WEED-FABRIC-INSTALLED",
+    "candidate_name": "Weed fabric (per square foot)",
+    "proposed_ocerp_layer": "CostItem",
+    "unit": "sf",
+    "source_calculator_methods": [
+      "SitePreparationJobCalculator",
+      "MaterialCalculator"
+    ],
+    "recent_usage_count": 388,
+    "component_resource_codes": [
+      "MAT-WEED-FABRIC-PER-ROLL"
+    ],
+    "quantity_formula": "component quantities preserved from attempt-1 validated extract; formulas documented in v2 report",
+    "sampling_basis": "attempt-1 sampling plus v2 recent usage priority table",
+    "validation_status": "static_validated",
+    "design_decision": "cost_item_conversion",
+    "notes": "Admitted by v2 CostItem checklist."
+  },
+  {
+    "candidate_code": "BED-PREP-FILL-DIRT",
+    "v2_code": "BED-FILL-DIRT-DELIVERED-SITEPREP",
+    "candidate_name": "Fill dirt (per ton)",
+    "proposed_ocerp_layer": "CostItem",
+    "unit": "ton",
+    "source_calculator_methods": [
+      "SitePreparationJobCalculator",
+      "MaterialCalculator"
+    ],
+    "recent_usage_count": 388,
+    "component_resource_codes": [
+      "MAT-PREP-FILL-DIRT-AGGREGATE",
+      "EQP-TRUCK-COST-PER-MILE"
+    ],
+    "quantity_formula": "component quantities preserved from attempt-1 validated extract; formulas documented in v2 report",
+    "sampling_basis": "attempt-1 sampling plus v2 recent usage priority table",
+    "validation_status": "static_validated",
+    "design_decision": "cost_item_installed_work",
+    "notes": "Admitted by v2 CostItem checklist."
+  },
+  {
+    "candidate_code": "BED-PREP-DRIVING",
+    "v2_code": "BED-MATERIAL-HAULING-SITEPREP-TON-MI-REVIEW",
+    "candidate_name": "Driving labor and truck cost per trip",
+    "proposed_ocerp_layer": "CostItem",
+    "unit": "trip",
+    "source_calculator_methods": [
+      "SitePreparationJobCalculator",
+      "MaterialCalculator"
+    ],
+    "recent_usage_count": 388,
+    "component_resource_codes": [
+      "LAB-DRIVING-LABORER-RATE",
+      "EQP-TRUCK-DUAL-AXLE-TIME",
+      "EQP-TRUCK-DUAL-AXLE-MILE"
+    ],
+    "quantity_formula": "component quantities preserved from attempt-1 validated extract; formulas documented in v2 report",
+    "sampling_basis": "attempt-1 sampling plus v2 recent usage priority table",
+    "validation_status": "static_validated",
+    "design_decision": "cost_item_installed_work",
+    "notes": "Admitted by v2 CostItem checklist."
+  },
+  {
+    "candidate_code": "BED-PREP-LABOR",
+    "v2_code": null,
+    "candidate_name": "Working labor (on-site crew) per hour",
+    "proposed_ocerp_layer": "none",
+    "unit": "hr",
+    "source_calculator_methods": [
+      "SitePreparationJobCalculator",
+      "MaterialCalculator"
+    ],
+    "recent_usage_count": 388,
+    "component_resource_codes": [
+      "LAB-PREPARATION-LABORER-RATE"
+    ],
+    "quantity_formula": "component quantities preserved from attempt-1 validated extract; formulas documented in v2 report",
+    "sampling_basis": "attempt-1 sampling plus v2 recent usage priority table",
+    "validation_status": "rejected_alias",
+    "design_decision": "delete_alias",
+    "notes": "Rejected pure alias; use CatalogResource LAB-PREPARATION-LABORER-RATE directly."
+  },
+  {
+    "candidate_code": "BED-PREP-ACCESS",
+    "v2_code": null,
+    "candidate_name": "Distance from access point (linear foot of access path)",
+    "proposed_ocerp_layer": "none",
+    "unit": "lf",
+    "source_calculator_methods": [
+      "SitePreparationJobCalculator",
+      "MaterialCalculator"
+    ],
+    "recent_usage_count": 388,
+    "component_resource_codes": [
+      "MAT-DISTANCE-FROM-ACCESS-COST-PER-FOOT"
+    ],
+    "quantity_formula": "component quantities preserved from attempt-1 validated extract; formulas documented in v2 report",
+    "sampling_basis": "attempt-1 sampling plus v2 recent usage priority table",
+    "validation_status": "rejected_alias",
+    "design_decision": "delete_alias",
+    "notes": "Rejected pure alias; use CatalogResource MAT-DISTANCE-FROM-ACCESS-COST-PER-FOOT directly."
+  },
+  {
+    "candidate_code": "BED-PREP-MAT-GATHER",
+    "v2_code": null,
+    "candidate_name": "Material gathering labor per hour",
+    "proposed_ocerp_layer": "none",
+    "unit": "hr",
+    "source_calculator_methods": [
+      "SitePreparationJobCalculator",
+      "MaterialCalculator"
+    ],
+    "recent_usage_count": 388,
+    "component_resource_codes": [
+      "LAB-PREPARATION-LABORER-RATE"
+    ],
+    "quantity_formula": "component quantities preserved from attempt-1 validated extract; formulas documented in v2 report",
+    "sampling_basis": "attempt-1 sampling plus v2 recent usage priority table",
+    "validation_status": "rejected_alias",
+    "design_decision": "delete_alias",
+    "notes": "Rejected pure alias; use CatalogResource LAB-PREPARATION-LABORER-RATE directly."
+  },
+  {
+    "candidate_code": "BED-ADHOC-LABOR",
+    "v2_code": null,
+    "candidate_name": "Working labor (on-site crew) per hour",
+    "proposed_ocerp_layer": "none",
+    "unit": "hr",
+    "source_calculator_methods": [
+      "AdhocJobCalculator",
+      "MaterialCalculator"
+    ],
+    "recent_usage_count": 137,
+    "component_resource_codes": [
+      "LAB-ADHOC-LABORER-RATE"
+    ],
+    "quantity_formula": "component quantities preserved from attempt-1 validated extract; formulas documented in v2 report",
+    "sampling_basis": "attempt-1 sampling plus v2 recent usage priority table",
+    "validation_status": "rejected_alias",
+    "design_decision": "delete_alias",
+    "notes": "Rejected pure alias; use CatalogResource LAB-ADHOC-LABORER-RATE directly."
+  },
+  {
+    "candidate_code": "BED-ADHOC-DRIVING",
+    "v2_code": "BED-MATERIAL-HAULING-ADHOC-TON-MI-REVIEW",
+    "candidate_name": "Driving labor and truck cost per trip",
+    "proposed_ocerp_layer": "CostItem",
+    "unit": "trip",
+    "source_calculator_methods": [
+      "AdhocJobCalculator",
+      "MaterialCalculator"
+    ],
+    "recent_usage_count": 137,
+    "component_resource_codes": [
+      "LAB-DRIVING-LABORER-RATE",
+      "EQP-TRUCK-DUAL-AXLE-TIME",
+      "EQP-TRUCK-DUAL-AXLE-MILE"
+    ],
+    "quantity_formula": "component quantities preserved from attempt-1 validated extract; formulas documented in v2 report",
+    "sampling_basis": "attempt-1 sampling plus v2 recent usage priority table",
+    "validation_status": "static_validated",
+    "design_decision": "cost_item_installed_work",
+    "notes": "Admitted by v2 CostItem checklist."
+  },
+  {
+    "candidate_code": "BED-ADHOC-MAT-GATHER",
+    "v2_code": null,
+    "candidate_name": "Material gathering labor per hour",
+    "proposed_ocerp_layer": "none",
+    "unit": "hr",
+    "source_calculator_methods": [
+      "AdhocJobCalculator",
+      "MaterialCalculator"
+    ],
+    "recent_usage_count": 137,
+    "component_resource_codes": [
+      "LAB-ADHOC-LABORER-RATE"
+    ],
+    "quantity_formula": "component quantities preserved from attempt-1 validated extract; formulas documented in v2 report",
+    "sampling_basis": "attempt-1 sampling plus v2 recent usage priority table",
+    "validation_status": "rejected_alias",
+    "design_decision": "delete_alias",
+    "notes": "Rejected pure alias; use CatalogResource LAB-ADHOC-LABORER-RATE directly."
+  },
+  {
+    "candidate_code": "BED-ADHOC-FILL-DIRT",
+    "v2_code": "BED-FILL-DIRT-DELIVERED-ADHOC",
+    "candidate_name": "Fill dirt (per ton)",
+    "proposed_ocerp_layer": "CostItem",
+    "unit": "ton",
+    "source_calculator_methods": [
+      "AdhocJobCalculator",
+      "MaterialCalculator"
+    ],
+    "recent_usage_count": 137,
+    "component_resource_codes": [
+      "MAT-PREP-FILL-DIRT-AGGREGATE",
+      "EQP-TRUCK-COST-PER-MILE"
+    ],
+    "quantity_formula": "component quantities preserved from attempt-1 validated extract; formulas documented in v2 report",
+    "sampling_basis": "attempt-1 sampling plus v2 recent usage priority table",
+    "validation_status": "static_validated",
+    "design_decision": "cost_item_installed_work",
+    "notes": "Admitted by v2 CostItem checklist."
+  },
+  {
+    "candidate_code": "BED-ADHOC-ACCESS",
+    "v2_code": null,
+    "candidate_name": "Distance from access point (linear foot of access path)",
+    "proposed_ocerp_layer": "none",
+    "unit": "lf",
+    "source_calculator_methods": [
+      "AdhocJobCalculator",
+      "MaterialCalculator"
+    ],
+    "recent_usage_count": 137,
+    "component_resource_codes": [
+      "MAT-DISTANCE-FROM-ACCESS-COST-PER-FOOT"
+    ],
+    "quantity_formula": "component quantities preserved from attempt-1 validated extract; formulas documented in v2 report",
+    "sampling_basis": "attempt-1 sampling plus v2 recent usage priority table",
+    "validation_status": "rejected_alias",
+    "design_decision": "delete_alias",
+    "notes": "Rejected pure alias; use CatalogResource MAT-DISTANCE-FROM-ACCESS-COST-PER-FOOT directly."
+  },
+  {
+    "candidate_code": "BED-ASM-ROCK-PAD-STANDARD",
+    "v2_code": "BED-ASM-ROCK-PAD-STANDARD",
+    "candidate_name": "Rock Pad Standard",
+    "proposed_ocerp_layer": "Assembly",
+    "unit": "sf",
+    "source_calculator_methods": [
+      "v2 assembly design",
+      "recent job usage"
+    ],
+    "recent_usage_count": 332,
+    "component_resource_codes": [],
+    "quantity_formula": "dominant takeoff unit with explicit component factors",
+    "sampling_basis": "recent usage priority; component-level static validation",
+    "validation_status": "needs_design_review",
+    "design_decision": "assembly",
+    "notes": "Generated as larger package without hiding optional scopes."
+  },
+  {
+    "candidate_code": "BED-ASM-SITE-PREP-STANDARD",
+    "v2_code": "BED-ASM-SITE-PREP-STANDARD",
+    "candidate_name": "Site Prep Standard",
+    "proposed_ocerp_layer": "Assembly",
+    "unit": "sf",
+    "source_calculator_methods": [
+      "v2 assembly design",
+      "recent job usage"
+    ],
+    "recent_usage_count": 388,
+    "component_resource_codes": [],
+    "quantity_formula": "dominant takeoff unit with explicit component factors",
+    "sampling_basis": "recent usage priority; component-level static validation",
+    "validation_status": "needs_design_review",
+    "design_decision": "assembly",
+    "notes": "Generated as larger package without hiding optional scopes."
+  },
+  {
+    "candidate_code": "BED-ASM-CONC-GIBRALTAR-FOUNDATION",
+    "v2_code": "BED-ASM-CONC-GIBRALTAR-FOUNDATION",
+    "candidate_name": "Conc Gibraltar Foundation",
+    "proposed_ocerp_layer": "Assembly",
+    "unit": "lf",
+    "source_calculator_methods": [
+      "v2 assembly design",
+      "recent job usage"
+    ],
+    "recent_usage_count": 56,
+    "component_resource_codes": [],
+    "quantity_formula": "dominant takeoff unit with explicit component factors",
+    "sampling_basis": "recent usage priority; component-level static validation",
+    "validation_status": "needs_design_review",
+    "design_decision": "assembly",
+    "notes": "Generated as larger package without hiding optional scopes."
+  }
+]

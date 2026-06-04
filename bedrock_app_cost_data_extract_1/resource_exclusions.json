@@ -1,0 +1,552 @@
+[
+  {
+    "bedrock_source": "rock_pad_variables",
+    "bedrock_key": "additional_course_block_labor_cost",
+    "description": "cost (dollars) per additional block",
+    "value": 0.0,
+    "effective_at": "2025-02-06",
+    "recommendation": "phase2",
+    "reason": "Labor-per-unit and formula factors should become component quantities or CostItem metadata.",
+    "phase_2_usage": "calculator_metadata"
+  },
+  {
+    "bedrock_source": "rock_pad_variables",
+    "bedrock_key": "bracket_labor_hour_per_piece",
+    "description": "labor hours per bracket",
+    "value": 0.0,
+    "effective_at": "2026-01-20",
+    "recommendation": "phase2",
+    "reason": "Labor-per-unit and formula factors should become component quantities or CostItem metadata.",
+    "phase_2_usage": "component_quantity_factor"
+  },
+  {
+    "bedrock_source": "rock_pad_variables",
+    "bedrock_key": "bracket_price_per_piece",
+    "description": "Price per bracket",
+    "value": 0.0,
+    "effective_at": "2026-01-20",
+    "recommendation": "exclude",
+    "reason": "Zero-valued rows need confirmation before import.",
+    "phase_2_usage": "excluded_pending_review"
+  },
+  {
+    "bedrock_source": "rock_pad_variables",
+    "bedrock_key": "concrete_cement_block_10_inch_core_cubic_feet",
+    "description": "cubic feet for a 2 core 10 inch block",
+    "value": 0.4,
+    "effective_at": "2023-03-08",
+    "recommendation": "phase2",
+    "reason": "Default to formula metadata until we confirm it is a direct unit price.",
+    "phase_2_usage": "calculator_metadata"
+  },
+  {
+    "bedrock_source": "rock_pad_variables",
+    "bedrock_key": "concrete_cement_block_12_inch_core_cubic_feet",
+    "description": "cubic feet for a 2 core 12 inch block",
+    "value": 0.5,
+    "effective_at": "2020-02-21",
+    "recommendation": "phase2",
+    "reason": "Default to formula metadata until we confirm it is a direct unit price.",
+    "phase_2_usage": "calculator_metadata"
+  },
+  {
+    "bedrock_source": "rock_pad_variables",
+    "bedrock_key": "concrete_cement_block_6_inch_core_cubic_feet",
+    "description": "cubic feet for a 2 core 6 inch block",
+    "value": 0.3,
+    "effective_at": "2023-03-07",
+    "recommendation": "phase2",
+    "reason": "Default to formula metadata until we confirm it is a direct unit price.",
+    "phase_2_usage": "calculator_metadata"
+  },
+  {
+    "bedrock_source": "rock_pad_variables",
+    "bedrock_key": "concrete_cement_block_8_inch_core_cubic_feet",
+    "description": "cubic feet for a 2 core 8 inch block",
+    "value": 0.35,
+    "effective_at": "2023-03-08",
+    "recommendation": "phase2",
+    "reason": "Default to formula metadata until we confirm it is a direct unit price.",
+    "phase_2_usage": "calculator_metadata"
+  },
+  {
+    "bedrock_source": "rock_pad_variables",
+    "bedrock_key": "concrete_cement_block_rebar_fill_spacing",
+    "description": "spacing (in feet) between rebar placed through cement block cores",
+    "value": 4.0,
+    "effective_at": "1900-01-01",
+    "recommendation": "exclude",
+    "reason": "Markup, commission, overhead, speed, spacing, dimensions, and counts should not become leaf resources.",
+    "phase_2_usage": "component_quantity_factor"
+  },
+  {
+    "bedrock_source": "rock_pad_variables",
+    "bedrock_key": "concrete_edge_thickness_in_inches",
+    "description": "Concrete edge thickness in inches",
+    "value": 18.0,
+    "effective_at": "2020-02-21",
+    "recommendation": "exclude",
+    "reason": "Markup, commission, overhead, speed, spacing, dimensions, and counts should not become leaf resources.",
+    "phase_2_usage": "component_quantity_factor"
+  },
+  {
+    "bedrock_source": "rock_pad_variables",
+    "bedrock_key": "concrete_gravel_base_depth_in_inches",
+    "description": "Concrete gravel base depth in inches",
+    "value": 4.0,
+    "effective_at": "1900-01-01",
+    "recommendation": "exclude",
+    "reason": "Markup, commission, overhead, speed, spacing, dimensions, and counts should not become leaf resources.",
+    "phase_2_usage": "component_quantity_factor"
+  },
+  {
+    "bedrock_source": "rock_pad_variables",
+    "bedrock_key": "concrete_laborers",
+    "description": "Number of laborers required",
+    "value": 0.0,
+    "effective_at": "2019-08-22",
+    "recommendation": "exclude",
+    "reason": "Markup, commission, overhead, speed, spacing, dimensions, and counts should not become leaf resources.",
+    "phase_2_usage": "excluded_pending_review"
+  },
+  {
+    "bedrock_source": "rock_pad_variables",
+    "bedrock_key": "concrete_number_of_piers",
+    "description": "Concrete number of piers",
+    "value": 6.0,
+    "effective_at": "1900-01-01",
+    "recommendation": "phase2",
+    "reason": "Default to formula metadata until we confirm it is a direct unit price.",
+    "phase_2_usage": "calculator_metadata"
+  },
+  {
+    "bedrock_source": "rock_pad_variables",
+    "bedrock_key": "concrete_psi_price_difference_2000_psi",
+    "description": "price difference (dollars) from \"Concrete Price\" (4000 PSI should be 0)",
+    "value": -12.0,
+    "effective_at": "2019-01-18",
+    "recommendation": "variant",
+    "reason": "Concrete PSI differences should feed the concrete variant table, not standalone resources.",
+    "phase_2_usage": "concrete_variant_pricing"
+  },
+  {
+    "bedrock_source": "rock_pad_variables",
+    "bedrock_key": "concrete_psi_price_difference_2500_psi",
+    "description": "price difference (dollars) from \"Concrete Price\" (4000 PSI should be 0)",
+    "value": -9.0,
+    "effective_at": "2019-01-18",
+    "recommendation": "variant",
+    "reason": "Concrete PSI differences should feed the concrete variant table, not standalone resources.",
+    "phase_2_usage": "concrete_variant_pricing"
+  },
+  {
+    "bedrock_source": "rock_pad_variables",
+    "bedrock_key": "concrete_psi_price_difference_3000_psi",
+    "description": "price difference (dollars) from \"Concrete Price\" (4000 PSI should be 0)",
+    "value": -6.0,
+    "effective_at": "2019-01-18",
+    "recommendation": "variant",
+    "reason": "Concrete PSI differences should feed the concrete variant table, not standalone resources.",
+    "phase_2_usage": "concrete_variant_pricing"
+  },
+  {
+    "bedrock_source": "rock_pad_variables",
+    "bedrock_key": "concrete_psi_price_difference_3500_psi",
+    "description": "price difference (dollars) from \"Concrete Price\" (4000 PSI should be 0)",
+    "value": -3.0,
+    "effective_at": "2019-01-18",
+    "recommendation": "variant",
+    "reason": "Concrete PSI differences should feed the concrete variant table, not standalone resources.",
+    "phase_2_usage": "concrete_variant_pricing"
+  },
+  {
+    "bedrock_source": "rock_pad_variables",
+    "bedrock_key": "concrete_psi_price_difference_4000_psi",
+    "description": "price difference (dollars) from \"Concrete Price\" (4000 PSI should be 0)",
+    "value": 0.0,
+    "effective_at": "2019-01-18",
+    "recommendation": "variant",
+    "reason": "Concrete PSI differences should feed the concrete variant table, not standalone resources.",
+    "phase_2_usage": "concrete_variant_pricing"
+  },
+  {
+    "bedrock_source": "rock_pad_variables",
+    "bedrock_key": "concrete_psi_price_difference_4500_psi",
+    "description": "price difference (dollars) from \"Concrete Price\" (4000 PSI should be 0)",
+    "value": 3.0,
+    "effective_at": "2019-01-18",
+    "recommendation": "variant",
+    "reason": "Concrete PSI differences should feed the concrete variant table, not standalone resources.",
+    "phase_2_usage": "concrete_variant_pricing"
+  },
+  {
+    "bedrock_source": "rock_pad_variables",
+    "bedrock_key": "concrete_psi_price_difference_5000_psi",
+    "description": "price difference (dollars) from \"Concrete Price\" (4000 PSI should be 0)",
+    "value": 6.0,
+    "effective_at": "2019-01-18",
+    "recommendation": "variant",
+    "reason": "Concrete PSI differences should feed the concrete variant table, not standalone resources.",
+    "phase_2_usage": "concrete_variant_pricing"
+  },
+  {
+    "bedrock_source": "rock_pad_variables",
+    "bedrock_key": "concrete_rebar_labor_price_per_foot",
+    "description": "cost (in dollars) of labor for one foot of rebar.",
+    "value": 0.0,
+    "effective_at": "2023-04-28",
+    "recommendation": "phase2",
+    "reason": "Labor-per-unit and formula factors should become component quantities or CostItem metadata.",
+    "phase_2_usage": "component_quantity_factor"
+  },
+  {
+    "bedrock_source": "rock_pad_variables",
+    "bedrock_key": "concrete_retaining_wall_fill_width",
+    "description": "width of rock in inches behind retaining wall",
+    "value": 18.0,
+    "effective_at": "2021-06-14",
+    "recommendation": "exclude",
+    "reason": "Markup, commission, overhead, speed, spacing, dimensions, and counts should not become leaf resources.",
+    "phase_2_usage": "component_quantity_factor"
+  },
+  {
+    "bedrock_source": "rock_pad_variables",
+    "bedrock_key": "concrete_square_footage_per_ton",
+    "description": "Square footage per ton of rock ( in sqft ) 6'' thick",
+    "value": 36.0,
+    "effective_at": "1900-01-01",
+    "recommendation": "exclude",
+    "reason": "Markup, commission, overhead, speed, spacing, dimensions, and counts should not become leaf resources.",
+    "phase_2_usage": "component_quantity_factor"
+  },
+  {
+    "bedrock_source": "rock_pad_variables",
+    "bedrock_key": "concrete_vapor_barrier_length",
+    "description": "Concrete vapor barrier length",
+    "value": 300.0,
+    "effective_at": "1900-01-01",
+    "recommendation": "exclude",
+    "reason": "Markup, commission, overhead, speed, spacing, dimensions, and counts should not become leaf resources.",
+    "phase_2_usage": "component_quantity_factor"
+  },
+  {
+    "bedrock_source": "rock_pad_variables",
+    "bedrock_key": "concrete_vapor_barrier_width",
+    "description": "Concrete vapor barrier width",
+    "value": 12.0,
+    "effective_at": "1900-01-01",
+    "recommendation": "exclude",
+    "reason": "Markup, commission, overhead, speed, spacing, dimensions, and counts should not become leaf resources.",
+    "phase_2_usage": "component_quantity_factor"
+  },
+  {
+    "bedrock_source": "rock_pad_variables",
+    "bedrock_key": "concrete_wire_4_x_8_labor_cost",
+    "description": "labor cost (in dollars) per 4x8 sheet",
+    "value": 10.0,
+    "effective_at": "2023-04-27",
+    "recommendation": "phase2",
+    "reason": "Labor-per-unit and formula factors should become component quantities or CostItem metadata.",
+    "phase_2_usage": "calculator_metadata"
+  },
+  {
+    "bedrock_source": "rock_pad_variables",
+    "bedrock_key": "contractor_material_markup",
+    "description": "(in percentage) Material markup for contractors",
+    "value": 5.0,
+    "effective_at": "2025-02-06",
+    "recommendation": "exclude",
+    "reason": "Markup, commission, overhead, speed, spacing, dimensions, and counts should not become leaf resources.",
+    "phase_2_usage": "boq_markup_or_tendering_layer"
+  },
+  {
+    "bedrock_source": "rock_pad_variables",
+    "bedrock_key": "dump_truck_time_at_job_site",
+    "description": "Minutes the truck will take at the job site",
+    "value": 45.0,
+    "effective_at": "2026-05-13",
+    "recommendation": "exclude",
+    "reason": "Markup, commission, overhead, speed, spacing, dimensions, and counts should not become leaf resources.",
+    "phase_2_usage": "excluded_pending_review"
+  },
+  {
+    "bedrock_source": "rock_pad_variables",
+    "bedrock_key": "dump_truck_time_at_quarry",
+    "description": "Minutes the truck will take at the quarry",
+    "value": 45.0,
+    "effective_at": "2026-05-13",
+    "recommendation": "exclude",
+    "reason": "Markup, commission, overhead, speed, spacing, dimensions, and counts should not become leaf resources.",
+    "phase_2_usage": "excluded_pending_review"
+  },
+  {
+    "bedrock_source": "rock_pad_variables",
+    "bedrock_key": "finish_cost_broom",
+    "description": "additional cost for a broom finish",
+    "value": 0.0,
+    "effective_at": "1900-01-01",
+    "recommendation": "exclude",
+    "reason": "Zero-valued rows need confirmation before import.",
+    "phase_2_usage": "excluded_pending_review"
+  },
+  {
+    "bedrock_source": "rock_pad_variables",
+    "bedrock_key": "labor_cost_markup",
+    "description": "in percentage",
+    "value": 5.0,
+    "effective_at": "2024-09-19",
+    "recommendation": "exclude",
+    "reason": "Markup, commission, overhead, speed, spacing, dimensions, and counts should not become leaf resources.",
+    "phase_2_usage": "boq_markup_or_tendering_layer"
+  },
+  {
+    "bedrock_source": "rock_pad_variables",
+    "bedrock_key": "labor_cost_per_board_foot",
+    "description": "cost (in cents) of buildup/retaining wall per board foot.",
+    "value": 700.0,
+    "effective_at": "2023-05-12",
+    "recommendation": "phase2",
+    "reason": "Labor-per-unit and formula factors should become component quantities or CostItem metadata.",
+    "phase_2_usage": "component_quantity_factor"
+  },
+  {
+    "bedrock_source": "rock_pad_variables",
+    "bedrock_key": "material_cost_markup",
+    "description": "in percentage",
+    "value": 15.0,
+    "effective_at": "2026-04-23",
+    "recommendation": "exclude",
+    "reason": "Markup, commission, overhead, speed, spacing, dimensions, and counts should not become leaf resources.",
+    "phase_2_usage": "boq_markup_or_tendering_layer"
+  },
+  {
+    "bedrock_source": "rock_pad_variables",
+    "bedrock_key": "off_level_excavation_markup",
+    "description": "(in percentage)Markup used to calculate excavation labor for off-level amount.",
+    "value": 60.0,
+    "effective_at": "2021-01-09",
+    "recommendation": "exclude",
+    "reason": "Markup, commission, overhead, speed, spacing, dimensions, and counts should not become leaf resources.",
+    "phase_2_usage": "boq_markup_or_tendering_layer"
+  },
+  {
+    "bedrock_source": "rock_pad_variables",
+    "bedrock_key": "overhead_percentage",
+    "description": "Percentage of job cost used to cover overhead.",
+    "value": 30.0,
+    "effective_at": "2022-07-14",
+    "recommendation": "exclude",
+    "reason": "Markup, commission, overhead, speed, spacing, dimensions, and counts should not become leaf resources.",
+    "phase_2_usage": "boq_markup_or_tendering_layer"
+  },
+  {
+    "bedrock_source": "rock_pad_variables",
+    "bedrock_key": "preparation_board_labor_cost_per_foot_6x6",
+    "description": "This is the 6x6 border board cost per foot",
+    "value": 5.5,
+    "effective_at": "2023-04-11",
+    "recommendation": "phase2",
+    "reason": "Labor-per-unit and formula factors should become component quantities or CostItem metadata.",
+    "phase_2_usage": "component_quantity_factor"
+  },
+  {
+    "bedrock_source": "rock_pad_variables",
+    "bedrock_key": "preparation_rebar_labor_price_per_foot",
+    "description": "cost (in dollars) of labor for one foot of rebar.",
+    "value": 0.55,
+    "effective_at": "2020-02-21",
+    "recommendation": "phase2",
+    "reason": "Labor-per-unit and formula factors should become component quantities or CostItem metadata.",
+    "phase_2_usage": "component_quantity_factor"
+  },
+  {
+    "bedrock_source": "rock_pad_variables",
+    "bedrock_key": "preparation_vapor_barrier_length",
+    "description": "Preparation vapor barrier length",
+    "value": 300.0,
+    "effective_at": "1900-01-01",
+    "recommendation": "exclude",
+    "reason": "Markup, commission, overhead, speed, spacing, dimensions, and counts should not become leaf resources.",
+    "phase_2_usage": "component_quantity_factor"
+  },
+  {
+    "bedrock_source": "rock_pad_variables",
+    "bedrock_key": "preparation_vapor_barrier_width",
+    "description": "Preparation vapor barrier width",
+    "value": 12.0,
+    "effective_at": "1900-01-01",
+    "recommendation": "exclude",
+    "reason": "Markup, commission, overhead, speed, spacing, dimensions, and counts should not become leaf resources.",
+    "phase_2_usage": "component_quantity_factor"
+  },
+  {
+    "bedrock_source": "rock_pad_variables",
+    "bedrock_key": "preparation_wire_4_x_8_labor_cost",
+    "description": "labor cost (in dollars) per 4x8 sheet",
+    "value": 5.0,
+    "effective_at": "1900-01-01",
+    "recommendation": "phase2",
+    "reason": "Labor-per-unit and formula factors should become component quantities or CostItem metadata.",
+    "phase_2_usage": "calculator_metadata"
+  },
+  {
+    "bedrock_source": "rock_pad_variables",
+    "bedrock_key": "referral_commission",
+    "description": "in percentage",
+    "value": 3.0,
+    "effective_at": "1900-01-01",
+    "recommendation": "exclude",
+    "reason": "Markup, commission, overhead, speed, spacing, dimensions, and counts should not become leaf resources.",
+    "phase_2_usage": "boq_markup_or_tendering_layer"
+  },
+  {
+    "bedrock_source": "rock_pad_variables",
+    "bedrock_key": "rockpad_retaining_wall_fill_width",
+    "description": "width of rock in inches behind retaining wall",
+    "value": 24.0,
+    "effective_at": "2026-04-23",
+    "recommendation": "exclude",
+    "reason": "Markup, commission, overhead, speed, spacing, dimensions, and counts should not become leaf resources.",
+    "phase_2_usage": "component_quantity_factor"
+  },
+  {
+    "bedrock_source": "rock_pad_variables",
+    "bedrock_key": "rockpad_spacing_for_rebar",
+    "description": "Feet of space between rebar pieces ( in feet )",
+    "value": 8.0,
+    "effective_at": "1900-01-01",
+    "recommendation": "exclude",
+    "reason": "Markup, commission, overhead, speed, spacing, dimensions, and counts should not become leaf resources.",
+    "phase_2_usage": "component_quantity_factor"
+  },
+  {
+    "bedrock_source": "rock_pad_variables",
+    "bedrock_key": "rockpad_square_footage_per_ton",
+    "description": "Square footage per ton of rock ( in sqft ) 6'' thick",
+    "value": 36.0,
+    "effective_at": "1900-01-01",
+    "recommendation": "exclude",
+    "reason": "Markup, commission, overhead, speed, spacing, dimensions, and counts should not become leaf resources.",
+    "phase_2_usage": "component_quantity_factor"
+  },
+  {
+    "bedrock_source": "rock_pad_variables",
+    "bedrock_key": "rockpad_trex_price_per_foot",
+    "description": "Cost of trex per foot (dollars)",
+    "value": 0.0,
+    "effective_at": "2020-06-25",
+    "recommendation": "exclude",
+    "reason": "Zero-valued rows need confirmation before import.",
+    "phase_2_usage": "excluded_pending_review"
+  },
+  {
+    "bedrock_source": "rock_pad_variables",
+    "bedrock_key": "rockpad_wire_mesh_length",
+    "description": "Rockpad wire mesh length",
+    "value": 300.0,
+    "effective_at": "1900-01-01",
+    "recommendation": "exclude",
+    "reason": "Markup, commission, overhead, speed, spacing, dimensions, and counts should not become leaf resources.",
+    "phase_2_usage": "component_quantity_factor"
+  },
+  {
+    "bedrock_source": "rock_pad_variables",
+    "bedrock_key": "rockpad_wire_mesh_per_roll",
+    "description": "Rockpad wire mesh per roll",
+    "value": 365.0,
+    "effective_at": "1900-01-01",
+    "recommendation": "phase2",
+    "reason": "Default to formula metadata until we confirm it is a direct unit price.",
+    "phase_2_usage": "calculator_metadata"
+  },
+  {
+    "bedrock_source": "rock_pad_variables",
+    "bedrock_key": "sales_commission_percentage",
+    "description": "Sales commission percentage",
+    "value": 0.0,
+    "effective_at": "2025-11-19",
+    "recommendation": "exclude",
+    "reason": "Markup, commission, overhead, speed, spacing, dimensions, and counts should not become leaf resources.",
+    "phase_2_usage": "boq_markup_or_tendering_layer"
+  },
+  {
+    "bedrock_source": "rock_pad_variables",
+    "bedrock_key": "speed_for_hour_calculation",
+    "description": "Average speed of travel ( in MPH )",
+    "value": 45.0,
+    "effective_at": "2025-06-20",
+    "recommendation": "exclude",
+    "reason": "Markup, commission, overhead, speed, spacing, dimensions, and counts should not become leaf resources.",
+    "phase_2_usage": "component_quantity_factor"
+  },
+  {
+    "bedrock_source": "rock_pad_variables",
+    "bedrock_key": "subcontractor_block_labor_per_block",
+    "description": "subcontractor labor price (in cents) per block",
+    "value": 500.0,
+    "effective_at": "1900-01-01",
+    "recommendation": "phase2",
+    "reason": "Labor-per-unit and formula factors should become component quantities or CostItem metadata.",
+    "phase_2_usage": "component_quantity_factor"
+  },
+  {
+    "bedrock_source": "rock_pad_variables",
+    "bedrock_key": "subcontractor_labor_cost_markup",
+    "description": "in percentage",
+    "value": 10.0,
+    "effective_at": "2024-09-18",
+    "recommendation": "exclude",
+    "reason": "Markup, commission, overhead, speed, spacing, dimensions, and counts should not become leaf resources.",
+    "phase_2_usage": "boq_markup_or_tendering_layer"
+  },
+  {
+    "bedrock_source": "rock_pad_variables",
+    "bedrock_key": "subcontractor_slab_labor_per_sqft",
+    "description": "subcontractor labor price (in cents) per slab square foot",
+    "value": 300.0,
+    "effective_at": "2021-06-14",
+    "recommendation": "phase2",
+    "reason": "Labor-per-unit and formula factors should become component quantities or CostItem metadata.",
+    "phase_2_usage": "component_quantity_factor"
+  },
+  {
+    "bedrock_source": "rock_pad_variables",
+    "bedrock_key": "truck_mileage_per_gallon",
+    "description": "MPG of truck (in mpg)",
+    "value": 4.0,
+    "effective_at": "2021-08-06",
+    "recommendation": "exclude",
+    "reason": "Mileage efficiency is equipment metadata, not a unit price.",
+    "phase_2_usage": "excluded_pending_review"
+  },
+  {
+    "bedrock_source": "rock_pad_variables",
+    "bedrock_key": "weed_fabric_length",
+    "description": "Length of the weed fabric roll ( in feet )",
+    "value": 300.0,
+    "effective_at": "1900-01-01",
+    "recommendation": "exclude",
+    "reason": "Markup, commission, overhead, speed, spacing, dimensions, and counts should not become leaf resources.",
+    "phase_2_usage": "component_quantity_factor"
+  },
+  {
+    "bedrock_source": "rock_pad_variables",
+    "bedrock_key": "weed_fabric_width",
+    "description": "Width of the weed fabric roll (in feet)",
+    "value": 12.0,
+    "effective_at": "1900-01-01",
+    "recommendation": "exclude",
+    "reason": "Markup, commission, overhead, speed, spacing, dimensions, and counts should not become leaf resources.",
+    "phase_2_usage": "component_quantity_factor"
+  },
+  {
+    "bedrock_source": "rock_pad_variables",
+    "bedrock_key": "wire_sheet_square_footage",
+    "description": "sheet size in square footage",
+    "value": 32.0,
+    "effective_at": "1900-01-01",
+    "recommendation": "phase2",
+    "reason": "Default to formula metadata until we confirm it is a direct unit price.",
+    "phase_2_usage": "calculator_metadata"
+  }
+]

@@ -1,0 +1,397 @@
+[
+  {
+    "code": "BED-PREP-EXCAVATION",
+    "description": "Excavation (per square foot)",
+    "unit": "sf",
+    "rate": 11.6,
+    "currency": "USD",
+    "source": "bedrock_extraction",
+    "region": "BEDROCK-MAIN",
+    "classification": {
+      "masterformat": "31 23 00"
+    },
+    "components": [
+      {
+        "code": "LAB-PREPARATION-LABORER-RATE",
+        "name": "Site preparation laborer",
+        "type": "labor",
+        "quantity": 0.08,
+        "unit_rate": 145.0,
+        "cost": 11.6,
+        "unit": "hr"
+      }
+    ],
+    "tags": [
+      "bedrock",
+      "siteprep",
+      "excavation",
+      "needs_sampling"
+    ],
+    "metadata": {
+      "draft_assumptions": [
+        "Excavation factor is ~0.08 hours per sf for standard depth (based on typical conditions).",
+        "Factor should be validated against real job data."
+      ]
+    }
+  },
+  {
+    "code": "BED-PREP-BOARD",
+    "description": "6x6 border board (per linear foot)",
+    "unit": "lf",
+    "rate": 5.5,
+    "currency": "USD",
+    "source": "bedrock_extraction",
+    "region": "BEDROCK-MAIN",
+    "classification": {
+      "masterformat": "06 11 00"
+    },
+    "components": [
+      {
+        "code": "MAT-PREPARATION-BOARD-COST-PER-FOOT-6X6",
+        "name": "This is the 6x6 border board cost per foot",
+        "type": "material",
+        "quantity": 1.0,
+        "unit_rate": 5.5,
+        "cost": 5.5,
+        "unit": "lf"
+      }
+    ],
+    "tags": [
+      "bedrock",
+      "siteprep"
+    ],
+    "metadata": {
+      "draft_assumptions": [
+        "Pass-through resource at qty=1; board quantity applied at BOQ."
+      ]
+    }
+  },
+  {
+    "code": "BED-PREP-REBAR",
+    "description": "Rebar reinforcement (per linear foot)",
+    "unit": "lf",
+    "rate": 0.55,
+    "currency": "USD",
+    "source": "bedrock_extraction",
+    "region": "BEDROCK-MAIN",
+    "classification": {
+      "masterformat": "03 20 00"
+    },
+    "components": [
+      {
+        "code": "MAT-PREPARATION-REBAR-PRICE-PER-FOOT",
+        "name": "cost (in dollars) of one foot of rebar.",
+        "type": "material",
+        "quantity": 1.0,
+        "unit_rate": 0.55,
+        "cost": 0.55,
+        "unit": "lf"
+      }
+    ],
+    "tags": [
+      "bedrock",
+      "siteprep"
+    ],
+    "metadata": {
+      "draft_assumptions": [
+        "Pass-through resource at qty=1; rebar quantity applied at BOQ."
+      ]
+    }
+  },
+  {
+    "code": "BED-PREP-WIRE",
+    "description": "Wire mesh reinforcement (per square foot)",
+    "unit": "sf",
+    "rate": 0.63,
+    "currency": "USD",
+    "source": "bedrock_extraction",
+    "region": "BEDROCK-MAIN",
+    "classification": {
+      "masterformat": "03 20 00"
+    },
+    "components": [
+      {
+        "code": "MAT-PREPARATION-WIRE-4-X-8-COST",
+        "name": "cost (in dollars) per 4x8 sheet",
+        "type": "material",
+        "quantity": 0.03125,
+        "unit_rate": 20.0,
+        "cost": 0.63,
+        "unit": "ea"
+      }
+    ],
+    "tags": [
+      "bedrock",
+      "siteprep",
+      "needs_sampling"
+    ],
+    "metadata": {
+      "draft_assumptions": [
+        "Wire quantity derived from 4x8 sheet coverage: 1/32 = 0.03125 sheets per sf.",
+        "Should be validated against real job data for typical sheet loss/waste."
+      ]
+    }
+  },
+  {
+    "code": "BED-PREP-VAPOR",
+    "description": "Vapor barrier (per square foot)",
+    "unit": "sf",
+    "rate": 0.11,
+    "currency": "USD",
+    "source": "bedrock_extraction",
+    "region": "BEDROCK-MAIN",
+    "classification": {
+      "masterformat": "07 26 00"
+    },
+    "components": [
+      {
+        "code": "MAT-PREPARATION-VAPOR-BARRIER-ROLL-COST",
+        "name": "Preparation vapor barrier roll cost",
+        "type": "material",
+        "quantity": 0.000278,
+        "unit_rate": 400.0,
+        "cost": 0.11,
+        "unit": "ea"
+      }
+    ],
+    "tags": [
+      "bedrock",
+      "siteprep",
+      "needs_sampling"
+    ],
+    "metadata": {
+      "draft_assumptions": [
+        "Vapor barrier quantity assumes 12ft x 300ft standard roll, so 0.000278 rolls per sf.",
+        "Roll dimensions are not available as leaf resources; should be validated."
+      ]
+    }
+  },
+  {
+    "code": "BED-PREP-FABRIC",
+    "description": "Weed fabric (per square foot)",
+    "unit": "sf",
+    "rate": 0.17,
+    "currency": "USD",
+    "source": "bedrock_extraction",
+    "region": "BEDROCK-MAIN",
+    "classification": {
+      "masterformat": "31 25 00"
+    },
+    "components": [
+      {
+        "code": "MAT-WEED-FABRIC-PER-ROLL",
+        "name": "Cost per roll ( in dollars )",
+        "type": "material",
+        "quantity": 0.000278,
+        "unit_rate": 600.0,
+        "cost": 0.17,
+        "unit": "ea"
+      }
+    ],
+    "tags": [
+      "bedrock",
+      "siteprep",
+      "needs_sampling"
+    ],
+    "metadata": {
+      "draft_assumptions": [
+        "Weed fabric quantity assumes 12ft x 300ft standard roll, so 0.000278 rolls per sf.",
+        "Roll dimensions (weed_fabric_width, weed_fabric_length) are not available as leaf resources; should be validated."
+      ]
+    }
+  },
+  {
+    "code": "BED-PREP-FILL-DIRT",
+    "description": "Fill dirt (per ton)",
+    "unit": "ton",
+    "rate": 23.25,
+    "currency": "USD",
+    "source": "bedrock_extraction",
+    "region": "BEDROCK-MAIN",
+    "classification": {
+      "masterformat": "31 23 00"
+    },
+    "components": [
+      {
+        "code": "MAT-PREP-FILL-DIRT-AGGREGATE",
+        "name": "Fill Dirt/Aggregate ",
+        "type": "material",
+        "quantity": 1.0,
+        "unit_rate": 20.0,
+        "cost": 20.0,
+        "unit": "cy"
+      },
+      {
+        "code": "EQP-TRUCK-COST-PER-MILE",
+        "name": "Cost of truck per mile (dollars)",
+        "type": "equipment",
+        "quantity": 1.0,
+        "unit_rate": 3.25,
+        "cost": 3.25,
+        "unit": "mi"
+      }
+    ],
+    "tags": [
+      "bedrock",
+      "siteprep",
+      "fill",
+      "needs_sampling"
+    ],
+    "metadata": {
+      "draft_assumptions": [
+        "Fill dirt prep material rate is looked up via regex MAT-PREP-.*FILL.*DIRT; falls back to $15.00/ton if not found.",
+        "Truck cost per mile at qty=1; actual mileage applied at BOQ."
+      ]
+    }
+  },
+  {
+    "code": "BED-PREP-DRIVING",
+    "description": "Driving labor and truck cost per trip",
+    "unit": "trip",
+    "rate": 214.5,
+    "currency": "USD",
+    "source": "bedrock_extraction",
+    "region": "BEDROCK-MAIN",
+    "classification": {
+      "masterformat": "01 50 00"
+    },
+    "components": [
+      {
+        "code": "LAB-DRIVING-LABORER-RATE",
+        "name": "Driving laborer",
+        "type": "labor",
+        "quantity": 1.0,
+        "unit_rate": 85.0,
+        "cost": 85.0,
+        "unit": "hr"
+      },
+      {
+        "code": "EQP-TRUCK-DUAL-AXLE-TIME",
+        "name": "Dual Axle dump truck - time",
+        "type": "equipment",
+        "quantity": 1.0,
+        "unit_rate": 125.0,
+        "cost": 125.0,
+        "unit": "hr"
+      },
+      {
+        "code": "EQP-TRUCK-DUAL-AXLE-MILE",
+        "name": "Dual Axle dump truck - mileage",
+        "type": "equipment",
+        "quantity": 1.0,
+        "unit_rate": 4.5,
+        "cost": 4.5,
+        "unit": "mi"
+      }
+    ],
+    "tags": [
+      "bedrock",
+      "siteprep",
+      "driving"
+    ],
+    "metadata": {
+      "draft_assumptions": [
+        "Components are unit rates with qty=1; actual trip quantity varies by job distance and duration."
+      ]
+    }
+  },
+  {
+    "code": "BED-PREP-LABOR",
+    "description": "Working labor (on-site crew) per hour",
+    "unit": "hr",
+    "rate": 145.0,
+    "currency": "USD",
+    "source": "bedrock_extraction",
+    "region": "BEDROCK-MAIN",
+    "classification": {
+      "masterformat": "01 50 00"
+    },
+    "components": [
+      {
+        "code": "LAB-PREPARATION-LABORER-RATE",
+        "name": "Site preparation laborer",
+        "type": "labor",
+        "quantity": 1.0,
+        "unit_rate": 145.0,
+        "cost": 145.0,
+        "unit": "hr"
+      }
+    ],
+    "tags": [
+      "bedrock",
+      "siteprep",
+      "labor"
+    ],
+    "metadata": {
+      "draft_assumptions": [
+        "Rate equals LAB-PREPARATION-LABORER-RATE; crew size applied at BOQ."
+      ]
+    }
+  },
+  {
+    "code": "BED-PREP-ACCESS",
+    "description": "Distance from access point (linear foot of access path)",
+    "unit": "lf",
+    "rate": 2.0,
+    "currency": "USD",
+    "source": "bedrock_extraction",
+    "region": "BEDROCK-MAIN",
+    "classification": {
+      "masterformat": "31 23 00"
+    },
+    "components": [
+      {
+        "code": "MAT-DISTANCE-FROM-ACCESS-COST-PER-FOOT",
+        "name": "Distance from access cost per foot",
+        "type": "material",
+        "quantity": 1.0,
+        "unit_rate": 2.0,
+        "cost": 2.0,
+        "unit": "lf"
+      }
+    ],
+    "tags": [
+      "bedrock",
+      "siteprep",
+      "access"
+    ],
+    "metadata": {
+      "draft_assumptions": [
+        "Cost per lf of access path; quantity equals job distance_from_access."
+      ]
+    }
+  },
+  {
+    "code": "BED-PREP-MAT-GATHER",
+    "description": "Material gathering labor per hour",
+    "unit": "hr",
+    "rate": 145.0,
+    "currency": "USD",
+    "source": "bedrock_extraction",
+    "region": "BEDROCK-MAIN",
+    "classification": {
+      "masterformat": "01 50 00"
+    },
+    "components": [
+      {
+        "code": "LAB-PREPARATION-LABORER-RATE",
+        "name": "Site preparation laborer",
+        "type": "labor",
+        "quantity": 1.0,
+        "unit_rate": 145.0,
+        "cost": 145.0,
+        "unit": "hr"
+      }
+    ],
+    "tags": [
+      "bedrock",
+      "siteprep",
+      "material_gathering"
+    ],
+    "metadata": {
+      "draft_assumptions": [
+        "Rate equals LAB-PREPARATION-LABORER-RATE; hours applied at BOQ."
+      ]
+    }
+  }
+]

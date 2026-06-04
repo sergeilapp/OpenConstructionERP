@@ -1,0 +1,95 @@
+[
+  {
+    "code": "TCG-DELIVER-57-STONE-FD",
+    "description": "TCG deliver #57 stone for French drain - material plus bundled hauling",
+    "descriptions": {},
+    "unit": "t",
+    "rate": 79.57,
+    "currency": "USD",
+    "source": "bedrock_tcg_review_slice_import_1",
+    "region": "BEDROCK-TCG-REVIEW",
+    "classification": { "masterformat": "33 00 00", "collection": "Stormwater", "category": "Sitework", "department": "Utilities", "section": "French Drain" },
+    "components": [
+      { "code": "TCG-RES-57-STONE-TON", "resource_code": "TCG-RES-57-STONE-TON", "name": "#57 stone material", "type": "material", "resource_type": "material", "quantity": 1.0, "unit_rate": 38.0, "cost": 38.0, "unit": "t" },
+      { "code": "TCG-RES-HAUL-57-STONE-LOAD", "resource_code": "TCG-RES-HAUL-57-STONE-LOAD", "name": "#57 stone bundled hauling", "type": "equipment", "resource_type": "equipment", "quantity": 0.04399, "unit_rate": 945.0, "cost": 41.57, "unit": "LOAD" }
+    ],
+    "tags": ["tcg_review_slice", "review_only", "deliver"],
+    "metadata": { "review_only": true, "source_job_id": 38396, "draft_basis": "863.8 TON and 38 truck loads" }
+  },
+  {
+    "code": "TCG-DELIVER-SAND-FD",
+    "description": "TCG deliver sand for French drain - material plus bundled hauling",
+    "descriptions": {},
+    "unit": "CY",
+    "rate": 63.21,
+    "currency": "USD",
+    "source": "bedrock_tcg_review_slice_import_1",
+    "region": "BEDROCK-TCG-REVIEW",
+    "classification": { "masterformat": "33 00 00", "collection": "Stormwater", "category": "Sitework", "department": "Utilities", "section": "French Drain" },
+    "components": [
+      { "code": "TCG-RES-SAND-CY", "resource_code": "TCG-RES-SAND-CY", "name": "Sand material", "type": "material", "resource_type": "material", "quantity": 1.0, "unit_rate": 25.0, "cost": 25.0, "unit": "CY" },
+      { "code": "TCG-RES-HAUL-SAND-LOAD", "resource_code": "TCG-RES-HAUL-SAND-LOAD", "name": "Sand bundled hauling", "type": "equipment", "resource_type": "equipment", "quantity": 0.05129, "unit_rate": 745.0, "cost": 38.21, "unit": "LOAD" }
+    ],
+    "tags": ["tcg_review_slice", "review_only", "deliver"],
+    "metadata": { "review_only": true, "source_job_id": 38396, "draft_basis": "78 CY and 4 truck loads" }
+  },
+  {
+    "code": "TCG-PLACE-AGGREGATE-FD",
+    "description": "TCG place aggregate layers for French drain - draft labor allocation",
+    "descriptions": {},
+    "unit": "LS",
+    "rate": 12015.0,
+    "currency": "USD",
+    "source": "bedrock_tcg_review_slice_import_1",
+    "region": "BEDROCK-TCG-REVIEW",
+    "classification": { "masterformat": "33 00 00", "collection": "Stormwater", "category": "Sitework", "department": "Utilities", "section": "French Drain" },
+    "components": [
+      { "code": "TCG-RES-LABOR-SITE-PREP-135HR", "resource_code": "TCG-RES-LABOR-SITE-PREP-135HR", "name": "Aggregate placement labor", "type": "labor", "resource_type": "labor", "quantity": 89.0, "unit_rate": 135.0, "cost": 12015.0, "unit": "HR" }
+    ],
+    "tags": ["tcg_review_slice", "review_only", "place"],
+    "metadata": { "review_only": true, "source_job_id": 38396, "allocation_note": "Draft split from 109 HR pool; 20 HR left on stormwater scope" }
+  },
+  {
+    "code": "TCG-STORMWATER-DRAINAGE-FILTRATION-SCOPE",
+    "description": "TCG stormwater drainage and filtration support scope",
+    "descriptions": {},
+    "unit": "LS",
+    "rate": 8200.0,
+    "currency": "USD",
+    "source": "bedrock_tcg_review_slice_import_1",
+    "region": "BEDROCK-TCG-REVIEW",
+    "classification": { "masterformat": "33 00 00", "collection": "Stormwater", "category": "Sitework", "department": "Utilities", "section": "Filtration" },
+    "components": [
+      { "code": "TCG-RES-FABRIC-ROLL", "resource_code": "TCG-RES-FABRIC-ROLL", "name": "Geotextile fabric", "type": "material", "resource_type": "material", "quantity": 12.0, "unit_rate": 200.0, "cost": 2400.0, "unit": "ROLL" },
+      { "code": "TCG-RES-OBS-WELL-PIPE-LS", "resource_code": "TCG-RES-OBS-WELL-PIPE-LS", "name": "Pipe for observation wells", "type": "material", "resource_type": "material", "quantity": 1.0, "unit_rate": 1100.0, "cost": 1100.0, "unit": "LS" },
+      { "code": "TCG-RES-STORM-EQUIP-RENTAL-LS", "resource_code": "TCG-RES-STORM-EQUIP-RENTAL-LS", "name": "Stormwater equipment rental", "type": "equipment", "resource_type": "equipment", "quantity": 1.0, "unit_rate": 2000.0, "cost": 2000.0, "unit": "LS" },
+      { "code": "TCG-RES-LABOR-SITE-PREP-135HR", "resource_code": "TCG-RES-LABOR-SITE-PREP-135HR", "name": "Stormwater specialty labor", "type": "labor", "resource_type": "labor", "quantity": 20.0, "unit_rate": 135.0, "cost": 2700.0, "unit": "HR" }
+    ],
+    "tags": ["tcg_review_slice", "review_only", "scope"],
+    "metadata": { "review_only": true, "source_job_id": 38396, "excluded_pricing_adjustment": 75.5 }
+  },
+  {
+    "code": "TCG-UTILITY-TRENCHING-CONDUIT-SCOPE",
+    "description": "TCG utility trenching, conduit/pipe installation, and backfill scope",
+    "descriptions": {},
+    "unit": "LS",
+    "rate": 54225.0,
+    "currency": "USD",
+    "source": "bedrock_tcg_review_slice_import_1",
+    "region": "BEDROCK-TCG-REVIEW",
+    "classification": { "masterformat": "33 00 00", "collection": "Utilities", "category": "Sitework", "department": "Utilities", "section": "Utility Trenching" },
+    "components": [
+      { "code": "TCG-RES-UTILITY-PIPE-4IN-LS", "resource_code": "TCG-RES-UTILITY-PIPE-4IN-LS", "name": "4in schedule 40 pipe and fittings", "type": "material", "resource_type": "material", "quantity": 1.0, "unit_rate": 12000.0, "cost": 12000.0, "unit": "LS" },
+      { "code": "TCG-RES-UTILITY-CONDUIT-3IN-LS", "resource_code": "TCG-RES-UTILITY-CONDUIT-3IN-LS", "name": "3in electrical conduit", "type": "material", "resource_type": "material", "quantity": 1.0, "unit_rate": 4000.0, "cost": 4000.0, "unit": "LS" },
+      { "code": "TCG-RES-UTILITY-CONDUIT-1-5IN-LS", "resource_code": "TCG-RES-UTILITY-CONDUIT-1-5IN-LS", "name": "1.5in conduit", "type": "material", "resource_type": "material", "quantity": 1.0, "unit_rate": 2500.0, "cost": 2500.0, "unit": "LS" },
+      { "code": "TCG-RES-SCREENINGS-LOAD", "resource_code": "TCG-RES-SCREENINGS-LOAD", "name": "Screenings backfill", "type": "material", "resource_type": "material", "quantity": 8.0, "unit_rate": 1050.0, "cost": 8400.0, "unit": "LOAD" },
+      { "code": "TCG-RES-UTILITY-MATERIAL-ALLOWANCE-LS", "resource_code": "TCG-RES-UTILITY-MATERIAL-ALLOWANCE-LS", "name": "Additional utility materials", "type": "material", "resource_type": "material", "quantity": 1.0, "unit_rate": 6500.0, "cost": 6500.0, "unit": "LS" },
+      { "code": "TCG-RES-UTILITY-EQUIP-ALLOWANCE-LS", "resource_code": "TCG-RES-UTILITY-EQUIP-ALLOWANCE-LS", "name": "Utility equipment allowance", "type": "equipment", "resource_type": "equipment", "quantity": 1.0, "unit_rate": 2500.0, "cost": 2500.0, "unit": "LS" },
+      { "code": "TCG-RES-DRIVING-EQUIP-MI", "resource_code": "TCG-RES-DRIVING-EQUIP-MI", "name": "Driving equipment", "type": "equipment", "resource_type": "equipment", "quantity": 336.0, "unit_rate": 4.375, "cost": 1470.0, "unit": "MI" },
+      { "code": "TCG-RES-LABOR-SITE-PREP-135HR", "resource_code": "TCG-RES-LABOR-SITE-PREP-135HR", "name": "Utility trenching labor", "type": "labor", "resource_type": "labor", "quantity": 115.0, "unit_rate": 135.0, "cost": 15525.0, "unit": "HR" },
+      { "code": "TCG-RES-DRIVING-LABOR-95HR", "resource_code": "TCG-RES-DRIVING-LABOR-95HR", "name": "Driving labor", "type": "labor", "resource_type": "labor", "quantity": 14.0, "unit_rate": 95.0, "cost": 1330.0, "unit": "HR" }
+    ],
+    "tags": ["tcg_review_slice", "review_only", "scope"],
+    "metadata": { "review_only": true, "source_job_id": 38522, "draft_unit": "LS", "team_review_item": "Reconcile 1300 LF trench with 3700 ft pipe/conduit quantities" }
+  }
+]

@@ -1,0 +1,1504 @@
+{
+  "meta": {
+    "boq_id": "61839ac6-2af4-41ca-a385-c9b1c3516bf1",
+    "boq_name": "TCG Complete BOQ",
+    "boq_status": "draft",
+    "analysis_date": "2026-05-25T10:12:45.767849",
+    "csv_source": "/home/sergei/dev/bedrock-siteworks/OCERP/docs/TCG-Project/TCG_Estimate_Data_Sections.csv"
+  },
+  "legacy_summary": {
+    "total_estimate": 445447.8,
+    "total_labor_estimate": 185885.25,
+    "credits_total": 44700.0,
+    "net_project_value": 400747.8,
+    "rock_allowances_total": 183000
+  },
+  "per_job": {
+    "38254": {
+      "job_label": "Economy Level Site",
+      "legacy": {
+        "price": 82474.5,
+        "material_cost": 0.0,
+        "labor_cost": 31490.0,
+        "total_owed": 79784.44,
+        "area_sqft": 45225.0,
+        "additional_materials_desc": "Straw stabilization ($3200)  Equipment rental ($3000)  Compaction test ($4500)",
+        "additional_price": 10700.0,
+        "rock_allowance_cap": 0
+      },
+      "boq": {
+        "total": 77879.84,
+        "item_count": 7,
+        "items_with_rates": 7,
+        "zero_rate_items": 0,
+        "zero_rate_ordinals": [],
+        "cost_db_linked": 0,
+        "items_with_resource_breakdown": 4,
+        "component_breakdown": {
+          "labor": 2.72,
+          "equipment": 16.15,
+          "material": 12.61
+        },
+        "details": [
+          {
+            "ordinal": "01.01",
+            "description": "Soil compaction testing \u2014 5 building sites",
+            "quantity": 5.0,
+            "unit": "ea",
+            "rate": 900.0,
+            "total": 4500.0,
+            "source": "cost_database",
+            "rate_quality": "cost_db_sourced",
+            "has_resource_breakdown": false,
+            "cost_db_code": null,
+            "cost_db_match": false
+          },
+          {
+            "ordinal": "01.02",
+            "description": "Equipment rental \u2014 excavator, skid steer, attachments (all phases)",
+            "quantity": 3.0,
+            "unit": "month",
+            "rate": 2000.0,
+            "total": 6000.0,
+            "source": "cost_database",
+            "rate_quality": "cost_db_sourced",
+            "has_resource_breakdown": false,
+            "cost_db_code": null,
+            "cost_db_match": false
+          },
+          {
+            "ordinal": "31.01",
+            "description": "Cut and stockpile topsoil \u2014 45,225 SF, stockpile on site",
+            "quantity": 200.0,
+            "unit": "cy",
+            "rate": 12.4426,
+            "total": 2488.52,
+            "source": "cost_database",
+            "rate_quality": "cost_db_sourced",
+            "has_resource_breakdown": true,
+            "cost_db_code": null,
+            "cost_db_match": false
+          },
+          {
+            "ordinal": "31.02",
+            "description": "Excavate, grade, and compact subgrade \u2014 5 building pads, 45,225 SF",
+            "quantity": 45225.0,
+            "unit": "sf",
+            "rate": 0.4488,
+            "total": 20296.98,
+            "source": "cost_database",
+            "rate_quality": "cost_db_sourced",
+            "has_resource_breakdown": true,
+            "cost_db_code": null,
+            "cost_db_match": false
+          },
+          {
+            "ordinal": "31.03",
+            "description": "Import, place, and compact fill material \u2014 1,955 CY",
+            "quantity": 1955.0,
+            "unit": "cy",
+            "rate": 18.5035,
+            "total": 36174.3425,
+            "source": "cost_database",
+            "rate_quality": "cost_db_sourced",
+            "has_resource_breakdown": true,
+            "cost_db_code": null,
+            "cost_db_match": false
+          },
+          {
+            "ordinal": "31.05",
+            "description": "Excavate and grade 6\" berms behind units 3, 4, 5",
+            "quantity": 500.0,
+            "unit": "lf",
+            "rate": 15.0,
+            "total": 7500.0,
+            "source": "cost_database",
+            "rate_quality": "cost_db_sourced",
+            "has_resource_breakdown": false,
+            "cost_db_code": null,
+            "cost_db_match": false
+          },
+          {
+            "ordinal": "31.06",
+            "description": "Straw mulch stabilization \u2014 all disturbed areas",
+            "quantity": 11500.0,
+            "unit": "sf",
+            "rate": 0.08,
+            "total": 920.0,
+            "source": "manual",
+            "rate_quality": "manual_estimate",
+            "has_resource_breakdown": true,
+            "cost_db_code": null,
+            "cost_db_match": false
+          }
+        ]
+      },
+      "comparison": {
+        "variance_dollars": -4594.66,
+        "variance_pct": -5.6,
+        "percent_of_legacy": 94.4
+      }
+    },
+    "38304": {
+      "job_label": "Demolition & Disposal",
+      "legacy": {
+        "price": 48049.12,
+        "material_cost": 0.0,
+        "labor_cost": 18711.25,
+        "total_owed": 359469.05,
+        "area_sqft": 1500.0,
+        "additional_materials_desc": "Erosion controls done by sub crew - $4000  Silt fence w/ steel posts and wire mesh, and matting as needed ($4000)  Orange construction fence for right side of the site and around the berms ($2000)  Geo-textile fabric for construction entrance ($600)  Refresh the construction driveway ($1400)  11 dumpsters for construction debris at $800 per dumpster ($8800)  Haul out concrete at $450 per load x 6 loads ($2700)  Haul out asphalt at $450 per load x 7 loads ($3150)  Equipment rental ($2800)  Price correction ($12.31)",
+        "additional_price": 24462.31,
+        "rock_allowance_cap": 0
+      },
+      "boq": {
+        "total": 83803.05,
+        "item_count": 12,
+        "items_with_rates": 11,
+        "zero_rate_items": 1,
+        "zero_rate_ordinals": [
+          "01.09"
+        ],
+        "cost_db_linked": 0,
+        "items_with_resource_breakdown": 2,
+        "component_breakdown": {
+          "labor": 2.02,
+          "equipment": 3.66,
+          "material": 2.07
+        },
+        "details": [
+          {
+            "ordinal": "01.08",
+            "description": "Erosion controls \u2014 silt fence with steel posts and wire mesh",
+            "quantity": 325.0,
+            "unit": "lf",
+            "rate": 5.0,
+            "total": 1625.0,
+            "source": "manual",
+            "rate_quality": "manual_estimate",
+            "has_resource_breakdown": false,
+            "cost_db_code": null,
+            "cost_db_match": false
+          },
+          {
+            "ordinal": "01.09",
+            "description": "Construction entrance 20'x100' \u2014 geotextile fabric + 8\" ballast stone",
+            "quantity": 1.0,
+            "unit": "ls",
+            "rate": 0.0,
+            "total": 0.0,
+            "source": "manual",
+            "rate_quality": "zero",
+            "has_resource_breakdown": false,
+            "cost_db_code": null,
+            "cost_db_match": false
+          },
+          {
+            "ordinal": "01.10",
+            "description": "Orange construction fence \u2014 NE side and around berms, 325 LF",
+            "quantity": 325.0,
+            "unit": "lf",
+            "rate": 5.0,
+            "total": 1625.0,
+            "source": "manual",
+            "rate_quality": "manual_estimate",
+            "has_resource_breakdown": false,
+            "cost_db_code": null,
+            "cost_db_match": false
+          },
+          {
+            "ordinal": "02.03",
+            "description": "Demolish existing residence including foundation \u2014 1,500 SF",
+            "quantity": 1500.0,
+            "unit": "sf",
+            "rate": 10.33,
+            "total": 15495.0,
+            "source": "cost_database",
+            "rate_quality": "cost_db_sourced",
+            "has_resource_breakdown": false,
+            "cost_db_code": null,
+            "cost_db_match": false
+          },
+          {
+            "ordinal": "02.04",
+            "description": "Demolish existing garage structure and foundation \u2014 400 SF",
+            "quantity": 400.0,
+            "unit": "sf",
+            "rate": 10.33,
+            "total": 4132.0,
+            "source": "cost_database",
+            "rate_quality": "cost_db_sourced",
+            "has_resource_breakdown": false,
+            "cost_db_code": null,
+            "cost_db_match": false
+          },
+          {
+            "ordinal": "02.05",
+            "description": "Shed and treehouse removal",
+            "quantity": 2.0,
+            "unit": "ea",
+            "rate": 750.0,
+            "total": 1500.0,
+            "source": "manual",
+            "rate_quality": "manual_estimate",
+            "has_resource_breakdown": false,
+            "cost_db_code": null,
+            "cost_db_match": false
+          },
+          {
+            "ordinal": "02.06",
+            "description": "Concrete removal \u2014 walkway, driveway, patio \u2014 1,500 SF",
+            "quantity": 1500.0,
+            "unit": "sf",
+            "rate": 4.2507,
+            "total": 6376.05,
+            "source": "cost_database",
+            "rate_quality": "cost_db_sourced",
+            "has_resource_breakdown": true,
+            "cost_db_code": null,
+            "cost_db_match": false
+          },
+          {
+            "ordinal": "02.07",
+            "description": "Tree removal \u2014 12 trees",
+            "quantity": 12.0,
+            "unit": "ea",
+            "rate": 750.0,
+            "total": 9000.0,
+            "source": "cost_database",
+            "rate_quality": "cost_db_sourced",
+            "has_resource_breakdown": false,
+            "cost_db_code": null,
+            "cost_db_match": false
+          },
+          {
+            "ordinal": "02.08",
+            "description": "Dumpster disposal \u2014 11 loads at $800/load",
+            "quantity": 11.0,
+            "unit": "ea",
+            "rate": 800.0,
+            "total": 8800.0,
+            "source": "manual",
+            "rate_quality": "manual_estimate",
+            "has_resource_breakdown": false,
+            "cost_db_code": null,
+            "cost_db_match": false
+          },
+          {
+            "ordinal": "02.09",
+            "description": "Haul concrete debris \u2014 6 loads at $450/load",
+            "quantity": 6.0,
+            "unit": "ea",
+            "rate": 450.0,
+            "total": 2700.0,
+            "source": "manual",
+            "rate_quality": "manual_estimate",
+            "has_resource_breakdown": false,
+            "cost_db_code": null,
+            "cost_db_match": false
+          },
+          {
+            "ordinal": "02.10",
+            "description": "Haul asphalt debris \u2014 7 loads at $450/load",
+            "quantity": 7.0,
+            "unit": "ea",
+            "rate": 450.0,
+            "total": 3150.0,
+            "source": "manual",
+            "rate_quality": "manual_estimate",
+            "has_resource_breakdown": false,
+            "cost_db_code": null,
+            "cost_db_match": false
+          },
+          {
+            "ordinal": "02.14",
+            "description": "Asphalt driveway removal \u2014 8,400 SF",
+            "quantity": 8400.0,
+            "unit": "sf",
+            "rate": 3.5,
+            "total": 29400.0,
+            "source": "cost_database",
+            "rate_quality": "cost_db_sourced",
+            "has_resource_breakdown": true,
+            "cost_db_code": null,
+            "cost_db_match": false
+          }
+        ]
+      },
+      "comparison": {
+        "variance_dollars": 35753.93,
+        "variance_pct": 74.4,
+        "percent_of_legacy": 174.4
+      }
+    },
+    "38396": {
+      "job_label": "French Drain / Stormwater",
+      "legacy": {
+        "price": 76421.25,
+        "material_cost": 0.0,
+        "labor_cost": 16925.0,
+        "total_owed": 76421.25,
+        "area_sqft": 8326.0,
+        "additional_materials_desc": "Fabric 12 rolls ($2400)  Pipe for observation wells ($1100)  Equipment rental ($2000)",
+        "additional_price": 5500.0,
+        "rock_allowance_cap": 0
+      },
+      "boq": {
+        "total": 47544.5,
+        "item_count": 7,
+        "items_with_rates": 7,
+        "zero_rate_items": 0,
+        "zero_rate_ordinals": [],
+        "cost_db_linked": 0,
+        "items_with_resource_breakdown": 0,
+        "component_breakdown": {
+          "labor": 0.0,
+          "equipment": 0.0,
+          "material": 0.0
+        },
+        "details": [
+          {
+            "ordinal": "33.40.02",
+            "description": "Geotextile fabric \u2014 infiltration pit, 8,326 SF",
+            "quantity": 8326.0,
+            "unit": "sf",
+            "rate": 0.75,
+            "total": 6244.5,
+            "source": "manual",
+            "rate_quality": "manual_estimate",
+            "has_resource_breakdown": false,
+            "cost_db_code": null,
+            "cost_db_match": false
+          },
+          {
+            "ordinal": "33.40.03",
+            "description": "Coarse sand bedding \u2014 3\" depth, 130 CY",
+            "quantity": 130.0,
+            "unit": "cy",
+            "rate": 35.0,
+            "total": 4550.0,
+            "source": "manual",
+            "rate_quality": "manual_estimate",
+            "has_resource_breakdown": false,
+            "cost_db_code": null,
+            "cost_db_match": false
+          },
+          {
+            "ordinal": "33.40.04",
+            "description": "#57 stone \u2014 24\" depth in infiltration pit, 620 CY",
+            "quantity": 620.0,
+            "unit": "cy",
+            "rate": 45.0,
+            "total": 27900.0,
+            "source": "cost_database",
+            "rate_quality": "cost_db_sourced",
+            "has_resource_breakdown": false,
+            "cost_db_code": null,
+            "cost_db_match": false
+          },
+          {
+            "ordinal": "33.40.05",
+            "description": "#8 stone top course \u2014 2\" depth, 50 CY",
+            "quantity": 50.0,
+            "unit": "cy",
+            "rate": 55.0,
+            "total": 2750.0,
+            "source": "manual",
+            "rate_quality": "manual_estimate",
+            "has_resource_breakdown": false,
+            "cost_db_code": null,
+            "cost_db_match": false
+          },
+          {
+            "ordinal": "33.40.06",
+            "description": "Observation wells \u2014 4 per approved plan",
+            "quantity": 4.0,
+            "unit": "ea",
+            "rate": 300.0,
+            "total": 1200.0,
+            "source": "manual",
+            "rate_quality": "manual_estimate",
+            "has_resource_breakdown": false,
+            "cost_db_code": null,
+            "cost_db_match": false
+          },
+          {
+            "ordinal": "33.40.07",
+            "description": "Geotextile fabric \u2014 12 rolls",
+            "quantity": 6000.0,
+            "unit": "sf",
+            "rate": 0.75,
+            "total": 4500.0,
+            "source": "manual",
+            "rate_quality": "manual_estimate",
+            "has_resource_breakdown": false,
+            "cost_db_code": null,
+            "cost_db_match": false
+          },
+          {
+            "ordinal": "33.40.08",
+            "description": "Pipe for observation wells",
+            "quantity": 1.0,
+            "unit": "ls",
+            "rate": 400.0,
+            "total": 400.0,
+            "source": "manual",
+            "rate_quality": "manual_estimate",
+            "has_resource_breakdown": false,
+            "cost_db_code": null,
+            "cost_db_match": false
+          }
+        ]
+      },
+      "comparison": {
+        "variance_dollars": -28876.75,
+        "variance_pct": -37.8,
+        "percent_of_legacy": 62.2
+      }
+    },
+    "38447": {
+      "job_label": "Concrete Curb",
+      "legacy": {
+        "price": 61154.41,
+        "material_cost": 0.0,
+        "labor_cost": 12623.25,
+        "total_owed": 61154.41,
+        "area_sqft": 919.0,
+        "additional_materials_desc": "15 yards of concrete ($3800)  Sub crew labor to form and pour the curb ($32000)  one load of 2A stone ($800)  Sub crew for the paving ($9800)  Repair utility trenches on the street, by the asphalt sub crew ($1500)",
+        "additional_price": 47900.0,
+        "rock_allowance_cap": 0
+      },
+      "boq": {
+        "total": 23080.44,
+        "item_count": 9,
+        "items_with_rates": 9,
+        "zero_rate_items": 0,
+        "zero_rate_ordinals": [],
+        "cost_db_linked": 0,
+        "items_with_resource_breakdown": 2,
+        "component_breakdown": {
+          "labor": 0.28,
+          "equipment": 0.56,
+          "material": 0.06
+        },
+        "details": [
+          {
+            "ordinal": "32.01",
+            "description": "Concrete curb and gutter \u2014 75 LF street frontage, 3500 PSI",
+            "quantity": 75.0,
+            "unit": "lf",
+            "rate": 15.2,
+            "total": 1140.0,
+            "source": "cost_database",
+            "rate_quality": "cost_db_sourced",
+            "has_resource_breakdown": false,
+            "cost_db_code": null,
+            "cost_db_match": false
+          },
+          {
+            "ordinal": "32.02",
+            "description": "Concrete ribbon curb \u2014 844 LF driveway/parking perimeter, 3500 PSI",
+            "quantity": 844.0,
+            "unit": "lf",
+            "rate": 9.81,
+            "total": 8279.640000000001,
+            "source": "cost_database",
+            "rate_quality": "cost_db_sourced",
+            "has_resource_breakdown": false,
+            "cost_db_code": null,
+            "cost_db_match": false
+          },
+          {
+            "ordinal": "32.03",
+            "description": "Subgrade preparation \u2014 curb and walkway areas, 1,500 SF",
+            "quantity": 1500.0,
+            "unit": "sf",
+            "rate": 0.4488,
+            "total": 673.1999999999999,
+            "source": "cost_database",
+            "rate_quality": "cost_db_sourced",
+            "has_resource_breakdown": true,
+            "cost_db_code": null,
+            "cost_db_match": false
+          },
+          {
+            "ordinal": "32.04",
+            "description": "Asphalt pavement \u2014 3.5\" hot mix, road widening area, 500 SF",
+            "quantity": 500.0,
+            "unit": "sf",
+            "rate": 5.56,
+            "total": 2780.0,
+            "source": "cost_database",
+            "rate_quality": "cost_db_sourced",
+            "has_resource_breakdown": false,
+            "cost_db_code": null,
+            "cost_db_match": false
+          },
+          {
+            "ordinal": "32.05",
+            "description": "Subgrade preparation \u2014 walkway areas, 2,000 SF",
+            "quantity": 2000.0,
+            "unit": "sf",
+            "rate": 0.4488,
+            "total": 897.5999999999999,
+            "source": "cost_database",
+            "rate_quality": "cost_db_sourced",
+            "has_resource_breakdown": true,
+            "cost_db_code": null,
+            "cost_db_match": false
+          },
+          {
+            "ordinal": "32.06",
+            "description": "Mill and overlay existing curb",
+            "quantity": 1.0,
+            "unit": "ls",
+            "rate": 2500.0,
+            "total": 2500.0,
+            "source": "manual",
+            "rate_quality": "manual_estimate",
+            "has_resource_breakdown": false,
+            "cost_db_code": null,
+            "cost_db_match": false
+          },
+          {
+            "ordinal": "32.07",
+            "description": "Excavation and grading for driveway ramp, sidewalk, walkways",
+            "quantity": 1.0,
+            "unit": "ls",
+            "rate": 3500.0,
+            "total": 3500.0,
+            "source": "manual",
+            "rate_quality": "manual_estimate",
+            "has_resource_breakdown": false,
+            "cost_db_code": null,
+            "cost_db_match": false
+          },
+          {
+            "ordinal": "32.08",
+            "description": "Repair utility trenches on street \u2014 asphalt repair",
+            "quantity": 1.0,
+            "unit": "ls",
+            "rate": 2500.0,
+            "total": 2500.0,
+            "source": "manual",
+            "rate_quality": "manual_estimate",
+            "has_resource_breakdown": false,
+            "cost_db_code": null,
+            "cost_db_match": false
+          },
+          {
+            "ordinal": "32.09",
+            "description": "Stone base \u2014 8\" #2A crushed aggregate under asphalt, 500 SF",
+            "quantity": 500.0,
+            "unit": "sf",
+            "rate": 1.62,
+            "total": 810.0,
+            "source": "cost_database",
+            "rate_quality": "cost_db_sourced",
+            "has_resource_breakdown": false,
+            "cost_db_code": null,
+            "cost_db_match": false
+          }
+        ]
+      },
+      "comparison": {
+        "variance_dollars": -38073.97,
+        "variance_pct": -62.3,
+        "percent_of_legacy": 37.7
+      }
+    },
+    "38522": {
+      "job_label": "Trenching",
+      "legacy": {
+        "price": 56842.25,
+        "material_cost": 0.0,
+        "labor_cost": 19945.0,
+        "total_owed": 51842.25,
+        "area_sqft": 262.0,
+        "additional_materials_desc": "1900' of 4\" schedule 40 pipe and fittings for water and sewer ($12000)  900' of 3\" schedule 40 pipe for electrical conduit ($4000)  900' of 1 1/2\" conduit for cable lines ($2500)  8 loads of screenings to backfill the trench with the gas line ($8400)  18\" concrete pipe w/ 2 headwalls ($6500)  Equipment rental ($2500)",
+        "additional_price": 35900.0,
+        "rock_allowance_cap": 0
+      },
+      "boq": {
+        "total": 44771.01,
+        "item_count": 7,
+        "items_with_rates": 7,
+        "zero_rate_items": 0,
+        "zero_rate_ordinals": [],
+        "cost_db_linked": 0,
+        "items_with_resource_breakdown": 6,
+        "component_breakdown": {
+          "labor": 116.31,
+          "equipment": 132.44,
+          "material": 974.72
+        },
+        "details": [
+          {
+            "ordinal": "33.01",
+            "description": "Sanitary sewer \u2014 4\" PVC SDR-35, 3' deep, 200 LF",
+            "quantity": 200.0,
+            "unit": "lf",
+            "rate": 28.0036,
+            "total": 5600.719999999999,
+            "source": "cost_database",
+            "rate_quality": "cost_db_sourced",
+            "has_resource_breakdown": true,
+            "cost_db_code": null,
+            "cost_db_match": false
+          },
+          {
+            "ordinal": "33.02",
+            "description": "Water service \u2014 4\" PVC C900, 3' deep, 200 LF",
+            "quantity": 200.0,
+            "unit": "lf",
+            "rate": 21.9763,
+            "total": 4395.259999999999,
+            "source": "cost_database",
+            "rate_quality": "cost_db_sourced",
+            "has_resource_breakdown": true,
+            "cost_db_code": null,
+            "cost_db_match": false
+          },
+          {
+            "ordinal": "33.03",
+            "description": "Electrical conduit \u2014 3\" PVC SCH 40, stone dust bed, red tracer tape, 900 LF",
+            "quantity": 900.0,
+            "unit": "lf",
+            "rate": 16.01,
+            "total": 14409.000000000002,
+            "source": "cost_database",
+            "rate_quality": "cost_db_sourced",
+            "has_resource_breakdown": false,
+            "cost_db_code": null,
+            "cost_db_match": false
+          },
+          {
+            "ordinal": "33.04",
+            "description": "Communications conduit \u2014 1.5\" PVC, shared trench, 900 LF",
+            "quantity": 900.0,
+            "unit": "lf",
+            "rate": 3.5155,
+            "total": 3163.95,
+            "source": "cost_database",
+            "rate_quality": "cost_db_sourced",
+            "has_resource_breakdown": true,
+            "cost_db_code": null,
+            "cost_db_match": false
+          },
+          {
+            "ordinal": "33.05",
+            "description": "Gas line trench \u2014 3'W x 3'D, stone dust backfill, yellow tape, 400 LF",
+            "quantity": 400.0,
+            "unit": "lf",
+            "rate": 23.5376,
+            "total": 9415.04,
+            "source": "cost_database",
+            "rate_quality": "cost_db_sourced",
+            "has_resource_breakdown": true,
+            "cost_db_code": null,
+            "cost_db_match": false
+          },
+          {
+            "ordinal": "33.06",
+            "description": "18\" RCP storm pipe \u2014 Class III, 125 LF",
+            "quantity": 125.0,
+            "unit": "lf",
+            "rate": 44.6686,
+            "total": 5583.575,
+            "source": "cost_database",
+            "rate_quality": "cost_db_sourced",
+            "has_resource_breakdown": true,
+            "cost_db_code": null,
+            "cost_db_match": false
+          },
+          {
+            "ordinal": "33.07",
+            "description": "Precast concrete headwall \u2014 18\" with outlet protection rip rap",
+            "quantity": 2.0,
+            "unit": "ea",
+            "rate": 1101.735,
+            "total": 2203.47,
+            "source": "cost_database",
+            "rate_quality": "cost_db_sourced",
+            "has_resource_breakdown": true,
+            "cost_db_code": null,
+            "cost_db_match": false
+          }
+        ]
+      },
+      "comparison": {
+        "variance_dollars": -12071.24,
+        "variance_pct": -21.2,
+        "percent_of_legacy": 78.8
+      }
+    },
+    "38577": {
+      "job_label": "Excavation \u2014 Crawlspace & Footers",
+      "legacy": {
+        "price": 34527.52,
+        "material_cost": 0.0,
+        "labor_cost": 19415.75,
+        "total_owed": 36298.6,
+        "area_sqft": 7220.0,
+        "additional_materials_desc": "1000' of 4\" corrugated perforated pipe",
+        "additional_price": 2320.98,
+        "rock_allowance_cap": 0
+      },
+      "boq": {
+        "total": 38466.74,
+        "item_count": 5,
+        "items_with_rates": 5,
+        "zero_rate_items": 0,
+        "zero_rate_ordinals": [],
+        "cost_db_linked": 0,
+        "items_with_resource_breakdown": 5,
+        "component_breakdown": {
+          "labor": 8.9,
+          "equipment": 9.95,
+          "material": 12.4
+        },
+        "details": [
+          {
+            "ordinal": "31.12",
+            "description": "Crawlspace and footer excavation \u2014 5 foundations, 720 CY",
+            "quantity": 720.0,
+            "unit": "cy",
+            "rate": 8.8678,
+            "total": 6384.816000000001,
+            "source": "cost_database",
+            "rate_quality": "cost_db_sourced",
+            "has_resource_breakdown": true,
+            "cost_db_code": null,
+            "cost_db_match": false
+          },
+          {
+            "ordinal": "31.13",
+            "description": "Fine grade garage areas \u2014 5 garages, 2,400 SF",
+            "quantity": 2400.0,
+            "unit": "sf",
+            "rate": 0.4488,
+            "total": 1077.12,
+            "source": "cost_database",
+            "rate_quality": "cost_db_sourced",
+            "has_resource_breakdown": true,
+            "cost_db_code": null,
+            "cost_db_match": false
+          },
+          {
+            "ordinal": "31.14",
+            "description": "Fine grade porch areas \u2014 5 porches, 1,000 SF",
+            "quantity": 1000.0,
+            "unit": "sf",
+            "rate": 0.4488,
+            "total": 448.79999999999995,
+            "source": "cost_database",
+            "rate_quality": "cost_db_sourced",
+            "has_resource_breakdown": true,
+            "cost_db_code": null,
+            "cost_db_match": false
+          },
+          {
+            "ordinal": "31.15",
+            "description": "Fine grade crawlspace \u2014 vapor barrier + 4\" #57 stone, 5 foundations, 5,000 SF",
+            "quantity": 5000.0,
+            "unit": "sf",
+            "rate": 2.2719,
+            "total": 11359.5,
+            "source": "cost_database",
+            "rate_quality": "cost_db_sourced",
+            "has_resource_breakdown": true,
+            "cost_db_code": null,
+            "cost_db_match": false
+          },
+          {
+            "ordinal": "31.16",
+            "description": "Foundation perimeter drain \u2014 4\" corrugated perforated, geotextile wrap, #57 stone, 1,000 LF",
+            "quantity": 1000.0,
+            "unit": "lf",
+            "rate": 19.1965,
+            "total": 19196.5,
+            "source": "cost_database",
+            "rate_quality": "cost_db_sourced",
+            "has_resource_breakdown": true,
+            "cost_db_code": null,
+            "cost_db_match": false
+          }
+        ]
+      },
+      "comparison": {
+        "variance_dollars": 3939.22,
+        "variance_pct": 11.4,
+        "percent_of_legacy": 111.4
+      }
+    },
+    "38578": {
+      "job_label": "Additional Work",
+      "legacy": {
+        "price": 85978.75,
+        "material_cost": 0.0,
+        "labor_cost": 66775.0,
+        "total_owed": 85978.75,
+        "area_sqft": 8400.0,
+        "additional_materials_desc": "Excavator and hammer for a month",
+        "additional_price": 15000.0,
+        "rock_allowance_cap": 0
+      },
+      "boq": {
+        "total": 13647.66,
+        "item_count": 6,
+        "items_with_rates": 5,
+        "zero_rate_items": 1,
+        "zero_rate_ordinals": [
+          "01.11"
+        ],
+        "cost_db_linked": 0,
+        "items_with_resource_breakdown": 4,
+        "component_breakdown": {
+          "labor": 4.12,
+          "equipment": 27.2,
+          "material": 12.53
+        },
+        "details": [
+          {
+            "ordinal": "01.11",
+            "description": "Site consultation \u2014 confirm structure location, utilities, permit coordination",
+            "quantity": 1.0,
+            "unit": "ls",
+            "rate": 0.0,
+            "total": 0.0,
+            "source": "manual",
+            "rate_quality": "zero",
+            "has_resource_breakdown": false,
+            "cost_db_code": null,
+            "cost_db_match": false
+          },
+          {
+            "ordinal": "01.12",
+            "description": "Site layout and staking \u2014 square, stake, establish 4 building corners",
+            "quantity": 1.0,
+            "unit": "ls",
+            "rate": 1200.0,
+            "total": 1200.0,
+            "source": "cost_database",
+            "rate_quality": "cost_db_sourced",
+            "has_resource_breakdown": false,
+            "cost_db_code": null,
+            "cost_db_match": false
+          },
+          {
+            "ordinal": "31.08",
+            "description": "Topsoil strip and stockpile \u2014 6\" cut, stockpile on site, 200 CY",
+            "quantity": 200.0,
+            "unit": "cy",
+            "rate": 12.4426,
+            "total": 2488.52,
+            "source": "cost_database",
+            "rate_quality": "cost_db_sourced",
+            "has_resource_breakdown": true,
+            "cost_db_code": null,
+            "cost_db_match": false
+          },
+          {
+            "ordinal": "31.09",
+            "description": "Bulk excavation \u2014 cut to design subgrade, stockpile on site, 200 CY",
+            "quantity": 200.0,
+            "unit": "cy",
+            "rate": 12.4426,
+            "total": 2488.52,
+            "source": "cost_database",
+            "rate_quality": "cost_db_sourced",
+            "has_resource_breakdown": true,
+            "cost_db_code": null,
+            "cost_db_match": false
+          },
+          {
+            "ordinal": "31.10",
+            "description": "Structural fill import \u2014 placement, moisture condition, compact to 95%, 200 CY",
+            "quantity": 200.0,
+            "unit": "cy",
+            "rate": 18.5035,
+            "total": 3700.7,
+            "source": "cost_database",
+            "rate_quality": "cost_db_sourced",
+            "has_resource_breakdown": true,
+            "cost_db_code": null,
+            "cost_db_match": false
+          },
+          {
+            "ordinal": "31.11",
+            "description": "Site grading and fine grade \u2014 entire 8,400 SF disturbed area",
+            "quantity": 8400.0,
+            "unit": "sf",
+            "rate": 0.4488,
+            "total": 3769.9199999999996,
+            "source": "cost_database",
+            "rate_quality": "cost_db_sourced",
+            "has_resource_breakdown": true,
+            "cost_db_code": null,
+            "cost_db_match": false
+          }
+        ]
+      },
+      "comparison": {
+        "variance_dollars": -72331.09,
+        "variance_pct": -84.1,
+        "percent_of_legacy": 15.9
+      }
+    }
+  },
+  "categories": {
+    "Cut & Fill / Earthwork": {
+      "item_count": 8,
+      "boq_total": 60965.6,
+      "items": [
+        {
+          "ordinal": "01.01",
+          "description": "Soil compaction testing \u2014 5 building sites",
+          "qty": 5.0,
+          "unit": "ea",
+          "rate": 900.0,
+          "total": 4500.0
+        },
+        {
+          "ordinal": "01.10",
+          "description": "Orange construction fence \u2014 NE side and around berms, 325 LF",
+          "qty": 325.0,
+          "unit": "lf",
+          "rate": 5.0,
+          "total": 1625.0
+        },
+        {
+          "ordinal": "31.01",
+          "description": "Cut and stockpile topsoil \u2014 45,225 SF, stockpile on site",
+          "qty": 200.0,
+          "unit": "cy",
+          "rate": 12.4426,
+          "total": 2488.52
+        },
+        {
+          "ordinal": "31.03",
+          "description": "Import, place, and compact fill material \u2014 1,955 CY",
+          "qty": 1955.0,
+          "unit": "cy",
+          "rate": 18.5035,
+          "total": 36174.3425
+        },
+        {
+          "ordinal": "31.05",
+          "description": "Excavate and grade 6\" berms behind units 3, 4, 5",
+          "qty": 500.0,
+          "unit": "lf",
+          "rate": 15.0,
+          "total": 7500.0
+        },
+        {
+          "ordinal": "31.08",
+          "description": "Topsoil strip and stockpile \u2014 6\" cut, stockpile on site, 200 CY",
+          "qty": 200.0,
+          "unit": "cy",
+          "rate": 12.4426,
+          "total": 2488.52
+        },
+        {
+          "ordinal": "31.09",
+          "description": "Bulk excavation \u2014 cut to design subgrade, stockpile on site, 200 CY",
+          "qty": 200.0,
+          "unit": "cy",
+          "rate": 12.4426,
+          "total": 2488.52
+        },
+        {
+          "ordinal": "31.10",
+          "description": "Structural fill import \u2014 placement, moisture condition, compact to 95%, 200 CY",
+          "qty": 200.0,
+          "unit": "cy",
+          "rate": 18.5035,
+          "total": 3700.7
+        }
+      ]
+    },
+    "Concrete Curbing": {
+      "item_count": 4,
+      "boq_total": 12592.84,
+      "items": [
+        {
+          "ordinal": "32.01",
+          "description": "Concrete curb and gutter \u2014 75 LF street frontage, 3500 PSI",
+          "qty": 75.0,
+          "unit": "lf",
+          "rate": 15.2,
+          "total": 1140.0
+        },
+        {
+          "ordinal": "32.02",
+          "description": "Concrete ribbon curb \u2014 844 LF driveway/parking perimeter, 3500 PSI",
+          "qty": 844.0,
+          "unit": "lf",
+          "rate": 9.81,
+          "total": 8279.640000000001
+        },
+        {
+          "ordinal": "32.03",
+          "description": "Subgrade preparation \u2014 curb and walkway areas, 1,500 SF",
+          "qty": 1500.0,
+          "unit": "sf",
+          "rate": 0.4488,
+          "total": 673.1999999999999
+        },
+        {
+          "ordinal": "32.06",
+          "description": "Mill and overlay existing curb",
+          "qty": 1.0,
+          "unit": "ls",
+          "rate": 2500.0,
+          "total": 2500.0
+        }
+      ]
+    },
+    "Paving & Asphalt": {
+      "item_count": 5,
+      "boq_total": 38640.0,
+      "items": [
+        {
+          "ordinal": "02.10",
+          "description": "Haul asphalt debris \u2014 7 loads at $450/load",
+          "qty": 7.0,
+          "unit": "ea",
+          "rate": 450.0,
+          "total": 3150.0
+        },
+        {
+          "ordinal": "02.14",
+          "description": "Asphalt driveway removal \u2014 8,400 SF",
+          "qty": 8400.0,
+          "unit": "sf",
+          "rate": 3.5,
+          "total": 29400.0
+        },
+        {
+          "ordinal": "32.04",
+          "description": "Asphalt pavement \u2014 3.5\" hot mix, road widening area, 500 SF",
+          "qty": 500.0,
+          "unit": "sf",
+          "rate": 5.56,
+          "total": 2780.0
+        },
+        {
+          "ordinal": "32.08",
+          "description": "Repair utility trenches on street \u2014 asphalt repair",
+          "qty": 1.0,
+          "unit": "ls",
+          "rate": 2500.0,
+          "total": 2500.0
+        },
+        {
+          "ordinal": "32.09",
+          "description": "Stone base \u2014 8\" #2A crushed aggregate under asphalt, 500 SF",
+          "qty": 500.0,
+          "unit": "sf",
+          "rate": 1.62,
+          "total": 810.0
+        }
+      ]
+    },
+    "Trenching & Utilities": {
+      "item_count": 5,
+      "boq_total": 36983.97,
+      "items": [
+        {
+          "ordinal": "33.01",
+          "description": "Sanitary sewer \u2014 4\" PVC SDR-35, 3' deep, 200 LF",
+          "qty": 200.0,
+          "unit": "lf",
+          "rate": 28.0036,
+          "total": 5600.719999999999
+        },
+        {
+          "ordinal": "33.02",
+          "description": "Water service \u2014 4\" PVC C900, 3' deep, 200 LF",
+          "qty": 200.0,
+          "unit": "lf",
+          "rate": 21.9763,
+          "total": 4395.259999999999
+        },
+        {
+          "ordinal": "33.03",
+          "description": "Electrical conduit \u2014 3\" PVC SCH 40, stone dust bed, red tracer tape, 900 LF",
+          "qty": 900.0,
+          "unit": "lf",
+          "rate": 16.01,
+          "total": 14409.000000000002
+        },
+        {
+          "ordinal": "33.04",
+          "description": "Communications conduit \u2014 1.5\" PVC, shared trench, 900 LF",
+          "qty": 900.0,
+          "unit": "lf",
+          "rate": 3.5155,
+          "total": 3163.95
+        },
+        {
+          "ordinal": "33.05",
+          "description": "Gas line trench \u2014 3'W x 3'D, stone dust backfill, yellow tape, 400 LF",
+          "qty": 400.0,
+          "unit": "lf",
+          "rate": 23.5376,
+          "total": 9415.04
+        }
+      ]
+    },
+    "Stormwater / Drainage": {
+      "item_count": 13,
+      "boq_total": 86737.54,
+      "items": [
+        {
+          "ordinal": "01.09",
+          "description": "Construction entrance 20'x100' \u2014 geotextile fabric + 8\" ballast stone",
+          "qty": 1.0,
+          "unit": "ls",
+          "rate": 0.0,
+          "total": 0.0
+        },
+        {
+          "ordinal": "31.15",
+          "description": "Fine grade crawlspace \u2014 vapor barrier + 4\" #57 stone, 5 foundations, 5,000 SF",
+          "qty": 5000.0,
+          "unit": "sf",
+          "rate": 2.2719,
+          "total": 11359.5
+        },
+        {
+          "ordinal": "31.16",
+          "description": "Foundation perimeter drain \u2014 4\" corrugated perforated, geotextile wrap, #57 stone, 1,000 LF",
+          "qty": 1000.0,
+          "unit": "lf",
+          "rate": 19.1965,
+          "total": 19196.5
+        },
+        {
+          "ordinal": "33.06",
+          "description": "18\" RCP storm pipe \u2014 Class III, 125 LF",
+          "qty": 125.0,
+          "unit": "lf",
+          "rate": 44.6686,
+          "total": 5583.575
+        },
+        {
+          "ordinal": "33.07",
+          "description": "Precast concrete headwall \u2014 18\" with outlet protection rip rap",
+          "qty": 2.0,
+          "unit": "ea",
+          "rate": 1101.735,
+          "total": 2203.47
+        },
+        {
+          "ordinal": "33.40.01",
+          "description": "Stormwater infiltration pit (drywell), including excavation, geotextile lining, #57 stone fill, inlet pipe connection, and surface restoration",
+          "qty": 1.0,
+          "unit": "cy",
+          "rate": 850.0,
+          "total": 850.0
+        },
+        {
+          "ordinal": "33.40.02",
+          "description": "Geotextile fabric \u2014 infiltration pit, 8,326 SF",
+          "qty": 8326.0,
+          "unit": "sf",
+          "rate": 0.75,
+          "total": 6244.5
+        },
+        {
+          "ordinal": "33.40.03",
+          "description": "Coarse sand bedding \u2014 3\" depth, 130 CY",
+          "qty": 130.0,
+          "unit": "cy",
+          "rate": 35.0,
+          "total": 4550.0
+        },
+        {
+          "ordinal": "33.40.04",
+          "description": "#57 stone \u2014 24\" depth in infiltration pit, 620 CY",
+          "qty": 620.0,
+          "unit": "cy",
+          "rate": 45.0,
+          "total": 27900.0
+        },
+        {
+          "ordinal": "33.40.05",
+          "description": "#8 stone top course \u2014 2\" depth, 50 CY",
+          "qty": 50.0,
+          "unit": "cy",
+          "rate": 55.0,
+          "total": 2750.0
+        },
+        {
+          "ordinal": "33.40.06",
+          "description": "Observation wells \u2014 4 per approved plan",
+          "qty": 4.0,
+          "unit": "ea",
+          "rate": 300.0,
+          "total": 1200.0
+        },
+        {
+          "ordinal": "33.40.07",
+          "description": "Geotextile fabric \u2014 12 rolls",
+          "qty": 6000.0,
+          "unit": "sf",
+          "rate": 0.75,
+          "total": 4500.0
+        },
+        {
+          "ordinal": "33.40.08",
+          "description": "Pipe for observation wells",
+          "qty": 1.0,
+          "unit": "ls",
+          "rate": 400.0,
+          "total": 400.0
+        }
+      ]
+    },
+    "Demolition": {
+      "item_count": 7,
+      "boq_total": 48003.05,
+      "items": [
+        {
+          "ordinal": "02.03",
+          "description": "Demolish existing residence including foundation \u2014 1,500 SF",
+          "qty": 1500.0,
+          "unit": "sf",
+          "rate": 10.33,
+          "total": 15495.0
+        },
+        {
+          "ordinal": "02.04",
+          "description": "Demolish existing garage structure and foundation \u2014 400 SF",
+          "qty": 400.0,
+          "unit": "sf",
+          "rate": 10.33,
+          "total": 4132.0
+        },
+        {
+          "ordinal": "02.05",
+          "description": "Shed and treehouse removal",
+          "qty": 2.0,
+          "unit": "ea",
+          "rate": 750.0,
+          "total": 1500.0
+        },
+        {
+          "ordinal": "02.06",
+          "description": "Concrete removal \u2014 walkway, driveway, patio \u2014 1,500 SF",
+          "qty": 1500.0,
+          "unit": "sf",
+          "rate": 4.2507,
+          "total": 6376.05
+        },
+        {
+          "ordinal": "02.07",
+          "description": "Tree removal \u2014 12 trees",
+          "qty": 12.0,
+          "unit": "ea",
+          "rate": 750.0,
+          "total": 9000.0
+        },
+        {
+          "ordinal": "02.08",
+          "description": "Dumpster disposal \u2014 11 loads at $800/load",
+          "qty": 11.0,
+          "unit": "ea",
+          "rate": 800.0,
+          "total": 8800.0
+        },
+        {
+          "ordinal": "02.09",
+          "description": "Haul concrete debris \u2014 6 loads at $450/load",
+          "qty": 6.0,
+          "unit": "ea",
+          "rate": 450.0,
+          "total": 2700.0
+        }
+      ]
+    },
+    "Erosion Control": {
+      "item_count": 2,
+      "boq_total": 2545.0,
+      "items": [
+        {
+          "ordinal": "01.08",
+          "description": "Erosion controls \u2014 silt fence with steel posts and wire mesh",
+          "qty": 325.0,
+          "unit": "lf",
+          "rate": 5.0,
+          "total": 1625.0
+        },
+        {
+          "ordinal": "31.06",
+          "description": "Straw mulch stabilization \u2014 all disturbed areas",
+          "qty": 11500.0,
+          "unit": "sf",
+          "rate": 0.08,
+          "total": 920.0
+        }
+      ]
+    },
+    "Site Preparation / Grading": {
+      "item_count": 4,
+      "boq_total": 6193.44,
+      "items": [
+        {
+          "ordinal": "31.11",
+          "description": "Site grading and fine grade \u2014 entire 8,400 SF disturbed area",
+          "qty": 8400.0,
+          "unit": "sf",
+          "rate": 0.4488,
+          "total": 3769.9199999999996
+        },
+        {
+          "ordinal": "31.13",
+          "description": "Fine grade garage areas \u2014 5 garages, 2,400 SF",
+          "qty": 2400.0,
+          "unit": "sf",
+          "rate": 0.4488,
+          "total": 1077.12
+        },
+        {
+          "ordinal": "31.14",
+          "description": "Fine grade porch areas \u2014 5 porches, 1,000 SF",
+          "qty": 1000.0,
+          "unit": "sf",
+          "rate": 0.4488,
+          "total": 448.79999999999995
+        },
+        {
+          "ordinal": "32.05",
+          "description": "Subgrade preparation \u2014 walkway areas, 2,000 SF",
+          "qty": 2000.0,
+          "unit": "sf",
+          "rate": 0.4488,
+          "total": 897.5999999999999
+        }
+      ]
+    },
+    "Crawlspace / Foundation": {
+      "item_count": 1,
+      "boq_total": 6384.82,
+      "items": [
+        {
+          "ordinal": "31.12",
+          "description": "Crawlspace and footer excavation \u2014 5 foundations, 720 CY",
+          "qty": 720.0,
+          "unit": "cy",
+          "rate": 8.8678,
+          "total": 6384.816000000001
+        }
+      ]
+    },
+    "General Requirements": {
+      "item_count": 3,
+      "boq_total": 7200.0,
+      "items": [
+        {
+          "ordinal": "01.02",
+          "description": "Equipment rental \u2014 excavator, skid steer, attachments (all phases)",
+          "qty": 3.0,
+          "unit": "month",
+          "rate": 2000.0,
+          "total": 6000.0
+        },
+        {
+          "ordinal": "01.11",
+          "description": "Site consultation \u2014 confirm structure location, utilities, permit coordination",
+          "qty": 1.0,
+          "unit": "ls",
+          "rate": 0.0,
+          "total": 0.0
+        },
+        {
+          "ordinal": "01.12",
+          "description": "Site layout and staking \u2014 square, stake, establish 4 building corners",
+          "qty": 1.0,
+          "unit": "ls",
+          "rate": 1200.0,
+          "total": 1200.0
+        }
+      ]
+    },
+    "Other / Unclassified": {
+      "item_count": 3,
+      "boq_total": 37296.18,
+      "items": [
+        {
+          "ordinal": "01.13",
+          "description": "Excavator 30T with hydraulic hammer, monthly rental rate (176 hr month, rates include all operating costs)",
+          "qty": 1.0,
+          "unit": "month",
+          "rate": 13499.2,
+          "total": 13499.2
+        },
+        {
+          "ordinal": "31.02",
+          "description": "Excavate, grade, and compact subgrade \u2014 5 building pads, 45,225 SF",
+          "qty": 45225.0,
+          "unit": "sf",
+          "rate": 0.4488,
+          "total": 20296.98
+        },
+        {
+          "ordinal": "32.07",
+          "description": "Excavation and grading for driveway ramp, sidewalk, walkways",
+          "qty": 1.0,
+          "unit": "ls",
+          "rate": 3500.0,
+          "total": 3500.0
+        }
+      ]
+    }
+  },
+  "unassigned_items": [
+    {
+      "ordinal": "01.13",
+      "description": "Excavator 30T with hydraulic hammer, monthly rental rate (176 hr month, rates include all operating costs)",
+      "total": 13499.2,
+      "rate": 13499.2
+    },
+    {
+      "ordinal": "33.40.01",
+      "description": "Stormwater infiltration pit (drywell), including excavation, geotextile lining, #57 stone fill, inlet pipe connection, and surface restoration",
+      "total": 850.0,
+      "rate": 850.0
+    }
+  ],
+  "quality_metrics": {
+    "total_positions": 55,
+    "positions_with_rates": 53,
+    "zero_rate_positions": 2,
+    "zero_rate_pct": 3.6,
+    "rate_coverage_pct": 96.4,
+    "source_distribution": {
+      "cost_database": 37,
+      "manual": 18
+    },
+    "resource_breakdown_items": 25,
+    "resource_breakdown_pct": 45.5,
+    "implicit_labor_total": 417.55,
+    "implicit_equipment_total": 13940.63,
+    "implicit_material_total": 1329.72,
+    "grand_total_boq": 343542.44
+  },
+  "zero_rate_items": [
+    {
+      "ordinal": "01.09",
+      "description": "Construction entrance 20'x100' \u2014 geotextile fabric + 8\" ballast stone",
+      "unit": "ls",
+      "job_id": "38304",
+      "source": "manual"
+    },
+    {
+      "ordinal": "01.11",
+      "description": "Site consultation \u2014 confirm structure location, utilities, permit coordination",
+      "unit": "ls",
+      "job_id": "38578",
+      "source": "manual"
+    }
+  ]
+}

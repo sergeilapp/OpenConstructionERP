@@ -1,0 +1,497 @@
+[
+  {
+    "resource_code": "TCG-RES-WORKING_LABOR-13500",
+    "name": "Working Labor Crew — Site Preparation",
+    "type": "labor",
+    "unit": "HR",
+    "base_rate": 135.0,
+    "base_rate_display": "$135.00/HR",
+    "rate_range": null,
+    "adjustability": "Estimator may change rate per crew composition or market",
+    "reusable": true,
+    "provenance": {
+      "rate_type": "working_labor",
+      "source_methods": [
+        "SitePreparationJobCalculator#working_labor_hours",
+        "SitePreparationJobCalculator#working_labor_cost"
+      ],
+      "calculator_kind": "site_preparation",
+      "confidence": "derived_from_calculator",
+      "contact_id": 24929,
+      "model_job_group_id": "tcg_24929_model_job",
+      "member_job_ids": [
+        38254,
+        38304,
+        38396,
+        38447,
+        38522,
+        38577,
+        38578
+      ]
+    },
+    "tags": [
+      "tcg_draft",
+      "review_only"
+    ],
+    "review_status": "draft"
+  },
+  {
+    "resource_code": "TCG-RES-WORKING_LABOR-12500",
+    "name": "Working Labor Crew — Light/Adhoc",
+    "type": "labor",
+    "unit": "HR",
+    "base_rate": 125.0,
+    "base_rate_display": "$125.00/HR",
+    "rate_range": null,
+    "adjustability": "Estimator may change rate per crew composition or market",
+    "reusable": true,
+    "provenance": {
+      "rate_type": "working_labor",
+      "source_methods": [
+        "SitePreparationJobCalculator#working_labor_hours",
+        "SitePreparationJobCalculator#working_labor_cost"
+      ],
+      "calculator_kind": "adhoc",
+      "confidence": "derived_from_calculator",
+      "contact_id": 24929,
+      "model_job_group_id": "tcg_24929_model_job",
+      "member_job_ids": [
+        38254,
+        38304,
+        38396,
+        38447,
+        38522,
+        38577,
+        38578
+      ]
+    },
+    "tags": [
+      "tcg_draft",
+      "review_only"
+    ],
+    "review_status": "draft"
+  },
+  {
+    "resource_code": "TCG-RES-DRIVING_LABOR-9500",
+    "name": "Driving Labor",
+    "type": "labor",
+    "unit": "HR",
+    "base_rate": 95.0,
+    "base_rate_display": "$95.00/HR",
+    "rate_range": null,
+    "adjustability": "Estimator may change rate per crew composition or market",
+    "reusable": true,
+    "provenance": {
+      "rate_type": "driving_labor",
+      "source_methods": [
+        "SitePreparationJobCalculator#driving_labor_total",
+        "SitePreparationJobCalculator#driving_labor_cost"
+      ],
+      "calculator_kind": "site_preparation",
+      "confidence": "derived_from_calculator",
+      "contact_id": 24929,
+      "model_job_group_id": "tcg_24929_model_job",
+      "member_job_ids": [
+        38254,
+        38304,
+        38396,
+        38447,
+        38522,
+        38577,
+        38578
+      ]
+    },
+    "tags": [
+      "tcg_draft",
+      "review_only"
+    ],
+    "review_status": "draft"
+  },
+  {
+    "resource_code": "TCG-RES-TRUCK-LOAD-BALLAST__1_1_2____2_1_2___DRAIN_STONE",
+    "name": "Truck Hauling — Ballast (1 1/2\" - 2 1/2\") Drain Stone",
+    "type": "equipment",
+    "unit": "LOAD",
+    "base_rate": 985.0,
+    "base_rate_display": "$985.00/LOAD",
+    "rate_range": null,
+    "adjustability": "Rate per market fuel/surcharge; estimator may override per load or per mile",
+    "reusable": true,
+    "provenance": {
+      "source": "SitePreparationMaterial 3207 truck_cost_per_load",
+      "quarry": " Vulcan Materials - Danley* 4-1-20",
+      "quarry_distance_mi": 9.0,
+      "truck_type": "Tri Axle / 20 cy / 23 tons",
+      "confidence": "persisted_rate",
+      "job_id": 38304,
+      "contact_id": 24929,
+      "model_job_group_id": "tcg_24929_model_job",
+      "member_job_ids": [
+        38254,
+        38304,
+        38396,
+        38447,
+        38522,
+        38577,
+        38578
+      ]
+    },
+    "tags": [
+      "tcg_draft",
+      "review_only"
+    ],
+    "review_status": "draft"
+  },
+  {
+    "resource_code": "TCG-RES-TRUCK-LOAD-SAND",
+    "name": "Truck Hauling — Sand",
+    "type": "equipment",
+    "unit": "LOAD",
+    "base_rate": 745.0,
+    "base_rate_display": "$745.00/LOAD",
+    "rate_range": null,
+    "adjustability": "Rate per market fuel/surcharge; estimator may override per load or per mile",
+    "reusable": true,
+    "provenance": {
+      "source": "SitePreparationMaterial 3015 truck_cost_per_load",
+      "quarry": " Vulcan Materials - Danley* 4-1-20",
+      "quarry_distance_mi": 9.0,
+      "truck_type": "Tri Axle / 20 cy / 23 tons",
+      "confidence": "persisted_rate",
+      "job_id": 38396,
+      "contact_id": 24929,
+      "model_job_group_id": "tcg_24929_model_job",
+      "member_job_ids": [
+        38254,
+        38304,
+        38396,
+        38447,
+        38522,
+        38577,
+        38578
+      ]
+    },
+    "tags": [
+      "tcg_draft",
+      "review_only"
+    ],
+    "review_status": "draft"
+  },
+  {
+    "resource_code": "TCG-RES-TRUCK-LOAD-_57__2B___3_4____1__CLEAN_STONE_",
+    "name": "Truck Hauling — #57 (2B) (3/4\" - 1\" clean stone)",
+    "type": "equipment",
+    "unit": "LOAD",
+    "base_rate": 945.0,
+    "base_rate_display": "$945.00/LOAD",
+    "rate_range": null,
+    "adjustability": "Rate per market fuel/surcharge; estimator may override per load or per mile",
+    "reusable": true,
+    "provenance": {
+      "source": "SitePreparationMaterial 3016 truck_cost_per_load",
+      "quarry": " Vulcan Materials - Danley* 4-1-20",
+      "quarry_distance_mi": 9.0,
+      "truck_type": "Tri Axle / 20 cy / 23 tons",
+      "confidence": "persisted_rate",
+      "job_id": 38396,
+      "contact_id": 24929,
+      "model_job_group_id": "tcg_24929_model_job",
+      "member_job_ids": [
+        38254,
+        38304,
+        38396,
+        38447,
+        38522,
+        38577,
+        38578
+      ]
+    },
+    "tags": [
+      "tcg_draft",
+      "review_only"
+    ],
+    "review_status": "draft"
+  },
+  {
+    "resource_code": "TCG-RES-TRUCK-MILE-DRIVING",
+    "name": "Truck Driving — Cost Per Mile",
+    "type": "equipment",
+    "unit": "MI",
+    "base_rate": 4.84,
+    "base_rate_display": "$4.84/MI",
+    "rate_range": {
+      "min": 4.38,
+      "max": 7.38,
+      "job_count": 7
+    },
+    "adjustability": "Rate varies by fuel cost, truck type, and distance; estimator should confirm per trip",
+    "reusable": true,
+    "provenance": {
+      "source_methods": [
+        "DrivingCalculator#truck_cost",
+        "DrivingCalculator#truck_total_mileage"
+      ],
+      "confidence": "derived_from_calculator",
+      "contact_id": 24929,
+      "model_job_group_id": "tcg_24929_model_job",
+      "member_job_ids": [
+        38254,
+        38304,
+        38396,
+        38447,
+        38522,
+        38577,
+        38578
+      ]
+    },
+    "tags": [
+      "tcg_draft",
+      "review_only"
+    ],
+    "review_status": "draft"
+  },
+  {
+    "resource_code": "TCG-RES-TRUCK-MILE-OPERATING",
+    "name": "Truck Operating — Cost Per Mile (gas/maintenance/tires)",
+    "type": "equipment",
+    "unit": "MI",
+    "base_rate": 4.84,
+    "base_rate_display": "$4.84/MI",
+    "rate_range": {
+      "min": 4.38,
+      "max": 7.38,
+      "job_count": 7
+    },
+    "adjustability": "Estimator should update per current fuel/maintenance costs",
+    "reusable": true,
+    "provenance": {
+      "source_methods": [
+        "DrivingCalculator#truck_gas_cost",
+        "DrivingCalculator#truck_maintenance_cost"
+      ],
+      "confidence": "derived_from_calculator",
+      "contact_id": 24929,
+      "model_job_group_id": "tcg_24929_model_job",
+      "member_job_ids": [
+        38254,
+        38304,
+        38396,
+        38447,
+        38522,
+        38577,
+        38578
+      ]
+    },
+    "tags": [
+      "tcg_draft",
+      "review_only"
+    ],
+    "review_status": "draft"
+  },
+  {
+    "resource_code": "TCG-RES-TRUCK-TRIP-DRIVING",
+    "name": "Truck Driving — Cost Per Trip (round-trip)",
+    "type": "equipment",
+    "unit": "TRIP",
+    "base_rate": 1671.0,
+    "base_rate_display": "$1671.00/TRIP",
+    "rate_range": {
+      "min": 367.5,
+      "max": 3780.0,
+      "job_count": 7
+    },
+    "adjustability": "Trip cost varies by distance; estimator should confirm per job",
+    "reusable": true,
+    "provenance": {
+      "source_methods": [
+        "DrivingCalculator#truck_cost",
+        "DrivingCalculator#number_of_trips"
+      ],
+      "confidence": "derived_from_calculator",
+      "contact_id": 24929,
+      "model_job_group_id": "tcg_24929_model_job",
+      "member_job_ids": [
+        38254,
+        38304,
+        38396,
+        38447,
+        38522,
+        38577,
+        38578
+      ]
+    },
+    "tags": [
+      "tcg_draft",
+      "review_only"
+    ],
+    "review_status": "draft"
+  },
+  {
+    "resource_code": "TCG-RES-FILL-HAUL-38254",
+    "name": "Fill Hauling — Fill Dirt (Compactabile)",
+    "type": "equipment",
+    "unit": "LOAD",
+    "base_rate": 395.0,
+    "base_rate_display": "$395.00/LOAD",
+    "rate_range": null,
+    "adjustability": "Job-specific; may generalize if fill sources are consistent",
+    "reusable": false,
+    "provenance": {
+      "job_id": 38254,
+      "fill_material": "Fill Dirt (Compactabile)",
+      "source": "SitePreparationJobCalculator#fill_truck_cost (job 38254)",
+      "confidence": "needs_unit_review",
+      "contact_id": 24929,
+      "model_job_group_id": "tcg_24929_model_job",
+      "member_job_ids": [
+        38254,
+        38304,
+        38396,
+        38447,
+        38522,
+        38577,
+        38578
+      ]
+    },
+    "tags": [
+      "tcg_draft",
+      "review_only"
+    ],
+    "review_status": "draft"
+  },
+  {
+    "resource_code": "TCG-RES-FILL-HAUL-38396",
+    "name": "Fill Hauling — Fill Dirt (Compactabile)",
+    "type": "equipment",
+    "unit": "LOAD",
+    "base_rate": 245.0,
+    "base_rate_display": "$245.00/LOAD",
+    "rate_range": null,
+    "adjustability": "Job-specific; may generalize if fill sources are consistent",
+    "reusable": false,
+    "provenance": {
+      "job_id": 38396,
+      "fill_material": "Fill Dirt (Compactabile)",
+      "source": "SitePreparationJobCalculator#fill_truck_cost (job 38396)",
+      "confidence": "needs_unit_review",
+      "contact_id": 24929,
+      "model_job_group_id": "tcg_24929_model_job",
+      "member_job_ids": [
+        38254,
+        38304,
+        38396,
+        38447,
+        38522,
+        38577,
+        38578
+      ]
+    },
+    "tags": [
+      "tcg_draft",
+      "review_only"
+    ],
+    "review_status": "draft"
+  },
+  {
+    "resource_code": "TCG-RES-WORKING_LABOR-13500",
+    "name": "Working Labor — site_preparation",
+    "type": "labor",
+    "unit": "HR",
+    "base_rate": 135.0,
+    "base_rate_display": "$135.00/hr",
+    "adjustability": "Composite crew rate; estimator may adjust per crew composition",
+    "reusable": true,
+    "provenance": {
+      "source_methods": [
+        "SitePreparationJobCalculator#working_labor_hours",
+        "SitePreparationJobCalculator#working_labor_cost"
+      ],
+      "calculator_kind": "site_preparation",
+      "confidence": "derived_from_calculator",
+      "contact_id": 24929,
+      "model_job_group_id": "tcg_24929_model_job",
+      "member_job_ids": [
+        38254,
+        38304,
+        38396,
+        38447,
+        38522,
+        38577,
+        38578
+      ]
+    },
+    "tags": [
+      "tcg_draft",
+      "review_only"
+    ],
+    "review_status": "draft"
+  },
+  {
+    "resource_code": "TCG-RES-WORKING_LABOR-12500",
+    "name": "Working Labor — adhoc",
+    "type": "labor",
+    "unit": "HR",
+    "base_rate": 125.0,
+    "base_rate_display": "$125.00/hr",
+    "adjustability": "Composite crew rate; estimator may adjust per crew composition",
+    "reusable": true,
+    "provenance": {
+      "source_methods": [
+        "SitePreparationJobCalculator#working_labor_hours",
+        "SitePreparationJobCalculator#working_labor_cost"
+      ],
+      "calculator_kind": "adhoc",
+      "confidence": "derived_from_calculator",
+      "contact_id": 24929,
+      "model_job_group_id": "tcg_24929_model_job",
+      "member_job_ids": [
+        38254,
+        38304,
+        38396,
+        38447,
+        38522,
+        38577,
+        38578
+      ]
+    },
+    "tags": [
+      "tcg_draft",
+      "review_only"
+    ],
+    "review_status": "draft"
+  },
+  {
+    "resource_code": "TCG-RES-DRIVING_LABOR-9500",
+    "name": "Driving Labor — site_preparation",
+    "type": "labor",
+    "unit": "HR",
+    "base_rate": 95.0,
+    "base_rate_display": "$95.00/hr",
+    "adjustability": "Composite crew rate; estimator may adjust per crew composition",
+    "reusable": true,
+    "provenance": {
+      "source_methods": [
+        "SitePreparationJobCalculator#driving_labor_total",
+        "SitePreparationJobCalculator#driving_labor_cost"
+      ],
+      "calculator_kind": "site_preparation",
+      "confidence": "derived_from_calculator",
+      "contact_id": 24929,
+      "model_job_group_id": "tcg_24929_model_job",
+      "member_job_ids": [
+        38254,
+        38304,
+        38396,
+        38447,
+        38522,
+        38577,
+        38578
+      ]
+    },
+    "tags": [
+      "tcg_draft",
+      "review_only"
+    ],
+    "review_status": "draft"
+  }
+]

@@ -1,0 +1,359 @@
+[
+  {
+    "code": "BED-ROCK-STONE",
+    "description": "Stone (per ton)",
+    "unit": "ton",
+    "rate": 52.0,
+    "currency": "USD",
+    "source": "bedrock_extraction",
+    "region": "BEDROCK-MAIN",
+    "classification": {
+      "masterformat": "31 22 00"
+    },
+    "components": [
+      {
+        "code": "MAT-CONCRETE-ROCK-PER-TON",
+        "name": "Cost of rock per ton (in dollars)",
+        "type": "material",
+        "quantity": 1.0,
+        "unit_rate": 52.0,
+        "cost": 52.0,
+        "unit": "ton"
+      }
+    ],
+    "tags": [
+      "bedrock",
+      "rockpad"
+    ],
+    "metadata": {
+      "draft_assumptions": [
+        "Pass-through resource at qty=1; stone quantity applied at BOQ."
+      ]
+    }
+  },
+  {
+    "code": "BED-ROCK-BOARD",
+    "description": "Board (per linear foot)",
+    "unit": "lf",
+    "rate": 5.0,
+    "currency": "USD",
+    "source": "bedrock_extraction",
+    "region": "BEDROCK-MAIN",
+    "classification": {
+      "masterformat": "06 11 00"
+    },
+    "components": [
+      {
+        "code": "MAT-ROCKPAD-BOARD-COST-PER-FOOT",
+        "name": "Cost per foot of boards under 16 (in dollars)",
+        "type": "material",
+        "quantity": 1.0,
+        "unit_rate": 5.0,
+        "cost": 5.0,
+        "unit": "lf"
+      }
+    ],
+    "tags": [
+      "bedrock",
+      "rockpad"
+    ],
+    "metadata": {
+      "draft_assumptions": [
+        "Pass-through resource at qty=1; board quantity applied at BOQ."
+      ]
+    }
+  },
+  {
+    "code": "BED-ROCK-REBAR",
+    "description": "Rebar piece (each)",
+    "unit": "ea",
+    "rate": 2.0,
+    "currency": "USD",
+    "source": "bedrock_extraction",
+    "region": "BEDROCK-MAIN",
+    "classification": {
+      "masterformat": "03 20 00"
+    },
+    "components": [
+      {
+        "code": "MAT-ROCKPAD-REBAR-PIECE",
+        "name": "Cost per piece of rebar ( in dollars )",
+        "type": "material",
+        "quantity": 1.0,
+        "unit_rate": 2.0,
+        "cost": 2.0,
+        "unit": "ea"
+      }
+    ],
+    "tags": [
+      "bedrock",
+      "rockpad"
+    ],
+    "metadata": {
+      "draft_assumptions": [
+        "Pass-through resource at qty=1; rebar quantity applied at BOQ."
+      ]
+    }
+  },
+  {
+    "code": "BED-ROCK-EROSION-CONTROL",
+    "description": "Erosion control wire (per linear foot)",
+    "unit": "lf",
+    "rate": 2.5,
+    "currency": "USD",
+    "source": "bedrock_extraction",
+    "region": "BEDROCK-MAIN",
+    "classification": {
+      "masterformat": "31 25 00"
+    },
+    "components": [
+      {
+        "code": "MAT-ROCKPAD-EROSION-CONTROL-WIRE-PRICE",
+        "name": "In Linear foot (in dollars)",
+        "type": "material",
+        "quantity": 1.0,
+        "unit_rate": 2.5,
+        "cost": 2.5,
+        "unit": "ea"
+      }
+    ],
+    "tags": [
+      "bedrock",
+      "rockpad"
+    ],
+    "metadata": {
+      "draft_assumptions": [
+        "Resource unit is 'ea'; unit cast to 'lf' for CostItem. Pass-through resource at qty=1; quantity applied at BOQ."
+      ]
+    }
+  },
+  {
+    "code": "BED-ROCK-EXCAVATION",
+    "description": "Excavation (per square foot)",
+    "unit": "sf",
+    "rate": 8.0,
+    "currency": "USD",
+    "source": "bedrock_extraction",
+    "region": "BEDROCK-MAIN",
+    "classification": {
+      "masterformat": "31 23 00"
+    },
+    "components": [
+      {
+        "code": "LAB-ROCKPAD-LABORER-RATE",
+        "name": "Rock pad laborer",
+        "type": "labor",
+        "quantity": 0.08,
+        "unit_rate": 100.0,
+        "cost": 8.0,
+        "unit": "hr"
+      }
+    ],
+    "tags": [
+      "bedrock",
+      "rockpad",
+      "excavation",
+      "needs_sampling"
+    ],
+    "metadata": {
+      "draft_assumptions": [
+        "Excavation factor is ~0.08 hours per sf for standard depth (based on typical conditions).",
+        "Factor should be validated against real job data."
+      ]
+    }
+  },
+  {
+    "code": "BED-ROCK-FILL-DIRT",
+    "description": "Fill dirt (per ton)",
+    "unit": "ton",
+    "rate": 23.25,
+    "currency": "USD",
+    "source": "bedrock_extraction",
+    "region": "BEDROCK-MAIN",
+    "classification": {
+      "masterformat": "31 23 00"
+    },
+    "components": [
+      {
+        "code": "MAT-PREP-FILL-DIRT-AGGREGATE",
+        "name": "Fill Dirt/Aggregate ",
+        "type": "material",
+        "quantity": 1.0,
+        "unit_rate": 20.0,
+        "cost": 20.0,
+        "unit": "cy"
+      },
+      {
+        "code": "EQP-TRUCK-COST-PER-MILE",
+        "name": "Cost of truck per mile (dollars)",
+        "type": "equipment",
+        "quantity": 1.0,
+        "unit_rate": 3.25,
+        "cost": 3.25,
+        "unit": "mi"
+      }
+    ],
+    "tags": [
+      "bedrock",
+      "rockpad",
+      "fill",
+      "needs_sampling"
+    ],
+    "metadata": {
+      "draft_assumptions": [
+        "Fill dirt prep material rate is looked up via regex MAT-PREP-.*FILL.*DIRT; falls back to $15.00/ton if not found.",
+        "Truck cost per mile at qty=1; actual mileage applied at BOQ."
+      ]
+    }
+  },
+  {
+    "code": "BED-ROCK-DRIVING",
+    "description": "Driving labor and truck cost per trip",
+    "unit": "trip",
+    "rate": 214.5,
+    "currency": "USD",
+    "source": "bedrock_extraction",
+    "region": "BEDROCK-MAIN",
+    "classification": {
+      "masterformat": "01 50 00"
+    },
+    "components": [
+      {
+        "code": "LAB-DRIVING-LABORER-RATE",
+        "name": "Driving laborer",
+        "type": "labor",
+        "quantity": 1.0,
+        "unit_rate": 85.0,
+        "cost": 85.0,
+        "unit": "hr"
+      },
+      {
+        "code": "EQP-TRUCK-DUAL-AXLE-TIME",
+        "name": "Dual Axle dump truck - time",
+        "type": "equipment",
+        "quantity": 1.0,
+        "unit_rate": 125.0,
+        "cost": 125.0,
+        "unit": "hr"
+      },
+      {
+        "code": "EQP-TRUCK-DUAL-AXLE-MILE",
+        "name": "Dual Axle dump truck - mileage",
+        "type": "equipment",
+        "quantity": 1.0,
+        "unit_rate": 4.5,
+        "cost": 4.5,
+        "unit": "mi"
+      }
+    ],
+    "tags": [
+      "bedrock",
+      "rockpad",
+      "driving"
+    ],
+    "metadata": {
+      "draft_assumptions": [
+        "Components are unit rates with qty=1; actual trip quantity varies by job distance and duration."
+      ]
+    }
+  },
+  {
+    "code": "BED-ROCK-LABOR",
+    "description": "Working labor (on-site crew) per hour",
+    "unit": "hr",
+    "rate": 100.0,
+    "currency": "USD",
+    "source": "bedrock_extraction",
+    "region": "BEDROCK-MAIN",
+    "classification": {
+      "masterformat": "01 50 00"
+    },
+    "components": [
+      {
+        "code": "LAB-ROCKPAD-LABORER-RATE",
+        "name": "Rock pad laborer",
+        "type": "labor",
+        "quantity": 1.0,
+        "unit_rate": 100.0,
+        "cost": 100.0,
+        "unit": "hr"
+      }
+    ],
+    "tags": [
+      "bedrock",
+      "rockpad",
+      "labor"
+    ],
+    "metadata": {
+      "draft_assumptions": [
+        "Rate equals LAB-ROCKPAD-LABORER-RATE; crew size applied at BOQ."
+      ]
+    }
+  },
+  {
+    "code": "BED-ROCK-ACCESS",
+    "description": "Distance from access point (linear foot of access path)",
+    "unit": "lf",
+    "rate": 2.0,
+    "currency": "USD",
+    "source": "bedrock_extraction",
+    "region": "BEDROCK-MAIN",
+    "classification": {
+      "masterformat": "31 23 00"
+    },
+    "components": [
+      {
+        "code": "MAT-DISTANCE-FROM-ACCESS-COST-PER-FOOT",
+        "name": "Distance from access cost per foot",
+        "type": "material",
+        "quantity": 1.0,
+        "unit_rate": 2.0,
+        "cost": 2.0,
+        "unit": "lf"
+      }
+    ],
+    "tags": [
+      "bedrock",
+      "rockpad",
+      "access"
+    ],
+    "metadata": {
+      "draft_assumptions": [
+        "Cost per lf of access path; quantity equals job distance_from_access."
+      ]
+    }
+  },
+  {
+    "code": "BED-ROCK-MAT-GATHER",
+    "description": "Material gathering labor per hour",
+    "unit": "hr",
+    "rate": 100.0,
+    "currency": "USD",
+    "source": "bedrock_extraction",
+    "region": "BEDROCK-MAIN",
+    "classification": {
+      "masterformat": "01 50 00"
+    },
+    "components": [
+      {
+        "code": "LAB-ROCKPAD-LABORER-RATE",
+        "name": "Rock pad laborer",
+        "type": "labor",
+        "quantity": 1.0,
+        "unit_rate": 100.0,
+        "cost": 100.0,
+        "unit": "hr"
+      }
+    ],
+    "tags": [
+      "bedrock",
+      "rockpad",
+      "material_gathering"
+    ],
+    "metadata": {
+      "draft_assumptions": [
+        "Rate equals LAB-ROCKPAD-LABORER-RATE; hours applied at BOQ."
+      ]
+    }
+  }
+]

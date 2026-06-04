@@ -1,0 +1,3509 @@
+[
+  {
+    "code": "BED-CONC-SLAB-4IN",
+    "description": "Concrete slab - 4 in thick, reinforced, vapor barrier, choose PSI",
+    "unit": "sf",
+    "rate": 14.88,
+    "currency": "USD",
+    "source": "bedrock_extraction",
+    "region": "BEDROCK-MAIN",
+    "classification": {
+      "masterformat": "03 30 00"
+    },
+    "components": [
+      {
+        "code": "MAT-CONCRETE-PRICE-PER-YARD",
+        "name": "Concrete price per cubic yard",
+        "type": "material",
+        "quantity": 0.017042,
+        "unit_rate": 225.0,
+        "cost": 3.83,
+        "unit": "cy",
+        "available_variants": [
+          {
+            "index": 0,
+            "label": "2000 psi",
+            "price": 213.0,
+            "price_per_unit": 213.0
+          },
+          {
+            "index": 1,
+            "label": "2500 psi",
+            "price": 216.0,
+            "price_per_unit": 216.0
+          },
+          {
+            "index": 2,
+            "label": "3000 psi",
+            "price": 219.0,
+            "price_per_unit": 219.0
+          },
+          {
+            "index": 3,
+            "label": "3500 psi",
+            "price": 222.0,
+            "price_per_unit": 222.0
+          },
+          {
+            "index": 4,
+            "label": "4000 psi",
+            "price": 225.0,
+            "price_per_unit": 225.0
+          },
+          {
+            "index": 5,
+            "label": "4500 psi",
+            "price": 228.0,
+            "price_per_unit": 228.0
+          },
+          {
+            "index": 6,
+            "label": "5000 psi",
+            "price": 231.0,
+            "price_per_unit": 231.0
+          }
+        ],
+        "available_variant_stats": {
+          "min": 213.0,
+          "max": 231.0,
+          "mean": 222.0,
+          "median": 222.0,
+          "unit": "cy",
+          "group": "Concrete PSI",
+          "count": 7
+        }
+      },
+      {
+        "code": "MAT-CONCRETE-WIRE-4-X-8-COST",
+        "name": "cost (in dollars) per 4x8 sheet",
+        "type": "material",
+        "quantity": 0.03125,
+        "unit_rate": 35.0,
+        "cost": 1.09,
+        "unit": "ea"
+      },
+      {
+        "code": "MAT-CONCRETE-REBAR-PRICE-PER-FOOT",
+        "name": "cost (in dollars) of one foot of rebar.",
+        "type": "material",
+        "quantity": 1.266409,
+        "unit_rate": 0.8,
+        "cost": 1.01,
+        "unit": "lf"
+      },
+      {
+        "code": "MAT-CONCRETE-VAPOR-BARRIER-ROLL-COST",
+        "name": "Concrete vapor barrier roll cost",
+        "type": "material",
+        "quantity": 0.000278,
+        "unit_rate": 400.0,
+        "cost": 0.11,
+        "unit": "ea"
+      },
+      {
+        "code": "LAB-CONCRETE-LABORER-RATE",
+        "name": "Rate per laborer (dollars)",
+        "type": "labor",
+        "quantity": 0.088437,
+        "unit_rate": 100.0,
+        "cost": 8.84,
+        "unit": "hr"
+      }
+    ],
+    "tags": [
+      "bedrock",
+      "concrete",
+      "slab",
+      "sample"
+    ],
+    "metadata": {
+      "variants": [
+        {
+          "index": 0,
+          "label": "2000 psi slab",
+          "full_label": "Concrete slab - 4 in, 2000 psi",
+          "price": 14.68,
+          "price_per_unit": 14.68
+        },
+        {
+          "index": 1,
+          "label": "2500 psi slab",
+          "full_label": "Concrete slab - 4 in, 2500 psi",
+          "price": 14.73,
+          "price_per_unit": 14.73
+        },
+        {
+          "index": 2,
+          "label": "3000 psi slab",
+          "full_label": "Concrete slab - 4 in, 3000 psi",
+          "price": 14.78,
+          "price_per_unit": 14.78
+        },
+        {
+          "index": 3,
+          "label": "3500 psi slab",
+          "full_label": "Concrete slab - 4 in, 3500 psi",
+          "price": 14.83,
+          "price_per_unit": 14.83
+        },
+        {
+          "index": 4,
+          "label": "4000 psi slab",
+          "full_label": "Concrete slab - 4 in, 4000 psi",
+          "price": 14.88,
+          "price_per_unit": 14.88
+        },
+        {
+          "index": 5,
+          "label": "4500 psi slab",
+          "full_label": "Concrete slab - 4 in, 4500 psi",
+          "price": 14.94,
+          "price_per_unit": 14.94
+        },
+        {
+          "index": 6,
+          "label": "5000 psi slab",
+          "full_label": "Concrete slab - 4 in, 5000 psi",
+          "price": 14.99,
+          "price_per_unit": 14.99
+        }
+      ],
+      "variant_stats": {
+        "min": 14.68,
+        "max": 14.99,
+        "mean": 14.83,
+        "median": 14.83,
+        "unit": "sf",
+        "group": "Concrete slab 4 in",
+        "count": 7
+      },
+      "sampled_factor_source": {
+        "thickness_in_inches": 4,
+        "sample_count": 25,
+        "job_ids": [
+          38785,
+          38781,
+          38775,
+          38757,
+          38733,
+          38732,
+          38710,
+          38684,
+          38683,
+          38672,
+          38665,
+          38647,
+          38638,
+          38627,
+          38624,
+          38622,
+          38608,
+          38567,
+          38534,
+          38528,
+          38479,
+          38454,
+          38438,
+          38426,
+          38416
+        ],
+        "factors": {
+          "concrete_cy_per_sf": {
+            "count": 25,
+            "mean": 0.018276,
+            "median": 0.017042,
+            "min": 0.011962,
+            "max": 0.047562
+          },
+          "rebar_lf_per_sf": {
+            "count": 15,
+            "mean": 1.429094,
+            "median": 1.266409,
+            "min": 1.105467,
+            "max": 3.082036
+          },
+          "wire_sheets_per_sf": {
+            "count": 6,
+            "mean": 0.03125,
+            "median": 0.03125,
+            "min": 0.03125,
+            "max": 0.03125
+          },
+          "vapor_rolls_per_sf": {
+            "count": 11,
+            "mean": 0.000334,
+            "median": 0.000278,
+            "min": 0.000226,
+            "max": 0.000856
+          },
+          "labor_hours_per_sf": {
+            "count": 22,
+            "mean": 0.123663,
+            "median": 0.088437,
+            "min": 0.005754,
+            "max": 0.678048
+          }
+        },
+        "fallback_factors": {
+          "concrete_cy_per_sf": 0.015432,
+          "rebar_lf_per_sf": 1.2,
+          "wire_sheets_per_sf": 0.03125,
+          "vapor_rolls_per_sf": 0.000278,
+          "labor_hours_per_sf": 0.075
+        }
+      },
+      "draft_assumptions": [
+        "Factors use median values from 25 recent real concrete slab jobs for the matching slab thickness when available.",
+        "Concrete quantity is still geometry-driven by slab thickness; sampled median verifies actual calculator output.",
+        "Rebar, wire, vapor barrier, and labor quantities are sampled from calculator outputs and stored per sf.",
+        "If a factor has no positive samples, the extractor falls back to the documented geometric/default factor."
+      ]
+    }
+  },
+  {
+    "code": "BED-CONC-SLAB-6IN",
+    "description": "Concrete slab - 6 in thick, reinforced, vapor barrier, choose PSI",
+    "unit": "sf",
+    "rate": 13.76,
+    "currency": "USD",
+    "source": "bedrock_extraction",
+    "region": "BEDROCK-MAIN",
+    "classification": {
+      "masterformat": "03 30 00"
+    },
+    "components": [
+      {
+        "code": "MAT-CONCRETE-PRICE-PER-YARD",
+        "name": "Concrete price per cubic yard",
+        "type": "material",
+        "quantity": 0.021605,
+        "unit_rate": 225.0,
+        "cost": 4.86,
+        "unit": "cy",
+        "available_variants": [
+          {
+            "index": 0,
+            "label": "2000 psi",
+            "price": 213.0,
+            "price_per_unit": 213.0
+          },
+          {
+            "index": 1,
+            "label": "2500 psi",
+            "price": 216.0,
+            "price_per_unit": 216.0
+          },
+          {
+            "index": 2,
+            "label": "3000 psi",
+            "price": 219.0,
+            "price_per_unit": 219.0
+          },
+          {
+            "index": 3,
+            "label": "3500 psi",
+            "price": 222.0,
+            "price_per_unit": 222.0
+          },
+          {
+            "index": 4,
+            "label": "4000 psi",
+            "price": 225.0,
+            "price_per_unit": 225.0
+          },
+          {
+            "index": 5,
+            "label": "4500 psi",
+            "price": 228.0,
+            "price_per_unit": 228.0
+          },
+          {
+            "index": 6,
+            "label": "5000 psi",
+            "price": 231.0,
+            "price_per_unit": 231.0
+          }
+        ],
+        "available_variant_stats": {
+          "min": 213.0,
+          "max": 231.0,
+          "mean": 222.0,
+          "median": 222.0,
+          "unit": "cy",
+          "group": "Concrete PSI",
+          "count": 7
+        }
+      },
+      {
+        "code": "MAT-CONCRETE-WIRE-4-X-8-COST",
+        "name": "cost (in dollars) per 4x8 sheet",
+        "type": "material",
+        "quantity": 0.03125,
+        "unit_rate": 35.0,
+        "cost": 1.09,
+        "unit": "ea"
+      },
+      {
+        "code": "MAT-CONCRETE-REBAR-PRICE-PER-FOOT",
+        "name": "cost (in dollars) of one foot of rebar.",
+        "type": "material",
+        "quantity": 1.191174,
+        "unit_rate": 0.8,
+        "cost": 0.95,
+        "unit": "lf"
+      },
+      {
+        "code": "MAT-CONCRETE-VAPOR-BARRIER-ROLL-COST",
+        "name": "Concrete vapor barrier roll cost",
+        "type": "material",
+        "quantity": 0.000278,
+        "unit_rate": 400.0,
+        "cost": 0.11,
+        "unit": "ea"
+      },
+      {
+        "code": "LAB-CONCRETE-LABORER-RATE",
+        "name": "Rate per laborer (dollars)",
+        "type": "labor",
+        "quantity": 0.0675,
+        "unit_rate": 100.0,
+        "cost": 6.75,
+        "unit": "hr"
+      }
+    ],
+    "tags": [
+      "bedrock",
+      "concrete",
+      "slab",
+      "sample"
+    ],
+    "metadata": {
+      "variants": [
+        {
+          "index": 0,
+          "label": "2000 psi slab",
+          "full_label": "Concrete slab - 6 in, 2000 psi",
+          "price": 13.5,
+          "price_per_unit": 13.5
+        },
+        {
+          "index": 1,
+          "label": "2500 psi slab",
+          "full_label": "Concrete slab - 6 in, 2500 psi",
+          "price": 13.57,
+          "price_per_unit": 13.57
+        },
+        {
+          "index": 2,
+          "label": "3000 psi slab",
+          "full_label": "Concrete slab - 6 in, 3000 psi",
+          "price": 13.63,
+          "price_per_unit": 13.63
+        },
+        {
+          "index": 3,
+          "label": "3500 psi slab",
+          "full_label": "Concrete slab - 6 in, 3500 psi",
+          "price": 13.7,
+          "price_per_unit": 13.7
+        },
+        {
+          "index": 4,
+          "label": "4000 psi slab",
+          "full_label": "Concrete slab - 6 in, 4000 psi",
+          "price": 13.76,
+          "price_per_unit": 13.76
+        },
+        {
+          "index": 5,
+          "label": "4500 psi slab",
+          "full_label": "Concrete slab - 6 in, 4500 psi",
+          "price": 13.83,
+          "price_per_unit": 13.83
+        },
+        {
+          "index": 6,
+          "label": "5000 psi slab",
+          "full_label": "Concrete slab - 6 in, 5000 psi",
+          "price": 13.89,
+          "price_per_unit": 13.89
+        }
+      ],
+      "variant_stats": {
+        "min": 13.5,
+        "max": 13.89,
+        "mean": 13.7,
+        "median": 13.7,
+        "unit": "sf",
+        "group": "Concrete slab 6 in",
+        "count": 7
+      },
+      "sampled_factor_source": {
+        "thickness_in_inches": 6,
+        "sample_count": 25,
+        "job_ids": [
+          38569,
+          38472,
+          38444,
+          38284,
+          38199,
+          38071,
+          38030,
+          37830,
+          37802,
+          37447,
+          37409,
+          37305,
+          37264,
+          37262,
+          37261,
+          37175,
+          37149,
+          36949,
+          36931,
+          36883,
+          36879,
+          36858,
+          36854,
+          36809,
+          36808
+        ],
+        "factors": {
+          "concrete_cy_per_sf": {
+            "count": 25,
+            "mean": 0.022988,
+            "median": 0.021605,
+            "min": 0.019592,
+            "max": 0.029762
+          },
+          "rebar_lf_per_sf": {
+            "count": 24,
+            "mean": 1.179926,
+            "median": 1.191174,
+            "min": 1.04128,
+            "max": 1.484085
+          },
+          "wire_sheets_per_sf": {
+            "count": 1,
+            "mean": 0.03125,
+            "median": 0.03125,
+            "min": 0.03125,
+            "max": 0.03125
+          },
+          "vapor_rolls_per_sf": {
+            "count": 21,
+            "mean": 0.000289,
+            "median": 0.000278,
+            "min": 0.000253,
+            "max": 0.000383
+          },
+          "labor_hours_per_sf": {
+            "count": 23,
+            "mean": 0.089015,
+            "median": 0.0675,
+            "min": 0.006319,
+            "max": 0.380767
+          }
+        },
+        "fallback_factors": {
+          "concrete_cy_per_sf": 0.021605,
+          "rebar_lf_per_sf": 1.2,
+          "wire_sheets_per_sf": 0.03125,
+          "vapor_rolls_per_sf": 0.000278,
+          "labor_hours_per_sf": 0.075
+        }
+      },
+      "draft_assumptions": [
+        "Factors use median values from 25 recent real concrete slab jobs for the matching slab thickness when available.",
+        "Concrete quantity is still geometry-driven by slab thickness; sampled median verifies actual calculator output.",
+        "Rebar, wire, vapor barrier, and labor quantities are sampled from calculator outputs and stored per sf.",
+        "If a factor has no positive samples, the extractor falls back to the documented geometric/default factor."
+      ]
+    }
+  },
+  {
+    "code": "BED-CONC-SLAB-8IN",
+    "description": "Concrete slab - 8 in thick, reinforced, vapor barrier, choose PSI",
+    "unit": "sf",
+    "rate": 15.91,
+    "currency": "USD",
+    "source": "bedrock_extraction",
+    "region": "BEDROCK-MAIN",
+    "classification": {
+      "masterformat": "03 30 00"
+    },
+    "components": [
+      {
+        "code": "MAT-CONCRETE-PRICE-PER-YARD",
+        "name": "Concrete price per cubic yard",
+        "type": "material",
+        "quantity": 0.027778,
+        "unit_rate": 225.0,
+        "cost": 6.25,
+        "unit": "cy",
+        "available_variants": [
+          {
+            "index": 0,
+            "label": "2000 psi",
+            "price": 213.0,
+            "price_per_unit": 213.0
+          },
+          {
+            "index": 1,
+            "label": "2500 psi",
+            "price": 216.0,
+            "price_per_unit": 216.0
+          },
+          {
+            "index": 2,
+            "label": "3000 psi",
+            "price": 219.0,
+            "price_per_unit": 219.0
+          },
+          {
+            "index": 3,
+            "label": "3500 psi",
+            "price": 222.0,
+            "price_per_unit": 222.0
+          },
+          {
+            "index": 4,
+            "label": "4000 psi",
+            "price": 225.0,
+            "price_per_unit": 225.0
+          },
+          {
+            "index": 5,
+            "label": "4500 psi",
+            "price": 228.0,
+            "price_per_unit": 228.0
+          },
+          {
+            "index": 6,
+            "label": "5000 psi",
+            "price": 231.0,
+            "price_per_unit": 231.0
+          }
+        ],
+        "available_variant_stats": {
+          "min": 213.0,
+          "max": 231.0,
+          "mean": 222.0,
+          "median": 222.0,
+          "unit": "cy",
+          "group": "Concrete PSI",
+          "count": 7
+        }
+      },
+      {
+        "code": "MAT-CONCRETE-WIRE-4-X-8-COST",
+        "name": "cost (in dollars) per 4x8 sheet",
+        "type": "material",
+        "quantity": 0.03125,
+        "unit_rate": 35.0,
+        "cost": 1.09,
+        "unit": "ea"
+      },
+      {
+        "code": "MAT-CONCRETE-REBAR-PRICE-PER-FOOT",
+        "name": "cost (in dollars) of one foot of rebar.",
+        "type": "material",
+        "quantity": 1.2,
+        "unit_rate": 0.8,
+        "cost": 0.96,
+        "unit": "lf"
+      },
+      {
+        "code": "MAT-CONCRETE-VAPOR-BARRIER-ROLL-COST",
+        "name": "Concrete vapor barrier roll cost",
+        "type": "material",
+        "quantity": 0.000278,
+        "unit_rate": 400.0,
+        "cost": 0.11,
+        "unit": "ea"
+      },
+      {
+        "code": "LAB-CONCRETE-LABORER-RATE",
+        "name": "Rate per laborer (dollars)",
+        "type": "labor",
+        "quantity": 0.075,
+        "unit_rate": 100.0,
+        "cost": 7.5,
+        "unit": "hr"
+      }
+    ],
+    "tags": [
+      "bedrock",
+      "concrete",
+      "slab",
+      "sample"
+    ],
+    "metadata": {
+      "variants": [
+        {
+          "index": 0,
+          "label": "2000 psi slab",
+          "full_label": "Concrete slab - 8 in, 2000 psi",
+          "price": 15.58,
+          "price_per_unit": 15.58
+        },
+        {
+          "index": 1,
+          "label": "2500 psi slab",
+          "full_label": "Concrete slab - 8 in, 2500 psi",
+          "price": 15.66,
+          "price_per_unit": 15.66
+        },
+        {
+          "index": 2,
+          "label": "3000 psi slab",
+          "full_label": "Concrete slab - 8 in, 3000 psi",
+          "price": 15.74,
+          "price_per_unit": 15.74
+        },
+        {
+          "index": 3,
+          "label": "3500 psi slab",
+          "full_label": "Concrete slab - 8 in, 3500 psi",
+          "price": 15.83,
+          "price_per_unit": 15.83
+        },
+        {
+          "index": 4,
+          "label": "4000 psi slab",
+          "full_label": "Concrete slab - 8 in, 4000 psi",
+          "price": 15.91,
+          "price_per_unit": 15.91
+        },
+        {
+          "index": 5,
+          "label": "4500 psi slab",
+          "full_label": "Concrete slab - 8 in, 4500 psi",
+          "price": 15.99,
+          "price_per_unit": 15.99
+        },
+        {
+          "index": 6,
+          "label": "5000 psi slab",
+          "full_label": "Concrete slab - 8 in, 5000 psi",
+          "price": 16.08,
+          "price_per_unit": 16.08
+        }
+      ],
+      "variant_stats": {
+        "min": 15.58,
+        "max": 16.08,
+        "mean": 15.83,
+        "median": 15.83,
+        "unit": "sf",
+        "group": "Concrete slab 8 in",
+        "count": 7
+      },
+      "sampled_factor_source": {
+        "thickness_in_inches": 8,
+        "sample_count": 1,
+        "job_ids": [
+          36565
+        ],
+        "factors": {
+          "concrete_cy_per_sf": {
+            "count": 1,
+            "mean": 0.035425,
+            "median": 0.035425,
+            "min": 0.035425,
+            "max": 0.035425
+          },
+          "rebar_lf_per_sf": {
+            "count": 1,
+            "mean": 1.275295,
+            "median": 1.275295,
+            "min": 1.275295,
+            "max": 1.275295
+          },
+          "wire_sheets_per_sf": {
+            "count": 0,
+            "mean": null,
+            "median": null,
+            "min": null,
+            "max": null
+          },
+          "vapor_rolls_per_sf": {
+            "count": 0,
+            "mean": null,
+            "median": null,
+            "min": null,
+            "max": null
+          },
+          "labor_hours_per_sf": {
+            "count": 1,
+            "mean": 0.182185,
+            "median": 0.182185,
+            "min": 0.182185,
+            "max": 0.182185
+          }
+        },
+        "fallback_factors": {
+          "concrete_cy_per_sf": 0.027778,
+          "rebar_lf_per_sf": 1.2,
+          "wire_sheets_per_sf": 0.03125,
+          "vapor_rolls_per_sf": 0.000278,
+          "labor_hours_per_sf": 0.075
+        }
+      },
+      "draft_assumptions": [
+        "Factors use median values from 1 recent real concrete slab jobs for the matching slab thickness when available.",
+        "Concrete quantity is still geometry-driven by slab thickness; sampled median verifies actual calculator output.",
+        "Rebar, wire, vapor barrier, and labor quantities are sampled from calculator outputs and stored per sf.",
+        "If a factor has no positive samples, the extractor falls back to the documented geometric/default factor."
+      ]
+    }
+  },
+  {
+    "code": "BED-CONC-FOOTER",
+    "description": "Concrete footer - reinforced trench, choose PSI",
+    "unit": "lf",
+    "rate": 19.06,
+    "currency": "USD",
+    "source": "bedrock_extraction",
+    "region": "BEDROCK-MAIN",
+    "classification": {
+      "masterformat": "03 31 13"
+    },
+    "components": [
+      {
+        "code": "MAT-CONCRETE-PRICE-PER-YARD",
+        "name": "Concrete price per cubic yard",
+        "type": "material",
+        "quantity": 0.068587,
+        "unit_rate": 225.0,
+        "cost": 15.43,
+        "unit": "cy",
+        "available_variants": [
+          {
+            "index": 0,
+            "label": "2000 psi",
+            "price": 213.0,
+            "price_per_unit": 213.0
+          },
+          {
+            "index": 1,
+            "label": "2500 psi",
+            "price": 216.0,
+            "price_per_unit": 216.0
+          },
+          {
+            "index": 2,
+            "label": "3000 psi",
+            "price": 219.0,
+            "price_per_unit": 219.0
+          },
+          {
+            "index": 3,
+            "label": "3500 psi",
+            "price": 222.0,
+            "price_per_unit": 222.0
+          },
+          {
+            "index": 4,
+            "label": "4000 psi",
+            "price": 225.0,
+            "price_per_unit": 225.0
+          },
+          {
+            "index": 5,
+            "label": "4500 psi",
+            "price": 228.0,
+            "price_per_unit": 228.0
+          },
+          {
+            "index": 6,
+            "label": "5000 psi",
+            "price": 231.0,
+            "price_per_unit": 231.0
+          }
+        ],
+        "available_variant_stats": {
+          "min": 213.0,
+          "max": 231.0,
+          "mean": 222.0,
+          "median": 222.0,
+          "unit": "cy",
+          "group": "Concrete PSI",
+          "count": 7
+        }
+      },
+      {
+        "code": "MAT-CONCRETE-REBAR-PRICE-PER-FOOT",
+        "name": "cost (in dollars) of one foot of rebar.",
+        "type": "material",
+        "quantity": 2.0,
+        "unit_rate": 0.8,
+        "cost": 1.6,
+        "unit": "lf"
+      },
+      {
+        "code": "MAT-CONCRETE-WIRE-4-X-8-COST",
+        "name": "cost (in dollars) per 4x8 sheet",
+        "type": "material",
+        "quantity": 0.05787,
+        "unit_rate": 35.0,
+        "cost": 2.03,
+        "unit": "ea"
+      }
+    ],
+    "tags": [
+      "bedrock",
+      "concrete"
+    ],
+    "metadata": {
+      "sampled_factor_source": {
+        "sample_count": 200,
+        "job_ids": [
+          38785,
+          38778,
+          38733,
+          38684,
+          38672,
+          38624,
+          38540,
+          38534,
+          38517,
+          38442,
+          38439,
+          38421,
+          38384,
+          38325,
+          38313,
+          38307,
+          38299,
+          38295,
+          38284,
+          38283,
+          38280,
+          38277,
+          38272,
+          38248,
+          38244,
+          38206,
+          38199,
+          38109,
+          38093,
+          38083,
+          38082,
+          38077,
+          38071,
+          38059,
+          38033,
+          38031,
+          38030,
+          38029,
+          38002,
+          38001,
+          37993,
+          37965,
+          37962,
+          37935,
+          37927,
+          37926,
+          37854,
+          37848,
+          37830,
+          37825,
+          37819,
+          37810,
+          37805,
+          37779,
+          37754,
+          37734,
+          37721,
+          37708,
+          37703,
+          37702,
+          37689,
+          37687,
+          37679,
+          37666,
+          37649,
+          37607,
+          37600,
+          37596,
+          37516,
+          37515,
+          37513,
+          37511,
+          37500,
+          37451,
+          37448,
+          37440,
+          37424,
+          37410,
+          37409,
+          37367,
+          37359,
+          37305,
+          37272,
+          37256,
+          37225,
+          37210,
+          37208,
+          37207,
+          37201,
+          37200,
+          37190,
+          37189,
+          37184,
+          37175,
+          37149,
+          37139,
+          37131,
+          37107,
+          37099,
+          37084,
+          37076,
+          37068,
+          37060,
+          37058,
+          37056,
+          37051,
+          36995,
+          36990,
+          36979,
+          36969,
+          36966,
+          36954,
+          36949,
+          36932,
+          36931,
+          36914,
+          36905,
+          36904,
+          36901,
+          36885,
+          36880,
+          36879,
+          36871,
+          36870,
+          36861,
+          36859,
+          36858,
+          36855,
+          36848,
+          36844,
+          36811,
+          36800,
+          36769,
+          36745,
+          36719,
+          36679,
+          36644,
+          36585,
+          36566,
+          36553,
+          36549,
+          36546,
+          36539,
+          36528,
+          36509,
+          36476,
+          36459,
+          36442,
+          36432,
+          36394,
+          36384,
+          36349,
+          36343,
+          36286,
+          36281,
+          36263,
+          36255,
+          36250,
+          36240,
+          36192,
+          36191,
+          36180,
+          36179,
+          36154,
+          36142,
+          36106,
+          36105,
+          36094,
+          36088,
+          36083,
+          36073,
+          36069,
+          36051,
+          36042,
+          36028,
+          36016,
+          35996,
+          35995,
+          35992,
+          35970,
+          35963,
+          35957,
+          35877,
+          35872,
+          35870,
+          35869,
+          35854,
+          35828,
+          35818,
+          35813,
+          35747,
+          35742,
+          35739,
+          35683,
+          35681,
+          35672,
+          35665,
+          35653,
+          35646,
+          35637
+        ],
+        "factors": {
+          "concrete_cy_per_lf": {
+            "count": 200,
+            "mean": 0.067987,
+            "median": 0.068587,
+            "min": 0.019753,
+            "max": 0.094967
+          },
+          "rebar_lf_per_lf": {
+            "count": 200,
+            "mean": 2.0,
+            "median": 2.0,
+            "min": 2.0,
+            "max": 2.0
+          },
+          "wire_pieces_per_lf": {
+            "count": 200,
+            "mean": 0.05692,
+            "median": 0.05787,
+            "min": 0.029167,
+            "max": 0.061504
+          }
+        },
+        "fallback_factors": {
+          "concrete_cy_per_lf": 0.074074,
+          "rebar_lf_per_lf": 2.0,
+          "wire_pieces_per_lf": 0.0625
+        }
+      },
+      "draft_assumptions": [
+        "Factors use median values from 200 recent real concrete jobs when available.",
+        "If a factor has no positive samples, falls back to geometric/default factor."
+      ],
+      "variants": [
+        {
+          "index": 0,
+          "label": "2000 psi footer",
+          "full_label": "Concrete footer, 2000 psi",
+          "price": 18.24,
+          "price_per_unit": 18.24
+        },
+        {
+          "index": 1,
+          "label": "2500 psi footer",
+          "full_label": "Concrete footer, 2500 psi",
+          "price": 18.44,
+          "price_per_unit": 18.44
+        },
+        {
+          "index": 2,
+          "label": "3000 psi footer",
+          "full_label": "Concrete footer, 3000 psi",
+          "price": 18.65,
+          "price_per_unit": 18.65
+        },
+        {
+          "index": 3,
+          "label": "3500 psi footer",
+          "full_label": "Concrete footer, 3500 psi",
+          "price": 18.86,
+          "price_per_unit": 18.86
+        },
+        {
+          "index": 4,
+          "label": "4000 psi footer",
+          "full_label": "Concrete footer, 4000 psi",
+          "price": 19.06,
+          "price_per_unit": 19.06
+        },
+        {
+          "index": 5,
+          "label": "4500 psi footer",
+          "full_label": "Concrete footer, 4500 psi",
+          "price": 19.27,
+          "price_per_unit": 19.27
+        },
+        {
+          "index": 6,
+          "label": "5000 psi footer",
+          "full_label": "Concrete footer, 5000 psi",
+          "price": 19.47,
+          "price_per_unit": 19.47
+        }
+      ],
+      "variant_stats": {
+        "min": 18.24,
+        "max": 19.47,
+        "mean": 18.86,
+        "median": 18.86,
+        "unit": "lf",
+        "group": "Concrete footer - reinforced trench, choose PSI",
+        "count": 7
+      }
+    }
+  },
+  {
+    "code": "BED-CONC-BLOCK-6IN",
+    "description": "Concrete block wall - 6in block (per course)",
+    "unit": "lf",
+    "rate": 2.63,
+    "currency": "USD",
+    "source": "bedrock_extraction",
+    "region": "BEDROCK-MAIN",
+    "classification": {
+      "masterformat": "04 22 00"
+    },
+    "components": [
+      {
+        "code": "MAT-CONCRETE-CEMENT-BLOCK-6-COST",
+        "name": "Concrete cement block 6 cost",
+        "type": "material",
+        "quantity": 0.75,
+        "unit_rate": 3.5,
+        "cost": 2.63,
+        "unit": "ea"
+      }
+    ],
+    "tags": [
+      "bedrock",
+      "concrete"
+    ],
+    "metadata": {
+      "sampled_factor_source": {
+        "sample_count": 0,
+        "job_ids": [
+
+        ],
+        "factors": {
+          "blocks_per_lf": {
+            "count": 0,
+            "mean": null,
+            "median": null,
+            "min": null,
+            "max": null
+          }
+        },
+        "fallback_factors": {
+          "blocks_per_lf": 0.75
+        }
+      },
+      "draft_assumptions": [
+        "Factors use median values from 0 recent real concrete jobs when available.",
+        "If a factor has no positive samples, falls back to geometric/default factor."
+      ]
+    }
+  },
+  {
+    "code": "BED-CONC-BLOCK-8IN",
+    "description": "Concrete block wall - 8in block (per course)",
+    "unit": "lf",
+    "rate": 2.63,
+    "currency": "USD",
+    "source": "bedrock_extraction",
+    "region": "BEDROCK-MAIN",
+    "classification": {
+      "masterformat": "04 22 00"
+    },
+    "components": [
+      {
+        "code": "MAT-CONCRETE-CEMENT-BLOCK-8-COST",
+        "name": "The price for each Cement Block",
+        "type": "material",
+        "quantity": 0.75,
+        "unit_rate": 3.5,
+        "cost": 2.63,
+        "unit": "ea"
+      }
+    ],
+    "tags": [
+      "bedrock",
+      "concrete"
+    ],
+    "metadata": {
+      "sampled_factor_source": {
+        "sample_count": 289,
+        "job_ids": [
+          38785,
+          38778,
+          38733,
+          38684,
+          38672,
+          38624,
+          38540,
+          38534,
+          38517,
+          38442,
+          38439,
+          38421,
+          38384,
+          38325,
+          38313,
+          38307,
+          38299,
+          38295,
+          38284,
+          38283,
+          38280,
+          38277,
+          38272,
+          38248,
+          38206,
+          38199,
+          38109,
+          38093,
+          38083,
+          38082,
+          38077,
+          38071,
+          38059,
+          38033,
+          38031,
+          38030,
+          38029,
+          38002,
+          38001,
+          37993,
+          37965,
+          37962,
+          37935,
+          37927,
+          37926,
+          37854,
+          37848,
+          37830,
+          37825,
+          37819,
+          37810,
+          37805,
+          37779,
+          37754,
+          37734,
+          37721,
+          37708,
+          37703,
+          37702,
+          37689,
+          37666,
+          37649,
+          37607,
+          37600,
+          37596,
+          37516,
+          37515,
+          37513,
+          37511,
+          37500,
+          37451,
+          37448,
+          37440,
+          37424,
+          37410,
+          37409,
+          37367,
+          37359,
+          37305,
+          37272,
+          37256,
+          37225,
+          37210,
+          37208,
+          37207,
+          37201,
+          37200,
+          37190,
+          37189,
+          37175,
+          37149,
+          37139,
+          37131,
+          37107,
+          37099,
+          37084,
+          37076,
+          37068,
+          37060,
+          37058,
+          37056,
+          37051,
+          36995,
+          36990,
+          36979,
+          36969,
+          36966,
+          36954,
+          36949,
+          36932,
+          36931,
+          36914,
+          36905,
+          36904,
+          36901,
+          36885,
+          36880,
+          36879,
+          36871,
+          36870,
+          36861,
+          36859,
+          36858,
+          36855,
+          36848,
+          36844,
+          36811,
+          36800,
+          36769,
+          36745,
+          36719,
+          36679,
+          36644,
+          36585,
+          36553,
+          36549,
+          36546,
+          36539,
+          36528,
+          36509,
+          36476,
+          36459,
+          36442,
+          36432,
+          36394,
+          36384,
+          36349,
+          36343,
+          36286,
+          36281,
+          36263,
+          36255,
+          36250,
+          36240,
+          36192,
+          36191,
+          36180,
+          36179,
+          36106,
+          36105,
+          36094,
+          36088,
+          36083,
+          36073,
+          36069,
+          36051,
+          36042,
+          36028,
+          36016,
+          35996,
+          35995,
+          35992,
+          35963,
+          35957,
+          35877,
+          35872,
+          35870,
+          35869,
+          35854,
+          35828,
+          35818,
+          35813,
+          35747,
+          35742,
+          35739,
+          35683,
+          35681,
+          35672,
+          35653,
+          35646,
+          35637,
+          35634,
+          35590,
+          35588,
+          35578,
+          35567,
+          35540,
+          35458,
+          35451,
+          35445,
+          35440,
+          35438,
+          35437,
+          35433,
+          35410,
+          35385,
+          35370,
+          35342,
+          35323,
+          35303,
+          35295,
+          35293,
+          35291,
+          35289,
+          35273,
+          35221,
+          35218,
+          35213,
+          35212,
+          35196,
+          35176,
+          35173,
+          35124,
+          35123,
+          35117,
+          35111,
+          35109,
+          35094,
+          35077,
+          35067,
+          35063,
+          35060,
+          35056,
+          35046,
+          35044,
+          35043,
+          35032,
+          35017,
+          35011,
+          35009,
+          34992,
+          34905,
+          34869,
+          34852,
+          34849,
+          34848,
+          34780,
+          34753,
+          34664,
+          34628,
+          34623,
+          34616,
+          34576,
+          34572,
+          34564,
+          34557,
+          34554,
+          34537,
+          34533,
+          34530,
+          34528,
+          34509,
+          34508,
+          34504,
+          34472,
+          34467,
+          34435,
+          34426,
+          34395,
+          34384,
+          34382,
+          34376,
+          34374,
+          34371,
+          34368,
+          34351,
+          34330,
+          34305,
+          34304,
+          34281,
+          34273,
+          34267,
+          34265,
+          34264,
+          34256,
+          34243,
+          34225,
+          34223,
+          34179
+        ],
+        "factors": {
+          "blocks_per_lf": {
+            "count": 289,
+            "mean": 0.75,
+            "median": 0.75,
+            "min": 0.75,
+            "max": 0.75
+          }
+        },
+        "fallback_factors": {
+          "blocks_per_lf": 0.75
+        }
+      },
+      "draft_assumptions": [
+        "Factors use median values from 289 recent real concrete jobs when available.",
+        "If a factor has no positive samples, falls back to geometric/default factor."
+      ]
+    }
+  },
+  {
+    "code": "BED-CONC-BLOCK-10IN",
+    "description": "Concrete block wall - 10in block (per course)",
+    "unit": "lf",
+    "rate": 3.19,
+    "currency": "USD",
+    "source": "bedrock_extraction",
+    "region": "BEDROCK-MAIN",
+    "classification": {
+      "masterformat": "04 22 00"
+    },
+    "components": [
+      {
+        "code": "MAT-CONCRETE-CEMENT-BLOCK-10-COST",
+        "name": "Concrete cement block 10 cost",
+        "type": "material",
+        "quantity": 0.75,
+        "unit_rate": 4.25,
+        "cost": 3.19,
+        "unit": "ea"
+      }
+    ],
+    "tags": [
+      "bedrock",
+      "concrete"
+    ],
+    "metadata": {
+      "sampled_factor_source": {
+        "sample_count": 7,
+        "job_ids": [
+          38244,
+          37184,
+          36566,
+          36154,
+          36142,
+          35665,
+          34292
+        ],
+        "factors": {
+          "blocks_per_lf": {
+            "count": 7,
+            "mean": 0.75,
+            "median": 0.75,
+            "min": 0.75,
+            "max": 0.75
+          }
+        },
+        "fallback_factors": {
+          "blocks_per_lf": 0.75
+        }
+      },
+      "draft_assumptions": [
+        "Factors use median values from 7 recent real concrete jobs when available.",
+        "If a factor has no positive samples, falls back to geometric/default factor."
+      ]
+    }
+  },
+  {
+    "code": "BED-CONC-BLOCK-12IN",
+    "description": "Concrete block wall - 12in block (per course)",
+    "unit": "lf",
+    "rate": 3.38,
+    "currency": "USD",
+    "source": "bedrock_extraction",
+    "region": "BEDROCK-MAIN",
+    "classification": {
+      "masterformat": "04 22 00"
+    },
+    "components": [
+      {
+        "code": "MAT-CONCRETE-CEMENT-BLOCK-12-COST",
+        "name": "Concrete cement block 12 cost",
+        "type": "material",
+        "quantity": 0.75,
+        "unit_rate": 4.5,
+        "cost": 3.38,
+        "unit": "ea"
+      }
+    ],
+    "tags": [
+      "bedrock",
+      "concrete"
+    ],
+    "metadata": {
+      "sampled_factor_source": {
+        "sample_count": 4,
+        "job_ids": [
+          35970,
+          35594,
+          35324,
+          34259
+        ],
+        "factors": {
+          "blocks_per_lf": {
+            "count": 4,
+            "mean": 0.75,
+            "median": 0.75,
+            "min": 0.75,
+            "max": 0.75
+          }
+        },
+        "fallback_factors": {
+          "blocks_per_lf": 0.75
+        }
+      },
+      "draft_assumptions": [
+        "Factors use median values from 4 recent real concrete jobs when available.",
+        "If a factor has no positive samples, falls back to geometric/default factor."
+      ]
+    }
+  },
+  {
+    "code": "BED-CONC-PIER",
+    "description": "Concrete pier - 18in diameter, reinforced, choose PSI",
+    "unit": "ea",
+    "rate": 65.17,
+    "currency": "USD",
+    "source": "bedrock_extraction",
+    "region": "BEDROCK-MAIN",
+    "classification": {
+      "masterformat": "03 31 16"
+    },
+    "components": [
+      {
+        "code": "MAT-CONCRETE-PRICE-PER-YARD",
+        "name": "Concrete price per cubic yard",
+        "type": "material",
+        "quantity": 0.277778,
+        "unit_rate": 225.0,
+        "cost": 62.5,
+        "unit": "cy",
+        "available_variants": [
+          {
+            "index": 0,
+            "label": "2000 psi",
+            "price": 213.0,
+            "price_per_unit": 213.0
+          },
+          {
+            "index": 1,
+            "label": "2500 psi",
+            "price": 216.0,
+            "price_per_unit": 216.0
+          },
+          {
+            "index": 2,
+            "label": "3000 psi",
+            "price": 219.0,
+            "price_per_unit": 219.0
+          },
+          {
+            "index": 3,
+            "label": "3500 psi",
+            "price": 222.0,
+            "price_per_unit": 222.0
+          },
+          {
+            "index": 4,
+            "label": "4000 psi",
+            "price": 225.0,
+            "price_per_unit": 225.0
+          },
+          {
+            "index": 5,
+            "label": "4500 psi",
+            "price": 228.0,
+            "price_per_unit": 228.0
+          },
+          {
+            "index": 6,
+            "label": "5000 psi",
+            "price": 231.0,
+            "price_per_unit": 231.0
+          }
+        ],
+        "available_variant_stats": {
+          "min": 213.0,
+          "max": 231.0,
+          "mean": 222.0,
+          "median": 222.0,
+          "unit": "cy",
+          "group": "Concrete PSI",
+          "count": 7
+        }
+      },
+      {
+        "code": "MAT-CONCRETE-REBAR-PRICE-PER-FOOT",
+        "name": "cost (in dollars) of one foot of rebar.",
+        "type": "material",
+        "quantity": 3.333333,
+        "unit_rate": 0.8,
+        "cost": 2.67,
+        "unit": "lf"
+      }
+    ],
+    "tags": [
+      "bedrock",
+      "concrete"
+    ],
+    "metadata": {
+      "sampled_factor_source": {
+        "sample_count": 200,
+        "job_ids": [
+          38563,
+          38446,
+          38298,
+          38163,
+          37552,
+          37291,
+          37098,
+          36985,
+          36906,
+          36807,
+          36770,
+          36747,
+          36513,
+          36317,
+          36285,
+          36224,
+          36190,
+          36176,
+          35611,
+          35597,
+          35442,
+          35296,
+          35239,
+          34978,
+          34887,
+          34837,
+          34823,
+          34723,
+          34674,
+          34454,
+          34421,
+          34415,
+          34344,
+          34329,
+          34307,
+          34252,
+          33996,
+          33973,
+          33889,
+          33857,
+          33810,
+          33798,
+          33735,
+          33663,
+          33609,
+          33588,
+          33478,
+          33426,
+          33410,
+          33408,
+          33267,
+          33165,
+          33153,
+          33150,
+          33143,
+          33116,
+          33089,
+          33079,
+          33026,
+          32956,
+          32903,
+          32800,
+          32729,
+          32706,
+          32661,
+          32606,
+          32605,
+          32335,
+          32333,
+          32182,
+          32041,
+          32036,
+          31993,
+          31968,
+          31909,
+          31747,
+          31697,
+          31468,
+          31356,
+          31330,
+          31280,
+          31231,
+          31188,
+          31171,
+          30955,
+          30866,
+          30746,
+          30683,
+          30603,
+          30517,
+          30493,
+          30274,
+          30122,
+          30007,
+          29930,
+          29853,
+          29808,
+          29752,
+          29700,
+          29519,
+          29389,
+          29367,
+          29357,
+          29235,
+          29123,
+          29056,
+          28912,
+          28892,
+          28825,
+          28818,
+          28762,
+          28748,
+          28618,
+          28569,
+          28483,
+          28251,
+          27932,
+          27794,
+          27692,
+          27581,
+          27467,
+          27386,
+          27259,
+          27254,
+          27130,
+          26889,
+          26857,
+          26797,
+          26742,
+          26554,
+          26397,
+          26354,
+          26320,
+          25832,
+          25726,
+          25630,
+          25574,
+          25543,
+          25438,
+          25190,
+          25125,
+          24933,
+          24841,
+          24750,
+          24654,
+          24576,
+          24569,
+          24547,
+          24533,
+          24460,
+          24156,
+          23941,
+          23885,
+          23466,
+          23446,
+          23249,
+          23226,
+          23036,
+          23030,
+          23012,
+          23011,
+          22942,
+          22869,
+          22453,
+          22219,
+          22055,
+          21965,
+          21916,
+          21831,
+          21774,
+          21728,
+          21699,
+          21611,
+          21605,
+          21539,
+          21488,
+          21448,
+          21414,
+          21411,
+          21404,
+          21389,
+          21322,
+          21299,
+          21233,
+          21188,
+          21162,
+          21097,
+          21078,
+          21032,
+          20991,
+          20988,
+          20986,
+          20977,
+          20829,
+          20810,
+          20759,
+          20728,
+          20609,
+          20601,
+          20449
+        ],
+        "factors": {
+          "concrete_cy_per_pier": {
+            "count": 200,
+            "mean": 0.302298,
+            "median": 0.277778,
+            "min": 0.104938,
+            "max": 3.753086
+          },
+          "rebar_lf_per_pier": {
+            "count": 200,
+            "mean": 5.547916,
+            "median": 3.333333,
+            "min": 1.833333,
+            "max": 25.333333
+          }
+        },
+        "fallback_factors": {
+          "concrete_cy_per_pier": 0.218166,
+          "rebar_lf_per_pier": 9.333333
+        }
+      },
+      "draft_assumptions": [
+        "Factors use median values from 200 recent real concrete jobs when available.",
+        "If a factor has no positive samples, falls back to geometric/default factor."
+      ],
+      "variants": [
+        {
+          "index": 0,
+          "label": "2000 psi pier",
+          "full_label": "Concrete pier, 2000 psi",
+          "price": 61.84,
+          "price_per_unit": 61.84
+        },
+        {
+          "index": 1,
+          "label": "2500 psi pier",
+          "full_label": "Concrete pier, 2500 psi",
+          "price": 62.67,
+          "price_per_unit": 62.67
+        },
+        {
+          "index": 2,
+          "label": "3000 psi pier",
+          "full_label": "Concrete pier, 3000 psi",
+          "price": 63.5,
+          "price_per_unit": 63.5
+        },
+        {
+          "index": 3,
+          "label": "3500 psi pier",
+          "full_label": "Concrete pier, 3500 psi",
+          "price": 64.34,
+          "price_per_unit": 64.34
+        },
+        {
+          "index": 4,
+          "label": "4000 psi pier",
+          "full_label": "Concrete pier, 4000 psi",
+          "price": 65.17,
+          "price_per_unit": 65.17
+        },
+        {
+          "index": 5,
+          "label": "4500 psi pier",
+          "full_label": "Concrete pier, 4500 psi",
+          "price": 66.0,
+          "price_per_unit": 66.0
+        },
+        {
+          "index": 6,
+          "label": "5000 psi pier",
+          "full_label": "Concrete pier, 5000 psi",
+          "price": 66.84,
+          "price_per_unit": 66.84
+        }
+      ],
+      "variant_stats": {
+        "min": 61.84,
+        "max": 66.84,
+        "mean": 64.34,
+        "median": 64.34,
+        "unit": "ea",
+        "group": "Concrete pier - 18in diameter, reinforced, choose PSI",
+        "count": 7
+      }
+    }
+  },
+  {
+    "code": "BED-CONC-APRON",
+    "description": "Concrete apron - 4in thick, reinforced, choose PSI",
+    "unit": "sf",
+    "rate": 3.58,
+    "currency": "USD",
+    "source": "bedrock_extraction",
+    "region": "BEDROCK-MAIN",
+    "classification": {
+      "masterformat": "03 30 00"
+    },
+    "components": [
+      {
+        "code": "MAT-CONCRETE-PRICE-PER-YARD",
+        "name": "Concrete price per cubic yard",
+        "type": "material",
+        "quantity": 0.012346,
+        "unit_rate": 225.0,
+        "cost": 2.78,
+        "unit": "cy",
+        "available_variants": [
+          {
+            "index": 0,
+            "label": "2000 psi",
+            "price": 213.0,
+            "price_per_unit": 213.0
+          },
+          {
+            "index": 1,
+            "label": "2500 psi",
+            "price": 216.0,
+            "price_per_unit": 216.0
+          },
+          {
+            "index": 2,
+            "label": "3000 psi",
+            "price": 219.0,
+            "price_per_unit": 219.0
+          },
+          {
+            "index": 3,
+            "label": "3500 psi",
+            "price": 222.0,
+            "price_per_unit": 222.0
+          },
+          {
+            "index": 4,
+            "label": "4000 psi",
+            "price": 225.0,
+            "price_per_unit": 225.0
+          },
+          {
+            "index": 5,
+            "label": "4500 psi",
+            "price": 228.0,
+            "price_per_unit": 228.0
+          },
+          {
+            "index": 6,
+            "label": "5000 psi",
+            "price": 231.0,
+            "price_per_unit": 231.0
+          }
+        ],
+        "available_variant_stats": {
+          "min": 213.0,
+          "max": 231.0,
+          "mean": 222.0,
+          "median": 222.0,
+          "unit": "cy",
+          "group": "Concrete PSI",
+          "count": 7
+        }
+      },
+      {
+        "code": "MAT-CONCRETE-REBAR-PRICE-PER-FOOT",
+        "name": "cost (in dollars) of one foot of rebar.",
+        "type": "material",
+        "quantity": 1.0,
+        "unit_rate": 0.8,
+        "cost": 0.8,
+        "unit": "lf"
+      }
+    ],
+    "tags": [
+      "bedrock",
+      "concrete"
+    ],
+    "metadata": {
+      "sampled_factor_source": {
+        "sample_count": 147,
+        "job_ids": [
+          38785,
+          38608,
+          38528,
+          38438,
+          38313,
+          38284,
+          38277,
+          38199,
+          38113,
+          38110,
+          38071,
+          38033,
+          38031,
+          38030,
+          38001,
+          37965,
+          37962,
+          37927,
+          37926,
+          37889,
+          37854,
+          37848,
+          37830,
+          37819,
+          37805,
+          37734,
+          37727,
+          37721,
+          37708,
+          37702,
+          37649,
+          37596,
+          37516,
+          37515,
+          37500,
+          37483,
+          37409,
+          37370,
+          37305,
+          37275,
+          37264,
+          37189,
+          37175,
+          37076,
+          37051,
+          36949,
+          36901,
+          36870,
+          36848,
+          36801,
+          36800,
+          36745,
+          36719,
+          36674,
+          36634,
+          36596,
+          36547,
+          36509,
+          36504,
+          36394,
+          36343,
+          36281,
+          36180,
+          36179,
+          36113,
+          36017,
+          35996,
+          35995,
+          35965,
+          35953,
+          35922,
+          35818,
+          35813,
+          35805,
+          35634,
+          35590,
+          35573,
+          35567,
+          35507,
+          35492,
+          35475,
+          35452,
+          35451,
+          35438,
+          35436,
+          35426,
+          35392,
+          35344,
+          35342,
+          35295,
+          35273,
+          35213,
+          34794,
+          34722,
+          34705,
+          34664,
+          34567,
+          34554,
+          34351,
+          34281,
+          34273,
+          34250,
+          34162,
+          34061,
+          33879,
+          33811,
+          33795,
+          33788,
+          33782,
+          33776,
+          33774,
+          33692,
+          33632,
+          33631,
+          33449,
+          33443,
+          33436,
+          33431,
+          33427,
+          33393,
+          33236,
+          33128,
+          33124,
+          33031,
+          32968,
+          32942,
+          32926,
+          32908,
+          32869,
+          32843,
+          32822,
+          32723,
+          32722,
+          32673,
+          32666,
+          32448,
+          32345,
+          32334,
+          32280,
+          32205,
+          32195,
+          32189,
+          32184,
+          32062,
+          32004,
+          29533,
+          16620
+        ],
+        "factors": {
+          "concrete_cy_per_sf": {
+            "count": 147,
+            "mean": 0.01285,
+            "median": 0.012346,
+            "min": 0.012346,
+            "max": 0.024691
+          },
+          "rebar_lf_per_sf": {
+            "count": 147,
+            "mean": 1.0,
+            "median": 1.0,
+            "min": 1.0,
+            "max": 1.0
+          }
+        },
+        "fallback_factors": {
+          "concrete_cy_per_sf": 0.012346,
+          "rebar_lf_per_sf": 0.5
+        }
+      },
+      "draft_assumptions": [
+        "Factors use median values from 147 recent real concrete jobs when available.",
+        "If a factor has no positive samples, falls back to geometric/default factor."
+      ],
+      "variants": [
+        {
+          "index": 0,
+          "label": "2000 psi apron",
+          "full_label": "Concrete apron, 2000 psi",
+          "price": 3.43,
+          "price_per_unit": 3.43
+        },
+        {
+          "index": 1,
+          "label": "2500 psi apron",
+          "full_label": "Concrete apron, 2500 psi",
+          "price": 3.47,
+          "price_per_unit": 3.47
+        },
+        {
+          "index": 2,
+          "label": "3000 psi apron",
+          "full_label": "Concrete apron, 3000 psi",
+          "price": 3.5,
+          "price_per_unit": 3.5
+        },
+        {
+          "index": 3,
+          "label": "3500 psi apron",
+          "full_label": "Concrete apron, 3500 psi",
+          "price": 3.54,
+          "price_per_unit": 3.54
+        },
+        {
+          "index": 4,
+          "label": "4000 psi apron",
+          "full_label": "Concrete apron, 4000 psi",
+          "price": 3.58,
+          "price_per_unit": 3.58
+        },
+        {
+          "index": 5,
+          "label": "4500 psi apron",
+          "full_label": "Concrete apron, 4500 psi",
+          "price": 3.61,
+          "price_per_unit": 3.61
+        },
+        {
+          "index": 6,
+          "label": "5000 psi apron",
+          "full_label": "Concrete apron, 5000 psi",
+          "price": 3.65,
+          "price_per_unit": 3.65
+        }
+      ],
+      "variant_stats": {
+        "min": 3.43,
+        "max": 3.65,
+        "mean": 3.54,
+        "median": 3.54,
+        "unit": "sf",
+        "group": "Concrete apron - 4in thick, reinforced, choose PSI",
+        "count": 7
+      }
+    }
+  },
+  {
+    "code": "BED-CONC-EDGE",
+    "description": "Graduated slab edge - thickened, choose PSI",
+    "unit": "lf",
+    "rate": 11.11,
+    "currency": "USD",
+    "source": "bedrock_extraction",
+    "region": "BEDROCK-MAIN",
+    "classification": {
+      "masterformat": "03 30 00"
+    },
+    "components": [
+      {
+        "code": "MAT-CONCRETE-PRICE-PER-YARD",
+        "name": "Concrete price per cubic yard",
+        "type": "material",
+        "quantity": 0.049383,
+        "unit_rate": 225.0,
+        "cost": 11.11,
+        "unit": "cy",
+        "available_variants": [
+          {
+            "index": 0,
+            "label": "2000 psi",
+            "price": 213.0,
+            "price_per_unit": 213.0
+          },
+          {
+            "index": 1,
+            "label": "2500 psi",
+            "price": 216.0,
+            "price_per_unit": 216.0
+          },
+          {
+            "index": 2,
+            "label": "3000 psi",
+            "price": 219.0,
+            "price_per_unit": 219.0
+          },
+          {
+            "index": 3,
+            "label": "3500 psi",
+            "price": 222.0,
+            "price_per_unit": 222.0
+          },
+          {
+            "index": 4,
+            "label": "4000 psi",
+            "price": 225.0,
+            "price_per_unit": 225.0
+          },
+          {
+            "index": 5,
+            "label": "4500 psi",
+            "price": 228.0,
+            "price_per_unit": 228.0
+          },
+          {
+            "index": 6,
+            "label": "5000 psi",
+            "price": 231.0,
+            "price_per_unit": 231.0
+          }
+        ],
+        "available_variant_stats": {
+          "min": 213.0,
+          "max": 231.0,
+          "mean": 222.0,
+          "median": 222.0,
+          "unit": "cy",
+          "group": "Concrete PSI",
+          "count": 7
+        }
+      }
+    ],
+    "tags": [
+      "bedrock",
+      "concrete"
+    ],
+    "metadata": {
+      "sampled_factor_source": {
+        "sample_count": 200,
+        "job_ids": [
+          38775,
+          38528,
+          38454,
+          38362,
+          38354,
+          38338,
+          38110,
+          38060,
+          38010,
+          37958,
+          37940,
+          37889,
+          37792,
+          37727,
+          37714,
+          37677,
+          37627,
+          37621,
+          37579,
+          37483,
+          37445,
+          37444,
+          37439,
+          37370,
+          37366,
+          37321,
+          37275,
+          37202,
+          37063,
+          37042,
+          37036,
+          36933,
+          36808,
+          36801,
+          36695,
+          36681,
+          36670,
+          36661,
+          36634,
+          36603,
+          36601,
+          36548,
+          36547,
+          36458,
+          36429,
+          36342,
+          36314,
+          36288,
+          36269,
+          36222,
+          36113,
+          36017,
+          35981,
+          35965,
+          35953,
+          35922,
+          35918,
+          35904,
+          35902,
+          35809,
+          35802,
+          35800,
+          35736,
+          35731,
+          35691,
+          35651,
+          35642,
+          35576,
+          35573,
+          35558,
+          35520,
+          35517,
+          35507,
+          35475,
+          35452,
+          35450,
+          35436,
+          35392,
+          35365,
+          35344,
+          35332,
+          35318,
+          35314,
+          35312,
+          35307,
+          35261,
+          35233,
+          35194,
+          35160,
+          35084,
+          35036,
+          35034,
+          35026,
+          34994,
+          34979,
+          34967,
+          34937,
+          34878,
+          34722,
+          34710,
+          34707,
+          34705,
+          34630,
+          34609,
+          34567,
+          34440,
+          34418,
+          34392,
+          34367,
+          34356,
+          34299,
+          34221,
+          34205,
+          34159,
+          34141,
+          34104,
+          34077,
+          34046,
+          34016,
+          34014,
+          34009,
+          33994,
+          33879,
+          33848,
+          33811,
+          33795,
+          33782,
+          33772,
+          33760,
+          33741,
+          33662,
+          33657,
+          33554,
+          33539,
+          33449,
+          33443,
+          33411,
+          33397,
+          33389,
+          33361,
+          33245,
+          33224,
+          33149,
+          33145,
+          33015,
+          32949,
+          32942,
+          32815,
+          32793,
+          32790,
+          32750,
+          32746,
+          32722,
+          32673,
+          32396,
+          32334,
+          32312,
+          32220,
+          32205,
+          32189,
+          32184,
+          32165,
+          32077,
+          32028,
+          32009,
+          31837,
+          31836,
+          31822,
+          31788,
+          31783,
+          31757,
+          31701,
+          31690,
+          31610,
+          31586,
+          31582,
+          31549,
+          31465,
+          31448,
+          31434,
+          31407,
+          31402,
+          31338,
+          31299,
+          31265,
+          31238,
+          31230,
+          31226,
+          31167,
+          31149,
+          31144,
+          31122,
+          31100,
+          31065,
+          31060,
+          31040,
+          31017,
+          30990,
+          30959,
+          30936
+        ],
+        "factors": {
+          "concrete_cy_per_lf": {
+            "count": 200,
+            "mean": 0.058107,
+            "median": 0.049383,
+            "min": 0.024691,
+            "max": 0.197531
+          }
+        },
+        "fallback_factors": {
+          "concrete_cy_per_lf": 0.049383
+        }
+      },
+      "draft_assumptions": [
+        "Factors use median values from 200 recent real concrete jobs when available.",
+        "If a factor has no positive samples, falls back to geometric/default factor."
+      ],
+      "variants": [
+        {
+          "index": 0,
+          "label": "2000 psi edge",
+          "full_label": "Graduated slab edge, 2000 psi",
+          "price": 10.52,
+          "price_per_unit": 10.52
+        },
+        {
+          "index": 1,
+          "label": "2500 psi edge",
+          "full_label": "Graduated slab edge, 2500 psi",
+          "price": 10.67,
+          "price_per_unit": 10.67
+        },
+        {
+          "index": 2,
+          "label": "3000 psi edge",
+          "full_label": "Graduated slab edge, 3000 psi",
+          "price": 10.81,
+          "price_per_unit": 10.81
+        },
+        {
+          "index": 3,
+          "label": "3500 psi edge",
+          "full_label": "Graduated slab edge, 3500 psi",
+          "price": 10.96,
+          "price_per_unit": 10.96
+        },
+        {
+          "index": 4,
+          "label": "4000 psi edge",
+          "full_label": "Graduated slab edge, 4000 psi",
+          "price": 11.11,
+          "price_per_unit": 11.11
+        },
+        {
+          "index": 5,
+          "label": "4500 psi edge",
+          "full_label": "Graduated slab edge, 4500 psi",
+          "price": 11.26,
+          "price_per_unit": 11.26
+        },
+        {
+          "index": 6,
+          "label": "5000 psi edge",
+          "full_label": "Graduated slab edge, 5000 psi",
+          "price": 11.41,
+          "price_per_unit": 11.41
+        }
+      ],
+      "variant_stats": {
+        "min": 10.52,
+        "max": 11.41,
+        "mean": 10.96,
+        "median": 10.96,
+        "unit": "lf",
+        "group": "Graduated slab edge - thickened, choose PSI",
+        "count": 7
+      }
+    }
+  },
+  {
+    "code": "BED-CONC-CORE-FILL",
+    "description": "Block core fill - concrete and rebar, choose PSI",
+    "unit": "lf",
+    "rate": 19.32,
+    "currency": "USD",
+    "source": "bedrock_extraction",
+    "region": "BEDROCK-MAIN",
+    "classification": {
+      "masterformat": "03 30 00"
+    },
+    "components": [
+      {
+        "code": "MAT-CONCRETE-PRICE-PER-YARD",
+        "name": "Concrete price per cubic yard",
+        "type": "material",
+        "quantity": 0.076389,
+        "unit_rate": 225.0,
+        "cost": 17.19,
+        "unit": "cy",
+        "available_variants": [
+          {
+            "index": 0,
+            "label": "2000 psi",
+            "price": 213.0,
+            "price_per_unit": 213.0
+          },
+          {
+            "index": 1,
+            "label": "2500 psi",
+            "price": 216.0,
+            "price_per_unit": 216.0
+          },
+          {
+            "index": 2,
+            "label": "3000 psi",
+            "price": 219.0,
+            "price_per_unit": 219.0
+          },
+          {
+            "index": 3,
+            "label": "3500 psi",
+            "price": 222.0,
+            "price_per_unit": 222.0
+          },
+          {
+            "index": 4,
+            "label": "4000 psi",
+            "price": 225.0,
+            "price_per_unit": 225.0
+          },
+          {
+            "index": 5,
+            "label": "4500 psi",
+            "price": 228.0,
+            "price_per_unit": 228.0
+          },
+          {
+            "index": 6,
+            "label": "5000 psi",
+            "price": 231.0,
+            "price_per_unit": 231.0
+          }
+        ],
+        "available_variant_stats": {
+          "min": 213.0,
+          "max": 231.0,
+          "mean": 222.0,
+          "median": 222.0,
+          "unit": "cy",
+          "group": "Concrete PSI",
+          "count": 7
+        }
+      },
+      {
+        "code": "MAT-CONCRETE-REBAR-PRICE-PER-FOOT",
+        "name": "cost (in dollars) of one foot of rebar.",
+        "type": "material",
+        "quantity": 2.666667,
+        "unit_rate": 0.8,
+        "cost": 2.13,
+        "unit": "lf"
+      }
+    ],
+    "tags": [
+      "bedrock",
+      "concrete"
+    ],
+    "metadata": {
+      "sampled_factor_source": {
+        "sample_count": 200,
+        "job_ids": [
+          38778,
+          38684,
+          38672,
+          38624,
+          38540,
+          38534,
+          38517,
+          38442,
+          38299,
+          38284,
+          38280,
+          38248,
+          38199,
+          38083,
+          38077,
+          38071,
+          38059,
+          38029,
+          37993,
+          37935,
+          37825,
+          37810,
+          37805,
+          37703,
+          37687,
+          37666,
+          37607,
+          37513,
+          37511,
+          37451,
+          37440,
+          37424,
+          37410,
+          37272,
+          37256,
+          37225,
+          37207,
+          37201,
+          37190,
+          37184,
+          37131,
+          37107,
+          37099,
+          37084,
+          37058,
+          36954,
+          36914,
+          36905,
+          36904,
+          36885,
+          36880,
+          36870,
+          36811,
+          36644,
+          36566,
+          36509,
+          36442,
+          36384,
+          36263,
+          36191,
+          36180,
+          36154,
+          36142,
+          36088,
+          36083,
+          36028,
+          36016,
+          35970,
+          35957,
+          35877,
+          35818,
+          35739,
+          35683,
+          35637,
+          35634,
+          35594,
+          35590,
+          35588,
+          35540,
+          35437,
+          35324,
+          35291,
+          35289,
+          35273,
+          35173,
+          35124,
+          35123,
+          35111,
+          35109,
+          35094,
+          35063,
+          35046,
+          35044,
+          35043,
+          35009,
+          34905,
+          34849,
+          34623,
+          34608,
+          34572,
+          34564,
+          34557,
+          34554,
+          34537,
+          34509,
+          34508,
+          34504,
+          34467,
+          34426,
+          34382,
+          34376,
+          34305,
+          34292,
+          34267,
+          34265,
+          34259,
+          34243,
+          34223,
+          34179,
+          34124,
+          34092,
+          34061,
+          34036,
+          34006,
+          33940,
+          33927,
+          33913,
+          33871,
+          33846,
+          33814,
+          33788,
+          33774,
+          33773,
+          33770,
+          33692,
+          33683,
+          33648,
+          33631,
+          33601,
+          33553,
+          33175,
+          32809,
+          32685,
+          32676,
+          32501,
+          32497,
+          32493,
+          32485,
+          32406,
+          32394,
+          32393,
+          32391,
+          32389,
+          32270,
+          32195,
+          32161,
+          32152,
+          32112,
+          32071,
+          32026,
+          32004,
+          31944,
+          31918,
+          31801,
+          31746,
+          31708,
+          31587,
+          31573,
+          31450,
+          31426,
+          31366,
+          31346,
+          31323,
+          31315,
+          31308,
+          31236,
+          31224,
+          31178,
+          31038,
+          30937,
+          30665,
+          30658,
+          30568,
+          30365,
+          30183,
+          30160,
+          30032,
+          30004,
+          30001,
+          30000,
+          29770,
+          29676,
+          29565,
+          29515,
+          29459,
+          29421,
+          29287,
+          29286,
+          29187,
+          29185
+        ],
+        "factors": {
+          "core_fill_cy_per_lf": {
+            "count": 200,
+            "mean": 0.084582,
+            "median": 0.076389,
+            "min": 0.008333,
+            "max": 0.241667
+          },
+          "core_rebar_lf_per_lf": {
+            "count": 186,
+            "mean": 3.600299,
+            "median": 2.666667,
+            "min": 0.333333,
+            "max": 54.0
+          }
+        },
+        "fallback_factors": {
+          "core_fill_cy_per_lf": 0.0185,
+          "core_rebar_lf_per_lf": 1.0
+        }
+      },
+      "draft_assumptions": [
+        "Factors use median values from 200 recent real concrete jobs when available.",
+        "If a factor has no positive samples, falls back to geometric/default factor."
+      ],
+      "variants": [
+        {
+          "index": 0,
+          "label": "2000 psi core fill",
+          "full_label": "Block core fill, 2000 psi",
+          "price": 18.4,
+          "price_per_unit": 18.4
+        },
+        {
+          "index": 1,
+          "label": "2500 psi core fill",
+          "full_label": "Block core fill, 2500 psi",
+          "price": 18.63,
+          "price_per_unit": 18.63
+        },
+        {
+          "index": 2,
+          "label": "3000 psi core fill",
+          "full_label": "Block core fill, 3000 psi",
+          "price": 18.86,
+          "price_per_unit": 18.86
+        },
+        {
+          "index": 3,
+          "label": "3500 psi core fill",
+          "full_label": "Block core fill, 3500 psi",
+          "price": 19.09,
+          "price_per_unit": 19.09
+        },
+        {
+          "index": 4,
+          "label": "4000 psi core fill",
+          "full_label": "Block core fill, 4000 psi",
+          "price": 19.32,
+          "price_per_unit": 19.32
+        },
+        {
+          "index": 5,
+          "label": "4500 psi core fill",
+          "full_label": "Block core fill, 4500 psi",
+          "price": 19.55,
+          "price_per_unit": 19.55
+        },
+        {
+          "index": 6,
+          "label": "5000 psi core fill",
+          "full_label": "Block core fill, 5000 psi",
+          "price": 19.78,
+          "price_per_unit": 19.78
+        }
+      ],
+      "variant_stats": {
+        "min": 18.4,
+        "max": 19.78,
+        "mean": 19.09,
+        "median": 19.09,
+        "unit": "lf",
+        "group": "Block core fill - concrete and rebar, choose PSI",
+        "count": 7
+      }
+    }
+  },
+  {
+    "code": "BED-CONC-TOP-BLOCK",
+    "description": "Top solid block course",
+    "unit": "lf",
+    "rate": 2.63,
+    "currency": "USD",
+    "source": "bedrock_extraction",
+    "region": "BEDROCK-MAIN",
+    "classification": {
+      "masterformat": "04 22 00"
+    },
+    "components": [
+      {
+        "code": "MAT-CONCRETE-CEMENT-BLOCK-6-COST",
+        "name": "Concrete cement block 6 cost",
+        "type": "material",
+        "quantity": 0.75,
+        "unit_rate": 3.5,
+        "cost": 2.63,
+        "unit": "ea"
+      }
+    ],
+    "tags": [
+      "bedrock",
+      "concrete"
+    ],
+    "metadata": {
+      "sampled_factor_source": {
+        "sample_count": 200,
+        "job_ids": [
+          38785,
+          38733,
+          38439,
+          38384,
+          38325,
+          38313,
+          38307,
+          38295,
+          38284,
+          38206,
+          38199,
+          38109,
+          38093,
+          38082,
+          38077,
+          38071,
+          38059,
+          38033,
+          38031,
+          38030,
+          38001,
+          37965,
+          37962,
+          37935,
+          37927,
+          37926,
+          37854,
+          37848,
+          37830,
+          37819,
+          37805,
+          37754,
+          37734,
+          37721,
+          37702,
+          37689,
+          37666,
+          37649,
+          37596,
+          37516,
+          37515,
+          37500,
+          37448,
+          37440,
+          37409,
+          37359,
+          37305,
+          37210,
+          37208,
+          37200,
+          37189,
+          37175,
+          37149,
+          37056,
+          37051,
+          36949,
+          36932,
+          36901,
+          36879,
+          36871,
+          36858,
+          36800,
+          36679,
+          36585,
+          36546,
+          36509,
+          36459,
+          36432,
+          36394,
+          36349,
+          36343,
+          36286,
+          36281,
+          36250,
+          36240,
+          36192,
+          36180,
+          36179,
+          36088,
+          35995,
+          35957,
+          35869,
+          35854,
+          35828,
+          35818,
+          35813,
+          35742,
+          35683,
+          35653,
+          35646,
+          35634,
+          35594,
+          35590,
+          35588,
+          35578,
+          35567,
+          35451,
+          35445,
+          35385,
+          35342,
+          35295,
+          35293,
+          35291,
+          35212,
+          35176,
+          35173,
+          35124,
+          35077,
+          35067,
+          35060,
+          35032,
+          35017,
+          35011,
+          34869,
+          34852,
+          34848,
+          34780,
+          34628,
+          34623,
+          34576,
+          34530,
+          34472,
+          34435,
+          34330,
+          34305,
+          34281,
+          34273,
+          34259,
+          34243,
+          34225,
+          34179,
+          34124,
+          34092,
+          34036,
+          33975,
+          33957,
+          33873,
+          33871,
+          33846,
+          33814,
+          33788,
+          33774,
+          33770,
+          33692,
+          33683,
+          33681,
+          33649,
+          33648,
+          33631,
+          33601,
+          33585,
+          33553,
+          33402,
+          33236,
+          33198,
+          33182,
+          33178,
+          33128,
+          33124,
+          33112,
+          33096,
+          33095,
+          33031,
+          33027,
+          33020,
+          33014,
+          32983,
+          32968,
+          32927,
+          32926,
+          32908,
+          32869,
+          32843,
+          32822,
+          32770,
+          32735,
+          32723,
+          32685,
+          32676,
+          32666,
+          32505,
+          32463,
+          32448,
+          32433,
+          32394,
+          32345,
+          32344,
+          32318,
+          32310,
+          32288,
+          32287,
+          32282,
+          32280,
+          32261,
+          32195,
+          32181,
+          32161,
+          32157,
+          32147,
+          32137
+        ],
+        "factors": {
+          "blocks_per_lf": {
+            "count": 200,
+            "mean": 0.76875,
+            "median": 0.75,
+            "min": 0.75,
+            "max": 1.5
+          }
+        },
+        "fallback_factors": {
+          "blocks_per_lf": 0.75
+        }
+      },
+      "draft_assumptions": [
+        "Factors use median values from 200 recent real concrete jobs when available.",
+        "If a factor has no positive samples, falls back to geometric/default factor."
+      ]
+    }
+  },
+  {
+    "code": "BED-CONC-DRIVING",
+    "description": "Driving labor and truck cost per trip",
+    "unit": "trip",
+    "rate": 214.5,
+    "currency": "USD",
+    "source": "bedrock_extraction",
+    "region": "BEDROCK-MAIN",
+    "classification": {
+      "masterformat": "01 50 00"
+    },
+    "components": [
+      {
+        "code": "LAB-DRIVING-LABORER-RATE",
+        "name": "Driving laborer",
+        "type": "labor",
+        "quantity": 1.0,
+        "unit_rate": 85.0,
+        "cost": 85.0,
+        "unit": "hr"
+      },
+      {
+        "code": "EQP-TRUCK-DUAL-AXLE-TIME",
+        "name": "Dual Axle dump truck - time",
+        "type": "equipment",
+        "quantity": 1.0,
+        "unit_rate": 125.0,
+        "cost": 125.0,
+        "unit": "hr"
+      },
+      {
+        "code": "EQP-TRUCK-DUAL-AXLE-MILE",
+        "name": "Dual Axle dump truck - mileage",
+        "type": "equipment",
+        "quantity": 1.0,
+        "unit_rate": 4.5,
+        "cost": 4.5,
+        "unit": "mi"
+      }
+    ],
+    "tags": [
+      "bedrock",
+      "concrete",
+      "driving"
+    ],
+    "metadata": {
+      "draft_assumptions": [
+        "Components are unit rates with qty=1; actual trip quantity varies by job distance and duration."
+      ]
+    }
+  },
+  {
+    "code": "BED-CONC-LABOR",
+    "description": "Working labor (on-site crew) per hour",
+    "unit": "hr",
+    "rate": 100.0,
+    "currency": "USD",
+    "source": "bedrock_extraction",
+    "region": "BEDROCK-MAIN",
+    "classification": {
+      "masterformat": "01 50 00"
+    },
+    "components": [
+      {
+        "code": "LAB-CONCRETE-LABORER-RATE",
+        "name": "Concrete laborer",
+        "type": "labor",
+        "quantity": 1.0,
+        "unit_rate": 100.0,
+        "cost": 100.0,
+        "unit": "hr"
+      }
+    ],
+    "tags": [
+      "bedrock",
+      "concrete",
+      "labor"
+    ],
+    "metadata": {
+      "draft_assumptions": [
+        "Rate equals LAB-CONCRETE-LABORER-RATE; crew size applied at BOQ."
+      ]
+    }
+  },
+  {
+    "code": "BED-CONC-ACCESS",
+    "description": "Distance from access point (linear foot of access path)",
+    "unit": "lf",
+    "rate": 2.0,
+    "currency": "USD",
+    "source": "bedrock_extraction",
+    "region": "BEDROCK-MAIN",
+    "classification": {
+      "masterformat": "31 23 00"
+    },
+    "components": [
+      {
+        "code": "MAT-DISTANCE-FROM-ACCESS-COST-PER-FOOT",
+        "name": "Distance from access cost per foot",
+        "type": "material",
+        "quantity": 1.0,
+        "unit_rate": 2.0,
+        "cost": 2.0,
+        "unit": "lf"
+      }
+    ],
+    "tags": [
+      "bedrock",
+      "concrete",
+      "access"
+    ],
+    "metadata": {
+      "draft_assumptions": [
+        "Cost per lf of access path; quantity equals job distance_from_access."
+      ]
+    }
+  },
+  {
+    "code": "BED-CONC-MAT-GATHER",
+    "description": "Material gathering labor per hour",
+    "unit": "hr",
+    "rate": 100.0,
+    "currency": "USD",
+    "source": "bedrock_extraction",
+    "region": "BEDROCK-MAIN",
+    "classification": {
+      "masterformat": "01 50 00"
+    },
+    "components": [
+      {
+        "code": "LAB-CONCRETE-LABORER-RATE",
+        "name": "Concrete laborer",
+        "type": "labor",
+        "quantity": 1.0,
+        "unit_rate": 100.0,
+        "cost": 100.0,
+        "unit": "hr"
+      }
+    ],
+    "tags": [
+      "bedrock",
+      "concrete",
+      "material_gathering"
+    ],
+    "metadata": {
+      "draft_assumptions": [
+        "Rate equals LAB-CONCRETE-LABORER-RATE; hours applied at BOQ."
+      ]
+    }
+  }
+]

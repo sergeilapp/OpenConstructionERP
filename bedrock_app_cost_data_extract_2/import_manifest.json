@@ -1,0 +1,67 @@
+{
+  "package": "bedrock_app_cost_data_extract_2",
+  "generated_at": "2026-05-28T19:50:25+00:00",
+  "source": "bedrock_extraction_v2",
+  "region": "BEDROCK-MAIN",
+  "currency": "USD",
+  "cleanup_mode": {
+    "v2_cleanup_supported": true,
+    "attempt1_cleanup_supported": true,
+    "attempt1_cleanup_requires_separate_approval": true
+  },
+  "counts": {
+    "catalog_resources": 648,
+    "cost_items": 30,
+    "assemblies": 6,
+    "conversion_wrappers": 11,
+    "needs_design_review": 6
+  },
+  "import_order": [
+    "catalog_resources.json",
+    "cost_items.json",
+    "assemblies.json"
+  ],
+  "files": {
+    "catalog_resources.json": {
+      "sha256": "f15d30be057b45f0d8dfe69d6da3bf9c6b411f1ccd248fa5c8fc6b6b17995265",
+      "bytes": 727424
+    },
+    "cost_items.json": {
+      "sha256": "aa3124d22eae3d4a75a07abdc6928070c93e4ae780943320693ba333b5b7dc07",
+      "bytes": 110251
+    },
+    "assemblies.json": {
+      "sha256": "375537c6c33a9dc60432ef7438f5d032f86aa17acf85c0feed428e613864fc2d",
+      "bytes": 11677
+    },
+    "resource_exclusions.json": {
+      "sha256": "d8cf7e9f22590a6e1beed48a9149114d4b5932745ccd55f2e55a92bea1c30b5b",
+      "bytes": 4364
+    },
+    "candidate_scope_inventory.json": {
+      "sha256": "6b2c47ef7c2ea12015601b34c4d083f1ba7093a019b5d502781e6bcf57db22f7",
+      "bytes": 36984
+    },
+    "generate_bedrock_cost_data_v2.py": {
+      "sha256": "48f4a19df011c6014964e310a7734ecbfe670c92570d7bfde63c3430c6570a24",
+      "bytes": 30963
+    },
+    "import_bedrock_costs_v2.py": {
+      "sha256": "93571adc623b3ad95292e8dc9ff5036fbda6574575687878811d05e60bb8eda7",
+      "bytes": 13531
+    },
+    "README.md": {
+      "sha256": "3f6e4d5845653b2b6666eed25a726f31d84b5aed9df9ed3df90a44ad76b39661",
+      "bytes": 857
+    },
+    "item_design_review.md": {
+      "sha256": "7633334f63e05a96ef50a094550d56cb9c8a3c201535c630ed1a4e5e949f7ea8",
+      "bytes": 2650
+    },
+    "validation_report.md": {
+      "sha256": "53742a5d252d1dce595daa0437b07a05421e2af0ec277961356399d77ad88159",
+      "bytes": 1894
+    }
+  },
+  "validation_status": "pass"
+}

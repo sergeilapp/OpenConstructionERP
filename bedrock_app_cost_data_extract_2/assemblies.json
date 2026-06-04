@@ -1,0 +1,400 @@
+[
+  {
+    "code": "BED-ASM-CONC-FLOATING-SLAB",
+    "name": "Concrete floating slab package",
+    "description": "Bedrock v2 assembly. Optional scopes remain visible as separate components where supported. Missing optional choices are deferred rather than hidden.",
+    "unit": "sf",
+    "category": "Concrete",
+    "classification": {
+      "masterformat": "03 30 00"
+    },
+    "total_rate": 15.62,
+    "currency": "USD",
+    "bid_factor": 1.0,
+    "regional_factors": {},
+    "is_template": true,
+    "tags": [
+      "bedrock-v2",
+      "concrete",
+      "floating-slab"
+    ],
+    "components": [
+      {
+        "cost_item_code": "BED-CONC-SLAB-4IN-INSTALLED",
+        "description": "Concrete slab - 4 in thick, reinforced, vapor barrier, choose PSI installed",
+        "factor": 1.0,
+        "quantity": 1.0,
+        "unit": "sf",
+        "unit_cost": 14.88,
+        "resource_type": null,
+        "total": 14.88,
+        "metadata": {
+          "component_source": "cost_item"
+        }
+      },
+      {
+        "cost_item_code": "BED-VAPOR-BARRIER-INSTALLED",
+        "description": "Vapor barrier (per square foot) (takeoff conversion wrapper)",
+        "factor": 1.0,
+        "quantity": 1.0,
+        "unit": "sf",
+        "unit_cost": 0.11,
+        "resource_type": null,
+        "total": 0.11,
+        "metadata": {
+          "component_source": "cost_item"
+        }
+      },
+      {
+        "cost_item_code": "BED-WIRE-MESH-INSTALLED",
+        "description": "Wire mesh reinforcement (per square foot) (takeoff conversion wrapper)",
+        "factor": 1.0,
+        "quantity": 1.0,
+        "unit": "sf",
+        "unit_cost": 0.63,
+        "resource_type": null,
+        "total": 0.63,
+        "metadata": {
+          "component_source": "cost_item"
+        }
+      }
+    ],
+    "metadata": {
+      "source": "bedrock_extraction_v2",
+      "region": "BEDROCK-MAIN",
+      "validation_status": "validated_static",
+      "source_evidence": [
+        "v2 assembly design rules",
+        "recent job usage priority table"
+      ],
+      "generated_at": "2026-05-28T19:50:25+00:00"
+    }
+  },
+  {
+    "code": "BED-ASM-CONC-GIBRALTAR-FOUNDATION",
+    "name": "Concrete Gibraltar foundation package",
+    "description": "Bedrock v2 assembly. Optional scopes remain visible as separate components where supported. Missing optional choices are deferred rather than hidden.",
+    "unit": "lf",
+    "category": "Concrete",
+    "classification": {
+      "masterformat": "03 30 00"
+    },
+    "total_rate": 43.64,
+    "currency": "USD",
+    "bid_factor": 1.0,
+    "regional_factors": {},
+    "is_template": true,
+    "tags": [
+      "bedrock-v2",
+      "concrete",
+      "gibraltar"
+    ],
+    "components": [
+      {
+        "cost_item_code": "BED-CONC-FOOTER-INSTALLED",
+        "description": "Concrete footer - reinforced trench, choose PSI installed",
+        "factor": 1.0,
+        "quantity": 1.0,
+        "unit": "lf",
+        "unit_cost": 19.06,
+        "resource_type": null,
+        "total": 19.06,
+        "metadata": {
+          "component_source": "cost_item"
+        }
+      },
+      {
+        "cost_item_code": "BED-CONC-CMU-BLOCK-8IN-PER-LF",
+        "description": "Concrete block wall - 8in block (per course) (takeoff conversion wrapper)",
+        "factor": 1.0,
+        "quantity": 1.0,
+        "unit": "lf",
+        "unit_cost": 2.63,
+        "resource_type": null,
+        "total": 2.63,
+        "metadata": {
+          "component_source": "cost_item"
+        }
+      },
+      {
+        "cost_item_code": "BED-CONC-CORE-FILL-INSTALLED",
+        "description": "Block core fill - concrete and rebar, choose PSI installed",
+        "factor": 1.0,
+        "quantity": 1.0,
+        "unit": "lf",
+        "unit_cost": 19.32,
+        "resource_type": null,
+        "total": 19.32,
+        "metadata": {
+          "component_source": "cost_item"
+        }
+      },
+      {
+        "cost_item_code": "BED-CONC-CMU-TOP-BLOCK-PER-LF",
+        "description": "Top solid block course (takeoff conversion wrapper)",
+        "factor": 1.0,
+        "quantity": 1.0,
+        "unit": "lf",
+        "unit_cost": 2.63,
+        "resource_type": null,
+        "total": 2.63,
+        "metadata": {
+          "component_source": "cost_item"
+        }
+      }
+    ],
+    "metadata": {
+      "source": "bedrock_extraction_v2",
+      "region": "BEDROCK-MAIN",
+      "validation_status": "validated_static",
+      "source_evidence": [
+        "v2 assembly design rules",
+        "recent job usage priority table"
+      ],
+      "generated_at": "2026-05-28T19:50:25+00:00"
+    }
+  },
+  {
+    "code": "BED-ASM-CONC-GRADUATED-SLAB",
+    "name": "Concrete graduated slab package",
+    "description": "Bedrock v2 assembly. Optional scopes remain visible as separate components where supported. Missing optional choices are deferred rather than hidden.",
+    "unit": "sf",
+    "category": "Concrete",
+    "classification": {
+      "masterformat": "03 30 00"
+    },
+    "total_rate": 14.98,
+    "currency": "USD",
+    "bid_factor": 1.0,
+    "regional_factors": {},
+    "is_template": true,
+    "tags": [
+      "bedrock-v2",
+      "concrete",
+      "graduated-slab"
+    ],
+    "components": [
+      {
+        "cost_item_code": "BED-CONC-SLAB-6IN-INSTALLED",
+        "description": "Concrete slab - 6 in thick, reinforced, vapor barrier, choose PSI installed",
+        "factor": 1.0,
+        "quantity": 1.0,
+        "unit": "sf",
+        "unit_cost": 13.76,
+        "resource_type": null,
+        "total": 13.76,
+        "metadata": {
+          "component_source": "cost_item"
+        }
+      },
+      {
+        "cost_item_code": "BED-CONC-EDGE-INSTALLED",
+        "description": "Graduated slab edge - thickened, choose PSI (takeoff conversion wrapper)",
+        "factor": 1.0,
+        "quantity": 0.1,
+        "unit": "lf",
+        "unit_cost": 11.11,
+        "resource_type": null,
+        "total": 1.11,
+        "metadata": {
+          "component_source": "cost_item"
+        }
+      },
+      {
+        "cost_item_code": "BED-VAPOR-BARRIER-INSTALLED",
+        "description": "Vapor barrier (per square foot) (takeoff conversion wrapper)",
+        "factor": 1.0,
+        "quantity": 1.0,
+        "unit": "sf",
+        "unit_cost": 0.11,
+        "resource_type": null,
+        "total": 0.11,
+        "metadata": {
+          "component_source": "cost_item"
+        }
+      }
+    ],
+    "metadata": {
+      "source": "bedrock_extraction_v2",
+      "region": "BEDROCK-MAIN",
+      "validation_status": "validated_static",
+      "source_evidence": [
+        "v2 assembly design rules",
+        "recent job usage priority table"
+      ],
+      "generated_at": "2026-05-28T19:50:25+00:00"
+    }
+  },
+  {
+    "code": "BED-ASM-FILL-DIRT-SCOPE",
+    "name": "Fill dirt delivered scope package",
+    "description": "Bedrock v2 assembly. Optional scopes remain visible as separate components where supported. Missing optional choices are deferred rather than hidden.",
+    "unit": "ton",
+    "category": "Site Prep",
+    "classification": {
+      "masterformat": "31 23 23"
+    },
+    "total_rate": 23.25,
+    "currency": "USD",
+    "bid_factor": 1.0,
+    "regional_factors": {},
+    "is_template": true,
+    "tags": [
+      "bedrock-v2",
+      "fill-dirt"
+    ],
+    "components": [
+      {
+        "cost_item_code": "BED-FILL-DIRT-DELIVERED-SITEPREP",
+        "description": "Fill dirt (per ton)",
+        "factor": 1.0,
+        "quantity": 1.0,
+        "unit": "ton",
+        "unit_cost": 23.25,
+        "resource_type": null,
+        "total": 23.25,
+        "metadata": {
+          "component_source": "cost_item"
+        }
+      }
+    ],
+    "metadata": {
+      "source": "bedrock_extraction_v2",
+      "region": "BEDROCK-MAIN",
+      "validation_status": "validated_static",
+      "source_evidence": [
+        "v2 assembly design rules",
+        "recent job usage priority table"
+      ],
+      "generated_at": "2026-05-28T19:50:25+00:00"
+    }
+  },
+  {
+    "code": "BED-ASM-ROCK-PAD-STANDARD",
+    "name": "Standard rock pad scope package",
+    "description": "Bedrock v2 assembly. Optional scopes remain visible as separate components where supported. Missing optional choices are deferred rather than hidden.",
+    "unit": "sf",
+    "category": "Site Prep",
+    "classification": {
+      "masterformat": "31 22 00"
+    },
+    "total_rate": 8.17,
+    "currency": "USD",
+    "bid_factor": 1.0,
+    "regional_factors": {},
+    "is_template": true,
+    "tags": [
+      "bedrock-v2",
+      "rockpad",
+      "site-prep"
+    ],
+    "components": [
+      {
+        "cost_item_code": "BED-ROCK-EXCAVATION-INSTALLED",
+        "description": "Excavation (per square foot) (takeoff conversion wrapper)",
+        "factor": 1.0,
+        "quantity": 1.0,
+        "unit": "sf",
+        "unit_cost": 8.0,
+        "resource_type": null,
+        "total": 8.0,
+        "metadata": {
+          "component_source": "cost_item"
+        }
+      },
+      {
+        "cost_item_code": "BED-WEED-FABRIC-INSTALLED",
+        "description": "Weed fabric (per square foot) (takeoff conversion wrapper)",
+        "factor": 1.0,
+        "quantity": 1.0,
+        "unit": "sf",
+        "unit_cost": 0.17,
+        "resource_type": null,
+        "total": 0.17,
+        "metadata": {
+          "component_source": "cost_item"
+        }
+      }
+    ],
+    "metadata": {
+      "source": "bedrock_extraction_v2",
+      "region": "BEDROCK-MAIN",
+      "validation_status": "needs_design_review",
+      "source_evidence": [
+        "v2 assembly design rules",
+        "recent job usage priority table"
+      ],
+      "generated_at": "2026-05-28T19:50:25+00:00"
+    }
+  },
+  {
+    "code": "BED-ASM-SITE-PREP-STANDARD",
+    "name": "Standard site preparation package",
+    "description": "Bedrock v2 assembly. Optional scopes remain visible as separate components where supported. Missing optional choices are deferred rather than hidden.",
+    "unit": "sf",
+    "category": "Site Prep",
+    "classification": {
+      "masterformat": "31 20 00"
+    },
+    "total_rate": 12.4,
+    "currency": "USD",
+    "bid_factor": 1.0,
+    "regional_factors": {},
+    "is_template": true,
+    "tags": [
+      "bedrock-v2",
+      "siteprep"
+    ],
+    "components": [
+      {
+        "cost_item_code": "BED-PREP-EXCAVATION-INSTALLED",
+        "description": "Excavation (per square foot) (takeoff conversion wrapper)",
+        "factor": 1.0,
+        "quantity": 1.0,
+        "unit": "sf",
+        "unit_cost": 11.6,
+        "resource_type": null,
+        "total": 11.6,
+        "metadata": {
+          "component_source": "cost_item"
+        }
+      },
+      {
+        "cost_item_code": "BED-WEED-FABRIC-INSTALLED",
+        "description": "Weed fabric (per square foot) (takeoff conversion wrapper)",
+        "factor": 1.0,
+        "quantity": 1.0,
+        "unit": "sf",
+        "unit_cost": 0.17,
+        "resource_type": null,
+        "total": 0.17,
+        "metadata": {
+          "component_source": "cost_item"
+        }
+      },
+      {
+        "cost_item_code": "BED-WIRE-MESH-INSTALLED",
+        "description": "Wire mesh reinforcement (per square foot) (takeoff conversion wrapper)",
+        "factor": 1.0,
+        "quantity": 1.0,
+        "unit": "sf",
+        "unit_cost": 0.63,
+        "resource_type": null,
+        "total": 0.63,
+        "metadata": {
+          "component_source": "cost_item"
+        }
+      }
+    ],
+    "metadata": {
+      "source": "bedrock_extraction_v2",
+      "region": "BEDROCK-MAIN",
+      "validation_status": "needs_design_review",
+      "source_evidence": [
+        "v2 assembly design rules",
+        "recent job usage priority table"
+      ],
+      "generated_at": "2026-05-28T19:50:25+00:00"
+    }
+  }
+]

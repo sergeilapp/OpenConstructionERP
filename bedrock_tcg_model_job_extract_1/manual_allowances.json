@@ -1,0 +1,189 @@
+{
+  "generated_at": "2026-06-02T12:32:05-04:00",
+  "review_only": true,
+  "provenance": {
+    "contact_id": 24929,
+    "model_job_group_id": "tcg_24929_model_job",
+    "member_job_ids": [
+      38254,
+      38304,
+      38396,
+      38447,
+      38522,
+      38577,
+      38578
+    ]
+  },
+  "allowances": [
+    {
+      "code": "TCG-MANUAL-ADJ-00_00_00-1",
+      "description": "parsed addon job 38304 10",
+      "type": "markup_or_pricing_adjustment",
+      "unit": "LS",
+      "quantity": 1.0,
+      "amount": 12.31,
+      "amount_display": "$12.31",
+      "reason": "Track as lump-sum pricing adjustment (not a component-based CostItem)",
+      "provenance": {
+        "source_evidence": "parsed_addon:job_38304:10",
+        "job_ids": [
+          38304
+        ],
+        "masterformat_code": "00 00 00",
+        "contact_id": 24929,
+        "model_job_group_id": "tcg_24929_model_job",
+        "member_job_ids": [
+          38254,
+          38304,
+          38396,
+          38447,
+          38522,
+          38577,
+          38578
+        ]
+      },
+      "tags": [
+        "tcg_draft",
+        "review_only",
+        "pricing_adjustment"
+      ],
+      "review_status": "needs_review"
+    },
+    {
+      "code": "TCG-MANUAL-ADJ-00_00_00-2",
+      "description": "parsed addon job 38304 11",
+      "type": "markup_or_pricing_adjustment",
+      "unit": "LS",
+      "quantity": 1.0,
+      "amount": -5000.0,
+      "amount_display": "$-5000.00",
+      "reason": "Track as lump-sum pricing adjustment (not a component-based CostItem)",
+      "provenance": {
+        "source_evidence": "parsed_addon:job_38304:11",
+        "job_ids": [
+          38304
+        ],
+        "masterformat_code": "00 00 00",
+        "contact_id": 24929,
+        "model_job_group_id": "tcg_24929_model_job",
+        "member_job_ids": [
+          38254,
+          38304,
+          38396,
+          38447,
+          38522,
+          38577,
+          38578
+        ]
+      },
+      "tags": [
+        "tcg_draft",
+        "review_only",
+        "pricing_adjustment"
+      ],
+      "review_status": "needs_review"
+    },
+    {
+      "code": "TCG-MANUAL-ADJ-00_00_00-3",
+      "description": "parsed addon job 38396 4",
+      "type": "markup_or_pricing_adjustment",
+      "unit": "LS",
+      "quantity": 1.0,
+      "amount": 75.5,
+      "amount_display": "$75.50",
+      "reason": "Track as lump-sum pricing adjustment (not a component-based CostItem)",
+      "provenance": {
+        "source_evidence": "parsed_addon:job_38396:4",
+        "job_ids": [
+          38396
+        ],
+        "masterformat_code": "00 00 00",
+        "contact_id": 24929,
+        "model_job_group_id": "tcg_24929_model_job",
+        "member_job_ids": [
+          38254,
+          38304,
+          38396,
+          38447,
+          38522,
+          38577,
+          38578
+        ]
+      },
+      "tags": [
+        "tcg_draft",
+        "review_only",
+        "pricing_adjustment"
+      ],
+      "review_status": "needs_review"
+    },
+    {
+      "code": "TCG-MANUAL-ADJ-00_00_00-4",
+      "description": "parsed addon job 38447 5",
+      "type": "discount",
+      "unit": "LS",
+      "quantity": 1.0,
+      "amount": -117.03,
+      "amount_display": "$-117.03",
+      "reason": "Track as lump-sum pricing adjustment (not a component-based CostItem)",
+      "provenance": {
+        "source_evidence": "parsed_addon:job_38447:5",
+        "job_ids": [
+          38447
+        ],
+        "masterformat_code": "00 00 00",
+        "contact_id": 24929,
+        "model_job_group_id": "tcg_24929_model_job",
+        "member_job_ids": [
+          38254,
+          38304,
+          38396,
+          38447,
+          38522,
+          38577,
+          38578
+        ]
+      },
+      "tags": [
+        "tcg_draft",
+        "review_only",
+        "pricing_adjustment"
+      ],
+      "review_status": "needs_review"
+    },
+    {
+      "code": "TCG-MANUAL-ADJ-32_00_00-1",
+      "description": "parsed addon job 38304 5",
+      "type": "manual_allowance",
+      "unit": "LS",
+      "quantity": 1.0,
+      "amount": 1400.0,
+      "amount_display": "$1400.00",
+      "reason": "Track as lump-sum pricing adjustment (not a component-based CostItem)",
+      "provenance": {
+        "source_evidence": "parsed_addon:job_38304:5",
+        "job_ids": [
+          38304
+        ],
+        "masterformat_code": "32 00 00",
+        "contact_id": 24929,
+        "model_job_group_id": "tcg_24929_model_job",
+        "member_job_ids": [
+          38254,
+          38304,
+          38396,
+          38447,
+          38522,
+          38577,
+          38578
+        ]
+      },
+      "tags": [
+        "tcg_draft",
+        "review_only",
+        "pricing_adjustment"
+      ],
+      "review_status": "needs_review"
+    }
+  ]
+}

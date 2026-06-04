@@ -1,0 +1,146 @@
+[
+  {
+    "code": "BED-CONC-LABOR",
+    "reason": "Rejected pure alias; use CatalogResource LAB-CONCRETE-LABORER-RATE directly.",
+    "decision": "delete_alias",
+    "component_codes": [
+      "LAB-CONCRETE-LABORER-RATE"
+    ]
+  },
+  {
+    "code": "BED-CONC-ACCESS",
+    "reason": "Rejected pure alias; use CatalogResource MAT-DISTANCE-FROM-ACCESS-COST-PER-FOOT directly.",
+    "decision": "delete_alias",
+    "component_codes": [
+      "MAT-DISTANCE-FROM-ACCESS-COST-PER-FOOT"
+    ]
+  },
+  {
+    "code": "BED-CONC-MAT-GATHER",
+    "reason": "Rejected pure alias; use CatalogResource LAB-CONCRETE-LABORER-RATE directly.",
+    "decision": "delete_alias",
+    "component_codes": [
+      "LAB-CONCRETE-LABORER-RATE"
+    ]
+  },
+  {
+    "code": "BED-ROCK-STONE",
+    "reason": "Rejected pure alias; use CatalogResource MAT-CONCRETE-ROCK-PER-TON directly.",
+    "decision": "delete_alias",
+    "component_codes": [
+      "MAT-CONCRETE-ROCK-PER-TON"
+    ]
+  },
+  {
+    "code": "BED-ROCK-BOARD",
+    "reason": "Rejected pure alias; use CatalogResource MAT-ROCKPAD-BOARD-COST-PER-FOOT directly.",
+    "decision": "delete_alias",
+    "component_codes": [
+      "MAT-ROCKPAD-BOARD-COST-PER-FOOT"
+    ]
+  },
+  {
+    "code": "BED-ROCK-REBAR",
+    "reason": "Rejected pure alias; use CatalogResource MAT-ROCKPAD-REBAR-PIECE directly.",
+    "decision": "delete_alias",
+    "component_codes": [
+      "MAT-ROCKPAD-REBAR-PIECE"
+    ]
+  },
+  {
+    "code": "BED-ROCK-EROSION-CONTROL",
+    "reason": "Rejected pure alias; use CatalogResource MAT-ROCKPAD-EROSION-CONTROL-WIRE-PRICE directly.",
+    "decision": "delete_alias",
+    "component_codes": [
+      "MAT-ROCKPAD-EROSION-CONTROL-WIRE-PRICE"
+    ]
+  },
+  {
+    "code": "BED-ROCK-LABOR",
+    "reason": "Rejected pure alias; use CatalogResource LAB-ROCKPAD-LABORER-RATE directly.",
+    "decision": "delete_alias",
+    "component_codes": [
+      "LAB-ROCKPAD-LABORER-RATE"
+    ]
+  },
+  {
+    "code": "BED-ROCK-ACCESS",
+    "reason": "Rejected pure alias; use CatalogResource MAT-DISTANCE-FROM-ACCESS-COST-PER-FOOT directly.",
+    "decision": "delete_alias",
+    "component_codes": [
+      "MAT-DISTANCE-FROM-ACCESS-COST-PER-FOOT"
+    ]
+  },
+  {
+    "code": "BED-ROCK-MAT-GATHER",
+    "reason": "Rejected pure alias; use CatalogResource LAB-ROCKPAD-LABORER-RATE directly.",
+    "decision": "delete_alias",
+    "component_codes": [
+      "LAB-ROCKPAD-LABORER-RATE"
+    ]
+  },
+  {
+    "code": "BED-PREP-BOARD",
+    "reason": "Rejected pure alias; use CatalogResource MAT-PREPARATION-BOARD-COST-PER-FOOT-6X6 directly.",
+    "decision": "delete_alias",
+    "component_codes": [
+      "MAT-PREPARATION-BOARD-COST-PER-FOOT-6X6"
+    ]
+  },
+  {
+    "code": "BED-PREP-REBAR",
+    "reason": "Rejected pure alias; use CatalogResource MAT-PREPARATION-REBAR-PRICE-PER-FOOT directly.",
+    "decision": "delete_alias",
+    "component_codes": [
+      "MAT-PREPARATION-REBAR-PRICE-PER-FOOT"
+    ]
+  },
+  {
+    "code": "BED-PREP-LABOR",
+    "reason": "Rejected pure alias; use CatalogResource LAB-PREPARATION-LABORER-RATE directly.",
+    "decision": "delete_alias",
+    "component_codes": [
+      "LAB-PREPARATION-LABORER-RATE"
+    ]
+  },
+  {
+    "code": "BED-PREP-ACCESS",
+    "reason": "Rejected pure alias; use CatalogResource MAT-DISTANCE-FROM-ACCESS-COST-PER-FOOT directly.",
+    "decision": "delete_alias",
+    "component_codes": [
+      "MAT-DISTANCE-FROM-ACCESS-COST-PER-FOOT"
+    ]
+  },
+  {
+    "code": "BED-PREP-MAT-GATHER",
+    "reason": "Rejected pure alias; use CatalogResource LAB-PREPARATION-LABORER-RATE directly.",
+    "decision": "delete_alias",
+    "component_codes": [
+      "LAB-PREPARATION-LABORER-RATE"
+    ]
+  },
+  {
+    "code": "BED-ADHOC-LABOR",
+    "reason": "Rejected pure alias; use CatalogResource LAB-ADHOC-LABORER-RATE directly.",
+    "decision": "delete_alias",
+    "component_codes": [
+      "LAB-ADHOC-LABORER-RATE"
+    ]
+  },
+  {
+    "code": "BED-ADHOC-MAT-GATHER",
+    "reason": "Rejected pure alias; use CatalogResource LAB-ADHOC-LABORER-RATE directly.",
+    "decision": "delete_alias",
+    "component_codes": [
+      "LAB-ADHOC-LABORER-RATE"
+    ]
+  },
+  {
+    "code": "BED-ADHOC-ACCESS",
+    "reason": "Rejected pure alias; use CatalogResource MAT-DISTANCE-FROM-ACCESS-COST-PER-FOOT directly.",
+    "decision": "delete_alias",
+    "component_codes": [
+      "MAT-DISTANCE-FROM-ACCESS-COST-PER-FOOT"
+    ]
+  }
+]

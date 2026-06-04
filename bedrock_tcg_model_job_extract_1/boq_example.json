@@ -1,0 +1,1161 @@
+{
+  "generated_at": "2026-06-02T12:32:05-04:00",
+  "review_only": true,
+  "provenance": {
+    "contact_id": 24929,
+    "model_job_group_id": "tcg_24929_model_job",
+    "member_job_ids": [
+      38254,
+      38304,
+      38396,
+      38447,
+      38522,
+      38577,
+      38578
+    ]
+  },
+  "extraction_notes": [
+    "This is a review-only example of how TCG could be represented as BOQ lines.",
+    "Quantities are from TCG calculator and material data. Unit prices are from derived rates or catalog prices.",
+    "Items flagged as scope_notes are informational and not included in totals.",
+    "BOQ total may differ from stored job prices due to excluded markups, discounts, and catalog vs derived rates."
+  ],
+  "boq_items": [
+    {
+      "line_number": 1,
+      "masterformat_code": "00 00 00",
+      "description": "parsed addon job 38304 10",
+      "unit": "LS",
+      "quantity": 1.0,
+      "unit_price": 0.0,
+      "extended_amount": 12.31,
+      "atomic_meaning": "markup_or_pricing_adjustment",
+      "source_evidence": "parsed_addon:job_38304:10",
+      "job_ids": [
+        38304
+      ],
+      "ocerp_recommendation": "track_as_pricing_adjustment",
+      "proposed_cost_item_code": null
+    },
+    {
+      "line_number": 2,
+      "masterformat_code": "00 00 00",
+      "description": "parsed addon job 38304 11",
+      "unit": "LS",
+      "quantity": 1.0,
+      "unit_price": 0.0,
+      "extended_amount": -5000.0,
+      "atomic_meaning": "markup_or_pricing_adjustment",
+      "source_evidence": "parsed_addon:job_38304:11",
+      "job_ids": [
+        38304
+      ],
+      "ocerp_recommendation": "track_as_pricing_adjustment",
+      "proposed_cost_item_code": null
+    },
+    {
+      "line_number": 3,
+      "masterformat_code": "00 00 00",
+      "description": "parsed addon job 38396 4",
+      "unit": "LS",
+      "quantity": 1.0,
+      "unit_price": 0.0,
+      "extended_amount": 75.5,
+      "atomic_meaning": "markup_or_pricing_adjustment",
+      "source_evidence": "parsed_addon:job_38396:4",
+      "job_ids": [
+        38396
+      ],
+      "ocerp_recommendation": "track_as_pricing_adjustment",
+      "proposed_cost_item_code": null
+    },
+    {
+      "line_number": 4,
+      "masterformat_code": "00 00 00",
+      "description": "parsed addon job 38447 5",
+      "unit": "LS",
+      "quantity": 1.0,
+      "unit_price": 0.0,
+      "extended_amount": -117.03,
+      "atomic_meaning": "discount",
+      "source_evidence": "parsed_addon:job_38447:5",
+      "job_ids": [
+        38447
+      ],
+      "ocerp_recommendation": "track_as_pricing_adjustment",
+      "proposed_cost_item_code": null
+    },
+    {
+      "line_number": 1,
+      "masterformat_code": "02 00 00",
+      "description": "Driving/hauling equipment",
+      "unit": "MI",
+      "quantity": 168.0,
+      "unit_price": 0.0,
+      "extended_amount": 735.0,
+      "atomic_meaning": "equipment_component",
+      "source_evidence": "DrivingCalculator#truck_cost (job 38304)",
+      "job_ids": [
+        38304
+      ],
+      "ocerp_recommendation": "needs_new_cost_item",
+      "proposed_cost_item_code": "BED-MATERIAL-HAULING-ADHOC-TON-MI-REVIEW"
+    },
+    {
+      "line_number": 2,
+      "masterformat_code": "02 00 00",
+      "description": "Haul Ballast (1 1/2\" - 2 1/2\") Drain Stone from quarry",
+      "unit": "LOAD",
+      "quantity": 4.0,
+      "unit_price": 985.0,
+      "extended_amount": 3940.0,
+      "atomic_meaning": "equipment_component",
+      "source_evidence": "SitePreparationMaterial 3207 hauling (job 38304)",
+      "job_ids": [
+        38304
+      ],
+      "ocerp_recommendation": "needs_new_cost_item",
+      "proposed_cost_item_code": null
+    },
+    {
+      "line_number": 3,
+      "masterformat_code": "02 00 00",
+      "description": "Scheduled truck entries (labor schedule)",
+      "unit": "LOAD",
+      "quantity": 2.0,
+      "unit_price": 0.0,
+      "extended_amount": 0.0,
+      "atomic_meaning": "equipment_component",
+      "source_evidence": "labor_schedule:job_38304:truck_entries",
+      "job_ids": [
+        38304
+      ],
+      "ocerp_recommendation": "needs_cost_item_refinement",
+      "proposed_cost_item_code": null
+    },
+    {
+      "line_number": 4,
+      "masterformat_code": "02 00 00",
+      "description": "Site labor (scheduled)",
+      "unit": "HR",
+      "quantity": 118.0,
+      "unit_price": 0.0,
+      "extended_amount": 0.0,
+      "atomic_meaning": "labor_component",
+      "source_evidence": "labor_schedule:job_38304:labor",
+      "job_ids": [
+        38304
+      ],
+      "ocerp_recommendation": "track_as_labor_component",
+      "proposed_cost_item_code": null
+    },
+    {
+      "line_number": 5,
+      "masterformat_code": "02 00 00",
+      "description": "Supply Ballast (1 1/2\" - 2 1/2\") Drain Stone, 8.0\" thick",
+      "unit": "TON",
+      "quantity": 92.0,
+      "unit_price": 50.0,
+      "extended_amount": 4600.0,
+      "atomic_meaning": "material_component",
+      "source_evidence": "SitePreparationMaterial 3207 (job 38304)",
+      "job_ids": [
+        38304
+      ],
+      "ocerp_recommendation": "needs_new_cost_item",
+      "proposed_cost_item_code": "BED-FILL-DIRT-DELIVERED-ADHOC"
+    },
+    {
+      "line_number": 6,
+      "masterformat_code": "02 00 00",
+      "description": "Working labor (calculator-derived)",
+      "unit": "HR",
+      "quantity": 118.0,
+      "unit_price": 13500.0,
+      "extended_amount": 15930.0,
+      "atomic_meaning": "labor_component",
+      "source_evidence": "Job 38304 SitePreparationJobCalculator#working_labor_cost / #working_labor_hours",
+      "job_ids": [
+        38304
+      ],
+      "ocerp_recommendation": "track_as_labor_component",
+      "proposed_cost_item_code": null
+    },
+    {
+      "line_number": 7,
+      "masterformat_code": "02 00 00",
+      "description": "parsed addon job 38304 6",
+      "unit": "LS",
+      "quantity": 1.0,
+      "unit_price": 0.0,
+      "extended_amount": 8800.0,
+      "atomic_meaning": "equipment_component",
+      "source_evidence": "parsed_addon:job_38304:6",
+      "job_ids": [
+        38304
+      ],
+      "ocerp_recommendation": "needs_new_cost_item",
+      "proposed_cost_item_code": null
+    },
+    {
+      "line_number": 8,
+      "masterformat_code": "02 00 00",
+      "description": "parsed addon job 38304 7",
+      "unit": "LS",
+      "quantity": 1.0,
+      "unit_price": 0.0,
+      "extended_amount": 2700.0,
+      "atomic_meaning": "equipment_component",
+      "source_evidence": "parsed_addon:job_38304:7",
+      "job_ids": [
+        38304
+      ],
+      "ocerp_recommendation": "needs_new_cost_item",
+      "proposed_cost_item_code": null
+    },
+    {
+      "line_number": 9,
+      "masterformat_code": "02 00 00",
+      "description": "parsed addon job 38304 8",
+      "unit": "LS",
+      "quantity": 1.0,
+      "unit_price": 0.0,
+      "extended_amount": 3150.0,
+      "atomic_meaning": "equipment_component",
+      "source_evidence": "parsed_addon:job_38304:8",
+      "job_ids": [
+        38304
+      ],
+      "ocerp_recommendation": "needs_new_cost_item",
+      "proposed_cost_item_code": null
+    },
+    {
+      "line_number": 10,
+      "masterformat_code": "02 00 00",
+      "description": "parsed addon job 38304 9",
+      "unit": "LS",
+      "quantity": 1.0,
+      "unit_price": 0.0,
+      "extended_amount": 2800.0,
+      "atomic_meaning": "equipment_component",
+      "source_evidence": "parsed_addon:job_38304:9",
+      "job_ids": [
+        38304
+      ],
+      "ocerp_recommendation": "needs_new_cost_item",
+      "proposed_cost_item_code": null
+    },
+    {
+      "line_number": 1,
+      "masterformat_code": "03 00 00",
+      "description": "Driving/hauling equipment",
+      "unit": "MI",
+      "quantity": 84.0,
+      "unit_price": 0.0,
+      "extended_amount": 367.5,
+      "atomic_meaning": "equipment_component",
+      "source_evidence": "DrivingCalculator#truck_cost (job 38447)",
+      "job_ids": [
+        38447
+      ],
+      "ocerp_recommendation": "needs_new_cost_item",
+      "proposed_cost_item_code": "BED-MATERIAL-HAULING-ADHOC-TON-MI-REVIEW"
+    },
+    {
+      "line_number": 2,
+      "masterformat_code": "03 00 00",
+      "description": "Scheduled truck entries (labor schedule)",
+      "unit": "LOAD",
+      "quantity": 1.0,
+      "unit_price": 0.0,
+      "extended_amount": 0.0,
+      "atomic_meaning": "equipment_component",
+      "source_evidence": "labor_schedule:job_38447:truck_entries",
+      "job_ids": [
+        38447
+      ],
+      "ocerp_recommendation": "needs_cost_item_refinement",
+      "proposed_cost_item_code": null
+    },
+    {
+      "line_number": 3,
+      "masterformat_code": "03 00 00",
+      "description": "Site labor (scheduled)",
+      "unit": "HR",
+      "quantity": 42.0,
+      "unit_price": 0.0,
+      "extended_amount": 0.0,
+      "atomic_meaning": "labor_component",
+      "source_evidence": "labor_schedule:job_38447:labor",
+      "job_ids": [
+        38447
+      ],
+      "ocerp_recommendation": "track_as_labor_component",
+      "proposed_cost_item_code": null
+    },
+    {
+      "line_number": 4,
+      "masterformat_code": "03 00 00",
+      "description": "parsed addon job 38447 1",
+      "unit": "LS",
+      "quantity": 1.0,
+      "unit_price": 0.0,
+      "extended_amount": 3800.0,
+      "atomic_meaning": "material_component",
+      "source_evidence": "parsed_addon:job_38447:1",
+      "job_ids": [
+        38447
+      ],
+      "ocerp_recommendation": "needs_new_cost_item",
+      "proposed_cost_item_code": null
+    },
+    {
+      "line_number": 1,
+      "masterformat_code": "31 00 00",
+      "description": "Driving/hauling equipment",
+      "unit": "MI",
+      "quantity": 420.0,
+      "unit_price": 0.0,
+      "extended_amount": 3097.5,
+      "atomic_meaning": "equipment_component",
+      "source_evidence": "DrivingCalculator#truck_cost (job 38254)",
+      "job_ids": [
+        38254
+      ],
+      "ocerp_recommendation": "needs_new_cost_item",
+      "proposed_cost_item_code": "BED-MATERIAL-HAULING-ADHOC-TON-MI-REVIEW"
+    },
+    {
+      "line_number": 2,
+      "masterformat_code": "31 00 00",
+      "description": "Driving/hauling equipment",
+      "unit": "MI",
+      "quantity": 336.0,
+      "unit_price": 0.0,
+      "extended_amount": 1512.0,
+      "atomic_meaning": "equipment_component",
+      "source_evidence": "DrivingCalculator#truck_cost (job 38577)",
+      "job_ids": [
+        38577
+      ],
+      "ocerp_recommendation": "needs_new_cost_item",
+      "proposed_cost_item_code": "BED-MATERIAL-HAULING-ADHOC-TON-MI-REVIEW"
+    },
+    {
+      "line_number": 3,
+      "masterformat_code": "31 00 00",
+      "description": "Driving/hauling equipment",
+      "unit": "MI",
+      "quantity": 840.0,
+      "unit_price": 0.0,
+      "extended_amount": 3780.0,
+      "atomic_meaning": "equipment_component",
+      "source_evidence": "DrivingCalculator#truck_cost (job 38578)",
+      "job_ids": [
+        38578
+      ],
+      "ocerp_recommendation": "needs_new_cost_item",
+      "proposed_cost_item_code": "BED-MATERIAL-HAULING-ADHOC-TON-MI-REVIEW"
+    },
+    {
+      "line_number": 4,
+      "masterformat_code": "31 00 00",
+      "description": "Haul #57 (2B) (3/4\" - 1\" clean stone) from quarry",
+      "unit": "LOAD",
+      "quantity": 8.0,
+      "unit_price": 985.0,
+      "extended_amount": 7880.0,
+      "atomic_meaning": "equipment_component",
+      "source_evidence": "SitePreparationMaterial 3110 hauling (job 38577)",
+      "job_ids": [
+        38577
+      ],
+      "ocerp_recommendation": "needs_new_cost_item",
+      "proposed_cost_item_code": null
+    },
+    {
+      "line_number": 5,
+      "masterformat_code": "31 00 00",
+      "description": "Haul #57 (2B) (3/4\" - 1\" clean stone) from quarry",
+      "unit": "LOAD",
+      "quantity": 4.0,
+      "unit_price": 985.0,
+      "extended_amount": 3940.0,
+      "atomic_meaning": "equipment_component",
+      "source_evidence": "SitePreparationMaterial 3111 hauling (job 38577)",
+      "job_ids": [
+        38577
+      ],
+      "ocerp_recommendation": "needs_new_cost_item",
+      "proposed_cost_item_code": null
+    },
+    {
+      "line_number": 6,
+      "masterformat_code": "31 00 00",
+      "description": "Haul Sand from quarry",
+      "unit": "LOAD",
+      "quantity": 1.0,
+      "unit_price": 865.0,
+      "extended_amount": 865.0,
+      "atomic_meaning": "equipment_component",
+      "source_evidence": "SitePreparationMaterial 3112 hauling (job 38578)",
+      "job_ids": [
+        38578
+      ],
+      "ocerp_recommendation": "needs_new_cost_item",
+      "proposed_cost_item_code": null
+    },
+    {
+      "line_number": 7,
+      "masterformat_code": "31 00 00",
+      "description": "Haul fill material (Fill Dirt (Compactabile)) from quarry",
+      "unit": "LOAD",
+      "quantity": 98.0,
+      "unit_price": 395.0,
+      "extended_amount": 38710.0,
+      "atomic_meaning": "equipment_component",
+      "source_evidence": "SitePreparationJobCalculator#fill_truck_cost (job 38254)",
+      "job_ids": [
+        38254
+      ],
+      "ocerp_recommendation": "needs_new_cost_item",
+      "proposed_cost_item_code": "BED-FILL-DIRT-DELIVERED-ADHOC"
+    },
+    {
+      "line_number": 8,
+      "masterformat_code": "31 00 00",
+      "description": "Scheduled truck entries (labor schedule)",
+      "unit": "LOAD",
+      "quantity": 5.0,
+      "unit_price": 0.0,
+      "extended_amount": 0.0,
+      "atomic_meaning": "equipment_component",
+      "source_evidence": "labor_schedule:job_38254:truck_entries",
+      "job_ids": [
+        38254
+      ],
+      "ocerp_recommendation": "needs_cost_item_refinement",
+      "proposed_cost_item_code": null
+    },
+    {
+      "line_number": 9,
+      "masterformat_code": "31 00 00",
+      "description": "Scheduled truck entries (labor schedule)",
+      "unit": "LOAD",
+      "quantity": 4.0,
+      "unit_price": 0.0,
+      "extended_amount": 0.0,
+      "atomic_meaning": "equipment_component",
+      "source_evidence": "labor_schedule:job_38577:truck_entries",
+      "job_ids": [
+        38577
+      ],
+      "ocerp_recommendation": "needs_cost_item_refinement",
+      "proposed_cost_item_code": null
+    },
+    {
+      "line_number": 10,
+      "masterformat_code": "31 00 00",
+      "description": "Scheduled truck entries (labor schedule)",
+      "unit": "LOAD",
+      "quantity": 10.0,
+      "unit_price": 0.0,
+      "extended_amount": 0.0,
+      "atomic_meaning": "equipment_component",
+      "source_evidence": "labor_schedule:job_38578:truck_entries",
+      "job_ids": [
+        38578
+      ],
+      "ocerp_recommendation": "needs_cost_item_refinement",
+      "proposed_cost_item_code": null
+    },
+    {
+      "line_number": 11,
+      "masterformat_code": "31 00 00",
+      "description": "Site labor (scheduled)",
+      "unit": "HR",
+      "quantity": 188.0,
+      "unit_price": 0.0,
+      "extended_amount": 0.0,
+      "atomic_meaning": "labor_component",
+      "source_evidence": "labor_schedule:job_38254:labor",
+      "job_ids": [
+        38254
+      ],
+      "ocerp_recommendation": "track_as_labor_component",
+      "proposed_cost_item_code": null
+    },
+    {
+      "line_number": 12,
+      "masterformat_code": "31 00 00",
+      "description": "Site labor (scheduled)",
+      "unit": "HR",
+      "quantity": 114.0,
+      "unit_price": 0.0,
+      "extended_amount": 0.0,
+      "atomic_meaning": "labor_component",
+      "source_evidence": "labor_schedule:job_38577:labor",
+      "job_ids": [
+        38577
+      ],
+      "ocerp_recommendation": "track_as_labor_component",
+      "proposed_cost_item_code": null
+    },
+    {
+      "line_number": 13,
+      "masterformat_code": "31 00 00",
+      "description": "Site labor (scheduled)",
+      "unit": "HR",
+      "quantity": 392.0,
+      "unit_price": 0.0,
+      "extended_amount": 0.0,
+      "atomic_meaning": "labor_component",
+      "source_evidence": "labor_schedule:job_38578:labor",
+      "job_ids": [
+        38578
+      ],
+      "ocerp_recommendation": "track_as_labor_component",
+      "proposed_cost_item_code": null
+    },
+    {
+      "line_number": 14,
+      "masterformat_code": "31 00 00",
+      "description": "Supply #57 (2B) (3/4\" - 1\" clean stone), 12.0\" thick",
+      "unit": "TON",
+      "quantity": 92.0,
+      "unit_price": 50.0,
+      "extended_amount": 4600.0,
+      "atomic_meaning": "material_component",
+      "source_evidence": "SitePreparationMaterial 3111 (job 38577)",
+      "job_ids": [
+        38577
+      ],
+      "ocerp_recommendation": "needs_new_cost_item",
+      "proposed_cost_item_code": "BED-FILL-DIRT-DELIVERED-ADHOC"
+    },
+    {
+      "line_number": 15,
+      "masterformat_code": "31 00 00",
+      "description": "Supply #57 (2B) (3/4\" - 1\" clean stone), 4.0\" thick",
+      "unit": "TON",
+      "quantity": 165.2,
+      "unit_price": 50.0,
+      "extended_amount": 8260.0,
+      "atomic_meaning": "material_component",
+      "source_evidence": "SitePreparationMaterial 3110 (job 38577)",
+      "job_ids": [
+        38577
+      ],
+      "ocerp_recommendation": "needs_new_cost_item",
+      "proposed_cost_item_code": "BED-FILL-DIRT-DELIVERED-ADHOC"
+    },
+    {
+      "line_number": 16,
+      "masterformat_code": "31 00 00",
+      "description": "Supply Sand, 24.0\" thick",
+      "unit": "CY",
+      "quantity": 20.0,
+      "unit_price": 125.0,
+      "extended_amount": 2500.0,
+      "atomic_meaning": "material_component",
+      "source_evidence": "SitePreparationMaterial 3112 (job 38578)",
+      "job_ids": [
+        38578
+      ],
+      "ocerp_recommendation": "needs_new_cost_item",
+      "proposed_cost_item_code": null
+    },
+    {
+      "line_number": 17,
+      "masterformat_code": "31 00 00",
+      "description": "Working labor (calculator-derived)",
+      "unit": "HR",
+      "quantity": 188.0,
+      "unit_price": 13500.0,
+      "extended_amount": 25380.0,
+      "atomic_meaning": "labor_component",
+      "source_evidence": "Job 38254 SitePreparationJobCalculator#working_labor_cost / #working_labor_hours",
+      "job_ids": [
+        38254
+      ],
+      "ocerp_recommendation": "track_as_labor_component",
+      "proposed_cost_item_code": null
+    },
+    {
+      "line_number": 18,
+      "masterformat_code": "31 00 00",
+      "description": "Working labor (calculator-derived)",
+      "unit": "HR",
+      "quantity": 114.0,
+      "unit_price": 13500.0,
+      "extended_amount": 15390.0,
+      "atomic_meaning": "labor_component",
+      "source_evidence": "Job 38577 SitePreparationJobCalculator#working_labor_cost / #working_labor_hours",
+      "job_ids": [
+        38577
+      ],
+      "ocerp_recommendation": "track_as_labor_component",
+      "proposed_cost_item_code": null
+    },
+    {
+      "line_number": 19,
+      "masterformat_code": "31 00 00",
+      "description": "Working labor (calculator-derived)",
+      "unit": "HR",
+      "quantity": 392.0,
+      "unit_price": 13500.0,
+      "extended_amount": 52920.0,
+      "atomic_meaning": "labor_component",
+      "source_evidence": "Job 38578 SitePreparationJobCalculator#working_labor_cost / #working_labor_hours",
+      "job_ids": [
+        38578
+      ],
+      "ocerp_recommendation": "track_as_labor_component",
+      "proposed_cost_item_code": null
+    },
+    {
+      "line_number": 20,
+      "masterformat_code": "31 00 00",
+      "description": "parsed addon job 38254 1",
+      "unit": "LS",
+      "quantity": 1.0,
+      "unit_price": 0.0,
+      "extended_amount": 3200.0,
+      "atomic_meaning": "material_component",
+      "source_evidence": "parsed_addon:job_38254:1",
+      "job_ids": [
+        38254
+      ],
+      "ocerp_recommendation": "needs_new_cost_item",
+      "proposed_cost_item_code": null
+    },
+    {
+      "line_number": 21,
+      "masterformat_code": "31 00 00",
+      "description": "parsed addon job 38254 2",
+      "unit": "LS",
+      "quantity": 1.0,
+      "unit_price": 0.0,
+      "extended_amount": 3000.0,
+      "atomic_meaning": "equipment_component",
+      "source_evidence": "parsed_addon:job_38254:2",
+      "job_ids": [
+        38254
+      ],
+      "ocerp_recommendation": "needs_new_cost_item",
+      "proposed_cost_item_code": null
+    },
+    {
+      "line_number": 22,
+      "masterformat_code": "31 00 00",
+      "description": "parsed addon job 38304 1",
+      "unit": "LS",
+      "quantity": 1.0,
+      "unit_price": 0.0,
+      "extended_amount": 4000.0,
+      "atomic_meaning": "subcontractor_component",
+      "source_evidence": "parsed_addon:job_38304:1",
+      "job_ids": [
+        38304
+      ],
+      "ocerp_recommendation": "track_as_subcontractor_component",
+      "proposed_cost_item_code": null
+    },
+    {
+      "line_number": 23,
+      "masterformat_code": "31 00 00",
+      "description": "parsed addon job 38304 2",
+      "unit": "LS",
+      "quantity": 1.0,
+      "unit_price": 0.0,
+      "extended_amount": 4000.0,
+      "atomic_meaning": "material_component",
+      "source_evidence": "parsed_addon:job_38304:2",
+      "job_ids": [
+        38304
+      ],
+      "ocerp_recommendation": "needs_new_cost_item",
+      "proposed_cost_item_code": null
+    },
+    {
+      "line_number": 24,
+      "masterformat_code": "31 00 00",
+      "description": "parsed addon job 38304 3",
+      "unit": "LS",
+      "quantity": 1.0,
+      "unit_price": 0.0,
+      "extended_amount": 2000.0,
+      "atomic_meaning": "material_component",
+      "source_evidence": "parsed_addon:job_38304:3",
+      "job_ids": [
+        38304
+      ],
+      "ocerp_recommendation": "needs_new_cost_item",
+      "proposed_cost_item_code": null
+    },
+    {
+      "line_number": 25,
+      "masterformat_code": "31 00 00",
+      "description": "parsed addon job 38304 4",
+      "unit": "LS",
+      "quantity": 1.0,
+      "unit_price": 0.0,
+      "extended_amount": 600.0,
+      "atomic_meaning": "material_component",
+      "source_evidence": "parsed_addon:job_38304:4",
+      "job_ids": [
+        38304
+      ],
+      "ocerp_recommendation": "needs_new_cost_item",
+      "proposed_cost_item_code": null
+    },
+    {
+      "line_number": 26,
+      "masterformat_code": "31 00 00",
+      "description": "parsed addon job 38447 2",
+      "unit": "LS",
+      "quantity": 1.0,
+      "unit_price": 0.0,
+      "extended_amount": 800.0,
+      "atomic_meaning": "material_component",
+      "source_evidence": "parsed_addon:job_38447:2",
+      "job_ids": [
+        38447
+      ],
+      "ocerp_recommendation": "needs_new_cost_item",
+      "proposed_cost_item_code": null
+    },
+    {
+      "line_number": 27,
+      "masterformat_code": "31 00 00",
+      "description": "parsed addon job 38578 1",
+      "unit": "LS",
+      "quantity": 1.0,
+      "unit_price": 0.0,
+      "extended_amount": 15000.0,
+      "atomic_meaning": "equipment_component",
+      "source_evidence": "parsed_addon:job_38578:1",
+      "job_ids": [
+        38578
+      ],
+      "ocerp_recommendation": "needs_new_cost_item",
+      "proposed_cost_item_code": null
+    },
+    {
+      "line_number": 1,
+      "masterformat_code": "32 00 00",
+      "description": "parsed addon job 38304 5",
+      "unit": "LS",
+      "quantity": 1.0,
+      "unit_price": 0.0,
+      "extended_amount": 1400.0,
+      "atomic_meaning": "manual_allowance",
+      "source_evidence": "parsed_addon:job_38304:5",
+      "job_ids": [
+        38304
+      ],
+      "ocerp_recommendation": "track_as_pricing_adjustment",
+      "proposed_cost_item_code": null
+    },
+    {
+      "line_number": 2,
+      "masterformat_code": "32 00 00",
+      "description": "parsed addon job 38447 3",
+      "unit": "LS",
+      "quantity": 1.0,
+      "unit_price": 0.0,
+      "extended_amount": 9800.0,
+      "atomic_meaning": "subcontractor_component",
+      "source_evidence": "parsed_addon:job_38447:3",
+      "job_ids": [
+        38447
+      ],
+      "ocerp_recommendation": "track_as_subcontractor_component",
+      "proposed_cost_item_code": null
+    },
+    {
+      "line_number": 3,
+      "masterformat_code": "32 00 00",
+      "description": "parsed addon job 38447 4",
+      "unit": "LS",
+      "quantity": 1.0,
+      "unit_price": 0.0,
+      "extended_amount": 1500.0,
+      "atomic_meaning": "subcontractor_component",
+      "source_evidence": "parsed_addon:job_38447:4",
+      "job_ids": [
+        38447
+      ],
+      "ocerp_recommendation": "track_as_subcontractor_component",
+      "proposed_cost_item_code": null
+    },
+    {
+      "line_number": 1,
+      "masterformat_code": "33 00 00",
+      "description": "Driving/hauling equipment",
+      "unit": "MI",
+      "quantity": 168.0,
+      "unit_price": 0.0,
+      "extended_amount": 735.0,
+      "atomic_meaning": "equipment_component",
+      "source_evidence": "DrivingCalculator#truck_cost (job 38396)",
+      "job_ids": [
+        38396
+      ],
+      "ocerp_recommendation": "needs_new_cost_item",
+      "proposed_cost_item_code": "BED-MATERIAL-HAULING-ADHOC-TON-MI-REVIEW"
+    },
+    {
+      "line_number": 2,
+      "masterformat_code": "33 00 00",
+      "description": "Driving/hauling equipment",
+      "unit": "MI",
+      "quantity": 336.0,
+      "unit_price": 0.0,
+      "extended_amount": 1470.0,
+      "atomic_meaning": "equipment_component",
+      "source_evidence": "DrivingCalculator#truck_cost (job 38522)",
+      "job_ids": [
+        38522
+      ],
+      "ocerp_recommendation": "needs_new_cost_item",
+      "proposed_cost_item_code": "BED-MATERIAL-HAULING-ADHOC-TON-MI-REVIEW"
+    },
+    {
+      "line_number": 3,
+      "masterformat_code": "33 00 00",
+      "description": "Haul #57 (2B) (3/4\" - 1\" clean stone) from quarry",
+      "unit": "LOAD",
+      "quantity": 38.0,
+      "unit_price": 945.0,
+      "extended_amount": 35910.0,
+      "atomic_meaning": "equipment_component",
+      "source_evidence": "SitePreparationMaterial 3016 hauling (job 38396)",
+      "job_ids": [
+        38396
+      ],
+      "ocerp_recommendation": "needs_new_cost_item",
+      "proposed_cost_item_code": null
+    },
+    {
+      "line_number": 4,
+      "masterformat_code": "33 00 00",
+      "description": "Haul Sand from quarry",
+      "unit": "LOAD",
+      "quantity": 4.0,
+      "unit_price": 745.0,
+      "extended_amount": 2980.0,
+      "atomic_meaning": "equipment_component",
+      "source_evidence": "SitePreparationMaterial 3015 hauling (job 38396)",
+      "job_ids": [
+        38396
+      ],
+      "ocerp_recommendation": "needs_new_cost_item",
+      "proposed_cost_item_code": null
+    },
+    {
+      "line_number": 5,
+      "masterformat_code": "33 00 00",
+      "description": "Haul fill material (Fill Dirt (Compactabile)) from quarry",
+      "unit": "LOAD",
+      "quantity": 43.0,
+      "unit_price": 245.0,
+      "extended_amount": 10535.0,
+      "atomic_meaning": "equipment_component",
+      "source_evidence": "SitePreparationJobCalculator#fill_truck_cost (job 38396)",
+      "job_ids": [
+        38396
+      ],
+      "ocerp_recommendation": "needs_new_cost_item",
+      "proposed_cost_item_code": "BED-FILL-DIRT-DELIVERED-ADHOC"
+    },
+    {
+      "line_number": 6,
+      "masterformat_code": "33 00 00",
+      "description": "Scheduled truck entries (labor schedule)",
+      "unit": "LOAD",
+      "quantity": 2.0,
+      "unit_price": 0.0,
+      "extended_amount": 0.0,
+      "atomic_meaning": "equipment_component",
+      "source_evidence": "labor_schedule:job_38396:truck_entries",
+      "job_ids": [
+        38396
+      ],
+      "ocerp_recommendation": "needs_cost_item_refinement",
+      "proposed_cost_item_code": null
+    },
+    {
+      "line_number": 7,
+      "masterformat_code": "33 00 00",
+      "description": "Scheduled truck entries (labor schedule)",
+      "unit": "LOAD",
+      "quantity": 4.0,
+      "unit_price": 0.0,
+      "extended_amount": 0.0,
+      "atomic_meaning": "equipment_component",
+      "source_evidence": "labor_schedule:job_38522:truck_entries",
+      "job_ids": [
+        38522
+      ],
+      "ocerp_recommendation": "needs_cost_item_refinement",
+      "proposed_cost_item_code": null
+    },
+    {
+      "line_number": 8,
+      "masterformat_code": "33 00 00",
+      "description": "Site labor (scheduled)",
+      "unit": "HR",
+      "quantity": 109.0,
+      "unit_price": 0.0,
+      "extended_amount": 0.0,
+      "atomic_meaning": "labor_component",
+      "source_evidence": "labor_schedule:job_38396:labor",
+      "job_ids": [
+        38396
+      ],
+      "ocerp_recommendation": "track_as_labor_component",
+      "proposed_cost_item_code": null
+    },
+    {
+      "line_number": 9,
+      "masterformat_code": "33 00 00",
+      "description": "Site labor (scheduled)",
+      "unit": "HR",
+      "quantity": 115.0,
+      "unit_price": 0.0,
+      "extended_amount": 0.0,
+      "atomic_meaning": "labor_component",
+      "source_evidence": "labor_schedule:job_38522:labor",
+      "job_ids": [
+        38522
+      ],
+      "ocerp_recommendation": "track_as_labor_component",
+      "proposed_cost_item_code": null
+    },
+    {
+      "line_number": 10,
+      "masterformat_code": "33 00 00",
+      "description": "Supply #57 (2B) (3/4\" - 1\" clean stone), 24.0\" thick",
+      "unit": "TON",
+      "quantity": 863.8,
+      "unit_price": 50.0,
+      "extended_amount": 43190.0,
+      "atomic_meaning": "material_component",
+      "source_evidence": "SitePreparationMaterial 3016 (job 38396)",
+      "job_ids": [
+        38396
+      ],
+      "ocerp_recommendation": "needs_new_cost_item",
+      "proposed_cost_item_code": "BED-FILL-DIRT-DELIVERED-ADHOC"
+    },
+    {
+      "line_number": 11,
+      "masterformat_code": "33 00 00",
+      "description": "Supply Sand, 3.0\" thick",
+      "unit": "CY",
+      "quantity": 78.0,
+      "unit_price": 125.0,
+      "extended_amount": 9750.0,
+      "atomic_meaning": "material_component",
+      "source_evidence": "SitePreparationMaterial 3015 (job 38396)",
+      "job_ids": [
+        38396
+      ],
+      "ocerp_recommendation": "needs_new_cost_item",
+      "proposed_cost_item_code": null
+    },
+    {
+      "line_number": 12,
+      "masterformat_code": "33 00 00",
+      "description": "Working labor (calculator-derived)",
+      "unit": "HR",
+      "quantity": 109.0,
+      "unit_price": 13500.0,
+      "extended_amount": 14715.0,
+      "atomic_meaning": "labor_component",
+      "source_evidence": "Job 38396 SitePreparationJobCalculator#working_labor_cost / #working_labor_hours",
+      "job_ids": [
+        38396
+      ],
+      "ocerp_recommendation": "track_as_labor_component",
+      "proposed_cost_item_code": null
+    },
+    {
+      "line_number": 13,
+      "masterformat_code": "33 00 00",
+      "description": "Working labor (calculator-derived)",
+      "unit": "HR",
+      "quantity": 115.0,
+      "unit_price": 13500.0,
+      "extended_amount": 15525.0,
+      "atomic_meaning": "labor_component",
+      "source_evidence": "Job 38522 SitePreparationJobCalculator#working_labor_cost / #working_labor_hours",
+      "job_ids": [
+        38522
+      ],
+      "ocerp_recommendation": "track_as_labor_component",
+      "proposed_cost_item_code": null
+    },
+    {
+      "line_number": 14,
+      "masterformat_code": "33 00 00",
+      "description": "parsed addon job 38396 1",
+      "unit": "LS",
+      "quantity": 1.0,
+      "unit_price": 0.0,
+      "extended_amount": 2400.0,
+      "atomic_meaning": "material_component",
+      "source_evidence": "parsed_addon:job_38396:1",
+      "job_ids": [
+        38396
+      ],
+      "ocerp_recommendation": "needs_new_cost_item",
+      "proposed_cost_item_code": null
+    },
+    {
+      "line_number": 15,
+      "masterformat_code": "33 00 00",
+      "description": "parsed addon job 38396 2",
+      "unit": "LS",
+      "quantity": 1.0,
+      "unit_price": 0.0,
+      "extended_amount": 1100.0,
+      "atomic_meaning": "material_component",
+      "source_evidence": "parsed_addon:job_38396:2",
+      "job_ids": [
+        38396
+      ],
+      "ocerp_recommendation": "needs_new_cost_item",
+      "proposed_cost_item_code": null
+    },
+    {
+      "line_number": 16,
+      "masterformat_code": "33 00 00",
+      "description": "parsed addon job 38396 3",
+      "unit": "LS",
+      "quantity": 1.0,
+      "unit_price": 0.0,
+      "extended_amount": 2000.0,
+      "atomic_meaning": "equipment_component",
+      "source_evidence": "parsed_addon:job_38396:3",
+      "job_ids": [
+        38396
+      ],
+      "ocerp_recommendation": "needs_new_cost_item",
+      "proposed_cost_item_code": null
+    },
+    {
+      "line_number": 17,
+      "masterformat_code": "33 00 00",
+      "description": "parsed addon job 38522 1",
+      "unit": "LS",
+      "quantity": 1.0,
+      "unit_price": 0.0,
+      "extended_amount": 12000.0,
+      "atomic_meaning": "material_component",
+      "source_evidence": "parsed_addon:job_38522:1",
+      "job_ids": [
+        38522
+      ],
+      "ocerp_recommendation": "needs_new_cost_item",
+      "proposed_cost_item_code": null
+    },
+    {
+      "line_number": 18,
+      "masterformat_code": "33 00 00",
+      "description": "parsed addon job 38522 2",
+      "unit": "LS",
+      "quantity": 1.0,
+      "unit_price": 0.0,
+      "extended_amount": 4000.0,
+      "atomic_meaning": "material_component",
+      "source_evidence": "parsed_addon:job_38522:2",
+      "job_ids": [
+        38522
+      ],
+      "ocerp_recommendation": "needs_new_cost_item",
+      "proposed_cost_item_code": null
+    },
+    {
+      "line_number": 19,
+      "masterformat_code": "33 00 00",
+      "description": "parsed addon job 38522 3",
+      "unit": "LS",
+      "quantity": 1.0,
+      "unit_price": 0.0,
+      "extended_amount": 2500.0,
+      "atomic_meaning": "material_component",
+      "source_evidence": "parsed_addon:job_38522:3",
+      "job_ids": [
+        38522
+      ],
+      "ocerp_recommendation": "needs_new_cost_item",
+      "proposed_cost_item_code": null
+    },
+    {
+      "line_number": 20,
+      "masterformat_code": "33 00 00",
+      "description": "parsed addon job 38522 4",
+      "unit": "LS",
+      "quantity": 1.0,
+      "unit_price": 0.0,
+      "extended_amount": 8400.0,
+      "atomic_meaning": "material_component",
+      "source_evidence": "parsed_addon:job_38522:4",
+      "job_ids": [
+        38522
+      ],
+      "ocerp_recommendation": "needs_new_cost_item",
+      "proposed_cost_item_code": null
+    },
+    {
+      "line_number": 21,
+      "masterformat_code": "33 00 00",
+      "description": "parsed addon job 38522 5",
+      "unit": "LS",
+      "quantity": 1.0,
+      "unit_price": 0.0,
+      "extended_amount": 6500.0,
+      "atomic_meaning": "material_component",
+      "source_evidence": "parsed_addon:job_38522:5",
+      "job_ids": [
+        38522
+      ],
+      "ocerp_recommendation": "needs_new_cost_item",
+      "proposed_cost_item_code": null
+    },
+    {
+      "line_number": 22,
+      "masterformat_code": "33 00 00",
+      "description": "parsed addon job 38522 6",
+      "unit": "LS",
+      "quantity": 1.0,
+      "unit_price": 0.0,
+      "extended_amount": 2500.0,
+      "atomic_meaning": "equipment_component",
+      "source_evidence": "parsed_addon:job_38522:6",
+      "job_ids": [
+        38522
+      ],
+      "ocerp_recommendation": "needs_new_cost_item",
+      "proposed_cost_item_code": null
+    },
+    {
+      "line_number": 23,
+      "masterformat_code": "33 00 00",
+      "description": "parsed addon job 38577 1",
+      "unit": "LS",
+      "quantity": 1.0,
+      "unit_price": 0.0,
+      "extended_amount": 2320.98,
+      "atomic_meaning": "material_component",
+      "source_evidence": "parsed_addon:job_38577:1",
+      "job_ids": [
+        38577
+      ],
+      "ocerp_recommendation": "needs_new_cost_item",
+      "proposed_cost_item_code": null
+    }
+  ]
+}

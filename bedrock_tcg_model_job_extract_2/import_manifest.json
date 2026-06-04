@@ -1,0 +1,42 @@
+{
+  "manifest_version": "1.0",
+  "generated_at": "2026-06-03T16:16:50",
+  "package_name": "TCG Model Job Extract 2 \u2014 Unitized CostItems",
+  "package_path": "OCERP/bedrock_tcg_model_job_extract_2/",
+  "source": "bedrock_tcg_model_job_extract_2",
+  "region": "BEDROCK-TCG-EXTRACT-2",
+  "review_only": true,
+  "import_instructions": "Review-only package for OCERP app inspection. Run scripts/import_tcg_package.py with --dry-run first, then --cleanup to re-import.",
+  "provenance": {
+    "contact_id": 24929,
+    "model_job_group_id": "tcg_24929_model_job",
+    "member_job_ids": [
+      38254,
+      38304,
+      38396,
+      38447,
+      38522,
+      38577,
+      38578
+    ],
+    "source_docs": [
+      "app-bedrock/docs/TCG-project/tcg_costitem_composition_realignment_plan.md",
+      "app-bedrock/docs/TCG-project/tcg_demo_review_notes.md",
+      "app-bedrock/docs/TCG-project/tcg_proposed_composite_costitems_v4.md"
+    ]
+  },
+  "summary": {
+    "catalog_resources": 42,
+    "cost_items": 17,
+    "assemblies": 6,
+    "scope": "Extract 2: carried-forward v4 DELIVER/LS items + 7 new unitized CostItems with per-parent-unit factors"
+  },
+  "carried_review_flags": [
+    "TCG-P7-R2",
+    "TCG-P7-R3",
+    "TCG-P7-R5",
+    "TCG-P7-R6",
+    "TCG-P7-R7",
+    "TCG-RS-R1"
+  ]
+}

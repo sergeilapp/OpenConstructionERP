@@ -1,0 +1,1044 @@
+[
+  {
+    "code": "TCG-DELIVER-57-STONE-FD",
+    "description": "Deliver #57 stone for French drain",
+    "descriptions": {},
+    "unit": "t",
+    "rate": 79.57,
+    "currency": "USD",
+    "source": "bedrock_tcg_model_job_extract_2",
+    "region": "BEDROCK-TCG-EXTRACT-2",
+    "classification": {
+      "masterformat": "33 00 00",
+      "collection": "Stormwater",
+      "category": "Sitework",
+      "department": "Utilities",
+      "section": "French Drain"
+    },
+    "components": [
+      {
+        "code": "TCG-RES-57-STONE-TON",
+        "resource_code": "TCG-RES-57-STONE-TON",
+        "name": "#57 stone material",
+        "type": "material",
+        "resource_type": "material",
+        "quantity": 1.0,
+        "unit_rate": 38.0,
+        "cost": 38.0,
+        "unit": "t"
+      },
+      {
+        "code": "TCG-RES-HAUL-57-STONE-FD-LOAD",
+        "resource_code": "TCG-RES-HAUL-57-STONE-FD-LOAD",
+        "name": "#57 stone bundled hauling",
+        "type": "equipment",
+        "resource_type": "equipment",
+        "quantity": 0.04399,
+        "unit_rate": 945.0,
+        "cost": 41.57,
+        "unit": "LOAD"
+      }
+    ],
+    "tags": [
+      "tcg_extract_2",
+      "review_only",
+      "deliver"
+    ],
+    "metadata": {
+      "review_only": true,
+      "source_job_id": 38396
+    }
+  },
+  {
+    "code": "TCG-DELIVER-SAND-FD",
+    "description": "Deliver sand for French drain",
+    "descriptions": {},
+    "unit": "CY",
+    "rate": 63.2,
+    "currency": "USD",
+    "source": "bedrock_tcg_model_job_extract_2",
+    "region": "BEDROCK-TCG-EXTRACT-2",
+    "classification": {
+      "masterformat": "33 00 00",
+      "collection": "Stormwater",
+      "category": "Sitework",
+      "department": "Utilities",
+      "section": "French Drain"
+    },
+    "components": [
+      {
+        "code": "TCG-RES-SAND-CY",
+        "resource_code": "TCG-RES-SAND-CY",
+        "name": "Sand material",
+        "type": "material",
+        "resource_type": "material",
+        "quantity": 1.0,
+        "unit_rate": 25.0,
+        "cost": 25.0,
+        "unit": "CY"
+      },
+      {
+        "code": "TCG-RES-HAUL-SAND-FD-LOAD",
+        "resource_code": "TCG-RES-HAUL-SAND-FD-LOAD",
+        "name": "Sand bundled hauling",
+        "type": "equipment",
+        "resource_type": "equipment",
+        "quantity": 0.05128,
+        "unit_rate": 745.0,
+        "cost": 38.2,
+        "unit": "LOAD"
+      }
+    ],
+    "tags": [
+      "tcg_extract_2",
+      "review_only",
+      "deliver"
+    ],
+    "metadata": {
+      "review_only": true,
+      "source_job_id": 38396
+    }
+  },
+  {
+    "code": "TCG-DELIVER-DRAIN-STONE-CE",
+    "description": "Deliver drain stone for construction entrance",
+    "descriptions": {},
+    "unit": "t",
+    "rate": 80.83,
+    "currency": "USD",
+    "source": "bedrock_tcg_model_job_extract_2",
+    "region": "BEDROCK-TCG-EXTRACT-2",
+    "classification": {
+      "masterformat": "02 00 00",
+      "collection": "Existing Conditions",
+      "category": "Sitework",
+      "department": "Demo",
+      "section": "Demolition"
+    },
+    "components": [
+      {
+        "code": "TCG-RES-DRAIN-STONE-TON",
+        "resource_code": "TCG-RES-DRAIN-STONE-TON",
+        "name": "Drain stone material",
+        "type": "material",
+        "resource_type": "material",
+        "quantity": 1.0,
+        "unit_rate": 38.0,
+        "cost": 38.0,
+        "unit": "t"
+      },
+      {
+        "code": "TCG-RES-HAUL-DRAIN-STONE-LOAD",
+        "resource_code": "TCG-RES-HAUL-DRAIN-STONE-LOAD",
+        "name": "Drain stone bundled hauling",
+        "type": "equipment",
+        "resource_type": "equipment",
+        "quantity": 0.04348,
+        "unit_rate": 985.0,
+        "cost": 42.83,
+        "unit": "LOAD"
+      }
+    ],
+    "tags": [
+      "tcg_extract_2",
+      "review_only",
+      "deliver"
+    ],
+    "metadata": {
+      "review_only": true,
+      "source_job_id": 38304
+    }
+  },
+  {
+    "code": "TCG-DELIVER-57-STONE-CF",
+    "description": "Deliver #57 stone for crawlspace/footer drainage",
+    "descriptions": {},
+    "unit": "t",
+    "rate": 83.96,
+    "currency": "USD",
+    "source": "bedrock_tcg_model_job_extract_2",
+    "region": "BEDROCK-TCG-EXTRACT-2",
+    "classification": {
+      "masterformat": "31 00 00",
+      "collection": "Earthwork",
+      "category": "Sitework",
+      "department": "Earthwork",
+      "section": "General Earthwork"
+    },
+    "components": [
+      {
+        "code": "TCG-RES-57-STONE-TON",
+        "resource_code": "TCG-RES-57-STONE-TON",
+        "name": "#57 stone material",
+        "type": "material",
+        "resource_type": "material",
+        "quantity": 1.0,
+        "unit_rate": 38.0,
+        "cost": 38.0,
+        "unit": "t"
+      },
+      {
+        "code": "TCG-RES-HAUL-57-STONE-CF-LOAD",
+        "resource_code": "TCG-RES-HAUL-57-STONE-CF-LOAD",
+        "name": "#57 stone crawlspace hauling",
+        "type": "equipment",
+        "resource_type": "equipment",
+        "quantity": 0.04666,
+        "unit_rate": 985.0,
+        "cost": 45.96,
+        "unit": "LOAD"
+      }
+    ],
+    "tags": [
+      "tcg_extract_2",
+      "review_only",
+      "deliver"
+    ],
+    "metadata": {
+      "review_only": true,
+      "source_job_id": 38577
+    }
+  },
+  {
+    "code": "TCG-DELIVER-FILL-REVIEW",
+    "description": "Delivered fill material and hauling review item",
+    "descriptions": {},
+    "unit": "CY",
+    "rate": 26.3,
+    "currency": "USD",
+    "source": "bedrock_tcg_model_job_extract_2",
+    "region": "BEDROCK-TCG-EXTRACT-2",
+    "classification": {
+      "masterformat": "31 00 00",
+      "collection": "Earthwork",
+      "category": "Sitework",
+      "department": "Earthwork",
+      "section": "General Earthwork"
+    },
+    "components": [
+      {
+        "code": "TCG-RES-FILL-DELIVERED-CY",
+        "resource_code": "TCG-RES-FILL-DELIVERED-CY",
+        "name": "Delivered fill material review rate",
+        "type": "material",
+        "resource_type": "material",
+        "quantity": 1.0,
+        "unit_rate": 6.5,
+        "cost": 6.5,
+        "unit": "CY"
+      },
+      {
+        "code": "TCG-RES-HAUL-FILL-LOAD",
+        "resource_code": "TCG-RES-HAUL-FILL-LOAD",
+        "name": "Fill hauling",
+        "type": "equipment",
+        "resource_type": "equipment",
+        "quantity": 0.05013,
+        "unit_rate": 395.0,
+        "cost": 19.8,
+        "unit": "LOAD"
+      }
+    ],
+    "tags": [
+      "tcg_extract_2",
+      "review_only",
+      "deliver",
+      "review"
+    ],
+    "metadata": {
+      "review_only": true,
+      "source_job_id": 38254,
+      "review_flag": "TCG-P7-R3"
+    }
+  },
+  {
+    "code": "TCG-STORMWATER-DRAINAGE-FILTRATION-SCOPE",
+    "description": "Stormwater filtration fabric, observation pipe, equipment, and specialty labor",
+    "descriptions": {},
+    "unit": "LS",
+    "rate": 8200.0,
+    "currency": "USD",
+    "source": "bedrock_tcg_model_job_extract_2",
+    "region": "BEDROCK-TCG-EXTRACT-2",
+    "classification": {
+      "masterformat": "33 00 00",
+      "collection": "Stormwater",
+      "category": "Sitework",
+      "department": "Utilities",
+      "section": "French Drain"
+    },
+    "components": [
+      {
+        "code": "TCG-RES-FABRIC-ROLL",
+        "resource_code": "TCG-RES-FABRIC-ROLL",
+        "name": "Geotextile fabric",
+        "type": "material",
+        "resource_type": "material",
+        "quantity": 12.0,
+        "unit_rate": 200.0,
+        "cost": 2400.0,
+        "unit": "ROLL"
+      },
+      {
+        "code": "TCG-RES-OBS-WELL-PIPE-LS",
+        "resource_code": "TCG-RES-OBS-WELL-PIPE-LS",
+        "name": "Pipe for observation wells",
+        "type": "material",
+        "resource_type": "material",
+        "quantity": 1.0,
+        "unit_rate": 1100.0,
+        "cost": 1100.0,
+        "unit": "LS"
+      },
+      {
+        "code": "TCG-RES-STORM-EQUIP-RENTAL-LS",
+        "resource_code": "TCG-RES-STORM-EQUIP-RENTAL-LS",
+        "name": "Stormwater equipment rental",
+        "type": "equipment",
+        "resource_type": "equipment",
+        "quantity": 1.0,
+        "unit_rate": 2000.0,
+        "cost": 2000.0,
+        "unit": "LS"
+      },
+      {
+        "code": "TCG-RES-LABOR-SITE-PREP-135HR",
+        "resource_code": "TCG-RES-LABOR-SITE-PREP-135HR",
+        "name": "Stormwater specialty labor",
+        "type": "labor",
+        "resource_type": "labor",
+        "quantity": 20.0,
+        "unit_rate": 135.0,
+        "cost": 2700.0,
+        "unit": "HR"
+      }
+    ],
+    "tags": [
+      "tcg_extract_2",
+      "review_only",
+      "scope"
+    ],
+    "metadata": {
+      "review_only": true,
+      "source_job_id": 38396
+    }
+  },
+  {
+    "code": "TCG-SITE-PREP-DEMO-DISPOSAL-SCOPE",
+    "description": "Site prep demolition, tree removal, and disposal review scope",
+    "descriptions": {},
+    "unit": "LS",
+    "rate": 24665.0,
+    "currency": "USD",
+    "source": "bedrock_tcg_model_job_extract_2",
+    "region": "BEDROCK-TCG-EXTRACT-2",
+    "classification": {
+      "masterformat": "02 00 00",
+      "collection": "Existing Conditions",
+      "category": "Sitework",
+      "department": "Demo",
+      "section": "Demolition"
+    },
+    "components": [
+      {
+        "code": "TCG-RES-DEMO-EQUIP-ALLOWANCE-LS",
+        "resource_code": "TCG-RES-DEMO-EQUIP-ALLOWANCE-LS",
+        "name": "Demo equipment allowance",
+        "type": "equipment",
+        "resource_type": "equipment",
+        "quantity": 1.0,
+        "unit_rate": 17450.0,
+        "cost": 17450.0,
+        "unit": "LS"
+      },
+      {
+        "code": "TCG-RES-LABOR-SITE-PREP-135HR",
+        "resource_code": "TCG-RES-LABOR-SITE-PREP-135HR",
+        "name": "Demo/disposal labor",
+        "type": "labor",
+        "resource_type": "labor",
+        "quantity": 48.0,
+        "unit_rate": 135.0,
+        "cost": 6480.0,
+        "unit": "HR"
+      },
+      {
+        "code": "TCG-RES-DRIVING-EQUIP-MI",
+        "resource_code": "TCG-RES-DRIVING-EQUIP-MI",
+        "name": "Demo driving equipment",
+        "type": "equipment",
+        "resource_type": "equipment",
+        "quantity": 168.0,
+        "unit_rate": 4.375,
+        "cost": 735.0,
+        "unit": "MI"
+      }
+    ],
+    "tags": [
+      "tcg_extract_2",
+      "review_only",
+      "scope"
+    ],
+    "metadata": {
+      "review_only": true,
+      "source_job_id": 38304,
+      "review_flag": "TCG-RS-R1"
+    }
+  },
+  {
+    "code": "TCG-PAVING-ASPHALT-REPAIR-SUBCONTRACT-SCOPE",
+    "description": "Subcontracted paving and asphalt utility trench repair",
+    "descriptions": {},
+    "unit": "LS",
+    "rate": 11300.0,
+    "currency": "USD",
+    "source": "bedrock_tcg_model_job_extract_2",
+    "region": "BEDROCK-TCG-EXTRACT-2",
+    "classification": {
+      "masterformat": "32 00 00",
+      "collection": "Exterior Improvements",
+      "category": "Sitework",
+      "department": "Paving",
+      "section": "Asphalt"
+    },
+    "components": [
+      {
+        "code": "TCG-RES-PAVING-SUB-LS",
+        "resource_code": "TCG-RES-PAVING-SUB-LS",
+        "name": "Paving sub crew",
+        "type": "subcontractor",
+        "resource_type": "subcontractor",
+        "quantity": 1.0,
+        "unit_rate": 9800.0,
+        "cost": 9800.0,
+        "unit": "LS"
+      },
+      {
+        "code": "TCG-RES-ASPHALT-REPAIR-SUB-LS",
+        "resource_code": "TCG-RES-ASPHALT-REPAIR-SUB-LS",
+        "name": "Asphalt utility trench repair sub crew",
+        "type": "subcontractor",
+        "resource_type": "subcontractor",
+        "quantity": 1.0,
+        "unit_rate": 1500.0,
+        "cost": 1500.0,
+        "unit": "LS"
+      }
+    ],
+    "tags": [
+      "tcg_extract_2",
+      "review_only",
+      "scope",
+      "subcontractor"
+    ],
+    "metadata": {
+      "review_only": true,
+      "source_job_id": 38447
+    }
+  },
+  {
+    "code": "TCG-PLACE-COMPACT-FILL-REVIEW",
+    "description": "Place and compact imported fill (LS review scope)",
+    "descriptions": {},
+    "unit": "LS",
+    "rate": 25380.0,
+    "currency": "USD",
+    "source": "bedrock_tcg_model_job_extract_2",
+    "region": "BEDROCK-TCG-EXTRACT-2",
+    "classification": {
+      "masterformat": "31 00 00",
+      "collection": "Earthwork",
+      "category": "Sitework",
+      "department": "Earthwork",
+      "section": "General Earthwork"
+    },
+    "components": [
+      {
+        "code": "TCG-RES-LABOR-SITE-PREP-135HR",
+        "resource_code": "TCG-RES-LABOR-SITE-PREP-135HR",
+        "name": "Fill placement labor",
+        "type": "labor",
+        "resource_type": "labor",
+        "quantity": 188.0,
+        "unit_rate": 135.0,
+        "cost": 25380.0,
+        "unit": "HR"
+      }
+    ],
+    "tags": [
+      "tcg_extract_2",
+      "review_only",
+      "place",
+      "review"
+    ],
+    "metadata": {
+      "review_only": true,
+      "source_job_id": 38254,
+      "equipment_rate_missing": true
+    }
+  },
+  {
+    "code": "TCG-PLACE-TOPSOIL-REVIEW",
+    "description": "Place stockpiled topsoil (LS review scope)",
+    "descriptions": {},
+    "unit": "LS",
+    "rate": 10530.0,
+    "currency": "USD",
+    "source": "bedrock_tcg_model_job_extract_2",
+    "region": "BEDROCK-TCG-EXTRACT-2",
+    "classification": {
+      "masterformat": "31 00 00",
+      "collection": "Earthwork",
+      "category": "Sitework",
+      "department": "Earthwork",
+      "section": "General Earthwork"
+    },
+    "components": [
+      {
+        "code": "TCG-RES-LABOR-SITE-PREP-135HR",
+        "resource_code": "TCG-RES-LABOR-SITE-PREP-135HR",
+        "name": "Topsoil placement labor",
+        "type": "labor",
+        "resource_type": "labor",
+        "quantity": 78.0,
+        "unit_rate": 135.0,
+        "cost": 10530.0,
+        "unit": "HR"
+      }
+    ],
+    "tags": [
+      "tcg_extract_2",
+      "review_only",
+      "place",
+      "review"
+    ],
+    "metadata": {
+      "review_only": true,
+      "source_job_id": 38578
+    }
+  },
+  {
+    "code": "TCG-CONCRETE-CURB-GUTTER-UNIT",
+    "description": "Concrete curb and gutter per linear foot",
+    "descriptions": {},
+    "unit": "LF",
+    "rate": 167.64,
+    "currency": "USD",
+    "source": "bedrock_tcg_model_job_extract_2",
+    "region": "BEDROCK-TCG-EXTRACT-2",
+    "classification": {
+      "masterformat": "03 00 00",
+      "collection": "Concrete",
+      "category": "Sitework",
+      "department": "Concrete",
+      "section": "Curb"
+    },
+    "components": [
+      {
+        "code": "TCG-RES-CONCRETE-CY",
+        "resource_code": "TCG-RES-CONCRETE-CY",
+        "name": "Concrete material",
+        "type": "material",
+        "resource_type": "material",
+        "quantity": 0.2,
+        "unit_rate": 253.33,
+        "cost": 50.67,
+        "unit": "CY"
+      },
+      {
+        "code": "TCG-RES-2A-STONE-LOAD",
+        "resource_code": "TCG-RES-2A-STONE-LOAD",
+        "name": "2A stone",
+        "type": "material",
+        "resource_type": "material",
+        "quantity": 0.01333,
+        "unit_rate": 800.0,
+        "cost": 10.66,
+        "unit": "LOAD"
+      },
+      {
+        "code": "TCG-RES-LABOR-ADHOC-125HR",
+        "resource_code": "TCG-RES-LABOR-ADHOC-125HR",
+        "name": "Adhoc concrete labor (includes material gathering)",
+        "type": "labor",
+        "resource_type": "labor",
+        "quantity": 0.77333,
+        "unit_rate": 125.0,
+        "cost": 96.67,
+        "unit": "HR"
+      },
+      {
+        "code": "TCG-RES-DRIVING-EQUIP-MI",
+        "resource_code": "TCG-RES-DRIVING-EQUIP-MI",
+        "name": "Driving equipment",
+        "type": "equipment",
+        "resource_type": "equipment",
+        "quantity": 1.12,
+        "unit_rate": 4.375,
+        "cost": 4.9,
+        "unit": "MI"
+      },
+      {
+        "code": "TCG-RES-DRIVING-LABOR-95HR",
+        "resource_code": "TCG-RES-DRIVING-LABOR-95HR",
+        "name": "Driving labor",
+        "type": "labor",
+        "resource_type": "labor",
+        "quantity": 0.04987,
+        "unit_rate": 95.0,
+        "cost": 4.74,
+        "unit": "HR"
+      }
+    ],
+    "tags": [
+      "tcg_extract_2",
+      "review_only",
+      "unitized",
+      "concrete"
+    ],
+    "metadata": {
+      "review_only": true,
+      "source_job_id": 38447,
+      "review_flag": "TCG-P7-R7",
+      "allocation_note": "58 HR = 42 working HR + 16 material-gathering HR"
+    }
+  },
+  {
+    "code": "TCG-CRAWLSPACE-FOOTER-EXCAVATION-UNIT",
+    "description": "Crawlspace/footer excavation and drainage per linear foot",
+    "descriptions": {},
+    "unit": "LF",
+    "rate": 20.38,
+    "currency": "USD",
+    "source": "bedrock_tcg_model_job_extract_2",
+    "region": "BEDROCK-TCG-EXTRACT-2",
+    "classification": {
+      "masterformat": "31 00 00",
+      "collection": "Earthwork",
+      "category": "Sitework",
+      "department": "Earthwork",
+      "section": "General Earthwork"
+    },
+    "components": [
+      {
+        "code": "TCG-RES-CORRUGATED-PIPE-4IN-FT",
+        "resource_code": "TCG-RES-CORRUGATED-PIPE-4IN-FT",
+        "name": "4in corrugated perforated pipe",
+        "type": "material",
+        "resource_type": "material",
+        "quantity": 1.0,
+        "unit_rate": 2.32,
+        "cost": 2.32,
+        "unit": "FT"
+      },
+      {
+        "code": "TCG-RES-LABOR-SITE-PREP-135HR",
+        "resource_code": "TCG-RES-LABOR-SITE-PREP-135HR",
+        "name": "Crawlspace/footer labor",
+        "type": "labor",
+        "resource_type": "labor",
+        "quantity": 0.114,
+        "unit_rate": 135.0,
+        "cost": 15.39,
+        "unit": "HR"
+      },
+      {
+        "code": "TCG-RES-DRIVING-EQUIP-45MI",
+        "resource_code": "TCG-RES-DRIVING-EQUIP-45MI",
+        "name": "Driving equipment",
+        "type": "equipment",
+        "resource_type": "equipment",
+        "quantity": 0.336,
+        "unit_rate": 4.5,
+        "cost": 1.51,
+        "unit": "MI"
+      },
+      {
+        "code": "TCG-RES-DRIVING-LABOR-95HR",
+        "resource_code": "TCG-RES-DRIVING-LABOR-95HR",
+        "name": "Driving labor",
+        "type": "labor",
+        "resource_type": "labor",
+        "quantity": 0.01225,
+        "unit_rate": 95.0,
+        "cost": 1.16,
+        "unit": "HR"
+      }
+    ],
+    "tags": [
+      "tcg_extract_2",
+      "review_only",
+      "unitized",
+      "earthwork",
+      "drainage"
+    ],
+    "metadata": {
+      "review_only": true,
+      "source_job_id": 38577
+    }
+  },
+  {
+    "code": "TCG-UTILITY-TRENCHING-CONDUIT-UNIT",
+    "description": "Utility trenching, conduit/pipe installation per linear foot of trench",
+    "descriptions": {},
+    "unit": "LF",
+    "rate": 41.72,
+    "currency": "USD",
+    "source": "bedrock_tcg_model_job_extract_2",
+    "region": "BEDROCK-TCG-EXTRACT-2",
+    "classification": {
+      "masterformat": "33 00 00",
+      "collection": "Utilities",
+      "category": "Sitework",
+      "department": "Utilities",
+      "section": "Utility Trenching"
+    },
+    "components": [
+      {
+        "code": "TCG-RES-UTILITY-PIPE-4IN-FT",
+        "resource_code": "TCG-RES-UTILITY-PIPE-4IN-FT",
+        "name": "4in schedule 40 pipe",
+        "type": "material",
+        "resource_type": "material",
+        "quantity": 1.46154,
+        "unit_rate": 6.32,
+        "cost": 9.24,
+        "unit": "FT"
+      },
+      {
+        "code": "TCG-RES-UTILITY-CONDUIT-3IN-FT",
+        "resource_code": "TCG-RES-UTILITY-CONDUIT-3IN-FT",
+        "name": "3in electrical conduit",
+        "type": "material",
+        "resource_type": "material",
+        "quantity": 0.69231,
+        "unit_rate": 4.44,
+        "cost": 3.07,
+        "unit": "FT"
+      },
+      {
+        "code": "TCG-RES-UTILITY-CONDUIT-1-5IN-FT",
+        "resource_code": "TCG-RES-UTILITY-CONDUIT-1-5IN-FT",
+        "name": "1.5in conduit",
+        "type": "material",
+        "resource_type": "material",
+        "quantity": 0.69231,
+        "unit_rate": 2.78,
+        "cost": 1.92,
+        "unit": "FT"
+      },
+      {
+        "code": "TCG-RES-SCREENINGS-LOAD",
+        "resource_code": "TCG-RES-SCREENINGS-LOAD",
+        "name": "Screenings backfill",
+        "type": "material",
+        "resource_type": "material",
+        "quantity": 0.00615,
+        "unit_rate": 1050.0,
+        "cost": 6.46,
+        "unit": "LOAD"
+      },
+      {
+        "code": "TCG-RES-UTILITY-MATERIAL-ALLOWANCE-LS",
+        "resource_code": "TCG-RES-UTILITY-MATERIAL-ALLOWANCE-LS",
+        "name": "Additional utility materials",
+        "type": "material",
+        "resource_type": "material",
+        "quantity": 0.00077,
+        "unit_rate": 6500.0,
+        "cost": 5.01,
+        "unit": "LS"
+      },
+      {
+        "code": "TCG-RES-UTILITY-EQUIP-ALLOWANCE-LS",
+        "resource_code": "TCG-RES-UTILITY-EQUIP-ALLOWANCE-LS",
+        "name": "Utility equipment allowance",
+        "type": "equipment",
+        "resource_type": "equipment",
+        "quantity": 0.00077,
+        "unit_rate": 2500.0,
+        "cost": 1.93,
+        "unit": "LS"
+      },
+      {
+        "code": "TCG-RES-DRIVING-EQUIP-MI",
+        "resource_code": "TCG-RES-DRIVING-EQUIP-MI",
+        "name": "Driving equipment",
+        "type": "equipment",
+        "resource_type": "equipment",
+        "quantity": 0.25846,
+        "unit_rate": 4.375,
+        "cost": 1.13,
+        "unit": "MI"
+      },
+      {
+        "code": "TCG-RES-LABOR-SITE-PREP-135HR",
+        "resource_code": "TCG-RES-LABOR-SITE-PREP-135HR",
+        "name": "Utility trenching labor",
+        "type": "labor",
+        "resource_type": "labor",
+        "quantity": 0.08846,
+        "unit_rate": 135.0,
+        "cost": 11.94,
+        "unit": "HR"
+      },
+      {
+        "code": "TCG-RES-DRIVING-LABOR-95HR",
+        "resource_code": "TCG-RES-DRIVING-LABOR-95HR",
+        "name": "Driving labor",
+        "type": "labor",
+        "resource_type": "labor",
+        "quantity": 0.01077,
+        "unit_rate": 95.0,
+        "cost": 1.02,
+        "unit": "HR"
+      }
+    ],
+    "tags": [
+      "tcg_extract_2",
+      "review_only",
+      "unitized",
+      "utilities",
+      "trenching"
+    ],
+    "metadata": {
+      "review_only": true,
+      "source_job_id": 38522,
+      "factor_note": "Pipe runs per LF: 4in=1.462, 3in=0.692, 1.5in=0.692; adjust per job plans"
+    }
+  },
+  {
+    "code": "TCG-EROSION-STABILIZATION-UNIT",
+    "description": "Erosion control and site stabilization per linear foot of fence",
+    "descriptions": {},
+    "unit": "LF",
+    "rate": 53.52,
+    "currency": "USD",
+    "source": "bedrock_tcg_model_job_extract_2",
+    "region": "BEDROCK-TCG-EXTRACT-2",
+    "classification": {
+      "masterformat": "31 00 00",
+      "collection": "Earthwork",
+      "category": "Sitework",
+      "department": "Earthwork",
+      "section": "Erosion Control"
+    },
+    "components": [
+      {
+        "code": "TCG-RES-SILT-MATTING-LS",
+        "resource_code": "TCG-RES-SILT-MATTING-LS",
+        "name": "Silt fence, posts, wire mesh, and matting",
+        "type": "material",
+        "resource_type": "material",
+        "quantity": 1.0,
+        "unit_rate": 9.09,
+        "cost": 9.09,
+        "unit": "LF"
+      },
+      {
+        "code": "TCG-RES-ORANGE-FENCE-LS",
+        "resource_code": "TCG-RES-ORANGE-FENCE-LS",
+        "name": "Orange construction fence",
+        "type": "material",
+        "resource_type": "material",
+        "quantity": 1.0,
+        "unit_rate": 4.55,
+        "cost": 4.55,
+        "unit": "LF"
+      },
+      {
+        "code": "TCG-RES-GEOTEXTILE-ALLOWANCE-LS",
+        "resource_code": "TCG-RES-GEOTEXTILE-ALLOWANCE-LS",
+        "name": "Geotextile/fabric allowance",
+        "type": "material",
+        "resource_type": "material",
+        "quantity": 1.0,
+        "unit_rate": 1.36,
+        "cost": 1.36,
+        "unit": "LF"
+      },
+      {
+        "code": "TCG-RES-STRAW-STABILIZATION-LS",
+        "resource_code": "TCG-RES-STRAW-STABILIZATION-LS",
+        "name": "Straw stabilization",
+        "type": "material",
+        "resource_type": "material",
+        "quantity": 1.0,
+        "unit_rate": 7.27,
+        "cost": 7.27,
+        "unit": "LF"
+      },
+      {
+        "code": "TCG-RES-EROSION-SUB-LF",
+        "resource_code": "TCG-RES-EROSION-SUB-LF",
+        "name": "Erosion sub crew",
+        "type": "subcontractor",
+        "resource_type": "subcontractor",
+        "quantity": 1.0,
+        "unit_rate": 9.09,
+        "cost": 9.09,
+        "unit": "LF"
+      },
+      {
+        "code": "TCG-RES-EROSION-EQUIP-LF",
+        "resource_code": "TCG-RES-EROSION-EQUIP-LF",
+        "name": "Erosion equipment rental",
+        "type": "equipment",
+        "resource_type": "equipment",
+        "quantity": 1.0,
+        "unit_rate": 6.82,
+        "cost": 6.82,
+        "unit": "LF"
+      },
+      {
+        "code": "TCG-RES-LABOR-SITE-PREP-135HR",
+        "resource_code": "TCG-RES-LABOR-SITE-PREP-135HR",
+        "name": "Erosion/stabilization labor",
+        "type": "labor",
+        "resource_type": "labor",
+        "quantity": 0.11364,
+        "unit_rate": 135.0,
+        "cost": 15.34,
+        "unit": "HR"
+      }
+    ],
+    "tags": [
+      "tcg_extract_2",
+      "review_only",
+      "unitized",
+      "erosion"
+    ],
+    "metadata": {
+      "review_only": true,
+      "source_job_id": 38304,
+      "fence_length_ft": 440
+    }
+  },
+  {
+    "code": "TCG-PLACE-COMPACT-FILL-UNIT",
+    "description": "Place and compact imported fill per cubic yard",
+    "descriptions": {},
+    "unit": "CY",
+    "rate": 12.98,
+    "currency": "USD",
+    "source": "bedrock_tcg_model_job_extract_2",
+    "region": "BEDROCK-TCG-EXTRACT-2",
+    "classification": {
+      "masterformat": "31 00 00",
+      "collection": "Earthwork",
+      "category": "Sitework",
+      "department": "Earthwork",
+      "section": "General Earthwork"
+    },
+    "components": [
+      {
+        "code": "TCG-RES-LABOR-SITE-PREP-135HR",
+        "resource_code": "TCG-RES-LABOR-SITE-PREP-135HR",
+        "name": "Fill placement labor",
+        "type": "labor",
+        "resource_type": "labor",
+        "quantity": 0.09616,
+        "unit_rate": 135.0,
+        "cost": 12.98,
+        "unit": "HR"
+      }
+    ],
+    "tags": [
+      "tcg_extract_2",
+      "review_only",
+      "unitized",
+      "earthwork",
+      "fill"
+    ],
+    "metadata": {
+      "review_only": true,
+      "source_job_id": 38254,
+      "equipment_rate_missing": true,
+      "allocation_note": "Labor only; equipment rate TBD. Estimated all-in ~$18-25/CY."
+    }
+  },
+  {
+    "code": "TCG-PLACE-AGGREGATE-UNIT",
+    "description": "Place and level aggregate (stone/sand) per ton",
+    "descriptions": {},
+    "unit": "t",
+    "rate": 13.91,
+    "currency": "USD",
+    "source": "bedrock_tcg_model_job_extract_2",
+    "region": "BEDROCK-TCG-EXTRACT-2",
+    "classification": {
+      "masterformat": "33 00 00",
+      "collection": "Stormwater",
+      "category": "Sitework",
+      "department": "Utilities",
+      "section": "French Drain"
+    },
+    "components": [
+      {
+        "code": "TCG-RES-LABOR-SITE-PREP-135HR",
+        "resource_code": "TCG-RES-LABOR-SITE-PREP-135HR",
+        "name": "Aggregate placement labor",
+        "type": "labor",
+        "resource_type": "labor",
+        "quantity": 0.10303,
+        "unit_rate": 135.0,
+        "cost": 13.91,
+        "unit": "HR"
+      }
+    ],
+    "tags": [
+      "tcg_extract_2",
+      "review_only",
+      "unitized",
+      "aggregate",
+      "placement"
+    ],
+    "metadata": {
+      "review_only": true,
+      "source_job_id": 38396,
+      "allocation_note": "Draft split: 89 HR from 109 HR pool. Remaining 20 HR covers stormwater scope labor."
+    }
+  },
+  {
+    "code": "TCG-PLACE-TOPSOIL-UNIT",
+    "description": "Place stockpiled on-site topsoil per cubic yard",
+    "descriptions": {},
+    "unit": "CY",
+    "rate": 5.39,
+    "currency": "USD",
+    "source": "bedrock_tcg_model_job_extract_2",
+    "region": "BEDROCK-TCG-EXTRACT-2",
+    "classification": {
+      "masterformat": "31 00 00",
+      "collection": "Earthwork",
+      "category": "Sitework",
+      "department": "Earthwork",
+      "section": "General Earthwork"
+    },
+    "components": [
+      {
+        "code": "TCG-RES-LABOR-SITE-PREP-135HR",
+        "resource_code": "TCG-RES-LABOR-SITE-PREP-135HR",
+        "name": "Topsoil placement labor",
+        "type": "labor",
+        "resource_type": "labor",
+        "quantity": 0.0399,
+        "unit_rate": 135.0,
+        "cost": 5.39,
+        "unit": "HR"
+      }
+    ],
+    "tags": [
+      "tcg_extract_2",
+      "review_only",
+      "unitized",
+      "earthwork",
+      "topsoil"
+    ],
+    "metadata": {
+      "review_only": true,
+      "source_job_id": 38578,
+      "allocation_note": "78 HR from 38578 392 HR pool; remaining 314 HR covers broader earthwork/stone/excavator scope."
+    }
+  }
+]

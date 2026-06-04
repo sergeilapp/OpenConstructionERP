@@ -1,0 +1,1082 @@
+{
+  "generated_at": "2026-06-02T12:32:05-04:00",
+  "review_only": true,
+  "provenance": {
+    "contact_id": 24929,
+    "model_job_group_id": "tcg_24929_model_job",
+    "member_job_ids": [
+      38254,
+      38304,
+      38396,
+      38447,
+      38522,
+      38577,
+      38578
+    ]
+  },
+  "parameters": [
+    {
+      "cost_item_code": "TCG-DRAIN_STONE-SUPPLY",
+      "cost_item_name": "Supply Drain Stone",
+      "adjustable_fields": [
+        {
+          "field": "unit_price",
+          "current_value": 50.0,
+          "unit": "TON",
+          "reason": "Unit price per TON is estimator-adjustable; source quarry may change rate"
+        }
+      ],
+      "provenance": {
+        "evidence_count": 1,
+        "total_quantity": 92.0,
+        "total_extended": 4600.0,
+        "job_ids": [
+          38304
+        ],
+        "masterformat_codes": [
+          "02 00 00"
+        ],
+        "contact_id": 24929,
+        "model_job_group_id": "tcg_24929_model_job",
+        "member_job_ids": [
+          38254,
+          38304,
+          38396,
+          38447,
+          38522,
+          38577,
+          38578
+        ]
+      }
+    },
+    {
+      "cost_item_code": "TCG-_57_STONE-SUPPLY",
+      "cost_item_name": "Supply #57 Stone",
+      "adjustable_fields": [
+        {
+          "field": "unit_price",
+          "current_value": 50.0,
+          "unit": "TON",
+          "reason": "Unit price per TON is estimator-adjustable; source quarry may change rate"
+        }
+      ],
+      "provenance": {
+        "evidence_count": 3,
+        "total_quantity": 1121.0,
+        "total_extended": 56050.0,
+        "job_ids": [
+          38577,
+          38396
+        ],
+        "masterformat_codes": [
+          "31 00 00",
+          "33 00 00"
+        ],
+        "contact_id": 24929,
+        "model_job_group_id": "tcg_24929_model_job",
+        "member_job_ids": [
+          38254,
+          38304,
+          38396,
+          38447,
+          38522,
+          38577,
+          38578
+        ]
+      }
+    },
+    {
+      "cost_item_code": "TCG-SAND-SUPPLY",
+      "cost_item_name": "Supply Sand",
+      "adjustable_fields": [
+        {
+          "field": "unit_price",
+          "current_value": 125.0,
+          "unit": "CY",
+          "reason": "Unit price per CY is estimator-adjustable; source quarry may change rate"
+        }
+      ],
+      "provenance": {
+        "evidence_count": 2,
+        "total_quantity": 98.0,
+        "total_extended": 12250.0,
+        "job_ids": [
+          38578,
+          38396
+        ],
+        "masterformat_codes": [
+          "31 00 00",
+          "33 00 00"
+        ],
+        "contact_id": 24929,
+        "model_job_group_id": "tcg_24929_model_job",
+        "member_job_ids": [
+          38254,
+          38304,
+          38396,
+          38447,
+          38522,
+          38577,
+          38578
+        ]
+      }
+    },
+    {
+      "cost_item_code": "TCG-DRAIN_STONE-HAUL",
+      "cost_item_name": "Haul Drain Stone From Quarry",
+      "adjustable_fields": [
+        {
+          "field": "unit_price",
+          "current_value": 985.0,
+          "unit": "LOAD",
+          "reason": "Rate per LOAD varies by distance, fuel cost, and truck type"
+        }
+      ],
+      "provenance": {
+        "evidence_count": 1,
+        "total_quantity": 4.0,
+        "total_extended": 3940.0,
+        "job_ids": [
+          38304
+        ],
+        "masterformat_codes": [
+          "02 00 00"
+        ],
+        "contact_id": 24929,
+        "model_job_group_id": "tcg_24929_model_job",
+        "member_job_ids": [
+          38254,
+          38304,
+          38396,
+          38447,
+          38522,
+          38577,
+          38578
+        ]
+      }
+    },
+    {
+      "cost_item_code": "TCG-_57_STONE-HAUL",
+      "cost_item_name": "Haul #57 Stone From Quarry",
+      "adjustable_fields": [
+        {
+          "field": "unit_price",
+          "current_value": 954.6,
+          "unit": "LOAD",
+          "reason": "Rate per LOAD varies by distance, fuel cost, and truck type"
+        }
+      ],
+      "provenance": {
+        "evidence_count": 3,
+        "total_quantity": 50.0,
+        "total_extended": 47730.0,
+        "job_ids": [
+          38577,
+          38396
+        ],
+        "masterformat_codes": [
+          "31 00 00",
+          "33 00 00"
+        ],
+        "contact_id": 24929,
+        "model_job_group_id": "tcg_24929_model_job",
+        "member_job_ids": [
+          38254,
+          38304,
+          38396,
+          38447,
+          38522,
+          38577,
+          38578
+        ]
+      }
+    },
+    {
+      "cost_item_code": "TCG-SAND-HAUL",
+      "cost_item_name": "Haul Sand From Quarry",
+      "adjustable_fields": [
+        {
+          "field": "unit_price",
+          "current_value": 769.0,
+          "unit": "LOAD",
+          "reason": "Rate per LOAD varies by distance, fuel cost, and truck type"
+        }
+      ],
+      "provenance": {
+        "evidence_count": 2,
+        "total_quantity": 5.0,
+        "total_extended": 3845.0,
+        "job_ids": [
+          38578,
+          38396
+        ],
+        "masterformat_codes": [
+          "31 00 00",
+          "33 00 00"
+        ],
+        "contact_id": 24929,
+        "model_job_group_id": "tcg_24929_model_job",
+        "member_job_ids": [
+          38254,
+          38304,
+          38396,
+          38447,
+          38522,
+          38577,
+          38578
+        ]
+      }
+    },
+    {
+      "cost_item_code": "TCG-FILL_DIRT-HAUL",
+      "cost_item_name": "Haul Fill Dirt From Quarry",
+      "adjustable_fields": [
+        {
+          "field": "unit_price",
+          "current_value": 349.26,
+          "unit": "LOAD",
+          "reason": "Rate per LOAD varies by distance, fuel cost, and truck type"
+        }
+      ],
+      "provenance": {
+        "evidence_count": 2,
+        "total_quantity": 141.0,
+        "total_extended": 49245.0,
+        "job_ids": [
+          38254,
+          38396
+        ],
+        "masterformat_codes": [
+          "31 00 00",
+          "33 00 00"
+        ],
+        "contact_id": 24929,
+        "model_job_group_id": "tcg_24929_model_job",
+        "member_job_ids": [
+          38254,
+          38304,
+          38396,
+          38447,
+          38522,
+          38577,
+          38578
+        ]
+      }
+    },
+    {
+      "cost_item_code": "TCG-EQUIP-DRIVING-HAULING-PER-MI",
+      "cost_item_name": "Equipment — Driving/Hauling Per Mile",
+      "adjustable_fields": [
+        {
+          "field": "unit_price",
+          "current_value": 4.97,
+          "unit": "MI",
+          "reason": "Rate per MI varies by truck type, fuel, and distance; estimator should confirm per job"
+        }
+      ],
+      "provenance": {
+        "evidence_count": 7,
+        "total_miles": 2352.0,
+        "total_cost": 11697.0,
+        "job_ids": [
+          38304,
+          38447,
+          38254,
+          38577,
+          38578,
+          38396,
+          38522
+        ],
+        "masterformat_codes": [
+          "02 00 00",
+          "03 00 00",
+          "31 00 00",
+          "33 00 00"
+        ],
+        "contact_id": 24929,
+        "model_job_group_id": "tcg_24929_model_job",
+        "member_job_ids": [
+          38254,
+          38304,
+          38396,
+          38447,
+          38522,
+          38577,
+          38578
+        ]
+      }
+    },
+    {
+      "cost_item_code": "TCG-ADDON_7_02_00_00-ADDON",
+      "cost_item_name": "parsed addon job 38304 6",
+      "adjustable_fields": [
+        {
+          "field": "unit_price",
+          "current_value": null,
+          "unit": "LS",
+          "reason": "Lump-sum amount; estimator should review for reasonableness"
+        }
+      ],
+      "provenance": {
+        "source_evidence": "parsed_addon:job_38304:6",
+        "extended_amount": 8800.0,
+        "job_ids": [
+          38304
+        ],
+        "confidence": "needs_phase_5_or_estimator_review",
+        "contact_id": 24929,
+        "model_job_group_id": "tcg_24929_model_job",
+        "member_job_ids": [
+          38254,
+          38304,
+          38396,
+          38447,
+          38522,
+          38577,
+          38578
+        ]
+      }
+    },
+    {
+      "cost_item_code": "TCG-ADDON_8_02_00_00-ADDON",
+      "cost_item_name": "parsed addon job 38304 7",
+      "adjustable_fields": [
+        {
+          "field": "unit_price",
+          "current_value": null,
+          "unit": "LS",
+          "reason": "Lump-sum amount; estimator should review for reasonableness"
+        }
+      ],
+      "provenance": {
+        "source_evidence": "parsed_addon:job_38304:7",
+        "extended_amount": 2700.0,
+        "job_ids": [
+          38304
+        ],
+        "confidence": "needs_phase_5_or_estimator_review",
+        "contact_id": 24929,
+        "model_job_group_id": "tcg_24929_model_job",
+        "member_job_ids": [
+          38254,
+          38304,
+          38396,
+          38447,
+          38522,
+          38577,
+          38578
+        ]
+      }
+    },
+    {
+      "cost_item_code": "TCG-ADDON_9_02_00_00-ADDON",
+      "cost_item_name": "parsed addon job 38304 8",
+      "adjustable_fields": [
+        {
+          "field": "unit_price",
+          "current_value": null,
+          "unit": "LS",
+          "reason": "Lump-sum amount; estimator should review for reasonableness"
+        }
+      ],
+      "provenance": {
+        "source_evidence": "parsed_addon:job_38304:8",
+        "extended_amount": 3150.0,
+        "job_ids": [
+          38304
+        ],
+        "confidence": "needs_phase_5_or_estimator_review",
+        "contact_id": 24929,
+        "model_job_group_id": "tcg_24929_model_job",
+        "member_job_ids": [
+          38254,
+          38304,
+          38396,
+          38447,
+          38522,
+          38577,
+          38578
+        ]
+      }
+    },
+    {
+      "cost_item_code": "TCG-ADDON_10_02_00_00-ADDON",
+      "cost_item_name": "parsed addon job 38304 9",
+      "adjustable_fields": [
+        {
+          "field": "unit_price",
+          "current_value": null,
+          "unit": "LS",
+          "reason": "Lump-sum amount; estimator should review for reasonableness"
+        }
+      ],
+      "provenance": {
+        "source_evidence": "parsed_addon:job_38304:9",
+        "extended_amount": 2800.0,
+        "job_ids": [
+          38304
+        ],
+        "confidence": "needs_phase_5_or_estimator_review",
+        "contact_id": 24929,
+        "model_job_group_id": "tcg_24929_model_job",
+        "member_job_ids": [
+          38254,
+          38304,
+          38396,
+          38447,
+          38522,
+          38577,
+          38578
+        ]
+      }
+    },
+    {
+      "cost_item_code": "TCG-ADDON_4_03_00_00-ADDON",
+      "cost_item_name": "parsed addon job 38447 1",
+      "adjustable_fields": [
+        {
+          "field": "unit_price",
+          "current_value": null,
+          "unit": "LS",
+          "reason": "Lump-sum amount; estimator should review for reasonableness"
+        }
+      ],
+      "provenance": {
+        "source_evidence": "parsed_addon:job_38447:1",
+        "extended_amount": 3800.0,
+        "job_ids": [
+          38447
+        ],
+        "confidence": "needs_phase_5_or_estimator_review",
+        "contact_id": 24929,
+        "model_job_group_id": "tcg_24929_model_job",
+        "member_job_ids": [
+          38254,
+          38304,
+          38396,
+          38447,
+          38522,
+          38577,
+          38578
+        ]
+      }
+    },
+    {
+      "cost_item_code": "TCG-ADDON_20_31_00_00-ADDON",
+      "cost_item_name": "parsed addon job 38254 1",
+      "adjustable_fields": [
+        {
+          "field": "unit_price",
+          "current_value": null,
+          "unit": "LS",
+          "reason": "Lump-sum amount; estimator should review for reasonableness"
+        }
+      ],
+      "provenance": {
+        "source_evidence": "parsed_addon:job_38254:1",
+        "extended_amount": 3200.0,
+        "job_ids": [
+          38254
+        ],
+        "confidence": "needs_phase_5_or_estimator_review",
+        "contact_id": 24929,
+        "model_job_group_id": "tcg_24929_model_job",
+        "member_job_ids": [
+          38254,
+          38304,
+          38396,
+          38447,
+          38522,
+          38577,
+          38578
+        ]
+      }
+    },
+    {
+      "cost_item_code": "TCG-ADDON_21_31_00_00-ADDON",
+      "cost_item_name": "parsed addon job 38254 2",
+      "adjustable_fields": [
+        {
+          "field": "unit_price",
+          "current_value": null,
+          "unit": "LS",
+          "reason": "Lump-sum amount; estimator should review for reasonableness"
+        }
+      ],
+      "provenance": {
+        "source_evidence": "parsed_addon:job_38254:2",
+        "extended_amount": 3000.0,
+        "job_ids": [
+          38254
+        ],
+        "confidence": "needs_phase_5_or_estimator_review",
+        "contact_id": 24929,
+        "model_job_group_id": "tcg_24929_model_job",
+        "member_job_ids": [
+          38254,
+          38304,
+          38396,
+          38447,
+          38522,
+          38577,
+          38578
+        ]
+      }
+    },
+    {
+      "cost_item_code": "TCG-ADDON_23_31_00_00-ADDON",
+      "cost_item_name": "parsed addon job 38304 2",
+      "adjustable_fields": [
+        {
+          "field": "unit_price",
+          "current_value": null,
+          "unit": "LS",
+          "reason": "Lump-sum amount; estimator should review for reasonableness"
+        }
+      ],
+      "provenance": {
+        "source_evidence": "parsed_addon:job_38304:2",
+        "extended_amount": 4000.0,
+        "job_ids": [
+          38304
+        ],
+        "confidence": "needs_phase_5_or_estimator_review",
+        "contact_id": 24929,
+        "model_job_group_id": "tcg_24929_model_job",
+        "member_job_ids": [
+          38254,
+          38304,
+          38396,
+          38447,
+          38522,
+          38577,
+          38578
+        ]
+      }
+    },
+    {
+      "cost_item_code": "TCG-ADDON_24_31_00_00-ADDON",
+      "cost_item_name": "parsed addon job 38304 3",
+      "adjustable_fields": [
+        {
+          "field": "unit_price",
+          "current_value": null,
+          "unit": "LS",
+          "reason": "Lump-sum amount; estimator should review for reasonableness"
+        }
+      ],
+      "provenance": {
+        "source_evidence": "parsed_addon:job_38304:3",
+        "extended_amount": 2000.0,
+        "job_ids": [
+          38304
+        ],
+        "confidence": "needs_phase_5_or_estimator_review",
+        "contact_id": 24929,
+        "model_job_group_id": "tcg_24929_model_job",
+        "member_job_ids": [
+          38254,
+          38304,
+          38396,
+          38447,
+          38522,
+          38577,
+          38578
+        ]
+      }
+    },
+    {
+      "cost_item_code": "TCG-ADDON_25_31_00_00-ADDON",
+      "cost_item_name": "parsed addon job 38304 4",
+      "adjustable_fields": [
+        {
+          "field": "unit_price",
+          "current_value": null,
+          "unit": "LS",
+          "reason": "Lump-sum amount; estimator should review for reasonableness"
+        }
+      ],
+      "provenance": {
+        "source_evidence": "parsed_addon:job_38304:4",
+        "extended_amount": 600.0,
+        "job_ids": [
+          38304
+        ],
+        "confidence": "needs_phase_5_or_estimator_review",
+        "contact_id": 24929,
+        "model_job_group_id": "tcg_24929_model_job",
+        "member_job_ids": [
+          38254,
+          38304,
+          38396,
+          38447,
+          38522,
+          38577,
+          38578
+        ]
+      }
+    },
+    {
+      "cost_item_code": "TCG-ADDON_26_31_00_00-ADDON",
+      "cost_item_name": "parsed addon job 38447 2",
+      "adjustable_fields": [
+        {
+          "field": "unit_price",
+          "current_value": null,
+          "unit": "LS",
+          "reason": "Lump-sum amount; estimator should review for reasonableness"
+        }
+      ],
+      "provenance": {
+        "source_evidence": "parsed_addon:job_38447:2",
+        "extended_amount": 800.0,
+        "job_ids": [
+          38447
+        ],
+        "confidence": "needs_phase_5_or_estimator_review",
+        "contact_id": 24929,
+        "model_job_group_id": "tcg_24929_model_job",
+        "member_job_ids": [
+          38254,
+          38304,
+          38396,
+          38447,
+          38522,
+          38577,
+          38578
+        ]
+      }
+    },
+    {
+      "cost_item_code": "TCG-ADDON_27_31_00_00-ADDON",
+      "cost_item_name": "parsed addon job 38578 1",
+      "adjustable_fields": [
+        {
+          "field": "unit_price",
+          "current_value": null,
+          "unit": "LS",
+          "reason": "Lump-sum amount; estimator should review for reasonableness"
+        }
+      ],
+      "provenance": {
+        "source_evidence": "parsed_addon:job_38578:1",
+        "extended_amount": 15000.0,
+        "job_ids": [
+          38578
+        ],
+        "confidence": "needs_phase_5_or_estimator_review",
+        "contact_id": 24929,
+        "model_job_group_id": "tcg_24929_model_job",
+        "member_job_ids": [
+          38254,
+          38304,
+          38396,
+          38447,
+          38522,
+          38577,
+          38578
+        ]
+      }
+    },
+    {
+      "cost_item_code": "TCG-ADDON_14_33_00_00-ADDON",
+      "cost_item_name": "parsed addon job 38396 1",
+      "adjustable_fields": [
+        {
+          "field": "unit_price",
+          "current_value": null,
+          "unit": "LS",
+          "reason": "Lump-sum amount; estimator should review for reasonableness"
+        }
+      ],
+      "provenance": {
+        "source_evidence": "parsed_addon:job_38396:1",
+        "extended_amount": 2400.0,
+        "job_ids": [
+          38396
+        ],
+        "confidence": "needs_phase_5_or_estimator_review",
+        "contact_id": 24929,
+        "model_job_group_id": "tcg_24929_model_job",
+        "member_job_ids": [
+          38254,
+          38304,
+          38396,
+          38447,
+          38522,
+          38577,
+          38578
+        ]
+      }
+    },
+    {
+      "cost_item_code": "TCG-ADDON_15_33_00_00-ADDON",
+      "cost_item_name": "parsed addon job 38396 2",
+      "adjustable_fields": [
+        {
+          "field": "unit_price",
+          "current_value": null,
+          "unit": "LS",
+          "reason": "Lump-sum amount; estimator should review for reasonableness"
+        }
+      ],
+      "provenance": {
+        "source_evidence": "parsed_addon:job_38396:2",
+        "extended_amount": 1100.0,
+        "job_ids": [
+          38396
+        ],
+        "confidence": "needs_phase_5_or_estimator_review",
+        "contact_id": 24929,
+        "model_job_group_id": "tcg_24929_model_job",
+        "member_job_ids": [
+          38254,
+          38304,
+          38396,
+          38447,
+          38522,
+          38577,
+          38578
+        ]
+      }
+    },
+    {
+      "cost_item_code": "TCG-ADDON_16_33_00_00-ADDON",
+      "cost_item_name": "parsed addon job 38396 3",
+      "adjustable_fields": [
+        {
+          "field": "unit_price",
+          "current_value": null,
+          "unit": "LS",
+          "reason": "Lump-sum amount; estimator should review for reasonableness"
+        }
+      ],
+      "provenance": {
+        "source_evidence": "parsed_addon:job_38396:3",
+        "extended_amount": 2000.0,
+        "job_ids": [
+          38396
+        ],
+        "confidence": "needs_phase_5_or_estimator_review",
+        "contact_id": 24929,
+        "model_job_group_id": "tcg_24929_model_job",
+        "member_job_ids": [
+          38254,
+          38304,
+          38396,
+          38447,
+          38522,
+          38577,
+          38578
+        ]
+      }
+    },
+    {
+      "cost_item_code": "TCG-ADDON_17_33_00_00-ADDON",
+      "cost_item_name": "parsed addon job 38522 1",
+      "adjustable_fields": [
+        {
+          "field": "unit_price",
+          "current_value": null,
+          "unit": "LS",
+          "reason": "Lump-sum amount; estimator should review for reasonableness"
+        }
+      ],
+      "provenance": {
+        "source_evidence": "parsed_addon:job_38522:1",
+        "extended_amount": 12000.0,
+        "job_ids": [
+          38522
+        ],
+        "confidence": "needs_phase_5_or_estimator_review",
+        "contact_id": 24929,
+        "model_job_group_id": "tcg_24929_model_job",
+        "member_job_ids": [
+          38254,
+          38304,
+          38396,
+          38447,
+          38522,
+          38577,
+          38578
+        ]
+      }
+    },
+    {
+      "cost_item_code": "TCG-ADDON_18_33_00_00-ADDON",
+      "cost_item_name": "parsed addon job 38522 2",
+      "adjustable_fields": [
+        {
+          "field": "unit_price",
+          "current_value": null,
+          "unit": "LS",
+          "reason": "Lump-sum amount; estimator should review for reasonableness"
+        }
+      ],
+      "provenance": {
+        "source_evidence": "parsed_addon:job_38522:2",
+        "extended_amount": 4000.0,
+        "job_ids": [
+          38522
+        ],
+        "confidence": "needs_phase_5_or_estimator_review",
+        "contact_id": 24929,
+        "model_job_group_id": "tcg_24929_model_job",
+        "member_job_ids": [
+          38254,
+          38304,
+          38396,
+          38447,
+          38522,
+          38577,
+          38578
+        ]
+      }
+    },
+    {
+      "cost_item_code": "TCG-ADDON_19_33_00_00-ADDON",
+      "cost_item_name": "parsed addon job 38522 3",
+      "adjustable_fields": [
+        {
+          "field": "unit_price",
+          "current_value": null,
+          "unit": "LS",
+          "reason": "Lump-sum amount; estimator should review for reasonableness"
+        }
+      ],
+      "provenance": {
+        "source_evidence": "parsed_addon:job_38522:3",
+        "extended_amount": 2500.0,
+        "job_ids": [
+          38522
+        ],
+        "confidence": "needs_phase_5_or_estimator_review",
+        "contact_id": 24929,
+        "model_job_group_id": "tcg_24929_model_job",
+        "member_job_ids": [
+          38254,
+          38304,
+          38396,
+          38447,
+          38522,
+          38577,
+          38578
+        ]
+      }
+    },
+    {
+      "cost_item_code": "TCG-ADDON_20_33_00_00-ADDON",
+      "cost_item_name": "parsed addon job 38522 4",
+      "adjustable_fields": [
+        {
+          "field": "unit_price",
+          "current_value": null,
+          "unit": "LS",
+          "reason": "Lump-sum amount; estimator should review for reasonableness"
+        }
+      ],
+      "provenance": {
+        "source_evidence": "parsed_addon:job_38522:4",
+        "extended_amount": 8400.0,
+        "job_ids": [
+          38522
+        ],
+        "confidence": "needs_phase_5_or_estimator_review",
+        "contact_id": 24929,
+        "model_job_group_id": "tcg_24929_model_job",
+        "member_job_ids": [
+          38254,
+          38304,
+          38396,
+          38447,
+          38522,
+          38577,
+          38578
+        ]
+      }
+    },
+    {
+      "cost_item_code": "TCG-ADDON_21_33_00_00-ADDON",
+      "cost_item_name": "parsed addon job 38522 5",
+      "adjustable_fields": [
+        {
+          "field": "unit_price",
+          "current_value": null,
+          "unit": "LS",
+          "reason": "Lump-sum amount; estimator should review for reasonableness"
+        }
+      ],
+      "provenance": {
+        "source_evidence": "parsed_addon:job_38522:5",
+        "extended_amount": 6500.0,
+        "job_ids": [
+          38522
+        ],
+        "confidence": "needs_phase_5_or_estimator_review",
+        "contact_id": 24929,
+        "model_job_group_id": "tcg_24929_model_job",
+        "member_job_ids": [
+          38254,
+          38304,
+          38396,
+          38447,
+          38522,
+          38577,
+          38578
+        ]
+      }
+    },
+    {
+      "cost_item_code": "TCG-ADDON_22_33_00_00-ADDON",
+      "cost_item_name": "parsed addon job 38522 6",
+      "adjustable_fields": [
+        {
+          "field": "unit_price",
+          "current_value": null,
+          "unit": "LS",
+          "reason": "Lump-sum amount; estimator should review for reasonableness"
+        }
+      ],
+      "provenance": {
+        "source_evidence": "parsed_addon:job_38522:6",
+        "extended_amount": 2500.0,
+        "job_ids": [
+          38522
+        ],
+        "confidence": "needs_phase_5_or_estimator_review",
+        "contact_id": 24929,
+        "model_job_group_id": "tcg_24929_model_job",
+        "member_job_ids": [
+          38254,
+          38304,
+          38396,
+          38447,
+          38522,
+          38577,
+          38578
+        ]
+      }
+    },
+    {
+      "cost_item_code": "TCG-ADDON_23_33_00_00-ADDON",
+      "cost_item_name": "parsed addon job 38577 1",
+      "adjustable_fields": [
+        {
+          "field": "unit_price",
+          "current_value": null,
+          "unit": "LS",
+          "reason": "Lump-sum amount; estimator should review for reasonableness"
+        }
+      ],
+      "provenance": {
+        "source_evidence": "parsed_addon:job_38577:1",
+        "extended_amount": 2320.98,
+        "job_ids": [
+          38577
+        ],
+        "confidence": "needs_phase_5_or_estimator_review",
+        "contact_id": 24929,
+        "model_job_group_id": "tcg_24929_model_job",
+        "member_job_ids": [
+          38254,
+          38304,
+          38396,
+          38447,
+          38522,
+          38577,
+          38578
+        ]
+      }
+    },
+    {
+      "cost_item_code": "TCG-SUBCONTRACT-22-31_00_00",
+      "cost_item_name": "Subcontracted Work — parsed addon job 38304 1",
+      "adjustable_fields": [
+        {
+          "field": "unit_price",
+          "current_value": 4000.0,
+          "unit": "LS",
+          "reason": "Subcontractor bid amount; estimator should verify scope coverage"
+        }
+      ],
+      "provenance": {
+        "source_evidence": "parsed_addon:job_38304:1",
+        "job_ids": [
+          38304
+        ],
+        "confidence": "needs_phase_5_or_estimator_review",
+        "contact_id": 24929,
+        "model_job_group_id": "tcg_24929_model_job",
+        "member_job_ids": [
+          38254,
+          38304,
+          38396,
+          38447,
+          38522,
+          38577,
+          38578
+        ]
+      }
+    },
+    {
+      "cost_item_code": "TCG-SUBCONTRACT-2-32_00_00",
+      "cost_item_name": "Subcontracted Work — parsed addon job 38447 3",
+      "adjustable_fields": [
+        {
+          "field": "unit_price",
+          "current_value": 9800.0,
+          "unit": "LS",
+          "reason": "Subcontractor bid amount; estimator should verify scope coverage"
+        }
+      ],
+      "provenance": {
+        "source_evidence": "parsed_addon:job_38447:3",
+        "job_ids": [
+          38447
+        ],
+        "confidence": "needs_phase_5_or_estimator_review",
+        "contact_id": 24929,
+        "model_job_group_id": "tcg_24929_model_job",
+        "member_job_ids": [
+          38254,
+          38304,
+          38396,
+          38447,
+          38522,
+          38577,
+          38578
+        ]
+      }
+    },
+    {
+      "cost_item_code": "TCG-SUBCONTRACT-3-32_00_00",
+      "cost_item_name": "Subcontracted Work — parsed addon job 38447 4",
+      "adjustable_fields": [
+        {
+          "field": "unit_price",
+          "current_value": 1500.0,
+          "unit": "LS",
+          "reason": "Subcontractor bid amount; estimator should verify scope coverage"
+        }
+      ],
+      "provenance": {
+        "source_evidence": "parsed_addon:job_38447:4",
+        "job_ids": [
+          38447
+        ],
+        "confidence": "needs_phase_5_or_estimator_review",
+        "contact_id": 24929,
+        "model_job_group_id": "tcg_24929_model_job",
+        "member_job_ids": [
+          38254,
+          38304,
+          38396,
+          38447,
+          38522,
+          38577,
+          38578
+        ]
+      }
+    }
+  ]
+}

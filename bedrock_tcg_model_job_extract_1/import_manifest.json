@@ -1,0 +1,86 @@
+{
+  "manifest_version": "1.0",
+  "generated_at": "2026-06-02T12:32:05-04:00",
+  "package_name": "TCG Model Job — Draft Import Package",
+  "package_path": "OCERP/bedrock_tcg_model_job_extract_1/",
+  "review_only": true,
+  "import_instructions": "This package is for review only. Do NOT import automatically. The importer must default to dry-run. Separate explicit approval is required before any OCERP data is created or modified.",
+  "provenance": {
+    "contact_id": 24929,
+    "model_job_group_id": "tcg_24929_model_job",
+    "member_job_ids": [
+      38254,
+      38304,
+      38396,
+      38447,
+      38522,
+      38577,
+      38578
+    ]
+  },
+  "summary": {
+    "catalog_resources": 14,
+    "cost_items": 33,
+    "assemblies": 7,
+    "total_files": 11
+  },
+  "files": {
+    "catalog_resources.json": {
+      "size_bytes": 13002,
+      "sha256": "bd5c67cb6fbe08af69fdbf970d6d6faefe528c0d31bba383b58406a19098c912",
+      "lines": 497
+    },
+    "cost_items.json": {
+      "size_bytes": 69788,
+      "sha256": "df73fe53c003728a9be4c38100aab3e22de496e08e4f494fb9b3cdae268124a0",
+      "lines": 2547
+    },
+    "assemblies.json": {
+      "size_bytes": 27460,
+      "sha256": "284772125f8e27c61fdd7e6743fadfe472f49a73c0b27ac8022d2971572ba02f",
+      "lines": 913
+    },
+    "boq_example.json": {
+      "size_bytes": 35389,
+      "sha256": "c2009eec95ef7a06012ca8ef4ba76643e5d901df45a9892b3017874d77d6d7dd",
+      "lines": 1161
+    },
+    "manual_allowances.json": {
+      "size_bytes": 4739,
+      "sha256": "5c9ee52b9766b30d7f0c0b8425802f1b3ccbcf3881f677f1a777c38c4fc5f749",
+      "lines": 189
+    },
+    "notes_and_assumptions.json": {
+      "size_bytes": 13289,
+      "sha256": "e5c4527798d780661b364a6967025e89b602f65d5f761faa3e62b7c9a5e1e2e4",
+      "lines": 352
+    },
+    "resource_gaps.json": {
+      "size_bytes": 13478,
+      "sha256": "738b2a6bcd51ffe19dd4f45728712fdb648fdc87999f612bb0c0ad3a735c3b3f",
+      "lines": 306
+    },
+    "parameter_review.json": {
+      "size_bytes": 27640,
+      "sha256": "6f6c8a742661c4f4e2f58df8b817b3edc685ce98bc2faed9d9eeee18054b7bd7",
+      "lines": 1082
+    },
+    "validation_report.md": {
+      "size_bytes": 1625,
+      "sha256": "efa9347bd2daef248a914e35aeda5ff01cbdec601e9750832e51a340811d85ed",
+      "lines": 58
+    },
+    "mapping_review.md": {
+      "size_bytes": 2038,
+      "sha256": "b745aa9364228ed486f66d8cef6f8c895743f4879dce91c783925d5f82ad889c",
+      "lines": 49
+    },
+    "import_manifest.json": {
+      "size_bytes": 2834,
+      "sha256": null,
+      "sha256_note": "Self hash omitted; see self_hash_note.",
+      "lines": 86
+    }
+  },
+  "self_hash_note": "import_manifest.json is listed with a null sha256 because hashing a file that embeds its own final hash is self-referential; hash the written file externally after generation if an audit hash is required."
+}

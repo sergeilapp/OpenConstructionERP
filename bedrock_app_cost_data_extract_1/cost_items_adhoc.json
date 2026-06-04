@@ -1,0 +1,196 @@
+[
+  {
+    "code": "BED-ADHOC-LABOR",
+    "description": "Working labor (on-site crew) per hour",
+    "unit": "hr",
+    "rate": 130.0,
+    "currency": "USD",
+    "source": "bedrock_extraction",
+    "region": "BEDROCK-MAIN",
+    "classification": {
+      "masterformat": "01 50 00"
+    },
+    "components": [
+      {
+        "code": "LAB-ADHOC-LABORER-RATE",
+        "name": "Adhoc laborer",
+        "type": "labor",
+        "quantity": 1.0,
+        "unit_rate": 130.0,
+        "cost": 130.0,
+        "unit": "hr"
+      }
+    ],
+    "tags": [
+      "bedrock",
+      "adhoc",
+      "labor"
+    ],
+    "metadata": {
+      "draft_assumptions": [
+        "Rate equals LAB-ADHOC-LABORER-RATE; crew size applied at BOQ."
+      ]
+    }
+  },
+  {
+    "code": "BED-ADHOC-DRIVING",
+    "description": "Driving labor and truck cost per trip",
+    "unit": "trip",
+    "rate": 214.5,
+    "currency": "USD",
+    "source": "bedrock_extraction",
+    "region": "BEDROCK-MAIN",
+    "classification": {
+      "masterformat": "01 50 00"
+    },
+    "components": [
+      {
+        "code": "LAB-DRIVING-LABORER-RATE",
+        "name": "Driving laborer",
+        "type": "labor",
+        "quantity": 1.0,
+        "unit_rate": 85.0,
+        "cost": 85.0,
+        "unit": "hr"
+      },
+      {
+        "code": "EQP-TRUCK-DUAL-AXLE-TIME",
+        "name": "Dual Axle dump truck - time",
+        "type": "equipment",
+        "quantity": 1.0,
+        "unit_rate": 125.0,
+        "cost": 125.0,
+        "unit": "hr"
+      },
+      {
+        "code": "EQP-TRUCK-DUAL-AXLE-MILE",
+        "name": "Dual Axle dump truck - mileage",
+        "type": "equipment",
+        "quantity": 1.0,
+        "unit_rate": 4.5,
+        "cost": 4.5,
+        "unit": "mi"
+      }
+    ],
+    "tags": [
+      "bedrock",
+      "adhoc",
+      "driving"
+    ],
+    "metadata": {
+      "draft_assumptions": [
+        "Components are unit rates with qty=1; actual trip quantity varies by job distance and duration."
+      ]
+    }
+  },
+  {
+    "code": "BED-ADHOC-MAT-GATHER",
+    "description": "Material gathering labor per hour",
+    "unit": "hr",
+    "rate": 130.0,
+    "currency": "USD",
+    "source": "bedrock_extraction",
+    "region": "BEDROCK-MAIN",
+    "classification": {
+      "masterformat": "01 50 00"
+    },
+    "components": [
+      {
+        "code": "LAB-ADHOC-LABORER-RATE",
+        "name": "Adhoc laborer",
+        "type": "labor",
+        "quantity": 1.0,
+        "unit_rate": 130.0,
+        "cost": 130.0,
+        "unit": "hr"
+      }
+    ],
+    "tags": [
+      "bedrock",
+      "adhoc",
+      "material_gathering"
+    ],
+    "metadata": {
+      "draft_assumptions": [
+        "Rate equals LAB-ADHOC-LABORER-RATE; hours applied at BOQ."
+      ]
+    }
+  },
+  {
+    "code": "BED-ADHOC-FILL-DIRT",
+    "description": "Fill dirt (per ton)",
+    "unit": "ton",
+    "rate": 23.25,
+    "currency": "USD",
+    "source": "bedrock_extraction",
+    "region": "BEDROCK-MAIN",
+    "classification": {
+      "masterformat": "31 23 00"
+    },
+    "components": [
+      {
+        "code": "MAT-PREP-FILL-DIRT-AGGREGATE",
+        "name": "Fill Dirt/Aggregate ",
+        "type": "material",
+        "quantity": 1.0,
+        "unit_rate": 20.0,
+        "cost": 20.0,
+        "unit": "cy"
+      },
+      {
+        "code": "EQP-TRUCK-COST-PER-MILE",
+        "name": "Cost of truck per mile (dollars)",
+        "type": "equipment",
+        "quantity": 1.0,
+        "unit_rate": 3.25,
+        "cost": 3.25,
+        "unit": "mi"
+      }
+    ],
+    "tags": [
+      "bedrock",
+      "adhoc",
+      "fill",
+      "needs_sampling"
+    ],
+    "metadata": {
+      "draft_assumptions": [
+        "Fill dirt prep material rate is looked up via regex MAT-PREP-.*FILL.*DIRT; falls back to $15.00/ton if not found.",
+        "Truck cost per mile at qty=1; actual mileage applied at BOQ."
+      ]
+    }
+  },
+  {
+    "code": "BED-ADHOC-ACCESS",
+    "description": "Distance from access point (linear foot of access path)",
+    "unit": "lf",
+    "rate": 2.0,
+    "currency": "USD",
+    "source": "bedrock_extraction",
+    "region": "BEDROCK-MAIN",
+    "classification": {
+      "masterformat": "31 23 00"
+    },
+    "components": [
+      {
+        "code": "MAT-DISTANCE-FROM-ACCESS-COST-PER-FOOT",
+        "name": "Distance from access cost per foot",
+        "type": "material",
+        "quantity": 1.0,
+        "unit_rate": 2.0,
+        "cost": 2.0,
+        "unit": "lf"
+      }
+    ],
+    "tags": [
+      "bedrock",
+      "adhoc",
+      "access"
+    ],
+    "metadata": {
+      "draft_assumptions": [
+        "Cost per lf of access path; quantity equals job distance_from_access."
+      ]
+    }
+  }
+]
