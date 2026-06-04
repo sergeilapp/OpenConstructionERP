@@ -302,16 +302,17 @@ TOOL_DEFINITIONS: list[dict[str, Any]] = [
     },
     {
         "name": "get_boq_items",
-        "description": "Get Bill of Quantities items/positions for a project. Returns position descriptions, quantities, unit rates, totals.",
+        "description": "Get Bill of Quantities items/positions for a project. Returns position descriptions, quantities, unit rates, totals. The ONLY parameter is project_id. This tool does NOT support filtering by price, cost, or any other field.",
         "input_schema": {
             "type": "object",
             "properties": {
                 "project_id": {
                     "type": "string",
-                    "description": "UUID of the project",
+                    "description": "UUID of the project. This is the only accepted parameter.",
                 },
             },
             "required": ["project_id"],
+            "additionalProperties": False,
         },
     },
     {

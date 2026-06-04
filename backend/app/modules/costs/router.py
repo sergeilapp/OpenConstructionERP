@@ -3174,17 +3174,11 @@ async def load_cwicr_region(db_id: str, session: AsyncSession) -> dict:
         # the sum of those array lengths, mirroring the fresh-import branch's
         # ``resource_components = sum(len(v) for v in resources_by_code.values())``.
         #
-        # Dialect-portable JSON array length: SQLite has ``json_array_length`` and
-        # PostgreSQL (where ``components`` is physically JSONB) has
-        # ``jsonb_array_length``. Detect the dialect from THIS session's bind, not
-        # the global engine, so the PG test lane (global engine still SQLite) does
-        # not emit ``json_array_length(jsonb)`` which PG rejects. Same coalesce as
-        # the costs repository's "has components" predicate.
-        dialect_name = session.bind.dialect.name if session.bind else "sqlite"
-        if dialect_name == "sqlite":
-            _comp_len = func.coalesce(func.json_array_length(CostItem.components), 0)
-        else:
-            _comp_len = func.coalesce(func.jsonb_array_length(CostItem.components), 0)
+        # Dialect-portable JSON array length. The generic ``JSON`` type maps to
+        # ``json`` on PostgreSQL (not ``jsonb``), so ``json_array_length`` works
+        # on all backends. Same coalesce as the costs repository's "has components"
+        # predicate.
+        _comp_len = func.coalesce(func.json_array_length(CostItem.components), 0)
         resource_components_stmt = (
             select(func.coalesce(func.sum(_comp_len), 0))
             .select_from(CostItem)

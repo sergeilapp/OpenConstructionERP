@@ -375,26 +375,10 @@ class CostItemRepository:
 
         # Dialect-aware "has components" predicate. We treat any non-empty
         # JSON array as 1, empty/NULL as 0 — matches the Python ``_has_components``
-        # helper the router used to call. Postgres ships JSONB whose
-        # ``jsonb_array_length`` is the canonical helper; SQLite has
-        # ``json_array_length`` which mirrors it semantically (both return
-        # 0 for ``[]`` and NULL for non-arrays / NULL).
-        #
-        # Detect the dialect from THIS session's bind, not the global
-        # ``app.database.engine``: under the PG test lane the global engine is
-        # still SQLite while the session runs on PostgreSQL, and picking the
-        # wrong branch emits ``json_array_length(jsonb)`` which PG rejects.
+        # helper the router used to call. The generic ``JSON`` type maps to
+        # ``json`` on PostgreSQL, so ``json_array_length`` works on all dialects.
         dialect_name = self.session.bind.dialect.name if self.session.bind else "sqlite"
-        if dialect_name == "sqlite":
-            comp_len = func.coalesce(func.json_array_length(CostItem.components), 0)
-        else:
-            # CostItem.components is declared as generic ``JSON`` but
-            # ``pg_optimizations`` rewrites it to JSONB on PostgreSQL DDL, so the
-            # column is physically ``jsonb`` — and ``json_array_length(jsonb)``
-            # does NOT exist on PG (it raises "function does not exist"). The
-            # JSONB-domain helper is ``jsonb_array_length``; same coalesce
-            # semantics so NULL rows sort AFTER empty arrays.
-            comp_len = func.coalesce(func.jsonb_array_length(CostItem.components), 0)
+        comp_len = func.coalesce(func.json_array_length(CostItem.components), 0)
 
         # CASE(comp_len > 0 → 1 else 0) — items WITH components first.
         # DESC so the "1" rows lead.
