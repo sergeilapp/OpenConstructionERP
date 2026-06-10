@@ -13,6 +13,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Copy, Link as LinkIcon, Loader2, Plus, ShieldOff } from 'lucide-react';
+import { copyToClipboard } from '@/shared/lib/browser';
 import { useAuthStore } from '@/stores/useAuthStore';
 import {
   issuePortalToken,
@@ -80,7 +81,7 @@ export function BuyerAccessLinkPanel({
 
   async function copy(url: string) {
     try {
-      await navigator.clipboard.writeText(url);
+      await copyToClipboard(url);
       setCopyState('copied');
       setTimeout(() => setCopyState('idle'), 1500);
     } catch {
@@ -144,7 +145,7 @@ export function BuyerAccessLinkPanel({
           <p className="font-medium text-amber-900 dark:text-amber-200">
             {t('buyer_portal_panel.copy_now', {
               defaultValue:
-                'Copy this URL now — it will not be shown again.',
+                'Copy this URL now - it will not be shown again.',
             })}
           </p>
           <div className="flex items-center gap-1.5">

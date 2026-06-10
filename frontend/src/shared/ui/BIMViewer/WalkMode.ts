@@ -12,7 +12,7 @@
  *     hidden and movementX/Y drives the camera continuously. Unchanged from
  *     the original behaviour.
  *
- * Controls (both modes; mirrors BIMcollab / Navisworks walk mode):
+ * Controls (both modes; mirrors BIM coordination tool walk mode):
  *   - mouse drag (default) / locked mouse (FPS) → look
  *   - W/A/S/D / arrow keys      → walk
  *   - Q / PageDown / Ctrl       → down
@@ -276,7 +276,7 @@ export class WalkMode {
     if (this._enabled) return;
     if (this.orbitControls && this.orbitControls.enabled) {
       throw new Error(
-        'WalkMode.enable(): OrbitControls is still active — disable it first to avoid camera-fight rendering bugs.',
+        'WalkMode.enable(): OrbitControls is still active - disable it first to avoid camera-fight rendering bugs.',
       );
     }
     this._enabled = true;

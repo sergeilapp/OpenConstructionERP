@@ -1,18 +1,18 @@
 """‌⁠‍Change Orders API routes.
 
 Endpoints:
-    POST   /                       — Create change order
-    GET    /?project_id=X          — List for project
-    GET    /{id}                   — Get with items
-    PATCH  /{id}                   — Update
-    DELETE /{id}                   — Delete
-    POST   /{id}/items             — Add item
-    PATCH  /{id}/items/{item_id}   — Update item
-    DELETE /{id}/items/{item_id}   — Delete item
-    POST   /{id}/submit            — Change status to submitted
-    POST   /{id}/approve           — Change status to approved
-    POST   /{id}/reject            — Change status to rejected
-    GET    /summary?project_id=X   — Aggregated stats
+    POST   /                       - Create change order
+    GET    /?project_id=X          - List for project
+    GET    /{id}                   - Get with items
+    PATCH  /{id}                   - Update
+    DELETE /{id}                   - Delete
+    POST   /{id}/items             - Add item
+    PATCH  /{id}/items/{item_id}   - Update item
+    DELETE /{id}/items/{item_id}   - Delete item
+    POST   /{id}/submit            - Change status to submitted
+    POST   /{id}/approve           - Change status to approved
+    POST   /{id}/reject            - Change status to rejected
+    GET    /summary?project_id=X   - Aggregated stats
 """
 
 import logging
@@ -23,6 +23,8 @@ from fastapi import APIRouter, Depends, HTTPException, Query, status
 from app.core.rate_limiter import approval_limiter
 from app.dependencies import CurrentUserId, RequirePermission, SessionDep, verify_project_access
 from app.modules.changeorders.schemas import (
+    AIDraftRequest,
+    AIDraftResponse,
     ApprovalAdvanceRequest,
     ApprovalRow,
     ApprovalStartRequest,
@@ -34,6 +36,8 @@ from app.modules.changeorders.schemas import (
     ChangeOrderSummary,
     ChangeOrderUpdate,
     ChangeOrderWithItems,
+    SimulateImpactRequest,
+    SimulateImpactResponse,
 )
 from app.modules.changeorders.service import ChangeOrderService
 
@@ -47,7 +51,7 @@ def _get_service(session: SessionDep) -> ChangeOrderService:
 
 def _order_to_response(order: object) -> ChangeOrderResponse:
     """‌⁠‍Build a ChangeOrderResponse from a ChangeOrder ORM object."""
-    # `items` may not be eager-loaded in async context — only attempt to access
+    # `items` may not be eager-loaded in async context - only attempt to access
     # if the relationship was populated upstream (via selectinload or similar).
     # Returning an empty list when unloaded is intentional: this response type
     # only uses `item_count`, not the items themselves.
@@ -68,8 +72,10 @@ def _order_to_response(order: object) -> ChangeOrderResponse:
         status=order.status,  # type: ignore[attr-defined]
         submitted_by=order.submitted_by,  # type: ignore[attr-defined]
         approved_by=order.approved_by,  # type: ignore[attr-defined]
+        rejected_by=getattr(order, "rejected_by", None),  # type: ignore[attr-defined]
         submitted_at=order.submitted_at,  # type: ignore[attr-defined]
         approved_at=order.approved_at,  # type: ignore[attr-defined]
+        rejected_at=getattr(order, "rejected_at", None),  # type: ignore[attr-defined]
         cost_impact=str(order.cost_impact),  # type: ignore[attr-defined]
         schedule_impact_days=order.schedule_impact_days,  # type: ignore[attr-defined]
         currency=order.currency,  # type: ignore[attr-defined]
@@ -99,8 +105,10 @@ def _order_to_with_items(order: object) -> ChangeOrderWithItems:
         status=order.status,  # type: ignore[attr-defined]
         submitted_by=order.submitted_by,  # type: ignore[attr-defined]
         approved_by=order.approved_by,  # type: ignore[attr-defined]
+        rejected_by=getattr(order, "rejected_by", None),  # type: ignore[attr-defined]
         submitted_at=order.submitted_at,  # type: ignore[attr-defined]
         approved_at=order.approved_at,  # type: ignore[attr-defined]
+        rejected_at=getattr(order, "rejected_at", None),  # type: ignore[attr-defined]
         cost_impact=str(order.cost_impact),  # type: ignore[attr-defined]
         schedule_impact_days=order.schedule_impact_days,  # type: ignore[attr-defined]
         currency=order.currency,  # type: ignore[attr-defined]
@@ -188,7 +196,7 @@ async def create_change_order(
 
     R7 audit: the legacy POST trusted the ``project_id`` field on the
     payload and would happily create a change order on any project whose
-    UUID the caller could guess — silently leaking cost / schedule data
+    UUID the caller could guess - silently leaking cost / schedule data
     across tenants on subsequent reads. Now gated through
     ``verify_project_access`` which returns 404 on both "missing" and
     "not owned" so we don't leak existence either.
@@ -227,7 +235,7 @@ async def list_change_orders(
     """List change orders.
 
     If ``project_id`` is supplied we verify the caller owns/admins that project
-    before returning anything — earlier the route trusted the path parameter
+    before returning anything - earlier the route trusted the path parameter
     and silently leaked change-order data across tenants. When omitted we scope
     to every project the caller owns, matching the sibling-module convention
     and avoiding the 422 that fresh installs hit before any project exists.
@@ -258,7 +266,7 @@ async def get_change_order(
 ) -> ChangeOrderWithItems:
     """Get change order with all items.
 
-    R8 audit: the legacy GET /{order_id} lacked a RequirePermission gate —
+    R8 audit: the legacy GET /{order_id} lacked a RequirePermission gate -
     only verify_project_access ran, meaning any authenticated user could
     read a CO on a project they owned regardless of their CO-module role.
     Now gated on ``changeorders.read`` (viewer+) for consistency with the
@@ -419,7 +427,7 @@ async def execute_order(
     """Mark an approved change order as executed (work completed on site).
 
     R8 audit: the ``executed`` terminal state existed in the service FSM
-    (``approved`` → ``executed``) but had no router endpoint — leaving
+    (``approved`` → ``executed``) but had no router endpoint - leaving
     approved COs permanently stuck at that status and making the
     ``executed`` distinction invisible to project controllers. Callers
     need ``changeorders.update`` (editor-level) because execution is an
@@ -431,7 +439,7 @@ async def execute_order(
     return _order_to_response(order)
 
 
-# ── T3: Procore-style multi-step approval chain ─────────────────────────────
+# ── T3: construction management platform style multi-step approval chain ────
 
 
 def _approval_to_response(row: object) -> ApprovalRow:
@@ -461,7 +469,7 @@ async def start_approval_chain(
     _perm: None = Depends(RequirePermission("changeorders.approve")),
     service: ChangeOrderService = Depends(_get_service),
 ) -> list[ApprovalRow]:
-    """Start a sequential Procore-style approval chain on a change order.
+    """Start a sequential construction management platform style approval chain on a change order.
 
     Requires ``changeorders.approve`` so that an arbitrary editor can't
     hand-pick their own approver list and shortcut the four-eyes
@@ -491,7 +499,7 @@ async def advance_approval(
     The caller is identified from the JWT and must be the approver
     assigned to the step pointed at by ``co.current_approval_step``;
     any other user gets 403. No additional ``changeorders.approve``
-    role check is applied — being named as an approver in a chain
+    role check is applied - being named as an approver in a chain
     is itself the authorisation.
     """
     existing = await service.get_order(order_id)
@@ -516,3 +524,95 @@ async def get_approvals(
     await verify_project_access(existing.project_id, str(user_id), session)
     rows = await service.list_approvals(order_id)
     return [_approval_to_response(r) for r in rows]
+
+
+# ── What-If impact simulator + AI draft (TOP-30 #11) ─────────────────────────
+
+
+@router.post(
+    "/{order_id}/simulate-impact/",
+    response_model=SimulateImpactResponse,
+)
+async def simulate_impact(
+    order_id: uuid.UUID,
+    user_id: CurrentUserId,
+    session: SessionDep,
+    payload: SimulateImpactRequest | None = None,
+    _perm: None = Depends(RequirePermission("changeorders.read")),
+    service: ChangeOrderService = Depends(_get_service),
+) -> SimulateImpactResponse:
+    """Project a change order's cost, schedule, EVM and BOQ effect (read-only).
+
+    Nothing is persisted. With an empty body it forecasts the CO as it stands;
+    supplying ``cost_impact`` / ``schedule_impact_days`` runs a what-if with
+    those overrides so a reviewer can model an alternative before approving.
+    """
+    existing = await service.get_order(order_id)
+    await verify_project_access(existing.project_id, str(user_id), session)
+    body = payload or SimulateImpactRequest()
+    result = await service.simulate_impact(
+        order_id,
+        cost_override=body.cost_impact,
+        schedule_override=body.schedule_impact_days,
+    )
+    return SimulateImpactResponse(**result)
+
+
+@router.post(
+    "/{order_id}/publish-scenario/",
+    response_model=ChangeOrderResponse,
+)
+async def publish_scenario(
+    order_id: uuid.UUID,
+    user_id: CurrentUserId,
+    session: SessionDep,
+    payload: SimulateImpactRequest | None = None,
+    _perm: None = Depends(RequirePermission("changeorders.update")),
+    service: ChangeOrderService = Depends(_get_service),
+) -> ChangeOrderResponse:
+    """Snapshot the current what-if projection into the CO audit trail.
+
+    Re-runs the projection server-side (so the stored snapshot can never be
+    spoofed by the client) and appends it to the change order's metadata,
+    keeping the last 10 scenarios.
+    """
+    existing = await service.get_order(order_id)
+    await verify_project_access(existing.project_id, str(user_id), session)
+    body = payload or SimulateImpactRequest()
+    snapshot = await service.simulate_impact(
+        order_id,
+        cost_override=body.cost_impact,
+        schedule_override=body.schedule_impact_days,
+    )
+    order = await service.publish_scenario(order_id, snapshot)
+    return _order_to_response(order)
+
+
+@router.post(
+    "/ai-draft/",
+    response_model=AIDraftResponse,
+)
+async def ai_draft_change_order(
+    payload: AIDraftRequest,
+    user_id: CurrentUserId,
+    session: SessionDep,
+    _perm: None = Depends(RequirePermission("changeorders.create")),
+    service: ChangeOrderService = Depends(_get_service),
+) -> AIDraftResponse:
+    """Draft a change order from source text (AI when a key is set, else heuristic).
+
+    The response is a review-ready proposal - it is never saved. The caller
+    reviews or edits it, then creates the change order through the normal
+    create endpoint. Requires ``changeorders.create`` since it is the first
+    step of authoring one.
+    """
+    await verify_project_access(payload.project_id, str(user_id), session)
+    result = await service.ai_draft(
+        project_id=payload.project_id,
+        source_kind=payload.source_kind,
+        source_text=payload.source_text,
+        source_id=payload.source_id,
+        currency=payload.currency,
+        user_id=user_id,
+    )
+    return AIDraftResponse(**result)

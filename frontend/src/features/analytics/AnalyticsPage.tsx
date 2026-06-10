@@ -18,8 +18,11 @@ import {
   Database,
   AlertCircle,
   RefreshCw,
+  Wallet,
 } from 'lucide-react';
 import { Breadcrumb, Button, Card, Badge, Skeleton, EmptyState } from '@/shared/ui';
+import { PageHeader } from '@/shared/ui/PageHeader';
+import { DismissibleInfo, IntroRichText } from '@/shared/ui/DismissibleInfo';
 
 /* ── Helpers ─────────────────────────────────────────────────────────── */
 
@@ -211,8 +214,7 @@ export function AnalyticsPage() {
       <div className="space-y-6">
         <Breadcrumb
           items={[
-            { label: t('nav.dashboard', { defaultValue: 'Dashboard' }), to: '/' },
-            { label: t('analytics.title', { defaultValue: 'Analytics' }) },
+            { label: t('nav.analytics', { defaultValue: 'Analytics' }) },
           ]}
           className="mb-4"
         />
@@ -244,8 +246,7 @@ export function AnalyticsPage() {
       <div className="space-y-6">
         <Breadcrumb
           items={[
-            { label: t('nav.dashboard', { defaultValue: 'Dashboard' }), to: '/' },
-            { label: t('analytics.title', { defaultValue: 'Analytics' }) },
+            { label: t('nav.analytics', { defaultValue: 'Analytics' }) },
           ]}
           className="mb-4"
         />
@@ -280,38 +281,64 @@ export function AnalyticsPage() {
   }
 
   return (
-    <div className="space-y-6 animate-fade-in">
+    <div className="space-y-5 animate-fade-in">
       {/* Breadcrumb */}
       <Breadcrumb
         items={[
-          { label: t('nav.dashboard', { defaultValue: 'Dashboard' }), to: '/' },
-          { label: t('analytics.title', { defaultValue: 'Analytics' }) },
+          { label: t('nav.analytics', { defaultValue: 'Analytics' }) },
         ]}
-        className="mb-4"
       />
 
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-content-primary">
-            {t('analytics.title', { defaultValue: 'Cross-Project Analytics' })}
-          </h1>
-          <p className="mt-1 text-sm text-content-secondary">
-            {t('analytics.subtitle', {
-              defaultValue: 'Aggregated KPIs across all projects',
-            })}
-          </p>
-        </div>
-        <Button
-          variant="secondary"
-          size="sm"
-          icon={<Download size={14} />}
-          onClick={handleExportCSV}
-          disabled={!sortedProjects.length}
-        >
-          {t('analytics.export_csv', { defaultValue: 'Export CSV' })}
-        </Button>
-      </div>
+      {/* Header — module name + icon live in the global top bar; this page
+          renders only the muted subtitle + actions (canon §2). */}
+      <PageHeader
+        srTitle={t('nav.analytics', { defaultValue: 'Analytics' })}
+        subtitle={t('analytics.subtitle', {
+          defaultValue: 'Aggregated KPIs across all projects',
+        })}
+        actions={
+          <Button
+            variant="secondary"
+            size="sm"
+            icon={<Download size={14} />}
+            onClick={handleExportCSV}
+            disabled={!sortedProjects.length}
+          >
+            {t('analytics.export_csv', { defaultValue: 'Export CSV' })}
+          </Button>
+        }
+      />
+
+      <DismissibleInfo
+        storageKey="analytics"
+        title={t('analytics.intro_title', {
+          defaultValue: 'See which projects are bleeding money',
+        })}
+        more={
+          t('analytics.intro_more', { defaultValue: '' })
+            ? <IntroRichText text={t('analytics.intro_more')} />
+            : undefined
+        }
+        links={[
+          {
+            label: t('nav.projects', { defaultValue: 'Projects' }),
+            onClick: () => navigate('/projects'),
+          },
+          {
+            label: t('nav.reporting', { defaultValue: 'Reporting' }),
+            onClick: () => navigate('/reporting'),
+          },
+          {
+            label: t('nav.finance', { defaultValue: 'Finance' }),
+            onClick: () => navigate('/finance'),
+          },
+        ]}
+      >
+        {t('analytics.intro_body', {
+          defaultValue:
+            'This rolls every project\'s budget against actual cost into one sortable table and bar chart, flagging which jobs are over budget and by how much, with currencies kept separate so a EUR job is never blended with a USD one. Filter by region or status, search, and export the comparison to CSV. Click a row to open that project, or switch to Reporting for the role-by-role KPI view.',
+        })}
+      </DismissibleInfo>
 
       {/* KPI Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -542,6 +569,9 @@ export function AnalyticsPage() {
                   <th className="px-4 py-3 text-center text-xs font-medium text-content-tertiary uppercase tracking-wider">
                     {t('analytics.col_status', { defaultValue: 'Status' })}
                   </th>
+                  <th className="px-4 py-3 text-right text-xs font-medium text-content-tertiary uppercase tracking-wider">
+                    {t('analytics.col_finance', { defaultValue: 'Finance' })}
+                  </th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-border-light">
@@ -599,6 +629,26 @@ export function AnalyticsPage() {
                           ? t('analytics.on_budget', { defaultValue: 'On Budget' })
                           : t('analytics.over_budget', { defaultValue: 'Over Budget' })}
                       </Badge>
+                    </td>
+                    {/* Per-row Finance deep link: the row itself opens the
+                        project, this opens that project's Finance module so the
+                        budget-vs-actual figure traces to its source (CONN-76). */}
+                    <td className="px-4 py-3 text-right">
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          navigate(`/projects/${p.id}/finance`);
+                        }}
+                        title={t('analytics.open_finance', { defaultValue: 'Open Finance' })}
+                        aria-label={t('analytics.open_finance_for', {
+                          defaultValue: 'Open Finance for {{name}}',
+                          name: p.name,
+                        })}
+                        className="inline-flex h-7 w-7 items-center justify-center rounded-lg text-content-tertiary hover:bg-surface-secondary hover:text-oe-blue transition-colors"
+                      >
+                        <Wallet size={14} />
+                      </button>
                     </td>
                   </tr>
                 ))}
@@ -700,27 +750,31 @@ function KPICard({
   badge?: React.ReactNode;
 }) {
   return (
-    <Card>
+    <div className="rounded-xl border border-border-light bg-surface-elevated/90 p-4 shadow-xs transition-shadow duration-normal ease-oe hover:shadow-sm">
+      {/* items-start keeps the icon + text on the same top baseline; the
+          text column is a top-anchored flex-col so a single-line value tile
+          and a 3-line multi-currency tile share the first-line position
+          even when the grid stretches every tile to equal height (audit S8). */}
       <div className="flex items-start gap-3">
         <div
           className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-lg ${iconBg} ${iconColor}`}
         >
           {icon}
         </div>
-        <div className="min-w-0 flex-1">
-          <p className="text-xs font-medium text-content-tertiary">{label}</p>
+        <div className="flex min-w-0 flex-1 flex-col justify-start">
+          <p className="text-2xs font-medium uppercase tracking-wide text-content-tertiary">{label}</p>
           {valueNode ? (
             <div className="mt-1">{valueNode}</div>
           ) : (
             <div className="mt-1 flex items-center gap-2">
-              <span className="text-xl font-bold text-content-primary truncate">{value}</span>
+              <span className="text-lg font-semibold text-content-primary truncate">{value}</span>
               {badge}
             </div>
           )}
           {sub && <p className="mt-0.5 text-xs text-content-secondary">{sub}</p>}
         </div>
       </div>
-    </Card>
+    </div>
   );
 }
 

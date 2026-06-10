@@ -126,6 +126,7 @@ QA_*.md
 UX_*.md
 # Curated QA docs committed deliberately — opt-in exceptions to the above ignores.
 !docs/qa/UX_WEAKNESSES_AUDIT.md
+!docs/strategy/UX_*.md
 TESTING_PLAN.md
 TAKEOFF_TESTING_PLAN.md
 IMPROVEMENTS_TODO.md
@@ -152,6 +153,8 @@ test-screenshots/
 !frontend/public/*.jpeg
 # Partner-pack company logos are real shipped assets, not dev screenshots
 !packs/**/logo.png
+# Bundled demo site photos are real shipped seed assets, not dev screenshots
+!backend/app/scripts/flagship_assets/site_photos/*.jpg
 
 # QA test scripts (contain demo credentials)
 backend/qa_*.py
@@ -241,3 +244,103 @@ _qa_tmp/
 
 # Large binary data packages
 *.zip
+
+# --- session scratch / scan dumps / probe scripts (not product source) ---
+/oe_*.txt
+/oe_openapi.json
+/d5_*.txt
+/_audit_d3.txt
+/_d3_rawsql.txt
+/_scan_*.txt
+/qa_*.txt
+/qa_*.py
+/qa_out.txt
+/qa_sweep.py
+/_ci_*.txt
+/_ci_checks*.json
+/_fe_ci_log.txt
+/_open_issues.json
+/_tok.json
+/_tok.txt
+/closed_prs.json
+/c_1*.json
+/_i18n_*.mjs
+/_pdf_font_wire.workflow.js
+/_wheel*.sh
+/_ws*.sh
+/_pytest_smoke.sh
+/_wave1_verify.sh
+/HANDOVER_NEW_AGENT.md
+/_deploy642/
+/_dl_build/
+/_i18n_gaps/
+/_pr_review/
+backend/_*.py
+backend/_*.txt
+backend/*_id.txt
+backend/markup_id_qa.txt
+backend/sess_id.txt
+backend/_qa_findings.json
+backend/_e2e_shots/
+backend/_flagship/
+backend/_pdfreport/
+backend/_report_pages/
+backend/app/_frontend_dist_prev/
+frontend/_*.cjs
+frontend/_*.mjs
+frontend/_qa_b3dm.bin
+frontend/test-results-e2e-clean/
+qa/screenshots/_pw_artifacts_*
+docs/postgres-migration/*.txt
+docs/postgres-migration/*.json
+docs/postgres-migration/*.diff
+docs/strategy/improvement-2026-06/_*.txt
+/_wheelboot_health.json
+backend/uploads/
+data/connectors/
+
+# Recurring session scratch (QA temp output + i18n build/merge tooling)
+/_qa_tmp_*
+/_i18n_*.py
+/_i18n_*.js
+/_i18n_*.json
+/_i18n_new_*.txt
+/_qa_tsc_out.txt
+backend/_qa_tmp_*
+
+frontend/_qa_tmp_*
+frontend/tsc_result.txt
+frontend/tsc_out.txt
+frontend/_final_tsc.txt
+frontend/qa-*.mjs
+
+# Transient i18n debt dumps and one-off translation backfill scripts (mirror kept
+# integration strings; untracked to keep brand names out of the repo)
+scripts/_mn_*.json
+scripts/_mn_gaps_dump.txt
+scripts/_visible_gap.json
+scripts/_categorize_mixed.py
+scripts/_dump_heavily.py
+scripts/_find_mixed.py
+scripts/_top_leaked_words.py
+scripts/translate_mn_*.py
+
+# Session-local scratch, repro snapshots and secrets (never commit)
+/.ci_latest_run
+/.oe_token.txt
+/.oe_projects.txt
+/_projects.json
+/_m_*.json
+/_backend_restart.*
+/tmp_rvt_repro*.py
+backend/app/scripts/_flagship_dump.txt
+backend/app/scripts/_snap_dump.txt
+frontend/_qa/
+frontend/scripts/_apply_translations.cjs
+frontend/scripts/_dupcheck.cjs
+frontend/scripts/_extract_missing_keys.cjs
+frontend/scripts/_finalize_i18n.sh
+frontend/scripts/_i18n_stage2_state.cjs
+frontend/scripts/_stage2_tx/
+frontend/scripts/_validate_out.cjs
+frontend/scripts/_vite.out

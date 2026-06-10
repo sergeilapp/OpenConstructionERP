@@ -1,8 +1,8 @@
 """‌⁠‍Meetings ORM models.
 
 Tables:
-    oe_meetings_meeting     — project meetings with agendas, attendees, and action items
-    oe_meetings_attendance  — per-meeting attendance check-in records with optional signature
+    oe_meetings_meeting     - project meetings with agendas, attendees, and action items
+    oe_meetings_attendance  - per-meeting attendance check-in records with optional signature
 """
 
 import uuid
@@ -78,7 +78,7 @@ class Meeting(Base):
         server_default="[]",
     )
 
-    # ── Newforma-style recurring series ─────────────────────────────────
+    # ── Construction-suite style recurring series ───────────────────────
     # series_id stamps both the master AND every materialised occurrence,
     # so a single WHERE series_id = ? scoops the entire series. For a
     # one-off meeting this stays NULL.
@@ -101,7 +101,7 @@ class Meeting(Base):
         server_default="{}",
     )
 
-    # Attendance records — see MeetingAttendance.
+    # Attendance records - see MeetingAttendance.
     attendance_records: Mapped[list["MeetingAttendance"]] = relationship(
         "MeetingAttendance",
         back_populates="meeting",

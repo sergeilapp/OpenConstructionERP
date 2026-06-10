@@ -1,3 +1,8 @@
+import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
+import { unwrapList } from './normalize';
+import { projectPath } from './deepLink';
+
 interface ProjectInfo {
   id?: string;
   name?: string;
@@ -23,7 +28,11 @@ function formatCurrency(value: number | undefined, currency?: string): string {
 }
 
 export default function ProjectsGridRenderer({ data }: { data: unknown }) {
-  const projects: ProjectInfo[] = Array.isArray(data) ? data : [];
+  const { t } = useTranslation();
+  const navigate = useNavigate();
+  // Backend `get_all_projects` returns `{ projects: [...], total }`; older
+  // callers may pass a bare array. unwrapList handles both.
+  const projects = unwrapList(data, ['projects']) as ProjectInfo[];
 
   if (projects.length === 0) {
     return (
@@ -47,9 +56,24 @@ export default function ProjectsGridRenderer({ data }: { data: unknown }) {
     >
       {projects.map((p, i) => {
         const statusStyle = STATUS_COLORS[p.status ?? ''] ?? STATUS_COLORS.active;
+        const path = projectPath(p.id);
         return (
           <div
             key={p.id ?? i}
+            role={path ? 'link' : undefined}
+            tabIndex={path ? 0 : undefined}
+            onClick={path ? () => navigate(path) : undefined}
+            onKeyDown={
+              path
+                ? (e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      navigate(path);
+                    }
+                  }
+                : undefined
+            }
+            title={path ? t('chat.open_project', { defaultValue: 'Open project' }) : undefined}
             style={{
               background: 'var(--chat-surface-1)',
               border: '1px solid var(--chat-border-subtle)',
@@ -58,7 +82,23 @@ export default function ProjectsGridRenderer({ data }: { data: unknown }) {
               display: 'flex',
               flexDirection: 'column',
               gap: 8,
+              cursor: path ? 'pointer' : undefined,
+              transition: 'border-color 0.15s',
             }}
+            onMouseEnter={
+              path
+                ? (e) => {
+                    e.currentTarget.style.borderColor = 'var(--chat-accent)';
+                  }
+                : undefined
+            }
+            onMouseLeave={
+              path
+                ? (e) => {
+                    e.currentTarget.style.borderColor = 'var(--chat-border-subtle)';
+                  }
+                : undefined
+            }
           >
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 8 }}>
               <div>

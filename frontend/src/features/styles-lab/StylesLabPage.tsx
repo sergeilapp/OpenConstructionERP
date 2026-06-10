@@ -3,7 +3,7 @@
  *
  * All radii are tightened to Apple-current scale (iOS 17+/macOS Sequoia/
  * visionOS / WWDC25 Liquid Glass): 12px outer card, 8px inner preview,
- * 10px buttons & icon chips, 6px Notion-style block tags, 5px mono chip.
+ * 10px buttons & icon chips, 6px modern-SaaS-style block tags, 5px mono chip.
  * Pills (rounded-full) stay pill only where the semantic is genuinely
  * a pill (tags, dots, segmented tabs).
  *
@@ -51,7 +51,7 @@ export function StylesLabPage() {
           </h1>
           <p className="mt-3 max-w-2xl text-base text-content-secondary leading-relaxed">
             12-14 направлений по каждому элементу. Радиусы выровнены под
-            Apple-current (iOS 17+ / macOS Sequoia / WWDC25 Liquid Glass) —
+            Apple-current (iOS 17+ / macOS Sequoia / WWDC25 Liquid Glass) -
             6-12px вместо прежних 16-20px.
           </p>
 
@@ -257,7 +257,7 @@ function ButtonsSection() {
           </button>
         </Specimen>
 
-        <Specimen no={4} name="Neon Glow" family="Futuristic" note="Тёмный solid + цветное свечение. На тёмном фоне — chat, advisor.">
+        <Specimen no={4} name="Neon Glow" family="Futuristic" note="Тёмный solid + цветное свечение. На тёмном фоне - chat, advisor.">
           <div className="rounded-[10px] bg-[#0f1117] p-5 -m-5 w-full">
             <div className="grid place-items-center">
               <button className="relative inline-flex h-10 items-center gap-2 px-5 rounded-[10px] text-sm font-medium bg-[#1a1d2b] text-cyan-300 ring-1 ring-cyan-400/40 shadow-[0_0_0_1px_rgba(34,211,238,0.15),0_0_24px_rgba(34,211,238,0.35)] hover:shadow-[0_0_0_1px_rgba(34,211,238,0.3),0_0_36px_rgba(34,211,238,0.55)] transition-all duration-normal ease-oe">
@@ -282,7 +282,7 @@ function ButtonsSection() {
           </span>
         </Specimen>
 
-        <Specimen no={7} name="Bevel Hairline" family="SaaS Modern" note="Тонкая верхняя hairline + inner bottom shadow. Linear / Arc style.">
+        <Specimen no={7} name="Bevel Hairline" family="SaaS Modern" note="Тонкая верхняя hairline + inner bottom shadow. Modern SaaS style.">
           <button className="inline-flex h-10 items-center gap-2 px-5 rounded-[10px] text-sm font-medium text-white bg-content-primary shadow-[inset_0_1px_0_0_rgba(255,255,255,0.15),inset_0_-1px_0_0_rgba(0,0,0,0.4),0_1px_2px_rgba(0,0,0,0.2)] hover:bg-content-primary/90 active:translate-y-px transition-all duration-fast">
             <FileText className="h-4 w-4" /> Open report
           </button>
@@ -294,7 +294,7 @@ function ButtonsSection() {
           </button>
         </Specimen>
 
-        <Specimen no={9} name="Outline Refined" family="Minimal" note="Linear-style тонкий border, мягкая заливка на hover. Для secondary actions.">
+        <Specimen no={9} name="Outline Refined" family="Minimal" note="Modern-SaaS-style тонкий border, мягкая заливка на hover. Для secondary actions.">
           <button className="inline-flex h-10 items-center gap-2 px-5 rounded-[10px] text-sm font-medium text-content-primary border border-border bg-surface-primary hover:bg-surface-secondary hover:border-content-tertiary transition-all duration-normal ease-oe">
             <FileText className="h-4 w-4" /> Open report
           </button>
@@ -416,7 +416,7 @@ function IconsSection() {
           </div>
         </Specimen>
 
-        <Specimen no={11} name="Stacked Layers (3D)" family="Editorial" note="Несколько слоёв со сдвигом — псевдо-3D глубина. Для feature-карточек.">
+        <Specimen no={11} name="Stacked Layers (3D)" family="Editorial" note="Несколько слоёв со сдвигом - псевдо-3D глубина. Для feature-карточек.">
           <div className="relative h-12 w-12">
             <div className="absolute inset-0 rounded-[10px] bg-oe-blue/15 translate-x-2 translate-y-2" />
             <div className="absolute inset-0 rounded-[10px] bg-oe-blue/30 translate-x-1 translate-y-1" />
@@ -509,7 +509,7 @@ function TagsSection() {
           </span>
         </Specimen>
 
-        <Specimen no={10} name="Squircle Solid" family="iOS Native" note="Notion/iOS Section-style: пастельный блок с r=6px. Для категорий и tag-таксономий.">
+        <Specimen no={10} name="Squircle Solid" family="iOS Native" note="iOS Section-style: пастельный блок с r=6px. Для категорий и tag-таксономий.">
           <div className="flex items-center gap-1.5">
             <span className="inline-flex h-6 items-center rounded-[6px] px-2 text-2xs font-semibold uppercase tracking-wider bg-violet-100 text-violet-700 dark:bg-violet-500/20 dark:text-violet-300">Concrete</span>
             <span className="inline-flex h-6 items-center rounded-[6px] px-2 text-2xs font-semibold uppercase tracking-wider bg-amber-100 text-amber-800 dark:bg-amber-500/20 dark:text-amber-300">Rebar</span>
@@ -652,8 +652,8 @@ function BackgroundsSection() {
           bgClass="bg-surface-secondary"
         />
 
-        <BgSpecimen no={2} name="Dot Grid (subtle)" family="Linear / Vercel"
-          note="Сетка точек 0.9px с прозрачностью 16%, шаг 24px. Едва видна — добавляет «текстуру», но не отвлекает от таблиц/BOQ."
+        <BgSpecimen no={2} name="Dot Grid (subtle)" family="Modern SaaS"
+          note="Сетка точек 0.9px с прозрачностью 16%, шаг 24px. Едва видна - добавляет «текстуру», но не отвлекает от таблиц/BOQ."
           bgStyle={{
             backgroundColor: 'var(--oe-bg-secondary)',
             backgroundImage:
@@ -724,7 +724,7 @@ function BackgroundsSection() {
         />
 
         <BgSpecimen no={9} name="Topographic Contours" family="Construction"
-          note="Изогипсы — горизонтали высот. Прямая отсылка к стройке/гео. Для projects landing, BIM, /architecture."
+          note="Изогипсы - горизонтали высот. Прямая отсылка к стройке/гео. Для projects landing, BIM, /architecture."
         >
           <div className="absolute inset-0 bg-surface-secondary" />
           <svg className="absolute inset-0 h-full w-full text-oe-blue/15" viewBox="0 0 800 240" preserveAspectRatio="none" aria-hidden>
@@ -765,7 +765,7 @@ function BackgroundsSection() {
         />
 
         <BgSpecimen no={12} name="Cross-hatch (Drafting)" family="Construction"
-          note="Двойная штриховка под 45°/135° — лист миллиметровки/чертёжного эскиза. Для CAD/BIM."
+          note="Двойная штриховка под 45°/135° - лист миллиметровки/чертёжного эскиза. Для CAD/BIM."
           bgStyle={{
             backgroundColor: 'var(--oe-bg-secondary)',
             backgroundImage:

@@ -70,6 +70,7 @@ import {
   WideModalSection,
   ConfirmDialog,
 } from '@/shared/ui';
+import { PageHeader } from '@/shared/ui/PageHeader';
 import { useToastStore } from '@/stores/useToastStore';
 import { getErrorMessage } from '@/shared/lib/api';
 import {
@@ -78,12 +79,14 @@ import {
   deleteDocumentTemplateLocaleOverride,
   getCustomDocumentTemplateContent,
   getDocumentTemplateLocale,
+  listDevelopments,
   listDocumentTemplates,
   putDocumentTemplateLocale,
   sampleDocumentPreview,
   saveTextCustomDocumentTemplate,
   uploadCustomDocumentTemplate,
   type CustomTemplateTextContentType,
+  type Development,
   type DocumentTemplateEntry,
   type DocumentTemplateLocaleStatus,
   type DocumentTemplateVariableGroup,
@@ -219,6 +222,16 @@ export function DocumentTemplatesSettingsPage() {
     staleTime: 5 * 60_000,
   });
 
+  // Developments feed the active-development picker (CONN-25): operators
+  // pick a development by name instead of pasting a raw UUID, so the
+  // per-development default-template toggles are reachable in two clicks.
+  const developmentsQ = useQuery({
+    queryKey: ['propdev-developments'],
+    queryFn: () => listDevelopments({ limit: 100 }),
+    staleTime: 5 * 60_000,
+  });
+  const developments = developmentsQ.data ?? [];
+
   // Persist the active-dev pick on change.
   useEffect(() => {
     writeActiveDevelopmentId(activeDevId);
@@ -229,7 +242,7 @@ export function DocumentTemplatesSettingsPage() {
   const customs = templates.filter((t) => t.is_custom);
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-5 animate-fade-in">
       <Breadcrumb
         items={[
           { label: t('nav.settings', { defaultValue: 'Settings' }) },
@@ -245,25 +258,16 @@ export function DocumentTemplatesSettingsPage() {
         ]}
       />
 
-      {/* Intro card with friendly explainer + variables modal trigger */}
-      <Card className="p-4">
-        <div className="flex items-start justify-between gap-3">
-          <div className="flex-1">
-            <h1 className="flex items-center gap-2 text-lg font-semibold text-content-primary">
-              <FileSignature size={18} className="text-oe-blue" />
-              {t('property_dev.doc_templates.title', {
-                defaultValue: 'Document templates',
-              })}
-            </h1>
-            <p className="mt-1 text-sm text-content-secondary max-w-3xl">
-              {t('property_dev.doc_templates.intro', {
-                defaultValue:
-                  'Document templates power the PDF documents OpenConstructionERP generates for buyer journeys — reservation receipts, SPA contracts, handover protocols, warranty certificates. Pick a built-in template, preview it for your country / regulator, or upload your own .docx / .html / .pdf template.',
-              })}
-            </p>
-          </div>
+      <PageHeader
+        srTitle={t('property_dev.doc_templates.title', {
+          defaultValue: 'Document templates',
+        })}
+        subtitle={t('property_dev.doc_templates.intro', {
+          defaultValue:
+            'Document templates power the PDF documents OpenConstructionERP generates for buyer journeys, reservation receipts, SPA contracts, handover protocols, warranty certificates. Pick a built-in template, preview it for your country or regulator, or upload your own .docx / .html / .pdf template.',
+        })}
+        actions={
           <Button
-            size="sm"
             variant="ghost"
             icon={<Info size={14} />}
             onClick={() => setVariablesOpen(true)}
@@ -273,9 +277,13 @@ export function DocumentTemplatesSettingsPage() {
               defaultValue: 'Template variables',
             })}
           </Button>
-        </div>
+        }
+      />
+
+      {/* Locales / regulators meta + active-development context */}
+      <Card className="p-4">
         {dataQ.data && (
-          <div className="mt-3 space-y-2">
+          <div className="space-y-2">
             <div className="flex flex-wrap items-center gap-2">
               <div className="text-xs text-content-tertiary">
                 {t('property_dev.doc_templates.locales_supported', {
@@ -316,24 +324,58 @@ export function DocumentTemplatesSettingsPage() {
             </div>
           </div>
         )}
-        {/* Active development context — used by the per-dev "set as default" toggles */}
-        <div className="mt-3 flex items-center gap-2 text-xs text-content-secondary">
+        {/* Active development context — used by the per-dev "set as default"
+            toggles. A select populated from listDevelopments (CONN-25)
+            replaces the old free-text UUID input so the per-development
+            defaults are reachable without pasting an id. The chosen id is
+            stored under the same localStorage key. */}
+        <div className="mt-3 flex flex-wrap items-center gap-2 text-xs text-content-secondary">
           <label htmlFor="propdev-active-dev" className="font-medium">
             {t('property_dev.doc_templates.active_dev_label', {
               defaultValue: 'Active development (for "set as default" toggles):',
             })}
           </label>
-          <input
+          <select
             id="propdev-active-dev"
-            type="text"
-            placeholder={t('property_dev.doc_templates.active_dev_placeholder', {
-              defaultValue: 'Development UUID (optional)',
-            })}
             value={activeDevId ?? ''}
-            onChange={(e) => setActiveDevId(e.target.value.trim() || null)}
-            className="h-7 w-72 max-w-full rounded border border-border bg-surface-primary px-2 text-xs"
+            onChange={(e) => setActiveDevId(e.target.value || null)}
+            disabled={developmentsQ.isLoading}
+            className="h-7 w-72 max-w-full rounded border border-border bg-surface-primary px-2 text-xs disabled:opacity-60"
             data-testid="active-dev-input"
-          />
+          >
+            <option value="">
+              {developmentsQ.isLoading
+                ? t('common.loading', { defaultValue: 'Loading…' })
+                : t('property_dev.doc_templates.active_dev_none', {
+                    defaultValue: 'No development (built-in defaults)',
+                  })}
+            </option>
+            {developments.map((d: Development) => (
+              <option key={d.id} value={d.id}>
+                {d.code ? `${d.code} - ${d.name}` : d.name}
+              </option>
+            ))}
+            {/* Keep a stored id selectable even when it is not in the
+                loaded list (different project scope / stale localStorage). */}
+            {activeDevId &&
+              !developments.some((d: Development) => d.id === activeDevId) && (
+                <option value={activeDevId}>
+                  {t('property_dev.doc_templates.active_dev_unknown', {
+                    defaultValue: 'Saved development ({{id}})',
+                    id: activeDevId.slice(0, 8),
+                  })}
+                </option>
+              )}
+          </select>
+          {developmentsQ.isError && (
+            <button
+              type="button"
+              className="text-xs text-oe-blue underline"
+              onClick={() => developmentsQ.refetch()}
+            >
+              {t('common.retry', { defaultValue: 'Retry' })}
+            </button>
+          )}
           {activeDevId && (
             <button
               type="button"
@@ -361,7 +403,7 @@ export function DocumentTemplatesSettingsPage() {
             <p className="mt-0.5 text-xs text-content-secondary max-w-2xl">
               {t('property_dev.doc_templates.editor_cta_subtitle', {
                 defaultValue:
-                  "Write HTML or Markdown directly here — no upload required. Click variable chips to insert {placeholders}, and see a live preview alongside the source.",
+                  "Write HTML or Markdown directly here - no upload required. Click variable chips to insert {placeholders}, and see a live preview alongside the source.",
               })}
             </p>
           </div>
@@ -1399,7 +1441,7 @@ function TemplateEditorModal({
           '    <h1>{development.name}</h1>\n' +
           '    <p>Buyer: {buyer.full_name}</p>\n' +
           '    <p>Unit: {plot.plot_number} ({plot.area_m2} m²)</p>\n' +
-          '    <p>Contract: {contract.contract_number} — {contract.total_value} {contract.currency}</p>\n' +
+          '    <p>Contract: {contract.contract_number} - {contract.total_value} {contract.currency}</p>\n' +
           '  </body>\n' +
           '</html>',
       );
@@ -1706,7 +1748,7 @@ function TemplateEditorModal({
                 <p className="text-[11px] text-content-tertiary">
                   {t('property_dev.doc_templates.variables_empty', {
                     defaultValue:
-                      'No variable documentation is available — load this page from a tenant with property-dev enabled.',
+                      'No variable documentation is available - load this page from a tenant with property-dev enabled.',
                   })}
                 </p>
               ) : (
@@ -1761,7 +1803,7 @@ function TemplateEditorModal({
               <div className="flex items-center justify-between text-[10px] font-medium uppercase tracking-wide text-content-tertiary mb-1">
                 <span>
                   {t('property_dev.doc_templates.editor_preview_pane', {
-                    defaultValue: 'Live preview (advisory — final render is server-side)',
+                    defaultValue: 'Live preview (advisory - final render is server-side)',
                   })}
                 </span>
               </div>
@@ -1809,7 +1851,7 @@ function VariablesModal({
           <p className="text-xs text-content-tertiary">
             {t('property_dev.doc_templates.variables_empty', {
               defaultValue:
-                'No variable documentation is available — load this page from a tenant with property-dev enabled.',
+                'No variable documentation is available - load this page from a tenant with property-dev enabled.',
             })}
           </p>
         ) : (
@@ -1874,7 +1916,7 @@ function LocaleStatusList({
                   })
                 : t('property_dev.doc_templates.locale_source_fallback', {
                     defaultValue:
-                      'No translation found — PDF falls back to English. Click to add.',
+                      'No translation found - PDF falls back to English. Click to add.',
                   });
           const label = `${s.native_name} (${s.english_name})`;
           return (
@@ -2001,7 +2043,7 @@ function LocaleEditorModal({
         type: 'success',
         title: t('common.saved', { defaultValue: 'Saved' }),
         message: t('property_dev.doc_templates.locale_saved_msg', {
-          defaultValue: 'Tenant override stored — PDFs will use it on next render.',
+          defaultValue: 'Tenant override stored - PDFs will use it on next render.',
         }),
       });
       onSaved();

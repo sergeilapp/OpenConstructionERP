@@ -17,9 +17,9 @@ import {
   DollarSign,
   Trash2,
   ShieldAlert,
-  ArrowRight,
   Repeat,
   AlarmClock,
+  ExternalLink,
 } from 'lucide-react';
 import {
   Button,
@@ -34,10 +34,13 @@ import {
   ContactSearchInput,
   ConfirmDialog,
 } from '@/shared/ui';
+import { PageHeader } from '@/shared/ui/PageHeader';
+import { UserSearchInput } from '@/shared/ui/UserSearchInput';
+import { DismissibleInfo, IntroRichText } from '@/shared/ui/DismissibleInfo';
 import { MoneyDisplay } from '@/shared/ui/MoneyDisplay';
 import { DateDisplay } from '@/shared/ui/DateDisplay';
 import { useToastStore } from '@/stores/useToastStore';
-import { getErrorMessage } from '@/shared/lib/api';
+import { apiGet, getErrorMessage } from '@/shared/lib/api';
 import {
   listContracts,
   listAssets,
@@ -175,94 +178,55 @@ function dateToIsoDatetime(date: string): string | undefined {
   return `${date}T00:00:00+00:00`;
 }
 
-/* ─── Workflow intro ───────────────────────────────────────────────────
- *
- * Makes the contract → asset → ticket → work order → bill lifecycle
- * explicit so a coordinator knows the order of operations and where the
- * money lands. Links to the modules this depends on: customers come from
- * Contacts, on-site engineers from Subcontractors, and billed work orders
- * roll into Finance. Dismissible per-session.
+/**
+ * Resolve an internal user id (technician) to a human name. Shares the same
+ * cache key as UserSearchInput so the directory is fetched once. Falls back to
+ * the raw value, which keeps legacy free-text technician names readable after
+ * the picker migration.
  */
-function WorkflowIntro() {
-  const { t } = useTranslation();
-  const navigate = useNavigate();
-  const [dismissed, setDismissed] = useState(
-    () => sessionStorage.getItem('oe.svc.introDismissed') === '1',
-  );
-  if (dismissed) return null;
-  const dismiss = () => {
-    sessionStorage.setItem('oe.svc.introDismissed', '1');
-    setDismissed(true);
+function useUserNameResolver(): (id?: string | null) => string {
+  const { data: users = [] } = useQuery({
+    queryKey: ['users-search'],
+    queryFn: () =>
+      apiGet<Array<{ id: string; full_name: string; email: string }>>(
+        '/v1/users/?limit=100&is_active=true',
+      ),
+    staleTime: 60_000,
+  });
+  return (id) => {
+    if (!id) return '';
+    const u = users.find((x) => x.id === id);
+    return u ? u.full_name || u.email || id : id;
   };
-  return (
-    <Card padding="md" className="border-oe-blue/20 bg-oe-blue-subtle/10">
-      <div className="flex items-start gap-3">
-        <div className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-oe-blue-subtle text-oe-blue-text">
-          <Wrench size={16} />
-        </div>
-        <div className="min-w-0 flex-1">
-          <p className="text-sm font-semibold text-content-primary">
-            {t('service.intro_title', {
-              defaultValue: 'From customer call to billed visit',
-            })}
-          </p>
-          <p className="mt-1 text-xs leading-relaxed text-content-secondary">
-            {t('service.intro_body', {
-              defaultValue:
-                'Set up a service Contract for a customer, register the Assets it covers, then log a Ticket whenever something needs attention. Dispatching a ticket creates a Work Order that schedules an engineer; once completed with a debrief it can be Billed. Work the tabs left-to-right — each step unlocks the next.',
-            })}
-          </p>
-          <div className="mt-3 flex flex-wrap items-center gap-2">
-            <span className="text-2xs font-medium uppercase tracking-wide text-content-tertiary">
-              {t('service.intro_connects', { defaultValue: 'Connects to' })}
-            </span>
-            <button
-              type="button"
-              onClick={() => navigate('/contacts')}
-              className="inline-flex items-center gap-1 rounded-full border border-border-light bg-surface-primary px-2.5 py-1 text-xs font-medium text-content-secondary transition-colors hover:border-oe-blue hover:text-oe-blue"
-            >
-              {t('service.intro_link_contacts', {
-                defaultValue: 'Customers (Contacts)',
-              })}
-              <ArrowRight size={11} />
-            </button>
-            <button
-              type="button"
-              onClick={() => navigate('/subcontractors')}
-              className="inline-flex items-center gap-1 rounded-full border border-border-light bg-surface-primary px-2.5 py-1 text-xs font-medium text-content-secondary transition-colors hover:border-oe-blue hover:text-oe-blue"
-            >
-              {t('service.intro_link_subs', {
-                defaultValue: 'Subcontractors',
-              })}
-              <ArrowRight size={11} />
-            </button>
-            <button
-              type="button"
-              onClick={() => navigate('/finance')}
-              className="inline-flex items-center gap-1 rounded-full border border-border-light bg-surface-primary px-2.5 py-1 text-xs font-medium text-content-secondary transition-colors hover:border-oe-blue hover:text-oe-blue"
-            >
-              {t('service.intro_link_finance', { defaultValue: 'Finance' })}
-              <ArrowRight size={11} />
-            </button>
-          </div>
-        </div>
-        <button
-          type="button"
-          onClick={dismiss}
-          className="shrink-0 rounded-md p-1 text-content-tertiary transition-colors hover:bg-surface-secondary hover:text-content-primary"
-          aria-label={t('common.dismiss', { defaultValue: 'Dismiss' })}
-        >
-          <X size={14} />
-        </button>
-      </div>
-    </Card>
-  );
+}
+
+/**
+ * Resolve a contact id (service-contract customer) to a display name plus
+ * email, so the contract drawer can name the customer rather than show a UUID.
+ */
+interface ContactLite {
+  id: string;
+  company_name?: string | null;
+  first_name?: string | null;
+  last_name?: string | null;
+  primary_email?: string | null;
+}
+
+function contactDisplayName(c: ContactLite | undefined, fallback: string): string {
+  if (!c) return fallback;
+  const parts: string[] = [];
+  if (c.company_name) parts.push(c.company_name);
+  if (c.first_name || c.last_name) {
+    parts.push([c.first_name, c.last_name].filter(Boolean).join(' '));
+  }
+  return parts.join(' - ') || c.primary_email || fallback;
 }
 
 /* ─── Page ─── */
 
 export function ServicePage() {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const [tab, setTab] = useState<Tab>('tickets');
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('');
@@ -390,42 +354,64 @@ export function ServicePage() {
   const isError = !isLoading && activeQuery.isError;
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-5 animate-fade-in">
       <Breadcrumb
         items={[
-          { label: t('service.title', { defaultValue: 'Service & Maintenance' }) },
+          { label: t('nav.service', { defaultValue: 'Service & Maintenance' }) },
         ]}
       />
 
-      <div className="flex items-start justify-between gap-4 flex-wrap">
-        <div>
-          <h1 className="text-2xl font-semibold text-content-primary">
-            {t('service.title', { defaultValue: 'Service & Maintenance' })}
-          </h1>
-          <p className="mt-1 text-sm text-content-secondary">
-            {t('service.subtitle', {
-              defaultValue: 'Manage service contracts, assets, tickets and work orders.',
-            })}
-          </p>
-        </div>
-        {tab !== 'recurring' && (
-          <Button
-            variant="primary"
-            icon={<Plus size={14} />}
-            onClick={() => setCreateOpen(true)}
-          >
-            {tab === 'tickets'
-              ? t('service.new_ticket', { defaultValue: 'New Ticket' })
-              : tab === 'work_orders'
-                ? t('service.new_work_order', { defaultValue: 'New Work Order' })
-                : tab === 'contracts'
-                  ? t('service.new_contract', { defaultValue: 'New Contract' })
-                  : t('service.new_asset', { defaultValue: 'New Asset' })}
-          </Button>
-        )}
-      </div>
+      <PageHeader
+        srTitle={t('nav.service', { defaultValue: 'Service & Maintenance' })}
+        subtitle={t('service.subtitle', {
+          defaultValue: 'Manage service contracts, assets, tickets and work orders.',
+        })}
+        actions={
+          tab !== 'recurring' ? (
+            <Button
+              variant="primary"
+              size="sm"
+              icon={<Plus size={14} />}
+              onClick={() => setCreateOpen(true)}
+            >
+              {tab === 'tickets'
+                ? t('service.new_ticket', { defaultValue: 'New Ticket' })
+                : tab === 'work_orders'
+                  ? t('service.new_work_order', { defaultValue: 'New Work Order' })
+                  : tab === 'contracts'
+                    ? t('service.new_contract', { defaultValue: 'New Contract' })
+                    : t('service.new_asset', { defaultValue: 'New Asset' })}
+            </Button>
+          ) : undefined
+        }
+      />
 
-      <WorkflowIntro />
+      <DismissibleInfo
+        storageKey="service"
+        title={t('service.intro_title', {
+          defaultValue: 'From customer call to billed visit',
+        })}
+        more={t('service.intro_more', { defaultValue: '' }) ? <IntroRichText text={t('service.intro_more')} /> : undefined}
+        links={[
+          {
+            label: t('service.intro_link_contacts', { defaultValue: 'Customers (Contacts)' }),
+            onClick: () => navigate('/contacts'),
+          },
+          {
+            label: t('service.intro_link_subs', { defaultValue: 'Subcontractors' }),
+            onClick: () => navigate('/subcontractors'),
+          },
+          {
+            label: t('service.intro_link_finance', { defaultValue: 'Finance' }),
+            onClick: () => navigate('/finance'),
+          },
+        ]}
+      >
+        {t('service.intro_body', {
+          defaultValue:
+            'Set up a service contract for a customer, register the assets it covers, then log a ticket whenever something needs attention. Dispatching a ticket creates a work order that schedules an engineer, and once completed with a debrief it can be billed. Customers come from Contacts, on-site engineers from Subcontractors, and billed work orders roll into Finance.',
+        })}
+      </DismissibleInfo>
 
       {/* Tabs */}
       <div className="border-b border-border-light">
@@ -708,6 +694,7 @@ function WorkOrderTable({
   emptyAction: () => void;
 }) {
   const { t } = useTranslation();
+  const resolveUserName = useUserNameResolver();
   if (rows.length === 0) {
     return (
       <EmptyState
@@ -746,7 +733,7 @@ function WorkOrderTable({
               <td className="px-4 py-2 text-xs text-content-secondary">
                 {r.scheduled_for ? <DateDisplay value={r.scheduled_for} /> : '—'}
               </td>
-              <td className="px-4 py-2 text-content-secondary text-xs">{r.technician_id || '—'}</td>
+              <td className="px-4 py-2 text-content-secondary text-xs">{resolveUserName(r.technician_id) || '—'}</td>
               <td className="px-4 py-2">
                 <Badge variant={WO_STATUS_VARIANT[r.status]} dot>{r.status}</Badge>
               </td>
@@ -855,7 +842,7 @@ function AssetTable({
         icon={<Box size={22} />}
         title={t('service.empty_assets', { defaultValue: 'No assets under this contract' })}
         description={t('service.empty_assets_desc', {
-          defaultValue: 'Register the equipment you maintain — HVAC, lifts, generators, etc.',
+          defaultValue: 'Register the equipment you maintain - HVAC, lifts, generators, etc.',
         })}
         action={{
           label: t('service.new_asset', { defaultValue: 'New Asset' }),
@@ -920,6 +907,7 @@ function DetailDrawer({
   onClose: () => void;
 }) {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const qc = useQueryClient();
   const addToast = useToastStore((s) => s.addToast);
 
@@ -927,6 +915,15 @@ function DetailDrawer({
   const wo = kind === 'work_orders' ? workOrders.find((x) => x.id === id) : null;
   const contract = kind === 'contracts' ? contracts.find((x) => x.id === id) : null;
   const asset = kind === 'assets' ? assets.find((x) => x.id === id) : null;
+
+  // Resolve the contract's customer (a contact) to a readable name + deep
+  // link, so the drawer names the party instead of showing a bare UUID.
+  const customerQ = useQuery({
+    queryKey: ['service', 'contract-customer', contract?.customer_id],
+    queryFn: () =>
+      apiGet<ContactLite>(`/v1/contacts/${contract?.customer_id}`),
+    enabled: !!contract?.customer_id,
+  });
 
   const dispatchMut = useMutation({
     mutationFn: (technicianId: string) =>
@@ -1000,7 +997,10 @@ function DetailDrawer({
   });
 
   const [tech, setTech] = useState('');
+  const [techName, setTechName] = useState('');
   const [debrief, setDebrief] = useState({ problem: '', cause: '', solution: '' });
+  // Resolve technician / customer ids to readable names for the drawer.
+  const resolveUserName = useUserNameResolver();
   // Destructive action gate. WOs intentionally have no delete here — they
   // cascade from a ticket; a stand-alone WO delete would orphan the ticket
   // history. WO cancellation should flow through the ticket's "cancel".
@@ -1138,7 +1138,7 @@ function DetailDrawer({
                 <Field label={t('service.priority')} value={<Badge variant={PRIORITY_VARIANT[ticket.priority]}>{ticket.priority}</Badge>} />
                 <Field label={t('service.status')} value={<Badge variant={TICKET_STATUS_VARIANT[ticket.status]} dot>{ticket.status}</Badge>} />
                 <Field label={t('service.reported_at')} value={<DateDisplay value={ticket.reported_at} />} />
-                <Field label={t('service.assigned_to', { defaultValue: 'Assigned to' })} value={ticket.assigned_to || '—'} />
+                <Field label={t('service.assigned_to', { defaultValue: 'Assigned to' })} value={resolveUserName(ticket.assigned_to) || '—'} />
                 <Field label={t('service.sla_due', { defaultValue: 'SLA due' })} value={ticket.sla_due_at ? <DateDisplay value={ticket.sla_due_at} /> : '—'} />
                 {ticket.resolved_at && <Field label={t('service.resolved_at', { defaultValue: 'Resolved at' })} value={<DateDisplay value={ticket.resolved_at} />} />}
               </div>
@@ -1149,13 +1149,19 @@ function DetailDrawer({
                     {t('service.dispatch_ticket', { defaultValue: 'Dispatch to technician' })}
                   </p>
                   <div className="flex gap-2">
-                    <input
-                      type="text"
-                      value={tech}
-                      onChange={(e) => setTech(e.target.value)}
-                      placeholder={t('service.technician_id', { defaultValue: 'Technician ID / email' })}
-                      className={inputCls}
-                    />
+                    <div className="flex-1">
+                      <UserSearchInput
+                        value={tech}
+                        displayValue={techName}
+                        onChange={(id, name) => {
+                          setTech(id);
+                          setTechName(name);
+                        }}
+                        placeholder={t('service.technician_search_placeholder', {
+                          defaultValue: 'Search team members...',
+                        })}
+                      />
+                    </div>
                     <Button
                       variant="primary"
                       icon={<Send size={14} />}
@@ -1207,7 +1213,7 @@ function DetailDrawer({
               <div className="grid grid-cols-2 gap-3 text-sm">
                 <Field label={t('service.status')} value={<Badge variant={WO_STATUS_VARIANT[wo.status]} dot>{wo.status}</Badge>} />
                 <Field label={t('service.scheduled_for')} value={wo.scheduled_for ? <DateDisplay value={wo.scheduled_for} /> : '—'} />
-                <Field label={t('service.technician')} value={wo.technician_id || '—'} />
+                <Field label={t('service.technician')} value={resolveUserName(wo.technician_id) || '—'} />
                 <Field label={t('service.billed')} value={<MoneyDisplay amount={Number(wo.billed_amount) || 0} currency={wo.currency || undefined} />} />
               </div>
               {wo.debrief_summary && (
@@ -1296,6 +1302,34 @@ function DetailDrawer({
 
           {contract && (
             <div className="grid grid-cols-2 gap-3 text-sm">
+              <div className="col-span-2">
+                <p className="text-xs uppercase tracking-wide text-content-tertiary">
+                  {t('service.customer', { defaultValue: 'Customer' })}
+                </p>
+                {contract.customer_id ? (
+                  <button
+                    type="button"
+                    onClick={() =>
+                      navigate(`/contacts?contactId=${contract.customer_id}`)
+                    }
+                    className="mt-0.5 inline-flex items-center gap-1 text-sm font-medium text-oe-blue hover:underline"
+                    data-testid="service-contract-customer-link"
+                    title={t('service.view_customer_hint', {
+                      defaultValue: 'Open this customer in Contacts.',
+                    })}
+                  >
+                    {contactDisplayName(
+                      customerQ.data,
+                      customerQ.isLoading
+                        ? t('common.loading', { defaultValue: 'Loading...' })
+                        : contract.customer_id,
+                    )}
+                    <ExternalLink size={12} />
+                  </button>
+                ) : (
+                  <p className="mt-0.5 text-sm text-content-primary">—</p>
+                )}
+              </div>
               <Field label={t('service.title_col')} value={contract.title || '—'} />
               <Field label={t('service.status')} value={<Badge variant={CONTRACT_STATUS_VARIANT[contract.status]} dot>{contract.status}</Badge>} />
               <Field label={t('service.period_start', { defaultValue: 'Start' })} value={contract.period_start} />
@@ -1415,11 +1449,13 @@ function CreateModal({
     priority: 'med' as TicketPriority,
   });
 
-  // Work order
+  // Work order. ``technician_name`` is the picker's display value only — the
+  // backend persists the user id in ``technician_id``.
   const [woForm, setWoForm] = useState({
     ticket_id: tickets[0]?.id || '',
     scheduled_for: todayIso(),
     technician_id: '',
+    technician_name: '',
   });
 
   // Contract
@@ -1563,7 +1599,7 @@ function CreateModal({
     }),
     contracts: t('service.new_contract_subtitle', {
       defaultValue:
-        'A service contract groups recurring work for one customer. Pick the customer from the contacts list — no more pasting UUIDs.',
+        'A service contract groups recurring work for one customer. Pick the customer from the contacts list - no more pasting UUIDs.',
     }),
     assets: t('service.new_asset_subtitle', {
       defaultValue: 'Register a piece of equipment that this contract covers.',
@@ -1628,7 +1664,7 @@ function CreateModal({
               onChange={(e) => setTicketForm({ ...ticketForm, title: e.target.value })}
               className={inputCls}
               placeholder={t('service.title_placeholder', {
-                defaultValue: 'AC unit not cooling — Floor 3',
+                defaultValue: 'AC unit not cooling - Floor 3',
               })}
             />
           </WideModalField>
@@ -1695,16 +1731,18 @@ function CreateModal({
           </WideModalField>
           <WideModalField
             label={t('service.technician', { defaultValue: 'Technician' })}
-            hint={t('service.technician_hint', {
-              defaultValue: 'Optional — assign on-site engineer.',
+            hint={t('service.technician_hint_picker', {
+              defaultValue: 'Optional - assign an on-site engineer from your team.',
             })}
           >
-            <input
+            <UserSearchInput
               value={woForm.technician_id}
-              onChange={(e) => setWoForm({ ...woForm, technician_id: e.target.value })}
-              className={inputCls}
-              placeholder={t('service.technician_placeholder', {
-                defaultValue: 'John Doe',
+              displayValue={woForm.technician_name}
+              onChange={(id, name) =>
+                setWoForm({ ...woForm, technician_id: id, technician_name: name })
+              }
+              placeholder={t('service.technician_search_placeholder', {
+                defaultValue: 'Search team members...',
               })}
             />
           </WideModalField>
@@ -1724,7 +1762,7 @@ function CreateModal({
               required
               hint={t('service.customer_hint', {
                 defaultValue:
-                  'Pick from your contacts — searches as you type. Need to add a new one? Open Contacts in a new tab.',
+                  'Pick from your contacts - searches as you type. Need to add a new one? Open Contacts in a new tab.',
               })}
               span={2}
             >
@@ -1743,7 +1781,7 @@ function CreateModal({
             <WideModalField
               label={t('service.title_col', { defaultValue: 'Title' })}
               hint={t('service.contract_title_hint', {
-                defaultValue: 'Short label shown in lists, e.g. "HVAC maintenance — HQ 2026".',
+                defaultValue: 'Short label shown in lists, e.g. "HVAC maintenance - HQ 2026".',
               })}
               span={2}
             >
@@ -1752,7 +1790,7 @@ function CreateModal({
                 onChange={(e) => setContractForm({ ...contractForm, title: e.target.value })}
                 className={inputCls}
                 placeholder={t('service.contract_title_placeholder', {
-                  defaultValue: 'HVAC maintenance — HQ 2026',
+                  defaultValue: 'HVAC maintenance - HQ 2026',
                 })}
               />
             </WideModalField>
@@ -1854,7 +1892,7 @@ function CreateModal({
               {contracts.map((c) => (
                 <option key={c.id} value={c.id}>
                   {c.contract_number}
-                  {c.title ? ` — ${c.title}` : ''}
+                  {c.title ? ` - ${c.title}` : ''}
                 </option>
               ))}
             </select>
@@ -1900,7 +1938,7 @@ function CreateModal({
               onChange={(e) => setAssetForm({ ...assetForm, location: e.target.value })}
               className={inputCls}
               placeholder={t('service.location_placeholder', {
-                defaultValue: 'Roof, Floor 3 — North wing, …',
+                defaultValue: 'Roof, Floor 3 - North wing, …',
               })}
             />
           </WideModalField>

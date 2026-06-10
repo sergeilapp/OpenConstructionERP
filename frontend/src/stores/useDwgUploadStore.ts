@@ -11,6 +11,7 @@
  */
 
 import { create } from 'zustand';
+import { uuid } from '@/shared/lib/browser';
 import { fetchDrawing, uploadDrawing } from '@/features/dwg-takeoff/api';
 import type { DwgDrawing } from '@/features/dwg-takeoff/api';
 
@@ -192,7 +193,7 @@ export const useDwgUploadStore = create<DwgUploadState>((set, get) => {
       progress: 0,
       stage: 'dwg_upload.stage_stalled',
       errorMessage:
-        'Conversion did not finish within 20 minutes. The DDC converter may need attention — try uploading a smaller file or restart the converter.',
+        'Conversion did not finish within 20 minutes. The DDC converter may need attention - try uploading a smaller file or restart the converter.',
       completedAt: Date.now(),
     });
   }
@@ -257,7 +258,7 @@ export const useDwgUploadStore = create<DwgUploadState>((set, get) => {
     jobs: new Map(),
 
     startUpload: (params) => {
-      const jobId = crypto.randomUUID();
+      const jobId = uuid();
       const job: DwgUploadJob = {
         id: jobId,
         fileName: params.file.name,
@@ -372,7 +373,7 @@ if (typeof window !== 'undefined') {
         stage: 'dwg_upload.stage_stalled',
         errorMessage:
           job.errorMessage ??
-          'Upload abandoned after 45 min — reload to retry if the file is still needed.',
+          'Upload abandoned after 45 min - reload to retry if the file is still needed.',
         completedAt: now,
       });
       dirty = true;

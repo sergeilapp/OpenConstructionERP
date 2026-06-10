@@ -32,6 +32,7 @@ import {
   Settings,
   ChevronDown,
   Keyboard,
+  Leaf,
 } from 'lucide-react';
 import { Button } from '@/shared/ui';
 
@@ -55,6 +56,12 @@ export interface BOQToolbarProps {
   onImportInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   // Export
   onExport: (format: 'excel' | 'csv' | 'pdf' | 'gaeb') => void;
+  /**
+   * Open the embodied-carbon view for this BOQ. When provided, a "Carbon
+   * footprint" action appears in the File group; the host wires it to
+   * /sustainability with the active project and BOQ preselected.
+   */
+  onCarbonFootprint?: () => void;
   // Validate & recalculate
   onValidate: () => void;
   isValidating?: boolean;
@@ -137,6 +144,7 @@ export function BOQToolbar({
   importInputRef,
   onImportInputChange,
   onExport,
+  onCarbonFootprint,
   onValidate,
   isValidating,
   lastValidationScore,
@@ -354,6 +362,22 @@ export function BOQToolbar({
             )}
           </div>
         )}
+        {onCarbonFootprint && (
+          <Button
+            variant="ghost"
+            size="sm"
+            icon={<Leaf size={15} className="text-emerald-600" />}
+            onClick={onCarbonFootprint}
+            title={t('boq.carbon_footprint_tip', {
+              defaultValue: 'Analyse the embodied carbon of this BOQ from EPD material factors',
+            })}
+            aria-label={t('boq.carbon_footprint', { defaultValue: 'Carbon footprint' })}
+          >
+            <span className="hidden xl:inline">
+              {t('boq.carbon_footprint', { defaultValue: 'Carbon footprint' })}
+            </span>
+          </Button>
+        )}
       </div>
 
       <div className="w-px h-6 bg-border-light hidden sm:block" />
@@ -484,7 +508,7 @@ export function BOQToolbar({
               summary.displayRate != null && summary.displayCurrency
                 ? t('boq.grand_total_conversion_tooltip_v2', {
                     defaultValue:
-                      'Whole BOQ rendered in {{disp}} at rate {{rate}} ({{base}} → {{disp}}). View-only — server keeps base values. Switch to "Base" to edit prices.',
+                      'Whole BOQ rendered in {{disp}} at rate {{rate}} ({{base}} → {{disp}}). View-only - server keeps base values. Switch to "Base" to edit prices.',
                     base: summary.currencyCode || summary.currencySymbol,
                     disp: summary.displayCurrency,
                     rate: summary.displayRate.toLocaleString(undefined, {
@@ -687,7 +711,7 @@ function QualityAiMenu(props: QualityAiMenuProps) {
             <MenuRow
               icon={<Sparkles size={14} className={aiChatOpen ? 'text-violet-600' : 'text-content-tertiary'} />}
               label={t('boq.ai_chat_short', { defaultValue: 'AI Chat' })}
-              hint={t('boq.ai_assistant_tooltip', { defaultValue: 'Describe what you need in plain text — AI creates BOQ positions with realistic pricing.' })}
+              hint={t('boq.ai_assistant_tooltip', { defaultValue: 'Describe what you need in plain text - AI creates BOQ positions with realistic pricing.' })}
               active={aiChatOpen}
               onClick={fire(onToggleAiChat, false)}
             />

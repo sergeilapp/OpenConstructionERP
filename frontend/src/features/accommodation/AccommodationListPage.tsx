@@ -13,7 +13,7 @@
 
 import { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import clsx from 'clsx';
 import {
@@ -28,6 +28,8 @@ import {
   Users,
   CalendarCheck2,
   BedDouble,
+  Filter,
+  X,
 } from 'lucide-react';
 
 import {
@@ -35,6 +37,8 @@ import {
   Badge,
   BetaBanner,
   Button,
+  DismissibleInfo,
+  IntroRichText,
   EmptyState,
   RecoveryCard,
   Breadcrumb,
@@ -46,6 +50,7 @@ import {
   WideModalSection,
   WideModalField,
 } from '@/shared/ui/WideModal';
+import { PageHeader } from '@/shared/ui/PageHeader';
 import { useToastStore } from '@/stores/useToastStore';
 import { useProjectContextStore } from '@/stores/useProjectContextStore';
 import { projectsApi } from '@/features/projects/api';
@@ -113,10 +118,33 @@ export function AccommodationListPage() {
     return map;
   }, [projects]);
 
+  // Deep link: /accommodation?block=<blockId> (worker housing for a Property
+  // Development block). The accommodation row carries property_dev_block_id,
+  // so we filter the grid to that block client-side. A banner explains the
+  // active scope and offers a one-click clear that drops the param.
+  const [searchParams, setSearchParams] = useSearchParams();
+  const blockFilter = searchParams.get('block');
+  const clearBlockFilter = () => {
+    setSearchParams(
+      (prev) => {
+        const next = new URLSearchParams(prev);
+        next.delete('block');
+        return next;
+      },
+      { replace: true },
+    );
+  };
+
   const filtered = useMemo(() => {
-    if (filter === 'all') return accommodations;
-    return accommodations.filter((a) => a.kind === filter);
-  }, [accommodations, filter]);
+    let list = accommodations;
+    if (blockFilter) {
+      list = list.filter((a) => a.property_dev_block_id === blockFilter);
+    }
+    if (filter !== 'all') {
+      list = list.filter((a) => a.kind === filter);
+    }
+    return list;
+  }, [accommodations, filter, blockFilter]);
 
   // Counts per tab for the badges.
   const counts = useMemo(() => {
@@ -150,58 +178,81 @@ export function AccommodationListPage() {
   }, [accommodations, counts]);
 
   return (
-    <div className="space-y-4 pb-20 sm:pb-0">
-      <Breadcrumb items={[{ label: t('accommodation.title', { defaultValue: 'Accommodation' }) }]} />
-      <BetaBanner moduleKey="accommodation" className="mt-3" />
+    <div className="space-y-5 pb-20 sm:pb-0 animate-fade-in">
+      <Breadcrumb items={[{ label: t('nav.accommodation', { defaultValue: 'Accommodation' }) }]} />
 
       {/* Header */}
-      <div className="flex flex-wrap items-start justify-between gap-3">
-        <div className="min-w-0">
-          <div className="flex items-center gap-2">
-            <h1 className="text-2xl font-semibold text-content-primary">
-              {t('accommodation.title', { defaultValue: 'Accommodation' })}
-            </h1>
+      <PageHeader
+        srTitle={t('accommodation.title', { defaultValue: 'Accommodation' })}
+        subtitle={t('accommodation.subtitle', {
+          defaultValue:
+            'Worker camps, rentals and hotels - rooms, bookings and charges in one place. Bridges to PropDev units and HR contacts.',
+        })}
+        actions={
+          <>
             <ModuleHelpButton tourId="accommodation" />
-          </div>
-          <p className="mt-1 text-sm text-content-secondary max-w-prose">
-            {t('accommodation.subtitle', {
-              defaultValue:
-                'Worker camps, rentals and hotels — rooms, bookings and charges in one place. Bridges to PropDev units and HR contacts.',
-            })}
-          </p>
-        </div>
-        <div className="flex flex-wrap items-center gap-2">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => setHrAutobookOpen(true)}
-            data-testid="accommodation-hr-autobook-button"
-          >
-            <Sparkles size={14} className="mr-1.5" aria-hidden="true" />
-            {t('accommodation.hr_autobook.suggest_button', {
-              defaultValue: 'Suggest room for employee',
-            })}
-          </Button>
-          <Link
-            to="/accommodation/calendar"
-            className="inline-flex items-center gap-1.5 rounded-md border border-border bg-surface-primary px-3 py-1.5 text-xs font-medium text-content-secondary hover:text-content-primary hover:bg-surface-secondary transition-colors"
-            data-testid="accommodation-calendar-link"
-          >
-            <CalendarCheck2 size={14} aria-hidden="true" />
-            {t('accommodation.calendar.title', { defaultValue: 'Calendar' })}
-          </Link>
-          <Button
-            variant="primary"
-            size="sm"
-            onClick={() => setCreateOpen(true)}
-            data-testid="accommodation-new-button"
-            className="hidden sm:inline-flex"
-          >
-            <Plus size={14} className="mr-1.5" aria-hidden="true" />
-            {t('accommodation.new', { defaultValue: 'New accommodation' })}
-          </Button>
-        </div>
-      </div>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setHrAutobookOpen(true)}
+              data-testid="accommodation-hr-autobook-button"
+            >
+              <Sparkles size={14} className="mr-1.5" aria-hidden="true" />
+              {t('accommodation.hr_autobook.suggest_button', {
+                defaultValue: 'Suggest room for employee',
+              })}
+            </Button>
+            <Button
+              variant="secondary"
+              size="sm"
+              onClick={() => navigate('/accommodation/calendar')}
+              data-testid="accommodation-calendar-link"
+            >
+              <CalendarCheck2 size={14} className="mr-1.5" aria-hidden="true" />
+              {t('accommodation.calendar.title', { defaultValue: 'Calendar' })}
+            </Button>
+            <Button
+              variant="primary"
+              size="sm"
+              onClick={() => setCreateOpen(true)}
+              data-testid="accommodation-new-button"
+              className="hidden sm:inline-flex"
+            >
+              <Plus size={14} className="mr-1.5" aria-hidden="true" />
+              {t('accommodation.new', { defaultValue: 'New accommodation' })}
+            </Button>
+          </>
+        }
+      />
+
+      <DismissibleInfo
+        storageKey="accommodation"
+        title={t('accommodation.intro_title', {
+          defaultValue: 'House the workforce without losing track',
+        })}
+        more={
+          t('accommodation.intro_more', { defaultValue: '' })
+            ? <IntroRichText text={t('accommodation.intro_more')} />
+            : undefined
+        }
+        links={[
+          {
+            label: t('accommodation.intro_link_calendar', { defaultValue: 'Calendar' }),
+            onClick: () => navigate('/accommodation/calendar'),
+          },
+          {
+            label: t('accommodation.intro_link_contacts', { defaultValue: 'Contacts' }),
+            onClick: () => navigate('/contacts'),
+          },
+        ]}
+      >
+        {t('accommodation.intro_body', {
+          defaultValue:
+            'Track three kinds of stays in one place: worker camps for site crews, rentals for staff, and hotels for visiting consultants. Each property holds rooms, bookings and charges, and the calendar shows who is where across every date. Suggest a room for an employee to bridge directly from HR contacts into a booking.',
+        })}
+      </DismissibleInfo>
+
+      <BetaBanner moduleKey="accommodation" />
 
       {/* Summary KPI strip — collapses to a 2-col grid on phones,
           stretches to 4-col on desktop. Mute when nothing exists yet. */}
@@ -238,6 +289,34 @@ export function AccommodationListPage() {
             })}
             value={summary.rentals + summary.hotels}
           />
+        </div>
+      )}
+
+      {/* Block deep-link scope banner — shown when arriving from a Property
+          Development block. Tells the user the grid is filtered and lets them
+          drop back to the full list. */}
+      {blockFilter && (
+        <div
+          data-testid="accommodation-block-filter-banner"
+          className="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-oe-blue/30 bg-oe-blue/5 px-4 py-2.5"
+        >
+          <span className="inline-flex items-center gap-2 text-sm text-content-secondary">
+            <Filter size={14} className="text-oe-blue" aria-hidden="true" />
+            {t('accommodation.block_filter.active', {
+              defaultValue:
+                'Showing worker housing linked to the selected development block ({{count}}).',
+              count: filtered.length,
+            })}
+          </span>
+          <button
+            type="button"
+            onClick={clearBlockFilter}
+            data-testid="accommodation-block-filter-clear"
+            className="inline-flex items-center gap-1 rounded-full border border-border bg-surface-elevated px-2.5 py-1 text-2xs font-medium text-content-primary hover:bg-surface-secondary"
+          >
+            <X size={11} aria-hidden="true" />
+            {t('accommodation.block_filter.clear', { defaultValue: 'Show all accommodations' })}
+          </button>
         </div>
       )}
 
@@ -318,25 +397,43 @@ export function AccommodationListPage() {
               ? t('accommodation.empty_state.title', {
                   defaultValue: 'No accommodations yet',
                 })
-              : t('accommodation.empty_filtered.title', {
-                  defaultValue: 'No properties match this filter',
-                })
+              : blockFilter
+                ? t('accommodation.empty_block.title', {
+                    defaultValue: 'No housing linked to this block',
+                  })
+                : t('accommodation.empty_filtered.title', {
+                    defaultValue: 'No properties match this filter',
+                  })
           }
           description={
             accommodations.length === 0
               ? t('accommodation.empty_state.description', {
                   defaultValue:
-                    'Track three kinds of stays: worker camps for site crews, rentals for staff, and hotels for visiting consultants — each with rooms, bookings and charges.',
+                    'Track three kinds of stays: worker camps for site crews, rentals for staff, and hotels for visiting consultants - each with rooms, bookings and charges.',
                 })
-              : t('accommodation.empty_filtered.description', {
-                  defaultValue:
-                    'Try a different kind, or create a new property of this kind.',
-                })
+              : blockFilter
+                ? t('accommodation.empty_block.description', {
+                    defaultValue:
+                      'No accommodation is linked to this development block yet. Clear the filter to see all properties, or create one and link it from its settings.',
+                  })
+                : t('accommodation.empty_filtered.description', {
+                    defaultValue:
+                      'Try a different kind, or create a new property of this kind.',
+                  })
           }
-          action={{
-            label: t('accommodation.new', { defaultValue: 'New accommodation' }),
-            onClick: () => setCreateOpen(true),
-          }}
+          action={
+            blockFilter
+              ? {
+                  label: t('accommodation.block_filter.clear', {
+                    defaultValue: 'Show all accommodations',
+                  }),
+                  onClick: clearBlockFilter,
+                }
+              : {
+                  label: t('accommodation.new', { defaultValue: 'New accommodation' }),
+                  onClick: () => setCreateOpen(true),
+                }
+          }
         />
       ) : (
         <div
@@ -651,7 +748,7 @@ function CreateAccommodationModal({
             >
               <option value="">
                 {t('accommodation.project.placeholder', {
-                  defaultValue: '— Select project —',
+                  defaultValue: '- Select project -',
                 })}
               </option>
               {projects.map((p) => (

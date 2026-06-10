@@ -96,6 +96,7 @@ import { useToastStore } from '@/stores/useToastStore';
 import { getIntlLocale } from '@/shared/lib/formatters';
 import { VariantPicker } from '@/features/costs/VariantPicker';
 import type { CostVariant, VariantStats } from '@/features/costs/api';
+import { copyToClipboard, readClipboard } from '@/shared/lib/browser';
 
 /* ── Column width persistence ─────────────────────────────────────── */
 
@@ -642,7 +643,7 @@ const BOQGrid = forwardRef<BOQGridHandle, BOQGridProps>(function BOQGrid({
 
   const depthCapTooltip = t('boq.max_depth_reached_tooltip', {
     defaultValue:
-      'Maximum nesting depth of {{max}} levels reached — flatten the structure or use fewer sub-levels.',
+      'Maximum nesting depth of {{max}} levels reached - flatten the structure or use fewer sub-levels.',
     max: maxNestingDepth,
   });
 
@@ -1803,7 +1804,7 @@ const BOQGrid = forwardRef<BOQGridHandle, BOQGridProps>(function BOQGrid({
 
       // Position quantity is a multiplier on the per-unit unit_rate.
       // Resources are stored as PER-UNIT norms (qty per 1 unit of
-      // position) — same convention as CostX, Candy, iTWO, ProEst —
+      // position) — same convention as integrated 5D estimating suites —
       // so changing position qty must NOT touch resource qty/rate or
       // unit_rate. Backend re-derives total = qty × unit_rate.
       if (field === 'quantity') {
@@ -2096,7 +2097,7 @@ const BOQGrid = forwardRef<BOQGridHandle, BOQGridProps>(function BOQGrid({
         const text = formatCellForClipboard(value, colId);
 
         try {
-          await navigator.clipboard.writeText(text);
+          await copyToClipboard(text);
         } catch {
           // Clipboard API may be unavailable (e.g. insecure context) — silently ignore
         }
@@ -2118,7 +2119,7 @@ const BOQGrid = forwardRef<BOQGridHandle, BOQGridProps>(function BOQGrid({
 
         let clipboardText: string;
         try {
-          clipboardText = await navigator.clipboard.readText();
+          clipboardText = await readClipboard();
         } catch {
           // Clipboard read blocked — nothing we can do
           return;
@@ -2159,7 +2160,7 @@ const BOQGrid = forwardRef<BOQGridHandle, BOQGridProps>(function BOQGrid({
           addToast(
             {
               type: 'error',
-              title: t('boq.paste_failed', { defaultValue: 'Could not paste — invalid data or read-only cells' }),
+              title: t('boq.paste_failed', { defaultValue: 'Could not paste - invalid data or read-only cells' }),
             },
             { duration: 3000 },
           );
@@ -2941,7 +2942,7 @@ const BOQGrid = forwardRef<BOQGridHandle, BOQGridProps>(function BOQGrid({
               }}
               className="w-full mb-3 h-8 rounded-md border border-border-medium bg-surface-primary px-2 text-xs text-content-primary outline-none focus:border-oe-blue focus:ring-1 focus:ring-oe-blue/30"
               placeholder={t('boq.resource_code_placeholder', {
-                defaultValue: 'e.g. MAT-001 — reuse an existing code to link',
+                defaultValue: 'e.g. MAT-001 - reuse an existing code to link',
               })}
             />
 

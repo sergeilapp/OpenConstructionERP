@@ -31,6 +31,7 @@ import {
 } from 'lucide-react';
 import { APP_VERSION } from '@/shared/lib/version';
 import { apiPost, ApiError } from '@/shared/lib/api';
+import { copyToClipboard } from '@/shared/lib/browser';
 
 /* ── One-click upgrade — runs `pip install --upgrade` server-side ──── */
 
@@ -530,7 +531,7 @@ function UpdateFullModal({
 
   const copy = useCallback(async (key: string, text: string) => {
     try {
-      await navigator.clipboard.writeText(text);
+      await copyToClipboard(text);
       setCopiedKey(key);
       setTimeout(() => setCopiedKey(null), 1500);
     } catch {
@@ -599,7 +600,7 @@ function UpdateFullModal({
                 className="text-xl font-bold text-content-primary leading-tight"
               >
                 {t('update.popup_title', {
-                  defaultValue: 'Update available — v{{version}}',
+                  defaultValue: 'Update available - v{{version}}',
                   version: release.version,
                 })}
               </h2>
@@ -724,7 +725,7 @@ function UpdateFullModal({
                   <Loader2 size={18} className="animate-spin text-sky-600 dark:text-sky-400" />
                   <div className="text-sm text-content-primary">
                     {t('update.running', {
-                      defaultValue: 'Running pip install — this can take a minute on first download…',
+                      defaultValue: 'Running pip install - this can take a minute on first download…',
                     })}
                   </div>
                 </div>
@@ -767,7 +768,7 @@ function UpdateFullModal({
                   <div className="text-2xs text-content-tertiary">
                     {t('update.error_hint', {
                       defaultValue:
-                        'Copy the command below and run it from your terminal — the same pip install works there.',
+                        'Copy the command below and run it from your terminal - the same pip install works there.',
                     })}
                   </div>
                 </div>

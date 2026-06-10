@@ -1,14 +1,25 @@
 """‌⁠‍Safety ORM models.
 
 Tables:
-    oe_safety_incident    — safety incident reports (injuries, near misses, etc.)
-    oe_safety_observation — proactive safety observations with risk scoring
+    oe_safety_incident    - safety incident reports (injuries, near misses, etc.)
+    oe_safety_observation - proactive safety observations with risk scoring
 """
 
 import uuid
 from datetime import date, datetime
 
-from sqlalchemy import JSON, Boolean, Date, DateTime, Float, ForeignKey, Integer, String, Text
+from sqlalchemy import (
+    JSON,
+    Boolean,
+    Date,
+    DateTime,
+    Float,
+    ForeignKey,
+    Integer,
+    String,
+    Text,
+    UniqueConstraint,
+)
 from sqlalchemy.orm import Mapped, mapped_column
 
 from app.database import GUID, Base
@@ -18,6 +29,10 @@ class SafetyIncident(Base):
     """‌⁠‍A safety incident report tracking injuries, near misses, and property damage."""
 
     __tablename__ = "oe_safety_incident"
+    # Per-project uniqueness of the human-facing INC-NNN number. MAX(suffix)+1
+    # races under concurrent creates; this constraint forces a retry instead of
+    # a duplicate.
+    __table_args__ = (UniqueConstraint("project_id", "incident_number", name="uq_oe_safety_incident_project_number"),)
 
     project_id: Mapped[uuid.UUID] = mapped_column(
         GUID(),
@@ -34,14 +49,14 @@ class SafetyIncident(Base):
     description: Mapped[str] = mapped_column(Text, nullable=False)
 
     # ── Geo binding (cross-module) ────────────────────────────────────────
-    # Companion to the free-form ``location`` text — when the user pins the
+    # Companion to the free-form ``location`` text - when the user pins the
     # incident on a map, ``geo_lat``/``geo_lon`` are populated so Geo Hub can
     # render a project-scoped layer of incident pins. Canonical anchor
     # fields are named ``lat``/``lon`` across the platform, but on this
     # table we prefix with ``geo_`` to avoid colliding with any future
     # incident geometry (e.g. zone polygon).
     #
-    # Nullable + no server_default — incidents that pre-date this column
+    # Nullable + no server_default - incidents that pre-date this column
     # genuinely have no geo binding, and we don't want a fake (0, 0) point
     # leaking into the map layer. Add via Base.metadata.create_all on
     # fresh installs, and migration v3107_cross_module_geo_binding for
@@ -99,7 +114,7 @@ class SafetyIncident(Base):
     osha_case_number: Mapped[str | None] = mapped_column(String(32), nullable=True)
     days_away: Mapped[int | None] = mapped_column(Integer, nullable=True)
     days_restricted: Mapped[int | None] = mapped_column(Integer, nullable=True)
-    # 5_whys / fishbone / tap_root / other — kept free-form (validated in
+    # 5_whys / fishbone / tap_root / other - kept free-form (validated in
     # the service layer) so we can extend the taxonomy without a migration.
     root_cause_method: Mapped[str | None] = mapped_column(String(32), nullable=True)
     root_cause_tags: Mapped[list] = mapped_column(  # type: ignore[assignment]
@@ -118,14 +133,14 @@ class HSECorrectiveAction(Base):
 
     Distinct from :class:`app.modules.hse_advanced.models.CorrectiveAction`
     (which is the audit/JSA/observation-scoped CAPA carrying 5-Whys and
-    effectiveness verification). This table is the lightweight Procore /
-    Sphera-style "open a CA off an incident" record with a single
+    effectiveness verification). This table is the lightweight
+    construction-suite style "open a CA off an incident" record with a single
     pending → in_progress → verified → closed lifecycle.
     """
 
     __tablename__ = "oe_hse_corrective_action"
 
-    # Plain UUID — references oe_safety_incident.id, no FK to avoid
+    # Plain UUID - references oe_safety_incident.id, no FK to avoid
     # cross-module coupling (mirrors HSEIncidentInvestigation.incident_ref).
     incident_id: Mapped[uuid.UUID] = mapped_column(
         GUID(),
@@ -164,6 +179,12 @@ class SafetyObservation(Base):
     """‌⁠‍A proactive safety observation with risk scoring."""
 
     __tablename__ = "oe_safety_observation"
+    # Per-project uniqueness of the human-facing OBS-NNN number. MAX(suffix)+1
+    # races under concurrent creates; this constraint forces a retry instead of
+    # a duplicate.
+    __table_args__ = (
+        UniqueConstraint("project_id", "observation_number", name="uq_oe_safety_observation_project_number"),
+    )
 
     project_id: Mapped[uuid.UUID] = mapped_column(
         GUID(),

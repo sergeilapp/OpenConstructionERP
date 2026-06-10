@@ -1,7 +1,7 @@
 /**
  * T8 — ERP-Chat admin observability dashboard.
  *
- * Mirrors Autodesk AI Assist / Trimble Construction One AI's admin views:
+ * Mirrors construction management platform AI admin views:
  * token spend, prompt-cache hit rate, thumbs feedback rate, top thumbed-down
  * prompts, and a per-day breakdown — all gated behind the manager+
  * `erp_chat.admin` permission server-side.
@@ -25,7 +25,9 @@ function StatCard({ label, value, icon, sub }: StatCardProps) {
   return (
     <div
       style={{
-        background: 'var(--chat-surface-1, #fff)',
+        // 90% translucent surface (no blur) so the page dot grid shows
+        // through faintly, matching the canonical StatCard look.
+        background: 'color-mix(in srgb, var(--chat-surface-1, #fff) 90%, transparent)',
         border: '1px solid var(--chat-border, #e5e7eb)',
         borderRadius: 12,
         padding: '14px 16px',

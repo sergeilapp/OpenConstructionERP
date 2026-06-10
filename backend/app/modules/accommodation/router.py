@@ -38,6 +38,7 @@ from app.modules.accommodation.schemas import (
     BootstrapFromPropDevResponse,
     ChargeCreate,
     ChargeResponse,
+    ChargeUpdate,
     RoomBulkCreate,
     RoomResponse,
     RoomUpdate,
@@ -48,16 +49,20 @@ from app.modules.accommodation.service import (
     _accessible_project_ids,
     _verify_project_access,
     active_bookings_count,
+    assert_charge_mutable,
     assert_no_booking_overlap,
     assert_room_bookable,
     bootstrap_from_propdev_block,
     get_accommodation_or_404,
     get_booking_or_404,
+    get_charge_or_404,
     get_room_or_404,
     inherit_currency_for_room,
     is_valid_booking_transition,
+    is_valid_charge_transition,
     list_bookings_for_accommodation,
     list_bookings_for_room,
+    resolve_charge_currency,
     suggest_room_for_employee,
 )
 
@@ -260,11 +265,11 @@ async def list_bookings_for_accommodation_endpoint(
     """List bookings across every room of one accommodation.
 
     Multi-value ``?status=`` is accepted (FastAPI parses repeated query
-    params into a list). Date filtering uses overlap semantics — see
+    params into a list). Date filtering uses overlap semantics - see
     :func:`service._apply_booking_filters`.
     """
     statuses = _parse_booking_status_filter(status_filter)
-    bookings, room_label_by_id = await list_bookings_for_accommodation(
+    bookings, room_label_by_id, total = await list_bookings_for_accommodation(
         session,
         accommodation_id,
         user_id,
@@ -277,7 +282,7 @@ async def list_bookings_for_accommodation_endpoint(
     items = _decorate_bookings(bookings, room_label_by_id)
     return BookingListResponse(
         items=items,
-        total=len(items),
+        total=total,
         limit=limit,
         offset=offset,
     )
@@ -414,7 +419,7 @@ async def list_bookings_for_room_endpoint(
 ) -> BookingListResponse:
     """List bookings for one specific room."""
     statuses = _parse_booking_status_filter(status_filter)
-    bookings, room_label_by_id = await list_bookings_for_room(
+    bookings, room_label_by_id, total = await list_bookings_for_room(
         session,
         room_id,
         user_id,
@@ -427,7 +432,7 @@ async def list_bookings_for_room_endpoint(
     items = _decorate_bookings(bookings, room_label_by_id)
     return BookingListResponse(
         items=items,
-        total=len(items),
+        total=total,
         limit=limit,
         offset=offset,
     )
@@ -445,10 +450,10 @@ async def create_booking(
     session: SessionDep,
     user_id: CurrentUserId,
 ) -> BookingResponse:
-    """Create a booking — gates on room status + payload date validity."""
+    """Create a booking - gates on room status + payload date validity."""
     room, _accom = await get_room_or_404(session, room_id, user_id)
     assert_room_bookable(room)
-    # Block silent double-booking — half-open overlap with any live row.
+    # Block silent double-booking - half-open overlap with any live row.
     await assert_no_booking_overlap(
         session,
         room.id,
@@ -472,7 +477,7 @@ async def create_booking(
     # When the booking lands in an active state, flip the room to
     # occupied. ``reserved`` is held by the room (its slot is committed)
     # but we leave ``available`` flipping until check-in time to mirror
-    # real-world hotel/camp practice — front desks reserve rooms without
+    # real-world hotel/camp practice - front desks reserve rooms without
     # marking them occupied until the guest actually arrives.
     if payload.status == "checked_in":
         room.status = "occupied"
@@ -529,7 +534,7 @@ async def update_booking(
     metadata = data.pop("metadata", None)
 
     # State-machine gate. ``BookingUpdate.status`` is regex-validated so
-    # only legal target labels reach this point — we just check that the
+    # only legal target labels reach this point - we just check that the
     # transition itself is allowed.
     target_status = data.get("status")
     if target_status is not None and not is_valid_booking_transition(
@@ -563,7 +568,7 @@ async def update_booking(
     if metadata is not None:
         booking.metadata_ = metadata
 
-    # Reflect terminal transitions on the room status — but only when the
+    # Reflect terminal transitions on the room status - but only when the
     # room isn't actively in maintenance / blocked.
     if target_status == "checked_in" and room.status not in ("maintenance", "blocked"):
         room.status = "occupied"
@@ -597,14 +602,9 @@ async def create_charge(
         user_id,
     )
 
-    currency = payload.currency
-    if not currency:
-        # Inherit room → project — never a hardcoded EUR.
-        currency = room.base_rate_currency or await inherit_currency_for_room(
-            session,
-            accom,
-            "",
-        )
+    # Inherit room → project when blank or whitespace-only - never a
+    # hardcoded EUR and never a meaningless "  " stored verbatim.
+    currency = await resolve_charge_currency(session, room, accom, payload.currency)
 
     charge = Charge(
         booking_id=booking.id,
@@ -645,6 +645,96 @@ async def list_charges(
         .all()
     )
     return [ChargeResponse.model_validate(r) for r in rows]
+
+
+@router.patch(
+    "/charges/{charge_id}",
+    response_model=ChargeResponse,
+    dependencies=[Depends(RequirePermission("accommodation.charge.update"))],
+)
+async def update_charge(
+    charge_id: uuid.UUID,
+    payload: ChargeUpdate,
+    session: SessionDep,
+    user_id: CurrentUserId,
+) -> ChargeResponse:
+    """Partial update for a charge, with state-machine + lock guards.
+
+    A ``paid`` / ``waived`` charge is a closed financial record and is
+    rejected with 409. Status changes must follow the charge lifecycle
+    (``pending → invoiced → paid`` with ``waived`` reachable from any
+    non-settled state). A blank / whitespace currency re-inherits from the
+    room or project rather than persisting an empty string.
+    """
+    charge, _booking, room, accom = await get_charge_or_404(
+        session,
+        charge_id,
+        user_id,
+    )
+    # Lock settled / written-off records against any in-place edit.
+    assert_charge_mutable(charge)
+
+    data = payload.model_dump(exclude_unset=True)
+    metadata = data.pop("metadata", None)
+
+    # State-machine gate - only legal target labels reach here (regex), so
+    # we just check the transition itself is allowed.
+    target_status = data.get("status")
+    if target_status is not None and not is_valid_charge_transition(
+        charge.status,
+        target_status,
+    ):
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail=(f"Invalid charge transition: {charge.status} -> {target_status}"),
+        )
+
+    # Currency: a blank / whitespace value re-inherits rather than wiping
+    # the stored code. An explicit non-blank code is applied as given.
+    if "currency" in data:
+        data["currency"] = await resolve_charge_currency(
+            session,
+            room,
+            accom,
+            data.get("currency"),
+        )
+
+    for key, value in data.items():
+        setattr(charge, key, value)
+    if metadata is not None:
+        charge.metadata_ = metadata
+
+    await session.flush()
+    await session.refresh(charge)
+    return ChargeResponse.model_validate(charge)
+
+
+@router.delete(
+    "/charges/{charge_id}",
+    status_code=status.HTTP_204_NO_CONTENT,
+    dependencies=[Depends(RequirePermission("accommodation.charge.delete"))],
+)
+async def delete_charge(
+    charge_id: uuid.UUID,
+    session: SessionDep,
+    user_id: CurrentUserId,
+) -> None:
+    """Hard-delete an erroneous charge.
+
+    Only ``pending`` / ``invoiced`` charges may be removed; a settled
+    (``paid``) or written-off (``waived``) line-item is locked and returns
+    409 - reverse the settlement in Finance instead. Charges carry no
+    downstream dependents, so a hard delete is safe and keeps the booking's
+    billing total honest.
+    """
+    charge, _booking, _room, _accom = await get_charge_or_404(
+        session,
+        charge_id,
+        user_id,
+    )
+    assert_charge_mutable(charge)
+    await session.delete(charge)
+    await session.flush()
 
 
 # ── Cross-module integrations ────────────────────────────────────────────
@@ -692,7 +782,7 @@ async def suggest_from_hr(
     )
     accom = await session.get(Accommodation, room.accommodation_id)
     if accom is None:
-        # Shouldn't happen — JOIN above guarantees it — but be defensive.
+        # Shouldn't happen - JOIN above guarantees it - but be defensive.
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="No available room",

@@ -29,7 +29,7 @@ import {
   Zap,
 } from 'lucide-react';
 
-import { Button } from '@/shared/ui';
+import { Button, ConfidenceBadge } from '@/shared/ui';
 import { apiGet } from '@/shared/lib/api';
 import { useIsRTL } from '@/shared/hooks/useIsRTL';
 import { fmtWithCurrency } from './boqHelpers';
@@ -443,7 +443,7 @@ export function AISmartPanel({
           )}
           {prereqResult && prereqResult.suggestions.length === 0 && (
             <p className="text-xs text-text-muted italic">
-              {t('boq.ai_no_prereqs', { defaultValue: 'No missing items found — BOQ looks complete for this position.' })}
+              {t('boq.ai_no_prereqs', { defaultValue: 'No missing items found - BOQ looks complete for this position.' })}
             </p>
           )}
         </ActionCard>
@@ -600,7 +600,7 @@ export function AISmartPanel({
       <div className="shrink-0 px-4 py-2 border-t border-border-light text-[10px] text-text-muted">
         <div className="flex items-center gap-1">
           <Sparkles size={10} />
-          {t('boq.ai_smart_footer', { defaultValue: 'Powered by your AI provider (Settings > AI). Results are suggestions — always review.' })}
+          {t('boq.ai_smart_footer', { defaultValue: 'Powered by your AI provider (Settings > AI). Results are suggestions - always review.' })}
         </div>
       </div>
     </div>
@@ -669,12 +669,6 @@ function FactorBadge({ label, value }: { label: string; value: number }) {
   );
 }
 
-function ConfidenceBadge({ level }: { level: string }) {
-  const colors =
-    level === 'high'
-      ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400'
-      : level === 'medium'
-      ? 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400'
-      : 'bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400';
-  return <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${colors}`}>{level}</span>;
-}
+/* The local ConfidenceBadge was retired in favour of the shared
+ * <ConfidenceBadge> in @/shared/ui, which renders a translated label
+ * instead of leaking the raw lowercase enum (`high`/`medium`/`low`). */

@@ -1,7 +1,7 @@
 """‌⁠‍Meetings data access layer.
 
 All database queries for meetings live here.
-No business logic — pure data access.
+No business logic - pure data access.
 """
 
 import uuid
@@ -42,7 +42,7 @@ class MeetingRepository:
             base = base.where(Meeting.status == status)
 
         # Free-text search across title, minutes, and meeting number.
-        # (agenda_items is a JSON list column, not a text column — ilike on it
+        # (agenda_items is a JSON list column, not a text column - ilike on it
         # is not portable across SQLite/Postgres, so it is excluded here.)
         if search and search.strip():
             pattern = f"%{search.strip()}%"
@@ -73,22 +73,27 @@ class MeetingRepository:
         return items, total
 
     async def next_meeting_number(self, project_id: uuid.UUID) -> str:
-        """Generate the next meeting number using MAX to avoid duplicates."""
+        """Generate the next ``MTG-NNN`` number using MAX to avoid duplicates.
+
+        Only canonical ``MTG-<digits>`` rows are cast: PostgreSQL rejects an
+        empty or non-numeric integer cast (unlike SQLite, which yielded 0), so
+        one legacy or externally-numbered row would otherwise raise on every
+        new meeting for the project.
+        """
         from sqlalchemy import Integer as SAInteger
         from sqlalchemy import cast
         from sqlalchemy.sql import func as sqlfunc
 
-        stmt = select(
-            sqlfunc.coalesce(
-                sqlfunc.max(
-                    cast(
-                        func.substr(Meeting.meeting_number, 5),
-                        SAInteger,
-                    )
-                ),
-                0,
+        stmt = (
+            select(
+                sqlfunc.coalesce(
+                    sqlfunc.max(cast(func.substr(Meeting.meeting_number, 5), SAInteger)),
+                    0,
+                )
             )
-        ).where(Meeting.project_id == project_id)
+            .where(Meeting.project_id == project_id)
+            .where(Meeting.meeting_number.regexp_match("^MTG-[0-9]+$"))
+        )
         max_num = (await self.session.execute(stmt)).scalar_one()
         return f"MTG-{max_num + 1:03d}"
 
@@ -181,7 +186,7 @@ class MeetingRepository:
         """Stream only the JSON action_items per meeting.
 
         Returns ``(id, meeting_number, title, meeting_date, action_items)``
-        tuples — skips loading the full Meeting row so a project with 5000
+        tuples - skips loading the full Meeting row so a project with 5000
         meetings only ships the JSON column (most rows have <10 entries).
         Used by stats + open-actions endpoints. Filters out cancelled
         meetings and meetings whose action_items are empty.

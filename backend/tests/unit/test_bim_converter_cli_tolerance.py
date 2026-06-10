@@ -132,6 +132,16 @@ def _install_minimal_dependencies(monkeypatch: pytest.MonkeyPatch, *, converter:
     converter discovery, etc."""
     monkeypatch.setattr(cad_import, "find_converter", lambda _ext: converter)
 
+    # Stub the version probe so it never shells out. On Linux CI it runs
+    # ``dpkg-query`` through ``subprocess.run`` - which the tests monkeypatch
+    # with the recorder - adding a spurious third recorded call that has
+    # nothing to do with the converter invocations under test.
+    monkeypatch.setattr(
+        cad_import,
+        "detect_converter_version",
+        lambda _ext: {"version": None, "source": None, "binary_path": None},
+    )
+
     # parse_cad_excel always returns a single fake element row so the
     # downstream code path treats the conversion as successful.
     fake_rows = [
@@ -324,11 +334,11 @@ def test_infer_failure_cause_handles_each_input_class() -> None:
         == "converter_outdated"
     )
 
-    # Exit 15 alone (e.g. terse runtime) → converter_outdated as a safe
-    # default — Reinstall is the only one-click fix anyway.
-    assert (
-        ifc_processor._infer_failure_cause(reason="nonzero_exit", exit_code=15, stderr_text="") == "converter_outdated"
-    )
+    # Exit 15 alone (no unknown-argument marker) is NOT proof the converter is
+    # outdated - a current v18 binary exits 15 when handed an arg shape it does
+    # not understand (e.g. a mis-probed legacy invocation), so surface the
+    # generic, retryable guidance instead of a misleading Reinstall CTA.
+    assert ifc_processor._infer_failure_cause(reason="nonzero_exit", exit_code=15, stderr_text="") == "unknown"
 
     # Other failures keep their existing labels.
     assert ifc_processor._infer_failure_cause(reason="timeout", exit_code=None, stderr_text="") == "timeout"

@@ -181,14 +181,14 @@ export function CustomBranding({ iconified }: CustomBrandingProps) {
                   15px and clipped against the pencil. */}
               <Logo size="xs" />
               <span
-                className="text-[13px] font-extrabold text-content-primary whitespace-nowrap leading-none"
+                className="text-[13px] font-medium text-content-primary whitespace-nowrap leading-none"
                 style={{
                   fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif",
                   letterSpacing: '-0.02em',
                 }}
               >
                 Open<span className="text-oe-blue">Construction</span>
-                <span className="text-content-quaternary font-semibold">ERP</span>
+                <span className="text-content-quaternary">ERP</span>
               </span>
             </a>
           )}
@@ -429,7 +429,7 @@ function BrandingEditor({
                   </p>
                   <p className="text-xs text-content-tertiary mt-1">
                     {t('branding.logo_hint', {
-                      defaultValue: 'PNG, JPG, SVG, or WebP — up to 2 MB',
+                      defaultValue: 'PNG, JPG, SVG, or WebP - up to 2 MB',
                     })}
                   </p>
                 </div>

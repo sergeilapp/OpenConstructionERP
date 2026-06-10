@@ -1,6 +1,6 @@
-import React, { useState, useMemo, useCallback, useEffect } from 'react';
+import React, { useState, useMemo, useCallback, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import clsx from 'clsx';
 import {
@@ -19,7 +19,10 @@ import {
   XCircle,
   AlertTriangle,
   Clock,
-  Globe2,
+  MapPin,
+  CircleDot,
+  Flame,
+  Timer,
 } from 'lucide-react';
 import {
   Button,
@@ -33,7 +36,11 @@ import {
   WideModalSection,
   WideModalField,
   SkeletonTable,
+  IntroRichText,
+  KpiBand,
 } from '@/shared/ui';
+import type { KpiBandItem } from '@/shared/ui';
+import { PageHeader } from '@/shared/ui/PageHeader';
 import { RequiresProject } from '@/shared/auth/RequiresProject';
 import { useConfirm } from '@/shared/hooks/useConfirm';
 import { SectionIntro } from '@/features/validation';
@@ -123,14 +130,20 @@ const STATUS_TRANSITION: Record<PunchStatus, { next: PunchStatus; labelKey: stri
   in_progress: [
     { next: 'resolved', labelKey: 'punch.action_resolve', defaultLabel: 'Mark Resolved', icon: CheckCircle2 },
   ],
+  // Reopen targets must mirror the backend FSM (punchlist/service.py
+  // VALID_TRANSITIONS): resolved/verified/closed may all go back to "open" —
+  // "in_progress" is NOT a legal reopen target and the API rejects it.
   resolved: [
     { next: 'verified', labelKey: 'punch.action_verify', defaultLabel: 'Verify', icon: ShieldCheck },
-    { next: 'in_progress', labelKey: 'punch.action_reopen', defaultLabel: 'Reopen', icon: XCircle },
+    { next: 'open', labelKey: 'punch.action_reopen', defaultLabel: 'Reopen', icon: XCircle },
   ],
   verified: [
     { next: 'closed', labelKey: 'punch.action_close', defaultLabel: 'Close', icon: CheckCircle2 },
+    { next: 'open', labelKey: 'punch.action_reopen', defaultLabel: 'Reopen', icon: XCircle },
   ],
-  closed: [],
+  closed: [
+    { next: 'open', labelKey: 'punch.action_reopen', defaultLabel: 'Reopen', icon: XCircle },
+  ],
 };
 
 /* ── Styling helpers ──────────────────────────────────────────────────── */
@@ -142,61 +155,260 @@ const textareaCls =
 
 type ViewMode = 'list' | 'kanban';
 
-/* ── Stats Cards ──────────────────────────────────────────────────────── */
+/* ── Source provenance badge ──────────────────────────────────────────── */
 
-function StatsCards({ summary }: { summary: PunchSummary | undefined }) {
+/**
+ * Resolve the deep-link target for a punch item raised automatically from
+ * another module. Reads the source ids the backend stamps into `metadata_`:
+ *   - clash: `run_id` (-> the clash run that produced it) / `result_id`
+ *   - inspection: `inspection_id` (-> the originating inspection, highlighted)
+ *   - ncr: `ncr_id` when present (-> the NCR, highlighted), else the register
+ * Returns null for an unknown / source-less item so the caller renders nothing.
+ */
+function resolvePunchSourceLink(item: PunchItem): { source: string; to: string } | null {
+  const md = item.metadata ?? {};
+  const source = typeof md.source === 'string' ? md.source : '';
+  if (source === 'clash') {
+    const runId = typeof md.run_id === 'string' ? md.run_id : '';
+    return { source, to: runId ? `/clash?run=${runId}` : '/clash' };
+  }
+  if (source === 'inspection') {
+    const inspectionId = typeof md.inspection_id === 'string' ? md.inspection_id : '';
+    return {
+      source,
+      to: inspectionId
+        ? `/projects/${item.project_id}/inspections?highlight=${inspectionId}`
+        : '/inspections',
+    };
+  }
+  if (source === 'ncr') {
+    // Backend does not yet stamp an ncr id onto punch metadata; fall back to
+    // the register and highlight the NCR when an id is available.
+    const ncrId =
+      typeof md.ncr_id === 'string'
+        ? md.ncr_id
+        : typeof md.source_ncr_id === 'string'
+        ? md.source_ncr_id
+        : '';
+    return { source, to: ncrId ? `/ncr?highlight=${ncrId}` : '/ncr' };
+  }
+  return null;
+}
+
+function PunchSourceBadge({
+  item,
+  className,
+}: {
+  item: PunchItem;
+  className?: string;
+}) {
+  const { t } = useTranslation();
+  const navigate = useNavigate();
+  const link = resolvePunchSourceLink(item);
+  if (!link) return null;
+
+  const config: Record<string, { variant: 'error' | 'blue' | 'warning'; label: string }> = {
+    clash: { variant: 'error', label: t('punch.source_clash', { defaultValue: 'From clash' }) },
+    inspection: {
+      variant: 'blue',
+      label: t('punch.source_inspection', { defaultValue: 'From Inspection' }),
+    },
+    ncr: { variant: 'warning', label: t('punch.source_ncr', { defaultValue: 'From NCR' }) },
+  };
+  const cfg = config[link.source];
+  if (!cfg) return null;
+
+  return (
+    <button
+      type="button"
+      onClick={(e) => {
+        e.stopPropagation();
+        navigate(link.to);
+      }}
+      className={clsx(
+        'rounded-md transition-opacity hover:opacity-80 focus:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue/40',
+        className,
+      )}
+      title={t('punch.source_open_hint', {
+        defaultValue: 'Open the record this item was raised from',
+      })}
+    >
+      <Badge variant={cfg.variant} size="sm">
+        {cfg.label}
+      </Badge>
+    </button>
+  );
+}
+
+/* ── KPI band ──────────────────────────────────────────────────────────
+
+   The role-home KPI strip the founder picked as the reference pattern
+   (issue #70). Built on the shared <KpiBand> + StatCard so it reads the
+   same on every page that copies it. Metrics are derived from the data the
+   page already has: the server summary (total / by_status / by_priority /
+   overdue / avg_days_to_close) plus the loaded item list (used to compute
+   what the summary endpoint does not expose - urgent-open count, items
+   closed in the last seven days, and the average age of still-open work).
+   Tiles are clickable where a sensible drill-down exists, filtering the
+   list below to the matching slice. */
+
+const WEEK_MS = 7 * 24 * 60 * 60 * 1000;
+const DAY_MS = 24 * 60 * 60 * 1000;
+
+/** Parse an ISO timestamp to epoch ms, or null when absent/unparseable. */
+function toMs(value: string | null | undefined): number | null {
+  if (!value) return null;
+  const ms = new Date(value).getTime();
+  return Number.isFinite(ms) ? ms : null;
+}
+
+interface PunchKpiActions {
+  /** Show only the given statuses in the list below. */
+  onFilterStatus: (status: PunchStatus | '') => void;
+  /** Show only the given priority in the list below. */
+  onFilterPriority: (priority: PunchPriority | '') => void;
+}
+
+function PunchKpiBand({
+  summary,
+  items,
+  actions,
+}: {
+  summary: PunchSummary | undefined;
+  items: PunchItem[];
+  actions: PunchKpiActions;
+}) {
   const { t } = useTranslation();
 
-  const total = summary?.total ?? 0;
-  const byStatus = summary?.by_status ?? {};
-  const overdue = summary?.overdue ?? 0;
-  const avgDays = summary?.avg_days_to_close;
+  const metrics = useMemo(() => {
+    const byStatus = summary?.by_status ?? {};
+    const overdue = summary?.overdue ?? 0;
+    const avgClose = summary?.avg_days_to_close;
 
-  const items: { label: string; value: string | number; cls: string }[] = [
+    // "Open" = the live workload still to be worked (open + in progress).
+    const open = (byStatus['open'] ?? 0) + (byStatus['in_progress'] ?? 0);
+    const resolved = byStatus['resolved'] ?? 0;
+    // Urgent-open is not in the summary payload, so derive it from the list:
+    // critical/high items that are not yet resolved/verified/closed.
+    const urgentOpen = items.reduce((n, it) => {
+      const live = it.status === 'open' || it.status === 'in_progress';
+      const urgent = it.priority === 'critical' || it.priority === 'high';
+      return n + (live && urgent ? 1 : 0);
+    }, 0);
+
+    // Closed in the last 7 days: prefer the verified/resolved timestamps,
+    // fall back to updated_at for closed items that carry no resolved stamp.
+    const now = Date.now();
+    const closedThisWeek = items.reduce((n, it) => {
+      if (it.status !== 'closed' && it.status !== 'verified') return n;
+      const when = toMs(it.verified_at) ?? toMs(it.resolved_at) ?? toMs(it.updated_at);
+      return n + (when != null && now - when <= WEEK_MS ? 1 : 0);
+    }, 0);
+
+    // Average age (days) of still-open items, from created_at. Null when
+    // there is nothing open to average so we render a dash, not "0d".
+    let ageSum = 0;
+    let ageCount = 0;
+    for (const it of items) {
+      if (it.status !== 'open' && it.status !== 'in_progress') continue;
+      const created = toMs(it.created_at);
+      if (created == null) continue;
+      ageSum += Math.max(0, now - created);
+      ageCount += 1;
+    }
+    const avgOpenAgeDays = ageCount > 0 ? Math.round(ageSum / ageCount / DAY_MS) : null;
+
+    return {
+      open,
+      resolved,
+      overdue,
+      urgentOpen,
+      closedThisWeek,
+      avgOpenAgeDays,
+      avgClose,
+    };
+  }, [summary, items]);
+
+  const dashOrDays = (n: number | null | undefined) =>
+    n != null ? t('punch.kpi_days', { defaultValue: '{{count}}d', count: n }) : '-';
+
+  const kpiItems: KpiBandItem[] = [
     {
-      label: t('punch.stat_total', { defaultValue: 'Total' }),
-      value: total,
-      cls: 'text-content-primary',
+      key: 'open',
+      label: t('punch.kpi_open', { defaultValue: 'Open' }),
+      value: metrics.open,
+      sub: t('punch.kpi_open_sub', { defaultValue: 'still to action' }),
+      icon: CircleDot,
+      tone: metrics.open > 0 ? 'danger' : 'success',
+      tintValue: metrics.open > 0,
+      onClick: () => actions.onFilterStatus('open'),
+      ariaLabel: t('punch.kpi_open_aria', {
+        defaultValue: 'Filter to open items ({{count}})',
+        count: metrics.open,
+      }),
     },
     {
-      label: t('punch.stat_open', { defaultValue: 'Open' }),
-      value: byStatus['open'] ?? 0,
-      cls: 'text-semantic-error',
+      key: 'overdue',
+      label: t('punch.kpi_overdue', { defaultValue: 'Overdue' }),
+      value: metrics.overdue,
+      sub: t('punch.kpi_overdue_sub', { defaultValue: 'past due date' }),
+      icon: AlertTriangle,
+      tone: metrics.overdue > 0 ? 'danger' : 'default',
+      tintValue: metrics.overdue > 0,
     },
     {
-      label: t('punch.stat_in_progress', { defaultValue: 'In Progress' }),
-      value: byStatus['in_progress'] ?? 0,
-      cls: 'text-amber-700 dark:text-amber-400',
+      key: 'urgent',
+      label: t('punch.kpi_urgent', { defaultValue: 'Critical / High' }),
+      value: metrics.urgentOpen,
+      sub: t('punch.kpi_urgent_sub', { defaultValue: 'urgent and open' }),
+      icon: Flame,
+      tone: metrics.urgentOpen > 0 ? 'warning' : 'default',
+      tintValue: metrics.urgentOpen > 0,
+      onClick: () => actions.onFilterPriority('critical'),
+      ariaLabel: t('punch.kpi_urgent_aria', {
+        defaultValue: 'Filter to critical priority items',
+      }),
     },
     {
-      label: t('punch.stat_resolved', { defaultValue: 'Resolved' }),
-      value: byStatus['resolved'] ?? 0,
-      cls: 'text-oe-blue',
+      key: 'resolved',
+      label: t('punch.kpi_resolved', { defaultValue: 'Resolved' }),
+      value: metrics.resolved,
+      sub: t('punch.kpi_resolved_sub', { defaultValue: 'awaiting verify' }),
+      icon: CheckCircle2,
+      tone: 'blue',
+      tintValue: metrics.resolved > 0,
+      onClick: () => actions.onFilterStatus('resolved'),
+      ariaLabel: t('punch.kpi_resolved_aria', {
+        defaultValue: 'Filter to resolved items ({{count}})',
+        count: metrics.resolved,
+      }),
     },
     {
-      label: t('punch.stat_overdue', { defaultValue: 'Overdue' }),
-      value: overdue,
-      cls: overdue > 0 ? 'text-semantic-error' : 'text-content-primary',
+      key: 'closed_week',
+      label: t('punch.kpi_closed_week', { defaultValue: 'Closed this week' }),
+      value: metrics.closedThisWeek,
+      sub: t('punch.kpi_closed_week_sub', { defaultValue: 'last 7 days' }),
+      icon: ShieldCheck,
+      tone: 'success',
+      tintValue: metrics.closedThisWeek > 0,
     },
     {
-      label: t('punch.stat_avg_close', { defaultValue: 'Avg Days to Close' }),
-      value: avgDays != null ? `${avgDays}d` : '-',
-      cls: 'text-content-primary',
+      key: 'age',
+      label: t('punch.kpi_avg_age', { defaultValue: 'Avg open age' }),
+      value: dashOrDays(metrics.avgOpenAgeDays),
+      sub:
+        metrics.avgClose != null
+          ? t('punch.kpi_avg_close_sub', {
+              defaultValue: '{{count}}d avg to close',
+              count: metrics.avgClose,
+            })
+          : t('punch.kpi_avg_age_sub', { defaultValue: 'open items' }),
+      icon: Timer,
+      tone: 'default',
     },
   ];
 
-  return (
-    <div className="grid grid-cols-3 lg:grid-cols-6 gap-4">
-      {items.map((item) => (
-        <Card key={item.label} className="p-4 animate-card-in">
-          <p className="text-2xs text-content-tertiary uppercase tracking-wide">{item.label}</p>
-          <p className={clsx('text-xl font-bold mt-1 tabular-nums', item.cls)}>
-            {item.value}
-          </p>
-        </Card>
-      ))}
-    </div>
-  );
+  return <KpiBand items={kpiItems} columns={6} />;
 }
 
 /* ── Add Punch Item Modal ─────────────────────────────────────────────── */
@@ -210,6 +422,11 @@ interface PunchFormData {
   due_date: string;
   document_id: string;
   location: string;
+  /** Sheet page the pin sits on (1-based). Empty string when no pin. */
+  page: string;
+  /** Normalised pin coordinates on the sheet (0..1), as entered text. */
+  location_x: string;
+  location_y: string;
 }
 
 const EMPTY_FORM: PunchFormData = {
@@ -221,7 +438,31 @@ const EMPTY_FORM: PunchFormData = {
   due_date: '',
   document_id: '',
   location: '',
+  page: '',
+  location_x: '',
+  location_y: '',
 };
+
+/** Minimal drawing/document option for the punch-pin picker. */
+interface PunchDrawingOption {
+  id: string;
+  filename: string;
+}
+
+/**
+ * Build the markups deep-link that reopens the drawing a punch pin sits on.
+ * Mirrors the file-manager consumer in MarkupsPage (`?openDoc=<id>&page=<n>`).
+ * Returns null when there is no document to open.
+ */
+function punchDrawingLink(item: {
+  document_id: string | null;
+  page: number | null;
+}): string | null {
+  if (!item.document_id) return null;
+  const params = new URLSearchParams({ openDoc: item.document_id });
+  if (item.page != null) params.set('page', String(item.page));
+  return `/markups?${params.toString()}`;
+}
 
 const PRIORITY_RADIO_COLORS: Record<PunchPriority, string> = {
   low: 'bg-gray-100 text-gray-700 border-gray-300 peer-checked:bg-gray-200 peer-checked:border-gray-500 dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600',
@@ -235,11 +476,13 @@ function AddPunchModal({
   onSubmit,
   isPending,
   teamMembers,
+  drawings,
 }: {
   onClose: () => void;
   onSubmit: (data: PunchFormData) => void;
   isPending: boolean;
   teamMembers: TeamMember[];
+  drawings: PunchDrawingOption[];
 }) {
   const { t } = useTranslation();
   const [form, setForm] = useState<PunchFormData>(EMPTY_FORM);
@@ -249,7 +492,15 @@ function AddPunchModal({
     setForm((prev) => ({ ...prev, [key]: value }));
 
   const titleError = touched && form.title.trim().length === 0;
-  const canSubmit = form.title.trim().length > 0;
+  // A normalised pin coordinate must sit in the 0..1 range the backend accepts.
+  const coordError = (v: string) => {
+    if (!v.trim()) return false;
+    const n = Number(v);
+    return !Number.isFinite(n) || n < 0 || n > 1;
+  };
+  const xError = touched && coordError(form.location_x);
+  const yError = touched && coordError(form.location_y);
+  const canSubmit = form.title.trim().length > 0 && !coordError(form.location_x) && !coordError(form.location_y);
 
   const handleSubmit = () => {
     setTouched(true);
@@ -419,6 +670,87 @@ function AddPunchModal({
             className={inputCls}
           />
         </WideModalField>
+
+        {/* ── Pin on drawing ──────────────────────────────────────────────
+            Tie the snag to a sheet and an optional normalised pin so it can
+            be reopened on the drawing. The document picker reuses the project
+            documents list (no raw UUID input). */}
+        <WideModalField
+          label={t('punch.field_drawing', { defaultValue: 'Pin on drawing (optional)' })}
+          htmlFor="punch-drawing"
+          span={2}
+        >
+          <select
+            id="punch-drawing"
+            value={form.document_id}
+            onChange={(e) => set('document_id', e.target.value)}
+            className={inputCls}
+          >
+            <option value="">
+              {t('punch.no_drawing', { defaultValue: 'No drawing' })}
+            </option>
+            {drawings.map((d) => (
+              <option key={d.id} value={d.id}>
+                {d.filename || d.id.slice(0, 8)}
+              </option>
+            ))}
+          </select>
+        </WideModalField>
+
+        {form.document_id && (
+          <>
+            <WideModalField
+              label={t('punch.field_page', { defaultValue: 'Sheet page' })}
+              htmlFor="punch-page"
+            >
+              <input
+                id="punch-page"
+                type="number"
+                min={1}
+                step={1}
+                value={form.page}
+                onChange={(e) => set('page', e.target.value)}
+                placeholder="1"
+                className={inputCls}
+              />
+            </WideModalField>
+            <WideModalField
+              label={t('punch.field_pin', { defaultValue: 'Pin X / Y (0-1)' })}
+              error={
+                xError || yError
+                  ? t('punch.pin_range_error', {
+                      defaultValue: 'Coordinates must be between 0 and 1',
+                    })
+                  : undefined
+              }
+            >
+              <div className="flex items-center gap-2">
+                <input
+                  type="number"
+                  min={0}
+                  max={1}
+                  step="0.001"
+                  value={form.location_x}
+                  onChange={(e) => set('location_x', e.target.value)}
+                  placeholder="0.50"
+                  aria-label={t('punch.field_pin_x', { defaultValue: 'Pin X (0-1)' })}
+                  className={clsx(inputCls, xError && 'border-semantic-error focus:ring-red-300 focus:border-semantic-error')}
+                />
+                <input
+                  type="number"
+                  min={0}
+                  max={1}
+                  step="0.001"
+                  value={form.location_y}
+                  onChange={(e) => set('location_y', e.target.value)}
+                  placeholder="0.50"
+                  aria-label={t('punch.field_pin_y', { defaultValue: 'Pin Y (0-1)' })}
+                  className={clsx(inputCls, yError && 'border-semantic-error focus:ring-red-300 focus:border-semantic-error')}
+                />
+              </div>
+            </WideModalField>
+          </>
+        )}
       </WideModalSection>
     </WideModal>
   );
@@ -467,26 +799,11 @@ const PunchKanbanCard = React.memo(function PunchKanbanCard({
         </p>
       )}
 
-      {/* Source badge */}
-      {item.metadata?.source === 'clash' && (
+      {/* Source provenance — a button that deep-links back to the clash,
+          inspection or NCR this item was raised from. */}
+      {resolvePunchSourceLink(item) && (
         <div className="mt-1">
-          <Badge variant="error" size="sm">
-            {t('punch.source_clash', { defaultValue: 'From clash' })}
-          </Badge>
-        </div>
-      )}
-      {item.metadata?.source === 'inspection' && (
-        <div className="mt-1">
-          <Badge variant="blue" size="sm">
-            {t('punch.source_inspection', { defaultValue: 'From Inspection' })}
-          </Badge>
-        </div>
-      )}
-      {item.metadata?.source === 'ncr' && (
-        <div className="mt-1">
-          <Badge variant="warning" size="sm">
-            {t('punch.source_ncr', { defaultValue: 'From NCR' })}
-          </Badge>
+          <PunchSourceBadge item={item} />
         </div>
       )}
 
@@ -645,10 +962,15 @@ function KanbanView({
 export function PunchListPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
   const qc = useQueryClient();
   const addToast = useToastStore((s) => s.addToast);
   const { confirm, ...confirmProps } = useConfirm();
   const activeProjectId = useProjectContextStore((s) => s.activeProjectId);
+
+  // Deep-link target (e.g. from an inspection's "Open punch item" toast). The
+  // matching row scrolls into view and flashes once the data has loaded.
+  const highlightId = searchParams.get('highlight');
 
   // State
   const [viewMode, setViewMode] = useState<ViewMode>('list');
@@ -669,6 +991,11 @@ export function PunchListPage() {
   });
 
   const projectId = activeProjectId || projects[0]?.id || '';
+  // Breadcrumb only links a project when one is explicitly in the global
+  // context (never the projects[0] fallback), matching the rest of the cluster.
+  const breadcrumbProjectName = activeProjectId
+    ? projects.find((p) => p.id === activeProjectId)?.name
+    : undefined;
 
   const { data: punchItems = [], isLoading, isError, error, refetch } = useQuery({
     queryKey: ['punchlist', projectId, filterPriority, filterStatus, filterCategory, filterAssignee],
@@ -688,10 +1015,38 @@ export function PunchListPage() {
     enabled: !!projectId,
   });
 
+  // Unfiltered project-wide list used only to derive the KPI metrics the
+  // summary endpoint does not expose (urgent-open count, items closed this
+  // week, average age of open items). Keeping it separate from the
+  // filtered `punchItems` query means the role-home KPI band stays stable
+  // and project-wide even while the list below is narrowed by a filter.
+  const { data: kpiItems = [] } = useQuery({
+    queryKey: ['punchlist-kpi', projectId],
+    queryFn: () => fetchPunchItems(projectId),
+    enabled: !!projectId,
+    staleTime: 30_000,
+  });
+
   const { data: teamMembers = [] } = useQuery({
     queryKey: ['team-members', projectId],
     queryFn: () => fetchTeamMembers(projectId),
     enabled: !!projectId,
+  });
+
+  // Project documents, used to pin a punch item to a drawing sheet (CONN-57).
+  const { data: drawings = [] } = useQuery({
+    queryKey: ['punchlist-drawings', projectId],
+    queryFn: async (): Promise<PunchDrawingOption[]> => {
+      const rows = await apiGet<{ id: string; filename?: string; name?: string }[]>(
+        `/v1/documents/?project_id=${projectId}`,
+      );
+      return (Array.isArray(rows) ? rows : []).map((r) => ({
+        id: r.id,
+        filename: r.filename ?? r.name ?? '',
+      }));
+    },
+    enabled: !!projectId && showAddModal,
+    staleTime: 60_000,
   });
 
   // Client-side search
@@ -710,6 +1065,31 @@ export function PunchListPage() {
   useEffect(() => {
     setSelectedIds(new Set());
   }, [projectId]);
+
+  // A deep-link highlight only renders in the list view (the table row carries
+  // the flash); switch to it so the targeted item is actually visible.
+  useEffect(() => {
+    if (highlightId) setViewMode('list');
+  }, [highlightId]);
+
+  // Once the highlighted item is present, let the row flash then drop the
+  // ?highlight param (replace, preserving other params) so a refresh or
+  // back-navigation does not re-trigger the highlight.
+  useEffect(() => {
+    if (!highlightId) return;
+    if (!punchItems.some((it) => it.id === highlightId)) return;
+    const timer = window.setTimeout(() => {
+      setSearchParams(
+        (prev) => {
+          const next = new URLSearchParams(prev);
+          next.delete('highlight');
+          return next;
+        },
+        { replace: true },
+      );
+    }, 2600);
+    return () => window.clearTimeout(timer);
+  }, [highlightId, punchItems, setSearchParams]);
 
   // Invalidation
   const invalidateAll = useCallback(() => {
@@ -837,6 +1217,9 @@ export function PunchListPage() {
   // Handlers
   const handleCreateSubmit = useCallback(
     (formData: PunchFormData) => {
+      const pageNum = formData.page.trim() ? Number(formData.page) : undefined;
+      const xNum = formData.location_x.trim() ? Number(formData.location_x) : undefined;
+      const yNum = formData.location_y.trim() ? Number(formData.location_y) : undefined;
       createMut.mutate({
         project_id: projectId,
         title: formData.title,
@@ -846,6 +1229,12 @@ export function PunchListPage() {
         assigned_to: formData.assigned_to || undefined,
         due_date: formData.due_date || undefined,
         document_id: formData.document_id || undefined,
+        // Pin is only meaningful when tied to a drawing.
+        page: formData.document_id && pageNum != null && Number.isFinite(pageNum) ? pageNum : undefined,
+        location_x:
+          formData.document_id && xNum != null && Number.isFinite(xNum) ? xNum : undefined,
+        location_y:
+          formData.document_id && yNum != null && Number.isFinite(yNum) ? yNum : undefined,
       });
     },
     [createMut, projectId],
@@ -876,98 +1265,104 @@ export function PunchListPage() {
   );
 
   return (
-    <div className="mx-auto max-w-7xl px-6 py-6 animate-fade-in">
-      {/* Breadcrumb */}
+    <div className="animate-fade-in space-y-5">
+      {/* Breadcrumb — the Home icon already links to the dashboard, and a lone
+          module label auto-hides (MODULE_STYLE_GUIDE section 2.1), so no
+          literal "Dashboard" item. A project link is added once one is in
+          context, matching the rest of the quality cluster. */}
       <Breadcrumb
         items={[
-          { label: t('nav.dashboard', { defaultValue: 'Dashboard' }), to: '/' },
+          ...(breadcrumbProjectName && activeProjectId
+            ? [{ label: breadcrumbProjectName, to: `/projects/${activeProjectId}` }]
+            : []),
           { label: t('punch.title', { defaultValue: 'Punch List' }) },
         ]}
       />
 
-      {/* ── Header: single compact row ─────────────────────────────────── */}
-      <div className="mt-3 flex items-center justify-between gap-3 flex-nowrap overflow-x-auto">
-        {/* Left: title */}
-        <h1 className="text-lg font-bold text-content-primary flex items-center gap-2 shrink-0">
-          <ListChecks size={20} className="text-oe-blue" />
-          {t('punch.title', { defaultValue: 'Punch List' })}
-        </h1>
-
-        {/* Right: controls */}
-        <div className="flex items-center gap-2 shrink-0">
-          {/* Project selector */}
-          {projects.length > 0 && (
-            <select
-              value={projectId}
-              onChange={(e) => {
-                const p = projects.find((pr) => pr.id === e.target.value);
-                if (p) {
-                  useProjectContextStore.getState().setActiveProject(p.id, p.name);
-                }
-              }}
-              aria-label={t('punch.select_project', { defaultValue: 'Project...' })}
-              className={inputCls + ' !h-8 !text-xs max-w-[180px]'}
+      {/* ── Header: subtitle + primary actions ─────────────────────────── */}
+      {/* Module title and icon live in the global top app bar; project
+          selection is handled by the global top bar and read here from the
+          shared project context. */}
+      <PageHeader
+        srTitle={t('punch.title', { defaultValue: 'Punch List' })}
+        subtitle={t('punch.header_subtitle', {
+          defaultValue: 'Track snags and deficiencies through to close-out',
+        })}
+        actions={
+          <>
+            {projectId && (
+              <Button
+                variant="secondary"
+                size="sm"
+                icon={<MapPin size={14} />}
+                onClick={() => navigate(`/projects/${projectId}/geo`)}
+                title={t('geo_hub.view_on_map', { defaultValue: 'View on map' })}
+                data-testid="punchlist-view-on-map"
+              >
+                {t('geo_hub.view_on_map', { defaultValue: 'View on map' })}
+              </Button>
+            )}
+            <Button
+              variant="primary"
+              size="sm"
+              onClick={() => setShowAddModal(true)}
+              disabled={!projectId}
+              icon={<Plus size={14} />}
             >
-              <option value="" disabled>
-                {t('punch.select_project', { defaultValue: 'Project...' })}
-              </option>
-              {projects.map((p) => (
-                <option key={p.id} value={p.id}>
-                  {p.name}
-                </option>
-              ))}
-            </select>
-          )}
-          {projectId && (
-            <button
-              type="button"
-              onClick={() => navigate(`/projects/${projectId}/geo`)}
-              className="inline-flex items-center gap-1.5 rounded-md border border-border-light bg-surface-primary px-2.5 py-1.5 text-xs font-medium text-content-secondary hover:bg-surface-secondary hover:text-oe-blue focus:outline-none focus:ring-2 focus:ring-oe-blue/40 shrink-0 whitespace-nowrap"
-              title={t('geo_hub.view_on_map', { defaultValue: 'View on map' })}
-              aria-label={t('geo_hub.view_on_map', { defaultValue: 'View on map' })}
-              data-testid="punchlist-view-on-map"
-            >
-              <Globe2 size={13} />
-              {t('geo_hub.view_on_map', { defaultValue: 'View on map' })}
-            </button>
-          )}
-          <Button variant="primary" size="sm" onClick={() => setShowAddModal(true)} disabled={!projectId} className="shrink-0 whitespace-nowrap" icon={<Plus size={14} />}>
-            {t('punch.new_item', { defaultValue: 'New Item' })}
-          </Button>
-        </div>
-      </div>
+              {t('punch.new_item', { defaultValue: 'New Item' })}
+            </Button>
+          </>
+        }
+      />
 
-      <div className="mt-4">
-        <SectionIntro
-          storageKey="punchlist"
-          title={t('punch.intro_title', {
-            defaultValue: 'Track snags & deficiencies to close-out',
-          })}
-          links={[
-            {
-              label: t('punch.intro_link_inspections', { defaultValue: 'Inspections' }),
-              onClick: () => navigate('/inspections'),
-            },
-            {
-              label: t('punch.intro_link_ncr', { defaultValue: 'NCRs' }),
-              onClick: () => navigate('/ncr'),
-            },
-          ]}
-        >
-          {t('punch.intro_body', {
-            defaultValue:
-              'Punch list items capture outstanding work, snags and minor defects. Move each item through Open → In Progress → Resolved → Verified → Closed. Items raised from a failed inspection or an NCR are tagged with their source so you can trace them back. Use the Kanban view to manage flow, the list view for bulk triage.',
-          })}
-        </SectionIntro>
-      </div>
+      <SectionIntro
+        storageKey="punchlist"
+        title={t('punch.intro_title', {
+          defaultValue: 'Nothing slips through at handover',
+        })}
+        more={
+          <IntroRichText
+            text={t('punch.intro_more', {
+              defaultValue:
+                'Near the end of a job the small stuff piles up: a scuffed door, a missing fire seal, a tile that is not bedded right, a socket that does not work. These are not formal non-conformances, they are snags that just need someone to go and fix them and someone else to confirm they are done. The Punch List is the running register of that outstanding work, so handover is not held up by a hundred half-remembered items on a clipboard.\n\n**You put in:**\n- Punch items with a title, description and a photo or two of the problem\n- A priority (low to critical), a category (structural, MEP, finishing and so on) and a location\n- An assignee and a due date so each item has an owner and a deadline\n- Items raised automatically from a failed inspection, an NCR or a model clash, tagged with their source\n\n**You get out:**\n- A KPI strip showing total, open, in-progress, resolved, overdue and average days to close\n- A Kanban board to manage flow and a list view for bulk triage and close-out\n- A clear status lifecycle for every item, with overdue items flagged in red\n- Bulk close, per-item photos and a map view to see snags by location on site\n\n**How it works day to day:**\n1. Capture the snag during a walkthrough, set its priority and location, and assign it.\n2. The owner moves it Open to In Progress to Resolved as they work it.\n3. A checker verifies the fix and moves it Resolved to Verified to Closed.\n4. If the fix does not hold up on a re-check, reopen it straight back to Open from Resolved, Verified or Closed.\n5. Use the list view to multi-select and bulk close a batch once a zone is signed off.\n\nThe status flow is enforced by the backend, so only legal moves are offered, and reopen always goes back to Open rather than an invalid intermediate state. Items that came from a failed Inspection or an NCR keep a source badge so you can trace them to their origin, which keeps the inspect, defect and close-out loop honest right through to handover.',
+            })}
+          />
+        }
+        links={[
+          {
+            label: t('punch.intro_link_inspections', { defaultValue: 'Inspections' }),
+            onClick: () => navigate('/inspections'),
+          },
+          {
+            label: t('punch.intro_link_ncr', { defaultValue: 'NCRs' }),
+            onClick: () => navigate('/ncr'),
+          },
+        ]}
+      >
+        {t('punch.intro_body', {
+          defaultValue:
+            'Punch list items capture outstanding work, snags and minor defects. Move each item Open to In Progress to Resolved to Verified to Closed, and reopen anything back to Open straight from Resolved, Verified or Closed when a fix does not hold up on a re-check. Items raised from a failed inspection or an NCR are tagged with their source so you can trace them back. Use the Kanban view to manage flow, the list view for bulk triage.',
+        })}
+      </SectionIntro>
 
-      {/* Stats */}
-      <div className="mt-6">
-        <StatsCards summary={summary} />
-      </div>
+      {/* KPI strip - the role-home reference band (issue #70). */}
+      <PunchKpiBand
+        summary={summary}
+        items={kpiItems}
+        actions={{
+          onFilterStatus: (status) => {
+            setFilterStatus(status);
+            setShowFilters(true);
+          },
+          onFilterPriority: (priority) => {
+            setFilterPriority(priority);
+            setShowFilters(true);
+          },
+        }}
+      />
 
       {/* Toolbar */}
-      <div className="mt-6 flex flex-col sm:flex-row sm:items-center gap-3">
+      <div className="flex flex-col sm:flex-row sm:items-center gap-3">
         {/* Search */}
         <div className="relative flex-1 max-w-sm">
           <Search
@@ -1036,7 +1431,7 @@ export function PunchListPage() {
 
       {/* Collapsible filters */}
       {showFilters && (
-        <div className="mt-3 flex flex-wrap gap-3 animate-fade-in">
+        <div className="flex flex-wrap gap-3 animate-fade-in">
           <select
             value={filterPriority}
             onChange={(e) => setFilterPriority(e.target.value as PunchPriority | '')}
@@ -1116,7 +1511,7 @@ export function PunchListPage() {
       )}
 
       {/* Content */}
-      <div className="mt-6">
+      <div>
         {!projectId ? (
           <RequiresProject
             emptyHint={t('punch.no_project_desc', {
@@ -1255,6 +1650,7 @@ export function PunchListPage() {
                       onDelete={handleDelete}
                       selected={selectedIds.has(item.id)}
                       onToggleSelect={toggleSelect}
+                      highlight={highlightId === item.id}
                     />
                   ))}
                 </tbody>
@@ -1271,6 +1667,7 @@ export function PunchListPage() {
           onSubmit={handleCreateSubmit}
           isPending={createMut.isPending}
           teamMembers={teamMembers}
+          drawings={drawings}
         />
       )}
 
@@ -1299,15 +1696,31 @@ const PunchTableRow = React.memo(function PunchTableRow({
   onDelete,
   selected,
   onToggleSelect,
+  highlight,
 }: {
   item: PunchItem;
   onTransition: (id: string, status: PunchStatus) => void;
   onDelete: (id: string) => void;
   selected: boolean;
   onToggleSelect: (id: string) => void;
+  /** When set (from a ?highlight deep-link) the row scrolls into view and
+   *  flashes a highlight ring. */
+  highlight?: boolean;
 }) {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const transitions = STATUS_TRANSITION[item.status] ?? [];
+  const rowRef = useRef<HTMLTableRowElement>(null);
+  const [flash, setFlash] = useState(false);
+  const drawingLink = punchDrawingLink(item);
+
+  useEffect(() => {
+    if (!highlight) return;
+    setFlash(true);
+    rowRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    const timer = window.setTimeout(() => setFlash(false), 2400);
+    return () => window.clearTimeout(timer);
+  }, [highlight]);
 
   const isOverdue =
     item.due_date &&
@@ -1329,14 +1742,20 @@ const PunchTableRow = React.memo(function PunchTableRow({
   }, [item.due_date]);
 
   return (
-    <tr className={clsx(
-      'transition-colors',
-      selected
-        ? 'bg-oe-blue/5 hover:bg-oe-blue/10'
-        : isOverdue
-        ? 'bg-red-50/40 hover:bg-red-50/70 dark:bg-red-950/10 dark:hover:bg-red-950/20'
-        : 'hover:bg-surface-secondary/50',
-    )}>
+    <tr
+      ref={rowRef}
+      className={clsx(
+        'transition-colors scroll-mt-24',
+        flash && 'ring-2 ring-inset ring-oe-blue/50',
+        flash
+          ? 'bg-oe-blue/10'
+          : selected
+          ? 'bg-oe-blue/5 hover:bg-oe-blue/10'
+          : isOverdue
+          ? 'bg-red-50/40 hover:bg-red-50/70 dark:bg-red-950/10 dark:hover:bg-red-950/20'
+          : 'hover:bg-surface-secondary/50',
+      )}
+    >
       <td className="px-3 py-3 w-8">
         <input
           type="checkbox"
@@ -1360,21 +1779,24 @@ const PunchTableRow = React.memo(function PunchTableRow({
             {`(${item.location_x ?? '-'}, ${item.location_y ?? '-'})`}
           </p>
         )}
-        {item.metadata?.source === 'clash' && (
-          <Badge variant="error" size="sm" className="mt-0.5">
-            {t('punch.source_clash', { defaultValue: 'From clash' })}
-          </Badge>
+        {/* Reopen the pinned drawing in the markups viewer (CONN-57). */}
+        {drawingLink && (
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              navigate(drawingLink);
+            }}
+            className="mt-0.5 inline-flex items-center gap-1 rounded-md text-xs text-oe-blue hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue/40"
+            title={t('punch.open_drawing_hint', {
+              defaultValue: 'Open the drawing this item is pinned to',
+            })}
+          >
+            <MapPin size={11} className="shrink-0" />
+            {t('punch.open_drawing', { defaultValue: 'Open drawing' })}
+          </button>
         )}
-        {item.metadata?.source === 'inspection' && (
-          <Badge variant="blue" size="sm" className="mt-0.5">
-            {t('punch.source_inspection', { defaultValue: 'From Inspection' })}
-          </Badge>
-        )}
-        {item.metadata?.source === 'ncr' && (
-          <Badge variant="warning" size="sm" className="mt-0.5">
-            {t('punch.source_ncr', { defaultValue: 'From NCR' })}
-          </Badge>
-        )}
+        <PunchSourceBadge item={item} className="mt-0.5 inline-block" />
       </td>
       <td className="px-4 py-3">
         <Badge variant={PRIORITY_BADGE_VARIANT[item.priority]} size="sm" className={PRIORITY_BADGE_CLS[item.priority]}>

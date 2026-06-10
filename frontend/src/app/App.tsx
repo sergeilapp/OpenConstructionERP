@@ -1,5 +1,5 @@
-import { Suspense, lazy, useState, useCallback, useEffect } from 'react';
-import { Routes, Route, Navigate, useLocation, useParams } from 'react-router-dom';
+import { Suspense, lazy, useState, useCallback, useEffect, useLayoutEffect, useContext, createContext } from 'react';
+import { Routes, Route, Navigate, Outlet, useLocation, useParams } from 'react-router-dom';
 import { AppLayout } from './layout';
 import { DashboardPage } from '@/features/dashboard';
 import { LoginPage, RegisterPage, ForgotPasswordPage } from '@/features/auth';
@@ -19,7 +19,7 @@ import { syncCustomUnitsFromServer } from '@/features/boq/boqHelpers';
 import { NlRuleBuilderPanel } from '@/features/compliance';
 import { useModuleRouteElements } from '@/modules/ModuleRoutes';
 import { DatabaseSetupPage } from '@/features/setup';
-import { Logo, ShortcutsDialog, CommandPalette, ToastContainer, ErrorBoundary, NotFoundPage, ProductTour, OfflineBanner, PWAInstallPrompt } from '@/shared/ui';
+import { Logo, ShortcutsDialog, CommandPalette, ToastContainer, BackgroundInstallBanner, ErrorBoundary, NotFoundPage, ProductTour, OfflineBanner, PWAInstallPrompt } from '@/shared/ui';
 import { AdminOnly } from '@/shared/auth/AdminOnly';
 import GlobalSearchModal from '@/features/search/GlobalSearchModal';
 import { useGlobalSearchStore } from '@/stores/useGlobalSearchStore';
@@ -27,6 +27,7 @@ import { FloatingQueuePanel } from './layout/FloatingQueuePanel';
 import { useAuthStore } from '@/stores/useAuthStore';
 import { useThemeStore } from '@/stores/useThemeStore';
 import { ddcVerifyIntegrity, ddcInjectMeta, DDC_ORIGIN } from '@/shared/lib/ddc-integrity';
+import { NavigationProgress } from '@/shared/lib/navigationProgress';
 import { useKeyboardShortcuts } from '@/shared/hooks/useKeyboardShortcuts';
 import { useTranslation } from 'react-i18next';
 import { getLanguageByCode } from './i18n';
@@ -47,6 +48,9 @@ const TakeoffPage = lazy(() =>
 );
 const CadDataExplorerPage = lazy(() =>
   import('@/features/cad-explorer/CadDataExplorerPage').then((m) => ({ default: m.CadDataExplorerPage }))
+);
+const PointCloudPage = lazy(() =>
+  import('@/features/pointcloud/PointCloudPage').then((m) => ({ default: m.PointCloudPage }))
 );
 const MatchElementsPage = lazy(() =>
   import('@/features/match-elements/MatchElementsPage').then((m) => ({ default: m.MatchElementsPage }))
@@ -106,6 +110,7 @@ const PdfComparePage = lazy(() =>
 const PunchListPage = lazy(() =>
   import('@/features/punchlist/PunchListPage').then((m) => ({ default: m.PunchListPage }))
 );
+const CloseoutPage = lazy(() => import('@/features/closeout/CloseoutPage'));
 const FieldReportsPage = lazy(() =>
   import('@/features/fieldreports/FieldReportsPage').then((m) => ({ default: m.FieldReportsPage }))
 );
@@ -151,6 +156,9 @@ const InspectionsPage = lazy(() =>
 const NCRPage = lazy(() =>
   import('@/features/ncr/NCRPage').then((m) => ({ default: m.NCRPage }))
 );
+const MoCPage = lazy(() =>
+  import('@/features/moc/MoCPage').then((m) => ({ default: m.MoCPage }))
+);
 const ReportingPage = lazy(() =>
   import('@/features/reporting/ReportingPage').then((m) => ({ default: m.ReportingPage }))
 );
@@ -169,6 +177,7 @@ const BIMQuantityRulesPage = lazy(() =>
 const ClashDetectionPage = lazy(() =>
   import('@/features/clash/ClashDetectionPage').then((m) => ({ default: m.ClashDetectionPage }))
 );
+const ClashProfileManager = lazy(() => import('@/features/clash/ClashProfileManager'));
 const UserManagementPage = lazy(() =>
   import('@/features/users/UserManagementPage').then((m) => ({ default: m.UserManagementPage }))
 );
@@ -218,12 +227,17 @@ const BuyerPortalPage = lazy(() =>
     default: m.BuyerPortalPage,
   }))
 );
-// Field-worker mobile shell — DESIGN-STAGE SKELETON. See
+// Field-worker mobile shell + PIN-redemption auth. See
 // docs/architecture/FIELD_WORKER_MOBILE_DESIGN.md. Lazy-loaded in its
 // own chunk so the desktop bundle is unaffected.
 const FieldShellPage = lazy(() =>
   import('@/features/field/FieldShellPage').then((m) => ({
     default: m.FieldShellPage,
+  }))
+);
+const FieldAuthPage = lazy(() =>
+  import('@/features/field/FieldAuthPage').then((m) => ({
+    default: m.FieldAuthPage,
   }))
 );
 const SnapshotsPage = lazy(() =>
@@ -253,14 +267,31 @@ const SubcontractorsPage = lazy(() =>
 const EquipmentPage = lazy(() =>
   import('@/features/equipment').then((m) => ({ default: m.EquipmentPage }))
 );
+const PayrollPage = lazy(() => import('@/features/payroll/PayrollPage'));
 const PortalPage = lazy(() =>
   import('@/features/portal').then((m) => ({ default: m.PortalPage }))
+);
+const PortalPaymentsPage = lazy(() =>
+  import('@/features/portal').then((m) => ({ default: m.PortalPaymentsPage }))
 );
 const ResourcesPage = lazy(() =>
   import('@/features/resources').then((m) => ({ default: m.ResourcesPage }))
 );
+const CapacityPlanningPage = lazy(() =>
+  import('@/features/portfolio/CapacityPlanningPage').then((m) => ({
+    default: m.CapacityPlanningPage,
+  }))
+);
+const ResourceLevelingPage = lazy(() =>
+  import('@/features/portfolio/ResourceLevelingPage').then((m) => ({
+    default: m.ResourceLevelingPage,
+  }))
+);
 const ContractsPage = lazy(() =>
   import('@/features/contracts').then((m) => ({ default: m.ContractsPage }))
+);
+const ProgressClaimDetailPage = lazy(() =>
+  import('@/features/contracts').then((m) => ({ default: m.ProgressClaimDetailPage }))
 );
 const CRMPage = lazy(() =>
   import('@/features/crm').then((m) => ({ default: m.CRMPage }))
@@ -343,6 +374,9 @@ const VariationsPage = lazy(() =>
 const ScheduleAdvancedPage = lazy(() =>
   import('@/features/schedule-advanced').then((m) => ({ default: m.ScheduleAdvancedPage }))
 );
+const TaktSchedulePage = lazy(() =>
+  import('@/features/schedule-advanced').then((m) => ({ default: m.TaktSchedulePage }))
+);
 const HSEAdvancedPage = lazy(() =>
   import('@/features/hse-advanced').then((m) => ({ default: m.HSEAdvancedPage }))
 );
@@ -357,6 +391,9 @@ const SupplierCatalogsPage = lazy(() =>
 );
 const BIDashboardsPage = lazy(() =>
   import('@/features/bi-dashboards').then((m) => ({ default: m.BIDashboardsPage }))
+);
+const ProjectControlsPage = lazy(() =>
+  import('@/features/project-controls').then((m) => ({ default: m.ProjectControlsPage }))
 );
 // v4.1 — three additional P1 Slice-1 features land behind dedicated routes
 // (Assembly Library was already eagerly imported by the assemblies feature
@@ -414,6 +451,9 @@ const LoginPageNext = lazy(() =>
 );
 const QuickEstimatePage = lazy(() =>
   import('@/features/ai/QuickEstimatePage').then((m) => ({ default: m.QuickEstimatePage }))
+);
+const AiEstimatorPage = lazy(() =>
+  import('@/features/ai-estimator/AiEstimatorPage').then((m) => ({ default: m.AiEstimatorPage }))
 );
 
 // Rarely-visited or heavy secondary pages — moved out of the initial
@@ -483,16 +523,48 @@ function RequireAuth({ children }: { children: React.ReactNode }) {
   return <>{children}</>;
 }
 
-function P({ title, children }: { title: string; children: React.ReactNode }) {
+// Lets each page hand its header title up to the persistent AppShell.
+const PageTitleContext = createContext<(title: string) => void>(() => {});
+
+// The persistent application shell.  Previously every protected route's element
+// was `<P title><Page/></P>`, and because <AppLayout> (the sidebar + header)
+// lived INSIDE each route element, React Router tore the whole chrome down and
+// rebuilt it on every navigation — the same per-route remount that forced
+// ProductTour out of AppLayout (see AppLayout's BUG-UI02 note) and that made
+// each module feel slow to open.  AppShell hoists AppLayout above the router
+// <Outlet/> so the sidebar + header mount exactly once and only the page area
+// swaps.  The ErrorBoundary is keyed by pathname so a crashed page recovers on
+// the next navigation, matching the old per-route boundary; the Suspense
+// boundary stays mounted so the v7 startTransition smooth-nav keeps the
+// previous page on screen while the next chunk loads.
+function AppShell() {
+  const [title, setTitle] = useState('');
+  const location = useLocation();
   return (
     <RequireAuth>
       <AppLayout title={title}>
-        <ErrorBoundary>
-          <Suspense fallback={<PageLoadingInline />}>{children}</Suspense>
-        </ErrorBoundary>
+        <Suspense fallback={<PageLoadingInline />}>
+          <ErrorBoundary key={location.pathname}>
+            <PageTitleContext.Provider value={setTitle}>
+              <Outlet />
+            </PageTitleContext.Provider>
+          </ErrorBoundary>
+        </Suspense>
       </AppLayout>
     </RequireAuth>
   );
+}
+
+// Per-page wrapper kept at every route call site.  It no longer builds its own
+// layout — it just publishes the page's header title to the surrounding
+// AppShell.  useLayoutEffect runs before paint so the heading swaps without a
+// visible flash of the previous page's title.
+function P({ title, children }: { title: string; children: React.ReactNode }) {
+  const setTitle = useContext(PageTitleContext);
+  useLayoutEffect(() => {
+    setTitle(title);
+  }, [setTitle, title]);
+  return <>{children}</>;
 }
 
 /** Mounts global keyboard shortcuts, the shortcuts help dialog, and the command palette. */
@@ -521,7 +593,14 @@ function GlobalShortcuts() {
 
   const openGlobalSearch = useGlobalSearchStore((s) => s.openModal);
   const toggleGlobalSearch = useGlobalSearchStore((s) => s.toggleModal);
+  const closeGlobalSearch = useGlobalSearchStore((s) => s.closeModal);
 
+  // The command palette (Ctrl+K, local state) and the global semantic search
+  // modal (Ctrl+Shift+K, zustand) are two separate launcher surfaces that both
+  // render at z-[60]. The palette uses createPortal to document.body and sits
+  // later in the DOM, so when both are open it paints on top of the search
+  // modal. Keep them mutually exclusive: opening one closes the other in both
+  // directions.
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
       const mod = e.ctrlKey || e.metaKey;
@@ -535,6 +614,12 @@ function GlobalShortcuts() {
       // estimators can trigger semantic search while editing a BOQ row.
       if (mod && e.shiftKey && (e.key === 'K' || e.key === 'k')) {
         e.preventDefault();
+        // If the search is currently closed it is about to open, so close the
+        // command palette to keep the two launchers mutually exclusive. Read
+        // the live store state since toggleModal() does not return the result.
+        if (!useGlobalSearchStore.getState().open) {
+          setPaletteOpen(false);
+        }
         toggleGlobalSearch();
         return;
       }
@@ -543,16 +628,23 @@ function GlobalShortcuts() {
 
       if (mod && e.key === 'k') {
         e.preventDefault();
-        setPaletteOpen((prev) => !prev);
+        setPaletteOpen((prev) => {
+          const next = !prev;
+          // Opening the palette closes the global search modal.
+          if (next) closeGlobalSearch();
+          return next;
+        });
       }
       if (e.key === '/' && !mod) {
         e.preventDefault();
+        // Opening the palette closes the global search modal.
+        closeGlobalSearch();
         setPaletteOpen(true);
       }
     };
     document.addEventListener('keydown', handler);
     return () => document.removeEventListener('keydown', handler);
-  }, [toggleGlobalSearch, openGlobalSearch]);
+  }, [toggleGlobalSearch, openGlobalSearch, closeGlobalSearch]);
 
   return (
     <>
@@ -669,6 +761,11 @@ export default function App() {
 
   return (
     <Suspense fallback={<LoadingScreen />}>
+      {/* Route-transition pending feedback: under v7_startTransition the
+          old page stays on screen while a lazy chunk loads, so this binder
+          drives the top progress bar + sidebar row spinner for the gap
+          between history push and location commit (navigationProgress.ts). */}
+      <NavigationProgress />
       <OfflineBanner />
       {isAuthenticated && <GlobalShortcuts />}
       {/* First-run product tour — 8-step spotlight walk-through. Always
@@ -696,21 +793,33 @@ export default function App() {
         {/* Public buyer-portal landing page — magic-link auth only, no app shell */}
         <Route path="/buyer-portal/:token" element={<BuyerPortalPage />} />
 
+        {/* Public subcontractor payment portal — magic-link session, no app
+            shell. ?token=<magic-link> deep-links straight to the submit form
+            after auth; a return visit reuses the stored session token. */}
+        <Route path="/portal/payments" element={<PortalPaymentsPage />} />
+
         {/* Field-worker mobile shell — bottom-nav layout, no desktop sidebar.
-            Skeleton route gated behind VITE_FIELD_PILOT until the pilot adds
-            the `/field/{token}` PIN entry and the four tab bodies. Off by
-            default so the placeholder shell is never reachable in a normal
-            build. See docs/architecture/FIELD_WORKER_MOBILE_DESIGN.md */}
-        {import.meta.env.VITE_FIELD_PILOT === '1' && (
-          <Route
-            path="/field"
-            element={
-              <Suspense fallback={<LoadingScreen />}>
-                <FieldShellPage />
-              </Suspense>
-            }
-          />
-        )}
+            `/field/{token}` is the SMS magic-link PIN-redemption screen; it
+            consumes the link and routes to `/field`, the four-tab shell.
+            Both are session-driven (no JWT) and degrade gracefully to a
+            signed-out hint when no field session is present.
+            See docs/architecture/FIELD_WORKER_MOBILE_DESIGN.md */}
+        <Route
+          path="/field/:token"
+          element={
+            <Suspense fallback={<LoadingScreen />}>
+              <FieldAuthPage />
+            </Suspense>
+          }
+        />
+        <Route
+          path="/field"
+          element={
+            <Suspense fallback={<LoadingScreen />}>
+              <FieldShellPage />
+            </Suspense>
+          }
+        />
 
         {/* Auth — public */}
         <Route path="/login" element={isAuthenticated ? <Navigate to="/" replace /> : <LoginPage />} />
@@ -723,11 +832,15 @@ export default function App() {
           <RequireAuth><Suspense fallback={<LoadingScreen />}><OnboardingWizard /></Suspense></RequireAuth>
         } />
 
-        {/* App — all protected, all real pages */}
+        {/* App — all protected, all real pages.  Every route below shares one
+            persistent <AppShell/> (sidebar + header mount once); the matched
+            page renders into its <Outlet/>.  RequireAuth lives in AppShell, so
+            the inner per-page `<P>` only sets the header title now. */}
+        <Route element={<AppShell />}>
         {/* BUG-215 — authenticated users hitting `/` land on the dashboard
             (the canonical post-login surface). Unauthenticated users fall
-            through to <P>, which calls RequireAuth and bounces them to
-            /login (preserving the marketing-flavoured public landing path). */}
+            through to RequireAuth in AppShell and are bounced to /login
+            (preserving the marketing-flavoured public landing path). */}
         <Route
           path="/"
           element={
@@ -738,6 +851,7 @@ export default function App() {
         />
 
         <Route path="/ai-estimate" element={<P title="AI Quick Estimate"><QuickEstimatePage /></P>} />
+        <Route path="/ai-estimator" element={<P title="AI Estimate Builder"><AiEstimatorPage /></P>} />
         <Route path="/ai-agents" element={<P title="AI Agents"><AgentsPage /></P>} />
         <Route path="/advisor" element={<P title="AI Cost Advisor"><AdvisorPage /></P>} />
         <Route path="/chat" element={<P title="AI Chat"><ERPChatPage /></P>} />
@@ -746,6 +860,7 @@ export default function App() {
         <Route path="/cad-explorer" element={<Navigate to="/data-explorer" replace />} />
         <Route path="/data-explorer" element={<P title="Data Explorer"><CadDataExplorerPage /></P>} />
         <Route path="/match-elements" element={<P title="Match Elements"><MatchElementsPage /></P>} />
+        <Route path="/pointcloud" element={<P title="Point Cloud"><PointCloudPage /></P>} />
         <Route path="/bim" element={<P title="BIM Viewer"><BIMPage /></P>} />
         <Route path="/bim/federations" element={<P title="BIM Federations"><FederationsPage /></P>} />
         <Route path="/bim/rules" element={<P title="BIM Rules"><BIMQuantityRulesPage /></P>} />
@@ -753,6 +868,8 @@ export default function App() {
             "quantity-rules" segment isn't swallowed as a UUID model id. */}
         <Route path="/bim/quantity-rules" element={<Navigate to="/bim/rules" replace />} />
         <Route path="/clash" element={<P title="Clash Detection"><ClashDetectionPage /></P>} />
+        <Route path="/clash/profiles" element={<P title="Clash Profiles"><ClashProfileManager /></P>} />
+        <Route path="/projects/:projectId/clash/profiles" element={<P title="Clash Profiles"><ClashProfileManager /></P>} />
         <Route path="/coordination" element={<P title="Model Coordination"><CoordinationHubPage /></P>} />
         <Route path="/assets" element={<P title="Asset Register"><AssetsPage /></P>} />
         <Route path="/bim/:modelId" element={<P title="BIM Viewer"><BIMPage /></P>} />
@@ -812,6 +929,12 @@ export default function App() {
         <Route path="/projects/:projectId/files" element={<P title="Project Files"><FileManagerPage /></P>} />
 
         <Route path="/risks" element={<P title="Risk Register"><RiskRegisterPage /></P>} />
+        {/* Monte Carlo IA merge (#71): the standalone Risk Analysis tool
+            duplicated simulation that already lives in the Risk Register's
+            Monte Carlo tab (register-driven) and the 5D Cost Model
+            (BOQ-cost-driven). Collapse the third entry point into the Risk
+            Register tab so there is one way in; old deep links still resolve. */}
+        <Route path="/risk-analysis" element={<Navigate to="/risks?tab=montecarlo" replace />} />
 
         {/* Requirements merged into BIM Rules page */}
         <Route path="/requirements" element={<Navigate to="/bim/rules" replace />} />
@@ -823,6 +946,7 @@ export default function App() {
         <Route path="/markups" element={<P title="Markups"><MarkupsPage /></P>} />
         <Route path="/markups/compare" element={<P title="Compare Revisions"><PdfComparePage /></P>} />
         <Route path="/punchlist" element={<P title="Punch List"><PunchListPage /></P>} />
+        <Route path="/closeout" element={<P title="Handover & Closeout"><CloseoutPage /></P>} />
         <Route path="/field-reports" element={<P title="Field Reports"><FieldReportsPage /></P>} />
 
         <Route path="/finance" element={<P title="Finance"><FinancePage /></P>} />
@@ -854,6 +978,8 @@ export default function App() {
         <Route path="/inspections" element={<P title="Inspections"><InspectionsPage /></P>} />
         <Route path="/projects/:projectId/ncr" element={<P title="NCR"><NCRPage /></P>} />
         <Route path="/ncr" element={<P title="NCR"><NCRPage /></P>} />
+        <Route path="/projects/:projectId/moc" element={<P title="Management of Change"><MoCPage /></P>} />
+        <Route path="/moc" element={<P title="Management of Change"><MoCPage /></P>} />
 
         <Route path="/users" element={<P title="User Management"><UserManagementPage /></P>} />
         <Route path="/admin/audit-log" element={<P title="Audit Log"><AuditLogPage /></P>} />
@@ -926,16 +1052,21 @@ export default function App() {
         <Route path="/projects/:projectId/service" element={<P title="Service & Maintenance"><ServicePage /></P>} />
         <Route path="/equipment" element={<P title="Equipment & Fleet"><EquipmentPage /></P>} />
         <Route path="/projects/:projectId/equipment" element={<P title="Equipment & Fleet"><EquipmentPage /></P>} />
+        <Route path="/payroll" element={<P title="Payroll"><PayrollPage /></P>} />
+        <Route path="/projects/:projectId/payroll" element={<P title="Payroll"><PayrollPage /></P>} />
         <Route path="/daily-diary" element={<P title="Daily Diary"><DailyDiaryPage /></P>} />
         <Route path="/projects/:projectId/daily-diary" element={<P title="Daily Diary"><DailyDiaryPage /></P>} />
-        <Route path="/portal" element={<P title="Subcontractor Portal"><PortalPage /></P>} />
-        <Route path="/projects/:projectId/portal" element={<P title="Subcontractor Portal"><PortalPage /></P>} />
+        <Route path="/portal" element={<P title="Client & Partner Portal"><PortalPage /></P>} />
+        <Route path="/projects/:projectId/portal" element={<P title="Client & Partner Portal"><PortalPage /></P>} />
         <Route path="/resources" element={<P title="Resources & Crew"><ResourcesPage /></P>} />
         <Route path="/projects/:projectId/resources" element={<P title="Resources & Crew"><ResourcesPage /></P>} />
+        <Route path="/portfolio/capacity" element={<P title="Capacity Planning"><CapacityPlanningPage /></P>} />
+        <Route path="/portfolio/leveling" element={<P title="Resource Leveling"><ResourceLevelingPage /></P>} />
 
         {/* 18-Modules Wave — Commercial */}
         <Route path="/contracts" element={<P title="Contracts"><ContractsPage /></P>} />
         <Route path="/projects/:projectId/contracts" element={<P title="Contracts"><ContractsPage /></P>} />
+        <Route path="/projects/:projectId/contracts/claims/:claimId" element={<P title="Progress Claim"><ProgressClaimDetailPage /></P>} />
         <Route path="/subcontractors" element={<P title="Subcontractors"><SubcontractorsPage /></P>} />
         <Route path="/projects/:projectId/subcontractors" element={<P title="Subcontractors"><SubcontractorsPage /></P>} />
         <Route path="/bid-management" element={<P title="Bid Management"><BidManagementPage /></P>} />
@@ -982,6 +1113,8 @@ export default function App() {
         {/* 18-Modules Wave — Schedule & Quality */}
         <Route path="/schedule-advanced" element={<P title="Advanced Schedule"><ScheduleAdvancedPage /></P>} />
         <Route path="/projects/:projectId/schedule-advanced" element={<P title="Advanced Schedule"><ScheduleAdvancedPage /></P>} />
+        <Route path="/takt" element={<P title="Takt Planning"><TaktSchedulePage /></P>} />
+        <Route path="/projects/:projectId/takt" element={<P title="Takt Planning"><TaktSchedulePage /></P>} />
         <Route path="/qms" element={<P title="Quality Management"><QMSPage /></P>} />
         <Route path="/projects/:projectId/qms" element={<P title="Quality Management"><QMSPage /></P>} />
         <Route path="/hse-advanced" element={<P title="HSE Management"><HSEAdvancedPage /></P>} />
@@ -990,6 +1123,8 @@ export default function App() {
         <Route path="/projects/:projectId/carbon" element={<P title="Carbon & ESG"><CarbonPage /></P>} />
         <Route path="/bi-dashboards" element={<P title="BI Dashboards"><BIDashboardsPage /></P>} />
         <Route path="/projects/:projectId/bi-dashboards" element={<P title="BI Dashboards"><BIDashboardsPage /></P>} />
+        <Route path="/project-controls" element={<P title="Project Controls"><ProjectControlsPage /></P>} />
+        <Route path="/projects/:projectId/project-controls" element={<P title="Project Controls"><ProjectControlsPage /></P>} />
 
         {/* Convenience route aliases — redirect to canonical paths */}
         {/* `/dashboard` renders DashboardPage directly. The earlier alias
@@ -1012,8 +1147,14 @@ export default function App() {
 
         {/* 404 — catch-all for unknown routes */}
         <Route path="*" element={isAuthenticated ? <P title="Not Found"><NotFoundPage /></P> : <Navigate to="/login" replace />} />
+        </Route>
       </Routes>
       <ToastContainer />
+      {/* Non-blocking progress for a ready-made pack that keeps provisioning
+          (cost databases, modules, sample projects) in the background after the
+          user has already entered the app from onboarding. Mounted at the root
+          so it survives navigation; no-op until an install is in flight. */}
+      <BackgroundInstallBanner />
       <FloatingQueuePanel />
       {/* Mobile PWA — Slice 1.  Single, discrete install nudge handled
           entirely inside <PWAInstallPrompt /> (cooldown, iOS branch,

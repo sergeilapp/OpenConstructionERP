@@ -4,16 +4,16 @@
 
 Endpoints (auto-mounted at ``/api/v1/approval-routes/``)::
 
-    GET    /routes                            — list templates
-    POST   /routes                            — create template
-    GET    /routes/{route_id}                 — single template + steps
-    PATCH  /routes/{route_id}                 — update mutable fields
-    DELETE /routes/{route_id}                 — delete (rejected if instances exist)
-    GET    /instances                         — list workflows (filterable)
-    POST   /instances                         — start a workflow
-    GET    /instances/{instance_id}           — single workflow + step states
-    POST   /instances/{instance_id}/decide    — submit a decision
-    POST   /instances/{instance_id}/cancel    — cancel a pending workflow
+    GET    /routes                            - list templates
+    POST   /routes                            - create template
+    GET    /routes/{route_id}                 - single template + steps
+    PATCH  /routes/{route_id}                 - update mutable fields
+    DELETE /routes/{route_id}                 - delete (rejected if instances exist)
+    GET    /instances                         - list workflows (filterable)
+    POST   /instances                         - start a workflow
+    GET    /instances/{instance_id}           - single workflow + step states
+    POST   /instances/{instance_id}/decide    - submit a decision
+    POST   /instances/{instance_id}/cancel    - cancel a pending workflow
 
 All endpoints respect project_id tenant scoping: route templates with a
 ``project_id`` go through :func:`verify_project_access` so a caller
@@ -30,6 +30,7 @@ from fastapi import APIRouter, Depends, HTTPException, Query, status
 
 from app.dependencies import (
     CurrentUserId,
+    CurrentUserPayload,
     RequirePermission,
     SessionDep,
     verify_project_access,
@@ -130,7 +131,7 @@ async def list_routes(
     When ``project_id`` is supplied we gate access through the project
     guard so callers can't enumerate routes from other projects. The
     listing then includes tenant-wide templates (``project_id IS NULL``)
-    plus that project's routes — matching the picker UX in consumer
+    plus that project's routes - matching the picker UX in consumer
     modules.
 
     ``include_inactive`` defaults to ``True`` (admin surface). A consumer
@@ -293,7 +294,7 @@ async def list_instances(
     # project_id. We resolve project_id once per route via cache to
     # keep the listing query cheap.
     project_cache: dict[uuid.UUID, uuid.UUID | None] = {}
-    out: list[InstanceResponse] = []
+    visible: list[object] = []
     for inst in rows:
         if project_route_ids is not None and inst.route_id not in project_route_ids:
             continue
@@ -309,7 +310,21 @@ async def list_instances(
                 await verify_project_access(pid, user_id, session)
             except HTTPException:
                 continue  # Filter out cross-tenant rows silently.
-        out.append(await _instance_to_response(inst, service))
+        visible.append(inst)
+
+    # Batched: one IN(...) StepState fetch for all visible instances
+    # instead of N per-instance round trips.
+    states_by_instance = await service.list_step_states_for_instances(
+        [inst.id for inst in visible],  # type: ignore[attr-defined]
+    )
+    out: list[InstanceResponse] = []
+    for inst in visible:
+        payload = InstanceResponse.model_validate(inst)
+        payload.step_states = [
+            StepStateResponse.model_validate(s)
+            for s in states_by_instance.get(inst.id, [])  # type: ignore[attr-defined]
+        ]
+        out.append(payload)
     return out
 
 
@@ -364,9 +379,15 @@ async def submit_decision(
     payload: DecisionSubmit,
     session: SessionDep,
     user_id: CurrentUserId,
+    user_payload: CurrentUserPayload,
     service: ApprovalRouteService = Depends(_get_service),
 ) -> InstanceResponse:
-    """Approve / reject the current step on an instance."""
+    """Approve / reject the current step on an instance.
+
+    The caller's app role (from the JWT payload) is passed through so the
+    service can enforce a role-based step's approver role, not just the
+    ``approval_routes.decide`` permission.
+    """
     instance = await service.get_instance(instance_id)
     route = await service.get_route(instance.route_id)
     if route.project_id is not None:
@@ -375,6 +396,7 @@ async def submit_decision(
         instance_id,
         payload,
         approver_id=_safe_user_uuid(user_id),
+        caller_role=user_payload.get("role"),
     )
     return await _instance_to_response(updated, service)
 

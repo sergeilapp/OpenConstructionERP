@@ -47,7 +47,7 @@ def _get_positions(context: ValidationContext) -> list[dict[str, Any]]:
 
 
 def _get_leaf_positions(context: ValidationContext) -> list[dict[str, Any]]:
-    """Leaf-only positions — sections (parent / header rows) are skipped.
+    """Leaf-only positions - sections (parent / header rows) are skipped.
 
     Why: section rows aggregate children and intentionally lack `unit`,
     `quantity`, and `unit_rate`. Rules that enforce those fields would
@@ -56,7 +56,7 @@ def _get_leaf_positions(context: ValidationContext) -> list[dict[str, Any]]:
 
     Detection: a row is a section if (a) `metadata.type == "section"`
     (explicit), or (b) any other row in the dataset names this row as
-    its parent (implicit — derived from the parent_id graph). The
+    its parent (implicit - derived from the parent_id graph). The
     implicit branch covers seed/import paths that don't stamp the type
     metadata field.
     """
@@ -88,7 +88,7 @@ def _position_currency(pos: dict[str, Any]) -> str:
     """‌⁠‍Resolve one position's currency from whatever shape the loader supplied.
 
     The per-position currency is authoritative in the BOQ metadata
-    (``Position.metadata_['currency']`` — see ``boq.service._position_currency``),
+    (``Position.metadata_['currency']`` - see ``boq.service._position_currency``),
     but different callers flatten the position dict differently: some put
     ``currency`` at the top level, some nest it under ``metadata`` /
     ``metadata_``, and the BOQ validation loaders historically dropped it
@@ -115,7 +115,7 @@ def _position_currency(pos: dict[str, Any]) -> str:
 
 
 def _ok(locale: str) -> str:
-    """Shared "OK" string — every rule that emits passing results uses this."""
+    """Shared "OK" string - every rule that emits passing results uses this."""
     return translate("common.ok", locale=locale)
 
 
@@ -152,18 +152,18 @@ def _to_number(value: Any) -> float | object | None:
     understands those formats so a rule never crashes on a legal number.
 
     Returns:
-        * ``None`` if ``value`` is ``None`` (missing — caller decides default).
+        * ``None`` if ``value`` is ``None`` (missing - caller decides default).
         * a ``float`` if the value is/became a finite number.
         * :data:`_NOT_A_NUMBER` if the value is present but un-parseable as a
           number (caller must treat this as "not a number", never crash).
     """
     if value is None:
         return None
-    if isinstance(value, bool):  # bool is an int subclass — reject explicitly
+    if isinstance(value, bool):  # bool is an int subclass - reject explicitly
         return _NOT_A_NUMBER
     if isinstance(value, (int, float)):
         f = float(value)
-        # Reject NaN/Infinity — they would silently poison comparisons.
+        # Reject NaN/Infinity - they would silently poison comparisons.
         return f if f == f and f not in (float("inf"), float("-inf")) else _NOT_A_NUMBER
     if isinstance(value, Decimal):
         try:
@@ -210,7 +210,7 @@ def _to_number(value: Any) -> float | object | None:
     elif has_comma:
         # Only commas. ``1,234,567`` (>1 comma, no decimal) is unambiguous
         # US/UK thousands grouping. A *single* comma is the German/EU decimal
-        # separator (``0,24``, ``2,5``, ``150,00``) — US thousands ``1,234``
+        # separator (``0,24``, ``2,5``, ``150,00``) - US thousands ``1,234``
         # virtually always carries a ``.`` decimal part too, which is the
         # both-present branch above, so a lone comma is safely a decimal.
         if numeric.count(",") > 1:
@@ -219,7 +219,7 @@ def _to_number(value: Any) -> float | object | None:
             numeric = numeric.replace(",", ".")  # 1,5 / 12,50 / 0,24 → decimal
     elif has_dot:
         # A *single* dot with no comma is always a canonical decimal point
-        # (``3.0``, ``0.24``, ``185184.0``) — never reinterpret it, that is
+        # (``3.0``, ``0.24``, ``185184.0``) - never reinterpret it, that is
         # the source-of-truth storage format. Only multi-dot strings
         # (``1.234.567``) are unambiguously German thousands grouping.
         if numeric.count(".") > 1:
@@ -235,7 +235,7 @@ def _median(values: list[float]) -> float:
     """True statistical median.
 
     For an even-length list this is the mean of the two central elements
-    (``statistics.median`` semantics) — not ``sorted[n // 2]`` which is the
+    (``statistics.median`` semantics) - not ``sorted[n // 2]`` which is the
     *upper*-middle element and skews threshold-based anomaly detection on
     small even samples (E-VAL-013).
     """
@@ -659,7 +659,7 @@ class GAEBLVStructure(ValidationRule):
     severity = Severity.WARNING
     category = RuleCategory.STRUCTURE
     description = (
-        "Flags leaf positions with no parent_id — GAEB LV hierarchy requires "
+        "Flags leaf positions with no parent_id - GAEB LV hierarchy requires "
         "every Leistungsposition to live under a Leistungsgruppe."
     )
 
@@ -714,7 +714,7 @@ class GAEBEinheitspreisSanity(ValidationRule):
     """Flags zero/negative Einheitspreis on non-lump-sum positions.
 
     GAEB X83 treats an Einheitspreis of 0 as a bid-withdrawal signal.
-    Importing such a position silently is almost always a mistake — the
+    Importing such a position silently is almost always a mistake - the
     rule forces reviewers to confirm whether they meant a zero-priced
     lump sum (valid) or a missing rate (invalid).
     """
@@ -748,7 +748,7 @@ class GAEBEinheitspreisSanity(ValidationRule):
             parsed_rate = _to_number(rate)
             if parsed_rate is None or parsed_rate is _NOT_A_NUMBER:
                 # Non-numeric / unparseable rate is a formatting issue, not a
-                # GAEB pricing violation — keep signals orthogonal.
+                # GAEB pricing violation - keep signals orthogonal.
                 continue
             rate_val: float = parsed_rate  # type: ignore[assignment]
             passed = rate_val > 0
@@ -961,7 +961,7 @@ class NegativeValues(ValidationRule):
             qty = pos.get("quantity")
             rate = pos.get("unit_rate")
             # Unparseable / non-numeric is a *formatting* issue, not a
-            # negative value — treat as 0 so a locale string never masquerades
+            # negative value - treat as 0 so a locale string never masquerades
             # as a compliance ERROR (E-I18N-004).
             qty_val = _num(qty, default=0.0) or 0.0
             rate_val = _num(rate, default=0.0) or 0.0
@@ -1063,7 +1063,7 @@ class TotalMismatch(ValidationRule):
     category = RuleCategory.CONSISTENCY
     description = "Computed total (quantity × unit_rate) must match stored total within tolerance"
 
-    # Absolute floor (one currency minor unit — absorbs IEEE-754 noise like
+    # Absolute floor (one currency minor unit - absorbs IEEE-754 noise like
     # 0.1 * 0.2 == 0.020000000000000004) plus a magnitude-aware relative
     # term so a systematic sub-cent drift on large-value positions is no
     # longer invisible (E-VAL-014).
@@ -1084,7 +1084,7 @@ class TotalMismatch(ValidationRule):
             rate_p = _to_number(rate)
             stored_p = _to_number(stored_total)
             # A formatting issue must not masquerade as a consistency ERROR
-            # (E-I18N-004) — skip rather than crash/false-flag.
+            # (E-I18N-004) - skip rather than crash/false-flag.
             if (
                 qty_p is None
                 or qty_p is _NOT_A_NUMBER
@@ -1186,7 +1186,7 @@ class EmptyUnit(ValidationRule):
 
 
 # ── Wave 24: unit-system consistency (metric vs imperial) ──────────────────
-# Units that are definitively metric (SI) — m, m2, m3, kg, etc.
+# Units that are definitively metric (SI) - m, m2, m3, kg, etc.
 _METRIC_BOQ_UNITS: frozenset[str] = frozenset(
     {
         "m",
@@ -1207,7 +1207,7 @@ _METRIC_BOQ_UNITS: frozenset[str] = frozenset(
         "ha",  # hectare
     },
 )
-# Units that are definitively imperial (US/UK) — ft, lb, etc.
+# Units that are definitively imperial (US/UK) - ft, lb, etc.
 _IMPERIAL_BOQ_UNITS: frozenset[str] = frozenset(
     {
         "ft",
@@ -1372,7 +1372,7 @@ _COUNTRY_TO_DISPLAY_NAME: dict[str, str] = {
 
 # Rough cross-walk between DIN 276 KG groups and MasterFormat divisions.
 # Used as ``suggested_*`` hints when a position is missing the preferred
-# standard. None means "no mapping available — fire nudge but leave
+# standard. None means "no mapping available - fire nudge but leave
 # suggestion blank".
 _MF_DIV_TO_DIN276: dict[str, str | None] = {
     "01": "100",  # General requirements → Grundstück
@@ -1495,7 +1495,7 @@ class ClassificationCountryMismatchRule(ValidationRule):
         country_display = _COUNTRY_TO_DISPLAY_NAME.get(country, country)
         positions = _get_positions(context)
 
-        # Find the first position that triggers a nudge — i.e. classifications
+        # Find the first position that triggers a nudge - i.e. classifications
         # present but missing the preferred standard for this country.
         nudge_pos: dict[str, Any] | None = None
         for pos in positions:
@@ -1672,7 +1672,7 @@ class RateVsBenchmark(ValidationRule):
                 continue
             parsed = _to_number(rate)
             if parsed is None or parsed is _NOT_A_NUMBER:
-                continue  # Formatting issue — not a benchmark violation
+                continue  # Formatting issue - not a benchmark violation
             rate_val: float = parsed  # type: ignore[assignment]
             if rate_val <= 0:
                 continue
@@ -1726,7 +1726,7 @@ class LumpSumRatio(ValidationRule):
     severity = Severity.INFO
     category = RuleCategory.QUALITY
     description = (
-        "Flags BOQs where more than 30% of positions use lump sum (lsum) unit — indicates poor estimation granularity"
+        "Flags BOQs where more than 30% of positions use lump sum (lsum) unit - indicates poor estimation granularity"
     )
 
     THRESHOLD = 0.30  # 30%
@@ -1785,7 +1785,7 @@ class CostConcentration(ValidationRule):
     severity = Severity.WARNING
     category = RuleCategory.CONSISTENCY
     description = (
-        "Flags positions that account for more than 40% of total BOQ cost — "
+        "Flags positions that account for more than 40% of total BOQ cost - "
         "indicates potential scope error or missing breakdown"
     )
 
@@ -1951,7 +1951,7 @@ class DIN276Completeness(ValidationRule):
     description = "Major KG groups 300 (Building Construction) and 400 (Technical Systems) should be present"
 
     REQUIRED_GROUPS = {"300", "400"}
-    # Group names kept in English only — passed through {group_name} into
+    # Group names kept in English only - passed through {group_name} into
     # the i18n template so de/ru translations embed the canonical German
     # term in parentheses.
     GROUP_NAMES = {
@@ -2398,7 +2398,7 @@ class SINAPIValidCode(ValidationRule):
         return results
 
 
-# ── NBR 12721 Rules (Brazil — ABNT cost-group hierarchy) ───────────────
+# ── NBR 12721 Rules (Brazil - ABNT cost-group hierarchy) ───────────────
 #
 # ABNT NBR 12721 defines the cost-classification structure used by
 # Brazilian construction estimators alongside SINAPI compositions. A
@@ -3179,7 +3179,7 @@ class BC3CodeRequired(ValidationRule):
     BC3 ties every partida back to a concept code (``~C`` record); a
     position without one cannot be exported back to FIEBDC-3 without
     losing the original catalogue reference. Rule fires only when the
-    project's classification_standard is bc3 or region is ES / LATAM —
+    project's classification_standard is bc3 or region is ES / LATAM -
     other regions can leave the field blank without penalty.
     """
 
@@ -3194,7 +3194,7 @@ class BC3CodeRequired(ValidationRule):
         locale = _get_locale(context)
         results: list[RuleResult] = []
         for pos in _get_positions(context):
-            # Skip section rows — chapters carry their own code in ordinal.
+            # Skip section rows - chapters carry their own code in ordinal.
             if (pos.get("type") or "position") == "section":
                 continue
             classification = pos.get("classification") or {}
@@ -3239,7 +3239,7 @@ class BC3ValidCode(ValidationRule):
 
     Codes can be alphanumeric (e.g. ``E04CM040`` is a valid common code).
     We reject obviously malformed values (spaces, leading dots, control
-    chars) — the FIEBDC-3 spec doesn't fix a strict length, so we lean
+    chars) - the FIEBDC-3 spec doesn't fix a strict length, so we lean
     on shape rather than length.
     """
 
@@ -3309,7 +3309,7 @@ class CurrencyConsistency(ValidationRule):
         if not positions:
             # An empty BOQ has nothing to be consistent about. Emitting a
             # *passing* row here is what made an empty estimate look "100%
-            # green" instead of SKIPPED (E-VAL-008) — return nothing so the
+            # green" instead of SKIPPED (E-VAL-008) - return nothing so the
             # engine's no-results → SKIPPED branch can fire.
             return []
         currencies: set[str] = set()
@@ -3364,7 +3364,7 @@ class MeasurementConsistency(ValidationRule):
         locale = _get_locale(context)
         positions = _get_positions(context)
         if not positions:
-            # See CurrencyConsistency — no positions means nothing to check;
+            # See CurrencyConsistency - no positions means nothing to check;
             # a passing row here defeats the SKIPPED status (E-VAL-008).
             return []
         has_metric = False
@@ -3405,13 +3405,105 @@ class MeasurementConsistency(ValidationRule):
         ]
 
 
+# ── Revision-compare cost-impact review (Item 17) ───────────────────────────
+
+
+class RevisionCostImpactReview(ValidationRule):
+    """Advisory: a priced revision change should become a controlled variation.
+
+    When a drawing / PDF revision compare reports a non-zero
+    ``net_cost_impact`` but no variation request has been raised from it
+    yet, this rule flags the gap so the cost change is captured in the
+    commercial workflow rather than slipping through silently. It is a
+    WARNING (advisory, never blocks) per the "AI proposes, human confirms"
+    principle - the user creates the draft variation from the compare
+    drawer.
+
+    The compare result is supplied to the engine via
+    ``ValidationContext.data`` (or ``context.data["compare"]``) with the
+    shape returned by ``compare_drawing_versions`` /
+    ``compare_documents``: a ``summary`` carrying ``net_cost_impact``.
+    ``context.metadata["variation_request_exists"]`` (truthy) marks that a
+    variation has already been raised, so re-validating after the handoff
+    passes cleanly.
+    """
+
+    rule_id = "boq_quality.revision_cost_impact_review"
+    name = "Revision cost impact needs a variation"
+    standard = "boq_quality"
+    severity = Severity.WARNING
+    category = RuleCategory.CONSISTENCY
+    description = (
+        "A revision change with a non-zero cost impact should be turned "
+        "into a controlled variation request rather than left untracked."
+    )
+
+    @staticmethod
+    def _extract_net_impact(data: Any) -> Decimal | None:
+        """Pull ``net_cost_impact`` out of a compare-result-shaped payload."""
+        if not isinstance(data, dict):
+            return None
+        summary = data.get("summary")
+        if not isinstance(summary, dict):
+            # Allow the summary itself to be passed directly.
+            summary = data if "net_cost_impact" in data else {}
+        raw = summary.get("net_cost_impact")
+        if raw in (None, ""):
+            return None
+        try:
+            return Decimal(str(raw))
+        except (InvalidOperation, ValueError, TypeError):
+            return None
+
+    async def validate(self, context: ValidationContext) -> list[RuleResult]:
+        locale = _get_locale(context)
+        net_impact = self._extract_net_impact(context.data)
+        if net_impact is None:
+            # No compare payload / no priced change in this context - nothing
+            # to assert (a passing row here would defeat SKIPPED status).
+            return []
+
+        meta = getattr(context, "metadata", None) or {}
+        variation_exists = bool(meta.get("variation_request_exists")) if isinstance(meta, dict) else False
+
+        if net_impact != 0 and not variation_exists:
+            return [
+                RuleResult(
+                    rule_id=self.rule_id,
+                    rule_name=self.name,
+                    severity=self.severity,
+                    category=self.category,
+                    passed=False,
+                    message=translate(
+                        "boq_quality.revision_cost_impact_review.fail",
+                        locale=locale,
+                        amount=_fmt_decimal(float(net_impact)),
+                    ),
+                    suggestion=translate(
+                        "boq_quality.revision_cost_impact_review.suggestion",
+                        locale=locale,
+                    ),
+                )
+            ]
+        return [
+            RuleResult(
+                rule_id=self.rule_id,
+                rule_name=self.name,
+                severity=self.severity,
+                category=self.category,
+                passed=True,
+                message=_ok(locale),
+            )
+        ]
+
+
 # ── Pipeline Builder graph-validity rule ────────────────────────────────────
 
 
 class PipelineSideEffectGated(ValidationRule):
     """Structural "AI proposes, human confirms" gate (design §3.5).
 
-    Fails the graph (ERROR — blocks publish) if any ``side_effecting``
+    Fails the graph (ERROR - blocks publish) if any ``side_effecting``
     node can be reached from a trigger/AI node *without* passing through a
     ``gate.validation`` or ``gate.human_approval`` on that path. A failing
     graph stays ``is_published=false`` and cannot be triggered.
@@ -3541,7 +3633,7 @@ class PipelineSideEffectGated(ValidationRule):
 #     async def validate(self, context):
 #         ctx = _propdev_context(context)
 #         if ctx is None:
-#             return []        # not enough context — skip cleanly
+#             return []        # not enough context - skip cleanly
 #         session, dev_id = ctx
 #         ...                  # query, compute, build results
 #
@@ -3555,7 +3647,7 @@ def _propdev_context(context: ValidationContext) -> tuple[Any, Any] | None:
     """Pull session + development_id from a property-dev rule context.
 
     Returns ``None`` when either is missing so the caller can short-circuit
-    with an empty result list (rules MUST NOT raise on missing context —
+    with an empty result list (rules MUST NOT raise on missing context -
     that would surface as a phantom DIAGNOSTIC engine-error row).
     """
     meta = getattr(context, "metadata", None) or {}
@@ -3621,7 +3713,7 @@ def _iban_is_valid(iban: str) -> bool:
     country = raw[:2]
     expected_len = _IBAN_LENGTHS.get(country)
     if expected_len is None:
-        # Unknown country — accept range only.
+        # Unknown country - accept range only.
         if not (15 <= len(raw) <= 34):
             return False
     elif expected_len > 0 and len(raw) != expected_len:
@@ -3692,7 +3784,7 @@ class PropDevEscrowAccountRequired(ValidationRule):
             elif jurisdiction.startswith("SA"):
                 regulator = "CMA"
         if regulator not in _PROPDEV_REGULATORS_REQUIRING_ESCROW:
-            # Not subject to escrow rules — pass.
+            # Not subject to escrow rules - pass.
             return [
                 RuleResult(
                     rule_id=self.rule_id,
@@ -3838,7 +3930,7 @@ class PropDevEscrowBalanceReconciled(ValidationRule):
     ``EscrowAccount`` ledger (we treat the txn sum as ground truth and
     flag accounts whose ``metadata.ledger_balance`` declares something
     different). Drift > 0.01 currency unit triggers WARNING (it is a
-    soft signal — actual reconciliation lives in the dedicated workflow).
+    soft signal - actual reconciliation lives in the dedicated workflow).
     """
 
     rule_id = "property_dev.escrow_balance_reconciled"
@@ -3890,7 +3982,7 @@ class PropDevEscrowBalanceReconciled(ValidationRule):
             meta = acc.metadata_ or {}
             declared_raw = meta.get("ledger_balance") if isinstance(meta, dict) else None
             if declared_raw is None:
-                # No declared ledger — nothing to compare against. Skip.
+                # No declared ledger - nothing to compare against. Skip.
                 continue
             try:
                 declared = Decimal(str(declared_raw))
@@ -3970,7 +4062,7 @@ class PropDevSalesContractPartyOwnershipSumsTo100(ValidationRule):
     severity = Severity.ERROR
     category = RuleCategory.CONSISTENCY
     description = (
-        "Every SalesContract's parties must collectively own 100.00% — neither over-subscribed nor under-allocated."
+        "Every SalesContract's parties must collectively own 100.00% - neither over-subscribed nor under-allocated."
     )
 
     async def validate(self, context: ValidationContext) -> list[RuleResult]:
@@ -4109,7 +4201,7 @@ class PropDevPaymentScheduleInstalmentsSumToContractValue(ValidationRule):
             sched_stmt = _sql_select(PaymentSchedule).where(PaymentSchedule.sales_contract_id == c.id)
             sched = (await session.execute(sched_stmt)).scalar_one_or_none()
             if sched is None:
-                # No schedule yet — not the consistency rule's concern.
+                # No schedule yet - not the consistency rule's concern.
                 continue
             inst_stmt = _sql_select(Instalment).where(Instalment.schedule_id == sched.id)
             instalments = list((await session.execute(inst_stmt)).scalars().all())
@@ -4514,6 +4606,795 @@ class PropDevPriceMatrixNoNegativeModifier(ValidationRule):
         return results
 
 
+# ── Schedule Quality Rules (C1 - DCMA-14-style health checks) ───────────────
+#
+# A small pack of network-quality checks over a project schedule, modelled
+# on the public DCMA 14-point assessment used as an owner / audit gate on
+# public work. Each rule inspects the schedule data the platform already
+# stores (activities + relationships from the schedule module), so the pack
+# is migration-free: no new tables, no new columns.
+#
+# Expected ValidationContext.data shape (a dict):
+#
+#   {
+#     "activities": [
+#       {
+#         "id": "a1",
+#         "name": "Excavate footings",
+#         "duration_days": 5,
+#         "activity_type": "task",          # "milestone" rows are exempt where noted
+#         "total_float": 3,                 # int | None - from the CPM pass
+#         "is_critical": false,
+#         "constraint_type": "must_finish_on",  # None for ASAP/ALAP (soft)
+#         "dependencies": [...],            # inline links - counted as logic too
+#       },
+#       ...
+#     ],
+#     "relationships": [
+#       {"predecessor_id": "a1", "successor_id": "a2",
+#        "relationship_type": "FS", "lag_days": 0},
+#       ...
+#     ],
+#   }
+#
+# Field names mirror the schedule ORM (``Activity`` + ``ScheduleRelationship``)
+# so a loader can flatten the rows straight into these dicts. Rules return the
+# same RuleResult shape as every other rule in this file.
+
+# Constraint types that hard-pin an activity date and therefore override the
+# schedule logic (DCMA "hard constraint" check). ASAP / ALAP and the
+# soft "no earlier / no later" window constraints are NOT flagged - only the
+# constraints that fully fix a date are.
+_HARD_CONSTRAINT_TYPES: frozenset[str] = frozenset(
+    {
+        "must_start_on",
+        "must_finish_on",
+        "mandatory_start",
+        "mandatory_finish",
+    },
+)
+
+# Activity types that legitimately carry zero duration - missing-duration and
+# open-end logic checks skip these.
+_ZERO_DURATION_ACTIVITY_TYPES: frozenset[str] = frozenset(
+    {
+        "milestone",
+        "start_milestone",
+        "finish_milestone",
+        "hammock",
+        "wbs",
+        "summary",
+        "level_of_effort",
+    },
+)
+
+
+def _get_activities(context: ValidationContext) -> list[dict[str, Any]]:
+    """Extract the activity list from context data (tolerant of shapes).
+
+    Accepts either ``{"activities": [...]}`` or ``{"tasks": [...]}`` or a bare
+    list. Returns ``[]`` when no activities are present so a rule stays
+    SKIPPED rather than firing false positives on an empty schedule.
+    """
+    data = context.data
+    if isinstance(data, dict):
+        acts = data.get("activities")
+        if isinstance(acts, list):
+            return acts
+        tasks = data.get("tasks")
+        if isinstance(tasks, list):
+            return tasks
+        return []
+    if isinstance(data, list):
+        return data
+    return []
+
+
+def _get_relationships(context: ValidationContext) -> list[dict[str, Any]]:
+    """Extract explicit relationship rows from context data.
+
+    Accepts ``relationships`` or the legacy alias ``links``. Returns ``[]``
+    when none are present.
+    """
+    data = context.data
+    if isinstance(data, dict):
+        for key in ("relationships", "links"):
+            rels = data.get(key)
+            if isinstance(rels, list):
+                return rels
+    return []
+
+
+def _activity_label(act: dict[str, Any]) -> str:
+    """Best-effort human label for an activity in a message."""
+    for key in ("activity_code", "wbs_code", "name", "id"):
+        val = act.get(key)
+        if isinstance(val, str) and val.strip():
+            return val.strip()
+        if val is not None and not isinstance(val, str):
+            return str(val)
+    return "?"
+
+
+def _is_zero_duration_type(act: dict[str, Any]) -> bool:
+    """True when the activity type is one that legitimately has no duration."""
+    act_type = str(act.get("activity_type") or "").strip().lower()
+    return act_type in _ZERO_DURATION_ACTIVITY_TYPES
+
+
+def _inline_dependency_count(act: dict[str, Any]) -> int:
+    """Count inline dependencies stored on the activity row itself.
+
+    The schedule ``Activity.dependencies`` JSON column can hold links inline
+    (separate from the ``ScheduleRelationship`` table). Count them so an
+    activity that only uses inline links is not falsely flagged as an open
+    end.
+    """
+    deps = act.get("dependencies")
+    if isinstance(deps, list):
+        return len(deps)
+    return 0
+
+
+class ScheduleOpenEnds(ValidationRule):
+    """Flags activities with no predecessor and/or no successor logic.
+
+    DCMA "logic" check: every activity except the project start and finish
+    should have at least one predecessor and one successor so the network
+    is fully tied together. Dangling activities (open ends) make the
+    critical-path and float numbers unreliable. Milestone / summary rows are
+    exempt because a start milestone legitimately has no predecessor and a
+    finish milestone legitimately has no successor.
+    """
+
+    rule_id = "schedule_quality.open_ends"
+    name = "Schedule Open Ends"
+    standard = "schedule_quality"
+    severity = Severity.WARNING
+    category = RuleCategory.CONSISTENCY
+    description = (
+        "Flags activities missing predecessor and/or successor logic (open "
+        "ends / dangling activities) so the critical path stays defensible."
+    )
+
+    async def validate(self, context: ValidationContext) -> list[RuleResult]:
+        locale = _get_locale(context)
+        activities = _get_activities(context)
+        if not activities:
+            return []
+        relationships = _get_relationships(context)
+        has_pred: set[str] = set()
+        has_succ: set[str] = set()
+        for rel in relationships:
+            pred = rel.get("predecessor_id")
+            succ = rel.get("successor_id")
+            if pred is not None and succ is not None:
+                has_succ.add(str(pred))
+                has_pred.add(str(succ))
+
+        results: list[RuleResult] = []
+        for act in activities:
+            if _is_zero_duration_type(act):
+                continue
+            act_id = str(act.get("id") or "")
+            inline = _inline_dependency_count(act)
+            # An inline dependency means the activity has a predecessor link.
+            missing_pred = act_id not in has_pred and inline == 0
+            missing_succ = act_id not in has_succ
+            passed = not (missing_pred or missing_succ)
+            if passed:
+                message = _ok(locale)
+                suggestion = None
+            else:
+                if missing_pred and missing_succ:
+                    ends = translate("schedule_quality.open_ends.both", locale=locale)
+                elif missing_pred:
+                    ends = translate("schedule_quality.open_ends.predecessor", locale=locale)
+                else:
+                    ends = translate("schedule_quality.open_ends.successor", locale=locale)
+                message = translate(
+                    "schedule_quality.open_ends.fail",
+                    locale=locale,
+                    activity=_activity_label(act),
+                    ends=ends,
+                )
+                suggestion = translate("schedule_quality.open_ends.suggestion", locale=locale)
+            results.append(
+                RuleResult(
+                    rule_id=self.rule_id,
+                    rule_name=self.name,
+                    severity=self.severity,
+                    category=self.category,
+                    passed=passed,
+                    message=message,
+                    element_ref=act.get("id"),
+                    details=(
+                        {} if passed else {"missing_predecessor": missing_pred, "missing_successor": missing_succ}
+                    ),
+                    suggestion=suggestion,
+                )
+            )
+        return results
+
+
+class ScheduleNegativeLag(ValidationRule):
+    """Flags relationships that use negative lag (a lead).
+
+    DCMA "negative lag (leads)" check: a negative lag lets a successor start
+    before its predecessor logically allows, which distorts the forward pass
+    and hides true sequencing. Leads should be re-modelled as explicit
+    activities or SS/FF relationships instead.
+    """
+
+    rule_id = "schedule_quality.negative_lag"
+    name = "Schedule Negative Lag"
+    standard = "schedule_quality"
+    severity = Severity.ERROR
+    category = RuleCategory.CONSISTENCY
+    description = "Flags relationships with negative lag (leads), which distort the critical path."
+
+    async def validate(self, context: ValidationContext) -> list[RuleResult]:
+        locale = _get_locale(context)
+        relationships = _get_relationships(context)
+        if not relationships:
+            return []
+        results: list[RuleResult] = []
+        for rel in relationships:
+            lag = _to_number(rel.get("lag_days", 0))
+            if lag is None or lag is _NOT_A_NUMBER:
+                continue  # Non-numeric lag is a data issue, not a lead - skip.
+            lag_val: float = lag  # type: ignore[assignment]
+            passed = lag_val >= 0
+            pred = str(rel.get("predecessor_id") or "?")
+            succ = str(rel.get("successor_id") or "?")
+            if passed:
+                message = _ok(locale)
+                suggestion = None
+            else:
+                message = translate(
+                    "schedule_quality.negative_lag.fail",
+                    locale=locale,
+                    predecessor=pred,
+                    successor=succ,
+                    lag=_fmt_decimal(lag_val, places=0),
+                )
+                suggestion = translate("schedule_quality.negative_lag.suggestion", locale=locale)
+            results.append(
+                RuleResult(
+                    rule_id=self.rule_id,
+                    rule_name=self.name,
+                    severity=self.severity,
+                    category=self.category,
+                    passed=passed,
+                    message=message,
+                    element_ref=rel.get("successor_id"),
+                    details=({} if passed else {"lag_days": lag_val, "predecessor_id": pred, "successor_id": succ}),
+                    suggestion=suggestion,
+                )
+            )
+        return results
+
+
+class ScheduleExcessiveLag(ValidationRule):
+    """Flags relationships with lag above a sensible threshold.
+
+    DCMA "high lag" check: a large positive lag often hides a missing
+    activity (procurement, cure time, approval) that should be modelled
+    explicitly so it can carry status and be levelled. The threshold can be
+    overridden per project via ``metadata["schedule_quality"]["max_lag_days"]``.
+    """
+
+    rule_id = "schedule_quality.excessive_lag"
+    name = "Schedule Excessive Lag"
+    standard = "schedule_quality"
+    severity = Severity.WARNING
+    category = RuleCategory.CONSISTENCY
+    description = "Flags relationships whose lag exceeds the configured threshold (default 20 working days)."
+
+    DEFAULT_MAX_LAG_DAYS = 20
+
+    def _max_lag(self, context: ValidationContext) -> float:
+        meta = getattr(context, "metadata", None) or {}
+        cfg = meta.get("schedule_quality") if isinstance(meta, dict) else None
+        if isinstance(cfg, dict):
+            override = _to_number(cfg.get("max_lag_days"))
+            if override is not None and override is not _NOT_A_NUMBER and override > 0:  # type: ignore[operator]
+                return override  # type: ignore[return-value]
+        return float(self.DEFAULT_MAX_LAG_DAYS)
+
+    async def validate(self, context: ValidationContext) -> list[RuleResult]:
+        locale = _get_locale(context)
+        relationships = _get_relationships(context)
+        if not relationships:
+            return []
+        max_lag = self._max_lag(context)
+        results: list[RuleResult] = []
+        for rel in relationships:
+            lag = _to_number(rel.get("lag_days", 0))
+            if lag is None or lag is _NOT_A_NUMBER:
+                continue
+            lag_val: float = lag  # type: ignore[assignment]
+            passed = lag_val <= max_lag
+            pred = str(rel.get("predecessor_id") or "?")
+            succ = str(rel.get("successor_id") or "?")
+            if passed:
+                message = _ok(locale)
+                suggestion = None
+            else:
+                message = translate(
+                    "schedule_quality.excessive_lag.fail",
+                    locale=locale,
+                    predecessor=pred,
+                    successor=succ,
+                    lag=_fmt_decimal(lag_val, places=0),
+                    threshold=_fmt_decimal(max_lag, places=0),
+                )
+                suggestion = translate("schedule_quality.excessive_lag.suggestion", locale=locale)
+            results.append(
+                RuleResult(
+                    rule_id=self.rule_id,
+                    rule_name=self.name,
+                    severity=self.severity,
+                    category=self.category,
+                    passed=passed,
+                    message=message,
+                    element_ref=rel.get("successor_id"),
+                    details=({} if passed else {"lag_days": lag_val, "threshold": max_lag}),
+                    suggestion=suggestion,
+                )
+            )
+        return results
+
+
+class ScheduleHardConstraints(ValidationRule):
+    """Flags activities pinned by a hard date constraint.
+
+    DCMA "hard constraint" check: must-start-on / must-finish-on constraints
+    override the network logic and prevent activities from moving when their
+    predecessors slip, which masks delay. They should be used sparingly and
+    documented. Soft window constraints (start-no-earlier, ASAP, ALAP) are
+    not flagged.
+    """
+
+    rule_id = "schedule_quality.hard_constraints"
+    name = "Schedule Hard Constraints"
+    standard = "schedule_quality"
+    severity = Severity.WARNING
+    category = RuleCategory.CONSISTENCY
+    description = "Flags activities with a hard date constraint (must-start-on / must-finish-on) that overrides logic."
+
+    async def validate(self, context: ValidationContext) -> list[RuleResult]:
+        locale = _get_locale(context)
+        activities = _get_activities(context)
+        if not activities:
+            return []
+        results: list[RuleResult] = []
+        for act in activities:
+            constraint = str(act.get("constraint_type") or "").strip().lower()
+            is_hard = constraint in _HARD_CONSTRAINT_TYPES
+            passed = not is_hard
+            if passed:
+                message = _ok(locale)
+                suggestion = None
+            else:
+                message = translate(
+                    "schedule_quality.hard_constraints.fail",
+                    locale=locale,
+                    activity=_activity_label(act),
+                    constraint=constraint,
+                )
+                suggestion = translate("schedule_quality.hard_constraints.suggestion", locale=locale)
+            results.append(
+                RuleResult(
+                    rule_id=self.rule_id,
+                    rule_name=self.name,
+                    severity=self.severity,
+                    category=self.category,
+                    passed=passed,
+                    message=message,
+                    element_ref=act.get("id"),
+                    details=({} if passed else {"constraint_type": constraint}),
+                    suggestion=suggestion,
+                )
+            )
+        return results
+
+
+class ScheduleNegativeFloat(ValidationRule):
+    """Flags activities whose total float is negative.
+
+    DCMA "negative float" check: negative total float means the activity is
+    already behind the dates the network needs, usually because a hard
+    constraint or an external deadline conflicts with the logic. It signals
+    the plan is not achievable as drawn and needs re-sequencing or a
+    documented recovery plan.
+    """
+
+    rule_id = "schedule_quality.negative_float"
+    name = "Schedule Negative Float"
+    standard = "schedule_quality"
+    severity = Severity.ERROR
+    category = RuleCategory.CONSISTENCY
+    description = "Flags activities with negative total float - the schedule is not achievable as currently logic-tied."
+
+    async def validate(self, context: ValidationContext) -> list[RuleResult]:
+        locale = _get_locale(context)
+        activities = _get_activities(context)
+        if not activities:
+            return []
+        results: list[RuleResult] = []
+        for act in activities:
+            raw_float = act.get("total_float")
+            if raw_float is None:
+                continue  # No CPM result yet - nothing to judge.
+            tf = _to_number(raw_float)
+            if tf is None or tf is _NOT_A_NUMBER:
+                continue
+            tf_val: float = tf  # type: ignore[assignment]
+            passed = tf_val >= 0
+            if passed:
+                message = _ok(locale)
+                suggestion = None
+            else:
+                message = translate(
+                    "schedule_quality.negative_float.fail",
+                    locale=locale,
+                    activity=_activity_label(act),
+                    float=_fmt_decimal(tf_val, places=0),
+                )
+                suggestion = translate("schedule_quality.negative_float.suggestion", locale=locale)
+            results.append(
+                RuleResult(
+                    rule_id=self.rule_id,
+                    rule_name=self.name,
+                    severity=self.severity,
+                    category=self.category,
+                    passed=passed,
+                    message=message,
+                    element_ref=act.get("id"),
+                    details=({} if passed else {"total_float": tf_val}),
+                    suggestion=suggestion,
+                )
+            )
+        return results
+
+
+class ScheduleHighFloat(ValidationRule):
+    """Flags activities with an unusually large total float.
+
+    DCMA "high float" check: a very large total float (default over 44
+    working days, roughly two months) usually means the activity is missing
+    a successor link or is only loosely tied to the network, so its dates are
+    not really controlled by the plan. The threshold can be overridden via
+    ``metadata["schedule_quality"]["max_total_float_days"]``.
+    """
+
+    rule_id = "schedule_quality.high_float"
+    name = "Schedule High Float"
+    standard = "schedule_quality"
+    severity = Severity.INFO
+    category = RuleCategory.CONSISTENCY
+    description = "Flags activities whose total float exceeds the configured threshold (default 44 working days)."
+
+    DEFAULT_MAX_TOTAL_FLOAT_DAYS = 44
+
+    def _max_float(self, context: ValidationContext) -> float:
+        meta = getattr(context, "metadata", None) or {}
+        cfg = meta.get("schedule_quality") if isinstance(meta, dict) else None
+        if isinstance(cfg, dict):
+            override = _to_number(cfg.get("max_total_float_days"))
+            if override is not None and override is not _NOT_A_NUMBER and override > 0:  # type: ignore[operator]
+                return override  # type: ignore[return-value]
+        return float(self.DEFAULT_MAX_TOTAL_FLOAT_DAYS)
+
+    async def validate(self, context: ValidationContext) -> list[RuleResult]:
+        locale = _get_locale(context)
+        activities = _get_activities(context)
+        if not activities:
+            return []
+        threshold = self._max_float(context)
+        results: list[RuleResult] = []
+        for act in activities:
+            raw_float = act.get("total_float")
+            if raw_float is None:
+                continue
+            tf = _to_number(raw_float)
+            if tf is None or tf is _NOT_A_NUMBER:
+                continue
+            tf_val: float = tf  # type: ignore[assignment]
+            # Negative float is owned by ScheduleNegativeFloat - keep orthogonal.
+            if tf_val < 0:
+                continue
+            passed = tf_val <= threshold
+            if passed:
+                message = _ok(locale)
+                suggestion = None
+            else:
+                message = translate(
+                    "schedule_quality.high_float.fail",
+                    locale=locale,
+                    activity=_activity_label(act),
+                    float=_fmt_decimal(tf_val, places=0),
+                    threshold=_fmt_decimal(threshold, places=0),
+                )
+                suggestion = translate("schedule_quality.high_float.suggestion", locale=locale)
+            results.append(
+                RuleResult(
+                    rule_id=self.rule_id,
+                    rule_name=self.name,
+                    severity=self.severity,
+                    category=self.category,
+                    passed=passed,
+                    message=message,
+                    element_ref=act.get("id"),
+                    details=({} if passed else {"total_float": tf_val, "threshold": threshold}),
+                    suggestion=suggestion,
+                )
+            )
+        return results
+
+
+class ScheduleMissingDuration(ValidationRule):
+    """Flags non-milestone activities with a zero or missing duration.
+
+    DCMA "invalid dates / missing duration" family: a task with no duration
+    is either an unfinished plan entry or a milestone that has not been typed
+    as one. Genuine milestone / summary rows are exempt. A negative duration
+    is always invalid regardless of type.
+    """
+
+    rule_id = "schedule_quality.missing_duration"
+    name = "Schedule Missing Duration"
+    standard = "schedule_quality"
+    severity = Severity.WARNING
+    category = RuleCategory.COMPLETENESS
+    description = "Flags non-milestone activities with a zero, missing, or negative duration."
+
+    async def validate(self, context: ValidationContext) -> list[RuleResult]:
+        locale = _get_locale(context)
+        activities = _get_activities(context)
+        if not activities:
+            return []
+        results: list[RuleResult] = []
+        for act in activities:
+            is_zero_type = _is_zero_duration_type(act)
+            dur = _to_number(act.get("duration_days"))
+            if dur is None or dur is _NOT_A_NUMBER:
+                dur_val = 0.0
+            else:
+                dur_val = dur  # type: ignore[assignment]
+            if is_zero_type:
+                # Milestones may be 0 but must never be negative.
+                passed = dur_val >= 0
+            else:
+                passed = dur_val > 0
+            if passed:
+                message = _ok(locale)
+                suggestion = None
+            else:
+                message = translate(
+                    "schedule_quality.missing_duration.fail",
+                    locale=locale,
+                    activity=_activity_label(act),
+                    duration=_fmt_decimal(dur_val, places=0),
+                )
+                suggestion = translate("schedule_quality.missing_duration.suggestion", locale=locale)
+            results.append(
+                RuleResult(
+                    rule_id=self.rule_id,
+                    rule_name=self.name,
+                    severity=self.severity,
+                    category=self.category,
+                    passed=passed,
+                    message=message,
+                    element_ref=act.get("id"),
+                    details=({} if passed else {"duration_days": dur_val}),
+                    suggestion=suggestion,
+                )
+            )
+        return results
+
+
+# ── AI Takeoff (vision-LLM plan reading, issue #194) ────────────────────────
+#
+# Validation is first-class for the vision path: the model's structured output
+# is checked before it can become a trusted suggestion. These three rules fire
+# over a plan-read run's proposals (the engine is fed
+# ``context.data = {"proposals": [...], "page_width_pt", "page_height_pt"}``).
+# They are a review/quality gate, not a hard block - the API layer also blocks
+# accept on a self-intersection ERROR verdict.
+
+# The whole page must imply a real-world span inside this belt. Mirrors
+# plan_read._MIN_PAGE_SPAN_M / _MAX_PAGE_SPAN_M so the rule and the service
+# agree on what counts as an absurd ratio.
+_AI_TAKEOFF_MIN_PAGE_SPAN_M = 0.5
+_AI_TAKEOFF_MAX_PAGE_SPAN_M = 5000.0
+# Proposals at or below this confidence are flagged for human review.
+_AI_TAKEOFF_LOW_CONFIDENCE = 0.62
+
+
+def _get_plan_read_proposals(context: ValidationContext) -> list[dict[str, Any]]:
+    """Pull the plan-read proposal list from the validation context."""
+    data = context.data
+    if isinstance(data, dict):
+        proposals = data.get("proposals")
+        if isinstance(proposals, list):
+            return proposals
+    if isinstance(data, list):
+        return data
+    return []
+
+
+def _polygon_self_intersects(points: list[tuple[float, float]]) -> bool:
+    """Closed-polygon self-intersection test (parity with the TS source).
+
+    Twin of the frontend ``isSelfIntersecting`` and the service-side
+    ``plan_read.polygon_self_intersects`` so the dashboard finding matches the
+    canvas verdict.
+    """
+    n = len(points)
+    if n < 4:
+        return False
+
+    def _ccw(a: tuple[float, float], b: tuple[float, float], c: tuple[float, float]) -> bool:
+        return (c[1] - a[1]) * (b[0] - a[0]) > (b[1] - a[1]) * (c[0] - a[0])
+
+    def _cross(
+        a: tuple[float, float],
+        b: tuple[float, float],
+        c: tuple[float, float],
+        d: tuple[float, float],
+    ) -> bool:
+        return _ccw(a, c, d) != _ccw(b, c, d) and _ccw(a, b, c) != _ccw(a, b, d)
+
+    edges = [(points[i], points[(i + 1) % n]) for i in range(n)]
+    for i in range(n):
+        for j in range(i + 1, n):
+            if j == i or (i == 0 and j == n - 1) or j == i + 1:
+                continue
+            if _cross(*edges[i], *edges[j]):
+                return True
+    return False
+
+
+def _proposal_points(proposal: dict[str, Any]) -> list[tuple[float, float]]:
+    """Read ``[(x, y), ...]`` from a proposal's points, defensively."""
+    out: list[tuple[float, float]] = []
+    for pt in proposal.get("points") or []:
+        try:
+            if isinstance(pt, dict):
+                out.append((float(pt["x"]), float(pt["y"])))
+            elif isinstance(pt, (list, tuple)) and len(pt) >= 2:
+                out.append((float(pt[0]), float(pt[1])))
+        except (TypeError, ValueError, KeyError):
+            continue
+    return out
+
+
+class TakeoffScaleSanityRule(ValidationRule):
+    rule_id = "ai_takeoff.scale_sanity"
+    name = "AI Plan-Read Scale Sanity"
+    standard = "ai_takeoff"
+    severity = Severity.ERROR
+    category = RuleCategory.CONSISTENCY
+    description = "A detected scale must imply a plausible real-world page span"
+
+    async def validate(self, context: ValidationContext) -> list[RuleResult]:
+        locale = _get_locale(context)
+        data = context.data if isinstance(context.data, dict) else {}
+        ratio = _to_number(data.get("scale_ratio_px_per_unit"))
+        page_w = _to_number(data.get("page_width_pt")) or 0.0
+        page_h = _to_number(data.get("page_height_pt")) or 0.0
+        # Nothing to check when there is no scale (honest "no evidence").
+        if ratio is None or ratio is _NOT_A_NUMBER or ratio <= 0:
+            return []
+        long_edge = max(float(page_w), float(page_h))  # type: ignore[arg-type]
+        if long_edge <= 0:
+            return []
+        span_m = long_edge / float(ratio)  # type: ignore[arg-type]
+        passed = _AI_TAKEOFF_MIN_PAGE_SPAN_M <= span_m <= _AI_TAKEOFF_MAX_PAGE_SPAN_M
+        message = (
+            _ok(locale) if passed else translate("ai_takeoff.scale_sanity.fail", locale=locale, span=round(span_m, 2))
+        )
+        suggestion = None if passed else translate("ai_takeoff.scale_sanity.suggestion", locale=locale)
+        return [
+            RuleResult(
+                rule_id=self.rule_id,
+                rule_name=self.name,
+                severity=self.severity,
+                category=self.category,
+                passed=passed,
+                message=message,
+                suggestion=suggestion,
+            )
+        ]
+
+
+class TakeoffPolygonSelfIntersectionRule(ValidationRule):
+    rule_id = "ai_takeoff.polygon_self_intersection"
+    name = "AI Plan-Read Polygon Self-Intersection"
+    standard = "ai_takeoff"
+    severity = Severity.ERROR
+    category = RuleCategory.STRUCTURE
+    description = "A proposed room polygon must not self-intersect"
+
+    async def validate(self, context: ValidationContext) -> list[RuleResult]:
+        locale = _get_locale(context)
+        results: list[RuleResult] = []
+        for prop in _get_plan_read_proposals(context):
+            if (prop.get("type") or "").lower() != "area":
+                continue
+            points = _proposal_points(prop)
+            bad = _polygon_self_intersects(points)
+            message = (
+                _ok(locale)
+                if not bad
+                else translate(
+                    "ai_takeoff.polygon_self_intersection.fail",
+                    locale=locale,
+                    name=prop.get("annotation") or prop.get("id", "?"),
+                )
+            )
+            suggestion = (
+                None if not bad else translate("ai_takeoff.polygon_self_intersection.suggestion", locale=locale)
+            )
+            results.append(
+                RuleResult(
+                    rule_id=self.rule_id,
+                    rule_name=self.name,
+                    severity=self.severity,
+                    category=self.category,
+                    passed=not bad,
+                    message=message,
+                    element_ref=prop.get("id"),
+                    suggestion=suggestion,
+                )
+            )
+        return results
+
+
+class TakeoffLowConfidenceReviewRule(ValidationRule):
+    rule_id = "ai_takeoff.low_confidence_review"
+    name = "AI Plan-Read Low Confidence Review"
+    standard = "ai_takeoff"
+    severity = Severity.WARNING
+    category = RuleCategory.QUALITY
+    description = "Low-confidence AI proposals are flagged for human review before accept"
+
+    async def validate(self, context: ValidationContext) -> list[RuleResult]:
+        locale = _get_locale(context)
+        results: list[RuleResult] = []
+        for prop in _get_plan_read_proposals(context):
+            conf = _to_number(prop.get("confidence"))
+            if conf is None or conf is _NOT_A_NUMBER:
+                continue
+            passed = float(conf) > _AI_TAKEOFF_LOW_CONFIDENCE  # type: ignore[arg-type]
+            message = (
+                _ok(locale)
+                if passed
+                else translate(
+                    "ai_takeoff.low_confidence_review.fail",
+                    locale=locale,
+                    name=prop.get("annotation") or prop.get("id", "?"),
+                    confidence=round(float(conf), 2),  # type: ignore[arg-type]
+                )
+            )
+            suggestion = None if passed else translate("ai_takeoff.low_confidence_review.suggestion", locale=locale)
+            results.append(
+                RuleResult(
+                    rule_id=self.rule_id,
+                    rule_name=self.name,
+                    severity=self.severity,
+                    category=self.category,
+                    passed=passed,
+                    message=message,
+                    element_ref=prop.get("id"),
+                    suggestion=suggestion,
+                )
+            )
+        return results
+
+
 # ── Registration ────────────────────────────────────────────────────────────
 
 
@@ -4538,12 +5419,13 @@ def register_builtin_rules() -> None:
         (MeasurementConsistency(), None),
         (BOQUnitSystemConsistencyRule(), None),
         (ClassificationCountryMismatchRule(), None),
+        (RevisionCostImpactReview(), None),
         # DIN 276 (DACH)
         (DIN276CostGroupRequired(), None),
         (DIN276ValidCostGroup(), None),
         (DIN276Hierarchy(), None),
         (DIN276Completeness(), None),
-        # GAEB (DACH) — slice D expansion
+        # GAEB (DACH) - slice D expansion
         (GAEBOrdinalFormat(), None),
         (GAEBLVStructure(), None),
         (GAEBEinheitspreisSanity(), None),
@@ -4560,7 +5442,7 @@ def register_builtin_rules() -> None:
         # SINAPI (Brazil)
         (SINAPICodeRequired(), None),
         (SINAPIValidCode(), None),
-        # NBR 12721 (Brazil — ABNT cost-group hierarchy)
+        # NBR 12721 (Brazil - ABNT cost-group hierarchy)
         (NBR12721ClassificationRequired(), None),
         (NBR12721ValidSection(), None),
         # GESN (Russia/CIS)
@@ -4587,7 +5469,7 @@ def register_builtin_rules() -> None:
         # BC3 / FIEBDC-3 (Spain + LATAM)
         (BC3CodeRequired(), None),
         (BC3ValidCode(), None),
-        # Pipeline Builder — structural graph-validity gate
+        # Pipeline Builder - structural graph-validity gate
         (PipelineSideEffectGated(), None),
         # Property Development (task #139)
         (PropDevEscrowAccountRequired(), None),
@@ -4598,6 +5480,18 @@ def register_builtin_rules() -> None:
         (PropDevReservationExpiryInFuture(), None),
         (PropDevBrokerCommissionRateWithinBounds(), None),
         (PropDevPriceMatrixNoNegativeModifier(), None),
+        # Schedule Quality (C1 - DCMA-14-style health checks)
+        (ScheduleOpenEnds(), None),
+        (ScheduleNegativeLag(), None),
+        (ScheduleExcessiveLag(), None),
+        (ScheduleHardConstraints(), None),
+        (ScheduleNegativeFloat(), None),
+        (ScheduleHighFloat(), None),
+        (ScheduleMissingDuration(), None),
+        # AI Takeoff (vision-LLM plan reading, issue #194)
+        (TakeoffScaleSanityRule(), None),
+        (TakeoffPolygonSelfIntersectionRule(), None),
+        (TakeoffLowConfidenceReviewRule(), None),
     ]
 
     for rule, sets in rules:

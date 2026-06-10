@@ -16,12 +16,14 @@
  */
 
 import { useEffect, useMemo, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import clsx from 'clsx';
 import {
   ArrowRight,
   ArrowRightCircle,
+  BedDouble,
   Boxes,
   Briefcase,
   Calculator,
@@ -636,6 +638,7 @@ export function BlocksTab({
   onJumpToPlots: () => void;
 }) {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const qc = useQueryClient();
   const addToast = useToastStore((s) => s.addToast);
   const [phaseId, setPhaseId] = useState<string>('');
@@ -724,7 +727,7 @@ export function BlocksTab({
           icon={<Layers size={22} />}
           title={t('propdev.no_phases', { defaultValue: 'No phases yet' })}
           description={t('propdev.create_phase_first', {
-            defaultValue: 'Blocks belong to phases — create a phase first.',
+            defaultValue: 'Blocks belong to phases - create a phase first.',
           })}
         />
       </Card>
@@ -843,6 +846,21 @@ export function BlocksTab({
                           })}
                           title={t('propdev.assign_plots', {
                             defaultValue: 'Assign plots',
+                          })}
+                        />
+                        {/* CONN-16 (producer half): jump to the worker
+                            housing units of this block - the consumer on
+                            /accommodation filters by ?block=. */}
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          icon={<BedDouble size={12} />}
+                          onClick={() => navigate(`/accommodation?block=${b.id}`)}
+                          aria-label={t('propdev.worker_housing', {
+                            defaultValue: 'Worker housing',
+                          })}
+                          title={t('propdev.worker_housing', {
+                            defaultValue: 'Worker housing',
                           })}
                         />
                         <Button
@@ -1094,7 +1112,7 @@ function BlockFormModal({
             className={inputCls}
           >
             <option value="">
-              {t('common.none', { defaultValue: '— none —' })}
+              {t('common.none', { defaultValue: '- none -' })}
             </option>
             <option value="N">N</option>
             <option value="NE">NE</option>
@@ -2348,7 +2366,7 @@ function PriceMatrixFormModal({
           {rules.length === 0 && (
             <p className="text-xs text-content-tertiary italic">
               {t('propdev.matrix.no_rules', {
-                defaultValue: 'No rules — every plot prices at the base rate.',
+                defaultValue: 'No rules - every plot prices at the base rate.',
               })}
             </p>
           )}
@@ -2470,7 +2488,7 @@ function PriceMatrixPreviewModal({
             onChange={(e) => setPlotId(e.target.value)}
             className={inputCls}
           >
-            {plots.length === 0 && <option value="">— no plots —</option>}
+            {plots.length === 0 && <option value="">- no plots -</option>}
             {plots.map((p) => (
               <option key={p.id} value={p.id}>
                 {p.plot_number} — {toNumber(p.area_m2)} m²

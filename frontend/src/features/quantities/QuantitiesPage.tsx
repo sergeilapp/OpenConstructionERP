@@ -26,7 +26,8 @@ import {
 } from 'lucide-react';
 import { apiGet, apiPost } from '@/shared/lib/api';
 import { isModuleLoaded } from '@/shared/lib/moduleProbe';
-import { Breadcrumb } from '@/shared/ui';
+import { Breadcrumb, DismissibleInfo, IntroRichText } from '@/shared/ui';
+import { PageHeader } from '@/shared/ui/PageHeader';
 import { useToastStore } from '@/stores/useToastStore';
 import {
   fetchConverterVersionCheck,
@@ -552,7 +553,11 @@ function InstallProgressPanel({
         <div className="mb-3">
           <div className="flex items-center justify-between mb-1.5">
             <span className="text-xs font-medium text-content-secondary">
-              {error ? 'Failed' : result ? 'Complete' : phaseLabels[phase]}
+              {error
+                ? t('quantities.status_failed', { defaultValue: 'Failed' })
+                : result
+                  ? t('quantities.status_complete', { defaultValue: 'Complete' })
+                  : phaseLabels[phase]}
             </span>
             <span
               className={clsx(
@@ -581,7 +586,12 @@ function InstallProgressPanel({
         {/* Phase steps */}
         {installing && (
           <div className="flex items-center gap-1 text-2xs">
-            {['Download', 'Extract', 'Verify', 'Done'].map((label, i) => (
+            {[
+              t('quantities.step_download', { defaultValue: 'Download' }),
+              t('quantities.step_extract', { defaultValue: 'Extract' }),
+              t('quantities.step_verify', { defaultValue: 'Verify' }),
+              t('quantities.step_done', { defaultValue: 'Done' }),
+            ].map((label, i) => (
               <div key={label} className="flex items-center gap-1">
                 <div
                   className={clsx(
@@ -939,20 +949,37 @@ export function QuantitiesPage() {
     converters.find((c) => c.id === installing)?.name ?? installing ?? '';
 
   return (
-    <div className="w-full space-y-8 animate-fade-in">
-      <Breadcrumb items={[{ label: t('nav.dashboard', 'Dashboard'), to: '/' }, { label: t('nav.quantities', 'Quantity Takeoff') }]} className="mb-4" />
-      {/* Header */}
-      <div>
-        <h1 className="text-2xl font-bold text-content-primary">
-          {t('quantities.title', { defaultValue: 'Quantity Takeoff' })}
-        </h1>
-        <p className="mt-1 text-sm text-content-tertiary">
-          {t('quantities.subtitle', {
-            defaultValue:
-              'Collect project quantities — from AI text input, PDF drawings, or CAD/BIM models',
-          })}
-        </p>
-      </div>
+    <div className="space-y-5 animate-fade-in">
+      <Breadcrumb items={[{ label: t('nav.quantities', 'Quantity Takeoff') }]} />
+      {/* Canonical top block — module name + icon come from the global top
+          bar; the page renders only its subtitle. */}
+      <PageHeader
+        srTitle={t('quantities.title', { defaultValue: 'Quantity Takeoff' })}
+        subtitle={t('quantities.subtitle', {
+          defaultValue:
+            'Collect project quantities, from AI text input, PDF drawings, or CAD/BIM models',
+        })}
+      />
+
+      <DismissibleInfo
+        storageKey="quantities"
+        title={t('quantities.intro_title', { defaultValue: 'Pick the right way to measure' })}
+        more={
+          t('quantities.intro_more', { defaultValue: '' })
+            ? <IntroRichText text={t('quantities.intro_more')} />
+            : undefined
+        }
+        links={[
+          { label: t('nav.ai_estimate', { defaultValue: 'Quick Estimate (AI)' }), onClick: () => navigate('/ai-estimate') },
+          { label: t('nav.takeoff', { defaultValue: 'PDF Takeoff' }), onClick: () => navigate('/takeoff') },
+          { label: t('nav.data_explorer', { defaultValue: 'Data Explorer' }), onClick: () => navigate('/data-explorer') },
+        ]}
+      >
+        {t('quantities.intro_body', {
+          defaultValue:
+            'Choose how to collect quantities, from a written description via AI, from PDF drawings, or from CAD and BIM models, and install the converter modules the file formats need. Each route turns drawings or models into measured quantities that flow into your BOQ.',
+        })}
+      </DismissibleInfo>
 
       {/* Method cards */}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">

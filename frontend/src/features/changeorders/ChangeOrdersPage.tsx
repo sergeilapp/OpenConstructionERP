@@ -4,19 +4,29 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { normalizeListResponse } from '@/shared/lib/apiHelpers';
 import {
   FileEdit,
+  FileText,
   Plus,
   Send,
   CheckCircle2,
+  CheckCheck,
   XCircle,
   ChevronRight,
   ArrowLeft,
+  ArrowUp,
+  ArrowDown,
   DollarSign,
   Clock,
   AlertTriangle,
   Trash2,
   Download,
+  Sparkles,
+  ShoppingCart,
+  HelpCircle,
+  GitBranch,
 } from 'lucide-react';
-import { Button, Card, Badge, EmptyState, Breadcrumb, InfoHint, ConfirmDialog, RecoveryCard, SkeletonTable, SkeletonCard } from '@/shared/ui';
+import { Button, Card, Badge, EmptyState, Breadcrumb, InfoHint, DismissibleInfo, IntroRichText, ConfirmDialog, RecoveryCard, SkeletonTable, SkeletonCard } from '@/shared/ui';
+import { useNavigate } from 'react-router-dom';
+import { PageHeader } from '@/shared/ui/PageHeader';
 import { RequiresProject } from '@/shared/auth/RequiresProject';
 import {
   WideModal,
@@ -30,6 +40,8 @@ import { useToastStore } from '@/stores/useToastStore';
 import { useProjectContextStore } from '@/stores/useProjectContextStore';
 import { useAuthStore } from '@/stores/useAuthStore';
 import { ApprovalTimeline } from './ApprovalTimeline';
+import { ImpactSimulator, type SavedScenario } from './ImpactSimulator';
+import { AIDraftModal } from './AIDraftModal';
 import {
   advanceApproval,
   getApprovals,
@@ -77,8 +89,13 @@ interface ChangeOrder {
   status: string;
   submitted_by: string | null;
   approved_by: string | null;
+  // BUG-351: rejection now has its own audit columns on the backend. A CO
+  // rejected straight from 'submitted' populates only these — gating the
+  // audit card on approved_at hid the rejection entirely.
+  rejected_by: string | null;
   submitted_at: string | null;
   approved_at: string | null;
+  rejected_at: string | null;
   // Backend emits cost_impact as a canonical decimal string (see schemas.py
   // ChangeOrderResponse.cost_impact:str). Coerce with Number(...) at use.
   cost_impact: string;
@@ -88,7 +105,7 @@ interface ChangeOrder {
   item_count: number;
   created_at: string;
   updated_at: string;
-  // T3: Procore-style approval chain + commitment / RFI links.
+  // T3: construction-management-platform-style approval chain + commitment / RFI links.
   linked_po_ids?: string[];
   linked_rfi_ids?: string[];
   current_approval_step?: number | null;
@@ -138,11 +155,15 @@ interface Summary {
 
 /* ── Helpers ───────────────────────────────────────────────────────────── */
 
+// Status vocabulary mirrors the backend FSM exactly
+// (service.VALID_TRANSITIONS: draft -> submitted -> approved -> executed,
+// with rejected as a terminal branch). There is no 'under_review' state on
+// the backend, so it is intentionally absent here.
 const STATUS_COLORS: Record<string, 'neutral' | 'blue' | 'success' | 'warning' | 'error'> = {
   draft: 'neutral',
   submitted: 'blue',
-  under_review: 'warning',
   approved: 'success',
+  executed: 'success',
   rejected: 'error',
 };
 
@@ -160,8 +181,8 @@ function translateStatus(status: string, t: (key: string, opts?: Record<string, 
   const map: Record<string, string> = {
     draft: t('changeorders.status_draft', { defaultValue: 'Draft' }),
     submitted: t('changeorders.status_submitted', { defaultValue: 'Submitted' }),
-    under_review: t('changeorders.status_under_review', { defaultValue: 'Under Review' }),
     approved: t('changeorders.status_approved', { defaultValue: 'Approved' }),
+    executed: t('changeorders.status_executed', { defaultValue: 'Executed' }),
     rejected: t('changeorders.status_rejected', { defaultValue: 'Rejected' }),
   };
   return map[status] || status;
@@ -359,11 +380,14 @@ function CreateDialog({
 
 function AddItemDialog({
   orderId,
+  projectId,
   currency,
   onClose,
   onCreated,
 }: {
   orderId: string;
+  // CONN-45: needed to list the project's BOQs in the "Pick from BOQ" flow.
+  projectId: string;
   currency: string;
   onClose: () => void;
   onCreated: () => void;
@@ -376,7 +400,27 @@ function AddItemDialog({
   const [origRate, setOrigRate] = useState(0);
   const [newRate, setNewRate] = useState(0);
   const [unit, setUnit] = useState('');
+  // CONN-45: provenance of a picked BOQ position, stamped onto item metadata
+  // so the change order line stays traceable back to the estimate it amends.
+  const [boqSource, setBoqSource] = useState<BoqPositionPick | null>(null);
+  const [showBoqPicker, setShowBoqPicker] = useState(false);
   const addToast = useToastStore((s) => s.addToast);
+
+  // Pre-fill the form from a chosen BOQ position. The position's quantity/rate
+  // become the ORIGINAL (pre-change) values; the New Qty defaults to the same
+  // so a pure rate change or quantity change is one edit away.
+  const applyBoqPick = (pick: BoqPositionPick) => {
+    setBoqSource(pick);
+    setDesc(pick.description);
+    setUnit(pick.unit);
+    setOrigQty(pick.quantity);
+    setNewQty(pick.quantity);
+    setOrigRate(pick.unit_rate);
+    setNewRate(pick.unit_rate);
+    setShowBoqPicker(false);
+  };
+
+  const clearBoqSource = () => setBoqSource(null);
 
   const mutation = useMutation({
     mutationFn: () =>
@@ -388,6 +432,18 @@ function AddItemDialog({
         original_rate: origRate,
         new_rate: newRate,
         unit,
+        // Stamp BOQ provenance when the line was seeded from an estimate
+        // position. The backend item schema already accepts a free-form
+        // metadata dict, so no model/schema change is needed.
+        ...(boqSource
+          ? {
+              metadata: {
+                boq_id: boqSource.boqId,
+                boq_position_id: boqSource.id,
+                boq_position_ordinal: boqSource.ordinal,
+              },
+            }
+          : {}),
       }),
     onSuccess: () => {
       onCreated();
@@ -408,6 +464,7 @@ function AddItemDialog({
     'h-10 w-full rounded-lg border border-border bg-surface-primary px-3 text-sm focus:outline-none focus:ring-2 focus:ring-oe-blue/30 focus:border-oe-blue';
 
   return (
+    <>
     <WideModal
       open
       onClose={onClose}
@@ -435,6 +492,41 @@ function AddItemDialog({
         title={t('changeorders.section_basic', { defaultValue: 'Item details' })}
         columns={2}
       >
+        {/* CONN-45: seed this line from a BOQ position so the original
+            quantity and rate come straight from the estimate being amended,
+            instead of being re-keyed by hand. */}
+        <div className="sm:col-span-2">
+          {boqSource ? (
+            <div className="flex items-center justify-between gap-2 rounded-lg border border-blue-200 bg-blue-50 dark:bg-blue-950/20 dark:border-blue-800 px-3 py-2 text-xs">
+              <span className="flex min-w-0 items-center gap-2 text-blue-700 dark:text-blue-300">
+                <FileText size={14} className="shrink-0" />
+                <span className="truncate">
+                  {t('changeorders.boq_source_label', {
+                    position: boqSource.ordinal || boqSource.id.slice(0, 8),
+                  })}
+                </span>
+              </span>
+              <button
+                type="button"
+                onClick={clearBoqSource}
+                className="shrink-0 text-content-tertiary hover:text-semantic-error"
+                aria-label={t('changeorders.boq_source_clear', { defaultValue: 'Clear BOQ link' })}
+              >
+                <XCircle size={14} />
+              </button>
+            </div>
+          ) : (
+            <Button
+              type="button"
+              variant="secondary"
+              size="sm"
+              onClick={() => setShowBoqPicker(true)}
+            >
+              <FileText size={14} className="mr-1.5" />
+              {t('changeorders.pick_from_boq', { defaultValue: 'Pick from BOQ' })}
+            </Button>
+          )}
+        </div>
         <WideModalField
           label={t('common.description', { defaultValue: 'Description' })}
           required
@@ -545,16 +637,252 @@ function AddItemDialog({
         </div>
       </WideModalSection>
     </WideModal>
+    {showBoqPicker && (
+      <BoqPositionPickerDialog
+        projectId={projectId}
+        currency={currency}
+        onClose={() => setShowBoqPicker(false)}
+        onPick={applyBoqPick}
+      />
+    )}
+    </>
+  );
+}
+
+/* ── BOQ position picker (CONN-45) ─────────────────────────────────────── */
+
+/** A BOQ position chosen in the picker, flattened to just the fields a
+ *  change-order line seeds from plus enough provenance to deep-link back. */
+interface BoqPositionPick {
+  id: string;
+  boqId: string;
+  ordinal: string;
+  description: string;
+  unit: string;
+  quantity: number;
+  unit_rate: number;
+}
+
+interface BoqListItem {
+  id: string;
+  name: string;
+}
+
+interface BoqPositionRow {
+  id: string;
+  boq_id: string;
+  parent_id: string | null;
+  ordinal: string;
+  description: string;
+  unit: string;
+  quantity: number;
+  unit_rate: number;
+}
+
+interface BoqWithPositions {
+  positions: BoqPositionRow[];
+}
+
+/**
+ * Two-step picker: choose one of the project's BOQs, then a leaf position
+ * within it. Picking a position pre-fills the change-order line's
+ * description, unit and original quantity/rate. Sections (rows with a 0 rate
+ * and 0 quantity that carry children) are still selectable but the buyer
+ * normally picks a priced leaf.
+ */
+function BoqPositionPickerDialog({
+  projectId,
+  currency,
+  onClose,
+  onPick,
+}: {
+  projectId: string;
+  currency: string;
+  onClose: () => void;
+  onPick: (pick: BoqPositionPick) => void;
+}) {
+  const { t } = useTranslation();
+  const [boqId, setBoqId] = useState('');
+  const [search, setSearch] = useState('');
+
+  const { data: boqs = [], isLoading: boqsLoading } = useQuery({
+    queryKey: ['changeorders', 'boqs', projectId],
+    queryFn: () => apiGet<BoqListItem[]>(`/v1/boq/boqs/?project_id=${projectId}`),
+    select: (d): BoqListItem[] => normalizeListResponse(d),
+    enabled: !!projectId,
+  });
+
+  const { data: boqDetail, isLoading: posLoading } = useQuery({
+    queryKey: ['changeorders', 'boq-positions', boqId],
+    queryFn: () => apiGet<BoqWithPositions>(`/v1/boq/boqs/${boqId}`),
+    enabled: !!boqId,
+  });
+
+  const positions = useMemo(() => {
+    const rows = boqDetail?.positions ?? [];
+    const q = search.trim().toLowerCase();
+    const filtered = q
+      ? rows.filter(
+          (p) =>
+            (p.description || '').toLowerCase().includes(q) ||
+            (p.ordinal || '').toLowerCase().includes(q),
+        )
+      : rows;
+    return filtered.slice(0, 300);
+  }, [boqDetail, search]);
+
+  const fieldCls =
+    'h-10 w-full rounded-lg border border-border bg-surface-primary px-3 text-sm focus:outline-none focus:ring-2 focus:ring-oe-blue/30 focus:border-oe-blue';
+
+  return (
+    <WideModal
+      open
+      onClose={onClose}
+      title={t('changeorders.boq_picker_title', { defaultValue: 'Pick from BOQ' })}
+      size="lg"
+      footer={
+        <Button variant="ghost" onClick={onClose}>
+          {t('common.cancel', { defaultValue: 'Cancel' })}
+        </Button>
+      }
+    >
+      <WideModalSection columns={1}>
+        <WideModalField
+          label={t('changeorders.boq_picker_boq', { defaultValue: 'BOQ' })}
+          htmlFor="boq-picker-boq"
+          span={1}
+        >
+          <select
+            id="boq-picker-boq"
+            value={boqId}
+            onChange={(e) => setBoqId(e.target.value)}
+            disabled={boqsLoading}
+            className={fieldCls}
+          >
+            <option value="">
+              {boqsLoading
+                ? t('common.loading', { defaultValue: 'Loading...' })
+                : boqs.length > 0
+                  ? t('common.select_boq', { defaultValue: 'Select BOQ...' })
+                  : t('boq.no_boqs', { defaultValue: 'No BOQs found' })}
+            </option>
+            {boqs.map((b) => (
+              <option key={b.id} value={b.id}>
+                {b.name}
+              </option>
+            ))}
+          </select>
+        </WideModalField>
+
+        {boqId && (
+          <WideModalField
+            label={t('common.search', { defaultValue: 'Search' })}
+            htmlFor="boq-picker-search"
+            span={1}
+          >
+            <input
+              id="boq-picker-search"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder={t('changeorders.boq_picker_search_placeholder', {
+                defaultValue: 'Filter by description or ordinal…',
+              })}
+              className={fieldCls}
+              autoComplete="off"
+            />
+          </WideModalField>
+        )}
+
+        {boqId && (
+          posLoading ? (
+            <SkeletonTable rows={6} columns={3} />
+          ) : positions.length === 0 ? (
+            <p className="rounded-lg border border-dashed border-border px-3 py-6 text-center text-xs text-content-tertiary">
+              {t('changeorders.boq_picker_empty', {
+                defaultValue: 'No positions match. Pick another BOQ or clear the filter.',
+              })}
+            </p>
+          ) : (
+            <div className="max-h-80 overflow-y-auto rounded-lg border border-border">
+              <table className="w-full text-sm">
+                <thead className="sticky top-0 bg-surface-secondary text-content-tertiary text-xs uppercase tracking-wide">
+                  <tr>
+                    <th className="px-3 py-2 text-left">
+                      {t('changeorders.boq_picker_ordinal', { defaultValue: 'Ord.' })}
+                    </th>
+                    <th className="px-3 py-2 text-left">
+                      {t('common.description', { defaultValue: 'Description' })}
+                    </th>
+                    <th className="px-3 py-2 text-right">
+                      {t('changeorders.boq_picker_qty', { defaultValue: 'Qty' })}
+                    </th>
+                    <th className="px-3 py-2 text-right">
+                      {t('changeorders.boq_picker_rate', { defaultValue: 'Rate' })}
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {positions.map((p) => (
+                    <tr
+                      key={p.id}
+                      onClick={() =>
+                        onPick({
+                          id: p.id,
+                          boqId: p.boq_id || boqId,
+                          ordinal: p.ordinal,
+                          description: p.description,
+                          unit: p.unit,
+                          quantity: Number(p.quantity) || 0,
+                          unit_rate: Number(p.unit_rate) || 0,
+                        })
+                      }
+                      className="cursor-pointer border-t border-border-light hover:bg-surface-secondary"
+                    >
+                      <td className="px-3 py-2 font-mono text-xs text-content-secondary whitespace-nowrap">
+                        {p.ordinal}
+                      </td>
+                      <td className="px-3 py-2 text-content-primary">{p.description}</td>
+                      <td className="px-3 py-2 text-right tabular-nums text-content-secondary">
+                        {formatQuantity(p.quantity)} {p.unit}
+                      </td>
+                      <td className="px-3 py-2 text-right tabular-nums text-content-secondary">
+                        {formatCurrency(Number(p.unit_rate) || 0, currency)}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )
+        )}
+      </WideModalSection>
+    </WideModal>
   );
 }
 
 /* ── Approval Chain Builder ────────────────────────────────────────────── */
 
+interface DirectoryUser {
+  id: string;
+  email: string;
+  full_name: string;
+  role: string;
+  is_active: boolean;
+}
+
+/** Friendly display name for a directory user. */
+function userLabel(u: DirectoryUser): string {
+  return (u.full_name || '').trim() || u.email || u.id;
+}
+
 /**
- * Minimal approver-id picker — accepts one UUID per line so an admin can
- * paste a list of user ids without needing the full users-directory
- * search-and-select widget. The full picker can replace this textarea
- * later without changing the API surface.
+ * Approver picker — searches the user directory by name/email and lets the
+ * admin add approvers in step order (reorder + remove). This replaces the
+ * old raw-UUID textarea so a real PM can build the chain by name.
+ *
+ * If the directory cannot be loaded (e.g. the caller lacks the users.list
+ * permission), it degrades to a paste-UUID textarea so the feature still
+ * works rather than dead-ending.
  */
 function ApprovalChainBuilderDialog({
   onClose,
@@ -566,8 +894,58 @@ function ApprovalChainBuilderDialog({
   busy: boolean;
 }) {
   const { t } = useTranslation();
+  const [search, setSearch] = useState('');
+  // Ordered approver list (step 1 first). Holds the full user object so the
+  // chip can show a name without a second lookup.
+  const [chosen, setChosen] = useState<DirectoryUser[]>([]);
+  // Fallback textarea state (only used when the directory query failed).
   const [raw, setRaw] = useState('');
-  const ids = useMemo(
+
+  const { data: users = [], isError: dirError } = useQuery({
+    queryKey: ['users-directory'],
+    queryFn: () => apiGet<DirectoryUser[]>('/v1/users/?limit=200&is_active=true'),
+    staleTime: 60_000,
+  });
+
+  const chosenIds = useMemo(() => new Set(chosen.map((u) => u.id)), [chosen]);
+  const matches = useMemo(() => {
+    const q = search.trim().toLowerCase();
+    const pool = users.filter((u) => !chosenIds.has(u.id));
+    if (!q) return pool.slice(0, 8);
+    return pool
+      .filter(
+        (u) =>
+          userLabel(u).toLowerCase().includes(q) ||
+          (u.email || '').toLowerCase().includes(q) ||
+          (u.role || '').toLowerCase().includes(q),
+      )
+      .slice(0, 8);
+  }, [users, chosenIds, search]);
+
+  const addUser = (u: DirectoryUser) => {
+    if (chosen.length >= 20 || chosenIds.has(u.id)) return;
+    setChosen((prev) => [...prev, u]);
+    setSearch('');
+  };
+  const removeAt = (idx: number) =>
+    setChosen((prev) => prev.filter((_, i) => i !== idx));
+  const moveUp = (idx: number) =>
+    setChosen((prev) => {
+      if (idx <= 0) return prev;
+      const next = [...prev];
+      [next[idx - 1], next[idx]] = [next[idx]!, next[idx - 1]!];
+      return next;
+    });
+  const moveDown = (idx: number) =>
+    setChosen((prev) => {
+      if (idx >= prev.length - 1) return prev;
+      const next = [...prev];
+      [next[idx + 1], next[idx]] = [next[idx]!, next[idx + 1]!];
+      return next;
+    });
+
+  // Fallback parsing (raw textarea).
+  const rawIds = useMemo(
     () =>
       raw
         .split(/[\s,;]+/)
@@ -575,12 +953,18 @@ function ApprovalChainBuilderDialog({
         .filter((x) => x.length > 0),
     [raw],
   );
-  // Permissive UUID check — back-end Pydantic will reject malformed
-  // ones anyway; we just want to catch typos early.
-  const looksValid =
-    ids.length > 0 &&
-    ids.length <= 20 &&
-    ids.every((id) => /^[0-9a-f-]{32,36}$/i.test(id));
+  const rawLooksValid =
+    rawIds.length > 0 &&
+    rawIds.length <= 20 &&
+    rawIds.every((id) => /^[0-9a-f-]{32,36}$/i.test(id));
+
+  const usePicker = !dirError;
+  const canSubmit = usePicker ? chosen.length > 0 : rawLooksValid;
+  const handleConfirm = () =>
+    onConfirm(usePicker ? chosen.map((u) => u.id) : rawIds);
+
+  const fieldCls =
+    'h-10 w-full rounded-lg border border-border bg-surface-primary px-3 text-sm focus:outline-none focus:ring-2 focus:ring-oe-blue/30 focus:border-oe-blue';
 
   return (
     <WideModal
@@ -598,8 +982,8 @@ function ApprovalChainBuilderDialog({
           </Button>
           <Button
             variant="primary"
-            disabled={!looksValid || busy}
-            onClick={() => onConfirm(ids)}
+            disabled={!canSubmit || busy}
+            onClick={handleConfirm}
           >
             {busy
               ? t('common.saving', { defaultValue: 'Saving…' })
@@ -611,29 +995,141 @@ function ApprovalChainBuilderDialog({
       }
     >
       <WideModalSection columns={1}>
-        <WideModalField
-          label={t('changeorders.approver_user_ids_label', {
-            defaultValue: 'Approver user ids (one per line, in step order)',
-          })}
-          htmlFor="approver-user-ids"
-          span={1}
-        >
-          <textarea
-            id="approver-user-ids"
-            value={raw}
-            onChange={(e) => setRaw(e.target.value)}
-            rows={5}
-            disabled={busy}
-            placeholder={'b1f7e8e2-…\n5c0a9d1f-…\n8e4f1a32-…'}
-            className="w-full rounded-lg border border-border bg-surface-primary p-2 font-mono text-xs focus:border-oe-blue focus:outline-none focus:ring-2 focus:ring-oe-blue/30"
-          />
-        </WideModalField>
         <p className="text-xs text-content-tertiary">
           {t('changeorders.approver_user_ids_hint', {
             defaultValue:
               'Steps run sequentially: step 1 acts first, then step 2, etc. Each approver only sees the change order when their step becomes active.',
           })}
         </p>
+
+        {usePicker ? (
+          <>
+            <WideModalField
+              label={t('changeorders.approver_search_label', {
+                defaultValue: 'Add approver (search by name or email)',
+              })}
+              htmlFor="approver-search"
+              span={1}
+            >
+              <input
+                id="approver-search"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                disabled={busy}
+                placeholder={t('changeorders.approver_search_placeholder', {
+                  defaultValue: 'Start typing a name…',
+                })}
+                className={fieldCls}
+                autoComplete="off"
+              />
+            </WideModalField>
+
+            {/* Suggestion list */}
+            {matches.length > 0 && (
+              <ul className="max-h-44 overflow-y-auto rounded-lg border border-border divide-y divide-border-light">
+                {matches.map((u) => (
+                  <li key={u.id}>
+                    <button
+                      type="button"
+                      onClick={() => addUser(u)}
+                      disabled={busy || chosen.length >= 20}
+                      className="flex w-full items-center justify-between gap-2 px-3 py-2 text-left text-sm hover:bg-surface-secondary disabled:opacity-50"
+                    >
+                      <span className="min-w-0">
+                        <span className="block truncate font-medium text-content-primary">{userLabel(u)}</span>
+                        <span className="block truncate text-xs text-content-tertiary">{u.email} · {u.role}</span>
+                      </span>
+                      <Plus size={14} className="shrink-0 text-content-tertiary" />
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            )}
+            {search.trim() && matches.length === 0 && (
+              <p className="text-xs text-content-tertiary">
+                {t('changeorders.approver_no_match', { defaultValue: 'No matching active users.' })}
+              </p>
+            )}
+
+            {/* Chosen approvers, in step order */}
+            {chosen.length === 0 ? (
+              <p className="rounded-lg border border-dashed border-border px-3 py-4 text-center text-xs text-content-tertiary">
+                {t('changeorders.approver_chain_empty', {
+                  defaultValue: 'No approvers added yet. Search above and add them in the order they should sign off.',
+                })}
+              </p>
+            ) : (
+              <ol className="space-y-2">
+                {chosen.map((u, idx) => (
+                  <li
+                    key={u.id}
+                    className="flex items-center gap-2 rounded-lg border border-border bg-surface-secondary/40 px-3 py-2"
+                  >
+                    <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-oe-blue-subtle text-2xs font-bold text-oe-blue-text">
+                      {idx + 1}
+                    </span>
+                    <span className="min-w-0 flex-1">
+                      <span className="block truncate text-sm font-medium text-content-primary">{userLabel(u)}</span>
+                      <span className="block truncate text-xs text-content-tertiary">{u.email}</span>
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => moveUp(idx)}
+                      disabled={busy || idx === 0}
+                      aria-label={t('changeorders.approver_move_up', { defaultValue: 'Move up' })}
+                      className="text-content-tertiary hover:text-content-primary disabled:opacity-30"
+                    >
+                      <ArrowUp size={14} />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => moveDown(idx)}
+                      disabled={busy || idx === chosen.length - 1}
+                      aria-label={t('changeorders.approver_move_down', { defaultValue: 'Move down' })}
+                      className="text-content-tertiary hover:text-content-primary disabled:opacity-30"
+                    >
+                      <ArrowDown size={14} />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => removeAt(idx)}
+                      disabled={busy}
+                      aria-label={t('changeorders.approver_remove', { defaultValue: 'Remove approver' })}
+                      className="text-content-tertiary hover:text-semantic-error"
+                    >
+                      <Trash2 size={14} />
+                    </button>
+                  </li>
+                ))}
+              </ol>
+            )}
+          </>
+        ) : (
+          // Directory unavailable (no users.list permission) — fall back to
+          // pasting UUIDs so the feature is never a dead end.
+          <WideModalField
+            label={t('changeorders.approver_user_ids_label', {
+              defaultValue: 'Approver user ids (one per line, in step order)',
+            })}
+            htmlFor="approver-user-ids"
+            span={1}
+          >
+            <textarea
+              id="approver-user-ids"
+              value={raw}
+              onChange={(e) => setRaw(e.target.value)}
+              rows={5}
+              disabled={busy}
+              placeholder={'b1f7e8e2-…\n5c0a9d1f-…\n8e4f1a32-…'}
+              className="w-full rounded-lg border border-border bg-surface-primary p-2 font-mono text-xs focus:border-oe-blue focus:outline-none focus:ring-2 focus:ring-oe-blue/30"
+            />
+            <p className="mt-1 text-xs text-content-tertiary">
+              {t('changeorders.approver_directory_unavailable', {
+                defaultValue: 'The user directory is unavailable, so paste approver ids one per line in step order.',
+              })}
+            </p>
+          </WideModalField>
+        )}
       </WideModalSection>
     </WideModal>
   );
@@ -646,10 +1142,12 @@ function WorkflowStepper({ status, t }: { status: string; t: (key: string, opts?
     { key: 'draft', label: t('changeorders.status_draft', { defaultValue: 'Draft' }) },
     { key: 'submitted', label: t('changeorders.status_submitted', { defaultValue: 'Submitted' }) },
     { key: 'approved', label: t('changeorders.status_approved', { defaultValue: 'Approved' }) },
+    { key: 'executed', label: t('changeorders.status_executed', { defaultValue: 'Executed' }) },
   ];
 
-  // Map status to step index
-  const statusIndex: Record<string, number> = { draft: 0, submitted: 1, under_review: 1, approved: 2, rejected: 2 };
+  // Map status to step index — mirrors the backend FSM. A rejected CO sits on
+  // the step it was rejected from (submitted) so the cross renders in place.
+  const statusIndex: Record<string, number> = { draft: 0, submitted: 1, approved: 2, executed: 3, rejected: 1 };
   const currentIdx = statusIndex[status] ?? 0;
   const isRejected = status === 'rejected';
 
@@ -659,7 +1157,9 @@ function WorkflowStepper({ status, t }: { status: string; t: (key: string, opts?
         const isActive = i === currentIdx;
         const isCompleted = i < currentIdx;
         const isLast = i === steps.length - 1;
-        const showRejected = isLast && isRejected;
+        // A rejected CO marks the step it stalled on (currentIdx) with a cross
+        // rather than the final step, so the workflow reads truthfully.
+        const showRejected = isRejected && i === currentIdx;
 
         return (
           <div key={step.key} className="flex items-center" role="listitem">
@@ -703,6 +1203,7 @@ function DetailView({
   onBack: () => void;
 }) {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const queryClient = useQueryClient();
   const addToast = useToastStore((s) => s.addToast);
   const userRole = useAuthStore((s) => s.userRole);
@@ -715,6 +1216,9 @@ function DetailView({
   // permission `changeorders.approve` enforces this server-side; we hide
   // the buttons in the UI to give a better experience than 403 errors.
   const canApprove = userRole === 'admin' || userRole === 'manager';
+  // Marking a CO executed is an editor-level operation (changeorders.update),
+  // so it is available to editors too, not just approvers.
+  const canExecute = userRole === 'admin' || userRole === 'manager' || userRole === 'editor';
   const currentUserId = useMemo(
     () => decodeUserIdFromToken(accessToken),
     [accessToken],
@@ -755,6 +1259,20 @@ function DetailView({
     onError: (err: Error) => addToast({ type: 'error', title: t('common.error', { defaultValue: 'Error' }), message: err.message }),
   });
 
+  // Terminal FSM step approved -> executed: the work has actually been carried
+  // out on site. Needs changeorders.update (editor level) on the backend; the
+  // button is shown to admins/managers/editors so a controller can close it out.
+  const executeMut = useMutation({
+    mutationFn: () => apiPost<ChangeOrder>(`/v1/changeorders/${orderId}/execute/`),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['changeorder', orderId] });
+      queryClient.invalidateQueries({ queryKey: ['changeorders'] });
+      queryClient.invalidateQueries({ queryKey: ['changeorders-summary'] });
+      addToast({ type: 'success', title: t('changeorders.executed', { defaultValue: 'Change order marked as executed' }) });
+    },
+    onError: (err: Error) => addToast({ type: 'error', title: t('common.error', { defaultValue: 'Error' }), message: err.message }),
+  });
+
   const deleteItemMut = useMutation({
     mutationFn: (itemId: string) => apiDelete(`/v1/changeorders/${orderId}/items/${itemId}`),
     onSuccess: () => {
@@ -765,13 +1283,28 @@ function DetailView({
     onError: (err: Error) => addToast({ type: 'error', title: t('common.error', { defaultValue: 'Error' }), message: err.message }),
   });
 
-  // ── T3: Procore-style approval chain ───────────────────────────────────
+  // ── T3: construction-management-platform-style approval chain ──────────
   // Fetched alongside the order detail so the timeline is always in sync
   // with the cursor. Cheap query — typically 1-5 rows.
   const { data: approvals = [] } = useQuery<ApprovalRow[]>({
     queryKey: ['changeorder-approvals', orderId],
     queryFn: () => getApprovals(orderId),
   });
+
+  // Resolve approver UUIDs to display names for the timeline. Best-effort:
+  // if the directory is unavailable (no users.list permission) the timeline
+  // falls back to the id snippet on its own.
+  const { data: directory = [] } = useQuery<DirectoryUser[]>({
+    queryKey: ['users-directory'],
+    queryFn: () => apiGet<DirectoryUser[]>('/v1/users/?limit=200&is_active=true'),
+    staleTime: 60_000,
+    enabled: approvals.length > 0,
+  });
+  const approverNames = useMemo(() => {
+    const map: Record<string, string> = {};
+    for (const u of directory) map[u.id] = userLabel(u);
+    return map;
+  }, [directory]);
 
   const startChainMut = useMutation({
     mutationFn: (approverUserIds: string[]) =>
@@ -954,6 +1487,22 @@ function DetailView({
                 </div>
               )
             )}
+            {/* Terminal step: an approved CO whose work has been done on site.
+                Moves it approved -> executed so dashboards can tell committed
+                from realised scope. */}
+            {order.status === 'approved' && canExecute && (
+              <Button variant="secondary" size="sm" onClick={async () => {
+                const ok = await confirm({
+                  title: t('changeorders.execute_confirm_title', { defaultValue: 'Mark as executed?' }),
+                  message: t('changeorders.execute_confirm', { defaultValue: 'Mark this change order as executed? This records that the scope change has been carried out on site. It cannot be undone.' }),
+                  variant: 'warning',
+                });
+                if (ok) executeMut.mutate();
+              }} disabled={executeMut.isPending}>
+                <CheckCheck size={14} className="mr-1.5" />
+                {t('changeorders.mark_executed', { defaultValue: 'Mark as executed' })}
+              </Button>
+            )}
           </div>
         </div>
       </div>
@@ -1008,8 +1557,29 @@ function DetailView({
         </Card>
       </div>
 
-      {/* Audit trail */}
-      {(order.submitted_at || order.approved_at) && (
+      {/* What-If impact simulator (TOP-30 #11). Hidden once a CO is rejected:
+          there is nothing left to forecast. Publishing a scenario is allowed
+          while the CO can still change (draft / submitted); the backend also
+          enforces the changeorders.update permission. */}
+      {order.status !== 'rejected' && (
+        <ImpactSimulator
+          orderId={orderId}
+          defaultCost={order.cost_impact}
+          defaultDays={order.schedule_impact_days}
+          canPublish={order.status === 'draft' || order.status === 'submitted'}
+          savedScenarios={
+            Array.isArray((order.metadata as { simulations?: unknown[] })?.simulations)
+              ? ((order.metadata as { simulations: SavedScenario[] }).simulations)
+              : []
+          }
+        />
+      )}
+
+      {/* Audit trail. Each milestone has its own dedicated card keyed on its
+          own timestamp column — a CO rejected straight from 'submitted' has
+          only rejected_at, so reusing approved_at (BUG-351) used to hide the
+          rejection entirely. */}
+      {(order.submitted_at || order.approved_at || order.rejected_at) && (
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
           {order.submitted_at && (
             <Card className="p-4">
@@ -1025,9 +1595,7 @@ function DetailView({
           {order.approved_at && (
             <Card className="p-4">
               <p className="text-xs text-content-tertiary uppercase tracking-wide">
-                {order.status === 'rejected'
-                  ? t('changeorders.rejected_at', { defaultValue: 'Rejected' })
-                  : t('changeorders.approved_at', { defaultValue: 'Approved' })}
+                {t('changeorders.approved_at', { defaultValue: 'Approved' })}
               </p>
               <p className="mt-1 text-sm font-medium text-content-primary">{formatDate(order.approved_at)}</p>
               {order.approved_by && (
@@ -1035,10 +1603,95 @@ function DetailView({
               )}
             </Card>
           )}
+          {order.rejected_at && (
+            <Card className="p-4">
+              <p className="text-xs text-semantic-error uppercase tracking-wide">
+                {t('changeorders.rejected_at', { defaultValue: 'Rejected' })}
+              </p>
+              <p className="mt-1 text-sm font-medium text-content-primary">{formatDate(order.rejected_at)}</p>
+              {order.rejected_by && (
+                <p className="mt-0.5 text-xs text-content-tertiary">{order.rejected_by}</p>
+              )}
+            </Card>
+          )}
         </div>
       )}
 
-      {/* T3: Procore-style approval chain. Shown when the CO has either
+      {/* Related records — the commitment (PO) and RFI links the CO ties to,
+          plus the source variation when this CO was mirrored from a variation
+          order (service stamps origin + variation ids onto metadata). All ids
+          are already on the GET /{id} payload; we just turn them into chips. */}
+      {(() => {
+        const poIds = order.linked_po_ids ?? [];
+        const rfiIds = order.linked_rfi_ids ?? [];
+        const meta = (order.metadata ?? {}) as {
+          origin?: string;
+          variation_order_id?: string;
+          variation_request_id?: string;
+        };
+        const fromVariation =
+          meta.origin === 'variations.convert_vr_to_vo' &&
+          (meta.variation_order_id || meta.variation_request_id);
+        if (poIds.length === 0 && rfiIds.length === 0 && !fromVariation) {
+          return null;
+        }
+        const chipCls =
+          'flex items-center gap-1.5 rounded-lg border border-blue-200 bg-blue-50 dark:bg-blue-950/20 dark:border-blue-800 px-2.5 py-1.5 text-xs text-blue-700 dark:text-blue-300 hover:bg-blue-100 transition-colors';
+        return (
+          <div className="mb-6">
+            <h3 className="text-base font-semibold text-content-primary mb-3">
+              {t('changeorders.related_records', { defaultValue: 'Related' })}
+            </h3>
+            <div className="flex flex-wrap items-center gap-2">
+              {fromVariation && (
+                <button
+                  type="button"
+                  className={chipCls}
+                  onClick={() => navigate('/variations')}
+                  title={t('changeorders.from_variation_hint', {
+                    defaultValue: 'Open the variation order this change order was created from',
+                  })}
+                >
+                  <GitBranch size={12} />
+                  {t('changeorders.from_variation', { defaultValue: 'From variation' })}
+                </button>
+              )}
+              {poIds.map((poId, i) => (
+                <button
+                  key={`po-${poId}`}
+                  type="button"
+                  className={chipCls}
+                  onClick={() => navigate('/procurement')}
+                  title={poId}
+                >
+                  <ShoppingCart size={12} />
+                  {t('changeorders.linked_po', {
+                    defaultValue: 'PO {{n}}',
+                    n: i + 1,
+                  })}
+                </button>
+              ))}
+              {rfiIds.map((rfiId, i) => (
+                <button
+                  key={`rfi-${rfiId}`}
+                  type="button"
+                  className={chipCls}
+                  onClick={() => navigate('/rfi')}
+                  title={rfiId}
+                >
+                  <HelpCircle size={12} />
+                  {t('changeorders.linked_rfi', {
+                    defaultValue: 'RFI {{n}}',
+                    n: i + 1,
+                  })}
+                </button>
+              ))}
+            </div>
+          </div>
+        );
+      })()}
+
+      {/* T3: construction-management-platform-style approval chain. Shown when the CO has either
           a chain already or is in 'submitted' state (so an admin/manager
           can start one). Hidden on plain draft/approved/rejected COs with
           no chain to avoid cluttering simple workflows. */}
@@ -1066,10 +1719,25 @@ function DetailView({
                 </Button>
               )}
           </div>
+          <InfoHint
+            className="mb-3"
+            text={
+              approvals.length === 0
+                ? t('changeorders.approval_chain_help_start', {
+                    defaultValue:
+                      'Optional: route this submitted change order through named approvers in sequence. Starting a chain replaces the single Approve/Reject buttons above - each approver then signs off step by step in the timeline below.',
+                  })
+                : t('changeorders.approval_chain_help_active', {
+                    defaultValue:
+                      'This change order is on a step-by-step approval chain. The single Approve/Reject buttons are disabled - the assigned approver records each decision in the timeline below, and a rejection at any step stops the chain.',
+                  })
+            }
+          />
           <ApprovalTimeline
             rows={approvals}
             currentApprovalStep={order.current_approval_step ?? null}
             currentUserId={currentUserId}
+            approverNames={approverNames}
             busy={advanceMut.isPending}
             onDecide={(decision, comments) =>
               advanceMut.mutate({ decision, comments })
@@ -1191,6 +1859,7 @@ function DetailView({
       {showAddItem && (
         <AddItemDialog
           orderId={orderId}
+          projectId={order.project_id}
           currency={order.currency}
           onClose={() => setShowAddItem(false)}
           onCreated={() => {
@@ -1208,12 +1877,14 @@ function DetailView({
 
 export function ChangeOrdersPage() {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const queryClient = useQueryClient();
   const addToast = useToastStore((s) => s.addToast);
   const activeProjectId = useProjectContextStore((s) => s.activeProjectId);
   const { confirm: confirmList, ...confirmListProps } = useConfirm();
 
   const [showCreate, setShowCreate] = useState(false);
+  const [showAIDraft, setShowAIDraft] = useState(false);
   const [selectedOrderId, setSelectedOrderId] = useState<string | null>(null);
   const [statusFilter, setStatusFilter] = useState<string>('');
 
@@ -1325,59 +1996,72 @@ export function ChangeOrdersPage() {
   const currency = project?.currency || summary?.currency || '';
 
   return (
-    <div className="w-full animate-fade-in">
+    <div className="space-y-5 animate-fade-in">
       <Breadcrumb items={[
-        { label: t('nav.dashboard', { defaultValue: 'Dashboard' }), to: '/' },
+        ...(project ? [{ label: project.name, to: `/projects/${project.id}` }] : []),
         { label: t('nav.change_orders', { defaultValue: 'Change Orders' }) },
       ]} />
 
-      {/* Header */}
-      <div className="mt-4 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-content-primary">
-            {t('nav.change_orders', { defaultValue: 'Change Orders' })}
-          </h1>
-          <p className="mt-1 text-sm text-content-secondary">
-            {t('changeorders.subtitle', { defaultValue: 'Track scope changes with cost and schedule impact' })}
-          </p>
-        </div>
-        <div className="flex items-end gap-3">
-          <div>
-            <label htmlFor="co-project-select" className="block text-sm font-medium text-content-primary mb-1.5">
-              {t('common.project', { defaultValue: 'Project' })}
-            </label>
-            <select
-              id="co-project-select"
-              value={projectId}
-              onChange={(e) => {
-                const id = e.target.value;
-                const name = projects.find((p) => p.id === id)?.name ?? '';
-                if (id) {
-                  useProjectContextStore.getState().setActiveProject(id, name);
-                }
-              }}
-              className="h-10 w-full min-w-[200px] rounded-lg border border-border bg-surface-primary px-3 text-sm transition-all focus:outline-none focus:ring-2 focus:ring-oe-blue/30 focus:border-oe-blue"
-            >
-              {projects.map((p) => (
-                <option key={p.id} value={p.id}>{p.name}</option>
-              ))}
-            </select>
-          </div>
-          <Button variant="secondary" size="sm" icon={<Download size={14} />} onClick={handleExportCSV} disabled={!filteredOrders || filteredOrders.length === 0}>
-            {t('changeorders.export_csv', { defaultValue: 'Export CSV' })}
-          </Button>
-          <Button variant="primary" onClick={() => setShowCreate(true)} disabled={!projectId}>
-            <Plus size={16} className="mr-1.5" />
-            {t('changeorders.new', { defaultValue: 'New Change Order' })}
-          </Button>
-        </div>
-      </div>
+      {/* Header — project selection lives in the global top bar; the page
+          reads the shared project context and falls back to the first
+          project, so no in-page project picker is rendered here. */}
+      <PageHeader
+        subtitle={t('changeorders.subtitle', { defaultValue: 'Track scope changes with cost and schedule impact' })}
+        actions={
+          <>
+            <Button variant="secondary" icon={<Download size={14} />} onClick={handleExportCSV} disabled={!filteredOrders || filteredOrders.length === 0}>
+              {t('changeorders.export_csv', { defaultValue: 'Export CSV' })}
+            </Button>
+            <Button variant="secondary" onClick={() => setShowAIDraft(true)} disabled={!projectId}>
+              <Sparkles size={16} className="mr-1.5" />
+              {t('changeorders.ai_draft', { defaultValue: 'AI Draft' })}
+            </Button>
+            <Button variant="primary" onClick={() => setShowCreate(true)} disabled={!projectId}>
+              <Plus size={16} className="mr-1.5" />
+              {t('changeorders.new', { defaultValue: 'New Change Order' })}
+            </Button>
+          </>
+        }
+      />
 
-      <InfoHint className="mt-4 mb-2" text={t('changeorders.workflow_desc', { defaultValue: 'Change Order workflow: Draft (prepare scope change) \u2192 Submitted (send for review) \u2192 Approved or Rejected. Each order tracks cost impact and schedule impact in days. Add line items to detail what changed \u2014 original vs new quantities and rates. The cost delta is computed automatically.' })} />
+      <DismissibleInfo
+        storageKey="changeorders"
+        title={t('changeorders.intro_title', {
+          defaultValue: 'Price every scope change before you commit it',
+        })}
+        more={
+          t('changeorders.intro_more', { defaultValue: '' })
+            ? <IntroRichText text={t('changeorders.intro_more')} />
+            : undefined
+        }
+        links={[
+          {
+            label: t('nav.finance', { defaultValue: 'Finance' }),
+            onClick: () => navigate('/finance'),
+          },
+          {
+            label: t('nav.variations', { defaultValue: 'Variations' }),
+            onClick: () => navigate('/variations'),
+          },
+          {
+            // CONN-48: the three change pipelines (MoC, Variations, Change
+            // Orders) stay connected. An approved Management-of-Change item is
+            // the upstream decision a change order commits; surface it here so
+            // the trail is one click away in either direction.
+            label: t('moc.title', { defaultValue: 'Management of Change' }),
+            onClick: () => navigate('/moc'),
+          },
+        ]}
+      >
+        {t('changeorders.intro_body', {
+          defaultValue:
+            'Capture each scope change with its line items, original versus new quantities and rates, and the system computes the cost delta and schedule impact for you. Route it through Draft, Submitted, Approved and Executed, optionally via a named approval chain, and an approved order is applied to the project budget as a revised commitment.',
+        })}
+      </DismissibleInfo>
 
       {/* Summary cards */}
       {summary && (
-        <div className="mt-6 grid grid-cols-2 sm:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
           <Card className="p-4">
             <div className="flex items-center gap-2">
               <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-surface-secondary">
@@ -1462,7 +2146,7 @@ export function ChangeOrdersPage() {
       )}
 
       {/* Status filter */}
-      <div className="mt-6 flex items-center gap-3 mb-3">
+      <div className="flex items-center gap-3">
         <select
           value={statusFilter}
           onChange={(e) => setStatusFilter(e.target.value)}
@@ -1612,6 +2296,18 @@ export function ChangeOrdersPage() {
           currency={currency}
           onClose={() => setShowCreate(false)}
           onCreated={handleRefresh}
+        />
+      )}
+      {showAIDraft && projectId && (
+        <AIDraftModal
+          projectId={projectId}
+          currency={currency}
+          onClose={() => setShowAIDraft(false)}
+          onCreated={(orderId) => {
+            setShowAIDraft(false);
+            handleRefresh();
+            setSelectedOrderId(orderId);
+          }}
         />
       )}
       <ConfirmDialog {...confirmListProps} />

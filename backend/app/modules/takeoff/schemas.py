@@ -2,12 +2,12 @@
 
 import math
 from datetime import datetime
-from typing import Any
+from typing import Any, Literal
 from uuid import UUID
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
-# Round-6 audit (2026-05-22) — hard bound on per-axis coordinates inside a
+# Round-6 audit (2026-05-22) - hard bound on per-axis coordinates inside a
 # polygon. PDF pages render in PostScript points (72 dpi); ISO A0 at 72 dpi
 # is 3370 × 2384 px. The frontend zoom factor caps the visible canvas at
 # ~50× before WebGL gives up, so a legitimate point will never exceed
@@ -46,7 +46,7 @@ class ExtractedElement(BaseModel):
     quantity: float
     unit: str
     # R7 deep-improve: confidence must be a probability in [0, 1]. Out-of-
-    # range values from an AI model indicate a bug — fail loudly instead
+    # range values from an AI model indicate a bug - fail loudly instead
     # of silently allowing 1.5 or -3 to propagate through the UI.
     confidence: float = Field(..., ge=0.0, le=1.0)
 
@@ -63,6 +63,27 @@ class ExtractTablesResponse(BaseModel):
 
     elements: list[ExtractedElement]
     summary: dict
+
+
+class RecognizeCandidate(BaseModel):
+    """One detected, unconfirmed measurement proposed by vector recognition."""
+
+    type: str  # "area" | "distance" | "count"
+    points: list[dict] = Field(default_factory=list)
+    value: float | None = None
+    dimension: str = ""  # "area" | "length" | "count"
+    count: int | None = None
+    confidence: float = 0.0
+    reason: str = ""
+
+
+class RecognizeResponse(BaseModel):
+    """Result of offline vector recognition for one page (nothing persisted)."""
+
+    candidates: list[RecognizeCandidate] = Field(default_factory=list)
+    page: int
+    source: str = "vector_recognize"
+    notes: str | None = None
 
 
 # ── CAD quantity extraction schemas ──────────────────────────────────────
@@ -113,7 +134,7 @@ class CadExtractResponse(BaseModel):
 class PointSchema(BaseModel):
     """A single 2D point in page coordinates.
 
-    Round-6 audit — both axes are clamped to ``±_MAX_COORD_ABS`` so a
+    Round-6 audit - both axes are clamped to ``±_MAX_COORD_ABS`` so a
     malicious payload (``x: 1e30``) cannot inflate polygon areas via
     the shoelace formula and contaminate BOQ totals. NaN and infinity
     are rejected outright (they would produce ``NaN`` areas that
@@ -126,7 +147,7 @@ class PointSchema(BaseModel):
     @field_validator("x", "y")
     @classmethod
     def _reject_nan_inf(cls, v: float) -> float:
-        # Pydantic's ge/le accept NaN through silently on some versions —
+        # Pydantic's ge/le accept NaN through silently on some versions -
         # belt-and-braces. Without this guard, a polygon with NaN points
         # produces NaN areas that the upstream Decimal cast turns into
         # ``Decimal('NaN')`` and the downstream rollup never errors.
@@ -240,6 +261,78 @@ class TakeoffMeasurementSummary(BaseModel):
     by_page: dict[int, int] = Field(default_factory=dict)
 
 
+# ── Revision compare (Item 17) ─────────────────────────────────────────
+
+
+class TakeoffMeasurementDiffRow(BaseModel):
+    """One measurement-level change between two takeoff documents.
+
+    Measurements are matched across the two documents by a stable key:
+    ``metadata.compare_key`` when present, otherwise the natural tuple
+    ``(page, type, group_name, annotation)``. A measurement present only
+    in the new document is ``added``; only in the old one ``removed``; a
+    measured-value change is ``modified``; identical value ``unchanged``.
+
+    When the measurement is linked to a BOQ position and its value
+    changed, ``cost_impact`` carries the signed money delta
+    ``(new - old) * unit_rate`` in the project's base currency (Decimal
+    string; never blended across currencies).
+    """
+
+    change_type: Literal["added", "removed", "modified", "unchanged"]
+    measurement_id: str
+    type: str
+    group_name: str = "General"
+    page: int = 1
+    label: str | None = None
+    old_value: float | None = None
+    new_value: float | None = None
+    measurement_unit: str | None = None
+    linked_boq_position_id: str | None = None
+    cost_impact: str | None = None  # signed Decimal string in base currency
+    cost_currency: str | None = None
+
+
+class TakeoffCompareResponse(BaseModel):
+    """Full revision-compare payload for two takeoff documents."""
+
+    project_id: UUID
+    from_document_id: str
+    to_document_id: str
+    measurement_rows: list[TakeoffMeasurementDiffRow] = Field(default_factory=list)
+    summary: dict[str, Any] = Field(default_factory=dict)
+
+
+# ── Create-variation-from-delta handoff (Item 17) ───────────────────────
+
+
+class CreateVariationFromCompareRequest(BaseModel):
+    """Turn a PDF revision-compare delta into a draft variation request.
+
+    The compare is recomputed server-side from the two document ids (the
+    deterministic :meth:`compare_documents` is the single source of
+    truth), so the client only carries the project + document pair and an
+    optional title override. The created variation is always a *draft* -
+    automation proposes, a human confirms and submits it.
+    """
+
+    model_config = ConfigDict(str_strip_whitespace=True)
+
+    project_id: UUID
+    from_document_id: str = Field(..., min_length=1, max_length=255)
+    to_document_id: str = Field(..., min_length=1, max_length=255)
+    title: str | None = Field(default=None, max_length=500)
+
+
+class CreateVariationFromCompareResponse(BaseModel):
+    """The draft variation request minted from a PDF revision-compare delta."""
+
+    variation_request_id: UUID
+    code: str
+    estimated_cost_impact: str = "0"  # signed Decimal string in base currency
+    currency: str = ""
+
+
 class LinkToBoqRequest(BaseModel):
     """Request to link a measurement to a BOQ position."""
 
@@ -254,3 +347,174 @@ class LinkToBoqRequest(BaseModel):
             "existing callers backward-compatible."
         ),
     )
+
+
+# ── Vision-LLM plan reading (issue #194) ────────────────────────────────────
+#
+# The vision-LLM path is an ADDITIONAL, higher-quality suggestion source that
+# sits alongside the offline OpenCV "Recognize" tool, never replacing it. Every
+# model output is a SUGGESTION carrying a real confidence; nothing is applied to
+# the takeoff or the BOQ without an explicit human accept (CLAUDE.md rule 7).
+#
+# Takeoff-local confidence band thresholds, mirroring the canonical values in
+# ``ai_estimator/service.py`` (0.78 / 0.62). Exposed through ``/plan-read/meta``
+# so the UI never hardcodes them.
+TAKEOFF_CONFIDENCE_HIGH_THRESHOLD = 0.78
+TAKEOFF_CONFIDENCE_MEDIUM_THRESHOLD = 0.62
+# The largest polygon the model may return for a single room. Bounds the
+# shoelace loop and the JSON payload. Aligned with the prompt's "4 to 60".
+MAX_PLAN_POLYGON_VERTICES = 60
+# The largest count cluster the model may return for a single symbol class.
+MAX_PLAN_SYMBOL_CENTERS = 400
+
+
+class NormPoint(BaseModel):
+    """A single normalized [0, 1] image/page coordinate (top-left origin).
+
+    Reuses the :class:`PointSchema` NaN/Inf guard but bounds both axes to
+    ``[0, 1]`` because the vision model is told to emit normalized coordinates.
+    An out-of-range or non-finite value is rejected so a malformed model output
+    can never map to an off-page PDF point or a NaN area.
+    """
+
+    x: float = Field(..., ge=0.0, le=1.0)
+    y: float = Field(..., ge=0.0, le=1.0)
+
+    @field_validator("x", "y")
+    @classmethod
+    def _reject_nan_inf(cls, v: float) -> float:
+        if math.isnan(v) or math.isinf(v):
+            raise ValueError("coordinate must be a finite real number")
+        return v
+
+
+class PlanScale(BaseModel):
+    """A scale candidate read from the drawing by the vision model.
+
+    The model returns two normalized endpoints it claims span a known real
+    distance, the real value, the unit, and which evidence it used. The server
+    derives ``ratio_px_per_unit`` from the endpoints and validates it against
+    the plausibility belt before this is ever offered to the user; the model's
+    own ratio is never trusted.
+    """
+
+    value: float | None = Field(default=None, gt=0)
+    unit: Literal["m", "mm", "ft", "in"] | None = None
+    source: Literal["dimension_string", "scale_bar", "inferred"] | None = None
+    confidence: float = Field(..., ge=0.0, le=1.0)
+    ref_pixels: tuple[NormPoint, NormPoint] | None = None
+    ref_real_value: float | None = Field(default=None, gt=0)
+    ref_unit: Literal["m", "mm", "ft", "in"] | None = None
+
+
+class PlanRoom(BaseModel):
+    """One enclosed room traced by the vision model as a normalized polygon."""
+
+    name: str = Field(default="", max_length=200)
+    polygon: list[NormPoint] = Field(..., min_length=3, max_length=MAX_PLAN_POLYGON_VERTICES)
+    confidence: float = Field(..., ge=0.0, le=1.0)
+
+
+class PlanSymbol(BaseModel):
+    """A class of repeated symbols clustered into one count proposal."""
+
+    element_class: str = Field(default="", max_length=80)
+    centers: list[NormPoint] = Field(..., min_length=1, max_length=MAX_PLAN_SYMBOL_CENTERS)
+    confidence: float = Field(..., ge=0.0, le=1.0)
+
+
+class PlanReadResult(BaseModel):
+    """The validated structured output of one vision plan-read call."""
+
+    page: int = Field(..., ge=1)
+    scale: PlanScale | None = None
+    rooms: list[PlanRoom] = Field(default_factory=list)
+    symbols: list[PlanSymbol] = Field(default_factory=list)
+    image_dpi: int = 0
+    page_width_pt: float = 0.0
+    page_height_pt: float = 0.0
+    model_used: str = ""
+    provider: str = ""
+    tokens_used: int = 0
+    cost_usd_estimate: float = 0.0
+    notes: str | None = None
+
+
+class PlanReadRequest(BaseModel):
+    """Request to start a vision-LLM plan-read run for one page."""
+
+    model_config = ConfigDict(str_strip_whitespace=True)
+
+    project_id: UUID
+    document_id: str = Field(..., min_length=1, max_length=255)
+    page: int = Field(default=1, ge=1)
+    scale_pixels_per_unit: float | None = Field(default=None, gt=0)
+    mode: Literal["scale", "rooms", "symbols", "full"] = "rooms"
+    do_cost_match: bool = False
+
+
+class AiTakeoffRunResponse(BaseModel):
+    """Pollable state of one vision plan-read run."""
+
+    model_config = ConfigDict(from_attributes=True, populate_by_name=True)
+
+    id: UUID
+    status: str
+    project_id: UUID
+    document_id: str | None = None
+    page: int = 1
+    mode: str = "rooms"
+    provider: str | None = None
+    model_used: str | None = None
+    total_tokens: int = 0
+    cost_usd_estimate: float = 0.0
+    duration_ms: int = 0
+    proposal_count: int = 0
+    accepted_count: int = 0
+    validation_report: dict[str, Any] | None = None
+    failure_reason: str | None = None
+    created_at: datetime | None = None
+
+
+class PlanReadAcceptRequest(BaseModel):
+    """Confirm a subset of a run's proposals into billed measurements.
+
+    Either an explicit ``measurement_ids`` selection or a ``min_confidence``
+    threshold (bulk-confirm-by-threshold) selects what to accept. A proposal
+    carrying a self-intersection ERROR verdict is always blocked (redraw first);
+    low confidence is a warning, not a block.
+    """
+
+    measurement_ids: list[str] | None = Field(default=None, max_length=2000)
+    min_confidence: float | None = Field(default=None, ge=0.0, le=1.0)
+
+
+class PlanReadAcceptResponse(BaseModel):
+    """Outcome of a plan-read accept call."""
+
+    confirmed: int = 0
+    skipped: int = 0
+    blocked: int = 0
+    measurement_ids: list[str] = Field(default_factory=list)
+
+
+class PlanReadMetaResponse(BaseModel):
+    """Thresholds, capabilities, and caps for the plan-read UI.
+
+    The UI never hardcodes thresholds or limits; it reads them here (same
+    pattern as ``/ai-estimator/meta``). ``vision_available`` lets the takeoff
+    viewer hide / disable the "Read plan with AI" action when no vision-capable
+    key is configured, so the feature degrades gracefully.
+    """
+
+    confidence_high_threshold: float = TAKEOFF_CONFIDENCE_HIGH_THRESHOLD
+    confidence_medium_threshold: float = TAKEOFF_CONFIDENCE_MEDIUM_THRESHOLD
+    vision_providers: list[str] = Field(default_factory=list)
+    max_polygon_vertices: int = MAX_PLAN_POLYGON_VERTICES
+    max_cost_usd: float = 0.0
+    rolling_spend_usd: float = 0.0
+    modes: list[str] = Field(default_factory=lambda: ["scale", "rooms", "symbols", "full"])
+    vision_available: bool = False
+    provider: str | None = None
+    model_used: str | None = None
+    reason: str | None = None

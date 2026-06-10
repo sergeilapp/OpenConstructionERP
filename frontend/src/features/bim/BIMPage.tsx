@@ -57,7 +57,7 @@ import {
   Palette,
   Footprints,
 } from 'lucide-react';
-import { Badge, EmptyState, Breadcrumb, ConfirmDialog, ModuleHelpButton } from '@/shared/ui';
+import { Badge, EmptyState, Breadcrumb, ConfirmDialog, ModuleHelpButton, DismissibleInfo, IntroRichText } from '@/shared/ui';
 import { useConfirm } from '@/shared/hooks/useConfirm';
 import { BIMViewer } from '@/shared/ui/BIMViewer';
 import type { BIMElementData, BIMModelData } from '@/shared/ui/BIMViewer';
@@ -91,11 +91,13 @@ import { useToastStore } from '@/stores/useToastStore';
 import { useAuthStore } from '@/stores/useAuthStore';
 import { useBIMLinkSelectionStore } from '@/stores/useBIMLinkSelectionStore';
 import { useBIMUploadStore, type BIMUploadJob } from '@/stores/useBIMUploadStore';
+import { useDwgUploadStore } from '@/stores/useDwgUploadStore';
 import { apiGet } from '@/shared/lib/api';
 import {
   fetchBIMModels,
   fetchBIMModel,
   fetchBIMElements,
+  fetchBIMElementProgress,
   fetchBIMConverters,
   deleteBIMModel,
   deleteLink,
@@ -103,6 +105,7 @@ import {
   deleteElementGroup,
   installBIMConverter,
   retryBIMModelProcessing,
+  isNon3DBimFormat,
   type BIMElementGroup,
 } from './api';
 
@@ -485,19 +488,36 @@ function UploadPanel({
   const handleFileSelect = useCallback((f: File) => {
     const ext = getFileExtension(f.name);
     if (DWG_EXTENSIONS.has(ext)) {
+      // DWG/DXF are 2D takeoff drawings, not 3D BIM models. Hand the picked
+      // file straight to the DWG Takeoff module so the user does not have to
+      // re-pick it there, then open that module where the upload is already
+      // running.
+      if (projectId) {
+        useDwgUploadStore.getState().startUpload({
+          file: f,
+          projectId,
+          modelName: f.name.replace(/\.[^.]+$/, ''),
+          discipline,
+        });
+      }
       addToast({
         type: 'info',
         title: t('bim.dwg_redirect_title', { defaultValue: 'DWG files are handled in the DWG Takeoff module' }),
-        message: t('bim.dwg_redirect_msg', { defaultValue: 'Redirecting to DWG Takeoff...' }),
+        message: projectId
+          ? t('bim.dwg_handoff_msg', { defaultValue: 'Sending your drawing to DWG Takeoff...' })
+          : t('bim.dwg_redirect_msg', { defaultValue: 'Opening DWG Takeoff...' }),
       });
       navigate('/dwg-takeoff');
       return;
     }
-    if (!CAD_EXTENSIONS.has(ext) && !DATA_EXTENSIONS.has(ext)) { setUploadError(t('bim.upload_unsupported_format', { defaultValue: 'Unsupported file format. Please upload .rvt or .ifc files.' })); return; }
+    // Simple picker accepts native 3D BIM only (RVT/IFC). Tabular data
+    // (CSV/XLSX) lives behind the explicit "Advanced" toggle, which uses its
+    // own file input, so anything else dropped here is rejected up front.
+    if (!CAD_EXTENSIONS.has(ext)) { setUploadError(t('bim.upload_unsupported_format', { defaultValue: 'Unsupported file format. Please upload RVT, IFC or DWG files.' })); return; }
     setFile(f);
     setUploadError(ext === '.rvt' ? t('bim.upload_rvt_note') : null);
     if (!modelName) setModelName(f.name.replace(/\.[^.]+$/, ''));
-  }, [modelName, t, addToast, navigate]);
+  }, [modelName, t, addToast, navigate, projectId, discipline]);
 
   const resetForm = useCallback(() => {
     setFile(null); setDataFile(null); setGeometryFile(null); setModelName(''); setUploadError(null);
@@ -520,7 +540,12 @@ function UploadPanel({
   }, [globalJobs, projectId]);
 
   const handleUpload = useCallback(async () => {
-    if (!projectId) return;
+    if (!projectId) {
+      // Without a resolved project the upload silently did nothing before,
+      // which read as "the button is dead". Surface the real reason instead.
+      setUploadError(t('bim.upload_no_project', { defaultValue: 'No active project yet. Open a project, then upload again.' }));
+      return;
+    }
     setUploading(true);
     setUploadError(null);
     setUploadProgress(0);
@@ -541,7 +566,7 @@ function UploadPanel({
           type: 'info',
           title: t('bim.upload_started_title', { defaultValue: 'Upload started' }),
           message: t('bim.upload_background_msg', {
-            defaultValue: 'You can navigate to other pages — the upload will continue in the background.',
+            defaultValue: 'You can navigate to other pages - the upload will continue in the background.',
           }),
         });
         resetForm();
@@ -605,7 +630,7 @@ function UploadPanel({
             type: 'info',
             title: t('bim.upload_started_title', { defaultValue: 'Upload started' }),
             message: t('bim.upload_background_msg', {
-              defaultValue: 'You can navigate to other pages — the upload will continue in the background.',
+              defaultValue: 'You can navigate to other pages - the upload will continue in the background.',
             }),
           });
           resetForm();
@@ -622,7 +647,7 @@ function UploadPanel({
             type: 'info',
             title: t('bim.upload_started_title', { defaultValue: 'Upload started' }),
             message: t('bim.upload_background_msg', {
-              defaultValue: 'You can navigate to other pages — the upload will continue in the background.',
+              defaultValue: 'You can navigate to other pages - the upload will continue in the background.',
             }),
           });
           resetForm();
@@ -672,7 +697,7 @@ function UploadPanel({
         type: 'info',
         title: t('bim.upload_started_title', { defaultValue: 'Upload started' }),
         message: t('bim.upload_background_msg', {
-          defaultValue: 'You can navigate to other pages — the upload will continue in the background.',
+          defaultValue: 'You can navigate to other pages - the upload will continue in the background.',
         }),
       });
     },
@@ -738,7 +763,7 @@ function UploadPanel({
             {activeUploads.some((j) => j.status !== 'ready') && (
               <p className="text-[10px] text-content-tertiary text-center py-1">
                 {t('bim.upload_continue_working', {
-                  defaultValue: 'Processing in background — you can continue working or upload another file.',
+                  defaultValue: 'Processing in background - you can continue working or upload another file.',
                 })}
               </p>
             )}
@@ -750,7 +775,7 @@ function UploadPanel({
             htmlFor="bim-upload-file-input"
             role="button"
             tabIndex={0}
-            aria-label={t('bim.upload_dropzone_aria', { defaultValue: 'Upload BIM file (RVT, IFC, CSV, XLSX)' })}
+            aria-label={t('bim.upload_dropzone_aria', { defaultValue: 'Upload BIM file (RVT, IFC, DWG)' })}
             onKeyDown={(e) => {
               if (e.key === 'Enter' || e.key === ' ') {
                 e.preventDefault();
@@ -779,12 +804,11 @@ function UploadPanel({
                 <div className="flex items-center gap-1.5 mt-1">
                   <span className="text-[9px] font-mono px-1 py-0.5 rounded bg-oe-blue/10 text-oe-blue border border-oe-blue/20">.rvt</span>
                   <span className="text-[9px] font-mono px-1 py-0.5 rounded bg-oe-blue/10 text-oe-blue border border-oe-blue/20">.ifc</span>
-                  <span className="text-[9px] font-mono px-1 py-0.5 rounded bg-surface-tertiary text-content-quaternary">.csv</span>
-                  <span className="text-[9px] font-mono px-1 py-0.5 rounded bg-surface-tertiary text-content-quaternary">.xlsx</span>
+                  <span className="text-[9px] font-mono px-1 py-0.5 rounded bg-oe-blue/10 text-oe-blue border border-oe-blue/20">.dwg</span>
                 </div>
               </>
             )}
-            <input id="bim-upload-file-input" ref={fileInputRef} type="file" accept=".rvt,.ifc,.csv,.xlsx,.xls" className="hidden" onChange={(e) => { const f = e.target.files?.[0]; if (f) handleFileSelect(f); }} />
+            <input id="bim-upload-file-input" ref={fileInputRef} type="file" accept=".rvt,.ifc,.dwg,.dxf" className="hidden" onChange={(e) => { const f = e.target.files?.[0]; if (f) handleFileSelect(f); }} />
           </label>
         ) : (
           <div className="grid grid-cols-2 gap-3">
@@ -842,7 +866,7 @@ function UploadPanel({
                     {t('bim.upload_generate_pdf_label', { defaultValue: 'Also export existing project sheets as PDF (background)' })}
                   </span>
                   <span className="block text-[10px] text-content-quaternary leading-relaxed mt-0.5">
-                    {t('bim.upload_generate_pdf_help', { defaultValue: 'Exports the sheets the designer prepared inside the model as a single PDF into Documents. Runs after the model is ready — upload is not delayed.' })}
+                    {t('bim.upload_generate_pdf_help', { defaultValue: 'Exports the sheets the designer prepared inside the model as a single PDF into Documents. Runs after the model is ready - upload is not delayed.' })}
                   </span>
                 </div>
               </label>
@@ -870,7 +894,7 @@ function UploadPanel({
 
       {/* Footer */}
       <div className="px-5 py-4 border-t border-border-light">
-        <button onClick={handleUpload} disabled={!canUpload} className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-semibold transition-all disabled:opacity-30 disabled:cursor-not-allowed bg-oe-blue text-white hover:bg-oe-blue-dark active:scale-[0.98] shadow-sm hover:shadow-md">
+        <button data-testid="bim-upload-submit" onClick={handleUpload} disabled={!canUpload} className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-semibold transition-all disabled:opacity-30 disabled:cursor-not-allowed bg-oe-blue text-white hover:bg-oe-blue-dark active:scale-[0.98] shadow-sm hover:shadow-md">
           {uploading ? <Loader2 size={16} className="animate-spin" /> : <Upload size={16} />}
           {uploading ? t('bim.uploading') : t('bim.upload_panel_title')}
         </button>
@@ -1040,7 +1064,23 @@ function NonReadyOverlay({ model, onUploadConverted, onDelete, onRetry, onInstal
     isOutdatedConverter
       ? t('bim.overlay_converter_outdated_clean', {
           defaultValue:
-            "The installed {{format}} converter is older than this build expects. Click 'Reinstall converter' below — we'll pull the latest version and retry your upload automatically.",
+            "The installed {{format}} converter is older than this build expects. Click 'Reinstall converter' below - we'll pull the latest version and retry your upload automatically.",
+          format: fmt || 'BIM',
+        })
+      : null;
+
+  // Zero-elements is NOT a converter-availability problem: the file was
+  // read fine, it simply yielded no convertible building elements (empty
+  // model, only spatial containers like project/site/building, or geometry
+  // the converter does not extract). The generic "converter unavailable"
+  // copy below would be actively misleading here (issue #197), so we lead
+  // with a specific, honest explanation and still surface the raw backend
+  // detail through the disclosure toggle.
+  const zeroElementsDescription =
+    !isProcessing && errorCode === 'zero_elements'
+      ? t('bim.overlay_zero_elements_clean', {
+          defaultValue:
+            'We read this {{format}} file but found no building elements to convert. The model may be empty, contain only spatial containers (project, site, building) or hold geometry the converter does not extract. Open it in your authoring tool to confirm it has modelled elements, then re-upload.',
           format: fmt || 'BIM',
         })
       : null;
@@ -1052,18 +1092,21 @@ function NonReadyOverlay({ model, onUploadConverted, onDelete, onRetry, onInstal
   // dev machines). We lead with that calm explanation and tuck the raw
   // backend string — e.g. "CAD conversion failed for .rvt file. Ensure the
   // converter is properly installed and the file is valid." — behind the
-  // collapsible "Show details" toggle below.
+  // collapsible "Show details" toggle below. This generic copy must never
+  // fire for a code with its own tailored message (e.g. zero_elements).
   const calmFailureDescription =
-    !isProcessing && (errorCode === 'ddc_not_found' || !!backendMessage)
+    !isProcessing
+    && errorCode !== 'zero_elements'
+    && (errorCode === 'ddc_not_found' || !!backendMessage)
       ? t('bim.overlay_converter_unavailable_calm', {
           defaultValue:
-            "We couldn't convert this {{format}} file. The CAD converter (DDC cad2data) isn't available in this environment — it's an optional, separate install. Add it, then retry the conversion.",
+            "We couldn't convert this {{format}} file. The CAD converter (DDC cad2data) isn't available in this environment - it's an optional, separate install. Add it, then retry the conversion.",
           format: fmt || 'CAD',
         })
       : null;
 
   const description =
-    cleanDescription ?? calmFailureDescription ?? c.desc;
+    cleanDescription ?? zeroElementsDescription ?? calmFailureDescription ?? c.desc;
   // The raw backend message is now ALWAYS surfaced through the collapsible
   // disclosure (when present) rather than inline — both for the outdated
   // case and the generic failure case.
@@ -1152,7 +1195,7 @@ function NonReadyOverlay({ model, onUploadConverted, onDelete, onRetry, onInstal
             </div>
             <p className="text-[11px] text-content-tertiary mt-2.5">
               {t('bim.overlay_processing_hint', {
-                defaultValue: 'Backend is converting the file. This page will update automatically when ready — feel free to navigate away.',
+                defaultValue: 'Backend is converting the file. This page will update automatically when ready - feel free to navigate away.',
               })}
             </p>
           </div>
@@ -1239,6 +1282,27 @@ function LandingPage({ projectId, onUploadComplete: _onUploadComplete, breadcrum
     if (fileInputRef.current) fileInputRef.current.value = '';
   }, []);
 
+  // DWG/DXF are 2D drawings, not 3D BIM. Hand the file to the DWG Takeoff
+  // module so it is not lost on the redirect, then open that module.
+  const handleLandingDwg = useCallback((f: File) => {
+    if (projectId) {
+      useDwgUploadStore.getState().startUpload({
+        file: f,
+        projectId,
+        modelName: f.name.replace(/\.[^.]+$/, ''),
+        discipline: 'architecture',
+      });
+    }
+    addToast({
+      type: 'info',
+      title: t('bim.dwg_redirect_title', { defaultValue: 'DWG files are handled in the DWG Takeoff module' }),
+      message: projectId
+        ? t('bim.dwg_handoff_msg', { defaultValue: 'Sending your drawing to DWG Takeoff...' })
+        : t('bim.dwg_redirect_msg', { defaultValue: 'Opening DWG Takeoff...' }),
+    });
+    navigate('/dwg-takeoff');
+  }, [projectId, addToast, t, navigate]);
+
   const handleUpload = useCallback(async () => {
     if (!file || !projectId) return;
     setUploading(true); setUploadError(null);
@@ -1260,7 +1324,7 @@ function LandingPage({ projectId, onUploadComplete: _onUploadComplete, breadcrum
         type: 'info',
         title: t('bim.upload_started_title', { defaultValue: 'Upload started' }),
         message: t('bim.upload_background_msg', {
-          defaultValue: 'You can navigate to other pages — the upload will continue in the background.',
+          defaultValue: 'You can navigate to other pages - the upload will continue in the background.',
         }),
       });
       resetForm();
@@ -1356,13 +1420,9 @@ function LandingPage({ projectId, onUploadComplete: _onUploadComplete, breadcrum
                     const f = e.dataTransfer.files?.[0];
                     if (f) {
                       const ext = getFileExtension(f.name);
-                      if (DWG_EXTENSIONS.has(ext)) {
-                        addToast({ type: 'info', title: t('bim.dwg_redirect_title', { defaultValue: 'DWG files are handled in the DWG Takeoff module' }), message: t('bim.dwg_redirect_msg', { defaultValue: 'Redirecting to DWG Takeoff...' }) });
-                        navigate('/dwg-takeoff');
-                        return;
-                      }
-                      if (!CAD_EXTENSIONS.has(ext) && !DATA_EXTENSIONS.has(ext)) {
-                        addToast({ type: 'error', title: t('bim.upload_unsupported_format', { defaultValue: 'Unsupported file format. Please upload .rvt or .ifc files.' }) });
+                      if (DWG_EXTENSIONS.has(ext)) { handleLandingDwg(f); return; }
+                      if (!CAD_EXTENSIONS.has(ext)) {
+                        addToast({ type: 'error', title: t('bim.upload_unsupported_format', { defaultValue: 'Unsupported file format. Please upload RVT, IFC or DWG files.' }) });
                         return;
                       }
                       setFile(f);
@@ -1400,7 +1460,7 @@ function LandingPage({ projectId, onUploadComplete: _onUploadComplete, breadcrum
                       </p>
                     </>
                   )}
-                  <input ref={fileInputRef} type="file" accept=".rvt,.ifc" className="hidden" onChange={(e) => { const f = e.target.files?.[0]; if (f) { setFile(f); if (!modelName) setModelName(f.name.replace(/\.[^.]+$/, '')); } }} />
+                  <input ref={fileInputRef} type="file" accept=".rvt,.ifc,.dwg,.dxf" className="hidden" onChange={(e) => { const f = e.target.files?.[0]; if (!f) return; if (DWG_EXTENSIONS.has(getFileExtension(f.name))) { handleLandingDwg(f); return; } setFile(f); if (!modelName) setModelName(f.name.replace(/\.[^.]+$/, '')); }} />
                 </label>
                 {file && (
                   <div className="mt-4 space-y-3">
@@ -1438,7 +1498,7 @@ function LandingPage({ projectId, onUploadComplete: _onUploadComplete, breadcrum
                               {t('bim.upload_generate_pdf_label', { defaultValue: 'Also export existing project sheets as PDF (background)' })}
                             </span>
                             <span className="block text-[10px] text-content-quaternary leading-relaxed mt-0.5">
-                              {t('bim.upload_generate_pdf_help', { defaultValue: 'Exports the sheets the designer prepared inside the model as a single PDF into Documents. Runs after the model is ready — upload is not delayed.' })}
+                              {t('bim.upload_generate_pdf_help', { defaultValue: 'Exports the sheets the designer prepared inside the model as a single PDF into Documents. Runs after the model is ready - upload is not delayed.' })}
                             </span>
                           </div>
                         </label>
@@ -1858,6 +1918,7 @@ export function BIMPage() {
     | 'document_coverage'
     | '5d_cost'
     | '4d_schedule'
+    | 'by_progress'
   >('default');
   const showBoundingBoxes = false;
   const [isolatedIds, setIsolatedIds] = useState<string[] | null>(null);
@@ -1911,7 +1972,16 @@ export function BIMPage() {
   const clearBIMLinkSelection = useBIMLinkSelectionStore((s) => s.clear);
 
   const modelsQuery = useQuery({ queryKey: ['bim-models', projectId], queryFn: () => fetchBIMModels(projectId), enabled: !!projectId, staleTime: 5 * 60_000 });
-  const models = modelsQuery.data?.items ?? [];
+  // Defense in depth: never surface 2D drawing formats (DWG/DXF/DGN) in the
+  // BIM 3D Takeoff filmstrip, picker or deep-link resolver. Those belong to the
+  // DWG Takeoff module and carry no 3D mesh, so the viewer must never try to
+  // load geometry for them. The backend list query already filters these out;
+  // this guard keeps the UI correct even against a stale cache or a backend
+  // that predates the server-side filter.
+  const models = useMemo(
+    () => (modelsQuery.data?.items ?? []).filter((m) => !isNon3DBimFormat(m.model_format || m.format)),
+    [modelsQuery.data],
+  );
   const hasModels = models.length > 0;
   const showFullPageUpload = showUploadOverride !== null ? showUploadOverride : !hasModels;
 
@@ -1967,6 +2037,12 @@ export function BIMPage() {
   // from the top selector (which would otherwise snap the user back to this model's project).
   const setActiveProject = useProjectContextStore((s) => s.setActiveProject);
   const autoDetectedRef = useRef<string | null>(null);
+  // Set only when auto-detect has CONFIRMED the deep-linked model genuinely
+  // does not exist (404). Until then the model pick effect must not fall back
+  // to models[0] of a (still-resolving, possibly other-project) list - doing so
+  // briefly activates an unrelated model and fires the model-switch reset
+  // effect, which wipes a filter/grouping the user just applied.
+  const urlModelMissingRef = useRef(false);
   useEffect(() => {
     if (!urlModelId) return;
     if (autoDetectedRef.current === urlModelId) return;
@@ -1974,15 +2050,18 @@ export function BIMPage() {
     const modelInList = models.find((m) => m.id === urlModelId);
     if (modelInList) {
       autoDetectedRef.current = urlModelId;
+      urlModelMissingRef.current = false;
       return;
     }
     fetchBIMModel(urlModelId).then((model) => {
       autoDetectedRef.current = urlModelId;
+      urlModelMissingRef.current = false;
       if (model?.project_id && model.project_id !== projectId) {
         setActiveProject(model.project_id, '');
       }
     }).catch(() => {
       autoDetectedRef.current = urlModelId;
+      urlModelMissingRef.current = true;
       // Surface the missing-model state so the user doesn't think the
       // model is "empty" — previously a 404 here was silent and the UI
       // fell back to "No elements to display" (audit P1-13).
@@ -2006,8 +2085,22 @@ export function BIMPage() {
     if (urlModelId && autoDetectedRef.current !== urlModelId) return;
     const currentInList = activeModelId && models.some((m) => m.id === activeModelId);
     if (currentInList) return;
-    const target = urlModelId && models.find((m) => m.id === urlModelId) ? urlModelId : models[0]!.id;
-    setActiveModelId(target);
+    if (urlModelId) {
+      // Deep link to a specific model. Activate it the moment it appears in the
+      // list. Until then - while its project is still resolving and `models`
+      // may be the wrong project's list - do NOT fall back to models[0]: that
+      // briefly activates an unrelated model and fires the model-switch reset
+      // effect, wiping the user's just-applied filter/grouping (the "grouping
+      // reverts to the whole project a second later" bug). Only fall back once
+      // auto-detect has CONFIRMED the model is genuinely missing (404), so the
+      // user still sees something instead of an empty viewer.
+      if (models.some((m) => m.id === urlModelId)) {
+        setActiveModelId(urlModelId);
+        return;
+      }
+      if (!urlModelMissingRef.current) return;
+    }
+    setActiveModelId(models[0]!.id);
   }, [models, activeModelId, urlModelId]);
 
   // Sync URL when active model changes
@@ -2081,6 +2174,44 @@ export function BIMPage() {
   });
   const elements: BIMElementData[] = elementsQuery.data?.items ?? [];
   const elementsTotal: number = elementsQuery.data?.total ?? 0;
+
+  // BOQ progress per element — fetched ONLY while the "By progress" colour
+  // mode is active (the skeleton element list carries no BOQ links, so
+  // progress comes from the enriched listing's `current_pct`). Gated on the
+  // mode so we never pay the extra round trip(s) for users who don't open
+  // the overlay. React Query caches the result, so toggling the mode back
+  // on is instant within the stale window.
+  const progressQuery = useQuery({
+    queryKey: ['bim-element-progress', activeModelId],
+    queryFn: () => fetchBIMElementProgress(activeModelId!),
+    enabled:
+      !!activeModelId &&
+      colorByMode === 'by_progress' &&
+      (activeModel?.status === 'ready' || activeModel?.status === 'degraded'),
+    staleTime: 60_000,
+  });
+  const progressByElementId: Record<string, number> = useMemo(() => {
+    const out: Record<string, number> = {};
+    for (const row of progressQuery.data?.items ?? []) {
+      if (row.current_pct != null && Number.isFinite(row.current_pct)) {
+        out[row.id] = row.current_pct;
+      }
+    }
+    return out;
+  }, [progressQuery.data]);
+  // Parallel map of the headline progress entry's recorded ISO date, keyed
+  // by element id — drives the "as of <date>" line in the selected-element
+  // info panel. Kept separate from the numeric map so the 3D colour ramp
+  // stays a pure number lookup.
+  const progressDateByElementId: Record<string, string> = useMemo(() => {
+    const out: Record<string, string> = {};
+    for (const row of progressQuery.data?.items ?? []) {
+      if (row.current_pct_date) {
+        out[row.id] = row.current_pct_date;
+      }
+    }
+    return out;
+  }, [progressQuery.data]);
 
   // Apply the deep-link element selection as soon as the elements list
   // resolves.  Strips the query param afterwards so a refresh doesn't
@@ -2755,9 +2886,9 @@ export function BIMPage() {
   }, [activeModelId, addToast, queryClient, projectId, t]);
 
   const breadcrumbItems = useMemo(() => {
-    const items: { label: string; to?: string }[] = [{ label: t('nav.dashboard', { defaultValue: 'Dashboard' }), to: '/' }];
+    const items: { label: string; to?: string }[] = [];
     if (projectId && contextProjectName) items.push({ label: contextProjectName, to: `/projects/${projectId}` });
-    items.push({ label: t('bim.title') });
+    items.push({ label: t('nav.bim_viewer', { defaultValue: 'BIM Viewer' }) });
     return items;
   }, [t, projectId, contextProjectName]);
 
@@ -2895,20 +3026,25 @@ export function BIMPage() {
               )}
             </div>
           </div>
+          {/* Stat pills yield below ~1360px so the two toolbar rows never
+              wrap onto a third line; the same counts live in Summary. */}
           {elements.length > 0 && (
-            <div className="hidden md:flex items-center gap-2 ms-2">
+            <div className="hidden min-[1360px]:flex items-center gap-2 ms-2">
               <StatPill icon={Box} label={t('bim.stat_elements', { defaultValue: 'Elements' })} value={elements.length} />
               {storeys.size > 0 && <StatPill icon={Layers} label={t('bim.stat_storeys', { defaultValue: 'Levels' })} value={storeys.size} />}
               {discips.size > 0 && <StatPill icon={Sparkles} label={t('bim.stat_disciplines', { defaultValue: 'Disciplines' })} value={discips.size} />}
             </div>
           )}
         </div>
-        <div className="flex items-center gap-2 flex-wrap justify-end">
-          {/* Primary CTA cluster — moved to the START of the toolbar so the
-              "Add Model" / "Tour" / "Rules" trio is always visible on row 1
-              regardless of how many toggles wrap below. The rest of the
-              toolbar (toggles, color-by, quality, …) stays right-aligned
-              via the parent `justify-end`. */}
+        {/* Two deliberate toolbar rows (founder ask 2026-06-06): one big
+            flex-wrap broke unevenly onto a third line at common widths.
+            Row 1 = model workflow + cross-module jumps, Row 2 = view
+            controls. Label budget keeps each row to ONE line from 1280px
+            up (verified 1280/1440/1680/1920): the longest labels show only
+            at min-[1900px], medium ones at 2xl; icon + tooltip + aria-label
+            always remain. Header stat pills yield below 1360px. */}
+        <div className="flex min-w-0 flex-col items-end gap-1.5">
+          <div className="flex flex-wrap items-center justify-end gap-2">
           <button
             onClick={() => setUploadOpen((p) => !p)}
             className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-semibold bg-oe-blue text-white hover:bg-oe-blue-dark transition-colors shadow-sm"
@@ -2991,32 +3127,9 @@ export function BIMPage() {
                 data-testid="bim-property-search-toggle"
               >
                 <Search size={13} />
-                {t('bim.property_search_button', { defaultValue: 'Property search' })}
-              </button>
-
-              <button
-                onClick={() => setDimensionsVisible(!dimensionsVisible)}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-medium transition-colors border ${
-                  dimensionsVisible
-                    ? 'bg-oe-blue/10 text-oe-blue border-oe-blue/30'
-                    : 'text-content-secondary bg-surface-secondary border-border-light hover:bg-surface-tertiary'
-                }`}
-                title={
-                  dimensionsVisible
-                    ? t('bim.dimensions_hide', {
-                        defaultValue: 'Hide bounding-box dimensions on selection',
-                      })
-                    : t('bim.dimensions_show', {
-                        defaultValue: 'Show bounding-box dimensions on selection',
-                      })
-                }
-                aria-label={t('bim.dimensions_toggle', {
-                  defaultValue: 'Toggle bounding-box dimensions',
-                })}
-                aria-pressed={dimensionsVisible}
-              >
-                <Maximize2 size={13} />
-                {t('bim.dimensions_button', { defaultValue: 'BBox Dimensions' })}
+                <span className="hidden min-[1900px]:inline">
+                  {t('bim.property_search_button', { defaultValue: 'Property search' })}
+                </span>
               </button>
 
               {projectId && (
@@ -3037,7 +3150,7 @@ export function BIMPage() {
                   data-testid="bim-snapshots-toggle"
                 >
                   <Layers size={13} />
-                  {t('bim.snapshots_button', { defaultValue: 'Snapshots' })}
+                  <span className="hidden 2xl:inline">{t('bim.snapshots_button', { defaultValue: 'Snapshots' })}</span>
                 </button>
               )}
 
@@ -3058,7 +3171,9 @@ export function BIMPage() {
                   data-testid="bim-view-on-map"
                 >
                   <Globe2 size={13} />
-                  {t('geo_hub.view_on_map', { defaultValue: 'View on map' })}
+                  <span className="hidden min-[1900px]:inline">
+                    {t('geo_hub.view_on_map', { defaultValue: 'View on map' })}
+                  </span>
                 </button>
               )}
 
@@ -3081,11 +3196,46 @@ export function BIMPage() {
                   data-testid="bim-open-in-data-explorer"
                 >
                   <Database size={13} />
-                  {t('bim.open_in_data_explorer', {
-                    defaultValue: 'Open in Data Explorer',
-                  })}
+                  <span className="hidden min-[1900px]:inline">
+                    {t('bim.open_in_data_explorer', {
+                      defaultValue: 'Open in Data Explorer',
+                    })}
+                  </span>
                 </button>
               )}
+            </>
+          )}
+          </div>
+
+          {/* Row 2: view controls - only meaningful with a loaded model. */}
+          {elements.length > 0 && (
+            <div className="flex flex-wrap items-center justify-end gap-2">
+              <button
+                onClick={() => setDimensionsVisible(!dimensionsVisible)}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-medium transition-colors border ${
+                  dimensionsVisible
+                    ? 'bg-oe-blue/10 text-oe-blue border-oe-blue/30'
+                    : 'text-content-secondary bg-surface-secondary border-border-light hover:bg-surface-tertiary'
+                }`}
+                title={
+                  dimensionsVisible
+                    ? t('bim.dimensions_hide', {
+                        defaultValue: 'Hide bounding-box dimensions on selection',
+                      })
+                    : t('bim.dimensions_show', {
+                        defaultValue: 'Show bounding-box dimensions on selection',
+                      })
+                }
+                aria-label={t('bim.dimensions_toggle', {
+                  defaultValue: 'Toggle bounding-box dimensions',
+                })}
+                aria-pressed={dimensionsVisible}
+              >
+                <Maximize2 size={13} />
+                <span className="hidden min-[1900px]:inline">
+                  {t('bim.dimensions_button', { defaultValue: 'BBox Dimensions' })}
+                </span>
+              </button>
 
               <button
                 onClick={() => setAssetCardEnabled(!assetCardEnabled)}
@@ -3110,7 +3260,7 @@ export function BIMPage() {
                 data-testid="bim-asset-card-toggle"
               >
                 <Package size={13} />
-                {t('bim.asset_card_button', { defaultValue: 'Asset Card' })}
+                <span className="hidden 2xl:inline">{t('bim.asset_card_button', { defaultValue: 'Asset Card' })}</span>
               </button>
 
               <button
@@ -3126,7 +3276,7 @@ export function BIMPage() {
                 data-testid="bim-tour-linked-boq-button"
               >
                 <ClipboardList size={13} />
-                {t('bim.linked_boq_button', { defaultValue: 'Linked BOQ' })}
+                <span className="hidden 2xl:inline">{t('bim.linked_boq_button', { defaultValue: 'Linked BOQ' })}</span>
               </button>
 
               <button
@@ -3162,7 +3312,7 @@ export function BIMPage() {
                 data-testid="bim-smart-views-toggle"
               >
                 <Sparkles size={13} />
-                {t('smartViews.title', { defaultValue: 'Smart Views' })}
+                <span className="hidden 2xl:inline">{t('smartViews.title', { defaultValue: 'Smart Views' })}</span>
               </button>
 
               {/* Color-by selector — three families:
@@ -3182,7 +3332,8 @@ export function BIMPage() {
                       | 'boq_coverage'
                       | 'document_coverage'
                       | '5d_cost'
-                      | '4d_schedule',
+                      | '4d_schedule'
+                      | 'by_progress',
                   )
                 }
                 title={t('bim.color_by', { defaultValue: 'Color by' })}
@@ -3215,6 +3366,9 @@ export function BIMPage() {
                   <option value="4d_schedule">
                     {t('bim.color_4d_schedule', { defaultValue: '4D timeline' })}
                   </option>
+                  <option value="by_progress">
+                    {t('bim.color_by_progress', { defaultValue: 'By progress' })}
+                  </option>
                 </optgroup>
               </select>
 
@@ -3236,7 +3390,7 @@ export function BIMPage() {
                       Icon: Zap,
                       label: t('bim.quality_fast', { defaultValue: 'Fast' }),
                       tooltip: t('bim.quality_fast_hint', {
-                        defaultValue: 'Fastest — opaque walls, low pixel ratio',
+                        defaultValue: 'Fastest - opaque walls, low pixel ratio',
                       }),
                     },
                     {
@@ -3244,7 +3398,7 @@ export function BIMPage() {
                       Icon: Eye,
                       label: t('bim.quality_default', { defaultValue: 'Default' }),
                       tooltip: t('bim.quality_default_hint', {
-                        defaultValue: 'Translucent — full lighting',
+                        defaultValue: 'Translucent - full lighting',
                       }),
                     },
                     {
@@ -3252,7 +3406,7 @@ export function BIMPage() {
                       Icon: Palette,
                       label: t('bim.quality_visual', { defaultValue: 'Visual' }),
                       tooltip: t('bim.quality_visual_hint', {
-                        defaultValue: 'Cleanest — opaque + glass transparency only',
+                        defaultValue: 'Cleanest - opaque + glass transparency only',
                       }),
                     },
                     {
@@ -3284,7 +3438,7 @@ export function BIMPage() {
                       )}
                     >
                       <Icon size={12} />
-                      <span className="hidden lg:inline">{label}</span>
+                      <span className="hidden 2xl:inline">{label}</span>
                     </button>
                   );
                 })}
@@ -3308,13 +3462,34 @@ export function BIMPage() {
                     : t('bim.isolate', { defaultValue: 'Isolate' })}
                 </button>
               )}
-              {/* Rules / Add Model / Tour moved to the top of this same
-                  flex row — see the "Primary CTA cluster" comment at the
-                  start of the toolbar. */}
-            </>
+            </div>
           )}
         </div>
       </div>
+
+      {/* ── Page intro / help banner — explains what the BIM viewer does and
+            how it ties into BOQ and the canonical model. Collapses to a
+            one-line header (remembered per page in localStorage). ── */}
+      <DismissibleInfo
+        storageKey="bim"
+        className="mx-3 mt-2"
+        title={t('bim.intro_title', { defaultValue: 'Turn the model into priced quantities' })}
+        more={
+          t('bim.intro_more', { defaultValue: '' })
+            ? <IntroRichText text={t('bim.intro_more')} />
+            : undefined
+        }
+        links={[
+          { label: t('bim.intro_link_boq', { defaultValue: 'Open BOQ' }), onClick: () => navigate('/boq') },
+          { label: t('bim.intro_link_explorer', { defaultValue: 'Data Explorer' }), onClick: () => navigate('/data-explorer') },
+          { label: t('bim.intro_link_rules', { defaultValue: 'Quantity rules' }), onClick: () => navigate('/bim/rules') },
+        ]}
+      >
+        {t('bim.intro_body', {
+          defaultValue:
+            'Open a converted CAD or BIM model in 3D, inspect element properties and quantities, and filter by storey, category or discipline. Link elements to BOQ positions so takeoff, cost and schedule all flow from the canonical model, and jump out to the Data Explorer or the map at any point.',
+        })}
+      </DismissibleInfo>
 
       {/* ── Converter status banner — surfaces any missing DDC
             converters so the user can one-click install them before
@@ -3599,6 +3774,8 @@ export function BIMPage() {
             showBoundingBoxes={showBoundingBoxes}
             filterPredicate={filterPredicate}
             colorByMode={colorByMode}
+            progressByElementId={progressByElementId}
+            progressDateByElementId={progressDateByElementId}
             isolatedIds={isolatedIds}
             onIsolationChange={(ids) => {
               setIsolatedIds(ids);

@@ -1,6 +1,6 @@
-import { useState, useMemo, useEffect, useRef } from 'react';
+import { useState, useMemo, useEffect, useRef, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import clsx from 'clsx';
 import { normalizeListResponse } from '@/shared/lib/apiHelpers';
@@ -21,6 +21,8 @@ import {
   UserX,
   AlertOctagon,
   Globe2,
+  LineChart,
+  Microscope,
 } from 'lucide-react';
 import {
   Button,
@@ -30,10 +32,14 @@ import {
   Breadcrumb,
   RecoveryCard,
   SkeletonTable,
+  IntroRichText,
 } from '@/shared/ui';
 import { RequiresProject } from '@/shared/auth/RequiresProject';
 import { DateDisplay } from '@/shared/ui/DateDisplay';
+import { PageHeader } from '@/shared/ui/PageHeader';
 import { SectionIntro } from '@/features/validation';
+import { SafetyTrendsChart } from './SafetyTrendsChart';
+import { SafetyThresholdWidget } from './SafetyThresholdWidget';
 import { apiGet, apiPost, triggerDownload, extractErrorMessageFromBody } from '@/shared/lib/api';
 import { useProjectContextStore } from '@/stores/useProjectContextStore';
 import { useAuthStore } from '@/stores/useAuthStore';
@@ -115,7 +121,7 @@ function normaliseObservation(o: ObservationWire): Observation {
 
 /* ── Constants ────────────────────────────────────────────────────────── */
 
-const SAFETY_TAB_IDS = ['incidents', 'observations'] as const;
+const SAFETY_TAB_IDS = ['incidents', 'observations', 'trends'] as const;
 type SafetyTab = (typeof SAFETY_TAB_IDS)[number];
 
 // Keyed on the backend incident_type enum
@@ -340,8 +346,15 @@ interface PunchSummaryData {
   by_status: Record<string, number>;
 }
 
-function QualityDashboardSummary({ projectId }: { projectId: string }) {
+function QualityDashboardSummary({
+  projectId,
+  onOpenIncidents,
+}: {
+  projectId: string;
+  onOpenIncidents: () => void;
+}) {
   const { t } = useTranslation();
+  const navigate = useNavigate();
 
   const { data: safetyStats, isError: safetyStatsError } = useQuery({
     queryKey: ['safety-stats', projectId],
@@ -401,18 +414,32 @@ function QualityDashboardSummary({ projectId }: { projectId: string }) {
       (punchSummary.by_status?.['in_progress'] ?? 0)
     : 0;
 
+  // Each tile is a drill-down into the filtered source list, the action a PM
+  // instinctively tries when they see a count. Inspections/NCRs/Defects deep-link
+  // to their registers; Open Incidents scrolls to and activates the incidents tab
+  // already on this page.
+  const tileBtnCls =
+    'w-full p-3 text-left rounded-xl transition-colors hover:bg-surface-secondary focus:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue/40';
+
   return (
-    <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
+    <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
       <Card padding="none">
-        <div className="p-3">
-          <div className="text-2xs text-content-tertiary uppercase">
+        <button
+          type="button"
+          onClick={onOpenIncidents}
+          className={tileBtnCls}
+          title={t('safety.dash_open_incidents_hint', {
+            defaultValue: 'View incidents',
+          })}
+        >
+          <div className="text-2xs uppercase tracking-wide text-content-tertiary">
             {t('safety.dash_open_incidents', { defaultValue: 'Open Incidents' })}
           </div>
           {safetyStatsError ? (
             <div
               className="flex items-center gap-1 text-sm font-semibold text-semantic-error"
               title={t('safety.stats_load_error', {
-                defaultValue: 'Could not load safety data — figure not confirmed',
+                defaultValue: 'Could not load safety data, figure not confirmed',
               })}
             >
               <AlertTriangle size={14} />
@@ -420,13 +447,13 @@ function QualityDashboardSummary({ projectId }: { projectId: string }) {
             </div>
           ) : (
             <>
-              <div className="text-xl font-bold text-content-primary">{openIncidents}</div>
+              <div className="text-lg font-semibold text-content-primary">{openIncidents}</div>
               {safetyDataUnreliable && (
                 <div
                   className="mt-0.5 flex items-center gap-1 text-2xs text-semantic-error"
                   title={t('safety.dates_unparseable_hint', {
                     defaultValue:
-                      'Some incidents have unreadable dates — "days without incident" cannot be confirmed.',
+                      'Some incidents have unreadable dates - "days without incident" cannot be confirmed.',
                   })}
                 >
                   <AlertTriangle size={11} />
@@ -435,31 +462,50 @@ function QualityDashboardSummary({ projectId }: { projectId: string }) {
               )}
             </>
           )}
-        </div>
+        </button>
       </Card>
       <Card padding="none">
-        <div className="p-3">
-          <div className="text-2xs text-content-tertiary uppercase">
+        <button
+          type="button"
+          onClick={() => navigate('/inspections')}
+          className={tileBtnCls}
+          title={t('safety.dash_pending_inspections_hint', {
+            defaultValue: 'View inspections',
+          })}
+        >
+          <div className="text-2xs uppercase tracking-wide text-content-tertiary">
             {t('safety.dash_pending_inspections', { defaultValue: 'Pending Inspections' })}
           </div>
-          <div className="text-xl font-bold text-content-primary">{pendingInspections}</div>
-        </div>
+          <div className="text-lg font-semibold text-content-primary">{pendingInspections}</div>
+        </button>
       </Card>
       <Card padding="none">
-        <div className="p-3">
-          <div className="text-2xs text-content-tertiary uppercase">
+        <button
+          type="button"
+          onClick={() => navigate('/ncr')}
+          className={tileBtnCls}
+          title={t('safety.dash_open_ncrs_hint', { defaultValue: 'View NCRs' })}
+        >
+          <div className="text-2xs uppercase tracking-wide text-content-tertiary">
             {t('safety.dash_open_ncrs', { defaultValue: 'Open NCRs' })}
           </div>
-          <div className="text-xl font-bold text-content-primary">{openNCRs}</div>
-        </div>
+          <div className="text-lg font-semibold text-content-primary">{openNCRs}</div>
+        </button>
       </Card>
       <Card padding="none">
-        <div className="p-3">
-          <div className="text-2xs text-content-tertiary uppercase">
+        <button
+          type="button"
+          onClick={() => navigate('/punchlist')}
+          className={tileBtnCls}
+          title={t('safety.dash_open_defects_hint', {
+            defaultValue: 'View punch list',
+          })}
+        >
+          <div className="text-2xs uppercase tracking-wide text-content-tertiary">
             {t('safety.dash_open_defects', { defaultValue: 'Open Defects' })}
           </div>
-          <div className="text-xl font-bold text-content-primary">{openDefects}</div>
-        </div>
+          <div className="text-lg font-semibold text-content-primary">{openDefects}</div>
+        </button>
       </Card>
     </div>
   );
@@ -476,11 +522,65 @@ export function SafetyPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { projectId: routeProjectId } = useParams<{ projectId?: string }>();
+  const [searchParams, setSearchParams] = useSearchParams();
   const activeProjectId = useProjectContextStore((s) => s.activeProjectId);
   const projectId = routeProjectId || activeProjectId || '';
   const projectName = useProjectContextStore((s) => s.activeProjectName);
 
-  const [activeTab, setActiveTab] = useState<SafetyTab>('incidents');
+  // Deep-link params. ?highlight=<incidentId> (from Daily Diary "View incident")
+  // scrolls and flashes the incident row; the optional ?tab=incidents focuses
+  // that tab; ?sub=<name> (from a subcontractor rating cross-link, CONN-44)
+  // seeds the incidents search so the list opens filtered to that firm.
+  const highlightId = searchParams.get('highlight');
+  const tabParam = searchParams.get('tab');
+  const subParam = searchParams.get('sub');
+
+  const initialTab: SafetyTab =
+    tabParam && (SAFETY_TAB_IDS as readonly string[]).includes(tabParam)
+      ? (tabParam as SafetyTab)
+      : 'incidents';
+
+  const [activeTab, setActiveTab] = useState<SafetyTab>(initialTab);
+  // ?sub seeds the incidents search once; keep the first value even after the
+  // param is cleared so a later clear/refine by the user is not undone.
+  const [subSeed] = useState<string | null>(() => subParam);
+  // Anchors the incidents tab panel so the Open Incidents summary tile can
+  // scroll the list into view after switching to it.
+  const tabsRef = useRef<HTMLDivElement>(null);
+
+  // A highlighted incident lives on the incidents tab, so focus it (a ?sub
+  // filter is an incidents filter too). The ?tab and ?sub params have served
+  // their purpose once read, so drop them; ?highlight is cleared by the tab
+  // after it has flashed the row.
+  useEffect(() => {
+    if ((highlightId || subParam) && activeTab !== 'incidents') {
+      setActiveTab('incidents');
+    }
+    if (tabParam || subParam) {
+      setSearchParams(
+        (prev) => {
+          const next = new URLSearchParams(prev);
+          next.delete('tab');
+          next.delete('sub');
+          return next;
+        },
+        { replace: true },
+      );
+    }
+    // Run once on mount for the initial param snapshot.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const clearHighlight = useCallback(() => {
+    setSearchParams(
+      (prev) => {
+        const next = new URLSearchParams(prev);
+        next.delete('highlight');
+        return next;
+      },
+      { replace: true },
+    );
+  }, [setSearchParams]);
   // Arrow-key navigation across the Incidents / Observations tabs (WCAG 2.1.1).
   const onTabKeyDown = useTabKeyboardNav<SafetyTab>({
     ids: SAFETY_TAB_IDS,
@@ -500,54 +600,61 @@ export function SafetyPage() {
       label: t('safety.observations', { defaultValue: 'Observations' }),
       icon: <Eye size={15} />,
     },
+    {
+      key: 'trends',
+      label: t('safety.trends', { defaultValue: 'Trends' }),
+      icon: <LineChart size={15} />,
+    },
   ];
 
   return (
-    <div className="w-full animate-fade-in">
+    <div className="space-y-5 animate-fade-in">
       <Breadcrumb
         items={[
-          { label: t('nav.dashboard', 'Dashboard'), to: '/' },
           ...(projectName
             ? [{ label: projectName, to: `/projects/${projectId}` }]
             : []),
           { label: t('safety.title', { defaultValue: 'Safety' }) },
         ]}
-        className="mb-4"
       />
 
       {/* Header */}
-      <div className="mb-6 flex items-start justify-between gap-4 flex-wrap">
-        <div>
-          <h1 className="text-2xl font-bold text-content-primary">
-            {t('safety.title', { defaultValue: 'Safety' })}
-          </h1>
-          <p className="mt-1 text-sm text-content-secondary">
-            {t('safety.subtitle', {
-              defaultValue: 'Report incidents, record observations, and monitor site safety compliance',
-            })}
-          </p>
-        </div>
-        {projectId && (
-          <button
-            type="button"
-            onClick={() => navigate(`/projects/${projectId}/geo`)}
-            className="inline-flex items-center gap-1.5 rounded-md border border-border-light bg-surface-primary px-2.5 py-1.5 text-xs font-medium text-content-secondary hover:bg-surface-secondary hover:text-oe-blue focus:outline-none focus:ring-2 focus:ring-oe-blue/40 shrink-0"
-            title={t('geo_hub.view_on_map', { defaultValue: 'View on map' })}
-            aria-label={t('geo_hub.view_on_map', { defaultValue: 'View on map' })}
-            data-testid="safety-view-on-map"
-          >
-            <Globe2 size={13} />
-            {t('geo_hub.view_on_map', { defaultValue: 'View on map' })}
-          </button>
-        )}
-      </div>
+      <PageHeader
+        srTitle={t('safety.title', { defaultValue: 'Safety' })}
+        subtitle={t('safety.subtitle', {
+          defaultValue: 'Report incidents, record observations, and monitor site safety compliance',
+        })}
+        actions={
+          projectId && (
+            <Button
+              variant="secondary"
+              size="sm"
+              icon={<Globe2 size={14} />}
+              onClick={() => navigate(`/projects/${projectId}/geo`)}
+              title={t('geo_hub.view_on_map', { defaultValue: 'View on map' })}
+              data-testid="safety-view-on-map"
+            >
+              {t('geo_hub.view_on_map', { defaultValue: 'View on map' })}
+            </Button>
+          )
+        }
+      />
 
       <SectionIntro
         storageKey="safety"
         title={t('safety.intro_title', {
-          defaultValue: 'Incidents vs. observations',
+          defaultValue: 'Catch the hazard before the injury',
         })}
+        more={
+          t('safety.intro_more', { defaultValue: '' }) ? (
+            <IntroRichText text={t('safety.intro_more')} />
+          ) : undefined
+        }
         links={[
+          {
+            label: t('safety.intro_link_hse', { defaultValue: 'HSE Advanced' }),
+            onClick: () => navigate('/hse-advanced'),
+          },
           {
             label: t('safety.link_inspections', { defaultValue: 'Inspections' }),
             onClick: () => navigate('/inspections'),
@@ -556,20 +663,24 @@ export function SafetyPage() {
             label: t('safety.link_punchlist', { defaultValue: 'Punch List' }),
             onClick: () => navigate('/punchlist'),
           },
-          {
-            label: t('safety.intro_link_hse', { defaultValue: 'HSE Advanced' }),
-            onClick: () => navigate('/hse-advanced'),
-          },
         ]}
       >
         {t('safety.intro_body', {
           defaultValue:
-            'Log Incidents for things that happened (injury, near-miss, property damage, fire, environmental) — they feed the “days without incident” compliance metric. Log Observations for hazards spotted before harm; their Severity × Likelihood risk score can prompt a follow-up inspection. For formal 5-Whys investigations, permits-to-work and CAPA tracking, use HSE Advanced.',
+            'Log Incidents for things that already happened (injury, near-miss, property damage, fire, environmental) and Observations for hazards spotted before harm, scored by severity times likelihood. The records drive the days-without-incident metric and the safety rollup tiles, and a serious event escalates into HSE Advanced for root-cause investigation while a flagged hazard can open an inspection or punch item.',
         })}
       </SectionIntro>
 
       {/* Quality Ecosystem Summary */}
-      {projectId && <QualityDashboardSummary projectId={projectId} />}
+      {projectId && (
+        <QualityDashboardSummary
+          projectId={projectId}
+          onOpenIncidents={() => {
+            setActiveTab('incidents');
+            tabsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }}
+        />
+      )}
 
       <RequiresProject
         emptyHint={t('safety.select_project', {
@@ -579,7 +690,8 @@ export function SafetyPage() {
       >
         {/* Tab Bar */}
         <div
-          className="flex items-center gap-1 mb-6 border-b border-border-light"
+          ref={tabsRef}
+          className="flex items-center gap-1 mb-5 border-b border-border-light scroll-mt-24"
           role="tablist"
           aria-label={t('safety.tabs_aria', { defaultValue: 'Safety sections' })}
           onKeyDown={onTabKeyDown}
@@ -618,10 +730,21 @@ export function SafetyPage() {
           aria-labelledby={`safety-tab-${activeTab}`}
         >
           {activeTab === 'incidents' && projectId && (
-            <IncidentsTab projectId={projectId} />
+            <IncidentsTab
+              projectId={projectId}
+              searchSeed={subSeed}
+              highlightId={highlightId}
+              onHighlightConsumed={clearHighlight}
+            />
           )}
           {activeTab === 'observations' && projectId && (
             <ObservationsTab projectId={projectId} />
+          )}
+          {activeTab === 'trends' && projectId && (
+            <div className="space-y-4">
+              <SafetyThresholdWidget projectId={projectId} />
+              <SafetyTrendsChart projectId={projectId} />
+            </div>
           )}
         </div>
       </RequiresProject>
@@ -631,10 +754,25 @@ export function SafetyPage() {
 
 /* ── Incidents Tab ────────────────────────────────────────────────────── */
 
-function IncidentsTab({ projectId }: { projectId: string }) {
+function IncidentsTab({
+  projectId,
+  searchSeed,
+  highlightId,
+  onHighlightConsumed,
+}: {
+  projectId: string;
+  /** Pre-fills the search box once (from a ?sub deep-link). */
+  searchSeed?: string | null;
+  /** Incident id to scroll to and flash (from a ?highlight deep-link). */
+  highlightId?: string | null;
+  /** Called once the highlighted row has flashed so the parent can drop the
+   *  ?highlight param. */
+  onHighlightConsumed?: () => void;
+}) {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useState(() => searchSeed ?? '');
   const addToast = useToastStore((s) => s.addToast);
   const [showCreate, setShowCreate] = useState(false);
   const [incidentForm, setIncidentForm] = useState({
@@ -753,6 +891,29 @@ function IncidentsTab({ projectId }: { projectId: string }) {
     );
   }, [incidents, search]);
 
+  // Deep-link highlight (from Daily Diary "View incident"). Once the target
+  // incident is present, scroll its row into view, flash it briefly, then tell
+  // the parent to drop the ?highlight param so a refresh does not re-trigger it.
+  const rowRefs = useRef<Map<string, HTMLElement>>(new Map());
+  const [flashId, setFlashId] = useState<string | null>(null);
+  useEffect(() => {
+    if (!highlightId || !incidents) return;
+    if (!incidents.some((inc) => inc.id === highlightId)) return;
+    setFlashId(highlightId);
+    rowRefs.current.get(highlightId)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    const flashTimer = window.setTimeout(() => setFlashId(null), 2400);
+    const clearTimer = window.setTimeout(() => onHighlightConsumed?.(), 2600);
+    return () => {
+      window.clearTimeout(flashTimer);
+      window.clearTimeout(clearTimer);
+    };
+  }, [highlightId, incidents, onHighlightConsumed]);
+
+  const setRowRef = (id: string) => (el: HTMLElement | null) => {
+    if (el) rowRefs.current.set(id, el);
+    else rowRefs.current.delete(id);
+  };
+
   if (isLoading) return <SkeletonTable rows={5} columns={7} />;
 
   if (isError) return <RecoveryCard error={error} onRetry={() => refetch()} />;
@@ -845,19 +1006,26 @@ function IncidentsTab({ projectId }: { projectId: string }) {
               <th className="px-4 py-3 text-center font-medium text-content-tertiary">
                 {t('common.status', { defaultValue: 'Status' })}
               </th>
+              <th className="px-4 py-3 text-right font-medium text-content-tertiary">
+                {t('common.actions', { defaultValue: 'Actions' })}
+              </th>
             </tr>
           </thead>
           <tbody>
             {filtered.length === 0 ? (
               <tr>
-                <td colSpan={7} className="px-4 py-8 text-center text-sm text-content-tertiary">
+                <td colSpan={8} className="px-4 py-8 text-center text-sm text-content-tertiary">
                   {t('safety.no_incidents_match', { defaultValue: 'No matching incidents' })}
                 </td>
               </tr>
             ) : filtered.map((inc) => (
               <tr
                 key={inc.id}
-                className="border-b border-border-light hover:bg-surface-secondary/30 transition-colors"
+                ref={setRowRef(inc.id)}
+                className={clsx(
+                  'border-b border-border-light hover:bg-surface-secondary/30 transition-colors scroll-mt-24',
+                  flashId === inc.id && 'bg-oe-blue/10 ring-2 ring-inset ring-oe-blue/40',
+                )}
               >
                 <td className="px-4 py-3 font-mono text-xs text-content-primary">
                   {inc.incident_number}
@@ -907,6 +1075,23 @@ function IncidentsTab({ projectId }: { projectId: string }) {
                     })}
                   </Badge>
                 </td>
+                <td className="px-4 py-3 text-right whitespace-nowrap">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    icon={<Microscope size={14} />}
+                    onClick={() =>
+                      navigate(
+                        `/hse-advanced?tab=incidents&action=investigate&incident_id=${inc.id}`,
+                      )
+                    }
+                    title={t('safety.investigate_hint', {
+                      defaultValue: 'Open a formal HSE investigation for this incident',
+                    })}
+                  >
+                    {t('safety.investigate', { defaultValue: 'Investigate' })}
+                  </Button>
+                </td>
               </tr>
             ))}
           </tbody>
@@ -920,7 +1105,15 @@ function IncidentsTab({ projectId }: { projectId: string }) {
             {t('safety.no_incidents_match', { defaultValue: 'No matching incidents' })}
           </p>
         ) : filtered.map((inc) => (
-          <Card key={inc.id} className="p-4">
+          <div
+            key={inc.id}
+            ref={setRowRef(inc.id)}
+            className={clsx(
+              'rounded-xl scroll-mt-24',
+              flashId === inc.id && 'ring-2 ring-oe-blue/40',
+            )}
+          >
+          <Card className="p-4">
             <div className="flex items-center justify-between mb-2">
               <div>
                 <span className="text-xs font-mono text-content-tertiary">{inc.incident_number}</span>
@@ -942,7 +1135,22 @@ function IncidentsTab({ projectId }: { projectId: string }) {
                 <span className="text-xs font-medium text-semantic-error">{inc.days_lost} {t('safety.days_lost', { defaultValue: 'days lost' })}</span>
               )}
             </div>
+            <div className="mt-3">
+              <Button
+                variant="secondary"
+                size="sm"
+                icon={<Microscope size={14} />}
+                onClick={() =>
+                  navigate(
+                    `/hse-advanced?tab=incidents&action=investigate&incident_id=${inc.id}`,
+                  )
+                }
+              >
+                {t('safety.investigate', { defaultValue: 'Investigate' })}
+              </Button>
+            </div>
           </Card>
+          </div>
         ))}
       </div>
     </Card>

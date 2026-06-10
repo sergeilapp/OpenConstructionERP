@@ -1,7 +1,7 @@
-"""‌⁠‍Tendering Pydantic schemas — request/response models.
+"""‌⁠‍Tendering Pydantic schemas - request/response models.
 
 Defines create, update, and response schemas for tender packages and bids.
-v3 §10 — money fields are Decimal-as-string in JSON.
+v3 §10 - money fields are Decimal-as-string in JSON.
 """
 
 import re
@@ -12,7 +12,7 @@ from uuid import UUID
 
 from pydantic import BaseModel, ConfigDict, Field, field_serializer, field_validator
 
-# Pragmatic email regex — RFC 5322 is impractical to validate at the
+# Pragmatic email regex - RFC 5322 is impractical to validate at the
 # schema layer, so we apply the same shape check the frontend ``type=email``
 # input uses (HTML5 living standard). Empty string stays valid because the
 # field is optional on a bid (Wave 12 audit added validation).
@@ -20,7 +20,7 @@ _EMAIL_RE = re.compile(r"^[^\s@]+@[^\s@]+\.[^\s@]+$")
 
 
 # ── v3 §10 money serialisation helper ─────────────────────────────────────
-# Mirrors backend/app/modules/boq/schemas.py — money fields are stored /
+# Mirrors backend/app/modules/boq/schemas.py - money fields are stored /
 # accepted as Decimal but emitted as plain decimal strings in JSON.
 def _serialise_money(v: Decimal | None) -> str | None:
     if v is None:
@@ -72,7 +72,7 @@ class PackageResponse(BaseModel):
     ``validation_alias='metadata_'`` lets the model read the ORM column
     named ``metadata_`` while emitting the canonical ``metadata`` key on
     the wire. FastAPI defaults ``response_model_by_alias=True``, which
-    used to leak ``metadata_`` to the frontend — the frontend reads
+    used to leak ``metadata_`` to the frontend - the frontend reads
     ``metadata`` and was getting ``undefined`` (Wave 12 audit).
     """
 
@@ -103,8 +103,8 @@ class PackageWithBidsResponse(PackageResponse):
 class BidLineItem(BaseModel):
     """A single line item within a bid.
 
-    v3 §10 — ``unit_rate`` is money; Decimal-as-string in JSON.
-    ``total`` stays float (not in the deferred audit list — kept as the
+    v3 §10 - ``unit_rate`` is money; Decimal-as-string in JSON.
+    ``total`` stays float (not in the deferred audit list - kept as the
     UI-side preview value the FE rolls up).
     """
 
@@ -138,7 +138,7 @@ class BidCreate(BaseModel):
     @field_validator("contact_email")
     @classmethod
     def _check_email(cls, v: str) -> str:
-        # Optional field — empty stays empty. Anything non-empty must look
+        # Optional field - empty stays empty. Anything non-empty must look
         # like an email so we don't accept garbage strings the buyer can
         # later try to send notifications to (Wave 12 audit).
         if v and not _EMAIL_RE.match(v):
@@ -197,9 +197,9 @@ class BidResponse(BaseModel):
 class BidComparisonRow(BaseModel):
     """A single row in the bid comparison matrix.
 
-    v3 §10 — ``budget_rate`` and ``budget_total`` are money;
+    v3 §10 - ``budget_rate`` and ``budget_total`` are money;
     Decimal-as-string in JSON. ``budget_quantity`` listed in the audit as
-    "measurement, but priced — verify per project"; it is genuinely a
+    "measurement, but priced - verify per project"; it is genuinely a
     measured quantity in the bid context (not a unit price) so we keep
     it as float for symmetry with ``BidLineItem.quantity`` and the
     upstream BOQ position's ``quantity``.
@@ -221,7 +221,7 @@ class BidComparisonRow(BaseModel):
 class BidComparisonResponse(BaseModel):
     """Full bid comparison for a package.
 
-    v3 §10 — ``budget_total`` is money; Decimal-as-string in JSON.
+    v3 §10 - ``budget_total`` is money; Decimal-as-string in JSON.
     """
 
     package_id: UUID
@@ -281,7 +281,7 @@ class BidAnalysisResponse(BaseModel):
 
 # ── Addenda (mid-tender clarifications) ──────────────────────────────────────
 # Addenda are stored inside the package ``metadata_`` JSON store (under the
-# ``addenda`` key) rather than a dedicated table — they are a lightweight,
+# ``addenda`` key) rather than a dedicated table - they are a lightweight,
 # append-only revision log scoped to one package, and the data model already
 # uses ``metadata_`` as the extensible per-package store (see service
 # ``update_package`` lifecycle stamps). This keeps the feature schema-free
@@ -331,22 +331,30 @@ class AddendumResponse(BaseModel):
 # ── Bid leveling ─────────────────────────────────────────────────────────────
 # Bid leveling normalizes every bid onto the package's reference BOQ lines.
 # It is a pure computation over data that already exists (BOQ positions + each
-# bid's ``line_items``) — no persistence, no migration. Lines a bidder omitted
+# bid's ``line_items``) - no persistence, no migration. Lines a bidder omitted
 # are "imputed" at the bidder's own mean rate so a short quote cannot win on a
 # misleadingly low total.
 
 
 class BidLevelingSummary(BaseModel):
-    """Per-bid leveling rollup (raw vs leveled, line classification counts)."""
+    """Per-bid leveling rollup (raw vs leveled, line classification counts).
+
+    v3 §10 - the rolled-up amounts are money, so they ride as
+    Decimal-as-string in JSON like every other money field.
+    """
 
     bid_id: str
     company_name: str
-    raw_amount: float = 0.0
-    leveled_amount: float = 0.0
+    raw_amount: Decimal = Decimal("0")
+    leveled_amount: Decimal = Decimal("0")
     matched_lines: int = 0
     scaled_lines: int = 0
     imputed_lines: int = 0
     currency: str = ""
+
+    @field_serializer("raw_amount", "leveled_amount", when_used="json")
+    def _ser_money(self, v: Decimal) -> str | None:
+        return _serialise_money(v)
 
 
 class LevelingMatrixCell(BaseModel):
@@ -357,7 +365,12 @@ class LevelingMatrixCell(BaseModel):
     raw_total: float = 0.0
     leveled_total: float = 0.0
     status: str = ""  # "" | "matched" | "scaled" | "imputed"
-    unit_rate: float = 0.0
+    # v3 §10 - the bidder's unit price is money (Decimal-as-string in JSON).
+    unit_rate: Decimal = Decimal("0")
+
+    @field_serializer("unit_rate", when_used="json")
+    def _ser_money(self, v: Decimal) -> str | None:
+        return _serialise_money(v)
 
 
 class LevelingMatrixRow(BaseModel):
@@ -379,7 +392,7 @@ class LevelingMatrixResponse(BaseModel):
     package_id: UUID
     package_name: str
     # ISO currency the matrix is computed in (the package currency). Leveling
-    # only includes bids quoted in this currency — never blend currencies.
+    # only includes bids quoted in this currency - never blend currencies.
     currency: str = ""
     # Count of bids excluded because they were quoted in a different currency.
     excluded_off_currency: int = 0

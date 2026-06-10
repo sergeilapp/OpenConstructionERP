@@ -1,4 +1,5 @@
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useTabKeyboardNav } from '@/shared/hooks/useTabKeyboardNav';
 import { useTranslation } from 'react-i18next';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -23,6 +24,9 @@ import {
   Download,
   AlertTriangle,
   Diamond,
+  Search,
+  X,
+  Loader2,
 } from 'lucide-react';
 import {
   Button,
@@ -30,12 +34,14 @@ import {
   Badge,
   EmptyState,
   Breadcrumb,
+  DismissibleInfo,
   RecoveryCard,
   SkeletonTable,
   WideModal,
   ConfirmDialog,
   InfoHint,
 } from '@/shared/ui';
+import { PageHeader } from '@/shared/ui/PageHeader';
 import { RequiresProject } from '@/shared/auth/RequiresProject';
 import { PlanningCrossLinks } from '@/features/schedule/PlanningCrossLinks';
 import { DateDisplay } from '@/shared/ui/DateDisplay';
@@ -61,6 +67,7 @@ import {
   createLookAhead,
   publishLookAhead,
   listConstraints,
+  createConstraint,
   clearConstraint,
   escalateConstraint,
   deleteConstraint,
@@ -89,8 +96,10 @@ import {
   type RNCCategory,
   type Baseline,
   type BaselineDeltaEntry,
+  type ConstraintType,
   currentTasksForMaster,
 } from './api';
+import { fetchTasks, type Task } from '@/features/tasks/api';
 
 const SCHEDULE_TAB_IDS = [
   'master',
@@ -163,10 +172,173 @@ function pctNumber(value: string | number | null | undefined): number {
   return Math.min(100, Math.max(0, n));
 }
 
+/* ── Task picker ─────────────────────────────────────────────────────────
+ *
+ * Last Planner commitments and constraints both link to a real project
+ * task by its UUID (``task_ref``). The legacy UI made the user paste a
+ * raw UUID into a free-text box, which is a hard data-island: there is no
+ * way to know a task's id by hand. This picker loads the project's tasks
+ * (fetchTasks by project) and lets the user search by title, emitting the
+ * task UUID on select. Reused by both the Add-commitment and New-constraint
+ * modals so the two flows stay consistent.
+ */
+function TaskPicker({
+  projectId,
+  value,
+  onChange,
+  autoFocus,
+}: {
+  projectId: string;
+  value: string;
+  /** Emits the selected task UUID (or '' when cleared). */
+  onChange: (taskId: string) => void;
+  autoFocus?: boolean;
+}) {
+  const { t } = useTranslation();
+  const [query, setQuery] = useState('');
+  const [open, setOpen] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  const tasksQ = useQuery({
+    queryKey: ['schedule-advanced', 'task-picker', projectId],
+    queryFn: () => fetchTasks({ project_id: projectId }),
+    enabled: !!projectId,
+  });
+
+  // Close on outside click.
+  useEffect(() => {
+    function onDocClick(e: MouseEvent) {
+      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
+        setOpen(false);
+      }
+    }
+    document.addEventListener('mousedown', onDocClick);
+    return () => document.removeEventListener('mousedown', onDocClick);
+  }, []);
+
+  const tasks = tasksQ.data ?? [];
+  const selected: Task | undefined = useMemo(
+    () => tasks.find((tk) => tk.id === value),
+    [tasks, value],
+  );
+
+  const filtered = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    const base = q
+      ? tasks.filter(
+          (tk) =>
+            tk.title.toLowerCase().includes(q) ||
+            tk.id.toLowerCase().startsWith(q),
+        )
+      : tasks;
+    return base.slice(0, 50);
+  }, [tasks, query]);
+
+  const statusVariant: Record<Task['status'], string> = {
+    draft: 'text-content-tertiary',
+    open: 'text-oe-blue',
+    in_progress: 'text-amber-600 dark:text-amber-400',
+    completed: 'text-emerald-600 dark:text-emerald-400',
+  };
+
+  return (
+    <div ref={containerRef} className="relative">
+      <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-content-tertiary">
+        <Search size={14} />
+      </div>
+      <input
+        type="text"
+        value={open ? query : selected ? selected.title : query}
+        onChange={(e) => {
+          setQuery(e.target.value);
+          if (value) onChange('');
+          setOpen(true);
+        }}
+        onFocus={() => setOpen(true)}
+        autoFocus={autoFocus}
+        className={clsx(inputCls, 'pl-9', value && 'pr-8')}
+        placeholder={t('schedule_advanced.task_picker_placeholder', {
+          defaultValue: 'Search project tasks…',
+        })}
+        role="combobox"
+        aria-expanded={open}
+        aria-controls="task-picker-list"
+      />
+      {value && (
+        <button
+          type="button"
+          onClick={() => {
+            onChange('');
+            setQuery('');
+          }}
+          aria-label={t('common.clear', { defaultValue: 'Clear' })}
+          className="absolute inset-y-0 right-0 flex items-center pr-2.5 text-content-tertiary hover:text-content-primary"
+        >
+          <X size={14} />
+        </button>
+      )}
+      {open && (
+        <div
+          id="task-picker-list"
+          role="listbox"
+          className="absolute left-0 top-full z-50 mt-1 max-h-56 w-full overflow-y-auto rounded-lg border border-border-light bg-surface-elevated shadow-md"
+        >
+          {tasksQ.isLoading ? (
+            <div className="flex items-center justify-center gap-2 px-3 py-3 text-xs text-content-tertiary">
+              <Loader2 size={14} className="animate-spin" />
+              {t('common.loading', { defaultValue: 'Loading...' })}
+            </div>
+          ) : tasksQ.isError ? (
+            <div className="px-3 py-3 text-xs text-semantic-error">
+              {t('schedule_advanced.task_picker_error', {
+                defaultValue: 'Could not load tasks.',
+              })}
+            </div>
+          ) : filtered.length === 0 ? (
+            <div className="px-3 py-3 text-xs text-content-tertiary">
+              {tasks.length === 0
+                ? t('schedule_advanced.task_picker_none', {
+                    defaultValue: 'No tasks in this project yet.',
+                  })
+                : t('schedule_advanced.task_picker_no_match', {
+                    defaultValue: 'No tasks match your search.',
+                  })}
+            </div>
+          ) : (
+            filtered.map((tk) => (
+              <button
+                key={tk.id}
+                type="button"
+                role="option"
+                aria-selected={tk.id === value}
+                onClick={() => {
+                  onChange(tk.id);
+                  setQuery('');
+                  setOpen(false);
+                }}
+                className={clsx(
+                  'flex w-full items-center gap-2 px-3 py-2 text-left text-sm transition-colors hover:bg-surface-secondary',
+                  tk.id === value && 'bg-oe-blue-subtle/40',
+                )}
+              >
+                <span className="min-w-0 flex-1 truncate text-content-primary">{tk.title}</span>
+                <span className={clsx('shrink-0 text-2xs capitalize', statusVariant[tk.status])}>
+                  {tk.status.replace('_', ' ')}
+                </span>
+              </button>
+            ))
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
 /* ── Page ────────────────────────────────────────────────────────────── */
 
 export function ScheduleAdvancedPage() {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const [tab, setTab] = useState<Tab>('master');
   // Arrow-key navigation across the schedule advanced tab strip (WCAG 2.1.1).
   const onTabKeyDown = useTabKeyboardNav<Tab>({
@@ -193,13 +365,16 @@ export function ScheduleAdvancedPage() {
     queryFn: () => projectsApi.list(),
   });
 
-  // Prefer the globally-selected active project; fall back to the first
-  // project only when no active project is set. Never override an explicit
-  // in-page selection.
+  // Project selection lives in the global top-bar selector. Follow the
+  // active project; fall back to the first project only when nothing is
+  // active yet. Reset dependent selections whenever the project changes.
   useEffect(() => {
-    if (projectId) return;
-    const seed = activeProjectId || projectsQ.data?.[0]?.id;
-    if (seed) setProjectId(seed);
+    const next = activeProjectId || projectsQ.data?.[0]?.id || '';
+    if (!next || next === projectId) return;
+    setProjectId(next);
+    setMasterId('');
+    setLookAheadId('');
+    setWeekPlanId('');
   }, [activeProjectId, projectsQ.data, projectId]);
 
   const masterQ = useQuery({
@@ -317,59 +492,53 @@ export function ScheduleAdvancedPage() {
   });
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-5 animate-fade-in">
       <Breadcrumb
         items={[
           {
-            label: t('schedule_advanced.title', {
+            label: t('nav.schedule_advanced', {
               defaultValue: 'Last Planner / CPM',
             }),
           },
         ]}
       />
 
+      <PageHeader
+        srTitle={t('nav.schedule_advanced', { defaultValue: 'Last Planner / CPM' })}
+        subtitle={t('schedule_advanced.subtitle', {
+          defaultValue:
+            'Pull-planning, lookaheads, weekly commitments, constraints and baselines.',
+        })}
+        actions={
+          <Button
+            variant="primary"
+            icon={<Plus size={14} />}
+            onClick={() => setCreateMaster(true)}
+            disabled={!projectId}
+          >
+            {t('schedule_advanced.new_master', { defaultValue: 'New Master Schedule' })}
+          </Button>
+        }
+      />
+
+      <DismissibleInfo
+        storageKey="schedule-advanced"
+        title={t('schedule_advanced.intro_title', {
+          defaultValue: 'Keep the weekly promises the plan depends on',
+        })}
+        links={[
+          { label: t('schedule_advanced.intro_link_schedule', { defaultValue: '4D Schedule' }), onClick: () => navigate('/schedule') },
+          { label: t('schedule_advanced.intro_link_takt', { defaultValue: 'Takt planning' }), onClick: () => navigate('/takt') },
+        ]}
+      >
+        {t('schedule_advanced.intro_body', {
+          defaultValue:
+            'Builds the Last Planner stack on top of a master schedule: break the project into phases, roll a six-week look-ahead to clear constraints, and capture weekly commitments from trade foremen. Missed commitments record a reason for non-completion that feeds root-cause analysis, and baselines track variance against the plan.',
+        })}
+      </DismissibleInfo>
+
       {/* Cross-module navigation — connects the planning value chain */}
       <PlanningCrossLinks active="schedule-advanced" />
-
-      <div className="flex items-start justify-between gap-4 flex-wrap">
-        <div>
-          <h1 className="text-2xl font-semibold text-content-primary">
-            {t('schedule_advanced.title', { defaultValue: 'Last Planner / CPM' })}
-          </h1>
-          <p className="mt-1 text-sm text-content-secondary">
-            {t('schedule_advanced.subtitle', {
-              defaultValue:
-                'Pull-planning, lookaheads, weekly commitments, constraints and baselines.',
-            })}
-          </p>
-        </div>
-        {projectsQ.data && projectsQ.data.length > 0 && (
-          <select
-            value={projectId}
-            onChange={(e) => {
-              setProjectId(e.target.value);
-              setMasterId('');
-              setLookAheadId('');
-              setWeekPlanId('');
-            }}
-            className={clsx(inputCls, 'max-w-xs')}
-          >
-            {projectsQ.data.map((p) => (
-              <option key={p.id} value={p.id}>
-                {p.name}
-              </option>
-            ))}
-          </select>
-        )}
-      </div>
-
-      {/* How Last Planner connects to the rest of the platform */}
-      <InfoHint
-        text={t('schedule_advanced.what_is_lps', {
-          defaultValue:
-            'The Last Planner System is pull-based production control that complements the 4D Schedule. Master schedule sets milestones, Phase Plans pull work backwards from them, Look-Aheads (6 weeks) make work ready by removing constraints, and Weekly Work Plans capture crew commitments. PPC (Percent Plan Complete) and constraint logs measure reliability. Use the 4D Schedule for the CPM critical path; use this for what the team actually commits to do next.',
-        })}
-      />
 
       {/* Tabs */}
       <div className="border-b border-border-light">
@@ -485,6 +654,7 @@ export function ScheduleAdvancedPage() {
         />
       ) : tab === 'weekly' ? (
         <WeeklyTab
+          projectId={projectId}
           plans={weeklyQ.data ?? []}
           loading={weeklyQ.isLoading}
           isError={weeklyQ.isError}
@@ -500,6 +670,7 @@ export function ScheduleAdvancedPage() {
         />
       ) : tab === 'constraints' ? (
         <ConstraintsTab
+          projectId={projectId}
           lookAheads={lookAheadsQ.data ?? []}
           lookAheadId={lookAheadId}
           onSelectLA={setLookAheadId}
@@ -545,7 +716,7 @@ export function ScheduleAdvancedPage() {
             ? t('schedule_advanced.delete_master_message', {
                 name: deleteMaster.name,
                 defaultValue:
-                  '"{{name}}" and everything under it — phase plans, look-aheads, weekly work plans, commitments and baselines — will be permanently deleted. This cannot be undone.',
+                  '"{{name}}" and everything under it - phase plans, look-aheads, weekly work plans, commitments and baselines - will be permanently deleted. This cannot be undone.',
               })
             : ''
         }
@@ -621,7 +792,7 @@ function MasterTab({
           title={t('schedule_advanced.no_master_yet', { defaultValue: 'No master schedule yet' })}
           description={t('schedule_advanced.no_master_yet_desc', {
             defaultValue:
-              'The master schedule is the top-level plan that every phase plan, look-ahead and weekly work plan rolls up to. Create one to start pull-planning — you can rename it, change its dates, or delete it at any time.',
+              'The master schedule is the top-level plan that every phase plan, look-ahead and weekly work plan rolls up to. Create one to start pull-planning - you can rename it, change its dates, or delete it at any time.',
           })}
           action={{
             label: t('schedule_advanced.create_master', { defaultValue: 'Create Master' }),
@@ -1381,7 +1552,7 @@ function PhasesCardGrid({
             {onCritical && (
               <span
                 className="absolute top-2 right-2 inline-flex items-center gap-0.5 rounded-md bg-rose-500/15 px-1.5 py-px text-2xs font-semibold text-rose-700 dark:text-rose-300"
-                title={t('schedule_advanced.cp_tooltip', { defaultValue: 'On the critical path — slipping this phase delays the project finish' })}
+                title={t('schedule_advanced.cp_tooltip', { defaultValue: 'On the critical path - slipping this phase delays the project finish' })}
                 data-testid="phase-cp-badge"
               >
                 <AlertTriangle size={9} />
@@ -1526,7 +1697,7 @@ function PhasesTableView({
                       {isPhaseMilestone(p) && <Diamond size={10} className="text-amber-500 rotate-45 shrink-0" aria-hidden />}
                       {p.name}
                       {onCritical && (
-                        <span className="rounded-md bg-rose-500/15 px-1 py-px text-2xs font-semibold text-rose-700 dark:text-rose-300" title={t('schedule_advanced.cp_tooltip', { defaultValue: 'On the critical path — slipping this phase delays the project finish' })} data-testid="phase-cp-badge">CP</span>
+                        <span className="rounded-md bg-rose-500/15 px-1 py-px text-2xs font-semibold text-rose-700 dark:text-rose-300" title={t('schedule_advanced.cp_tooltip', { defaultValue: 'On the critical path - slipping this phase delays the project finish' })} data-testid="phase-cp-badge">CP</span>
                       )}
                     </button>
                   </td>
@@ -1733,7 +1904,7 @@ function PhasesTimelineView({
                     title={p.name}
                   >
                     {onCritical && (
-                      <span className="rounded-sm bg-rose-500/15 px-1 py-px text-2xs font-semibold text-rose-700 dark:text-rose-300" title={t('schedule_advanced.cp_tooltip', { defaultValue: 'On the critical path — slipping this phase delays the project finish' })} data-testid="phase-cp-badge">CP</span>
+                      <span className="rounded-sm bg-rose-500/15 px-1 py-px text-2xs font-semibold text-rose-700 dark:text-rose-300" title={t('schedule_advanced.cp_tooltip', { defaultValue: 'On the critical path - slipping this phase delays the project finish' })} data-testid="phase-cp-badge">CP</span>
                     )}
                     <span className="truncate">{p.name}</span>
                     <VarianceBadge days={variance} />
@@ -1872,7 +2043,7 @@ function PhaseFormModal({
       title={isEdit ? t('schedule_advanced.edit_phase', { defaultValue: 'Edit phase' }) : t('schedule_advanced.create_phase', { defaultValue: 'New phase' })}
       subtitle={t('schedule_advanced.phase_modal_subtitle', {
         defaultValue:
-          'Phases are high-level project segments — typically 4–12 weeks each. Use the lifecycle buttons on the card to pull, start, and complete a phase.',
+          'Phases are high-level project segments - typically 4–12 weeks each. Use the lifecycle buttons on the card to pull, start, and complete a phase.',
       })}
       size="lg"
       busy={busy}
@@ -1969,21 +2140,21 @@ function PhaseTemplateModal({
       key: 'residential',
       title: t('schedule_advanced.template_residential', { defaultValue: 'Residential' }),
       description: t('schedule_advanced.template_residential_desc', {
-        defaultValue: 'Single-family / multi-family build — site prep through handover.',
+        defaultValue: 'Single-family / multi-family build - site prep through handover.',
       }),
     },
     {
       key: 'commercial',
       title: t('schedule_advanced.template_commercial', { defaultValue: 'Commercial' }),
       description: t('schedule_advanced.template_commercial_desc', {
-        defaultValue: 'Office / retail / institutional — includes commissioning phase.',
+        defaultValue: 'Office / retail / institutional - includes commissioning phase.',
       }),
     },
     {
       key: 'infrastructure',
       title: t('schedule_advanced.template_infrastructure', { defaultValue: 'Infrastructure' }),
       description: t('schedule_advanced.template_infrastructure_desc', {
-        defaultValue: 'Roads / utilities — earthworks-heavy with final inspection.',
+        defaultValue: 'Roads / utilities - earthworks-heavy with final inspection.',
       }),
     },
   ];
@@ -1997,7 +2168,7 @@ function PhaseTemplateModal({
       title={t('schedule_advanced.apply_template', { defaultValue: 'Apply phase template' })}
       subtitle={t('schedule_advanced.apply_template_subtitle', {
         defaultValue:
-          'Pick a starter set of construction phases. Each phase gets a default duration — you can edit names, dates, and notes after applying.',
+          'Pick a starter set of construction phases. Each phase gets a default duration - you can edit names, dates, and notes after applying.',
       })}
       size="xl"
       busy={busy}
@@ -2201,6 +2372,7 @@ function LookAheadTab({
 /* ── Weekly plan tab ─────────────────────────────────────────────────── */
 
 function WeeklyTab({
+  projectId,
   plans,
   loading,
   isError,
@@ -2214,6 +2386,7 @@ function WeeklyTab({
   currentWeek,
   onCreate,
 }: {
+  projectId: string;
   plans: WeeklyWorkPlan[];
   loading: boolean;
   isError?: boolean;
@@ -2576,6 +2749,7 @@ function WeeklyTab({
 
       {addCommitment && weekPlanId && (
         <AddCommitmentModal
+          projectId={projectId}
           weekPlanId={weekPlanId}
           onClose={() => setAddCommitment(false)}
           onSaved={invalidateCommitments}
@@ -2595,10 +2769,12 @@ function WeeklyTab({
 }
 
 function AddCommitmentModal({
+  projectId,
   weekPlanId,
   onClose,
   onSaved,
 }: {
+  projectId: string;
   weekPlanId: string;
   onClose: () => void;
   onSaved: () => void;
@@ -2612,16 +2788,11 @@ function AddCommitmentModal({
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const isUuid = (v: string) =>
-    /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
-      v.trim(),
-    );
-
   const submit = async () => {
-    if (!isUuid(taskRef)) {
+    if (!taskRef.trim()) {
       setError(
-        t('schedule_advanced.err_task_ref', {
-          defaultValue: 'A valid task reference (UUID) is required.',
+        t('schedule_advanced.err_task_pick', {
+          defaultValue: 'Pick the task this commitment delivers.',
         }),
       );
       return;
@@ -2668,15 +2839,9 @@ function AddCommitmentModal({
       )}
       <div>
         <label className={labelCls}>
-          {t('schedule_advanced.task_ref', { defaultValue: 'Task reference (UUID)' })} *
+          {t('schedule_advanced.task', { defaultValue: 'Task' })} *
         </label>
-        <input
-          value={taskRef}
-          onChange={(e) => setTaskRef(e.target.value)}
-          className={inputCls}
-          placeholder="00000000-0000-0000-0000-000000000000"
-          autoFocus
-        />
+        <TaskPicker projectId={projectId} value={taskRef} onChange={setTaskRef} autoFocus />
       </div>
       <div>
         <label className={labelCls}>{t('schedule_advanced.crew', { defaultValue: 'Crew' })}</label>
@@ -2794,6 +2959,7 @@ function MissCommitmentDialog({
 /* ── Constraints tab ─────────────────────────────────────────────────── */
 
 function ConstraintsTab({
+  projectId,
   lookAheads,
   lookAheadId,
   onSelectLA,
@@ -2804,6 +2970,7 @@ function ConstraintsTab({
   filter,
   onFilter,
 }: {
+  projectId: string;
   lookAheads: LookAheadPlan[];
   lookAheadId: string;
   onSelectLA: (id: string) => void;
@@ -2817,6 +2984,12 @@ function ConstraintsTab({
   const { t } = useTranslation();
   const qc = useQueryClient();
   const addToast = useToastStore((s) => s.addToast);
+  const [createOpen, setCreateOpen] = useState(false);
+
+  const invalidateConstraints = () =>
+    qc.invalidateQueries({
+      queryKey: ['schedule-advanced', 'constraints', lookAheadId],
+    });
 
   const clearMut = useMutation({
     mutationFn: (id: string) => clearConstraint(id),
@@ -2849,7 +3022,7 @@ function ConstraintsTab({
           icon={<AlertCircle size={22} />}
           title={t('schedule_advanced.no_la_for_constraints', { defaultValue: 'No look-aheads' })}
           description={t('schedule_advanced.no_la_for_constraints_desc', {
-            defaultValue: 'Constraints belong to a look-ahead — create one first.',
+            defaultValue: 'Constraints belong to a look-ahead - create one first.',
           })}
         />
       </Card>
@@ -2894,6 +3067,15 @@ function ConstraintsTab({
           <span className="rounded-md bg-semantic-success-bg px-2 py-1 text-semantic-success">
             {t('schedule_advanced.cleared_count', { count: clearedCount, defaultValue: '{{count}} cleared' })}
           </span>
+          <Button
+            variant="primary"
+            size="sm"
+            icon={<Plus size={14} />}
+            onClick={() => setCreateOpen(true)}
+            disabled={!lookAheadId}
+          >
+            {t('schedule_advanced.new_constraint', { defaultValue: 'New constraint' })}
+          </Button>
         </div>
       </div>
 
@@ -2911,8 +3093,13 @@ function ConstraintsTab({
             icon={<AlertCircle size={22} />}
             title={t('schedule_advanced.no_constraints', { defaultValue: 'No constraints' })}
             description={t('schedule_advanced.no_constraints_desc', {
-              defaultValue: 'Add constraints from the look-ahead detail view.',
+              defaultValue:
+                'Constraints are the things blocking a task from being ready to start - missing material, permits, predecessors or information. Log one against a task so it can be cleared before the work is committed.',
             })}
+            action={{
+              label: t('schedule_advanced.new_constraint', { defaultValue: 'New constraint' }),
+              onClick: () => setCreateOpen(true),
+            }}
           />
         ) : (
           <div className="overflow-x-auto">
@@ -2981,7 +3168,147 @@ function ConstraintsTab({
           </div>
         )}
       </Card>
+
+      {createOpen && lookAheadId && (
+        <NewConstraintModal
+          projectId={projectId}
+          lookAheadId={lookAheadId}
+          onClose={() => setCreateOpen(false)}
+          onSaved={invalidateConstraints}
+        />
+      )}
     </div>
+  );
+}
+
+const CONSTRAINT_TYPES: ConstraintType[] = [
+  'info',
+  'material',
+  'labor',
+  'equipment',
+  'permit',
+  'predecessor',
+  'weather',
+  'other',
+];
+
+function NewConstraintModal({
+  projectId,
+  lookAheadId,
+  onClose,
+  onSaved,
+}: {
+  projectId: string;
+  lookAheadId: string;
+  onClose: () => void;
+  onSaved: () => void;
+}) {
+  const { t } = useTranslation();
+  const addToast = useToastStore((s) => s.addToast);
+  const [taskRef, setTaskRef] = useState('');
+  const [constraintType, setConstraintType] = useState<ConstraintType>('material');
+  const [description, setDescription] = useState('');
+  const [targetClear, setTargetClear] = useState('');
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const submit = async () => {
+    if (!taskRef.trim()) {
+      setError(
+        t('schedule_advanced.err_task_pick', {
+          defaultValue: 'Pick the task this commitment delivers.',
+        }),
+      );
+      return;
+    }
+    setError(null);
+    setBusy(true);
+    try {
+      await createConstraint({
+        look_ahead_id: lookAheadId,
+        task_ref: taskRef.trim(),
+        constraint_type: constraintType,
+        description: description.trim() || undefined,
+        target_clear_date: targetClear || undefined,
+      });
+      addToast({
+        type: 'success',
+        title: t('schedule_advanced.constraint_created', { defaultValue: 'Constraint added' }),
+      });
+      onSaved();
+      onClose();
+    } catch (err) {
+      addToast({ type: 'error', title: getErrorMessage(err) });
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  return (
+    <ModalShell
+      title={t('schedule_advanced.new_constraint', { defaultValue: 'New constraint' })}
+      subtitle={t('schedule_advanced.new_constraint_subtitle', {
+        defaultValue:
+          'Log what is blocking a task from being ready - material, permit, predecessor or information - so it can be cleared before the work is committed.',
+      })}
+      onClose={onClose}
+      onSubmit={submit}
+      busy={busy}
+      disabled={!taskRef.trim()}
+    >
+      {error && (
+        <div className="rounded-md border border-semantic-error/30 bg-semantic-error-bg/40 px-3 py-2 text-sm text-semantic-error">
+          {error}
+        </div>
+      )}
+      <div>
+        <label className={labelCls}>
+          {t('schedule_advanced.task', { defaultValue: 'Task' })} *
+        </label>
+        <TaskPicker projectId={projectId} value={taskRef} onChange={setTaskRef} autoFocus />
+      </div>
+      <div className="grid grid-cols-2 gap-3">
+        <div>
+          <label className={labelCls}>
+            {t('schedule_advanced.type', { defaultValue: 'Type' })}
+          </label>
+          <select
+            value={constraintType}
+            onChange={(e) => setConstraintType(e.target.value as ConstraintType)}
+            className={inputCls}
+          >
+            {CONSTRAINT_TYPES.map((ct) => (
+              <option key={ct} value={ct}>
+                {t(`schedule_advanced.constraint_type.${ct}`, { defaultValue: ct })}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div>
+          <label className={labelCls}>
+            {t('schedule_advanced.target_clear', { defaultValue: 'Target clear' })}
+          </label>
+          <input
+            type="date"
+            value={targetClear}
+            onChange={(e) => setTargetClear(e.target.value)}
+            className={inputCls}
+          />
+        </div>
+      </div>
+      <div>
+        <label className={labelCls}>{t('common.description', { defaultValue: 'Description' })}</label>
+        <textarea
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          rows={3}
+          className={clsx(inputCls, 'h-auto py-2')}
+          placeholder={t('schedule_advanced.constraint_desc_placeholder', {
+            defaultValue: 'What is blocking this task?',
+          })}
+        />
+      </div>
+    </ModalShell>
   );
 }
 
@@ -3210,7 +3537,7 @@ function BaselinesTab({
             <p className="mt-3 text-center text-xs text-content-tertiary">
               {t('schedule_advanced.no_variance_entries', {
                 defaultValue:
-                  'No variance data — the baseline snapshot was empty. Capture a new baseline now to start tracking variance.',
+                  'No variance data - the baseline snapshot was empty. Capture a new baseline now to start tracking variance.',
               })}
             </p>
           )}
@@ -3530,7 +3857,7 @@ function CreateWeeklyModal({
       title={t('schedule_advanced.create_weekly', { defaultValue: 'New weekly work plan' })}
       subtitle={t('schedule_advanced.create_weekly_subtitle', {
         defaultValue:
-          'Last Planner® weekly plan — pick the work week you want to commit to delivering.',
+          'Last Planner® weekly plan - pick the work week you want to commit to delivering.',
       })}
       onClose={onClose}
       onSubmit={submit}

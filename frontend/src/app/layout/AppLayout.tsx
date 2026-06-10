@@ -5,6 +5,7 @@ import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
 import { Sidebar, FloatingRecentButton } from './Sidebar';
 import { Header, resolvePageTitleKey } from './Header';
+import { DesktopToolbar } from './DesktopToolbar';
 import { FeedbackDialog } from '@/shared/ui';
 import { FloatingQueuePanel } from './FloatingQueuePanel';
 import { GlobalProgress } from '@/shared/ui/GlobalProgress';
@@ -12,7 +13,6 @@ import { GlobalUploadIndicator } from '@/shared/ui/GlobalUploadIndicator';
 import { DwgUploadIndicator } from '@/shared/ui/DwgUploadIndicator';
 import { GlobalCatalogueInstallIndicator } from '@/shared/ui/GlobalCatalogueInstallIndicator';
 import { DemoBanner } from '@/shared/ui/DemoBanner';
-import { PostgresMigrationNotice } from '@/shared/ui/PostgresMigrationNotice';
 import { FloatingChatButton } from '@/features/erp-chat/FloatingChatButton';
 import { FloatingChatPanel } from '@/features/erp-chat/FloatingChatPanel';
 import {
@@ -24,6 +24,7 @@ import { useSwipeGesture, useEdgeSwipe } from '@/shared/hooks/useSwipeGesture';
 import { useIsRTL } from '@/shared/hooks/useIsRTL';
 import { useOfflineSync } from '@/shared/hooks/useOnlineStatus';
 import { usePartnerPackLocale } from '@/shared/hooks/usePartnerPackLocale';
+import { useBrandingStore } from '@/stores/useBrandingStore';
 
 interface AppLayoutProps {
   title?: string;
@@ -46,14 +47,20 @@ export function AppLayout({ title, children }: AppLayoutProps) {
   // dialog reverts to English.
   usePartnerPackLocale();
 
+  // When the user has white-labelled the workspace with their own company
+  // name, the browser tab follows the same brand as the sidebar so the whole
+  // experience reads as "their" tool. Falls back to OpenConstructionERP.
+  const brandName = useBrandingStore((s) => (s.companyName.trim() ? s.companyName.trim() : null));
+
   useEffect(() => {
     // Translate the browser-tab title through the same map the on-screen
     // page heading uses, so the tab also follows the active language.
     const key = resolvePageTitleKey(title);
     const translated = title ? (key ? t(key, { defaultValue: title }) : title) : null;
-    document.title = translated ? `${translated} | OpenConstructionERP` : 'OpenConstructionERP';
+    const suffix = brandName ?? 'OpenConstructionERP';
+    document.title = translated ? `${translated} | ${suffix}` : suffix;
     // i18n.language in deps so the tab re-translates on a language switch.
-  }, [title, t, i18n.language]);
+  }, [title, t, i18n.language, brandName]);
 
   // Lock body scroll when mobile sidebar is open
   useEffect(() => {
@@ -94,7 +101,6 @@ export function AppLayout({ title, children }: AppLayoutProps) {
           context and hides the tinted spotlight. */}
       <DashboardBackdrop variant={backdropVariant} />
       <DemoBanner />
-      <PostgresMigrationNotice />
       <GlobalProgress />
 
       {/* Mobile overlay */}
@@ -127,6 +133,11 @@ export function AppLayout({ title, children }: AppLayoutProps) {
           Full-bleed pages (BIM viewer, DWG takeoff, AI chat) negate it
           via `-mx-4 sm:-mx-7` on their root div. */}
       <div className="lg:pl-sidebar">
+        {/* Desktop-only browser-style chrome (Back/Forward/Reload/Home,
+            address field, open-in-browser, favorites). Renders null in the
+            normal web build. Sits above the Header so it reads as window
+            chrome. */}
+        <DesktopToolbar />
         <Header
           title={title}
           onMenuClick={openSidebar}

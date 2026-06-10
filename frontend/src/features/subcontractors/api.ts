@@ -39,7 +39,7 @@ export interface Subcontractor {
   website?: string | null;
   notes?: string | null;
   is_active: boolean;
-  // ── Wave 4 / T12: BuildingConnected-style prequal + insurance tracking ──
+  // ── Wave 4 / T12: subcontractor-prequalification-platform-style prequal + insurance tracking ──
   prequal_score?: number | null;
   insurance_expiry_date?: string | null; // ISO date (yyyy-mm-dd)
   insurance_doc_id?: string | null;
@@ -115,6 +115,9 @@ export interface Agreement {
   retention_percent: number | string;
   retention_release_event?: string | null;
   status: AgreementStatus;
+  // When true, every payment application under this agreement is held until a
+  // signed lien waiver covering the net amount is on file (TOP-30 #9).
+  requires_lien_waiver: boolean;
   notes?: string | null;
   created_by?: string | null;
   metadata: Record<string, unknown>;
@@ -275,6 +278,13 @@ export function listAgreements(params: {
   return apiGet<Agreement[]>(`/v1/subcontractors/agreements/?${qs.toString()}`);
 }
 
+export function updateAgreement(
+  id: string,
+  data: Partial<Pick<Agreement, 'title' | 'status' | 'notes' | 'requires_lien_waiver'>>,
+): Promise<Agreement> {
+  return apiPatch<Agreement>(`/v1/subcontractors/agreements/${id}`, data);
+}
+
 export function listWorkPackages(agreementId: string): Promise<WorkPackage[]> {
   const qs = new URLSearchParams({ agreement_id: agreementId });
   return apiGet<WorkPackage[]>(`/v1/subcontractors/work-packages/?${qs.toString()}`);
@@ -296,6 +306,26 @@ export function listRetentionLedger(agreementId: string): Promise<RetentionLedge
   return apiGet<RetentionLedgerEntry[]>(`/v1/subcontractors/retention/ledger?${qs.toString()}`);
 }
 
+/**
+ * Lien-waiver release gate for a single payment application (TOP-30 #9).
+ *
+ * `waiver_required` mirrors the agreement flag; `blocked` is true when the
+ * gate would refuse finance approval / mark-paid right now, with `reasons`
+ * one of `missing_waiver` / `waiver_amount_mismatch`.
+ */
+export interface PaymentReleaseCheck {
+  payment_application_id: string;
+  waiver_required: boolean;
+  blocked: boolean;
+  reasons: string[];
+}
+
+export function getPaymentReleaseCheck(paymentId: string): Promise<PaymentReleaseCheck> {
+  return apiGet<PaymentReleaseCheck>(
+    `/v1/subcontractors/payment-applications/${paymentId}/release-check`,
+  );
+}
+
 /* ── Certificates ──────────────────────────────────────────────────────── */
 
 export function listCertificates(subcontractorId: string): Promise<Certificate[]> {
@@ -308,6 +338,57 @@ export function listCertificates(subcontractorId: string): Promise<Certificate[]
 export function listRatings(subcontractorId: string): Promise<Rating[]> {
   const qs = new URLSearchParams({ subcontractor_id: subcontractorId });
   return apiGet<Rating[]>(`/v1/subcontractors/ratings/?${qs.toString()}`);
+}
+
+/**
+ * Recompute the monthly rating rollup for a subcontractor (TOP-30 #20).
+ *
+ * `period` is a YYYY-MM string. MANAGER-only on the backend. The compute is
+ * idempotent — re-running for the same month refreshes the figures rather than
+ * creating a duplicate row — and emits `subcontractors.rating.updated`.
+ */
+export function computeMonthlyRating(
+  subId: string,
+  period: string,
+): Promise<Rating> {
+  const qs = new URLSearchParams({ period });
+  return apiPost<Rating>(
+    `/v1/subcontractors/subcontractors/${subId}/ratings/compute?${qs.toString()}`,
+    {},
+  );
+}
+
+/* ── Award eligibility + prequalification (TOP-30 #20) ──────────────────── */
+
+export interface AwardEligibility {
+  subcontractor_id: string;
+  awardable: boolean;
+  reasons: string[];
+}
+
+export function getAwardEligibility(subId: string): Promise<AwardEligibility> {
+  return apiGet<AwardEligibility>(
+    `/v1/subcontractors/subcontractors/${subId}/award-eligibility`,
+  );
+}
+
+export interface PrequalView {
+  subcontractor_id: string;
+  prequalification_status: PrequalStatus;
+  prequal_score?: number | null;
+  prequal_questionnaire?: Record<string, unknown> | null;
+  prequal_completed_at?: string | null;
+  is_blocked: boolean;
+  blocked_reason?: string | null;
+  missing_required: string[];
+  computed_score?: number | null;
+  approval_threshold: number;
+}
+
+export function getPrequalView(subId: string): Promise<PrequalView> {
+  return apiGet<PrequalView>(
+    `/v1/subcontractors/subcontractors/${subId}/prequal`,
+  );
 }
 
 /* ── Wave 4 / T12: Prequal + block + insurance ─────────────────────────── */

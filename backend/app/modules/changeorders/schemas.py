@@ -1,4 +1,4 @@
-"""‌⁠‍Change Order Pydantic schemas — request/response models.
+"""‌⁠‍Change Order Pydantic schemas - request/response models.
 
 Defines create, update, and response schemas for change orders and their items.
 Monetary values (cost_impact, cost_delta, quantities, rates) are exposed as
@@ -15,13 +15,13 @@ from uuid import UUID
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
-# Bound ints at PostgreSQL INT4 max — anything above is clearly bad input and
+# Bound ints at PostgreSQL INT4 max - anything above is clearly bad input and
 # would overflow the underlying column.
 _INT32_MAX = 2_147_483_647
 
 
 def _validate_decimal(v: str, field_name: str = "value") -> str:
-    """‌⁠‍Validate that a string is a valid decimal number (allows negative — CO
+    """‌⁠‍Validate that a string is a valid decimal number (allows negative - CO
     cost impacts can be credits)."""
     try:
         Decimal(v)
@@ -67,7 +67,7 @@ class ChangeOrderCreate(BaseModel):
         pattern=r"^(client_request|design_change|unforeseen|regulatory|error)$",
     )
     schedule_impact_days: int = Field(default=0, ge=0, le=_INT32_MAX)
-    # Empty when the caller does not specify one — the service resolves it
+    # Empty when the caller does not specify one - the service resolves it
     # from the project's currency. NEVER default to a literal "EUR" here
     # (task #217): that silently mis-stamps non-Eurozone projects.
     currency: str = Field(default="", max_length=10)
@@ -87,7 +87,7 @@ class ChangeOrderUpdate(BaseModel):
 
     Status transitions must go through the dedicated action endpoints
     (``/submit``, ``/approve``, ``/reject``). Sending ``status`` here
-    returns 422 instead of silently ignoring it — the silent-ignore
+    returns 422 instead of silently ignoring it - the silent-ignore
     behaviour was :bug:`385` and made the whole CO workflow look
     non-functional.
     """
@@ -109,7 +109,7 @@ class ChangeOrderUpdate(BaseModel):
     linked_rfi_ids: list[UUID] | None = Field(default=None, max_length=50)
     status: str | None = Field(
         default=None,
-        description="Reserved — use /submit, /approve, /reject to change status.",
+        description="Reserved - use /submit, /approve, /reject to change status.",
     )
 
     @field_validator("status")
@@ -166,8 +166,15 @@ class ChangeOrderResponse(BaseModel):
     status: str
     submitted_by: str | None = None
     approved_by: str | None = None
+    # BUG-351: rejection writes its own dedicated columns (never reuses
+    # ``approved_*``). Exposing them on the wire lets the UI render an honest
+    # "Rejected by X on DATE" card. A CO rejected straight from 'submitted'
+    # sets only ``rejected_*`` - without these fields the rejection was
+    # invisible to users.
+    rejected_by: str | None = None
     submitted_at: str | None = None
     approved_at: str | None = None
+    rejected_at: str | None = None
     cost_impact: str = "0"
     schedule_impact_days: int = 0
     currency: str
@@ -177,7 +184,7 @@ class ChangeOrderResponse(BaseModel):
     item_count: int = 0
 
     _coerce_decimal = field_validator("cost_impact", mode="before")(lambda cls, v: _decimal_to_str(v))
-    # T3: Procore-style commitment / RFI links + approval-chain cursor.
+    # T3: construction management platform style commitment / RFI links + approval-chain cursor.
     # Normalised to ``[]`` on read so legacy COs that pre-date v3082
     # (where the columns are physically NULL) still serialize cleanly.
     linked_po_ids: list[str] = Field(default_factory=list)
@@ -260,7 +267,7 @@ class ChangeOrderItemUpdate(BaseModel):
         return _validate_non_negative_decimal(v)
 
 
-# ── Approval-chain schemas (T3 — Procore-style multi-step approval) ──────────
+# ── Approval-chain schemas (T3 - construction management platform style multi-step approval) ──
 
 
 class ApprovalStartRequest(BaseModel):
@@ -319,9 +326,9 @@ class ChangeOrderSummary(BaseModel):
     total_cost_impact: str = "0"
     total_time_impact_days: int = 0
     total_schedule_impact_days: int = 0
-    # The project's BASE currency — the only currency ``total_cost_impact`` /
+    # The project's BASE currency - the only currency ``total_cost_impact`` /
     # ``total_approved_amount`` are expressed in. Empty only when the project
-    # carries no currency — never a literal "EUR" (task #217).
+    # carries no currency - never a literal "EUR" (task #217).
     currency: str = ""
     # Approved change orders priced in a FOREIGN currency that has no FX rate
     # in ``Project.fx_rates`` are excluded from the base-currency total (money
@@ -332,3 +339,152 @@ class ChangeOrderSummary(BaseModel):
     _coerce_decimal = field_validator("total_approved_amount", "total_cost_impact", mode="before")(
         lambda cls, v: _decimal_to_str(v)
     )
+
+
+# ── What-If impact simulator (TOP-30 #11) ────────────────────────────────────
+
+
+class SimulateImpactRequest(BaseModel):
+    """Run a what-if impact projection for a change order.
+
+    Both fields are optional overrides: when omitted the simulator uses the
+    change order's own stored ``cost_impact`` / ``schedule_impact_days`` so a
+    plain ``POST`` with an empty body forecasts the order exactly as it stands.
+    Supplying a value lets the user explore "what if this CO were worth X / ran
+    Y days longer" before committing to it. Nothing is persisted by a simulate
+    call - it is a read-only projection.
+    """
+
+    model_config = ConfigDict(str_strip_whitespace=True, extra="ignore")
+
+    cost_impact: str | None = Field(
+        default=None,
+        max_length=50,
+        description="Optional signed decimal override for the CO cost impact, in the CO's own currency.",
+    )
+    schedule_impact_days: int | None = Field(
+        default=None,
+        ge=0,
+        le=_INT32_MAX,
+        description="Optional override for the number of calendar days this CO adds to the programme.",
+    )
+
+    @field_validator("cost_impact")
+    @classmethod
+    def _check_decimal(cls, v: str | None) -> str | None:
+        if v is None:
+            return v
+        return _validate_decimal(v, "cost_impact")
+
+
+class ImpactCost(BaseModel):
+    """Cost side of an impact projection, all in the project base currency."""
+
+    budget_before: str = "0"
+    budget_after: str = "0"
+    delta: str = "0"
+    pct_of_budget: float = 0.0
+
+
+class ImpactSchedule(BaseModel):
+    """Schedule side of an impact projection."""
+
+    current_end_date: str | None = None
+    projected_end_date: str | None = None
+    days_added: int = 0
+    finish_moves: bool = False
+
+
+class ImpactEVM(BaseModel):
+    """Earned-value projection before and after the change order is applied."""
+
+    bac_before: str = "0"
+    bac_after: str = "0"
+    eac_before: str = "0"
+    eac_after: str = "0"
+    vac_before: str = "0"
+    vac_after: str = "0"
+    spi: str = "0"
+    cpi: str = "0"
+
+
+class ImpactBOQ(BaseModel):
+    """Preview of what approving the CO would write into the project BOQ."""
+
+    item_count: int = 0
+    sections_added: int = 0
+    positions_added: int = 0
+    target_boq_name: str | None = None
+
+
+class SimulateImpactResponse(BaseModel):
+    """Full what-if impact projection for a change order."""
+
+    order_id: UUID
+    code: str
+    base_currency: str = ""
+    as_of: str
+    co_cost_native: str = "0"
+    co_currency: str = ""
+    co_cost_base: str = "0"
+    fx_converted: bool = True
+    cost: ImpactCost
+    schedule: ImpactSchedule
+    evm: ImpactEVM
+    boq: ImpactBOQ
+    notes: list[str] = Field(default_factory=list)
+
+
+# ── AI / heuristic draft from free text, RFI or daily log (TOP-30 #11) ───────
+
+
+class AIDraftRequest(BaseModel):
+    """Draft a change order from a piece of source text.
+
+    The text can come from an RFI thread, a daily-diary entry, or be pasted
+    free-hand. When an AI provider key is configured the text is sent to the
+    model for structured extraction; otherwise a deterministic heuristic reads
+    the obvious cost/schedule signals so the feature still produces a usable
+    draft offline. Nothing is saved - the response is a review-ready proposal
+    the user confirms (or edits) before a change order is actually created.
+    """
+
+    model_config = ConfigDict(str_strip_whitespace=True, extra="ignore")
+
+    project_id: UUID
+    source_kind: str = Field(
+        default="free_text",
+        pattern=r"^(free_text|rfi|daily_log)$",
+    )
+    source_id: UUID | None = None
+    source_text: str = Field(..., min_length=1, max_length=20000)
+    currency: str = Field(default="", max_length=10)
+
+
+class AIDraftLine(BaseModel):
+    """One suggested change-order line item in a draft proposal."""
+
+    description: str = ""
+    unit: str = ""
+    quantity: str = "0"
+    rate: str = "0"
+    cost_delta: str = "0"
+    confidence: int = Field(default=0, ge=0, le=100)
+
+
+class AIDraftResponse(BaseModel):
+    """A review-ready change-order draft (never auto-saved)."""
+
+    title: str = ""
+    description: str = ""
+    reason_category: str = "client_request"
+    cost_impact: str = "0"
+    schedule_impact_days: int = 0
+    currency: str = ""
+    lines: list[AIDraftLine] = Field(default_factory=list)
+    confidence: int = Field(default=0, ge=0, le=100)
+    ai_used: bool = False
+    provider: str = ""
+    source_kind: str = "free_text"
+    source_id: UUID | None = None
+    note: str = ""

@@ -1,6 +1,6 @@
 """Accommodation module permission definitions.
 
-Coarse RBAC tier — fine-grained gates can be split out later if a
+Coarse RBAC tier - fine-grained gates can be split out later if a
 customer needs to separate "front-desk operator" from "HR housing
 coordinator". For the MVP we keep one read tier (VIEWER) and one write
 tier (EDITOR) with MANAGER gating destructive actions (delete) and
@@ -25,6 +25,9 @@ ACCOMMODATION_PERMISSIONS: dict[str, Role] = {
     # Charges
     "accommodation.charge.create": Role.EDITOR,
     "accommodation.charge.update": Role.EDITOR,
+    # Deleting a billed line-item is a financial correction - gate it at
+    # MANAGER like the other destructive actions (accommodation.delete).
+    "accommodation.charge.delete": Role.MANAGER,
     # Cross-module integrations
     "accommodation.bootstrap_from_propdev": Role.EDITOR,
     # Suggest-from-HR is EDITOR (not VIEWER): its only purpose is to drive

@@ -1,7 +1,7 @@
-import { useState, useMemo } from 'react';
-import { Link } from 'react-router-dom';
+import { useState, useMemo, useEffect } from 'react';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQuery, useQueryClient, useMutation } from '@tanstack/react-query';
 import clsx from 'clsx';
 import {
   HardHat,
@@ -22,11 +22,17 @@ import {
   Ban,
   CheckCircle2,
   ClipboardCheck,
+  FileSignature,
+  Send,
+  ShieldCheck,
+  HeartPulse,
 } from 'lucide-react';
 import {
   Button,
   Card,
   Badge,
+  DismissibleInfo,
+  IntroRichText,
   EmptyState,
   Breadcrumb,
   SkeletonTable,
@@ -35,12 +41,14 @@ import {
   WideModalSection,
   WideModalField,
 } from '@/shared/ui';
+import { Toggle } from '@/shared/ui/Toggle';
 import { MoneyDisplay } from '@/shared/ui/MoneyDisplay';
 import { DateDisplay } from '@/shared/ui/DateDisplay';
-import { PipelineBanner } from './PipelineBanner';
+import { PageHeader } from '@/shared/ui/PageHeader';
 import { PrequalModal } from './PrequalModal';
 import { ScorecardTile } from './ScorecardTile';
 import { LienWaiverPanel } from './LienWaiverPanel';
+import { AwardEligibilityBanner } from './AwardEligibilityBanner';
 import { useToastStore } from '@/stores/useToastStore';
 import { getErrorMessage } from '@/shared/lib/api';
 import {
@@ -51,10 +59,13 @@ import {
   deleteSubcontractor,
   getSubcontractorDashboard,
   listAgreements,
+  updateAgreement,
   listWorkPackages,
   listPaymentApplications,
+  getPaymentReleaseCheck,
   listRetentionLedger,
   listRatings,
+  computeMonthlyRating,
   listCertificates,
   blockSubcontractor,
   unblockSubcontractor,
@@ -197,6 +208,8 @@ function RatingStars({ score }: { score: number | string }) {
 
 export function SubcontractorsPage() {
   const { t } = useTranslation();
+  const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('');
   const [selectedId, setSelectedId] = useState<string | null>(null);
@@ -206,6 +219,25 @@ export function SubcontractorsPage() {
     queryKey: ['subcontractors', 'list'],
     queryFn: () => listSubcontractors({ limit: 200 }),
   });
+
+  // Deep-link target (e.g. from a Contract whose counterparty is this
+  // subcontractor). Once the matching record has loaded we open its detail
+  // drawer, then drop the ?highlight param (replace, preserving other params)
+  // so a refresh or back-navigation does not re-open the drawer.
+  const highlightId = searchParams.get('highlight');
+  useEffect(() => {
+    if (!highlightId) return;
+    if (!(subsQ.data ?? []).some((s) => s.id === highlightId)) return;
+    setSelectedId(highlightId);
+    setSearchParams(
+      (prev) => {
+        const next = new URLSearchParams(prev);
+        next.delete('highlight');
+        return next;
+      },
+      { replace: true },
+    );
+  }, [highlightId, subsQ.data, setSearchParams]);
 
   const filtered = useMemo(() => {
     const items = subsQ.data ?? [];
@@ -227,66 +259,59 @@ export function SubcontractorsPage() {
   // the drawer instead.
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-5 animate-fade-in">
       <Breadcrumb
         items={[
-          { label: t('subcontractors.title', { defaultValue: 'Subcontractors' }) },
+          { label: t('nav.subcontractors', { defaultValue: 'Subcontractors' }) },
         ]}
       />
 
-      <div className="flex items-start justify-between gap-4 flex-wrap">
-        <div>
-          <h1 className="text-2xl font-semibold text-content-primary">
-            {t('subcontractors.title', { defaultValue: 'Subcontractors' })}
-          </h1>
-          <p className="mt-1 text-sm text-content-secondary">
-            {t('subcontractors.subtitle', {
-              defaultValue:
-                'Manage subcontractor prequalifications, scopes, payments and ratings.',
-            })}
-          </p>
-        </div>
-        <Button
-          variant="primary"
-          icon={<Plus size={14} />}
-          onClick={() => setCreateOpen(true)}
-        >
-          {t('subcontractors.new', { defaultValue: 'New Subcontractor' })}
-        </Button>
-      </div>
-
-      <PipelineBanner
-        intro={t('subcontractors.pipeline_intro', {
+      <PageHeader
+        subtitle={t('subcontractors.subtitle', {
           defaultValue:
-            'Subcontractors are your prequalified supply chain. Approved firms can be invited to bid packages, bound by subcontract agreements, and paid via payment applications — with certificates and ratings gating eligibility.',
+            'Manage subcontractor prequalifications, scopes, payments and ratings.',
         })}
-        steps={[
+        actions={
+          <Button
+            variant="primary"
+            icon={<Plus size={14} />}
+            onClick={() => setCreateOpen(true)}
+          >
+            {t('subcontractors.new', { defaultValue: 'New Subcontractor' })}
+          </Button>
+        }
+      />
+
+      <DismissibleInfo
+        storageKey="subcontractors"
+        title={t('subcontractors.intro_title', {
+          defaultValue: 'Only award to firms that are actually qualified',
+        })}
+        more={
+          t('subcontractors.intro_more', { defaultValue: '' })
+            ? <IntroRichText text={t('subcontractors.intro_more')} />
+            : undefined
+        }
+        links={[
           {
-            label: t('subcontractors.step_subs', {
-              defaultValue: 'Subcontractors',
-            }),
-            current: true,
+            label: t('nav.bid_management', { defaultValue: 'Bid Management' }),
+            onClick: () => navigate('/bid-management'),
           },
           {
-            label: t('subcontractors.step_bid', {
-              defaultValue: 'Bid Management',
-            }),
-            to: '/bid-management',
+            label: t('nav.contracts', { defaultValue: 'Contracts' }),
+            onClick: () => navigate('/contracts'),
           },
           {
-            label: t('subcontractors.step_contract', {
-              defaultValue: 'Contracts',
-            }),
-            to: '/contracts',
-          },
-          {
-            label: t('subcontractors.step_procurement', {
-              defaultValue: 'Procurement',
-            }),
-            to: '/procurement',
+            label: t('nav.procurement', { defaultValue: 'Procurement' }),
+            onClick: () => navigate('/procurement'),
           },
         ]}
-      />
+      >
+        {t('subcontractors.intro_body', {
+          defaultValue:
+            'Keep your supply chain here with insurance and certificate status, subcontract scopes, payment applications, retention and performance ratings. Prequalification and lien waivers gate who can be invited to bid packages and who can be paid, so an expired certificate or a missing waiver stops the award before it happens.',
+        })}
+      </DismissibleInfo>
 
       {/* Tabs (single tab — left for layout parity with ServicePage) */}
       <div className="border-b border-border-light">
@@ -837,6 +862,18 @@ function DetailDrawer({ id, onClose }: { id: string; onClose: () => void }) {
                 {sub.blocked_reason}
               </div>
             )}
+            {/* Prequalification award gate (TOP-30 #20): one comprehensive
+                banner that mirrors the backend gate exactly (eligible /
+                pending / rejected-or-suspended / blocked) so the verdict is
+                visible up front instead of only on a 409. */}
+            <div className="border-b border-border-light px-5 py-3">
+              <AwardEligibilityBanner
+                subcontractorId={sub.id}
+                prequalStatus={sub.prequalification_status}
+                isBlocked={!!sub.is_blocked}
+                blockedReason={sub.blocked_reason}
+              />
+            </div>
 
             <div className="flex flex-wrap items-center gap-2 px-5 py-3 text-xs border-b border-border-light">
               <span className="text-content-tertiary">
@@ -850,12 +887,28 @@ function DetailDrawer({ id, onClose }: { id: string; onClose: () => void }) {
                   defaultValue: 'Invite to a bid package',
                 })}
               </Link>
+              {/* CONN-43: jump to this subcontractor's contracts, pre-filtered
+                  to it as the counterparty so the agreement is one click away. */}
               <Link
-                to="/contracts"
+                to={`/contracts?counterparty=${sub.id}`}
                 className="inline-flex items-center gap-1 rounded-md border border-border-light px-2 py-1 text-content-secondary hover:text-oe-blue hover:border-oe-blue transition-colors"
               >
+                <FileSignature size={12} />
                 {t('subcontractors.subcontract', {
                   defaultValue: 'Subcontract agreement',
+                })}
+              </Link>
+              {/* CONN-54: invite this firm to the partner portal with the
+                  invite modal pre-filled (subcontractor role + known contact). */}
+              <Link
+                to={`/portal?invite=1&role=subcontractor&name=${encodeURIComponent(
+                  sub.legal_name,
+                )}`}
+                className="inline-flex items-center gap-1 rounded-md border border-border-light px-2 py-1 text-content-secondary hover:text-oe-blue hover:border-oe-blue transition-colors"
+              >
+                <Send size={12} />
+                {t('subcontractors.invite_to_portal', {
+                  defaultValue: 'Invite to portal',
                 })}
               </Link>
             </div>
@@ -925,6 +978,8 @@ function DetailDrawer({ id, onClose }: { id: string; onClose: () => void }) {
               )}
               {tab === 'ratings' && (
                 <RatingsTab
+                  subcontractorId={sub.id}
+                  subName={sub.legal_name}
                   data={ratingsQ.data ?? []}
                   loading={ratingsQ.isLoading}
                 />
@@ -1092,6 +1147,7 @@ function AgreementRow({ agreement }: { agreement: Agreement }) {
           />
         </span>
       </div>
+      <LienWaiverRequirementToggle agreement={agreement} />
       {packages.length > 0 && (
         <div className="mt-3 border-t border-border-light pt-3 space-y-1.5">
           {packages.map((wp) => (
@@ -1108,6 +1164,96 @@ function AgreementRow({ agreement }: { agreement: Agreement }) {
         </div>
       )}
     </Card>
+  );
+}
+
+/**
+ * Inline switch that turns the lien-waiver payment gate on or off for one
+ * agreement. When on, finance approval and mark-paid are held server-side
+ * until a signed waiver covering the net amount is on file (TOP-30 #9). The
+ * PATCH is optimistic-free: we just invalidate and let the list re-fetch.
+ */
+function LienWaiverRequirementToggle({ agreement }: { agreement: Agreement }) {
+  const { t } = useTranslation();
+  const qc = useQueryClient();
+  const addToast = useToastStore((s) => s.addToast);
+  const required = agreement.requires_lien_waiver;
+
+  const mutation = useMutation({
+    mutationFn: (next: boolean) =>
+      updateAgreement(agreement.id, { requires_lien_waiver: next }),
+    onSuccess: (updated) => {
+      qc.invalidateQueries({ queryKey: ['subcontractors'] });
+      addToast({
+        type: 'success',
+        title: updated.requires_lien_waiver
+          ? t('subcontractors.waiver_gate_on', {
+              defaultValue: 'Lien waiver now required before payment',
+            })
+          : t('subcontractors.waiver_gate_off', {
+              defaultValue: 'Lien waiver requirement removed',
+            }),
+      });
+    },
+    onError: (err) => addToast({ type: 'error', title: getErrorMessage(err) }),
+  });
+
+  return (
+    <div className="mt-3 flex items-center justify-between gap-3 border-t border-border-light pt-3">
+      <span className="flex items-center gap-1.5 text-xs text-content-secondary">
+        <FileSignature size={13} className="text-content-tertiary" />
+        {t('subcontractors.require_lien_waiver', {
+          defaultValue: 'Require signed lien waiver before payment',
+        })}
+      </span>
+      <Toggle
+        size="sm"
+        checked={required}
+        disabled={mutation.isPending}
+        onChange={(next) => mutation.mutate(next)}
+      />
+    </div>
+  );
+}
+
+/**
+ * Per-payment lien-waiver gate indicator (TOP-30 #9). Only queried while the
+ * payment is still pending finance approval, where the gate actually bites;
+ * paid / finance-approved rows render nothing.
+ */
+function WaiverBadge({
+  paymentId,
+  status,
+}: {
+  paymentId: string;
+  status: PaymentApplicationStatus;
+}) {
+  const { t } = useTranslation();
+  const pending = status === 'submitted' || status === 'foreman_approved';
+  const checkQ = useQuery({
+    queryKey: ['subcontractors', 'releaseCheck', paymentId],
+    queryFn: () => getPaymentReleaseCheck(paymentId),
+    enabled: pending,
+  });
+
+  if (!pending || !checkQ.data || !checkQ.data.waiver_required) return null;
+
+  if (checkQ.data.blocked) {
+    const reason = checkQ.data.reasons[0];
+    const label =
+      reason === 'waiver_amount_mismatch'
+        ? t('subcontractors.waiver_short', { defaultValue: 'Waiver too low' })
+        : t('subcontractors.waiver_missing', { defaultValue: 'Waiver required' });
+    return (
+      <Badge variant="warning" size="sm" dot>
+        {label}
+      </Badge>
+    );
+  }
+  return (
+    <Badge variant="success" size="sm" dot>
+      {t('subcontractors.waiver_ok', { defaultValue: 'Waiver on file' })}
+    </Badge>
   );
 }
 
@@ -1166,13 +1312,24 @@ function PaymentsTab({
         </p>
       )}
       {paymentsQ.data && paymentsQ.data.length > 0 && (
-        <PaymentList rows={paymentsQ.data} />
+        <PaymentList
+          rows={paymentsQ.data}
+          requiresWaiver={
+            agreements.find((a) => a.id === effectiveId)?.requires_lien_waiver ?? false
+          }
+        />
       )}
     </div>
   );
 }
 
-function PaymentList({ rows }: { rows: PaymentApplication[] }) {
+function PaymentList({
+  rows,
+  requiresWaiver,
+}: {
+  rows: PaymentApplication[];
+  requiresWaiver: boolean;
+}) {
   const { t } = useTranslation();
   return (
     <div className="overflow-x-auto rounded-lg border border-border-light">
@@ -1216,9 +1373,14 @@ function PaymentList({ rows }: { rows: PaymentApplication[] }) {
                 />
               </td>
               <td className="px-3 py-2">
-                <Badge variant={PAYMENT_VARIANT[p.status]} dot>
-                  {p.status}
-                </Badge>
+                <div className="flex flex-wrap items-center gap-1.5">
+                  <Badge variant={PAYMENT_VARIANT[p.status]} dot>
+                    {p.status}
+                  </Badge>
+                  {requiresWaiver && (
+                    <WaiverBadge paymentId={p.id} status={p.status} />
+                  )}
+                </div>
               </td>
             </tr>
           ))}
@@ -1228,10 +1390,91 @@ function PaymentList({ rows }: { rows: PaymentApplication[] }) {
   );
 }
 
+function currentPeriod(): string {
+  const now = new Date();
+  const mm = String(now.getMonth() + 1).padStart(2, '0');
+  return `${now.getFullYear()}-${mm}`;
+}
+
+/**
+ * Header control that recomputes the current-month rating rollup on demand
+ * (TOP-30 #20). The compute is idempotent server-side, so re-running is safe;
+ * MANAGER-only on the backend, so non-managers get a toast on the 403.
+ */
+function ComputeRatingButton({ subcontractorId }: { subcontractorId: string }) {
+  const { t } = useTranslation();
+  const qc = useQueryClient();
+  const addToast = useToastStore((s) => s.addToast);
+  const mutation = useMutation({
+    mutationFn: () => computeMonthlyRating(subcontractorId, currentPeriod()),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['subcontractors', 'ratings', subcontractorId] });
+      qc.invalidateQueries({ queryKey: ['subcontractors', 'detail', subcontractorId] });
+      addToast({
+        type: 'success',
+        title: t('subcontractors.rating_recomputed', {
+          defaultValue: 'Rating recomputed for {{period}}',
+          period: currentPeriod(),
+        }),
+      });
+    },
+    onError: (err) => addToast({ type: 'error', title: getErrorMessage(err) }),
+  });
+  return (
+    <Button
+      variant="ghost"
+      size="sm"
+      loading={mutation.isPending}
+      onClick={() => mutation.mutate()}
+      icon={<Star size={13} />}
+    >
+      {t('subcontractors.compute_rating', {
+        defaultValue: 'Recompute this month',
+      })}
+    </Button>
+  );
+}
+
+/**
+ * CONN-44: the monthly score is rolled up from NCRs and safety incidents, so
+ * each dimension links to the source register filtered to this firm. The
+ * ``?sub=`` param is read by the QA/Safety pages where supported; it is emitted
+ * here regardless so the cross-link is in place as those consumers land.
+ */
+function RatingSourceLinks({ subName }: { subName: string }) {
+  const { t } = useTranslation();
+  const q = encodeURIComponent(subName);
+  return (
+    <div className="flex flex-wrap items-center gap-2 text-xs">
+      <span className="text-content-tertiary">
+        {t('subcontractors.score_sources', { defaultValue: 'Trace the score:' })}
+      </span>
+      <Link
+        to={`/ncr?sub=${q}`}
+        className="inline-flex items-center gap-1 rounded-md border border-border-light px-2 py-1 text-content-secondary hover:text-oe-blue hover:border-oe-blue transition-colors"
+      >
+        <ShieldCheck size={12} />
+        {t('subcontractors.quality_ncrs', { defaultValue: 'Quality NCRs' })}
+      </Link>
+      <Link
+        to={`/safety?sub=${q}`}
+        className="inline-flex items-center gap-1 rounded-md border border-border-light px-2 py-1 text-content-secondary hover:text-oe-blue hover:border-oe-blue transition-colors"
+      >
+        <HeartPulse size={12} />
+        {t('subcontractors.hse_incidents', { defaultValue: 'HSE incidents' })}
+      </Link>
+    </div>
+  );
+}
+
 function RatingsTab({
+  subcontractorId,
+  subName,
   data,
   loading,
 }: {
+  subcontractorId: string;
+  subName: string;
   data: Rating[];
   loading: boolean;
 }) {
@@ -1240,6 +1483,16 @@ function RatingsTab({
   if (data.length === 0) {
     return (
       <div className="space-y-3">
+        <div className="flex items-center justify-between">
+          <p className="text-xs text-content-tertiary">
+            {t('subcontractors.ratings_intro', {
+              defaultValue:
+                'Monthly performance is rolled up from NCRs, safety incidents and schedule slips.',
+            })}
+          </p>
+          <ComputeRatingButton subcontractorId={subcontractorId} />
+        </div>
+        <RatingSourceLinks subName={subName} />
         <ScorecardTile ratings={data} />
         <EmptyState
           icon={<Star size={20} />}
@@ -1250,6 +1503,10 @@ function RatingsTab({
   }
   return (
     <div className="space-y-3">
+      <div className="flex items-center justify-end">
+        <ComputeRatingButton subcontractorId={subcontractorId} />
+      </div>
+      <RatingSourceLinks subName={subName} />
       <ScorecardTile ratings={data} />
       <div className="overflow-x-auto rounded-lg border border-border-light">
       <table className="w-full text-xs">
@@ -1699,7 +1956,7 @@ function SubcontractorFormModal({
           })}
           hint={t('subcontractors.trade_categories_hint', {
             defaultValue:
-              'Free-form labels used for tendering filters — e.g. concrete, steel, mep, finishings.',
+              'Free-form labels used for tendering filters, e.g. concrete, steel, mep, finishings.',
           })}
         >
           <input

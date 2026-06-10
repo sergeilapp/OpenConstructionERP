@@ -1,12 +1,12 @@
-"""‌⁠‍Cost Intelligence service (v3.12.0 — Stream B).
+"""‌⁠‍Cost Intelligence service (v3.12.0 - Stream B).
 
 Implements three small, independent services that share the same module:
 
-* ``RegionalIndexService`` — region × category factor lookup; backs the
+* ``RegionalIndexService`` - region × category factor lookup; backs the
   RSMeans-style "what would this rate cost in city X?" workflow.
-* ``CostCertaintyService`` — frequency + recency analysis on the per-item
+* ``CostCertaintyService`` - frequency + recency analysis on the per-item
   usage ledger; emits the green / yellow / red badge thresholds.
-* ``CostUsageRecorder`` — append-only writer for the usage ledger,
+* ``CostUsageRecorder`` - append-only writer for the usage ledger,
   invoked from the BOQ apply-rate path.
 
 All three are stateless wrappers around an ``AsyncSession`` so the
@@ -32,16 +32,25 @@ logger = logging.getLogger(__name__)
 # ── Certainty thresholds (single source of truth) ─────────────────────────
 
 
-# These thresholds intentionally live here — not buried in the router —
+# These thresholds intentionally live here - not buried in the router -
 # so the integration tests can import them directly when asserting
 # boundary behaviour. Keep aligned with the docstring in
 # ``schemas.CertaintyBadge``.
+#
+# Band meaning (revised so a single fresh use is never alarming red):
+#   * green  - well proven: frequency >= 10 AND used within the last year.
+#   * yellow - in use but not yet proven: at least one use and the most
+#     recent use is no older than CERTAINTY_YELLOW_MAX_AGE_DAYS.
+#   * red    - either never used (frequency 0) or the last use is older
+#     than CERTAINTY_YELLOW_MAX_AGE_DAYS (stale evidence).
 
 CERTAINTY_GREEN_MIN_FREQUENCY = 10
 CERTAINTY_GREEN_MAX_AGE_DAYS = 365
-CERTAINTY_YELLOW_MIN_FREQUENCY = 3
+# Any non-zero frequency reaches at least yellow, so there is no separate
+# yellow frequency floor any more. The only thing that pushes a used item
+# back to red is stale evidence (age above the max below).
 CERTAINTY_YELLOW_MAX_AGE_DAYS = 1095  # ≈ 3 years
-# Sentinel age used when a row has never been logged — keeps the badge
+# Sentinel age used when a row has never been logged - keeps the badge
 # JSON-clean (no nulls in the numeric field) and slots into the red
 # bucket via the threshold logic.
 NEVER_USED_AGE_DAYS = 999_999
@@ -53,9 +62,20 @@ CertaintyBand = Literal["green", "yellow", "red"]
 def classify_certainty(frequency: int, age_days: int) -> CertaintyBand:
     """‌⁠‍Map (frequency, age_days) onto a green / yellow / red band.
 
-    Pure function — exposed so the integration tests can pin the
+    Pure function - exposed so the integration tests can pin the
     boundary behaviour without going through the DB. Matches the
     contract documented on ``CertaintyBadge``.
+
+    Contract:
+        * ``red`` - the only alarming state: the item was never used
+          (``frequency == 0``) or the last use is stale (older than
+          ``CERTAINTY_YELLOW_MAX_AGE_DAYS``). A single fresh use is never
+          red.
+        * ``green`` - well proven: ``frequency >= 10`` and used within the
+          last year (``age_days < CERTAINTY_GREEN_MAX_AGE_DAYS``).
+        * ``yellow`` - everything in between: at least one use whose most
+          recent occurrence is no older than
+          ``CERTAINTY_YELLOW_MAX_AGE_DAYS``.
 
     Args:
         frequency: Total recorded uses (``>= 0``).
@@ -65,13 +85,14 @@ def classify_certainty(frequency: int, age_days: int) -> CertaintyBand:
     Returns:
         ``"green"`` / ``"yellow"`` / ``"red"``.
     """
+    # Never used, or evidence too old to trust - the only red cases.
+    if frequency <= 0 or age_days > CERTAINTY_YELLOW_MAX_AGE_DAYS:
+        return "red"
+    # Well proven: high frequency and a recent use.
     if frequency >= CERTAINTY_GREEN_MIN_FREQUENCY and age_days < CERTAINTY_GREEN_MAX_AGE_DAYS:
         return "green"
-    in_yellow_freq = CERTAINTY_YELLOW_MIN_FREQUENCY <= frequency < CERTAINTY_GREEN_MIN_FREQUENCY
-    in_yellow_age = CERTAINTY_GREEN_MAX_AGE_DAYS <= age_days <= CERTAINTY_YELLOW_MAX_AGE_DAYS
-    if in_yellow_freq or in_yellow_age:
-        return "yellow"
-    return "red"
+    # In use but not yet proven (any non-stale use) - reassuring, not alarming.
+    return "yellow"
 
 
 # ── Regional index lookup ─────────────────────────────────────────────────
@@ -161,7 +182,7 @@ class RegionalIndexService:
         """Compute ``(adjusted_rate, factor, source, effective_date)``.
 
         When no index row matches, the factor is ``Decimal("1")`` and the
-        source is ``"baseline"`` — the caller's frontend renders the
+        source is ``"baseline"`` - the caller's frontend renders the
         same shape either way.
 
         Round-7: returns ``Decimal`` so the multiply is exact (no float
@@ -178,7 +199,7 @@ class RegionalIndexService:
         # bad seed; the badge UI assumes ``factor > 0``.
         if factor <= 0:
             factor = Decimal("1")
-        # Quantise to 4 decimal places — matches the legacy round(..., 4).
+        # Quantise to 4 decimal places - matches the legacy round(..., 4).
         adjusted = (base * factor).quantize(Decimal("0.0001"))
         return adjusted, factor, row.source or "baseline", row.effective_date
 
@@ -204,7 +225,7 @@ class CostUsageRecorder:
         """Insert a usage row. Caller owns the commit.
 
         Accepts ``Decimal`` (Round-7 preferred), ``float`` (legacy callers
-        still in flight), or numeric strings — all coerced to ``Decimal``
+        still in flight), or numeric strings - all coerced to ``Decimal``
         via the ``str()`` round-trip so float imprecision never leaks into
         the persisted ledger entry.
         """
@@ -231,7 +252,7 @@ class CostCertaintyService:
         """Return a dict matching ``schemas.CertaintyBadge``.
 
         Raises:
-            LookupError: when the cost item id is unknown — the router
+            LookupError: when the cost item id is unknown - the router
                 maps this to a 404 so callers can distinguish "rate
                 with zero usage" (frequency=0, red badge) from "no
                 such rate".

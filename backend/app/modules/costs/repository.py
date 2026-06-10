@@ -1,7 +1,7 @@
 """‌⁠‍Cost item data access layer.
 
 All database queries for cost items live here.
-No business logic — pure data access.
+No business logic - pure data access.
 """
 
 from __future__ import annotations
@@ -50,7 +50,7 @@ def _split_classification_path(path: str) -> list[str | None]:
     for raw in cleaned.split("/"):
         seg = raw.strip()
         parts.append(seg if seg else None)
-    # Drop trailing empty segments — they add no filter and would force
+    # Drop trailing empty segments - they add no filter and would force
     # an unnecessary IS NOT NULL when the user just typed "X/".
     while parts and parts[-1] is None:
         parts.pop()
@@ -186,14 +186,14 @@ class CostItemRepository:
 
         Args:
             q: Text search on code OR description (canonical free-text param).
-                SQL ``ILIKE '%q%'`` cross-dialect via ``column.ilike()`` —
+                SQL ``ILIKE '%q%'`` cross-dialect via ``column.ilike()`` -
                 Postgres uses native ILIKE, SQLite uses case-insensitive
                 LIKE because the SQLite LIKE is itself case-insensitive
                 for ASCII by default. Always returns substring matches; the
                 vector layer is a best-effort re-ranker on top, never the
                 only source of recall.
             name: Substring filter against ``code`` only. CostItem rows
-                have no separate ``name`` column — ``code`` is the catalog
+                have no separate ``name`` column - ``code`` is the catalog
                 identifier clients call "name", so this aliases there.
             description: Substring filter against ``description`` only.
                 AND-combined with ``q`` and ``name`` so callers can
@@ -267,7 +267,7 @@ class CostItemRepository:
                 expr = _classification_expr(_CLASSIFICATION_DEPTHS[depth_idx])
                 base = base.where(expr == segment)
 
-        # Coerce to float for cross-dialect comparison — the rate column is
+        # Coerce to float for cross-dialect comparison - the rate column is
         # String(50) for SQLite Decimal compat (see models.py). ``numeric_value``
         # is tolerant of non-numeric strings on PostgreSQL (a bare ``cast(.., Float)``
         # would raise "invalid input syntax" on one malformed row), matching
@@ -279,7 +279,7 @@ class CostItemRepository:
         if max_rate is not None:
             base = base.where(numeric_value(CostItem.rate) <= float(max_rate))
 
-        # Total count — only when explicitly requested. Cursor-paginated
+        # Total count - only when explicitly requested. Cursor-paginated
         # queries skip this since counting on every page is wasteful and
         # the frontend doesn't show a total beyond the first page.
         total: int | None
@@ -294,7 +294,7 @@ class CostItemRepository:
         page_stmt = base
         if cursor is not None:
             cursor_code, cursor_id = cursor
-            # Cast UUID column to text for the tiebreaker comparison —
+            # Cast UUID column to text for the tiebreaker comparison -
             # SQLite stores UUIDs as VARCHAR(36) via the ``GUID`` type
             # decorator, and PostgreSQL has a built-in UUID → text cast.
             # Comparing on the string form keeps the ordering consistent
@@ -310,7 +310,7 @@ class CostItemRepository:
         # Fetch limit+1 to detect "has_more" without an extra count query.
         # Order by the SAME ``cast(id, String)`` expression we use in the
         # keyset filter so the lexicographic ordering of cursor.id matches
-        # the ORDER BY at the database — both SQLite (string-stored UUID)
+        # the ORDER BY at the database - both SQLite (string-stored UUID)
         # and Postgres (UUID-with-text-cast) sort identically that way.
         page_stmt = (
             page_stmt.order_by(CostItem.code.asc(), cast(CostItem.id, String).asc())
@@ -338,7 +338,7 @@ class CostItemRepository:
         :meth:`search` then resorted them in Python by "items with
         components first" (richer cards for the estimator). On a 110k-row
         catalogue this issued a 24-row fetch + Python sort per keystroke
-        when the user only ever saw 8 — pure waste.
+        when the user only ever saw 8 - pure waste.
 
         Pushing the priority into the ORDER BY uses the same single index
         the generic search already exploits (``ix_costs_active_code``)
@@ -354,7 +354,7 @@ class CostItemRepository:
 
         Args:
             q: Substring match against code OR description (ILIKE).
-                Required — no q means use the generic listing endpoint.
+                Required - no q means use the generic listing endpoint.
             region: Optional region filter (e.g. ``"DE_BERLIN"``).
             limit: Hard cap on returned rows (matches the public endpoint
                 cap of 20).
@@ -374,13 +374,29 @@ class CostItemRepository:
             base = base.where(CostItem.region == region)
 
         # Dialect-aware "has components" predicate. We treat any non-empty
-        # JSON array as 1, empty/NULL as 0 — matches the Python ``_has_components``
-        # helper the router used to call. The generic ``JSON`` type maps to
-        # ``json`` on PostgreSQL, so ``json_array_length`` works on all dialects.
+        # JSON array as 1, empty/NULL as 0 - matches the Python ``_has_components``
+        # helper the router used to call. Postgres ships JSONB whose
+        # ``jsonb_array_length`` is the canonical helper; SQLite has
+        # ``json_array_length`` which mirrors it semantically (both return
+        # 0 for ``[]`` and NULL for non-arrays / NULL).
+        #
+        # Detect the dialect from THIS session's bind, not the global
+        # ``app.database.engine``: under the PG test lane the global engine is
+        # still SQLite while the session runs on PostgreSQL, and picking the
+        # wrong branch emits ``json_array_length(jsonb)`` which PG rejects.
         dialect_name = self.session.bind.dialect.name if self.session.bind else "sqlite"
-        comp_len = func.coalesce(func.json_array_length(CostItem.components), 0)
+        if dialect_name == "sqlite":
+            comp_len = func.coalesce(func.json_array_length(CostItem.components), 0)
+        else:
+            # CostItem.components is declared as generic ``JSON`` but
+            # ``pg_optimizations`` rewrites it to JSONB on PostgreSQL DDL, so the
+            # column is physically ``jsonb`` - and ``json_array_length(jsonb)``
+            # does NOT exist on PG (it raises "function does not exist"). The
+            # JSONB-domain helper is ``jsonb_array_length``; same coalesce
+            # semantics so NULL rows sort AFTER empty arrays.
+            comp_len = func.coalesce(func.jsonb_array_length(CostItem.components), 0)
 
-        # CASE(comp_len > 0 → 1 else 0) — items WITH components first.
+        # CASE(comp_len > 0 → 1 else 0) - items WITH components first.
         # DESC so the "1" rows lead.
         from sqlalchemy import case
 
@@ -418,7 +434,7 @@ class CostItemRepository:
                 Reuses :func:`_split_classification_path` for empty-segment
                 wildcard semantics. Returned nodes start at ``depth+1``
                 relative to the root, but the caller renders them as if
-                they were a fresh top-level — combine with the existing
+                they were a fresh top-level - combine with the existing
                 cached top-level tree on the client to lazily extend.
 
         Returns:
@@ -430,7 +446,7 @@ class CostItemRepository:
         # Build the extracted expressions and label them so we can access
         # by name on the result rows. coalesce() doesn't help here
         # (json_extract returns NULL for missing keys, which IS what we
-        # want to detect) — we coerce in Python instead so empty strings
+        # want to detect) - we coerce in Python instead so empty strings
         # and missing keys collapse into the same sentinel.
         all_exprs = [_classification_expr(key) for key in _CLASSIFICATION_DEPTHS]
         all_cols = [expr.label(key) for expr, key in zip(all_exprs, _CLASSIFICATION_DEPTHS, strict=True)]

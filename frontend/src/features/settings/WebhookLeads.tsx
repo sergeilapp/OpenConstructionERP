@@ -25,6 +25,7 @@ import {
   ScrollText,
 } from 'lucide-react';
 import { Card, Badge, Button, ConfirmDialog, Input } from '@/shared/ui';
+import { copyToClipboard } from '@/shared/lib/browser';
 import { apiGet, apiPost, apiPatch, apiDelete } from '@/shared/lib/api';
 import { useConfirm } from '@/shared/hooks/useConfirm';
 import { useToastStore } from '@/stores/useToastStore';
@@ -225,7 +226,7 @@ export function WebhookLeads() {
   );
 
   const copy = (text: string) => {
-    void navigator.clipboard?.writeText(text);
+    void copyToClipboard(text);
     addToast({
       type: 'info',
       title: t('webhook_leads.copied', { defaultValue: 'Copied to clipboard' }),
@@ -260,7 +261,7 @@ export function WebhookLeads() {
               <p className="font-medium text-amber-800">
                 {t('webhook_leads.secret_once', {
                   defaultValue:
-                    'Copy this secret now — it is shown only once and cannot be retrieved later.',
+                    'Copy this secret now - it is shown only once and cannot be retrieved later.',
                 })}
               </p>
               <div className="mt-2 space-y-2 text-sm">
@@ -539,7 +540,7 @@ export function WebhookLeads() {
               {(mappingsQ.data ?? []).length === 0 && (
                 <p className="text-sm text-gray-500">
                   {t('webhook_leads.no_mappings', {
-                    defaultValue: 'No mappings — add at least one required rule.',
+                    defaultValue: 'No mappings - add at least one required rule.',
                   })}
                 </p>
               )}

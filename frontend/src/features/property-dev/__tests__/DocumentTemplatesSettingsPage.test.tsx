@@ -32,6 +32,7 @@ import { MemoryRouter } from 'react-router-dom';
 
 vi.mock('../api', () => ({
   listDocumentTemplates: vi.fn(),
+  listDevelopments: vi.fn().mockResolvedValue([]),
   uploadCustomDocumentTemplate: vi.fn(),
   deleteCustomDocumentTemplate: vi.fn(),
   customDocumentTemplateDownloadUrl: vi.fn(() => '/dl/x'),
@@ -96,7 +97,7 @@ function catalogue(overrides: Partial<Record<string, unknown>> = {}) {
   };
 }
 
-describe('DocumentTemplatesSettingsPage — worldwide parameterization', () => {
+describe('DocumentTemplatesSettingsPage - worldwide parameterization', () => {
   beforeEach(() => vi.clearAllMocks());
 
   it('upload form renders combobox inputs (not <select>) for doc_type and entity', async () => {

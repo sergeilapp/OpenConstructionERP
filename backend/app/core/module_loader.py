@@ -1,4 +1,4 @@
-"""‌⁠‍Module loader​‌‍⁠​‌‍⁠​‌‍⁠​‌‍⁠ — discovers, loads, and manages business modules.
+"""‌⁠‍Module loader​‌‍⁠​‌‍⁠​‌‍⁠​‌‍⁠ - discovers, loads, and manages business modules.
 
 Each module is a Python package under app/modules/ with a manifest.py.
 The loader handles dependency resolution, lifecycle, and route mounting.
@@ -221,8 +221,29 @@ class ModuleLoader:
                         module_name,
                         legacy_prefix,
                     )
-        except ModuleNotFoundError:
-            logger.debug("No router for module %s", module_name)
+        except ModuleNotFoundError as exc:
+            # Distinguish two very different cases that both surface as
+            # ModuleNotFoundError:
+            #   1. The module simply has no router.py - expected, stay quiet.
+            #   2. router.py exists but one of its (transitive) imports is
+            #      missing - the router silently disappears and every one of
+            #      the module's endpoints 404s. That must never be swallowed.
+            # The missing module's dotted name is on the exception. When it is
+            # the router module itself, case 1; otherwise a dependency of the
+            # router failed to import (case 2) and we log loudly so a missing
+            # package can be diagnosed instead of producing phantom 404s.
+            if exc.name in (router_module_name, f"{package_path}.router"):
+                logger.debug("No router for module %s", module_name)
+            else:
+                logger.warning(
+                    "Router for module %s was NOT mounted: import of %r failed "
+                    "(%s). The module's API endpoints are unavailable - this "
+                    "usually means a required dependency is not installed.",
+                    module_name,
+                    exc.name,
+                    exc,
+                    exc_info=True,
+                )
 
         # Load models (for Alembic discovery)
         try:
@@ -243,7 +264,7 @@ class ModuleLoader:
         with contextlib.suppress(ModuleNotFoundError):
             importlib.import_module(f"{package_path}.validators")
 
-        # Load pipeline node runners — a module opts node types into the
+        # Load pipeline node runners - a module opts node types into the
         # Pipeline Builder's Node Capability Registry by defining a
         # ``pipeline_nodes.py`` that calls ``register_node(...)`` at import
         # time (same autodiscovery contract as hooks/events/validators).
@@ -333,7 +354,7 @@ class ModuleLoader:
         # Load if not already loaded. Also force a reload when a stale
         # _modules record exists but the live app route table no longer
         # carries this module's prefix (e.g. routes were stripped by a
-        # prior disable) — otherwise the router would never be re-included
+        # prior disable) - otherwise the router would never be re-included
         # and the endpoints would keep 404ing until a process restart.
         if module_name not in self._modules or not self._has_live_routes(module_name, app):
             self._modules.pop(module_name, None)
@@ -393,7 +414,7 @@ class ModuleLoader:
                 f"Cannot disable '{module_name}': required by enabled modules: {', '.join(enabled_dependents)}"
             )
 
-        # Remove router from the FastAPI app — sweep both the canonical
+        # Remove router from the FastAPI app - sweep both the canonical
         # kebab-case prefix and the legacy underscore mirror so we do not
         # leak ghost routes after a disable.
         loaded = self._modules.get(module_name)

@@ -7,7 +7,7 @@
  *   1. A "Run simulation" panel with iterations input + mode selector.
  *   2. A "Last run" summary strip — P50 / P80 / P95 chips (cost +
  *      schedule), confidence bands familiar to anyone who's used
- *      Primavera Risk Analysis or Predict! by Riskwise.
+ *      schedule risk analysis tools.
  *   3. A histogram (Recharts BarChart, 10 equal-width bins) of the
  *      simulated contingency distribution + a tornado chart (top 8
  *      sensitivity contributors, sorted desc).
@@ -216,7 +216,7 @@ export function MonteCarloTab({ projectId, currency }: MonteCarloTabProps) {
             <TrendingUp size={14} className="text-content-tertiary" />
             <h3 className="text-sm font-semibold text-content-primary">
               {t('risk.montecarlo.last_run', {
-                defaultValue: 'Last run — {{risks}} risks, {{iterations}} iterations',
+                defaultValue: 'Last run - {{risks}} risks, {{iterations}} iterations',
                 risks: result.risk_count,
                 iterations: result.iterations.toLocaleString(),
               })}

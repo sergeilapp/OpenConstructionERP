@@ -3,7 +3,7 @@
 All routes are mounted at ``/api/v1/bid-management/`` and gated by
 :class:`RequirePermission` ("bid_management.*"). Internal cross-module
 references (project_id, tender_id, contract_template_ref) are plain
-UUID / string types — no FK constraints across modules.
+UUID / string types - no FK constraints across modules.
 
 Every endpoint enforces :func:`verify_project_access` so users cannot
 read/mutate bid data belonging to projects they don't own. The chain is:
@@ -338,7 +338,7 @@ async def package_qa_board(
     bidder_id: uuid.UUID | None = Query(default=None),
     _perm: None = Depends(RequirePermission("bid_management.read")),
 ) -> BidderQABoardResponse:
-    """‌⁠‍Aconex-style Q&A board filtered to one bidder (or all when owner)."""
+    """‌⁠‍Construction CDE platform style Q&A board filtered to one bidder (or all when owner)."""
     await _verify_package_access(session, package_id, user_id)
     svc = BidManagementService(session)
     board = await svc.qa_board_for_bidder(package_id, bidder_id)
@@ -903,7 +903,7 @@ async def get_or_create_comparison(
     user_id: CurrentUserId,
     _perm: None = Depends(RequirePermission("bid_management.create")),
 ) -> BidComparisonResponse:
-    """Idempotent comparison creation — returns the existing one if present.
+    """Idempotent comparison creation - returns the existing one if present.
 
     Lets the leveling UI re-run "Compute Leveling" without hitting the 409
     that plain ``create_comparison`` raises once a comparison exists.

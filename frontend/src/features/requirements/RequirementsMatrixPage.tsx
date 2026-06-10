@@ -21,14 +21,15 @@
 // fallback for external links).
 
 import { useEffect, useMemo, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
 import {
   ClipboardList,
+  ExternalLink,
   Filter as FilterIcon,
-  HelpCircle,
+  Link2,
   Pencil,
   Plus,
   RefreshCw,
@@ -36,6 +37,9 @@ import {
 } from 'lucide-react';
 
 import { BetaBanner } from '@/shared/ui/BetaBanner';
+import { Breadcrumb } from '@/shared/ui/Breadcrumb';
+import { DismissibleInfo, IntroRichText } from '@/shared/ui/DismissibleInfo';
+import { PageHeader } from '@/shared/ui/PageHeader';
 import { Button } from '@/shared/ui/Button';
 import { Card } from '@/shared/ui/Card';
 import { ConfirmDialog } from '@/shared/ui/ConfirmDialog';
@@ -115,6 +119,28 @@ const TYPE_LABEL: Record<string, string> = {
   pset: 'PSET',
   other: 'Other',
 };
+
+// Where each ISO 19650 deliverable type lives in the app. The cell editor
+// surfaces an "Open deliverable" link routing to the module that proves the
+// requirement (a model in the BIM viewer, a drawing in markups, a schedule in
+// the 4D Gantt, a report in Reports, etc.). The deliverable rows carry only a
+// type (no per-record FK on the backend), so we deep-link to the module home
+// scoped to the active project rather than a single record.
+const DELIVERABLE_ROUTE: Record<string, string> = {
+  model: '/bim',
+  drawing: '/markups',
+  schedule: '/schedule',
+  report: '/reports',
+  cobie: '/files',
+  pset: '/bim',
+  other: '/files',
+};
+
+/** Route for a deliverable type, scoped to the active project where useful. */
+function deliverableRoute(deliverableType: string, projectId: string): string {
+  const base = DELIVERABLE_ROUTE[deliverableType] ?? '/files';
+  return projectId ? `${base}?project=${encodeURIComponent(projectId)}` : base;
+}
 
 // Tailwind colour classes per status — heatmap cell background +
 // accent border + text. Keeps the matrix scannable at a glance.
@@ -482,12 +508,14 @@ interface CellEditorState {
 
 interface CellEditorProps {
   state: CellEditorState;
+  projectId: string;
   onClose: () => void;
   onSaved: () => void;
 }
 
-function CellEditor({ state, onClose, onSaved }: CellEditorProps) {
+function CellEditor({ state, projectId, onClose, onSaved }: CellEditorProps) {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const toast = useToastStore((s) => s.addToast);
   const isEditing = state.cell?.deliverable_id != null;
 
@@ -566,7 +594,7 @@ function CellEditor({ state, onClose, onSaved }: CellEditorProps) {
   if (!state.open || !state.row) return null;
 
   const typeLabel = TYPE_LABEL[state.deliverableType] ?? state.deliverableType;
-  const title = `${typeLabel} — ${state.row.entity}.${state.row.attribute}`;
+  const title = `${typeLabel} - ${state.row.entity}.${state.row.attribute}`;
 
   return (
     <WideModal
@@ -635,6 +663,36 @@ function CellEditor({ state, onClose, onSaved }: CellEditorProps) {
           <input type="datetime-local" value={acceptedAt} onChange={(e) => setAcceptedAt(e.target.value)} className={INPUT_CLASS} />
         </label>
       </WideModalSection>
+
+      {/* Open deliverable: route to the module that proves this requirement
+          (model -> BIM viewer, drawing -> markups, schedule -> 4D, etc.). */}
+      <WideModalSection title={t('requirements.matrix.open_deliverable', { defaultValue: 'Open deliverable' })} columns={1}>
+        <div className="flex flex-col gap-2">
+          <p className="text-xs text-content-secondary">
+            {t('requirements.matrix.open_deliverable_hint', {
+              defaultValue:
+                'Jump to where this {{type}} deliverable lives to review or attach the evidence that satisfies the requirement.',
+              type: typeLabel,
+            })}
+          </p>
+          <div>
+            <Button
+              variant="secondary"
+              size="sm"
+              icon={<ExternalLink size={14} />}
+              onClick={() => {
+                navigate(deliverableRoute(state.deliverableType, projectId));
+                onClose();
+              }}
+            >
+              {t('requirements.matrix.open_in_module', {
+                defaultValue: 'Open {{type}}',
+                type: typeLabel,
+              })}
+            </Button>
+          </div>
+        </div>
+      </WideModalSection>
     </WideModal>
   );
 }
@@ -666,6 +724,7 @@ function StatusLegend() {
 
 export function RequirementsMatrixPage() {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const [params, setParams] = useSearchParams();
   const ctxProjectId = useProjectContextStore((s) => s.activeProjectId);
   const ctxProjectName = useProjectContextStore((s) => s.activeProjectName);
@@ -675,7 +734,6 @@ export function RequirementsMatrixPage() {
   const [typeFilter, setTypeFilter] = useState<string>('');
   const [statusFilter, setStatusFilter] = useState<DeliverableStatus | ''>('');
   const [setFilter, setSetFilter] = useState<string>('');
-  const [showHelp, setShowHelp] = useState(false);
 
   const [cellEditor, setCellEditor] = useState<CellEditorState>({
     open: false,
@@ -804,74 +862,79 @@ export function RequirementsMatrixPage() {
   const loading = matrixQuery.isLoading || setsQuery.isLoading;
 
   return (
-    <div className="flex flex-col gap-4 p-4 md:p-6">
+    <div className="space-y-5 animate-fade-in">
+      <Breadcrumb
+        items={[
+          ...(ctxProjectName
+            ? [{ label: ctxProjectName, to: `/projects/${projectId}` }]
+            : []),
+          { label: t('nav.eir_matrix', { defaultValue: 'EIR Matrix (ISO 19650)' }) },
+        ]}
+      />
       <BetaBanner moduleKey="requirements" className="mt-3" />
 
       {/* Header */}
-      <header className="flex flex-wrap items-end justify-between gap-3">
-        <div className="min-w-0">
-          <h1 className="text-xl font-semibold text-content-primary">
-            {t('requirements.matrix.title', { defaultValue: 'Requirements Matrix' })}
-          </h1>
-          <p className="text-sm text-content-secondary">{subtitle}</p>
-        </div>
-        <div className="flex flex-wrap items-center gap-2">
-          {matrixQuery.data && totalRows > 0 && (
-            <div className="flex items-center gap-2 rounded-lg border border-border-light bg-surface-elevated px-3 py-1.5 text-sm">
-              <span className="text-content-secondary">{t('requirements.matrix.project_coverage', { defaultValue: 'Project coverage' })}</span>
-              <CoverageChip pct={matrixQuery.data.coverage_pct} />
-            </div>
-          )}
-          <Button
-            variant="ghost"
-            size="sm"
-            icon={<HelpCircle size={14} />}
-            onClick={() => setShowHelp((v) => !v)}
-            aria-expanded={showHelp}
-          >
-            {t('requirements.matrix.what_title', { defaultValue: 'What is this?' })}
-          </Button>
-          <Button
-            variant="secondary"
-            size="sm"
-            icon={<RefreshCw size={14} />}
-            onClick={refresh}
-            disabled={matrixQuery.isFetching || setsQuery.isFetching}
-          >
-            {t('requirements.matrix.refresh', { defaultValue: 'Refresh' })}
-          </Button>
-          {hasSets && (
+      <PageHeader
+        srTitle={t('nav.eir_matrix', { defaultValue: 'EIR Matrix (ISO 19650)' })}
+        subtitle={subtitle}
+        actions={
+          <>
+            {matrixQuery.data && totalRows > 0 && (
+              <div className="flex items-center gap-2 rounded-lg border border-border-light bg-surface-elevated px-3 py-1.5 text-sm">
+                <span className="text-content-secondary">{t('requirements.matrix.project_coverage', { defaultValue: 'Project coverage' })}</span>
+                <CoverageChip pct={matrixQuery.data.coverage_pct} />
+              </div>
+            )}
             <Button
-              variant="primary"
+              variant="secondary"
               size="sm"
-              icon={<Plus size={14} />}
-              onClick={() => setReqEditor({ open: true, row: null })}
+              icon={<RefreshCw size={14} />}
+              onClick={refresh}
+              disabled={matrixQuery.isFetching || setsQuery.isFetching}
             >
-              {t('requirements.matrix.add_requirement', { defaultValue: 'Add requirement' })}
+              {t('requirements.matrix.refresh', { defaultValue: 'Refresh' })}
             </Button>
-          )}
-        </div>
-      </header>
+            {hasSets && (
+              <Button
+                variant="primary"
+                size="sm"
+                icon={<Plus size={14} />}
+                onClick={() => setReqEditor({ open: true, row: null })}
+              >
+                {t('requirements.matrix.add_requirement', { defaultValue: 'Add requirement' })}
+              </Button>
+            )}
+          </>
+        }
+      />
 
-      {/* "What is this" explainer */}
-      {showHelp && (
-        <Card padding="sm" className="border-oe-blue/30 bg-oe-blue/5">
-          <div className="flex gap-3">
-            <HelpCircle size={18} className="mt-0.5 shrink-0 text-oe-blue" />
-            <div>
-              <h2 className="text-sm font-semibold text-content-primary">
-                {t('requirements.matrix.what_title', { defaultValue: 'What is the requirements matrix?' })}
-              </h2>
-              <p className="mt-1 text-sm leading-relaxed text-content-secondary">
-                {t('requirements.matrix.what_body', {
-                  defaultValue:
-                    'Each row is one project requirement, written as Entity, Attribute and Constraint (for example "exterior wall, fire rating, equals F90"). The columns are the ISO 19650 information deliverables that prove the requirement is met, a 3D Model, a Drawing, a Schedule, a Report, a COBie export or a property set (PSET). Each cell shows the level of detail and information delivered, and turns green when accepted, amber when submitted and red when still missing.',
-                })}
-              </p>
-            </div>
-          </div>
-        </Card>
-      )}
+      {/* Canonical intro card (replaces the old "What is this?" toggle) */}
+      <DismissibleInfo
+        storageKey="requirements/matrix"
+        title={t('requirements.intro_title', {
+          defaultValue: 'Prove every information requirement was met',
+        })}
+        more={
+          t('requirements.intro_more', { defaultValue: '' })
+            ? <IntroRichText text={t('requirements.intro_more')} />
+            : undefined
+        }
+        links={[
+          {
+            label: t('nav.bim_rules', { defaultValue: 'Rule Packs' }),
+            onClick: () => navigate('/bim/rules'),
+          },
+          {
+            label: t('nav.coordination_hub', { defaultValue: 'Coordination Hub' }),
+            onClick: () => navigate('/coordination'),
+          },
+        ]}
+      >
+        {t('requirements.intro_body', {
+          defaultValue:
+            'Write each project requirement as Entity, Attribute and Constraint, for example exterior wall, fire rating, equals F90, then map it against the ISO 19650 deliverables that prove it, model, drawing, schedule, report, COBie or property set. Every cell shows the level of information delivered and turns green when accepted, amber when submitted and red when still missing, giving a live coverage score for the active project.',
+        })}
+      </DismissibleInfo>
 
       {/* Filters + legend (only meaningful once requirements exist) */}
       {hasSets && totalRows > 0 && (
@@ -1034,6 +1097,21 @@ export function RequirementsMatrixPage() {
                           </span>
                         )}
                       </div>
+                      {row.linked_position_id && (
+                        <button
+                          type="button"
+                          onClick={() =>
+                            navigate(`/boq?positionId=${encodeURIComponent(row.linked_position_id as string)}`)
+                          }
+                          title={t('requirements.matrix.open_boq_position', {
+                            defaultValue: 'Open the linked BOQ position',
+                          })}
+                          className="mt-1 inline-flex items-center gap-1 rounded-full border border-oe-blue/30 bg-oe-blue/10 px-2 py-0.5 text-[11px] font-medium text-oe-blue transition hover:bg-oe-blue/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue"
+                        >
+                          <Link2 size={11} />
+                          {t('requirements.matrix.linked_boq', { defaultValue: 'BOQ' })}
+                        </button>
+                      )}
                     </td>
                     {sets.length > 1 && !setFilter && (
                       <td className="px-3 py-2 align-middle text-xs text-content-secondary">
@@ -1055,15 +1133,15 @@ export function RequirementsMatrixPage() {
                               'group flex w-full min-w-[120px] flex-col items-start gap-0.5 rounded-lg border px-2.5 py-1.5 text-left text-xs transition',
                               CELL_STYLE[status],
                             )}
-                            aria-label={`${TYPE_LABEL[col] ?? col} — ${STATUS_LABEL[status]} — ${row.entity}.${row.attribute}`}
+                            aria-label={`${TYPE_LABEL[col] ?? col} - ${STATUS_LABEL[status]} - ${row.entity}.${row.attribute}`}
                           >
                             <span className="font-semibold uppercase tracking-wide">
                               {t(`requirements.matrix.status_${status}`, { defaultValue: STATUS_LABEL[status] })}
                             </span>
                             <span className="text-[11px] opacity-80">
-                              {cell?.lod ? `LOD ${cell.lod}` : 'LOD —'}
+                              {cell?.lod ? `LOD ${cell.lod}` : 'LOD -'}
                               {' · '}
-                              {cell?.loi ? `LOI ${cell.loi}` : 'LOI —'}
+                              {cell?.loi ? `LOI ${cell.loi}` : 'LOI -'}
                             </span>
                             {!cell?.deliverable_id && (
                               <span className="inline-flex items-center gap-0.5 text-[11px] opacity-70 group-hover:opacity-100">
@@ -1122,6 +1200,7 @@ export function RequirementsMatrixPage() {
       />
       <CellEditor
         state={cellEditor}
+        projectId={projectId}
         onClose={() => setCellEditor({ open: false, row: null, deliverableType: '', cell: null })}
         onSaved={refresh}
       />

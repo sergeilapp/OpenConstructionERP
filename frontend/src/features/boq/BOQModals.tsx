@@ -495,7 +495,7 @@ export function CostDatabaseSearchModal({
       addToast({
         type: 'info',
         title: t('boq.cursor_error_title', {
-          defaultValue: 'Loading older results failed — refreshing',
+          defaultValue: 'Loading older results failed - refreshing',
         }),
       });
       // Drop pages so the next fetch starts at cursor=null.
@@ -1849,7 +1849,7 @@ export function CostDatabaseSearchModal({
                     <p className="mx-auto mb-4 max-w-sm text-xs text-content-tertiary">
                       {t('boq.no_databases_help', {
                         defaultValue:
-                          "There's no cost-rate database on this server, so search has nothing to show. Import a free CWICR pack — 48 regional databases are one click away.",
+                          "There's no cost-rate database on this server, so search has nothing to show. Import a free CWICR pack - 48 regional databases are one click away.",
                       })}
                     </p>
                     <Button
@@ -2031,11 +2031,11 @@ export function CostDatabaseSearchModal({
                                     title={
                                       lowRate
                                         ? t('boq.warn_zero_rate', {
-                                            defaultValue: 'No rate — review before commit',
+                                            defaultValue: 'No rate - review before commit',
                                           })
                                         : t('boq.warn_lump_sum', {
                                             defaultValue:
-                                              'Lump sum — quantity × rate may not match expected total',
+                                              'Lump sum - quantity × rate may not match expected total',
                                           })
                                     }
                                   >
@@ -2260,7 +2260,7 @@ export function CostDatabaseSearchModal({
       {/* Variant picker — anchored to the Add button so positioning is
           stable across the multi-item add loop.  Rendered outside the
           modal's overflow:hidden body via createPortal in VariantPicker.
-          Default strategy is "mean" (matches CostX/iTWO defaults); the
+          Default strategy is "mean" (matches integrated 5D estimating suite defaults); the
           legacy "median" tag in the Cost-DB browser remains available
           via the `defaultStrategy` prop on direct callers. */}
       {activeVariantPick && activeVariantPick.item.metadata_?.variants

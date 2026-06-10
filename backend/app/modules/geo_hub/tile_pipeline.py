@@ -14,30 +14,30 @@ and the glTF 2.0 Khronos extensions ``EXT_structural_metadata`` /
 
 Stages (all unit-testable in isolation):
 
-1. ``load_canonical_elements(elements_or_loader)`` — accept either a
+1. ``load_canonical_elements(elements_or_loader)`` - accept either a
    list of canonical-element dicts, or a coroutine that produces them.
-2. ``compute_aabb(elements)`` — axis-aligned bounding box over the
+2. ``compute_aabb(elements)`` - axis-aligned bounding box over the
    element geometries.
-3. ``partition_by_aabb(elements, target_tile_count)`` — naive
+3. ``partition_by_aabb(elements, target_tile_count)`` - naive
    octree-style split (v1 keeps it to a single tile because the
    spec's hierarchical traversal is overkill for the early customers;
    ``partition_by_aabb`` is exposed and tested so v1.1 can flip on
    multi-tile LoD without touching the public API).
-4. ``build_gltf_for_tile(elements, tile_aabb)`` — vertex + index
+4. ``build_gltf_for_tile(elements, tile_aabb)`` - vertex + index
    buffers, mesh primitives, ``EXT_structural_metadata`` property
    table with one row per element. Returns a glTF dict + a packed
    binary buffer.
-5. ``write_b3dm(gltf_bytes, feature_table, batch_table)`` — Cesium's
+5. ``write_b3dm(gltf_bytes, feature_table, batch_table)`` - Cesium's
    binary 3D tile wrapper around a glTF blob.
 6. ``build_tileset_json(tile_aabb, content_uri, geometric_error,
-   anchor_lat, anchor_lon)`` — root ``tileset.json`` with a region or
+   anchor_lat, anchor_lon)`` - root ``tileset.json`` with a region or
    sphere bounding volume positioned at the project anchor.
-7. ``upload_to_minio(...)`` — writes ``tileset.json`` + one ``.b3dm``
+7. ``upload_to_minio(...)`` - writes ``tileset.json`` + one ``.b3dm``
    into the existing :class:`StorageBackend` under
    ``tilesets/{tileset_id}/``.
 
 Reduce complexity for v1: one tile per source. LoD selection lives in
-the spec but is not required for correctness — the viewer treats the
+the spec but is not required for correctness - the viewer treats the
 root tile as the only tile and renders it. v1.1 will partition.
 
 All public functions accept and return only Python primitives so the
@@ -76,10 +76,23 @@ _COMPONENT_TYPE_UNSIGNED_SHORT = 5123
 _ARRAY_BUFFER = 34962
 _ELEMENT_ARRAY_BUFFER = 34963
 
-# Default geometric error in metres — controls when Cesium swaps in a
+# Default geometric error in metres - controls when Cesium swaps in a
 # higher-detail child tile. Picked to match Cesium's "wow that's a
 # building"-scale threshold without forcing the user to set it.
 _DEFAULT_GEOMETRIC_ERROR = 200.0
+
+# Default geometric error in metres for a point-cloud root. A registered
+# scan can be hundreds of metres across, so the root error has to be large
+# enough that Cesium loads the cloud from a sensible orbit distance rather
+# than only when the camera is already inside it. The converter writes the
+# real per-tile errors into the pnts/COPC octree; this is only the root
+# hint Cesium uses before it has fetched any leaves.
+_DEFAULT_POINT_CLOUD_GEOMETRIC_ERROR = 16.0
+
+# Metres per degree of latitude on the WGS84 ellipsoid (mean). Used only to
+# turn a tiny degenerate point-cloud bbox into a non-zero bounding region so
+# Cesium never reads a zero-area region as "nothing to load".
+_METRES_PER_DEGREE_LAT = 111_320.0
 
 
 # ── Datatypes ───────────────────────────────────────────────────────────
@@ -180,14 +193,14 @@ def _element_geometry_aabb(element: dict[str, Any]) -> TileAABB | None:
 
     Canonical format gives us at least one of:
 
-    * ``geometry.aabb`` — six-number list [min_x, min_y, min_z, max_x,
+    * ``geometry.aabb`` - six-number list [min_x, min_y, min_z, max_x,
       max_y, max_z] (preferred when the converter wrote it).
     * ``geometry.length_m`` / ``height_m`` / ``thickness_m`` for
       extrusions.
     * ``geometry.area_m2`` / ``geometry.volume_m3`` as a crude fallback
       (we infer a unit cube of equivalent area / volume so the element
       contributes to the tile bounding box even when the converter
-      didn't emit per-element geometry — better than dropping it).
+      didn't emit per-element geometry - better than dropping it).
 
     Returns ``None`` only when the element has no usable spatial hint.
     """
@@ -259,7 +272,7 @@ def partition_by_aabb(
 
     v1 ships a degenerate single-tile partition (returns the elements
     as a single group) when ``target_tile_count == 1``. For >1 we do
-    a simple median-split along the longest axis — recursive doubling
+    a simple median-split along the longest axis - recursive doubling
     until we hit the target group count. The recursion is bounded by
     ``ceil(log2(target_tile_count))`` and works in O(n log n).
     """
@@ -301,7 +314,7 @@ def partition_by_aabb(
             cval = cx if axis == "x" else (cy if axis == "y" else cz)
             (left if cval < mid else right).append(elem)
         if not left or not right:
-            # Split made no progress — stop here.
+            # Split made no progress - stop here.
             return [group]
         return _split(left, depth - 1) + _split(right, depth - 1)
 
@@ -323,7 +336,7 @@ def _emit_box_mesh(
 
     Returns the (new_vertex_offset, new_index_offset) so the caller can
     keep stacking primitives. Each vertex carries a ``_FEATURE_ID_0``
-    attribute that ties back to the metadata property table — this is
+    attribute that ties back to the metadata property table - this is
     what enables ``EXT_mesh_features`` lookups in Cesium.
     """
     # 8 vertices of the AABB (xyz + featureId).
@@ -478,8 +491,8 @@ def build_gltf_for_tile(
     """Build a single-tile glTF 2.0 dict + binary blob.
 
     Each element gets a degenerate box mesh sized to its canonical
-    AABB. The intent here is not to ship visually-perfect geometry —
-    that's the converter's job — but to produce a *valid* glTF that:
+    AABB. The intent here is not to ship visually-perfect geometry -
+    that's the converter's job - but to produce a *valid* glTF that:
 
     * places the right number of features at roughly the right place
     * carries the structural metadata so a tile click lights up the
@@ -941,6 +954,135 @@ def build_tileset_json(
     }
 
 
+# ── Stage 6b: point-cloud tileset.json (no re-tiling) ───────────────────
+
+
+def _region_from_wgs84_bbox(
+    *,
+    min_lat: float,
+    min_lon: float,
+    max_lat: float,
+    max_lon: float,
+    min_height: float,
+    max_height: float,
+) -> list[float]:
+    """Build a 3D Tiles ``region`` straight from a geographic bbox.
+
+    Unlike :func:`_bounding_region_for_aabb`, the point-cloud path already
+    knows the cloud's WGS84 footprint (the converter sniffs it from the
+    LAS/LAZ header and the ScanDataset stores it as plain ``Numeric``
+    min/max lat/lon). So there is no ENU -> ECEF -> WGS84 projection to do
+    here - we only convert degrees to the radians the spec mandates and
+    guard against a degenerate (zero-area) region, which Cesium silently
+    treats as "nothing to load".
+
+    Returns ``[west, south, east, north, min_h, max_h]`` with lon / lat in
+    radians, sorted so ``west <= east`` and ``south <= north``.
+    """
+    south = min(min_lat, max_lat)
+    north = max(min_lat, max_lat)
+    west = min(min_lon, max_lon)
+    east = max(min_lon, max_lon)
+    low_h = min(min_height, max_height)
+    high_h = max(min_height, max_height)
+
+    # A single-point or line scan collapses to a zero-area region. Pad it by
+    # ~1 m on each side so Cesium has a real volume to cull against and the
+    # camera can still frame it.
+    pad_deg = 1.0 / _METRES_PER_DEGREE_LAT
+    if north - south <= 0.0:
+        south -= pad_deg
+        north += pad_deg
+    if east - west <= 0.0:
+        west -= pad_deg
+        east += pad_deg
+    if high_h - low_h <= 0.0:
+        low_h -= 1.0
+        high_h += 1.0
+
+    return [
+        math.radians(west),
+        math.radians(south),
+        math.radians(east),
+        math.radians(north),
+        low_h,
+        high_h,
+    ]
+
+
+def build_point_cloud_tileset_json(
+    *,
+    content_uri: str,
+    tile_format: str,
+    min_lat: float,
+    min_lon: float,
+    max_lat: float,
+    max_lon: float,
+    min_height: float = 0.0,
+    max_height: float = 0.0,
+    geometric_error: float | None = None,
+) -> dict[str, Any]:
+    """Assemble a root ``tileset.json`` that points at an already-tiled cloud.
+
+    This is the point-cloud counterpart to :func:`build_tileset_json` and is
+    used when ``source_kind == "point_cloud"`` with ``tile_format`` in
+    (``pnts``, ``copc``). It deliberately BYPASSES the canonical-element ->
+    glTF -> b3dm box path: the heavy tiling is done out-of-core by the
+    converter (PDAL / py3dtiles), which writes the pnts octree or the
+    range-readable ``.copc.laz`` into object storage. The core never
+    re-tiles on demand - it only references the existing artifact and frames
+    it with a bounding region derived from the scan's WGS84 bbox.
+
+    ``content_uri`` is the relative URI of the already-tiled root:
+
+    * ``pnts`` - the converter's ``tileset.json`` sub-tree root, or a single
+      ``.pnts`` leaf when the cloud is small enough to ship as one tile.
+    * ``copc`` - the ``.copc.laz`` keystone; the browser reads LODs from it
+      via HTTP range requests (``@loaders.gl/copc``) rather than Cesium
+      walking a pnts octree.
+
+    The returned document is spec-compliant 3D Tiles 1.1 with a ``region``
+    bounding volume so Cesium positions it on the ellipsoid without a
+    per-tile transform matrix.
+    """
+    if geometric_error is None:
+        geometric_error = _DEFAULT_POINT_CLOUD_GEOMETRIC_ERROR
+    region = _region_from_wgs84_bbox(
+        min_lat=min_lat,
+        min_lon=min_lon,
+        max_lat=max_lat,
+        max_lon=max_lon,
+        min_height=min_height,
+        max_height=max_height,
+    )
+    return {
+        "asset": {"version": "1.1", "tilesetVersion": "1.0"},
+        "geometricError": geometric_error,
+        "root": {
+            "boundingVolume": {"region": region},
+            "geometricError": geometric_error,
+            "refine": "ADD",
+            "content": {"uri": content_uri},
+        },
+        "extensionsUsed": ["3DTILES_metadata"],
+        "extensionsRequired": [],
+        "metadata": {
+            "class": "tilesetRoot",
+            "properties": {
+                "generated_at": datetime.now(UTC).isoformat(),
+                "generator": "openconstructionerp/geo_hub",
+                # Records that this tileset references a pre-tiled cloud
+                # (``pnts`` octree or ``copc`` keystone) rather than the
+                # box-mesh b3dm path. Consumers can branch render settings
+                # (point-cloud shading / EDL) off this without re-deriving
+                # it from the content extension.
+                "source_kind": "point_cloud",
+                "tile_format": tile_format,
+            },
+        },
+    }
+
+
 # ── Stage 7: storage write ──────────────────────────────────────────────
 
 
@@ -953,7 +1095,7 @@ async def upload_artifacts(
 ) -> tuple[str, str]:
     """Persist tileset.json + content.b3dm into the storage backend.
 
-    Returns ``(tileset_json_uri, content_uri)`` — the URIs the API
+    Returns ``(tileset_json_uri, content_uri)`` - the URIs the API
     surfaces back to the frontend. When ``storage_backend`` is ``None``
     we use the application-default backend; tests pass in an in-memory
     backend to avoid touching disk.
@@ -990,7 +1132,7 @@ def build_tile_artifacts(
 ) -> tuple[dict[str, Any], bytes, GLTFBuild]:
     """Run stages 2-6 end-to-end and return the artefacts.
 
-    Storage upload is intentionally NOT part of this helper — the
+    Storage upload is intentionally NOT part of this helper - the
     service layer drives it so a unit test can grab the bytes without
     a backend.
     """
@@ -1016,6 +1158,7 @@ __all__ = [
     "GLTFBuild",
     "TileAABB",
     "build_gltf_for_tile",
+    "build_point_cloud_tileset_json",
     "build_tile_artifacts",
     "build_tileset_json",
     "compute_aabb",

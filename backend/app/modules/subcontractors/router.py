@@ -37,6 +37,7 @@ from app.modules.subcontractors.schemas import (
     AgreementCreate,
     AgreementResponse,
     AgreementUpdate,
+    AwardEligibility,
     BlockRequest,
     CertificateCreate,
     CertificateResponse,
@@ -45,13 +46,16 @@ from app.modules.subcontractors.schemas import (
     InsuranceExpiryEntry,
     LienWaiverFormFields,
     LienWaiverResponse,
+    MonthlyRatingComputeRequest,
     PaymentApplicationCreate,
     PaymentApplicationResponse,
     PaymentApplicationUpdate,
+    PaymentReleaseCheck,
     PrequalificationCreate,
     PrequalificationResponse,
     PrequalificationUpdate,
     PrequalRequest,
+    PrequalView,
     RatingCreate,
     RatingResponse,
     RetentionLedgerEntryResponse,
@@ -66,6 +70,7 @@ from app.modules.subcontractors.schemas import (
     SubcontractorUpdate,
     TaxIdValidationRequest,
     TaxIdValidationResponse,
+    VendorEligibility,
     WorkPackageCreate,
     WorkPackageResponse,
     WorkPackageUpdate,
@@ -74,7 +79,7 @@ from app.modules.subcontractors.service import SubcontractorService, validate_ta
 
 logger = logging.getLogger(__name__)
 
-# Cap upload bytes — 10 MiB is well above any realistic lien waiver scan
+# Cap upload bytes - 10 MiB is well above any realistic lien waiver scan
 # (typical 1-2 pages PDF / phone photo) and below the proxy default.
 LIEN_WAIVER_MAX_BYTES: int = 10 * 1024 * 1024
 
@@ -219,6 +224,90 @@ async def subcontractor_dashboard(
     """Return aggregated stats for a single subcontractor."""
     svc = SubcontractorService(session)
     return await svc.dashboard(sub_id)
+
+
+@router.get(
+    "/subcontractors/{sub_id}/award-eligibility",
+    response_model=AwardEligibility,
+)
+async def subcontractor_award_eligibility(
+    sub_id: uuid.UUID,
+    session: SessionDep,
+    _user: CurrentUserId,
+    _perm: None = Depends(RequirePermission("subcontractors.read")),
+) -> AwardEligibility:
+    """Report whether a subcontractor may be awarded live work (TOP-30 #20).
+
+    Lets the UI show a prequalification banner before anyone tries to activate
+    an agreement, instead of only learning about the block on a 409.
+    """
+    svc = SubcontractorService(session)
+    result = await svc.subcontractor_award_eligibility(sub_id)
+    return AwardEligibility(
+        subcontractor_id=sub_id,
+        awardable=not result.blocked,
+        reasons=result.reasons,
+    )
+
+
+@router.get(
+    "/vendors/by-contact/{contact_id}/eligibility",
+    response_model=VendorEligibility,
+)
+async def vendor_eligibility_by_contact(
+    contact_id: uuid.UUID,
+    session: SessionDep,
+    _user: CurrentUserId,
+    _perm: None = Depends(RequirePermission("subcontractors.read")),
+) -> VendorEligibility:
+    """Resolve a PO vendor's prequalification / block status (TOP-30 #20).
+
+    Procurement POs carry a CRM ``vendor_contact_id``, not a subcontractor
+    id. This endpoint maps that contact to the linked subcontractor and
+    returns the award-eligibility verdict so the procurement PO-row badge
+    and the create/issue gate can warn on non-prequalified vendors and
+    hard-block vendors that are flagged ``is_blocked``. When the contact is
+    not a registered subcontractor the verdict is ``known=false`` /
+    ``awardable=true`` - an ad-hoc supplier is never gated.
+    """
+    svc = SubcontractorService(session)
+    resolved = await svc.award_eligibility_for_contact(contact_id)
+    if resolved is None:
+        return VendorEligibility(contact_id=contact_id, known=False, awardable=True)
+    sub, block = resolved
+    return VendorEligibility(
+        contact_id=contact_id,
+        known=True,
+        subcontractor_id=sub.id,
+        legal_name=sub.legal_name,
+        awardable=not block.blocked,
+        prequalification_status=sub.prequalification_status,
+        is_blocked=bool(sub.is_blocked),
+        rating_score=str(sub.rating_score) if sub.rating_score is not None else None,
+        reasons=block.reasons,
+    )
+
+
+@router.get(
+    "/subcontractors/{sub_id}/prequal",
+    response_model=PrequalView,
+)
+async def get_subcontractor_prequal(
+    sub_id: uuid.UUID,
+    session: SessionDep,
+    _user: CurrentUserId,
+    _perm: None = Depends(RequirePermission("subcontractors.read")),
+) -> PrequalView:
+    """Return the current prequalification state for a subcontractor (TOP-30 #20).
+
+    Carries the persisted questionnaire + score plus a freshly recomputed
+    answer-key score and the list of still-unanswered required questions, so
+    the prequalification form and the reviewer approval panel can render from
+    a single read.
+    """
+    svc = SubcontractorService(session)
+    view = await svc.prequal_view(sub_id)
+    return PrequalView.model_validate(view)
 
 
 # ── Contacts ───────────────────────────────────────────────────────────
@@ -687,6 +776,32 @@ async def mark_payment_paid(
     return PaymentApplicationResponse.model_validate(entity)
 
 
+@router.get(
+    "/payment-applications/{payment_id}/release-check",
+    response_model=PaymentReleaseCheck,
+)
+async def payment_release_check(
+    payment_id: uuid.UUID,
+    user_id: CurrentUserId,
+    session: SessionDep,
+    _perm: None = Depends(RequirePermission("subcontractors.read")),
+) -> PaymentReleaseCheck:
+    """Report the lien-waiver release gate for a payment application.
+
+    Lets the approval UI show a waiver badge and disable approve/pay before the
+    user clicks, instead of only learning about the block on a 409.
+    """
+    svc = SubcontractorService(session)
+    await _verify_payment_application_project(payment_id, user_id, session, svc)
+    required, result = await svc.lien_waiver_status(payment_id)
+    return PaymentReleaseCheck(
+        payment_application_id=payment_id,
+        waiver_required=required,
+        blocked=result.blocked,
+        reasons=result.reasons,
+    )
+
+
 @router.post(
     "/payment-applications/{payment_id}/reject",
     response_model=PaymentApplicationResponse,
@@ -771,7 +886,7 @@ async def update_rating(
     """Upsert a subcontractor rating for a period.
 
     R5: this endpoint is gated by the dedicated ``subcontractors.rate``
-    permission (MANAGER-only) — previously any EDITOR could write a
+    permission (MANAGER-only) - previously any EDITOR could write a
     bogus rating and tamper with the subcontractor's roll-up score.
     """
     if events is not None and len(events) > 50:
@@ -783,6 +898,40 @@ async def update_rating(
         )
     svc = SubcontractorService(session)
     entity = await svc.update_rating(data, events=events)
+    return RatingResponse.model_validate(entity)
+
+
+@router.post(
+    "/subcontractors/{sub_id}/ratings/compute",
+    response_model=RatingResponse,
+)
+async def compute_monthly_rating(
+    sub_id: uuid.UUID,
+    session: SessionDep,
+    _user: CurrentUserId,
+    period: str = Query(..., pattern=r"^\d{4}-\d{2}$"),
+    _perm: None = Depends(RequirePermission("subcontractors.rate")),
+) -> RatingResponse:
+    """Recompute and persist a subcontractor's monthly rating rollup (TOP-30 #20).
+
+    The authoritative monthly compute behind the cron / admin trigger:
+    combines the event-accumulated counters with a direct count of NCR / HSE /
+    schedule-slip source rows for the period and upserts the single
+    ``(subcontractor_id, period)`` rating row, emitting
+    ``subcontractors.rating.updated``. Idempotent: a re-run for the same month
+    refreshes the figures rather than creating a duplicate row.
+
+    MANAGER-only (the ``subcontractors.rate`` gate) so a rating cannot be
+    forged by an EDITOR. Validates the ``period`` shape (YYYY-MM); 404 when the
+    subcontractor does not exist.
+    """
+    # Validate the period shape through the request model too (defence in depth
+    # against a future Query regression dropping the pattern).
+    MonthlyRatingComputeRequest(period=period)
+    svc = SubcontractorService(session)
+    entity = await svc.compute_monthly_rating(sub_id, period)
+    if entity is None:
+        raise HTTPException(status_code=404, detail="Subcontractor not found")
     return RatingResponse.model_validate(entity)
 
 
@@ -825,14 +974,14 @@ async def validate_tax_id_endpoint(
 ) -> TaxIdValidationResponse:
     """Validate a tax-ID / VAT number against the country's published format.
 
-    Format-only — no live registry lookup. Returns the canonical (uppercase,
+    Format-only - no live registry lookup. Returns the canonical (uppercase,
     de-punctuated) form of the value plus a pass/fail flag and the name of
     the standard the value was matched against.
     """
     return validate_tax_id(body.country, body.tax_id)
 
 
-# ── Wave 4 / T12 — BuildingConnected-style prequal + insurance + block ──
+# ── Wave 4 / T12 - construction management platform style prequal + insurance + block ──
 
 
 @router.post(
@@ -857,6 +1006,7 @@ async def submit_prequal(
         sub_id,
         questionnaire_data=body.questionnaire,
         score=body.score,
+        require_complete=body.require_complete,
     )
     return SubcontractorResponse.model_validate(entity)
 
@@ -954,7 +1104,7 @@ async def list_lien_waivers(
     """List every lien waiver / W-9 / W-8 filed against a subcontractor.
 
     Newest first so the most recent waiver wins on the dashboard. Returns
-    an empty list when no waivers exist — the UI shows an empty state.
+    an empty list when no waivers exist - the UI shows an empty state.
     """
     svc = SubcontractorService(session)
     rows = await svc.lien_waivers.list_for_subcontractor(sub_id)
@@ -990,7 +1140,7 @@ async def upload_lien_waiver(
 
     422 when the form fields fail validation (bad waiver_type, bad
     currency, negative amount). 404 when the linked subcontractor does
-    not exist (IDOR-safe — generic message, no enumeration leak).
+    not exist (IDOR-safe - generic message, no enumeration leak).
     """
     # Cap the read at the configured ceiling. UploadFile streams in
     # chunks; we collect into memory here because a lien waiver is
@@ -1009,7 +1159,7 @@ async def upload_lien_waiver(
         )
 
     # Magic-byte gate. Returns the detected signature token (e.g. "pdf")
-    # or raises FileSignatureMismatch — which we convert to 415 so the
+    # or raises FileSignatureMismatch - which we convert to 415 so the
     # frontend can show a "Format not supported" toast.
     try:
         detected = require_signature(
@@ -1060,7 +1210,7 @@ async def upload_lien_waiver(
         )
 
     # IDOR-safe: 404 if the subcontractor doesn't exist BEFORE we touch
-    # the disk — avoids leaving orphan files when the URL was guessed.
+    # the disk - avoids leaving orphan files when the URL was guessed.
     svc = SubcontractorService(session)
     parent = await svc.subs.get_by_id(sub_id)
     if parent is None:
@@ -1078,7 +1228,7 @@ async def upload_lien_waiver(
             svc,
         )
 
-    # Disk write — per-subcontractor folder so listings stay cheap.
+    # Disk write - per-subcontractor folder so listings stay cheap.
     target_dir = LIEN_WAIVERS_DIR / str(sub_id)
     target_dir.mkdir(parents=True, exist_ok=True)
     ext = Path(file.filename or "waiver.pdf").suffix or ".pdf"

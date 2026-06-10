@@ -3,11 +3,11 @@
 """‌⁠‍BIM Hub ORM models.
 
 Tables:
-    oe_bim_model        — imported BIM/CAD model metadata
-    oe_bim_element      — individual elements extracted from a model
-    oe_bim_boq_link     — links between BIM elements and BOQ positions
-    oe_bim_quantity_map  — rules for mapping BIM quantities to BOQ items
-    oe_bim_model_diff   — diff results between two model versions
+    oe_bim_model        - imported BIM/CAD model metadata
+    oe_bim_element      - individual elements extracted from a model
+    oe_bim_boq_link     - links between BIM elements and BOQ positions
+    oe_bim_quantity_map  - rules for mapping BIM quantities to BOQ items
+    oe_bim_model_diff   - diff results between two model versions
 """
 
 from __future__ import annotations
@@ -28,9 +28,32 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.database import GUID, Base
 
+# Source formats that are 2D drawings, not 3D models. These can never carry a
+# real mesh, so they must never appear in the BIM 3D Takeoff lists / pickers /
+# viewer. DWG/DXF belong to the dedicated DWG Takeoff module; DGN and 2D PDF
+# sheets are handled elsewhere too. The BIM 3D list query filters these out so
+# the 3D viewer is never handed a model whose geometry cannot exist (the source
+# of the "marked ready but its 3D geometry file is no longer on the server"
+# 404 reported on fresh installs). Matching is substring + case-insensitive so
+# values like ".dwg", "DWG", "autocad_dwg" all resolve correctly.
+NON_3D_MODEL_FORMATS: frozenset[str] = frozenset({"dwg", "dxf", "dgn"})
+
+
+def is_non_3d_format(model_format: str | None) -> bool:
+    """Return True when ``model_format`` is a 2D drawing format (no 3D mesh).
+
+    Used to keep DWG/DXF/DGN drawings out of the BIM 3D Takeoff surface. A
+    ``None``/empty format is treated as 3D-eligible (legacy rows predating the
+    format column, and generic uploads, still show in the 3D list).
+    """
+    if not model_format:
+        return False
+    fmt = model_format.strip().lower().lstrip(".")
+    return any(token in fmt for token in NON_3D_MODEL_FORMATS)
+
 
 class BIMModel(Base):
-    """‌⁠‍Imported BIM/CAD model — one record per uploaded file version."""
+    """‌⁠‍Imported BIM/CAD model - one record per uploaded file version."""
 
     __tablename__ = "oe_bim_model"
 
@@ -84,7 +107,7 @@ class BIMElement(Base):
     (ISO 19650 Asset Information Model). ``asset_info`` holds the
     operational-phase metadata (manufacturer, warranty, serial) and
     ``is_tracked_asset`` flags the element as a real-world object that
-    persists after construction — pumps, AHUs, doors, elevators etc.
+    persists after construction - pumps, AHUs, doors, elevators etc.
     Most geometry-only elements (walls, floors) leave both fields at
     their defaults and are invisible to the Assets page.
     """
@@ -275,8 +298,8 @@ class BIMElementGroup(Base):
       is the source of truth and never auto-recomputes.
 
     Scope:
-    - ``project_id`` is required — a group always belongs to a project.
-    - ``model_id`` is optional — when set, the group is scoped to a single
+    - ``project_id`` is required - a group always belongs to a project.
+    - ``model_id`` is optional - when set, the group is scoped to a single
       model; when NULL, it spans every model in the project.
 
     Uniqueness:
@@ -345,7 +368,7 @@ class BIMElementGroup(Base):
 
 
 class BIMFederation(Base):
-    """‌⁠‍Federation — a named group of N BIM models with a shared origin.
+    """‌⁠‍Federation - a named group of N BIM models with a shared origin.
 
     A federation composes multiple per-discipline models (architectural,
     structural, MEP, …) into a single coordinated set. Each member model
@@ -353,7 +376,7 @@ class BIMFederation(Base):
     simply records which models belong together, in what z-order, and
     with what display hint (visibility + color).
 
-    Federation ownership tracks project ownership — the project access
+    Federation ownership tracks project ownership - the project access
     helper (``_verify_project_access``) is the sole authorization gate.
     """
 
@@ -386,7 +409,7 @@ class BIMFederation(Base):
         server_default="m",
     )
 
-    # Relationships — member links cascade on federation delete so we
+    # Relationships - member links cascade on federation delete so we
     # never strand orphaned link rows. Members themselves (BIMModel
     # rows) are NOT deleted; the federation is purely an overlay.
     members: Mapped[list[BIMFederationModel]] = relationship(
@@ -401,7 +424,7 @@ class BIMFederation(Base):
 
 
 class BIMFederationModel(Base):
-    """‌⁠‍Join row — one ``BIMModel`` participating in one ``BIMFederation``.
+    """‌⁠‍Join row - one ``BIMModel`` participating in one ``BIMFederation``.
 
     A model can belong to multiple federations (e.g. the structural
     model takes part in both a clash-detection federation and a coord-

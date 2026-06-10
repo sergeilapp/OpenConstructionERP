@@ -1,22 +1,22 @@
 """‌⁠‍Document Management API routes.
 
 Endpoints:
-    POST   /upload                  — Upload a document
-    GET    /?project_id=X           — List for project (with filters)
-    GET    /{id}                    — Get document metadata
-    GET    /{id}/download           — Download file
-    PATCH  /{id}                    — Update metadata
-    DELETE /{id}                    — Delete document + file
-    GET    /summary?project_id=X    — Aggregated stats
+    POST   /upload                  - Upload a document
+    GET    /?project_id=X           - List for project (with filters)
+    GET    /{id}                    - Get document metadata
+    GET    /{id}/download           - Download file
+    PATCH  /{id}                    - Update metadata
+    DELETE /{id}                    - Delete document + file
+    GET    /summary?project_id=X    - Aggregated stats
 
-    POST   /photos/upload           — Upload a photo
-    GET    /photos?project_id=X     — List photos with filters
-    GET    /photos/gallery          — Gallery data
-    GET    /photos/timeline         — Photos grouped by date
-    GET    /photos/{id}             — Get photo metadata
-    GET    /photos/{id}/file        — Serve photo file
-    PATCH  /photos/{id}             — Update photo metadata
-    DELETE /photos/{id}             — Delete photo + file
+    POST   /photos/upload           - Upload a photo
+    GET    /photos?project_id=X     - List photos with filters
+    GET    /photos/gallery          - Gallery data
+    GET    /photos/timeline         - Photos grouped by date
+    GET    /photos/{id}             - Get photo metadata
+    GET    /photos/{id}/file        - Serve photo file
+    PATCH  /photos/{id}             - Update photo metadata
+    DELETE /photos/{id}             - Delete photo + file
 """
 
 import logging
@@ -28,10 +28,18 @@ from fastapi import APIRouter, Depends, File, Form, Header, HTTPException, Query
 from fastapi.responses import FileResponse
 
 from app.core.bulk_ops import BulkDeleteRequest
+from app.core.demo_placeholders import materialize_placeholder
 from app.core.i18n import get_locale
 from app.core.rate_limiter import upload_limiter
+from app.core.storage import is_within_safe_root
 from app.core.validation.messages import translate
-from app.dependencies import CurrentUserId, RequirePermission, SessionDep, verify_project_access
+from app.dependencies import (
+    CurrentUserId,
+    CurrentUserPayload,
+    RequirePermission,
+    SessionDep,
+    verify_project_access,
+)
 from app.modules.documents.schemas import (
     DocumentActivityResponse,
     DocumentBIMLinkCreate,
@@ -43,6 +51,7 @@ from app.modules.documents.schemas import (
     PhotoResponse,
     PhotoTimelineGroup,
     PhotoUpdate,
+    RecentPhotoResponse,
     ShareLinkAccessRequest,
     ShareLinkAccessResponse,
     ShareLinkCreate,
@@ -81,7 +90,7 @@ def _get_service(session: SessionDep) -> DocumentService:
 # extends the contract: project members can list / read / delete /
 # upload files within the scope of any grant they have.
 #
-# We do NOT change ``verify_project_access`` itself — it's used by
+# We do NOT change ``verify_project_access`` itself - it's used by
 # dozens of unrelated routers and tightening it touches risk we don't
 # want here. Instead the document-list / get / delete endpoints use a
 # more permissive helper that allows project members through, and then
@@ -114,7 +123,7 @@ async def _verify_project_membership_or_404(
         user = None
 
     if user is not None and getattr(user, "role", "") == "admin":
-        # Make sure the project actually exists for admins too — leaking
+        # Make sure the project actually exists for admins too - leaking
         # "yes this id exists" on a non-existent project is undesirable.
         from app.modules.projects.repository import ProjectRepository
 
@@ -226,7 +235,7 @@ async def upload_document(
             detail="Too many uploads. Please wait a moment and try again.",
             headers={"Retry-After": "60"},
         )
-    # No upload size cap — per product policy.
+    # No upload size cap - per product policy.
     try:
         doc = await service.upload_document(project_id, file, category, user_id)
         return _doc_to_response(doc)
@@ -267,7 +276,7 @@ async def list_documents(
 
     Documents the caller cannot see are filtered out server-side. We
     deliberately do not 404 here even when the filtered list is empty
-    — knowing the project exists and being told "no files" is the
+    - knowing the project exists and being told "no files" is the
     expected surface for a member who hasn't been granted a folder
     yet.
     """
@@ -294,7 +303,7 @@ async def list_documents(
     if await is_project_owner(session, project_id, user_uuid):
         return [_doc_to_response(d) for d in docs]
 
-    # Admin bypass — _verify_project_membership_or_404 already let them
+    # Admin bypass - _verify_project_membership_or_404 already let them
     # through, but we still need to skip filtering for them.
     from app.modules.users.repository import UserRepository
 
@@ -548,6 +557,48 @@ async def get_timeline(
     ]
 
 
+# ── Recent photos across the caller's projects ──────────────────────────
+
+
+@router.get(
+    "/photos/recent/",
+    response_model=list[RecentPhotoResponse],
+    dependencies=[Depends(RequirePermission("documents.read"))],
+)
+async def list_recent_photos(
+    session: SessionDep,
+    user_id: CurrentUserId = None,  # type: ignore[assignment]
+    limit: int = Query(default=12, ge=1, le=48),
+    service: PhotoService = Depends(_get_photo_service),
+) -> list[RecentPhotoResponse]:
+    """Most recent photos across every project the caller can access.
+
+    Powers the dashboard "Latest site photos" widget. Access control is
+    enforced in the service: only projects the user owns or is a member
+    of (admins: all) contribute photos, so this never leaks site
+    documentation from a project the caller cannot open. Ordered newest
+    first by ``taken_at`` with ``created_at`` as the null fallback.
+
+    Each item carries the project name (joined server-side) and a
+    relative thumbnail URL matching the existing ``/photos/{id}/thumb/``
+    route the gallery already loads through ``AuthImage``.
+    """
+    rows = await service.recent_across_projects(user_id, limit=limit)
+    return [
+        RecentPhotoResponse(
+            id=photo.id,
+            project_id=photo.project_id,
+            project_name=project_name,
+            caption=photo.caption,
+            category=photo.category,
+            taken_at=photo.taken_at,
+            created_at=photo.created_at,
+            file_url=f"/api/v1/documents/photos/{photo.id}/thumb/",
+        )
+        for photo, project_name in rows
+    ]
+
+
 # ── Get single photo ────────────────────────────────────────────────────
 
 
@@ -565,7 +616,7 @@ async def get_photo(
     """Get a single photo's metadata.
 
     IDOR-guarded via the parent project (A-DOC-04): a non-member is
-    404'd before any photo metadata is disclosed — same contract as
+    404'd before any photo metadata is disclosed - same contract as
     ``serve_photo_file`` / ``get_sheet``.
     """
     photo = await service.get_photo(photo_id)
@@ -666,7 +717,7 @@ async def serve_photo_thumbnail(
     if thumb_path_str:
         thumb_path = Path(thumb_path_str).resolve()
         try:
-            # Only allow paths that sit under the thumb-root — defence against
+            # Only allow paths that sit under the thumb-root - defence against
             # symlink escape + stored-path tampering.
             thumb_path.relative_to(thumb_base)
             if thumb_path.exists() and thumb_path.is_file() and not thumb_path.is_symlink():
@@ -677,7 +728,7 @@ async def serve_photo_thumbnail(
                 )
         except ValueError:
             logger.warning(
-                "Photo %s has thumbnail_path outside thumb base — ignoring",
+                "Photo %s has thumbnail_path outside thumb base - ignoring",
                 photo_id,
             )
 
@@ -729,7 +780,7 @@ async def update_photo(
     """Update photo metadata (caption, tags, category).
 
     R7 audit: the caller must have access to the photo's parent project
-    — without this guard any user with the ``documents.update``
+    - without this guard any user with the ``documents.update``
     permission could edit a photo belonging to another tenant by
     guessing its UUID. ``verify_project_access`` collapses missing /
     cross-tenant into the same 404 surface so the response cannot be
@@ -754,7 +805,7 @@ async def delete_photo(
 ) -> None:
     """Delete a photo and its file.
 
-    R7 audit: cross-tenant IDOR guard. Mirrors ``update_photo`` —
+    R7 audit: cross-tenant IDOR guard. Mirrors ``update_photo`` -
     without it, knowledge of a UUID was enough to wipe another tenant's
     site documentation.
     """
@@ -861,7 +912,7 @@ async def split_pdf(
     Generates thumbnails for each page.
     """
     await verify_project_access(project_id, user_id, session)
-    # No upload size cap — per product policy.
+    # No upload size cap - per product policy.
     try:
         sheets = await service.split_pdf_to_sheets(project_id, file, user_id)
         return [_sheet_to_response(s) for s in sheets]
@@ -992,12 +1043,12 @@ async def list_bim_links(
     """List Document ↔ BIM element links.
 
     Exactly one of ``element_id`` or ``document_id`` must be supplied:
-    - ``element_id=X`` — every document linked to BIM element X
-    - ``document_id=Y`` — every BIM element linked from document Y
+    - ``element_id=X`` - every document linked to BIM element X
+    - ``document_id=Y`` - every BIM element linked from document Y
 
     R7 audit: the caller must have access to the project the lookup
     keys into. Without this guard, ``documents.read`` was enough to
-    enumerate every BIM ↔ document link in the database — a sizable
+    enumerate every BIM ↔ document link in the database - a sizable
     cross-tenant data leak. 404 keeps the surface symmetric with the
     rest of the documents IDOR contract.
     """
@@ -1060,7 +1111,7 @@ async def create_bim_link(
     R7 audit: enforce project access on BOTH ends of the link before
     creating it. A caller with only ``documents.create`` previously
     could splice arbitrary BIM elements to arbitrary documents (no
-    project check) — a clean cross-tenant linkage attack used to
+    project check) - a clean cross-tenant linkage attack used to
     surface "phantom" drawings in another tenant's viewer.
     """
     from app.modules.bim_hub.models import BIMElement, BIMModel
@@ -1193,7 +1244,7 @@ async def batch_delete_documents(
 # Public share-link endpoints
 # NOTE: These MUST come BEFORE /{document_id} parametric routes to avoid
 #       FastAPI matching "share-links" as a document_id (route shadowing).
-#       Endpoints are intentionally public — they DO NOT require auth.
+#       Endpoints are intentionally public - they DO NOT require auth.
 # ══════════════════════════════════════════════════════════════════════════
 
 
@@ -1205,7 +1256,7 @@ async def get_share_link_info(
     token: str,
     session: SessionDep,
 ) -> ShareLinkPublicInfo:
-    """Public probe — what the recipient sees BEFORE entering a password.
+    """Public probe - what the recipient sees BEFORE entering a password.
 
     Returns the filename so the share page can display a meaningful
     title, plus two flags so the frontend knows whether to prompt for a
@@ -1234,7 +1285,7 @@ async def access_share_link_endpoint(
     body: ShareLinkAccessRequest,
     session: SessionDep,
 ) -> ShareLinkAccessResponse:
-    """Public unlock — verify password, bump count, return download URL.
+    """Public unlock - verify password, bump count, return download URL.
 
     Returns 401 when a password is required and missing/wrong;
     404 when the link is unknown, revoked, or expired.
@@ -1278,7 +1329,7 @@ async def serve_share_link_file(
     raw = Path(doc.file_path) if doc.file_path else None
     if raw is None:
         # Share links cannot be issued for documents without a stored
-        # path — fall through to 404 rather than re-materialise demo
+        # path - fall through to 404 rather than re-materialise demo
         # placeholders (which is auth-side behaviour).
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
@@ -1327,7 +1378,7 @@ def _link_to_response(link: object, public_url: str) -> ShareLinkResponse:
 
 
 # ══════════════════════════════════════════════════════════════════════════
-# Document CRUD by ID (parametric routes — MUST be after /photos/* and /sheets/* routes)
+# Document CRUD by ID (parametric routes - MUST be after /photos/* and /sheets/* routes)
 # ══════════════════════════════════════════════════════════════════════════
 
 
@@ -1390,51 +1441,51 @@ async def download_document(
     await verify_project_access(doc.project_id, user_id, session)
     upload_base = Path(UPLOAD_BASE).resolve()
     meta = getattr(doc, "metadata_", None) or {}
-    is_demo_pdf = bool(meta.get("is_demo")) and (doc.mime_type or "").lower() == "application/pdf"
+    is_demo = bool(meta.get("is_demo"))
+    # A document is "placeholder-eligible" when its real blob may legitimately
+    # be absent on this box: curated demo rows, and /files mirror documents
+    # that point back at another module's upload (dwg-takeoff, takeoff) whose
+    # blob can be pruned independently. For those we materialize a typed stub
+    # on demand rather than 404, so every /files row downloads something valid.
+    is_mirror = bool(meta.get("source_module"))
+    placeholder_eligible = is_demo or is_mirror
 
     # file_path stored in DB may be relative (demo seed records) or absolute
     # (real uploads). Normalize relatives against UPLOAD_BASE before resolving
     # so they don't escape the base via CWD.
     raw = Path(doc.file_path) if doc.file_path else None
     if raw is None:
-        file_path = (upload_base / "demo" / f"{doc.id}.pdf").resolve()
+        file_path = (upload_base / "demo" / f"{doc.id}{_placeholder_suffix(doc)}").resolve()
     else:
         file_path = (raw if raw.is_absolute() else upload_base / raw).resolve()
 
-    # Security: path must be STRICTLY inside upload_base after full resolution.
-    # ``str.startswith`` can be fooled on Windows case-insensitive FS and by
-    # symlinks; ``relative_to`` rejects both cases explicitly.
-    contained = True
-    try:
-        file_path.relative_to(upload_base)
-    except ValueError:
-        contained = False
+    # Security: path must resolve inside a directory the platform owns. The
+    # blob may legitimately live under a sibling root (a /files mirror document
+    # points at the dwg-takeoff or takeoff upload dir, not UPLOAD_BASE), so we
+    # accept UPLOAD_BASE plus the platform-wide safe data roots. ``relative_to``
+    # (not ``str.startswith``) defeats Windows case-fold and symlink escapes.
+    contained = is_within_safe_root(file_path, extra_roots=[upload_base])
 
     if not contained:
-        # v2.9.31: demo seed records that were ingested under a different
-        # UPLOAD_BASE (e.g. the user moved the upload dir between releases,
-        # or the wheel ran a demo seeded with absolute Windows paths from
-        # the developer's machine) used to 403 here. The doc IS accessible
-        # to this user (project_access already verified), the failed leg is
-        # only that the *stored* path no longer lands inside the current
-        # upload_base. For demo PDFs we re-anchor the path to a deterministic
-        # safe location and materialize the placeholder there. For real
-        # uploads we degrade to 404 ("file is missing") rather than 403
-        # ("access denied"), which is the truthful error and unblocks the
-        # /files → /takeoff cross-module open the user reported.
-        if is_demo_pdf:
-            file_path = (upload_base / "demo" / f"{doc.id}.pdf").resolve()
+        # The stored absolute path resolves outside every directory the
+        # platform writes to (e.g. a demo seeded with another machine's paths,
+        # or an upload dir moved between releases). The doc IS accessible to
+        # this user (project_access already verified); only the stored path is
+        # stale. For placeholder-eligible docs we re-anchor to a deterministic
+        # safe location and materialize a stub there. For real uploads we
+        # degrade to 404 ("file is missing"), the truthful error.
+        if placeholder_eligible:
+            file_path = (upload_base / "demo" / f"{doc.id}{_placeholder_suffix(doc)}").resolve()
             logger.info(
-                "Re-anchored demo doc %s to %s (stored path outside upload_base)",
+                "Re-anchored demo/mirror doc %s to %s (stored path outside safe roots)",
                 doc.id,
                 file_path,
             )
         else:
             logger.warning(
-                "Document %s file_path %s resolves outside upload_base %s",
+                "Document %s file_path %s resolves outside the platform data roots",
                 doc.id,
                 doc.file_path,
-                upload_base,
             )
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
@@ -1448,15 +1499,15 @@ async def download_document(
         )
 
     if not file_path.exists() or not file_path.is_file():
-        # Demo seed records are inserted without a real file on disk because
-        # we don't ship multi-MB PDFs in the wheel.  When a user clicks
-        # "Open in Module" → /takeoff for a demo document, materialize a
-        # minimal placeholder PDF on first download so the cross-module
-        # deeplink lands on a real preview instead of a raw 404.
-        if is_demo_pdf:
+        # Demo/mirror records may reference a blob that was never shipped in
+        # the wheel or has been pruned. Materialize a minimal, type-correct
+        # placeholder on first download so /files deeplinks land on a real
+        # file (PDF for PDFs, a tiny valid DWG/IFC stub for CAD, a text note
+        # otherwise) instead of a raw 404.
+        if placeholder_eligible:
             try:
-                _materialize_demo_pdf_placeholder(file_path, doc.name, meta.get("demo_id"))
-            except Exception:  # pragma: no cover — degrade to 404 if reportlab missing
+                _materialize_demo_placeholder(file_path, doc.name, meta.get("demo_id"))
+            except Exception:  # pragma: no cover - degrade to 404 on unexpected failure
                 logger.warning("Failed to materialize demo placeholder for %s", doc.id, exc_info=True)
         if not file_path.exists() or not file_path.is_file():
             raise HTTPException(
@@ -1471,38 +1522,37 @@ async def download_document(
     )
 
 
-def _materialize_demo_pdf_placeholder(target: Path, name: str, demo_id: str | None) -> None:
-    """Write a minimal one-page PDF to ``target`` for demo seed documents.
+def _placeholder_suffix(doc: object) -> str:
+    """Return the file extension to give a re-anchored placeholder for ``doc``.
 
-    Why: demo projects ship without bundled binaries, so seeded ``Document``
-    rows reference paths that don't exist on disk.  Generating a placeholder
-    on first download keeps ``/files`` deeplinks honest (PDF takeoff opens,
-    file manager preview works) without bloating the wheel.
+    Prefer the document's own name extension (so a .dwg row stays .dwg, a .ifc
+    row stays .ifc); fall back to .pdf for PDFs or anything without a usable
+    extension. This keeps the materialized stub type-correct for the viewer
+    the /files row links to.
     """
-    target.parent.mkdir(parents=True, exist_ok=True)
-    from reportlab.lib.pagesizes import A4  # type: ignore[import-untyped]
-    from reportlab.pdfgen import canvas as pdf_canvas  # type: ignore[import-untyped]
+    name = getattr(doc, "name", "") or ""
+    suffix = Path(name).suffix.lower()
+    if suffix and len(suffix) <= 6:
+        return suffix
+    mime = (getattr(doc, "mime_type", "") or "").lower()
+    if "pdf" in mime:
+        return ".pdf"
+    return ".pdf"
 
-    from app.core.pdf_fonts import BODY_FONT, BOLD_FONT, register_pdf_fonts
 
-    register_pdf_fonts()
+def _materialize_demo_placeholder(target: Path, name: str, demo_id: str | None) -> None:
+    """Write a minimal, type-correct placeholder file to ``target``.
 
-    width, height = A4
-    c = pdf_canvas.Canvas(str(target), pagesize=A4)
-    c.setTitle(name)
-    c.setFont(BOLD_FONT, 18)
-    c.drawString(72, height - 90, name[:90])
-    c.setFont(BODY_FONT, 11)
-    c.drawString(72, height - 130, "Demo placeholder document")
-    if demo_id:
-        c.drawString(72, height - 150, f"Project: {demo_id}")
-    c.setFont(BODY_FONT, 10)
-    c.drawString(72, height - 200, "This file is auto-generated for the demo project.")
-    c.drawString(72, height - 215, "Upload your own document to replace it.")
-    c.setFont(BODY_FONT, 9)
-    c.drawString(72, 60, "OpenConstructionERP — open-source construction cost platform")
-    c.showPage()
-    c.save()
+    Why: demo and showcase projects ship without bundled binaries, so seeded
+    ``Document`` rows (and /files mirror rows pointing at another module's
+    pruned upload) reference paths that may not exist on disk. Generating a
+    placeholder of the right type on first download keeps ``/files`` deeplinks
+    honest (PDF takeoff opens, the CAD/IFC viewer gets a real file) without
+    bloating the wheel. Dispatch by extension lives in
+    :mod:`app.core.demo_placeholders`.
+    """
+    note = f"Project: {demo_id}" if demo_id else None
+    materialize_placeholder(target, name, note)
 
 
 # ── Update ───────────────────────────────────────────────────────────────────
@@ -1513,18 +1563,29 @@ async def update_document(
     document_id: uuid.UUID,
     data: DocumentUpdate,
     user_id: CurrentUserId,
+    payload: CurrentUserPayload,
     session: SessionDep,
     _perm: None = Depends(RequirePermission("documents.update")),
     service: DocumentService = Depends(_get_service),
 ) -> DocumentResponse:
-    """Update document metadata."""
+    """Update document metadata.
+
+    The caller's app role (from the JWT payload) is passed through so the
+    service can enforce the ISO 19650 CDE role gates on a state transition
+    (Gate A / B / C). A non-state PATCH (rename, retag, …) is unaffected.
+    """
     existing = await service.get_document(document_id)
     await verify_project_access(existing.project_id, user_id, session)
-    doc = await service.update_document(document_id, data, user_id=str(user_id) if user_id else None)
+    doc = await service.update_document(
+        document_id,
+        data,
+        user_id=str(user_id) if user_id else None,
+        user_role=payload.get("role"),
+    )
     return _doc_to_response(doc)
 
 
-# ── Revisions (Epic C — Document Versioning Unification) ────────────────
+# ── Revisions (Epic C - Document Versioning Unification) ────────────────
 
 
 @router.post("/{document_id}/revisions/", response_model=DocumentResponse, status_code=201)
@@ -1592,7 +1653,7 @@ async def delete_document(
         * the folder is restricted and they have no grant, OR
         * they only have a ``viewer`` grant (no write capability).
 
-    Editors can only delete their OWN uploads — a defence in depth so
+    Editors can only delete their OWN uploads - a defence in depth so
     a single member can't accidentally nuke another member's work
     just because they share an "editor" grant.
     """
@@ -1818,7 +1879,7 @@ async def documents_similar(
             status_code=status.HTTP_404_NOT_FOUND, detail=translate("errors.document_not_found", locale=get_locale())
         )
 
-    # Cross-tenant IDOR gate — mirror ``get_document`` so a caller with no
+    # Cross-tenant IDOR gate - mirror ``get_document`` so a caller with no
     # access to the document's project gets a 404 (not a 200 leaking a
     # populated vector index). Was previously missing here while every
     # sibling /{id}/* endpoint enforces it.
