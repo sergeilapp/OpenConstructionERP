@@ -1099,3 +1099,25 @@ entity/book/currency columns shipped in Phase 0-1 mean no retrofit.
 8. **Audit immutability hardness:** is the hash-chained `oe_gl_audit_event`
    sufficient, or also enforce append-only at the DB layer
    (`REVOKE UPDATE/DELETE`) for a stronger claim?
+
+### 10.3 Founder decisions (locked 2026-06-10)
+
+These answer the open questions and adjust the build order. Build agents follow
+these over any conflicting default above.
+
+1. **Build scope now:** build straight through Phase 3 (revenue recognition),
+   reporting per phase. Phases stay sequential (each builds on the prior).
+2. **Tax pulled earlier:** insert a dedicated tax phase BETWEEN Phase 3 and
+   Phase 4 (US sales/use tax on materials is common in construction). The
+   reserved `tax_code`/`tax_code_default` columns are activated there, not
+   post-Phase-5. v1 core (Phase 0-3) still ships tax-inert.
+3. **Allocation rules tier:** `oe_gl_allocation_rule` ships in the Community /
+   AGPL open core, not enterprise-gated.
+4. **Frameworks at launch:** seed US GAAP complete + an IFRS skeleton marked
+   beta (proves multi-framework pluggability and opens the non-US market).
+5. **Remaining open questions proceed on the recommended defaults:** silent
+   auto-seed of one entity + primary book + 12-month calendar (Q1); SoD
+   configurable, default ERROR (Q2); P13 adjustment period opt-in per framework,
+   default on for `us_gaap` (Q4); snapshot the four primary statements + WIP,
+   keep aging/GL-detail/trial-balance live (Q7); hash-chained audit is
+   sufficient for v1, DB-level `REVOKE UPDATE/DELETE` is a later hardening (Q8).
