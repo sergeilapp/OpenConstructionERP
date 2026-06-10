@@ -1,0 +1,323 @@
+[
+  {
+    "code": "TEST-TCG-V5-ASM-STORMWATER-INFILTRATION-PIT-SF",
+    "name": "TEST IMPORT - TCG v5 Stormwater Infiltration Pit Delivered-Material Review Assembly",
+    "description": "Review-only assembly superseding the v4 French drain draft. Uses delivered-load pricing for quarry material rows and unitizes the scope by source job area.",
+    "unit": "LS",
+    "category": "Stormwater",
+    "classification": {
+      "masterformat": "33 00 00",
+      "collection": "Stormwater",
+      "category": "Sitework",
+      "department": "Utilities",
+      "section": "French Drain"
+    },
+    "total_rate": 69640.0,
+    "currency": "USD",
+    "bid_factor": 1.0,
+    "regional_factors": {},
+    "is_template": true,
+    "tags": [
+      "tcg_v4_review",
+      "review_only",
+      "assembly"
+    ],
+    "components": [
+      {
+        "cost_item_code": "TCG-INSTALL-STORMWATER-INFILTRATION-PIT-SF",
+        "description": "Install stormwater infiltration pit/French drain delivered-material scope",
+        "factor": 1.0,
+        "quantity": 8326.0,
+        "unit": "SF",
+        "unit_cost": 8.3642,
+        "resource_type": null,
+        "total": 69640.0,
+        "metadata": {
+          "component_source": "cost_item",
+          "quantity_basis": "8326 SF persisted source job area"
+        }
+      }
+    ],
+    "metadata": {
+      "source": "bedrock_tcg_v4_fd_test_import",
+      "region": "BEDROCK-TCG-V4-FD-TEST",
+      "review_only": true,
+      "supersedes": "TEST COPY OF TCG-V4-ASM-STORMWATER-FRENCH-DRAIN-DRAFT",
+      "draft_interpretation": "truck_cost_per_load values are delivered material load prices unless Bedrock confirms hauling-only",
+      "known_subtotal_before_unresolved_scope": 69640.0,
+      "review_flags": [
+        "TCG-MAT-R1",
+        "TCG-FD-R1",
+        "TCG-FD-R2",
+        "TCG-FD-R3",
+        "TCG-FD-R4",
+        "TCG-FD-R5"
+      ],
+      "base_scope_includes": [
+        "excavate infiltration pit",
+        "excess excavated material offhaul/disposal",
+        "delivered coarse sand",
+        "delivered #57 stone",
+        "geotextile fabric",
+        "observation wells",
+        "equipment rental",
+        "working labor"
+      ],
+      "not_base_scope_pending_review": [
+        "#8 stone top course due to $4500 credit",
+        "existing construction entrance stone removal/offhaul quantity and rate",
+        "conditional check dams",
+        "rock excavation T&M allowance",
+        "ambiguous driving labor/equipment pending confirmation as Bedrock crew mobilization or spoil-haul support"
+      ],
+      "test_import": true
+    }
+  },
+  {
+    "code": "TEST-TCG-V4-ASM-CONCRETE-CURB-PAVING-DRAFT",
+    "name": "TEST IMPORT - TCG v4 Concrete Curb and Paving Draft Assembly",
+    "description": "Review-only assembly grouping curb/gutter internal work and split subcontracted paving/asphalt repair.",
+    "unit": "LS",
+    "category": "Concrete/Paving",
+    "classification": {
+      "masterformat": "03 00 00",
+      "collection": "Concrete",
+      "category": "Sitework",
+      "department": "Concrete",
+      "section": "Curb"
+    },
+    "total_rate": 23872.75,
+    "currency": "USD",
+    "bid_factor": 1.0,
+    "regional_factors": {},
+    "is_template": true,
+    "tags": [
+      "tcg_v4_review",
+      "review_only",
+      "assembly"
+    ],
+    "components": [
+      {
+        "cost_item_code": "TCG-CONCRETE-CURB-GUTTER-SCOPE",
+        "description": "Concrete curb/gutter internal work",
+        "factor": 1.0,
+        "quantity": 1.0,
+        "unit": "LS",
+        "unit_cost": 12572.75,
+        "resource_type": null,
+        "total": 12572.75,
+        "metadata": {
+          "component_source": "cost_item"
+        }
+      },
+      {
+        "cost_item_code": "TCG-PAVING-ASPHALT-REPAIR-SUBCONTRACT-SCOPE",
+        "description": "Subcontracted paving and asphalt repair",
+        "factor": 1.0,
+        "quantity": 1.0,
+        "unit": "LS",
+        "unit_cost": 11300.0,
+        "resource_type": null,
+        "total": 11300.0,
+        "metadata": {
+          "component_source": "cost_item"
+        }
+      }
+    ],
+    "metadata": {
+      "source": "bedrock_tcg_v4_fd_test_import",
+      "region": "BEDROCK-TCG-V4-FD-TEST",
+      "review_only": true,
+      "test_import": true
+    }
+  },
+  {
+    "code": "TEST-TCG-V4-ASM-CRAWLSPACE-FOOTER-DRAINAGE-DRAFT",
+    "name": "TEST IMPORT - TCG v4 Crawlspace Footer Drainage Draft Assembly",
+    "description": "Review-only assembly for crawlspace/footer excavation, delivered stone, pipe, labor, and driving.",
+    "unit": "LS",
+    "category": "Earthwork",
+    "classification": {
+      "masterformat": "31 00 00",
+      "collection": "Earthwork",
+      "category": "Sitework",
+      "department": "Earthwork",
+      "section": "General Earthwork"
+    },
+    "total_rate": 41981.24,
+    "currency": "USD",
+    "bid_factor": 1.0,
+    "regional_factors": {},
+    "is_template": true,
+    "tags": [
+      "tcg_v4_review",
+      "review_only",
+      "assembly"
+    ],
+    "components": [
+      {
+        "cost_item_code": "TCG-DELIVER-57-STONE-CF",
+        "description": "Deliver #57 stone for crawlspace/footer",
+        "factor": 1.0,
+        "quantity": 257.2,
+        "unit": "t",
+        "unit_cost": 83.96,
+        "resource_type": null,
+        "total": 21594.51,
+        "metadata": {
+          "component_source": "cost_item"
+        }
+      },
+      {
+        "cost_item_code": "TCG-CRAWLSPACE-FOOTER-EXCAVATION-SCOPE",
+        "description": "Crawlspace/footer excavation and drainage scope",
+        "factor": 1.0,
+        "quantity": 1.0,
+        "unit": "LS",
+        "unit_cost": 20386.73,
+        "resource_type": null,
+        "total": 20386.73,
+        "metadata": {
+          "component_source": "cost_item"
+        }
+      }
+    ],
+    "metadata": {
+      "source": "bedrock_tcg_v4_fd_test_import",
+      "region": "BEDROCK-TCG-V4-FD-TEST",
+      "review_only": true,
+      "test_import": true
+    }
+  },
+  {
+    "code": "TEST-TCG-V4-ASM-SITE-PREP-DEMO-EROSION-DRAFT",
+    "name": "TEST IMPORT - TCG v4 Site Prep Demo and Erosion Draft Assembly",
+    "description": "Review-only assembly for construction entrance drain stone, erosion/stabilization, and demo/disposal scope.",
+    "unit": "LS",
+    "category": "Site Prep",
+    "classification": {
+      "masterformat": "02 00 00",
+      "collection": "Existing Conditions",
+      "category": "Sitework",
+      "department": "Demo",
+      "section": "Demolition"
+    },
+    "total_rate": 55651.36,
+    "currency": "USD",
+    "bid_factor": 1.0,
+    "regional_factors": {},
+    "is_template": true,
+    "tags": [
+      "tcg_v4_review",
+      "review_only",
+      "assembly"
+    ],
+    "components": [
+      {
+        "cost_item_code": "TCG-DELIVER-DRAIN-STONE-CE",
+        "description": "Deliver construction entrance drain stone",
+        "factor": 1.0,
+        "quantity": 92.0,
+        "unit": "t",
+        "unit_cost": 80.83,
+        "resource_type": null,
+        "total": 7436.36,
+        "metadata": {
+          "component_source": "cost_item"
+        }
+      },
+      {
+        "cost_item_code": "TCG-EROSION-STABILIZATION-SCOPE",
+        "description": "Erosion and stabilization scope",
+        "factor": 1.0,
+        "quantity": 1.0,
+        "unit": "LS",
+        "unit_cost": 23550.0,
+        "resource_type": null,
+        "total": 23550.0,
+        "metadata": {
+          "component_source": "cost_item"
+        }
+      },
+      {
+        "cost_item_code": "TCG-SITE-PREP-DEMO-DISPOSAL-SCOPE",
+        "description": "Site prep demo/disposal scope",
+        "factor": 1.0,
+        "quantity": 1.0,
+        "unit": "LS",
+        "unit_cost": 24665.0,
+        "resource_type": null,
+        "total": 24665.0,
+        "metadata": {
+          "component_source": "cost_item"
+        }
+      }
+    ],
+    "metadata": {
+      "source": "bedrock_tcg_v4_fd_test_import",
+      "region": "BEDROCK-TCG-V4-FD-TEST",
+      "review_only": true,
+      "test_import": true
+    }
+  },
+  {
+    "code": "TEST-TCG-V4-ASM-FILL-PLACEMENT-REVIEW",
+    "name": "TEST IMPORT - TCG v4 Fill Placement Review Assembly",
+    "description": "Review-only assembly for delivered fill and fill placement; blocked from final approval by TCG-P7-R3 and equipment-rate review.",
+    "unit": "LS",
+    "category": "Earthwork",
+    "classification": {
+      "masterformat": "31 00 00",
+      "collection": "Earthwork",
+      "category": "Sitework",
+      "department": "Earthwork",
+      "section": "General Earthwork"
+    },
+    "total_rate": 76796.5,
+    "currency": "USD",
+    "bid_factor": 1.0,
+    "regional_factors": {},
+    "is_template": true,
+    "tags": [
+      "tcg_v4_review",
+      "review_only",
+      "assembly"
+    ],
+    "components": [
+      {
+        "cost_item_code": "TCG-DELIVER-FILL-REVIEW",
+        "description": "Deliver fill review item",
+        "factor": 1.0,
+        "quantity": 1955.0,
+        "unit": "CY",
+        "unit_cost": 26.3,
+        "resource_type": null,
+        "total": 51416.5,
+        "metadata": {
+          "component_source": "cost_item",
+          "review_flag": "TCG-P7-R3"
+        }
+      },
+      {
+        "cost_item_code": "TCG-PLACE-COMPACT-FILL-REVIEW",
+        "description": "Place and compact fill review item",
+        "factor": 1.0,
+        "quantity": 1.0,
+        "unit": "LS",
+        "unit_cost": 25380.0,
+        "resource_type": null,
+        "total": 25380.0,
+        "metadata": {
+          "component_source": "cost_item",
+          "equipment_rate_missing": true
+        }
+      }
+    ],
+    "metadata": {
+      "source": "bedrock_tcg_v4_fd_test_import",
+      "region": "BEDROCK-TCG-V4-FD-TEST",
+      "review_only": true,
+      "test_import": true
+    }
+  }
+]

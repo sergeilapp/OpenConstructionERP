@@ -1,0 +1,740 @@
+[
+  {
+    "resource_code": "TCG-RES-LABOR-SITE-PREP-135HR",
+    "name": "TCG Site Preparation Labor Crew",
+    "resource_type": "labor",
+    "category": "Labor",
+    "unit": "HR",
+    "base_price": 135.0,
+    "min_price": 0,
+    "max_price": 0,
+    "currency": "USD",
+    "source": "bedrock_tcg_model_job_extract_v4_review",
+    "region": "BEDROCK-TCG-V4-REVIEW",
+    "specifications": {
+      "masterformat": "31 00 00"
+    },
+    "metadata": {
+      "review_only": true,
+      "source_evidence": "tcg_rate_card.md"
+    }
+  },
+  {
+    "resource_code": "TCG-RES-LABOR-ADHOC-125HR",
+    "name": "TCG Adhoc Labor Crew",
+    "resource_type": "labor",
+    "category": "Labor",
+    "unit": "HR",
+    "base_price": 125.0,
+    "min_price": 0,
+    "max_price": 0,
+    "currency": "USD",
+    "source": "bedrock_tcg_model_job_extract_v4_review",
+    "region": "BEDROCK-TCG-V4-REVIEW",
+    "specifications": {
+      "masterformat": "03 00 00"
+    },
+    "metadata": {
+      "review_only": true,
+      "review_flag": "TCG-P7-R7"
+    }
+  },
+  {
+    "resource_code": "TCG-RES-DRIVING-LABOR-95HR",
+    "name": "TCG Driving Labor",
+    "resource_type": "labor",
+    "category": "Labor",
+    "unit": "HR",
+    "base_price": 95.0,
+    "min_price": 0,
+    "max_price": 0,
+    "currency": "USD",
+    "source": "bedrock_tcg_model_job_extract_v4_review",
+    "region": "BEDROCK-TCG-V4-REVIEW",
+    "specifications": {
+      "masterformat": "01 50 00"
+    },
+    "metadata": {
+      "review_only": true,
+      "source_evidence": "tcg_rate_card.md"
+    }
+  },
+  {
+    "resource_code": "TCG-RES-57-STONE-TON",
+    "name": "TCG #57 Stone Material",
+    "resource_type": "material",
+    "category": "Aggregate",
+    "unit": "t",
+    "base_price": 38.0,
+    "min_price": 0,
+    "max_price": 0,
+    "currency": "USD",
+    "source": "bedrock_tcg_model_job_extract_v4_review",
+    "region": "BEDROCK-TCG-V4-REVIEW",
+    "specifications": {
+      "masterformat": "31 00 00"
+    },
+    "metadata": {
+      "review_only": true,
+      "review_flag": "TCG-P7-R5",
+      "rate_basis": "Draft proxy from drain-stone quarry rate"
+    }
+  },
+  {
+    "resource_code": "TCG-RES-DRAIN-STONE-TON",
+    "name": "TCG Ballast Drain Stone Material",
+    "resource_type": "material",
+    "category": "Aggregate",
+    "unit": "t",
+    "base_price": 38.0,
+    "min_price": 0,
+    "max_price": 0,
+    "currency": "USD",
+    "source": "bedrock_tcg_model_job_extract_v4_review",
+    "region": "BEDROCK-TCG-V4-REVIEW",
+    "specifications": {
+      "masterformat": "02 00 00"
+    },
+    "metadata": {
+      "review_only": true,
+      "review_flag": "TCG-P7-R2",
+      "rate_basis": "Reviewed quarry-rate draft basis"
+    }
+  },
+  {
+    "resource_code": "TCG-RES-SAND-CY",
+    "name": "TCG Sand Material",
+    "resource_type": "material",
+    "category": "Aggregate",
+    "unit": "CY",
+    "base_price": 25.0,
+    "min_price": 0,
+    "max_price": 0,
+    "currency": "USD",
+    "source": "bedrock_tcg_model_job_extract_v4_review",
+    "region": "BEDROCK-TCG-V4-REVIEW",
+    "specifications": {
+      "masterformat": "33 00 00"
+    },
+    "metadata": {
+      "review_only": true,
+      "review_flag": "TCG-P7-R6"
+    }
+  },
+  {
+    "resource_code": "TCG-RES-HAUL-57-STONE-FD-LOAD",
+    "name": "TCG Delivered #57 Stone Load for French Drain",
+    "resource_type": "material",
+    "category": "Aggregate",
+    "unit": "LOAD",
+    "base_price": 945.0,
+    "min_price": 0,
+    "max_price": 0,
+    "currency": "USD",
+    "source": "bedrock_tcg_model_job_extract_v4_review",
+    "region": "BEDROCK-TCG-V4-REVIEW",
+    "specifications": {
+      "masterformat": "33 00 00"
+    },
+    "metadata": {
+      "review_only": true,
+      "source_evidence": "SitePreparationMaterial 3016",
+      "raw_source_field": "truck_cost_per_load",
+      "draft_interpretation": "delivered_material_load_price",
+      "review_flag": "TCG-MAT-R1"
+    }
+  },
+  {
+    "resource_code": "TCG-RES-HAUL-SAND-FD-LOAD",
+    "name": "TCG Delivered Coarse Sand Load for French Drain",
+    "resource_type": "material",
+    "category": "Aggregate",
+    "unit": "LOAD",
+    "base_price": 745.0,
+    "min_price": 0,
+    "max_price": 0,
+    "currency": "USD",
+    "source": "bedrock_tcg_model_job_extract_v4_review",
+    "region": "BEDROCK-TCG-V4-REVIEW",
+    "specifications": {
+      "masterformat": "33 00 00"
+    },
+    "metadata": {
+      "review_only": true,
+      "source_evidence": "SitePreparationMaterial 3015",
+      "raw_source_field": "truck_cost_per_load",
+      "draft_interpretation": "delivered_material_load_price",
+      "review_flag": "TCG-MAT-R1"
+    }
+  },
+  {
+    "resource_code": "TCG-RES-HAUL-DRAIN-STONE-LOAD",
+    "name": "TCG Haul Drain Stone",
+    "resource_type": "equipment",
+    "category": "Hauling",
+    "unit": "LOAD",
+    "base_price": 985.0,
+    "min_price": 0,
+    "max_price": 0,
+    "currency": "USD",
+    "source": "bedrock_tcg_model_job_extract_v4_review",
+    "region": "BEDROCK-TCG-V4-REVIEW",
+    "specifications": {
+      "masterformat": "02 00 00"
+    },
+    "metadata": {
+      "review_only": true,
+      "source_evidence": "SitePreparationMaterial 3207"
+    }
+  },
+  {
+    "resource_code": "TCG-RES-HAUL-57-STONE-CF-LOAD",
+    "name": "TCG Haul #57 Stone for Crawlspace Footer",
+    "resource_type": "equipment",
+    "category": "Hauling",
+    "unit": "LOAD",
+    "base_price": 985.0,
+    "min_price": 0,
+    "max_price": 0,
+    "currency": "USD",
+    "source": "bedrock_tcg_model_job_extract_v4_review",
+    "region": "BEDROCK-TCG-V4-REVIEW",
+    "specifications": {
+      "masterformat": "31 00 00"
+    },
+    "metadata": {
+      "review_only": true,
+      "source_evidence": "SitePreparationMaterial 3110/3111"
+    }
+  },
+  {
+    "resource_code": "TCG-RES-FILL-DELIVERED-CY",
+    "name": "TCG Delivered Fill Material Review Rate",
+    "resource_type": "material",
+    "category": "Fill",
+    "unit": "CY",
+    "base_price": 6.5,
+    "min_price": 0,
+    "max_price": 0,
+    "currency": "USD",
+    "source": "bedrock_tcg_model_job_extract_v4_review",
+    "region": "BEDROCK-TCG-V4-REVIEW",
+    "specifications": {
+      "masterformat": "31 00 00"
+    },
+    "metadata": {
+      "review_only": true,
+      "review_flag": "TCG-P7-R3",
+      "rate_basis": "Draft derived fill material rate"
+    }
+  },
+  {
+    "resource_code": "TCG-RES-HAUL-FILL-LOAD",
+    "name": "TCG Fill Hauling Load",
+    "resource_type": "equipment",
+    "category": "Hauling",
+    "unit": "LOAD",
+    "base_price": 395.0,
+    "min_price": 0,
+    "max_price": 0,
+    "currency": "USD",
+    "source": "bedrock_tcg_model_job_extract_v4_review",
+    "region": "BEDROCK-TCG-V4-REVIEW",
+    "specifications": {
+      "masterformat": "31 00 00"
+    },
+    "metadata": {
+      "review_only": true,
+      "review_flag": "TCG-P7-R3",
+      "source_evidence": "job 38254 fill hauling"
+    }
+  },
+  {
+    "resource_code": "TCG-RES-OFFHAUL-EXCAVATED-MATERIAL-FD-LOAD",
+    "name": "TCG Excavated Material Offhaul/Disposal Load for French Drain",
+    "resource_type": "equipment",
+    "category": "Hauling",
+    "unit": "LOAD",
+    "base_price": 245.0,
+    "min_price": 0,
+    "max_price": 0,
+    "currency": "USD",
+    "source": "bedrock_tcg_model_job_extract_v4_review",
+    "region": "BEDROCK-TCG-V4-REVIEW",
+    "specifications": {
+      "masterformat": "33 00 00"
+    },
+    "metadata": {
+      "review_only": true,
+      "source_evidence": "job 38396 fill/offhaul row: 860 CY, 43 LOAD @ $245/load",
+      "raw_source_field": "truck_cost_per_load",
+      "draft_interpretation": "excavated_material_offhaul_disposal_load_price",
+      "review_flag": "TCG-FD-R3"
+    }
+  },
+  {
+    "resource_code": "TCG-RES-FABRIC-ROLL",
+    "name": "TCG Geotextile Fabric Roll",
+    "resource_type": "material",
+    "category": "Drainage",
+    "unit": "ROLL",
+    "base_price": 200.0,
+    "min_price": 0,
+    "max_price": 0,
+    "currency": "USD",
+    "source": "bedrock_tcg_model_job_extract_v4_review",
+    "region": "BEDROCK-TCG-V4-REVIEW",
+    "specifications": {
+      "masterformat": "33 00 00"
+    },
+    "metadata": {
+      "review_only": true,
+      "source_evidence": "job 38396 fabric"
+    }
+  },
+  {
+    "resource_code": "TCG-RES-OBS-WELL-PIPE-LS",
+    "name": "TCG Observation Well Pipe Allowance",
+    "resource_type": "material",
+    "category": "Drainage",
+    "unit": "LS",
+    "base_price": 1100.0,
+    "min_price": 0,
+    "max_price": 0,
+    "currency": "USD",
+    "source": "bedrock_tcg_model_job_extract_v4_review",
+    "region": "BEDROCK-TCG-V4-REVIEW",
+    "specifications": {
+      "masterformat": "33 00 00"
+    },
+    "metadata": {
+      "review_only": true,
+      "source_evidence": "job 38396 pipe for observation wells"
+    }
+  },
+  {
+    "resource_code": "TCG-RES-STORM-EQUIP-RENTAL-LS",
+    "name": "TCG Stormwater Equipment Rental Allowance",
+    "resource_type": "equipment",
+    "category": "Rental",
+    "unit": "LS",
+    "base_price": 2000.0,
+    "min_price": 0,
+    "max_price": 0,
+    "currency": "USD",
+    "source": "bedrock_tcg_model_job_extract_v4_review",
+    "region": "BEDROCK-TCG-V4-REVIEW",
+    "specifications": {
+      "masterformat": "33 00 00"
+    },
+    "metadata": {
+      "review_only": true,
+      "team_review_item": "Identify equipment type"
+    }
+  },
+  {
+    "resource_code": "TCG-RES-UTILITY-PIPE-4IN-LS",
+    "name": "TCG 4in Schedule 40 Pipe and Fittings Allowance",
+    "resource_type": "material",
+    "category": "Utilities",
+    "unit": "LS",
+    "base_price": 12000.0,
+    "min_price": 0,
+    "max_price": 0,
+    "currency": "USD",
+    "source": "bedrock_tcg_model_job_extract_v4_review",
+    "region": "BEDROCK-TCG-V4-REVIEW",
+    "specifications": {
+      "masterformat": "33 00 00"
+    },
+    "metadata": {
+      "review_only": true
+    }
+  },
+  {
+    "resource_code": "TCG-RES-UTILITY-CONDUIT-3IN-LS",
+    "name": "TCG 3in Schedule 40 Electrical Conduit Allowance",
+    "resource_type": "material",
+    "category": "Utilities",
+    "unit": "LS",
+    "base_price": 4000.0,
+    "min_price": 0,
+    "max_price": 0,
+    "currency": "USD",
+    "source": "bedrock_tcg_model_job_extract_v4_review",
+    "region": "BEDROCK-TCG-V4-REVIEW",
+    "specifications": {
+      "masterformat": "33 00 00"
+    },
+    "metadata": {
+      "review_only": true
+    }
+  },
+  {
+    "resource_code": "TCG-RES-UTILITY-CONDUIT-1-5IN-LS",
+    "name": "TCG 1.5in Conduit Allowance",
+    "resource_type": "material",
+    "category": "Utilities",
+    "unit": "LS",
+    "base_price": 2500.0,
+    "min_price": 0,
+    "max_price": 0,
+    "currency": "USD",
+    "source": "bedrock_tcg_model_job_extract_v4_review",
+    "region": "BEDROCK-TCG-V4-REVIEW",
+    "specifications": {
+      "masterformat": "33 00 00"
+    },
+    "metadata": {
+      "review_only": true
+    }
+  },
+  {
+    "resource_code": "TCG-RES-SCREENINGS-LOAD",
+    "name": "TCG Screenings Backfill Load",
+    "resource_type": "material",
+    "category": "Backfill",
+    "unit": "LOAD",
+    "base_price": 1050.0,
+    "min_price": 0,
+    "max_price": 0,
+    "currency": "USD",
+    "source": "bedrock_tcg_model_job_extract_v4_review",
+    "region": "BEDROCK-TCG-V4-REVIEW",
+    "specifications": {
+      "masterformat": "33 00 00"
+    },
+    "metadata": {
+      "review_only": true
+    }
+  },
+  {
+    "resource_code": "TCG-RES-UTILITY-MATERIAL-ALLOWANCE-LS",
+    "name": "TCG Utility Additional Materials Allowance",
+    "resource_type": "material",
+    "category": "Utilities",
+    "unit": "LS",
+    "base_price": 6500.0,
+    "min_price": 0,
+    "max_price": 0,
+    "currency": "USD",
+    "source": "bedrock_tcg_model_job_extract_v4_review",
+    "region": "BEDROCK-TCG-V4-REVIEW",
+    "specifications": {
+      "masterformat": "33 00 00"
+    },
+    "metadata": {
+      "review_only": true,
+      "team_review_item": "Identify exact material meaning"
+    }
+  },
+  {
+    "resource_code": "TCG-RES-UTILITY-EQUIP-ALLOWANCE-LS",
+    "name": "TCG Utility Equipment Allowance",
+    "resource_type": "equipment",
+    "category": "Utilities",
+    "unit": "LS",
+    "base_price": 2500.0,
+    "min_price": 0,
+    "max_price": 0,
+    "currency": "USD",
+    "source": "bedrock_tcg_model_job_extract_v4_review",
+    "region": "BEDROCK-TCG-V4-REVIEW",
+    "specifications": {
+      "masterformat": "33 00 00"
+    },
+    "metadata": {
+      "review_only": true,
+      "team_review_item": "Identify machine type"
+    }
+  },
+  {
+    "resource_code": "TCG-RES-DRIVING-EQUIP-MI",
+    "name": "TCG Driving Equipment Cost",
+    "resource_type": "equipment",
+    "category": "Driving",
+    "unit": "MI",
+    "base_price": 4.375,
+    "min_price": 0,
+    "max_price": 0,
+    "currency": "USD",
+    "source": "bedrock_tcg_model_job_extract_v4_review",
+    "region": "BEDROCK-TCG-V4-REVIEW",
+    "specifications": {
+      "masterformat": "01 50 00"
+    },
+    "metadata": {
+      "review_only": true
+    }
+  },
+  {
+    "resource_code": "TCG-RES-DRIVING-EQUIP-45MI",
+    "name": "TCG Driving Equipment Cost 4.50/mi",
+    "resource_type": "equipment",
+    "category": "Driving",
+    "unit": "MI",
+    "base_price": 4.5,
+    "min_price": 0,
+    "max_price": 0,
+    "currency": "USD",
+    "source": "bedrock_tcg_model_job_extract_v4_review",
+    "region": "BEDROCK-TCG-V4-REVIEW",
+    "specifications": {
+      "masterformat": "01 50 00"
+    },
+    "metadata": {
+      "review_only": true
+    }
+  },
+  {
+    "resource_code": "TCG-RES-CONCRETE-CY",
+    "name": "TCG Concrete Material",
+    "resource_type": "material",
+    "category": "Concrete",
+    "unit": "CY",
+    "base_price": 253.33,
+    "min_price": 0,
+    "max_price": 0,
+    "currency": "USD",
+    "source": "bedrock_tcg_model_job_extract_v4_review",
+    "region": "BEDROCK-TCG-V4-REVIEW",
+    "specifications": {
+      "masterformat": "03 00 00"
+    },
+    "metadata": {
+      "review_only": true,
+      "source_evidence": "job 38447 15 CY concrete $3800"
+    }
+  },
+  {
+    "resource_code": "TCG-RES-2A-STONE-LOAD",
+    "name": "TCG 2A Stone Load",
+    "resource_type": "material",
+    "category": "Aggregate",
+    "unit": "LOAD",
+    "base_price": 800.0,
+    "min_price": 0,
+    "max_price": 0,
+    "currency": "USD",
+    "source": "bedrock_tcg_model_job_extract_v4_review",
+    "region": "BEDROCK-TCG-V4-REVIEW",
+    "specifications": {
+      "masterformat": "31 00 00"
+    },
+    "metadata": {
+      "review_only": true,
+      "source_evidence": "job 38447 one load 2A stone"
+    }
+  },
+  {
+    "resource_code": "TCG-RES-PAVING-SUB-LS",
+    "name": "TCG Paving Subcontractor Allowance",
+    "resource_type": "subcontractor",
+    "category": "Subcontractor",
+    "unit": "LS",
+    "base_price": 9800.0,
+    "min_price": 0,
+    "max_price": 0,
+    "currency": "USD",
+    "source": "bedrock_tcg_model_job_extract_v4_review",
+    "region": "BEDROCK-TCG-V4-REVIEW",
+    "specifications": {
+      "masterformat": "32 00 00"
+    },
+    "metadata": {
+      "review_only": true
+    }
+  },
+  {
+    "resource_code": "TCG-RES-ASPHALT-REPAIR-SUB-LS",
+    "name": "TCG Asphalt Utility Trench Repair Subcontractor Allowance",
+    "resource_type": "subcontractor",
+    "category": "Subcontractor",
+    "unit": "LS",
+    "base_price": 1500.0,
+    "min_price": 0,
+    "max_price": 0,
+    "currency": "USD",
+    "source": "bedrock_tcg_model_job_extract_v4_review",
+    "region": "BEDROCK-TCG-V4-REVIEW",
+    "specifications": {
+      "masterformat": "32 00 00"
+    },
+    "metadata": {
+      "review_only": true
+    }
+  },
+  {
+    "resource_code": "TCG-RES-CORRUGATED-PIPE-4IN-LS",
+    "name": "TCG 4in Corrugated Perforated Pipe Allowance",
+    "resource_type": "material",
+    "category": "Drainage",
+    "unit": "LS",
+    "base_price": 2320.98,
+    "min_price": 0,
+    "max_price": 0,
+    "currency": "USD",
+    "source": "bedrock_tcg_model_job_extract_v4_review",
+    "region": "BEDROCK-TCG-V4-REVIEW",
+    "specifications": {
+      "masterformat": "33 00 00"
+    },
+    "metadata": {
+      "review_only": true
+    }
+  },
+  {
+    "resource_code": "TCG-RES-DEMO-EQUIP-ALLOWANCE-LS",
+    "name": "TCG Demo Equipment Allowance",
+    "resource_type": "equipment",
+    "category": "Demolition",
+    "unit": "LS",
+    "base_price": 17450.0,
+    "min_price": 0,
+    "max_price": 0,
+    "currency": "USD",
+    "source": "bedrock_tcg_model_job_extract_v4_review",
+    "region": "BEDROCK-TCG-V4-REVIEW",
+    "specifications": {
+      "masterformat": "02 00 00"
+    },
+    "metadata": {
+      "review_only": true,
+      "review_flag": "TCG-RS-R1"
+    }
+  },
+  {
+    "resource_code": "TCG-RES-EROSION-SUB-LS",
+    "name": "TCG Erosion Control Sub Crew",
+    "resource_type": "subcontractor",
+    "category": "Erosion",
+    "unit": "LS",
+    "base_price": 4000.0,
+    "min_price": 0,
+    "max_price": 0,
+    "currency": "USD",
+    "source": "bedrock_tcg_model_job_extract_v4_review",
+    "region": "BEDROCK-TCG-V4-REVIEW",
+    "specifications": {
+      "masterformat": "31 00 00"
+    },
+    "metadata": {
+      "review_only": true
+    }
+  },
+  {
+    "resource_code": "TCG-RES-SILT-MATTING-LS",
+    "name": "TCG Silt Fence, Posts, Wire Mesh, and Matting",
+    "resource_type": "material",
+    "category": "Erosion",
+    "unit": "LS",
+    "base_price": 4000.0,
+    "min_price": 0,
+    "max_price": 0,
+    "currency": "USD",
+    "source": "bedrock_tcg_model_job_extract_v4_review",
+    "region": "BEDROCK-TCG-V4-REVIEW",
+    "specifications": {
+      "masterformat": "31 00 00"
+    },
+    "metadata": {
+      "review_only": true
+    }
+  },
+  {
+    "resource_code": "TCG-RES-ORANGE-FENCE-LS",
+    "name": "TCG Orange Construction Fence",
+    "resource_type": "material",
+    "category": "Erosion",
+    "unit": "LS",
+    "base_price": 2000.0,
+    "min_price": 0,
+    "max_price": 0,
+    "currency": "USD",
+    "source": "bedrock_tcg_model_job_extract_v4_review",
+    "region": "BEDROCK-TCG-V4-REVIEW",
+    "specifications": {
+      "masterformat": "31 00 00"
+    },
+    "metadata": {
+      "review_only": true
+    }
+  },
+  {
+    "resource_code": "TCG-RES-GEOTEXTILE-ALLOWANCE-LS",
+    "name": "TCG Geotextile/Fabric Allowance",
+    "resource_type": "material",
+    "category": "Erosion",
+    "unit": "LS",
+    "base_price": 600.0,
+    "min_price": 0,
+    "max_price": 0,
+    "currency": "USD",
+    "source": "bedrock_tcg_model_job_extract_v4_review",
+    "region": "BEDROCK-TCG-V4-REVIEW",
+    "specifications": {
+      "masterformat": "31 00 00"
+    },
+    "metadata": {
+      "review_only": true
+    }
+  },
+  {
+    "resource_code": "TCG-RES-STRAW-STABILIZATION-LS",
+    "name": "TCG Straw Stabilization",
+    "resource_type": "material",
+    "category": "Erosion",
+    "unit": "LS",
+    "base_price": 3200.0,
+    "min_price": 0,
+    "max_price": 0,
+    "currency": "USD",
+    "source": "bedrock_tcg_model_job_extract_v4_review",
+    "region": "BEDROCK-TCG-V4-REVIEW",
+    "specifications": {
+      "masterformat": "31 00 00"
+    },
+    "metadata": {
+      "review_only": true
+    }
+  },
+  {
+    "resource_code": "TCG-RES-EROSION-EQUIP-RENTAL-LS",
+    "name": "TCG Erosion Equipment Rental Allowance",
+    "resource_type": "equipment",
+    "category": "Rental",
+    "unit": "LS",
+    "base_price": 3000.0,
+    "min_price": 0,
+    "max_price": 0,
+    "currency": "USD",
+    "source": "bedrock_tcg_model_job_extract_v4_review",
+    "region": "BEDROCK-TCG-V4-REVIEW",
+    "specifications": {
+      "masterformat": "31 00 00"
+    },
+    "metadata": {
+      "review_only": true
+    }
+  },
+  {
+    "resource_code": "TCG-RES-MATERIAL-GATHERING-LABOR-LS",
+    "name": "TCG Material Gathering Labor Allowance",
+    "resource_type": "labor",
+    "category": "Labor",
+    "unit": "LS",
+    "base_price": 2000.0,
+    "min_price": 0,
+    "max_price": 0,
+    "currency": "USD",
+    "source": "bedrock_tcg_model_job_extract_v4_review",
+    "region": "BEDROCK-TCG-V4-REVIEW",
+    "specifications": {
+      "masterformat": "03 00 00"
+    },
+    "metadata": {
+      "review_only": true,
+      "source_evidence": "AdhocJobCalculator material_gathering_labor_cost"
+    }
+  }
+]

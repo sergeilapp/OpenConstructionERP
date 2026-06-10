@@ -455,7 +455,12 @@ function RegionTabBar({
 /* ── Constants ─────────────────────────────────────────────────────────── */
 
 const UNITS = ['', 'm', 'm2', 'm3', 'kg', 't', 'pcs', 'lsum', 'h', 'set', 'lm'] as const;
-const SOURCES = ['', 'cwicr', 'custom'] as const;
+const SOURCES = ['', 'cwicr', 'custom', 'bedrock_tcg_v4_fd_test_import'] as const;
+const SOURCE_LABELS: Record<string, string> = {
+  cwicr: 'CWICR',
+  custom: 'Custom',
+  bedrock_tcg_v4_fd_test_import: 'Bedrock TCG FD Test',
+};
 // Initial page size kept small so the first paint shows results within
 // ~150ms even on cold-start. The user can navigate to the next page (or
 // scroll-trigger more) without re-fetching the same first batch — react-query
@@ -1341,11 +1346,11 @@ export function CostsPage() {
               className="h-10 w-full appearance-none rounded-lg border border-border bg-surface-primary pl-3 pr-9 text-sm text-content-primary transition-all duration-fast ease-oe focus:outline-none focus:ring-2 focus:ring-oe-blue focus:border-transparent hover:border-content-tertiary sm:w-36"
             >
               <option value="">{t('costs.all_sources', 'All sources')}</option>
-              {SOURCES.filter(Boolean).map((s) => (
-                <option key={s} value={s}>
-                  {t(`costs.source_${s}`, { defaultValue: s === 'cwicr' ? 'CWICR' : s.charAt(0).toUpperCase() + s.slice(1) })}
-                </option>
-              ))}
+                {SOURCES.filter(Boolean).map((s) => (
+                  <option key={s} value={s}>
+                    {t(`costs.source_${s}`, { defaultValue: SOURCE_LABELS[s] ?? s.charAt(0).toUpperCase() + s.slice(1) })}
+                  </option>
+                ))}
             </select>
             <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2.5 text-content-tertiary">
               <ChevronDown size={14} />

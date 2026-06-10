@@ -56,6 +56,11 @@ export const REGION_MAP: Record<string, RegionInfo> = {
   TR_ISTANBUL: { label: 'Türkiye (TRY)', name: 'Türkiye', flag: 'tr', currency: 'TRY' },
   VI_HANOI: { label: 'Vietnam (VND)', name: 'Vietnam', flag: 'vn', currency: 'VND' },
   ZA_JOHANNESBURG: { label: 'South Africa (ZAR)', name: 'South Africa', flag: 'za', currency: 'ZAR' },
+  'BEDROCK-MAIN': { label: 'Bedrock Siteworks (USD)', name: 'Bedrock Siteworks', flag: 'us', currency: 'USD' },
+  'BEDROCK-TCG-REVIEW': { label: 'Bedrock TCG Review (USD)', name: 'TCG Review', flag: 'us', currency: 'USD' },
+  'BEDROCK-TCG-V4-REVIEW': { label: 'Bedrock TCG V4 Review (USD)', name: 'TCG V4 Review', flag: 'us', currency: 'USD' },
+  'BEDROCK-TCG-EXTRACT-2': { label: 'Bedrock TCG Extract 2 (USD)', name: 'TCG Extract 2', flag: 'us', currency: 'USD' },
+  'BEDROCK-TCG-V4-FD-TEST': { label: 'Bedrock TCG French Drain Test (USD)', name: 'TCG French Drain Test', flag: 'us', currency: 'USD' },
   CUSTOM: { label: 'My Database', name: 'My Database', flag: 'custom', currency: '' },
 };
 
