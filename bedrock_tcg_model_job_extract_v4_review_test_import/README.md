@@ -2,7 +2,7 @@
 
 Status: review-only import package for OCERP app inspection.
 
-Current import status: revised package validates and dry-runs under region `BEDROCK-TCG-V4-REVIEW` with source `bedrock_tcg_model_job_extract_v4_review`. The database still contains the previous imported v4 counts until `--cleanup` is run again.
+Current test import status: revised package validates and dry-runs under region `BEDROCK-TCG-V4-FD-TEST` with source `bedrock_tcg_v4_fd_test_import`. The database still contains the previous imported v4 counts until `--cleanup` is run again.
 
 Included records:
 - 37 catalog resources
@@ -19,9 +19,9 @@ French drain reassessment:
 Validate/import from `OCERP/backend`:
 
 ```bash
-uv run python ../scripts/import_tcg_package.py --data-dir ../bedrock_tcg_model_job_extract_v4_review --validate-only
-uv run python ../scripts/import_tcg_package.py --data-dir ../bedrock_tcg_model_job_extract_v4_review --dry-run
-uv run python ../scripts/import_tcg_package.py --data-dir ../bedrock_tcg_model_job_extract_v4_review --cleanup
+uv run python ../scripts/import_tcg_package.py --data-dir ../bedrock_tcg_v4_fd_test_import --validate-only
+uv run python ../scripts/import_tcg_package.py --data-dir ../bedrock_tcg_v4_fd_test_import --dry-run
+uv run python ../scripts/import_tcg_package.py --data-dir ../bedrock_tcg_v4_fd_test_import --cleanup
 ```
 
 This package is not final-approved. It is intended to get the reviewed CostItems and assemblies into OCERP for visual/app review.

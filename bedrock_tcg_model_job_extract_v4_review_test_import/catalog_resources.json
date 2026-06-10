@@ -9,8 +9,8 @@
     "min_price": 0,
     "max_price": 0,
     "currency": "USD",
-    "source": "bedrock_tcg_model_job_extract_v4_review",
-    "region": "BEDROCK-TCG-V4-REVIEW",
+    "source": "bedrock_tcg_v4_fd_test_import",
+    "region": "BEDROCK-TCG-V4-FD-TEST",
     "specifications": {
       "masterformat": "31 00 00"
     },
@@ -29,8 +29,8 @@
     "min_price": 0,
     "max_price": 0,
     "currency": "USD",
-    "source": "bedrock_tcg_model_job_extract_v4_review",
-    "region": "BEDROCK-TCG-V4-REVIEW",
+    "source": "bedrock_tcg_v4_fd_test_import",
+    "region": "BEDROCK-TCG-V4-FD-TEST",
     "specifications": {
       "masterformat": "03 00 00"
     },
@@ -49,8 +49,8 @@
     "min_price": 0,
     "max_price": 0,
     "currency": "USD",
-    "source": "bedrock_tcg_model_job_extract_v4_review",
-    "region": "BEDROCK-TCG-V4-REVIEW",
+    "source": "bedrock_tcg_v4_fd_test_import",
+    "region": "BEDROCK-TCG-V4-FD-TEST",
     "specifications": {
       "masterformat": "01 50 00"
     },
@@ -69,8 +69,8 @@
     "min_price": 0,
     "max_price": 0,
     "currency": "USD",
-    "source": "bedrock_tcg_model_job_extract_v4_review",
-    "region": "BEDROCK-TCG-V4-REVIEW",
+    "source": "bedrock_tcg_v4_fd_test_import",
+    "region": "BEDROCK-TCG-V4-FD-TEST",
     "specifications": {
       "masterformat": "31 00 00"
     },
@@ -90,8 +90,8 @@
     "min_price": 0,
     "max_price": 0,
     "currency": "USD",
-    "source": "bedrock_tcg_model_job_extract_v4_review",
-    "region": "BEDROCK-TCG-V4-REVIEW",
+    "source": "bedrock_tcg_v4_fd_test_import",
+    "region": "BEDROCK-TCG-V4-FD-TEST",
     "specifications": {
       "masterformat": "02 00 00"
     },
@@ -111,8 +111,8 @@
     "min_price": 0,
     "max_price": 0,
     "currency": "USD",
-    "source": "bedrock_tcg_model_job_extract_v4_review",
-    "region": "BEDROCK-TCG-V4-REVIEW",
+    "source": "bedrock_tcg_v4_fd_test_import",
+    "region": "BEDROCK-TCG-V4-FD-TEST",
     "specifications": {
       "masterformat": "33 00 00"
     },
@@ -131,8 +131,8 @@
     "min_price": 0,
     "max_price": 0,
     "currency": "USD",
-    "source": "bedrock_tcg_model_job_extract_v4_review",
-    "region": "BEDROCK-TCG-V4-REVIEW",
+    "source": "bedrock_tcg_v4_fd_test_import",
+    "region": "BEDROCK-TCG-V4-FD-TEST",
     "specifications": {
       "masterformat": "33 00 00"
     },
@@ -154,8 +154,8 @@
     "min_price": 0,
     "max_price": 0,
     "currency": "USD",
-    "source": "bedrock_tcg_model_job_extract_v4_review",
-    "region": "BEDROCK-TCG-V4-REVIEW",
+    "source": "bedrock_tcg_v4_fd_test_import",
+    "region": "BEDROCK-TCG-V4-FD-TEST",
     "specifications": {
       "masterformat": "33 00 00"
     },
@@ -177,8 +177,8 @@
     "min_price": 0,
     "max_price": 0,
     "currency": "USD",
-    "source": "bedrock_tcg_model_job_extract_v4_review",
-    "region": "BEDROCK-TCG-V4-REVIEW",
+    "source": "bedrock_tcg_v4_fd_test_import",
+    "region": "BEDROCK-TCG-V4-FD-TEST",
     "specifications": {
       "masterformat": "02 00 00"
     },
@@ -197,8 +197,8 @@
     "min_price": 0,
     "max_price": 0,
     "currency": "USD",
-    "source": "bedrock_tcg_model_job_extract_v4_review",
-    "region": "BEDROCK-TCG-V4-REVIEW",
+    "source": "bedrock_tcg_v4_fd_test_import",
+    "region": "BEDROCK-TCG-V4-FD-TEST",
     "specifications": {
       "masterformat": "31 00 00"
     },
@@ -217,8 +217,8 @@
     "min_price": 0,
     "max_price": 0,
     "currency": "USD",
-    "source": "bedrock_tcg_model_job_extract_v4_review",
-    "region": "BEDROCK-TCG-V4-REVIEW",
+    "source": "bedrock_tcg_v4_fd_test_import",
+    "region": "BEDROCK-TCG-V4-FD-TEST",
     "specifications": {
       "masterformat": "31 00 00"
     },
@@ -238,8 +238,8 @@
     "min_price": 0,
     "max_price": 0,
     "currency": "USD",
-    "source": "bedrock_tcg_model_job_extract_v4_review",
-    "region": "BEDROCK-TCG-V4-REVIEW",
+    "source": "bedrock_tcg_v4_fd_test_import",
+    "region": "BEDROCK-TCG-V4-FD-TEST",
     "specifications": {
       "masterformat": "31 00 00"
     },
@@ -259,8 +259,8 @@
     "min_price": 0,
     "max_price": 0,
     "currency": "USD",
-    "source": "bedrock_tcg_model_job_extract_v4_review",
-    "region": "BEDROCK-TCG-V4-REVIEW",
+    "source": "bedrock_tcg_v4_fd_test_import",
+    "region": "BEDROCK-TCG-V4-FD-TEST",
     "specifications": {
       "masterformat": "33 00 00"
     },
@@ -282,8 +282,8 @@
     "min_price": 0,
     "max_price": 0,
     "currency": "USD",
-    "source": "bedrock_tcg_model_job_extract_v4_review",
-    "region": "BEDROCK-TCG-V4-REVIEW",
+    "source": "bedrock_tcg_v4_fd_test_import",
+    "region": "BEDROCK-TCG-V4-FD-TEST",
     "specifications": {
       "masterformat": "33 00 00"
     },
@@ -302,8 +302,8 @@
     "min_price": 0,
     "max_price": 0,
     "currency": "USD",
-    "source": "bedrock_tcg_model_job_extract_v4_review",
-    "region": "BEDROCK-TCG-V4-REVIEW",
+    "source": "bedrock_tcg_v4_fd_test_import",
+    "region": "BEDROCK-TCG-V4-FD-TEST",
     "specifications": {
       "masterformat": "33 00 00"
     },
@@ -322,8 +322,8 @@
     "min_price": 0,
     "max_price": 0,
     "currency": "USD",
-    "source": "bedrock_tcg_model_job_extract_v4_review",
-    "region": "BEDROCK-TCG-V4-REVIEW",
+    "source": "bedrock_tcg_v4_fd_test_import",
+    "region": "BEDROCK-TCG-V4-FD-TEST",
     "specifications": {
       "masterformat": "33 00 00"
     },
@@ -342,8 +342,8 @@
     "min_price": 0,
     "max_price": 0,
     "currency": "USD",
-    "source": "bedrock_tcg_model_job_extract_v4_review",
-    "region": "BEDROCK-TCG-V4-REVIEW",
+    "source": "bedrock_tcg_v4_fd_test_import",
+    "region": "BEDROCK-TCG-V4-FD-TEST",
     "specifications": {
       "masterformat": "33 00 00"
     },
@@ -361,8 +361,8 @@
     "min_price": 0,
     "max_price": 0,
     "currency": "USD",
-    "source": "bedrock_tcg_model_job_extract_v4_review",
-    "region": "BEDROCK-TCG-V4-REVIEW",
+    "source": "bedrock_tcg_v4_fd_test_import",
+    "region": "BEDROCK-TCG-V4-FD-TEST",
     "specifications": {
       "masterformat": "33 00 00"
     },
@@ -380,8 +380,8 @@
     "min_price": 0,
     "max_price": 0,
     "currency": "USD",
-    "source": "bedrock_tcg_model_job_extract_v4_review",
-    "region": "BEDROCK-TCG-V4-REVIEW",
+    "source": "bedrock_tcg_v4_fd_test_import",
+    "region": "BEDROCK-TCG-V4-FD-TEST",
     "specifications": {
       "masterformat": "33 00 00"
     },
@@ -399,8 +399,8 @@
     "min_price": 0,
     "max_price": 0,
     "currency": "USD",
-    "source": "bedrock_tcg_model_job_extract_v4_review",
-    "region": "BEDROCK-TCG-V4-REVIEW",
+    "source": "bedrock_tcg_v4_fd_test_import",
+    "region": "BEDROCK-TCG-V4-FD-TEST",
     "specifications": {
       "masterformat": "33 00 00"
     },
@@ -418,8 +418,8 @@
     "min_price": 0,
     "max_price": 0,
     "currency": "USD",
-    "source": "bedrock_tcg_model_job_extract_v4_review",
-    "region": "BEDROCK-TCG-V4-REVIEW",
+    "source": "bedrock_tcg_v4_fd_test_import",
+    "region": "BEDROCK-TCG-V4-FD-TEST",
     "specifications": {
       "masterformat": "33 00 00"
     },
@@ -438,8 +438,8 @@
     "min_price": 0,
     "max_price": 0,
     "currency": "USD",
-    "source": "bedrock_tcg_model_job_extract_v4_review",
-    "region": "BEDROCK-TCG-V4-REVIEW",
+    "source": "bedrock_tcg_v4_fd_test_import",
+    "region": "BEDROCK-TCG-V4-FD-TEST",
     "specifications": {
       "masterformat": "33 00 00"
     },
@@ -458,8 +458,8 @@
     "min_price": 0,
     "max_price": 0,
     "currency": "USD",
-    "source": "bedrock_tcg_model_job_extract_v4_review",
-    "region": "BEDROCK-TCG-V4-REVIEW",
+    "source": "bedrock_tcg_v4_fd_test_import",
+    "region": "BEDROCK-TCG-V4-FD-TEST",
     "specifications": {
       "masterformat": "01 50 00"
     },
@@ -477,8 +477,8 @@
     "min_price": 0,
     "max_price": 0,
     "currency": "USD",
-    "source": "bedrock_tcg_model_job_extract_v4_review",
-    "region": "BEDROCK-TCG-V4-REVIEW",
+    "source": "bedrock_tcg_v4_fd_test_import",
+    "region": "BEDROCK-TCG-V4-FD-TEST",
     "specifications": {
       "masterformat": "01 50 00"
     },
@@ -496,8 +496,8 @@
     "min_price": 0,
     "max_price": 0,
     "currency": "USD",
-    "source": "bedrock_tcg_model_job_extract_v4_review",
-    "region": "BEDROCK-TCG-V4-REVIEW",
+    "source": "bedrock_tcg_v4_fd_test_import",
+    "region": "BEDROCK-TCG-V4-FD-TEST",
     "specifications": {
       "masterformat": "03 00 00"
     },
@@ -516,8 +516,8 @@
     "min_price": 0,
     "max_price": 0,
     "currency": "USD",
-    "source": "bedrock_tcg_model_job_extract_v4_review",
-    "region": "BEDROCK-TCG-V4-REVIEW",
+    "source": "bedrock_tcg_v4_fd_test_import",
+    "region": "BEDROCK-TCG-V4-FD-TEST",
     "specifications": {
       "masterformat": "31 00 00"
     },
@@ -536,8 +536,8 @@
     "min_price": 0,
     "max_price": 0,
     "currency": "USD",
-    "source": "bedrock_tcg_model_job_extract_v4_review",
-    "region": "BEDROCK-TCG-V4-REVIEW",
+    "source": "bedrock_tcg_v4_fd_test_import",
+    "region": "BEDROCK-TCG-V4-FD-TEST",
     "specifications": {
       "masterformat": "32 00 00"
     },
@@ -555,8 +555,8 @@
     "min_price": 0,
     "max_price": 0,
     "currency": "USD",
-    "source": "bedrock_tcg_model_job_extract_v4_review",
-    "region": "BEDROCK-TCG-V4-REVIEW",
+    "source": "bedrock_tcg_v4_fd_test_import",
+    "region": "BEDROCK-TCG-V4-FD-TEST",
     "specifications": {
       "masterformat": "32 00 00"
     },
@@ -574,8 +574,8 @@
     "min_price": 0,
     "max_price": 0,
     "currency": "USD",
-    "source": "bedrock_tcg_model_job_extract_v4_review",
-    "region": "BEDROCK-TCG-V4-REVIEW",
+    "source": "bedrock_tcg_v4_fd_test_import",
+    "region": "BEDROCK-TCG-V4-FD-TEST",
     "specifications": {
       "masterformat": "33 00 00"
     },
@@ -593,8 +593,8 @@
     "min_price": 0,
     "max_price": 0,
     "currency": "USD",
-    "source": "bedrock_tcg_model_job_extract_v4_review",
-    "region": "BEDROCK-TCG-V4-REVIEW",
+    "source": "bedrock_tcg_v4_fd_test_import",
+    "region": "BEDROCK-TCG-V4-FD-TEST",
     "specifications": {
       "masterformat": "02 00 00"
     },
@@ -613,8 +613,8 @@
     "min_price": 0,
     "max_price": 0,
     "currency": "USD",
-    "source": "bedrock_tcg_model_job_extract_v4_review",
-    "region": "BEDROCK-TCG-V4-REVIEW",
+    "source": "bedrock_tcg_v4_fd_test_import",
+    "region": "BEDROCK-TCG-V4-FD-TEST",
     "specifications": {
       "masterformat": "31 00 00"
     },
@@ -632,8 +632,8 @@
     "min_price": 0,
     "max_price": 0,
     "currency": "USD",
-    "source": "bedrock_tcg_model_job_extract_v4_review",
-    "region": "BEDROCK-TCG-V4-REVIEW",
+    "source": "bedrock_tcg_v4_fd_test_import",
+    "region": "BEDROCK-TCG-V4-FD-TEST",
     "specifications": {
       "masterformat": "31 00 00"
     },
@@ -651,8 +651,8 @@
     "min_price": 0,
     "max_price": 0,
     "currency": "USD",
-    "source": "bedrock_tcg_model_job_extract_v4_review",
-    "region": "BEDROCK-TCG-V4-REVIEW",
+    "source": "bedrock_tcg_v4_fd_test_import",
+    "region": "BEDROCK-TCG-V4-FD-TEST",
     "specifications": {
       "masterformat": "31 00 00"
     },
@@ -670,8 +670,8 @@
     "min_price": 0,
     "max_price": 0,
     "currency": "USD",
-    "source": "bedrock_tcg_model_job_extract_v4_review",
-    "region": "BEDROCK-TCG-V4-REVIEW",
+    "source": "bedrock_tcg_v4_fd_test_import",
+    "region": "BEDROCK-TCG-V4-FD-TEST",
     "specifications": {
       "masterformat": "31 00 00"
     },
@@ -689,8 +689,8 @@
     "min_price": 0,
     "max_price": 0,
     "currency": "USD",
-    "source": "bedrock_tcg_model_job_extract_v4_review",
-    "region": "BEDROCK-TCG-V4-REVIEW",
+    "source": "bedrock_tcg_v4_fd_test_import",
+    "region": "BEDROCK-TCG-V4-FD-TEST",
     "specifications": {
       "masterformat": "31 00 00"
     },
@@ -708,8 +708,8 @@
     "min_price": 0,
     "max_price": 0,
     "currency": "USD",
-    "source": "bedrock_tcg_model_job_extract_v4_review",
-    "region": "BEDROCK-TCG-V4-REVIEW",
+    "source": "bedrock_tcg_v4_fd_test_import",
+    "region": "BEDROCK-TCG-V4-FD-TEST",
     "specifications": {
       "masterformat": "31 00 00"
     },
@@ -727,8 +727,8 @@
     "min_price": 0,
     "max_price": 0,
     "currency": "USD",
-    "source": "bedrock_tcg_model_job_extract_v4_review",
-    "region": "BEDROCK-TCG-V4-REVIEW",
+    "source": "bedrock_tcg_v4_fd_test_import",
+    "region": "BEDROCK-TCG-V4-FD-TEST",
     "specifications": {
       "masterformat": "03 00 00"
     },

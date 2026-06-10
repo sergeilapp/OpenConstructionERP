@@ -9,7 +9,7 @@ Previously imported with:
 ```bash
 cd /home/sergei/dev/bedrock-siteworks/OCERP/backend
 uv run python ../scripts/import_tcg_package.py \
-  --data-dir ../bedrock_tcg_model_job_extract_v4_review \
+  --data-dir ../bedrock_tcg_v4_fd_test_import \
   --cleanup
 ```
 
@@ -26,8 +26,8 @@ Package namespace:
 
 | Field | Value |
 |---|---|
-| Source | `bedrock_tcg_model_job_extract_v4_review` |
-| Region | `BEDROCK-TCG-V4-REVIEW` |
+| Source | `bedrock_tcg_v4_fd_test_import` |
+| Region | `BEDROCK-TCG-V4-FD-TEST` |
 | Review only | `true` |
 
 ## Included Reviewed Scopes

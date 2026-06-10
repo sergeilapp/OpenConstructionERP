@@ -168,6 +168,12 @@ const CWICR_DATABASES: CWICRDatabase[] = [
   // Americas
   { id: 'PT_SAOPAULO', name: 'Brazil / Portugal', city: 'S\u00e3o Paulo', lang: 'Portugu\u00eas', currency: 'BRL', flagId: 'br' },
   { id: 'MX_MEXICOCITY', name: 'Mexico', city: 'Mexico City', lang: 'Espa\u00f1ol', currency: 'MXN', flagId: 'mx' },
+  // Bedrock / TCG project regions
+  { id: 'BEDROCK-MAIN', name: 'Bedrock Siteworks', city: 'Nashville', lang: 'English', currency: 'USD', flagId: 'us' },
+  { id: 'BEDROCK-TCG-REVIEW', name: 'TCG Review', city: 'Nashville', lang: 'English', currency: 'USD', flagId: 'us' },
+  { id: 'BEDROCK-TCG-V4-REVIEW', name: 'TCG V4 Review', city: 'Nashville', lang: 'English', currency: 'USD', flagId: 'us' },
+  { id: 'BEDROCK-TCG-EXTRACT-2', name: 'TCG Extract 2', city: 'Nashville', lang: 'English', currency: 'USD', flagId: 'us' },
+  { id: 'BEDROCK-TCG-V4-FD-TEST', name: 'Bedrock TCG French Drain Test', city: 'Brentwood', lang: 'English', currency: 'USD', flagId: 'us' },
 ];
 
 // ── AI Provider definitions ─────────────────────────────────────────────────

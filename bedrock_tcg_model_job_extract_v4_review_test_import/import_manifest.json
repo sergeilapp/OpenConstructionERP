@@ -1,12 +1,12 @@
 {
   "manifest_version": "1.0",
   "generated_at": "2026-06-03T14:09:53",
-  "package_name": "TCG Model Job Extract v4 Review",
-  "package_path": "OCERP/bedrock_tcg_model_job_extract_v4_review/",
-  "source": "bedrock_tcg_model_job_extract_v4_review",
-  "region": "BEDROCK-TCG-V4-REVIEW",
+  "package_name": "TCG Model Job Extract v4 French Drain Test Import",
+  "package_path": "OCERP/bedrock_tcg_model_job_extract_v4_review_test_import/",
+  "source": "bedrock_tcg_v4_fd_test_import",
+  "region": "BEDROCK-TCG-V4-FD-TEST",
   "review_only": true,
-  "import_instructions": "Review-only package for OCERP app inspection. Run scripts/import_tcg_package.py with --dry-run first, then --cleanup to re-import.",
+  "import_instructions": "Side-by-side test import package. Import without --cleanup so existing v4 review records are not overwritten.",
   "provenance": {
     "contact_id": 24929,
     "model_job_group_id": "tcg_24929_model_job",

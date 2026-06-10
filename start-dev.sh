@@ -47,7 +47,7 @@ echo "  Frontend PID: $FRONTEND_PID (log: /tmp/ocerp-frontend.log)"
 # Wait for frontend
 echo "  Waiting for frontend..."
 for i in {1..15}; do
-    if curl -s -o /dev/null http://localhost:5173 2>/dev/null; then
+    if curl -s -o /dev/null http://localhost:5180 2>/dev/null; then
         echo "  Frontend ready!"
         break
     fi
@@ -57,7 +57,7 @@ done
 echo ""
 echo "=== All services started ==="
 echo "  Backend:  http://localhost:8000 (PID $BACKEND_PID)"
-echo "  Frontend: http://localhost:5173 (PID $FRONTEND_PID)"
+echo "  Frontend: http://localhost:5180 (PID $FRONTEND_PID)"
 echo "  Logs:     /tmp/ocerp-backend.log, /tmp/ocerp-frontend.log"
 echo ""
 echo "To stop: pkill -f 'uvicorn app.main:create_app'; pkill -f 'vite'"

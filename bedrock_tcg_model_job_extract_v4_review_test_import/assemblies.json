@@ -1,7 +1,7 @@
 [
   {
-    "code": "TCG-V5-ASM-STORMWATER-INFILTRATION-PIT-SF",
-    "name": "TCG v5 Stormwater Infiltration Pit Delivered-Material Review Assembly",
+    "code": "TEST-TCG-V5-ASM-STORMWATER-INFILTRATION-PIT-SF",
+    "name": "TEST IMPORT - TCG v5 Stormwater Infiltration Pit Delivered-Material Review Assembly",
     "description": "Review-only assembly superseding the v4 French drain draft. Uses delivered-load pricing for quarry material rows and unitizes the scope by source job area.",
     "unit": "LS",
     "category": "Stormwater",
@@ -39,10 +39,10 @@
       }
     ],
     "metadata": {
-      "source": "bedrock_tcg_model_job_extract_v4_review",
-      "region": "BEDROCK-TCG-V4-REVIEW",
+      "source": "bedrock_tcg_v4_fd_test_import",
+      "region": "BEDROCK-TCG-V4-FD-TEST",
       "review_only": true,
-      "supersedes": "TCG-V4-ASM-STORMWATER-FRENCH-DRAIN-DRAFT",
+      "supersedes": "TEST COPY OF TCG-V4-ASM-STORMWATER-FRENCH-DRAIN-DRAFT",
       "draft_interpretation": "truck_cost_per_load values are delivered material load prices unless Bedrock confirms hauling-only",
       "known_subtotal_before_unresolved_scope": 69640.0,
       "review_flags": [
@@ -69,12 +69,13 @@
         "conditional check dams",
         "rock excavation T&M allowance",
         "ambiguous driving labor/equipment pending confirmation as Bedrock crew mobilization or spoil-haul support"
-      ]
+      ],
+      "test_import": true
     }
   },
   {
-    "code": "TCG-V4-ASM-CONCRETE-CURB-PAVING-DRAFT",
-    "name": "TCG v4 Concrete Curb and Paving Draft Assembly",
+    "code": "TEST-TCG-V4-ASM-CONCRETE-CURB-PAVING-DRAFT",
+    "name": "TEST IMPORT - TCG v4 Concrete Curb and Paving Draft Assembly",
     "description": "Review-only assembly grouping curb/gutter internal work and split subcontracted paving/asphalt repair.",
     "unit": "LS",
     "category": "Concrete/Paving",
@@ -124,14 +125,15 @@
       }
     ],
     "metadata": {
-      "source": "bedrock_tcg_model_job_extract_v4_review",
-      "region": "BEDROCK-TCG-V4-REVIEW",
-      "review_only": true
+      "source": "bedrock_tcg_v4_fd_test_import",
+      "region": "BEDROCK-TCG-V4-FD-TEST",
+      "review_only": true,
+      "test_import": true
     }
   },
   {
-    "code": "TCG-V4-ASM-CRAWLSPACE-FOOTER-DRAINAGE-DRAFT",
-    "name": "TCG v4 Crawlspace Footer Drainage Draft Assembly",
+    "code": "TEST-TCG-V4-ASM-CRAWLSPACE-FOOTER-DRAINAGE-DRAFT",
+    "name": "TEST IMPORT - TCG v4 Crawlspace Footer Drainage Draft Assembly",
     "description": "Review-only assembly for crawlspace/footer excavation, delivered stone, pipe, labor, and driving.",
     "unit": "LS",
     "category": "Earthwork",
@@ -181,14 +183,15 @@
       }
     ],
     "metadata": {
-      "source": "bedrock_tcg_model_job_extract_v4_review",
-      "region": "BEDROCK-TCG-V4-REVIEW",
-      "review_only": true
+      "source": "bedrock_tcg_v4_fd_test_import",
+      "region": "BEDROCK-TCG-V4-FD-TEST",
+      "review_only": true,
+      "test_import": true
     }
   },
   {
-    "code": "TCG-V4-ASM-SITE-PREP-DEMO-EROSION-DRAFT",
-    "name": "TCG v4 Site Prep Demo and Erosion Draft Assembly",
+    "code": "TEST-TCG-V4-ASM-SITE-PREP-DEMO-EROSION-DRAFT",
+    "name": "TEST IMPORT - TCG v4 Site Prep Demo and Erosion Draft Assembly",
     "description": "Review-only assembly for construction entrance drain stone, erosion/stabilization, and demo/disposal scope.",
     "unit": "LS",
     "category": "Site Prep",
@@ -251,14 +254,15 @@
       }
     ],
     "metadata": {
-      "source": "bedrock_tcg_model_job_extract_v4_review",
-      "region": "BEDROCK-TCG-V4-REVIEW",
-      "review_only": true
+      "source": "bedrock_tcg_v4_fd_test_import",
+      "region": "BEDROCK-TCG-V4-FD-TEST",
+      "review_only": true,
+      "test_import": true
     }
   },
   {
-    "code": "TCG-V4-ASM-FILL-PLACEMENT-REVIEW",
-    "name": "TCG v4 Fill Placement Review Assembly",
+    "code": "TEST-TCG-V4-ASM-FILL-PLACEMENT-REVIEW",
+    "name": "TEST IMPORT - TCG v4 Fill Placement Review Assembly",
     "description": "Review-only assembly for delivered fill and fill placement; blocked from final approval by TCG-P7-R3 and equipment-rate review.",
     "unit": "LS",
     "category": "Earthwork",
@@ -310,9 +314,10 @@
       }
     ],
     "metadata": {
-      "source": "bedrock_tcg_model_job_extract_v4_review",
-      "region": "BEDROCK-TCG-V4-REVIEW",
-      "review_only": true
+      "source": "bedrock_tcg_v4_fd_test_import",
+      "region": "BEDROCK-TCG-V4-FD-TEST",
+      "review_only": true,
+      "test_import": true
     }
   }
 ]
