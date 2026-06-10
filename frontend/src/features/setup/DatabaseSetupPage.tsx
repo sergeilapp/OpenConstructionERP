@@ -83,6 +83,12 @@ const CWICR_DATABASES: CWICRDatabase[] = [
   { id: 'VN_NATIONAL', name: 'Vietnam (Dinh Muc)', city: 'National', lang: 'Tieng Viet', currency: 'VND', flagId: 'vn' },
   { id: 'ID_NATIONAL', name: 'Indonesia (AHSP)', city: 'National', lang: 'Bahasa Indonesia', currency: 'IDR', flagId: 'id' },
   { id: 'GR_NATIONAL', name: 'Greece (GGDE)', city: 'National', lang: 'Ellinika', currency: 'EUR', flagId: 'gr' },
+  // Bedrock / TCG project regions
+  { id: 'BEDROCK-MAIN', name: 'Bedrock Siteworks', city: 'Nashville', lang: 'English', currency: 'USD', flagId: 'us' },
+  { id: 'BEDROCK-TCG-REVIEW', name: 'TCG Review', city: 'Nashville', lang: 'English', currency: 'USD', flagId: 'us' },
+  { id: 'BEDROCK-TCG-V4-REVIEW', name: 'TCG V4 Review', city: 'Nashville', lang: 'English', currency: 'USD', flagId: 'us' },
+  { id: 'BEDROCK-TCG-EXTRACT-2', name: 'TCG Extract 2', city: 'Nashville', lang: 'English', currency: 'USD', flagId: 'us' },
+  { id: 'BEDROCK-TCG-V4-FD-TEST', name: 'Bedrock TCG French Drain Test', city: 'Brentwood', lang: 'English', currency: 'USD', flagId: 'us' },
 ];
 
 // ── Demo project definitions ────────────────────────────────────────────────

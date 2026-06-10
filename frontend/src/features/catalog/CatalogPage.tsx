@@ -179,6 +179,12 @@ const CWICR_REGIONS: CWICRRegionInfo[] = [
   { id: 'GR_NATIONAL', name: 'Greece (GGDE)', flagId: 'gr', currency: 'EUR' },
   { id: 'VN_NATIONAL', name: 'Vietnam (Dinh Muc)', flagId: 'vn', currency: 'VND' },
   { id: 'ID_NATIONAL', name: 'Indonesia (AHSP)', flagId: 'id', currency: 'IDR' },
+  // Bedrock / TCG project regions
+  { id: 'BEDROCK-MAIN', name: 'Bedrock Siteworks', flagId: 'us', currency: 'USD' },
+  { id: 'BEDROCK-TCG-REVIEW', name: 'TCG Review', flagId: 'us', currency: 'USD' },
+  { id: 'BEDROCK-TCG-V4-REVIEW', name: 'TCG V4 Review', flagId: 'us', currency: 'USD' },
+  { id: 'BEDROCK-TCG-EXTRACT-2', name: 'TCG Extract 2', flagId: 'us', currency: 'USD' },
+  { id: 'BEDROCK-TCG-V4-FD-TEST', name: 'Bedrock TCG French Drain Test', flagId: 'us', currency: 'USD' },
 ];
 
 /* ── API helpers ───────────────────────────────────────────────────────── */

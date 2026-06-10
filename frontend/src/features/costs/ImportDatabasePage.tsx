@@ -347,6 +347,12 @@ const CWICR_DATABASES: CWICRDatabase[] = [
   { id: 'VN_NATIONAL', name: 'Vietnam (Dinh Muc)', city: 'National', lang: 'Tieng Viet', currency: 'VND', flagId: 'vn', parquetName: 'VN' },
   { id: 'ID_NATIONAL', name: 'Indonesia (AHSP)', city: 'National', lang: 'Bahasa Indonesia', currency: 'IDR', flagId: 'id', parquetName: 'ID' },
   { id: 'GR_NATIONAL', name: 'Greece (GGDE)', city: 'National', lang: 'Ellinika', currency: 'EUR', flagId: 'gr', parquetName: 'GR' },
+  // Bedrock / TCG project regions
+  { id: 'BEDROCK-MAIN', name: 'Bedrock Siteworks', city: 'Nashville', lang: 'English', currency: 'USD', flagId: 'us', parquetName: 'BEDROCK-MAIN' },
+  { id: 'BEDROCK-TCG-REVIEW', name: 'TCG Review', city: 'Nashville', lang: 'English', currency: 'USD', flagId: 'us', parquetName: 'BEDROCK-TCG-REVIEW' },
+  { id: 'BEDROCK-TCG-V4-REVIEW', name: 'TCG V4 Review', city: 'Nashville', lang: 'English', currency: 'USD', flagId: 'us', parquetName: 'BEDROCK-TCG-V4-REVIEW' },
+  { id: 'BEDROCK-TCG-EXTRACT-2', name: 'TCG Extract 2', city: 'Nashville', lang: 'English', currency: 'USD', flagId: 'us', parquetName: 'BEDROCK-TCG-EXTRACT-2' },
+  { id: 'BEDROCK-TCG-V4-FD-TEST', name: 'Bedrock TCG French Drain Test', city: 'Brentwood', lang: 'English', currency: 'USD', flagId: 'us', parquetName: 'BEDROCK-TCG-V4-FD-TEST' },
 ];
 
 // Databases that may only be available via GitHub download (not in local DDC_Toolkit).
