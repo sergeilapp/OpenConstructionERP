@@ -64,6 +64,7 @@
     "dl_btn_macos": "Download for macOS",
     "dl_btn_linux": "Download for Linux",
     "dl_btn_sub": "Free - no Python, no Docker, nothing to set up",
+    "try_demo": "Or try the live demo in your browser, nothing to install",
     "all_platforms": "All platforms",
     "float_cta": "Download",
     "meta_selfhost": "Self-hosted",

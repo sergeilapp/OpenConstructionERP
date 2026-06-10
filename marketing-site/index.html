@@ -1096,31 +1096,46 @@
       padding: 8px 14px;
       margin-right: 8px;
       border-radius: 999px;
-      background: transparent;
-      color: var(--ink-1);
-      border: 1px solid var(--line-2);
+      background: rgba(2, 132, 199, 0.08);
+      color: var(--accent);
+      border: 1px solid rgba(2, 132, 199, 0.28);
       font-size: 13px;
-      font-weight: 500;
+      font-weight: 600;
       letter-spacing: -0.005em;
       white-space: nowrap;
       transition: transform 0.2s ease, background 0.25s ease, border-color 0.25s ease, color 0.25s ease;
     }
     .demo-pill:hover {
       transform: translateY(-1px);
-      background: var(--surface-2);
-      border-color: var(--line-1);
-      color: var(--ink-0);
+      background: rgba(2, 132, 199, 0.14);
+      border-color: rgba(2, 132, 199, 0.45);
+      color: var(--accent);
     }
     .demo-pill svg {
       color: var(--accent);
       flex-shrink: 0;
     }
-    [data-theme="dark"] .demo-pill { color: var(--ink-1); border-color: rgba(148, 163, 184, 0.22); }
-    [data-theme="dark"] .demo-pill:hover { background: rgba(148, 163, 184, 0.08); color: var(--ink-0); }
+    [data-theme="dark"] .demo-pill { background: rgba(56, 189, 248, 0.1); color: var(--accent); border-color: rgba(56, 189, 248, 0.32); }
+    [data-theme="dark"] .demo-pill:hover { background: rgba(56, 189, 248, 0.16); border-color: rgba(56, 189, 248, 0.5); }
     @media (max-width: 720px) {
       .demo-pill span { display: none; }
       .demo-pill { padding: 8px 10px; margin-right: 4px; }
     }
+
+    .hero-demo-link {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+      margin-top: 14px;
+      color: var(--accent);
+      font-size: 14px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: opacity 0.2s ease;
+    }
+    .hero-demo-link svg { flex-shrink: 0; }
+    .hero-demo-link:hover { opacity: 0.78; text-decoration: underline; }
 
     /* ================================================================ */
     /* HERO - two-column grid with floating right panel                  */
@@ -11909,6 +11924,11 @@
 
       <div class="nav-right">
 
+        <a class="demo-pill" href="/demo" aria-label="Try the live demo">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
+          <span data-i18n="nav.demo">Demo</span>
+        </a>
+
         <a class="github-pill" href="https://github.com/datadrivenconstruction/openconstructionerp" target="_blank" rel="noopener" aria-label="Star us on GitHub">
           <svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor" aria-hidden="true"><path d="M12 0.5C5.65 0.5 0.5 5.65 0.5 12a11.5 11.5 0 0 0 7.86 10.92c.58.1.79-.25.79-.56v-2c-3.2.7-3.87-1.36-3.87-1.36-.52-1.32-1.28-1.68-1.28-1.68-1.04-.71.08-.7.08-.7 1.15.08 1.76 1.18 1.76 1.18 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.55-.29-5.24-1.28-5.24-5.7 0-1.26.45-2.29 1.18-3.1-.12-.29-.51-1.47.11-3.05 0 0 .97-.31 3.18 1.18A11 11 0 0 1 12 6.8a11 11 0 0 1 2.9.39c2.2-1.5 3.17-1.18 3.17-1.18.63 1.58.24 2.76.12 3.05.74.81 1.18 1.84 1.18 3.1 0 4.43-2.7 5.4-5.27 5.69.42.36.78 1.07.78 2.15v3.19c0 .31.21.67.8.56A11.5 11.5 0 0 0 23.5 12C23.5 5.65 18.35.5 12 .5Z"/></svg>
           <span data-i18n="nav.github">GitHub</span>
@@ -11943,6 +11963,7 @@
 
   <!-- Mobile menu overlay - shown when body has .nav-open -->
   <div class="mobile-menu" id="mobile-menu" role="dialog" aria-label="Mobile navigation" aria-modal="true">
+    <a href="/demo"><span data-i18n="nav.demo">Demo</span><svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
     <a href="#tour"><span data-i18n="nav.tour">Tour</span><svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
     <a href="#compare"><span data-i18n="nav.compare">Compare</span><svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
     <a href="#pricing"><span data-i18n="nav.pricing">Pricing</span><svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
@@ -12266,6 +12287,10 @@
               <span id="hero-dl-label" data-i18n="hero.dl_btn_generic">Download the desktop app</span>
               <span class="hero-dl-sub" data-i18n="hero.dl_btn_sub">Free - no Python, no Docker, nothing to set up</span>
             </span>
+          </a>
+          <a class="hero-demo-link" href="/demo">
+            <svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
+            <span data-i18n="hero.try_demo">Or try the live demo in your browser, nothing to install</span>
           </a>
         </div>
         <div class="hero-secondary-row">
