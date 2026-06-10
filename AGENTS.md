@@ -48,6 +48,14 @@ make db-reset         # DESTRUCTIVE: drop + recreate + migrate + seed
 # Single module: make module-test NAME=oe_boq
 ```
 
+## Branching Strategy
+
+- **main** — current development working directory. Always the latest image.
+- **Feature branches** — created from main, rebased onto main when merging. After rebase, `git merge --no-ff` to preserve history.
+- **Upstream sync** — when upstream `origin/main` advances, rebase main onto it, then force-push fork/main. Feature branches then rebase onto the new fork/main.
+- **Releases** — pushing a `v*` tag on main triggers `.github/workflows/release.yml`: builds Docker image, pushes to GHCR, creates GitHub Release.
+- **TCG project** — `tcg-project` branch is a single source of truth for all TCG project files, reset to main whenever TCG work is consolidated.
+
 ## Key Conventions
 
 - **Lint/format tools**: ruff (backend, NOT flake8), prettier/eslint (frontend)
