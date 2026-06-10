@@ -7,13 +7,11 @@ import {
   Search, Plus, Layers, ChevronDown, ChevronLeft, ChevronRight, MoreHorizontal,
   Copy, Trash2, Download, ExternalLink, FileSpreadsheet, X, Sparkles, Loader2,
   Upload, Tag, Eye, Share2, LayoutGrid, Table2, ArrowUpDown, BarChart3, AlertCircle,
-  CheckSquare, Square as SquareIcon, Library,
+  CheckSquare, Square as SquareIcon,
 } from 'lucide-react';
-import { Button, Card, Badge, DismissibleInfo, IntroRichText, EmptyState, SkeletonGrid, Breadcrumb } from '@/shared/ui';
-import { PageHeader } from '@/shared/ui/PageHeader';
+import { Button, Card, Badge, EmptyState, InfoHint, SkeletonGrid } from '@/shared/ui';
 import { apiGet, apiPost, apiDelete } from '@/shared/lib/api';
 import { getIntlLocale } from '@/shared/lib/formatters';
-import { copyToClipboard } from '@/shared/lib/browser';
 import { useToastStore } from '@/stores/useToastStore';
 import {
   assembliesApi,
@@ -104,6 +102,7 @@ export function AssembliesPage() {
   const [showAiGenerate, setShowAiGenerate] = useState(false);
   const [showImportModal, setShowImportModal] = useState(false);
   const [tagFilter, setTagFilter] = useState('');
+  const [showHelp, setShowHelp] = useState(false);
 
   // Sort, view, multi-select state
   const [sortKey, setSortKey] = useState<SortKey>('updated_at');
@@ -353,20 +352,25 @@ export function AssembliesPage() {
     }).format(n);
 
   return (
-    <div className="space-y-5 animate-fade-in">
-      <Breadcrumb items={[{ label: t('nav.assemblies', 'Assemblies') }]} />
-      {/* Canonical top block — module name + icon are shown in the global top
-          app bar. The page renders only its (contextual) subtitle and the
-          action stack. */}
-      <PageHeader
-        srTitle={t('assemblies.title', 'Assemblies')}
-        subtitle={
-          total > 0
-            ? `${total} ${t('assemblies.assemblies_found', 'assemblies')}`
-            : t('assemblies.description', 'Reusable cost recipes')
-        }
-        actions={
-          <>
+    <div className="w-full animate-fade-in">
+      {/* Header — compact single-row: title + counter chip + action stack
+          on the right. The previous header burned ~80px on a 2xl headline +
+          paragraph subtitle that just restated what the page is. */}
+      <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
+        <div className="flex items-center gap-2.5 min-w-0">
+          <span className="shrink-0 w-7 h-7 rounded-lg bg-gradient-to-br from-oe-blue to-sky-500 text-white inline-flex items-center justify-center shadow-sm">
+            <Layers className="w-3.5 h-3.5" />
+          </span>
+          <h1 className="text-base lg:text-lg leading-none font-semibold text-content-primary">
+            {t('assemblies.title', 'Assemblies')}
+          </h1>
+          <span className="text-xs text-content-tertiary tabular-nums">
+            {total > 0
+              ? `${total} ${t('assemblies.assemblies_found', 'assemblies')}`
+              : t('assemblies.description', 'Reusable cost recipes')}
+          </span>
+        </div>
+        <div className="flex items-center gap-1.5">
           <div className="relative">
             <Button
               variant="secondary"
@@ -433,17 +437,6 @@ export function AssembliesPage() {
           <Button
             variant="secondary"
             size="sm"
-            icon={<Library size={14} />}
-            onClick={() => navigate('/assemblies/library')}
-            title={t('assemblies.browse_library_hint', {
-              defaultValue: 'Browse the built-in canonical recipe templates and apply one as a starting point',
-            })}
-          >
-            {t('assemblies.browse_library', { defaultValue: 'Browse Library' })}
-          </Button>
-          <Button
-            variant="secondary"
-            size="sm"
             icon={<Upload size={14} />}
             onClick={() => setShowImportModal(true)}
           >
@@ -454,48 +447,19 @@ export function AssembliesPage() {
             size="sm"
             icon={<Sparkles size={14} />}
             onClick={() => setShowAiGenerate(true)}
+            className="border-violet-300/40 text-violet-600 hover:bg-violet-50 dark:border-violet-700/30 dark:text-violet-400 dark:hover:bg-violet-950/30"
           >
             {t('assemblies.ai_generate', { defaultValue: 'AI Generate' })}
           </Button>
           <Button
             variant="primary"
-            size="sm"
-            icon={<Plus size={14} />}
+            icon={<Plus size={16} />}
             onClick={() => setCreateModalOpen(true)}
           >
             {t('assemblies.new_assembly', 'New Assembly')}
           </Button>
-          </>
-        }
-      />
-
-      {/* Intro / help banner — collapsible, remembers its state per page.
-          Explains the assembly recipe metaphor and how it ties into the
-          BOQ on first visit, then folds to a one-line header for returners. */}
-      <DismissibleInfo
-        storageKey="assemblies"
-        title={t('assemblies.intro_title', { defaultValue: 'Price recurring work once, reuse it everywhere' })}
-        more={t('assemblies.intro_more', { defaultValue: '' }) ? <IntroRichText text={t('assemblies.intro_more')} /> : undefined}
-        links={[
-          {
-            label: t('assemblies.browse_library', { defaultValue: 'Browse Library' }),
-            onClick: () => navigate('/assemblies/library'),
-          },
-          {
-            label: t('assemblies.new_assembly', { defaultValue: 'New Assembly' }),
-            onClick: () => navigate('/assemblies/new'),
-          },
-          {
-            label: t('nav.boq', { defaultValue: 'Bill of Quantities' }),
-            onClick: () => navigate('/boq'),
-          },
-        ]}
-      >
-        {t('assemblies.intro_body', {
-          defaultValue:
-            'Assemblies are reusable cost recipes that bundle materials, labour and equipment into one composite rate, for example a reinforced concrete wall combining concrete, rebar, formwork and labour. Apply an assembly to a BOQ position to auto-populate its component costs and keep rates consistent across the project.',
-        })}
-      </DismissibleInfo>
+        </div>
+      </div>
 
       {/* Stats banner — surfaces aggregated insight from /stats/ + the
           full-set fetch so the list feels like an estimating tool, not a
@@ -504,7 +468,7 @@ export function AssembliesPage() {
           Hidden when there are zero assemblies; renders skeleton rows
           while banner data is loading. */}
       {(banner.totalCount > 0 || allForBanner) && (
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-5">
+        <div className="mb-3 grid grid-cols-2 gap-2 sm:grid-cols-4 lg:grid-cols-5">
           <StatTile
             icon={<Layers size={14} />}
             label={t('assemblies.stat_total', { defaultValue: 'Assemblies' })}
@@ -573,7 +537,7 @@ export function AssembliesPage() {
           /stats/. Acts as a faster category picker than the dropdown and
           telegraphs distribution at a glance. */}
       {Object.keys(statsData?.by_category ?? {}).length > 0 && (
-        <div className="flex flex-wrap items-center gap-1.5">
+        <div className="mb-3 flex flex-wrap items-center gap-1.5">
           <button
             type="button"
             onClick={() => handleCategoryChange('')}
@@ -632,6 +596,20 @@ export function AssembliesPage() {
             </>
           )}
         </div>
+      )}
+
+      {/* Explanation — collapsible. The full assemblies recipe metaphor
+          is helpful on first visit but turns into chrome on every return;
+          gated behind a tiny "What are assemblies?" toggle so it doesn't
+          eat ~80px on every page load. */}
+      {showHelp && (
+        <InfoHint
+          className="mb-3"
+          text={t('assemblies.what_are_assemblies', {
+            defaultValue:
+              'Assemblies are reusable cost recipes that combine multiple resources (materials, labor, equipment) into a single composite rate. For example, a "Reinforced Concrete Wall" assembly includes concrete, rebar, formwork, and labor. Apply assemblies to BOQ positions to auto-populate component costs.',
+          })}
+        />
       )}
 
       {/* Search & Filters — flat toolbar (was a Card with internal p-4
@@ -769,6 +747,19 @@ export function AssembliesPage() {
             </button>
           </div>
 
+          {/* "What are assemblies?" toggle — sits inline with the filter
+              row so the help banner is one click away without taking
+              up vertical space by default. */}
+          <button
+            type="button"
+            onClick={() => setShowHelp((v) => !v)}
+            className="h-10 px-3 text-xs rounded-lg border border-border-light text-content-tertiary hover:border-content-tertiary hover:text-content-secondary transition-colors inline-flex items-center gap-1.5 shrink-0"
+            title={t('assemblies.what_are_assemblies_toggle', { defaultValue: 'What are assemblies?' })}
+          >
+            {showHelp
+              ? t('common.hide_help', { defaultValue: 'Hide help' })
+              : t('assemblies.what_are_assemblies_toggle', { defaultValue: 'What are assemblies?' })}
+          </button>
       </div>
 
       {/* Bulk-action bar — slides in when 1+ items selected. Sticky-ish
@@ -821,7 +812,7 @@ export function AssembliesPage() {
             query || category
               ? t('assemblies.no_results_hint', { defaultValue: 'Try adjusting your search or filters' })
               : t('assemblies.empty_hint', {
-                  defaultValue: 'Create your first assembly to build reusable cost recipes, or browse the built-in template library for a starting point',
+                  defaultValue: 'Create your first assembly to build reusable cost recipes',
                 })
           }
           action={
@@ -1410,11 +1401,7 @@ function AIGenerateModal({
       maximumFractionDigits: 2,
     }).format(n);
 
-  // The backend "confidence" is purely a function of how many catalogue rows
-  // matched the keyword search (it is a lexical ILIKE search, not a model).
-  // Surface it honestly as "match coverage" so a non-expert does not read it
-  // as AI certainty.
-  const coverageColor = result
+  const confidenceColor = result
     ? result.confidence >= 0.7
       ? 'text-emerald-600'
       : result.confidence >= 0.4
@@ -1422,12 +1409,12 @@ function AIGenerateModal({
         : 'text-red-500'
     : '';
 
-  const coverageLabel = result
+  const confidenceLabel = result
     ? result.confidence >= 0.7
-      ? t('assemblies.coverage_high', { defaultValue: 'Strong' })
+      ? t('assemblies.confidence_high', { defaultValue: 'High' })
       : result.confidence >= 0.4
-        ? t('assemblies.coverage_medium', { defaultValue: 'Partial' })
-        : t('assemblies.coverage_low', { defaultValue: 'Sparse' })
+        ? t('assemblies.confidence_medium', { defaultValue: 'Medium' })
+        : t('assemblies.confidence_low', { defaultValue: 'Low' })
     : '';
 
   return (
@@ -1447,7 +1434,7 @@ function AIGenerateModal({
                 {t('assemblies.ai_generate_title', { defaultValue: 'AI Assembly Generator' })}
               </h2>
               <p className="text-xs text-content-tertiary">
-                {t('assemblies.ai_generate_desc', { defaultValue: 'Describe what you need and we search the cost catalogue for matching priced components' })}
+                {t('assemblies.ai_generate_desc', { defaultValue: 'Describe what you need and AI will find matching components' })}
               </p>
             </div>
           </div>
@@ -1554,16 +1541,7 @@ function AIGenerateModal({
                   <p className="text-xs text-content-tertiary mt-0.5">
                     {result.source_items_count} {t('assemblies.items_found', { defaultValue: 'items found' })}
                     {' / '}
-                    <span
-                      title={t('assemblies.coverage_hint', {
-                        defaultValue:
-                          'How many of the components were matched to a priced catalogue item by the keyword search. This reflects catalogue coverage, not AI certainty - always review the matched rates.',
-                      })}
-                      className="cursor-help underline decoration-dotted decoration-content-quaternary underline-offset-2"
-                    >
-                      {t('assemblies.match_coverage', { defaultValue: 'Match coverage' })}
-                    </span>
-                    : <span className={`font-semibold ${coverageColor}`}>{coverageLabel}</span>
+                    {t('assemblies.confidence', { defaultValue: 'Confidence' })}: <span className={`font-semibold ${confidenceColor}`}>{confidenceLabel}</span>
                   </p>
                 </div>
                 <div className="text-right">
@@ -1814,7 +1792,7 @@ function AssemblyCard({
               onClick={() => {
                 setMenuOpen(false);
                 const text = `${assembly.code}\t${assembly.name}\t${assembly.unit}\t${assembly.total_rate}\t${assembly.category}`;
-                copyToClipboard(text).catch(() => {});
+                navigator.clipboard.writeText(text).catch(() => {});
               }}
               className="flex w-full items-center gap-2 px-3 py-2 text-sm text-content-primary hover:bg-surface-secondary transition-colors"
             >

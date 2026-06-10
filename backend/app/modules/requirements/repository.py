@@ -1,7 +1,7 @@
 """‌⁠‍Requirements & Quality Gates data access layer.
 
 All database queries for requirement sets, requirements, and gate results
-live here. No business logic - pure data access.
+live here. No business logic — pure data access.
 """
 
 import uuid

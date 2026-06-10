@@ -1,13 +1,13 @@
 """‌⁠‍Validation API routes.
 
 Endpoints:
-    POST  /validation/run                    - Run validation on a BOQ
-    POST  /validation/import-ids             - Import IDS rules (multipart upload)
-    GET   /validation/reports?project_id=X   - List validation reports
-    GET   /validation/reports/{report_id}    - Get single report
-    GET   /validation/reports/{id}/sarif     - Export report as SARIF v2.1.0 JSON
-    DELETE /validation/reports/{report_id}   - Delete report
-    GET   /validation/rule-sets              - List available rule sets
+    POST  /validation/run                    — Run validation on a BOQ
+    POST  /validation/import-ids             — Import IDS rules (multipart upload)
+    GET   /validation/reports?project_id=X   — List validation reports
+    GET   /validation/reports/{report_id}    — Get single report
+    GET   /validation/reports/{id}/sarif     — Export report as SARIF v2.1.0 JSON
+    DELETE /validation/reports/{report_id}   — Delete report
+    GET   /validation/rule-sets              — List available rule sets
 """
 
 import logging
@@ -58,7 +58,7 @@ async def _require_project_access(
     Central choke-point for project-scoped validation endpoints. Mirrors
     the pattern used by ``finance.router._require_project_access``.
     Raises HTTP 403 if the user has no access. ``None`` project_id is a
-    no-op - callers that accept global aggregates must scope at the
+    no-op — callers that accept global aggregates must scope at the
     service layer.
     """
     if project_id is None:
@@ -87,7 +87,7 @@ async def _require_project_access(
             user = await user_repo.get_by_id(user_id)
             if user is not None and getattr(user, "role", "") == "admin":
                 return
-        except Exception:  # noqa: BLE001 - best-effort admin check
+        except Exception:  # noqa: BLE001 — best-effort admin check
             pass
 
         if str(getattr(project, "owner_id", "")) != str(user_id):
@@ -121,7 +121,7 @@ async def _require_report_access(
     return report
 
 
-# ── POST /run - Run validation on a BOQ ──────────────────────────────────
+# ── POST /run — Run validation on a BOQ ──────────────────────────────────
 
 
 @router.post(
@@ -181,7 +181,7 @@ async def run_validation(
     )
 
 
-# ── POST /check-bim-model - Run per-element BIM rules ───────────────────
+# ── POST /check-bim-model — Run per-element BIM rules ───────────────────
 
 
 @router.post(
@@ -201,7 +201,7 @@ async def check_bim_model(
     each failure back to the offending element. Large models are capped at
     ``MAX_RESULTS_PER_REPORT`` failures with a ``_truncated`` sentinel.
     """
-    # Ownership check - resolve the BIM model to its project first.
+    # Ownership check — resolve the BIM model to its project first.
     from app.modules.bim_hub.repository import BIMModelRepository
 
     model_repo = BIMModelRepository(session)
@@ -229,7 +229,7 @@ async def check_bim_model(
     return ValidationReportResponse.model_validate(report)
 
 
-# ── GET /reports - List validation reports ───────────────────────────────
+# ── GET /reports — List validation reports ───────────────────────────────
 
 
 @router.get(
@@ -251,7 +251,7 @@ async def list_reports(
     return [ValidationReportResponse.model_validate(r) for r in reports]
 
 
-# ── GET /reports/{report_id} - Get single report ─────────────────────────
+# ── GET /reports/{report_id} — Get single report ─────────────────────────
 
 
 @router.get(
@@ -270,7 +270,7 @@ async def get_report(
     return ValidationReportResponse.model_validate(report)
 
 
-# ── DELETE /reports/{report_id} - Delete report ──────────────────────────
+# ── DELETE /reports/{report_id} — Delete report ──────────────────────────
 
 
 @router.delete(
@@ -294,7 +294,7 @@ async def delete_report(
         )
 
 
-# ── POST /import-ids - Import buildingSMART IDS rules ─────────────────────
+# ── POST /import-ids — Import buildingSMART IDS rules ─────────────────────
 
 
 @router.post(
@@ -302,10 +302,7 @@ async def delete_report(
     dependencies=[Depends(RequirePermission("validation.create"))],
 )
 async def import_ids(
-    user_id: CurrentUserId,
-    session: SessionDep,
     file: UploadFile = File(..., description="An IDS XML file (.ids or .xml)"),
-    project_id: uuid.UUID = Query(..., description="Project the imported rules belong to"),
     rule_set: str = Query(
         default="ids_custom",
         description="Rule set name to register the imported rules under.",
@@ -313,19 +310,10 @@ async def import_ids(
 ) -> dict[str, Any]:
     """Parse an IDS file and register one ValidationRule per <specification>.
 
-    Requires ``project_id`` and verifies the caller owns the project before
-    registering, mirroring every other validation endpoint. The rules are
-    added to the in-process rule registry under a project-namespaced rule
-    set (``{rule_set}:{project_id}``) so imported rules cannot leak across
-    tenants or projects.  Returns the count and the list of generated rule
-    ids.
-
-    NOTE: the registry is process-global and in-memory, so namespacing gates
-    which ``/validation/run`` calls can apply these rules but they are not yet
-    persisted per project (lost on restart). Durable per-project storage needs
-    a dedicated table - tracked as residual.
+    The rules are added to the in-process rule registry under ``rule_set``
+    (default ``ids_custom``) so subsequent ``/validation/run`` calls can
+    apply them.  Returns the count and the list of generated rule ids.
     """
-    await _require_project_access(session, project_id, user_id)
     try:
         payload = await file.read()
     except Exception as exc:  # noqa: BLE001
@@ -348,22 +336,20 @@ async def import_ids(
             detail=str(exc),
         ) from exc
 
-    scoped_rule_set = f"{rule_set}:{project_id}"
     rule_ids: list[str] = []
     for rule in rules:
-        rule_registry.register(rule, rule_sets=[scoped_rule_set, "IDS"])
+        rule_registry.register(rule, rule_sets=[rule_set, "IDS"])
         rule_ids.append(rule.rule_id)
 
     return {
         "rules_created": len(rule_ids),
         "rule_ids": rule_ids,
-        "rule_set": scoped_rule_set,
-        "project_id": str(project_id),
+        "rule_set": rule_set,
         "filename": file.filename,
     }
 
 
-# ── GET /reports/{id}/sarif - Export report as SARIF v2.1.0 ───────────────
+# ── GET /reports/{id}/sarif — Export report as SARIF v2.1.0 ───────────────
 
 
 @router.get(
@@ -386,7 +372,7 @@ async def export_report_sarif(
     return JSONResponse(content=sarif_doc, media_type="application/sarif+json")
 
 
-# ── GET /rule-sets - List available rule sets ─────────────────────────────
+# ── GET /rule-sets — List available rule sets ─────────────────────────────
 
 
 @router.get(
@@ -418,7 +404,7 @@ async def list_rule_sets(
 async def validation_report_similar(
     report_id: uuid.UUID,
     session: SessionDep,
-    user_id: CurrentUserId,
+    _user_id: CurrentUserId,
     limit: int = Query(default=5, ge=1, le=20),
     cross_project: bool = Query(default=True),
 ) -> dict[str, Any]:
@@ -426,9 +412,9 @@ async def validation_report_similar(
     from app.core.vector_index import find_similar
     from app.modules.validation.vector_adapter import validation_report_adapter
 
-    # Verify the caller owns the source report's project before running
-    # cross-project similarity, mirroring get_report/export_report_sarif.
-    row = await _require_report_access(session, report_id, user_id)
+    row = await session.get(ValidationReport, report_id)
+    if row is None:
+        raise HTTPException(status_code=404, detail="Validation report not found")
     project_id = str(row.project_id) if row.project_id else None
     hits = await find_similar(
         validation_report_adapter,

@@ -1,9 +1,9 @@
 """‌⁠‍Integrations ORM models.
 
 Tables:
-    oe_integrations_webhook  - user-defined webhook endpoints
-    oe_integrations_delivery - delivery log for each webhook dispatch attempt
-    oe_integrations_config   - chat connector configs (Teams, Slack, Telegram, etc.)
+    oe_integrations_webhook  — user-defined webhook endpoints
+    oe_integrations_delivery — delivery log for each webhook dispatch attempt
+    oe_integrations_config   — chat connector configs (Teams, Slack, Telegram, etc.)
 """
 
 import uuid

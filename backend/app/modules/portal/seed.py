@@ -2,7 +2,7 @@
 """‌⁠‍Deterministic seed data for the Customer & Partner Portal.
 
 Generates:
-    20 portal users - 4 clients, 3 investors, 3 consultants,
+    20 portal users — 4 clients, 3 investors, 3 consultants,
                       4 subcontractors, 4 suppliers, 2 building users
     3-5 access rules per user across the supplied project IDs
     30 notifications (mix read/unread, across all kinds)
@@ -145,10 +145,7 @@ async def seed_portal_demo(
                 permission=permission,
                 granted_at=now - timedelta(days=10 - r_idx),
             )
-            # merge (not add) so reruns are genuinely idempotent: the IDs are
-            # deterministic, so a second boot would otherwise re-INSERT the same
-            # primary key and raise a UniqueViolation that aborts the seed.
-            await session.merge(rule)
+            session.add(rule)
             rules_created += 1
     await session.flush()
 
@@ -167,7 +164,7 @@ async def seed_portal_demo(
             payload={"seq": n_idx, "kind": kind},
             read_at=read_at,
         )
-        await session.merge(notif)
+        session.add(notif)
         notifications_created += 1
     await session.flush()
 
@@ -184,7 +181,7 @@ async def seed_portal_demo(
             occurred_at=now - timedelta(minutes=l_idx * 7),
             ip_address=f"10.0.{l_idx // 256}.{l_idx % 256}",
         )
-        await session.merge(entry)
+        session.add(entry)
         access_logs_created += 1
     await session.flush()
 

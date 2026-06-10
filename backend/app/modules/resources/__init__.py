@@ -7,7 +7,7 @@ conflict detection, skill-based matching, and resource requests.
 
 
 async def on_startup() -> None:
-    """‌⁠‍Module startup hook - register permissions."""
+    """‌⁠‍Module startup hook — register permissions."""
     from app.modules.resources.permissions import register_resources_permissions
 
     register_resources_permissions()

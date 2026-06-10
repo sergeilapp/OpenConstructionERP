@@ -1,9 +1,9 @@
 """‌⁠‍Collaboration ORM models.
 
 Tables:
-    oe_collaboration_comment   - threaded comments on any entity
-    oe_collaboration_mention   - @mentions within comments
-    oe_collaboration_viewpoint - spatial viewpoints (PDF section, BIM camera, etc.)
+    oe_collaboration_comment   — threaded comments on any entity
+    oe_collaboration_mention   — @mentions within comments
+    oe_collaboration_viewpoint — spatial viewpoints (PDF section, BIM camera, etc.)
 """
 
 import uuid

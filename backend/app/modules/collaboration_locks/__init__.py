@@ -1,4 +1,4 @@
-"""‌⁠‍Collaboration-locks module - layer 1 of the real-time collab plan.
+"""‌⁠‍Collaboration-locks module — layer 1 of the real-time collab plan.
 
 Provides pessimistic soft locks + presence broadcast for any entity
 registered in :data:`schemas.ALLOWED_LOCK_ENTITY_TYPES`.  See

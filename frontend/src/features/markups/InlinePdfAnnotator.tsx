@@ -27,7 +27,6 @@ import {
   Stamp,
 } from 'lucide-react';
 import { Button } from '@/shared/ui';
-import { uuid } from '@/shared/lib/browser';
 import { useToastStore } from '@/stores/useToastStore';
 import { useAuthStore } from '@/stores/useAuthStore';
 import { createMarkup, fetchMarkups } from './api';
@@ -696,7 +695,7 @@ export function InlinePdfAnnotator({
     if (activeTool === 'stamp') {
       const stampDef = availableStamps.find((s) => s.name === selectedStamp);
       const newAnnotation: DrawnAnnotation = {
-        id: uuid(),
+        id: crypto.randomUUID(),
         tool: 'stamp',
         points: [toPdfPoint(coords)],
         coordSpace: 'pdf',
@@ -733,7 +732,7 @@ export function InlinePdfAnnotator({
     }
 
     const newAnnotation: DrawnAnnotation = {
-      id: uuid(),
+      id: crypto.randomUUID(),
       tool: activeTool,
       points: [toPdfPoint(drawStart), toPdfPoint(drawEnd)],
       coordSpace: 'pdf',
@@ -751,7 +750,7 @@ export function InlinePdfAnnotator({
       return;
     }
     const newAnnotation: DrawnAnnotation = {
-      id: uuid(),
+      id: crypto.randomUUID(),
       tool: 'text',
       points: [toPdfPoint(textPosition)],
       coordSpace: 'pdf',

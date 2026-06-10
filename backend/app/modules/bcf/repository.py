@@ -1,7 +1,7 @@
 """‌⁠‍BCF data-access layer.
 
 Thin async wrappers around the ORM so the service layer never builds raw
-SQLAlchemy statements. All reads are project-scoped - the service is
+SQLAlchemy statements. All reads are project-scoped — the service is
 responsible for verifying the caller owns the project before calling in.
 """
 
@@ -47,7 +47,7 @@ class BCFRepository:
 
         A ``select()`` with explicit ``selectinload`` is used instead of
         ``session.get`` so the collections are populated *inside* the async
-        context - accessing them later during response serialisation (after
+        context — accessing them later during response serialisation (after
         the request session has committed) would otherwise emit a lazy load
         and raise ``MissingGreenlet``.
         """

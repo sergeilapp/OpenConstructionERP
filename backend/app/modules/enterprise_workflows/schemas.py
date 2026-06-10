@@ -1,4 +1,4 @@
-"""‌⁠‍Enterprise Workflows Pydantic schemas - request/response models."""
+"""‌⁠‍Enterprise Workflows Pydantic schemas — request/response models."""
 
 from datetime import datetime
 from typing import Any

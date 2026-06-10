@@ -21,7 +21,6 @@ import pytest
 import pytest_asyncio
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
-from httpx import ASGITransport, AsyncClient
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
 
 from app.core.audit import AuditEntry
@@ -50,24 +49,12 @@ def fresh_registry(monkeypatch):
 class TestPermissionsMatrixPayload:
     def test_empty_registry_returns_canonical_roles_only(self, fresh_registry):
         payload = _build_matrix_payload()
-        # ``roles`` is the matrix *column* set: the four permission-bearing
-        # roles the UI renders cells for. The three field-worker personas
-        # (field_worker / site_foreman / site_inspector) carry no
-        # permissions yet (register_field_role_permissions is a design-stage
-        # stub), so they are intentionally omitted from the column set even
-        # though they exist in the canonical role hierarchy below.
         assert payload["roles"] == ["viewer", "editor", "manager", "admin"]
         assert payload["modules"] == []
         # Role hierarchy is rendered as {role_value: int_level} so the
         # UI can label / sort columns without re-implementing the
-        # canonical order on its side. This mirrors the full canonical
-        # ROLE_HIERARCHY, including the field-worker personas whose ranks
-        # are NEGATIVE (below viewer=0) so a legacy default-`-1` lookup
-        # can never promote a field worker above a viewer.
+        # canonical order on its side.
         assert payload["role_hierarchy"] == {
-            "field_worker": -2,
-            "site_foreman": -1,
-            "site_inspector": 0,
             "viewer": 0,
             "editor": 1,
             "manager": 2,
@@ -180,17 +167,13 @@ class TestPermissionsMatrixEdit:
     async def test_patch_toggles_min_role_and_writes_audit(self, edit_app):
         app, sessionmaker = edit_app
         _set_admin(app)
+        client = TestClient(app)
 
-        # Drive the app with an in-process AsyncClient on THIS event loop. The
-        # sync TestClient runs the handler on a separate anyio portal loop,
-        # which would hand the request a DB connection bound to a different
-        # loop than the engine - the source of "attached to a different loop".
-        async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
-            # Flip projects.create from editor → manager.
-            resp = await client.patch(
-                "/v1/admin/permissions/projects.create",
-                json={"min_role": "manager"},
-            )
+        # Flip projects.create from editor → manager.
+        resp = client.patch(
+            "/v1/admin/permissions/projects.create",
+            json={"min_role": "manager"},
+        )
         assert resp.status_code == 200, resp.text
         body = resp.json()
         assert body["previous_min_role"] == "editor"
@@ -247,18 +230,16 @@ class TestPermissionsMatrixEdit:
         """``viewer-default`` flips read-style keys to viewer."""
         app, sessionmaker = edit_app
         _set_admin(app)
+        client = TestClient(app)
 
-        # In-process AsyncClient on THIS loop (see the patch test above for
-        # why the sync TestClient cannot be used with a loop-bound engine).
-        async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
-            # projects.read is already viewer — flip it to editor first so
-            # the preset has something to undo.
-            await client.patch(
-                "/v1/admin/permissions/projects.read",
-                json={"min_role": "editor"},
-            )
+        # projects.read is already viewer — flip it to editor first so
+        # the preset has something to undo.
+        client.patch(
+            "/v1/admin/permissions/projects.read",
+            json={"min_role": "editor"},
+        )
 
-            resp = await client.post("/v1/admin/permissions/preset/viewer-default")
+        resp = client.post("/v1/admin/permissions/preset/viewer-default")
         assert resp.status_code == 200, resp.text
         body = resp.json()
         assert body["preset"] == "viewer-default"

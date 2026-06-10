@@ -36,7 +36,6 @@ import {
   ArrowUpRight,
   Type,
   Square,
-  RectangleHorizontal,
   Highlighter,
   Loader2,
   Link2,
@@ -75,16 +74,6 @@ import {
   formatScaleRatio,
 } from './data/scale-helpers';
 import {
-  hitTest,
-  insertVertexAt,
-  deleteVertexAt,
-  translatePoints,
-  recomputeMeasurement,
-  supportsVariableVertices,
-  minVertices,
-  type HitResult,
-} from './data/hit-test';
-import {
   SHORTCUT_LETTER,
   labelWithShortcut,
   shortcutToTool,
@@ -111,7 +100,7 @@ pdfjsLib.GlobalWorkerOptions.workerSrc = new URL(
 
 /* ── Types ─────────────────────────────────────────────────────────── */
 
-type MeasureTool = 'select' | 'distance' | 'polyline' | 'area' | 'rectarea' | 'volume' | 'count'
+type MeasureTool = 'select' | 'distance' | 'polyline' | 'area' | 'volume' | 'count'
   | 'cloud' | 'arrow' | 'text' | 'rectangle' | 'highlight';
 
 /** Annotation-specific tool types */
@@ -177,12 +166,6 @@ interface Measurement {
   linkedBoqId?: string;
   /** Human label of the linked position (description), for tooltip. */
   linkedPositionLabel?: string;
-  /** AI-suggested but not yet confirmed by the user (issue #194 Recognize).
-   *  Suggested measurements render dashed/translucent and are NEVER persisted
-   *  until the user accepts them (which clears this flag). */
-  suggested?: boolean;
-  /** Recognition confidence 0..1, present only on AI-sourced measurements. */
-  confidence?: number;
 }
 
 /* ── Annotation Colors ───────────────────────────────────────────── */
@@ -238,11 +221,7 @@ type UndoOperation =
   | { kind: 'complete_measurement'; measurement: Measurement; previousActivePoints: Point[] }
   | { kind: 'add_count_point'; measurementId: string; point: Point; wasNew: boolean; previousMeasurement: Measurement | null }
   | { kind: 'delete_measurement'; measurement: Measurement }
-  | { kind: 'change_annotation'; measurementId: string; previousAnnotation: string }
-  // In-canvas geometry edit (#194 Feature 1). Both kinds snapshot the
-  // pre-edit measurement so undo restores the exact prior geometry +
-  // derived value; redo replays the post-edit snapshot.
-  | { kind: 'edit_geometry'; measurementId: string; previousMeasurement: Measurement; nextMeasurement: Measurement };
+  | { kind: 'change_annotation'; measurementId: string; previousAnnotation: string };
 
 /* ── Component ─────────────────────────────────────────────────────── */
 
@@ -380,38 +359,6 @@ export default function TakeoffViewerModule({
   // Selected measurement (drives the right-side Properties panel).
   const [selectedMeasurementId, setSelectedMeasurementId] = useState<string | null>(null);
 
-  /* ── In-canvas editing (#194 Feature 1) ──────────────────────────────
-   * Drag transient lives in a ref so mid-drag mousemove never triggers a
-   * re-render storm. A single `dragPreview` state holds the live mutated
-   * points the overlay draws for the one measurement being reshaped; the
-   * commit lands on mouseup, which is also where the undo frame + the
-   * server-authoritative PATCH (via the persistence hook) fire. */
-  const dragRef = useRef<{
-    mode: 'vertex' | 'shape';
-    measurementId: string;
-    /** Pre-edit measurement snapshot for the undo frame + abort restore. */
-    original: Measurement;
-    /** Original points captured at drag start (vertex / shape source). */
-    origPoints: Point[];
-    /** Vertex being dragged (vertex mode only). */
-    vertexIndex: number;
-    /** Pointer position at drag start in PDF units (shape mode only). */
-    startPt: Point;
-    /** True once the pointer actually moved, so a plain click that grabs a
-     *  vertex but does not move it produces no edit / undo frame. */
-    moved: boolean;
-    /** The latest dragged points - the authoritative geometry the commit
-     *  uses on mouseup (state only holds the pre-drag copy mid-drag). */
-    lastPoints: Point[];
-  } | null>(null);
-  const [dragPreview, setDragPreview] = useState<
-    { measurementId: string; points: Point[]; label: string; selfIntersecting: boolean } | null
-  >(null);
-  /** The vertex most recently grabbed / hovered on the selected
-   *  measurement, so Delete can remove a vertex (when valid) instead of
-   *  always deleting the whole measurement. Cleared on deselect. */
-  const activeVertexRef = useRef<{ measurementId: string; index: number } | null>(null);
-
   // Legend overlay visibility (bottom-left of canvas).
   const [showLegend, setShowLegend] = useState(true);
 
@@ -536,11 +483,6 @@ export default function TakeoffViewerModule({
     setSettingScale(false);
     setCalibrationMode(false);
     setScalePoints([]);
-    // Abandon any in-flight in-canvas edit drag so it cannot bleed onto the
-    // new page (#194).
-    dragRef.current = null;
-    activeVertexRef.current = null;
-    setDragPreview(null);
   }, [currentPage]);
 
   /* Deselect a measurement that lives on a different page than the one
@@ -550,16 +492,6 @@ export default function TakeoffViewerModule({
     const m = measurements.find((x) => x.id === selectedMeasurementId);
     if (m && m.page !== currentPage) setSelectedMeasurementId(null);
   }, [currentPage, selectedMeasurementId, measurements]);
-
-  /* Clear the active-vertex tracker whenever the selection changes, so a
-   * stale vertex index from a previously-selected measurement can never
-   * drive a Delete-vertex on the wrong shape (#194). */
-  useEffect(() => {
-    const active = activeVertexRef.current;
-    if (active && active.measurementId !== selectedMeasurementId) {
-      activeVertexRef.current = null;
-    }
-  }, [selectedMeasurementId]);
 
   /* ── Load PDF from URL (filmstrip click / deep link) ────────────── */
 
@@ -748,10 +680,6 @@ export default function TakeoffViewerModule({
       const color = GROUP_COLOR_MAP[m.group] || '#3B82F6';
       ctx.strokeStyle = color;
       ctx.fillStyle = color;
-      // AI suggestions (#194) render translucent + dashed until the user
-      // confirms them, so they read as proposals rather than committed work.
-      ctx.globalAlpha = m.suggested ? 0.5 : 1.0;
-      ctx.setLineDash(m.suggested ? [6 * dpr, 4 * dpr] : []);
 
       if (m.type === 'distance' && m.points.length === 2) {
         const p0 = m.points[0]!;
@@ -990,9 +918,6 @@ export default function TakeoffViewerModule({
         drawAnnotationLabel(m.annotation, rx, ry - 4 * dpr, annoColor);
       }
     }
-    // Reset any AI-suggestion styling before drawing in-progress shapes.
-    ctx.globalAlpha = 1.0;
-    ctx.setLineDash([]);
 
     // Draw active points (in-progress measurement)
     if (activePoints.length > 0) {
@@ -1070,8 +995,7 @@ export default function TakeoffViewerModule({
         ctx.fillRect(rx, ry, rw, rh);
         ctx.globalAlpha = 1;
       }
-      // Measured rectangle previews in measure-blue; annotations keep their color.
-      ctx.strokeStyle = activeTool === 'rectarea' ? '#2563EB' : annotationColor;
+      ctx.strokeStyle = annotationColor;
       ctx.setLineDash([4 * dpr, 4 * dpr]);
       ctx.strokeRect(rx, ry, rw, rh);
       ctx.setLineDash([]);
@@ -1095,123 +1019,7 @@ export default function TakeoffViewerModule({
         ctx.stroke();
       }
     }
-
-    /* ── In-canvas edit handles + drag preview (#194 Feature 1) ──────────
-     * When the select tool is active and a measurement on this page is
-     * selected, draw an edit overlay on top: a highlight outline, filled
-     * vertex handles the user can grab, and hollow "+" midpoint handles on
-     * add-capable types. While a drag is live, the preview points (from
-     * `dragPreview`) replace the committed ones so the shape tracks the
-     * cursor, with a live value readout and an amber bowtie warning. */
-    if (activeTool === 'select') {
-      const selected = measurements.find(
-        (m) => m.id === selectedMeasurementId && m.page === currentPage,
-      );
-      if (selected) {
-        const preview = dragPreview?.measurementId === selected.id ? dragPreview : null;
-        const pts = preview ? preview.points : selected.points;
-        const accent = '#2563EB';
-        ctx.save();
-        ctx.globalAlpha = 1;
-        ctx.setLineDash([]);
-
-        // Outline the selected shape so it reads as active.
-        if (pts.length >= 2) {
-          ctx.strokeStyle = accent;
-          ctx.lineWidth = 1.5 * dpr;
-          ctx.setLineDash([5 * dpr, 4 * dpr]);
-          ctx.beginPath();
-          const isClosed = selected.type === 'area' || selected.type === 'volume' || selected.type === 'cloud';
-          const isRect = selected.type === 'rectangle' || selected.type === 'highlight';
-          if (isRect && pts.length === 2) {
-            const a = pts[0]!;
-            const b = pts[1]!;
-            ctx.strokeRect(
-              Math.min(a.x, b.x) * dpr * zoom,
-              Math.min(a.y, b.y) * dpr * zoom,
-              Math.abs(b.x - a.x) * dpr * zoom,
-              Math.abs(b.y - a.y) * dpr * zoom,
-            );
-          } else {
-            ctx.moveTo(pts[0]!.x * dpr * zoom, pts[0]!.y * dpr * zoom);
-            for (let i = 1; i < pts.length; i++) {
-              ctx.lineTo(pts[i]!.x * dpr * zoom, pts[i]!.y * dpr * zoom);
-            }
-            if (isClosed) ctx.closePath();
-            ctx.stroke();
-          }
-          ctx.setLineDash([]);
-        }
-
-        // Midpoint "+" add-vertex handles (variable-vertex types only).
-        if (supportsVariableVertices(selected.type) && pts.length >= 2 && !preview) {
-          const closed = selected.type === 'area' || selected.type === 'volume' || selected.type === 'cloud';
-          const segCount = closed ? pts.length : pts.length - 1;
-          ctx.strokeStyle = accent;
-          ctx.lineWidth = 1.5 * dpr;
-          for (let i = 0; i < segCount; i++) {
-            const a = pts[i]!;
-            const b = pts[(i + 1) % pts.length]!;
-            const mx = ((a.x + b.x) / 2) * dpr * zoom;
-            const my = ((a.y + b.y) / 2) * dpr * zoom;
-            const r = 4 * dpr;
-            ctx.beginPath();
-            ctx.arc(mx, my, r, 0, Math.PI * 2);
-            ctx.fillStyle = '#ffffff';
-            ctx.globalAlpha = 0.9;
-            ctx.fill();
-            ctx.globalAlpha = 1;
-            ctx.stroke();
-            ctx.beginPath();
-            ctx.moveTo(mx - r * 0.5, my);
-            ctx.lineTo(mx + r * 0.5, my);
-            ctx.moveTo(mx, my - r * 0.5);
-            ctx.lineTo(mx, my + r * 0.5);
-            ctx.stroke();
-          }
-        }
-
-        // Filled vertex handles (the grabbable points).
-        const handleR = 5 * dpr;
-        for (let i = 0; i < pts.length; i++) {
-          const p = pts[i]!;
-          const hx = p.x * dpr * zoom;
-          const hy = p.y * dpr * zoom;
-          ctx.beginPath();
-          ctx.arc(hx, hy, handleR, 0, Math.PI * 2);
-          ctx.fillStyle = '#ffffff';
-          ctx.fill();
-          ctx.lineWidth = 2 * dpr;
-          ctx.strokeStyle = accent;
-          ctx.stroke();
-        }
-
-        // Live value readout + bowtie warning while dragging.
-        if (preview) {
-          const last = pts[pts.length - 1]!;
-          const lx = last.x * dpr * zoom + 10 * dpr;
-          const ly = last.y * dpr * zoom - 10 * dpr;
-          if (preview.label) {
-            ctx.font = `bold ${12 * dpr}px sans-serif`;
-            const txt = preview.label;
-            const w = ctx.measureText(txt).width + 8 * dpr;
-            ctx.fillStyle = isDark ? '#1e293b' : '#ffffff';
-            ctx.globalAlpha = 0.9;
-            ctx.fillRect(lx - 4 * dpr, ly - 12 * dpr, w, 18 * dpr);
-            ctx.globalAlpha = 1;
-            ctx.fillStyle = accent;
-            ctx.fillText(txt, lx, ly);
-          }
-          if (preview.selfIntersecting) {
-            ctx.font = `bold ${11 * dpr}px sans-serif`;
-            ctx.fillStyle = '#f59e0b';
-            ctx.fillText('⚠', last.x * dpr * zoom - 18 * dpr, last.y * dpr * zoom - 10 * dpr);
-          }
-        }
-        ctx.restore();
-      }
-    }
-  }, [measurements, activePoints, currentPage, zoom, settingScale, scalePoints, activeTool, hiddenGroups, scale, annotationColor, rectStartPoint, isDraggingRect, selectedMeasurementId, dragPreview]);
+  }, [measurements, activePoints, currentPage, zoom, settingScale, scalePoints, activeTool, hiddenGroups, scale, annotationColor, rectStartPoint, isDraggingRect]);
 
   /* ── Canvas click handler ────────────────────────────────────────── */
 
@@ -1527,48 +1335,6 @@ export default function TakeoffViewerModule({
         }
         return;
       }
-
-      if (activeTool === 'rectarea') {
-        if (!rectStartPoint) {
-          // First click — set the start corner.
-          setRectStartPoint(point);
-          setActivePoints([point]);
-          pushUndo({ kind: 'add_point', tool: activeTool, point });
-        } else {
-          // Second click — close the rectangle into a measured area polygon.
-          // It is stored as a normal `area` measurement so it reuses all the
-          // existing area rendering, scale-recompute and BOQ-link plumbing.
-          const a = rectStartPoint;
-          const b = point;
-          const corners: Point[] = [
-            { x: a.x, y: a.y },
-            { x: b.x, y: a.y },
-            { x: b.x, y: b.y },
-            { x: a.x, y: b.y },
-          ];
-          const pixArea = polygonAreaPixels(corners);
-          const realArea = toRealArea(pixArea, scale);
-          const perimPx = polygonPerimeterPixels(corners);
-          const realPerim = toRealDistance(perimPx, scale);
-          const newMeasurement: Measurement = {
-            id: `m_${Date.now()}`,
-            type: 'area',
-            points: corners,
-            value: realArea,
-            unit: `${scale.unitLabel}²`,
-            label: `${formatMeasurement(realArea, scale.unitLabel + '²')} (P: ${formatMeasurement(realPerim, scale.unitLabel)})`,
-            annotation: nextAnnotation('area'),
-            page: currentPage,
-            group: activeGroup,
-          };
-          pushUndo({ kind: 'complete_measurement', measurement: newMeasurement, previousActivePoints: [rectStartPoint] });
-          setMeasurements((prev) => [...prev, newMeasurement]);
-          setRectStartPoint(null);
-          setIsDraggingRect(false);
-          setActivePoints([]);
-        }
-        return;
-      }
     },
     [activeTool, activePoints, scale, currentPage, countLabel, settingScale, scalePoints, zoom, pushUndo, nextAnnotation, activeGroup, annotationColor, rectStartPoint],
   );
@@ -1707,237 +1473,11 @@ export default function TakeoffViewerModule({
     [activeTool, activePoints, handleCanvasDblClick],
   );
 
-  /* ── In-canvas editing: live values read through refs ─────────────────
-   * The drag handlers must read the latest measurements / selection /
-   * scale / zoom without re-subscribing (a re-created handler mid-drag
-   * would drop the window mouseup listener). Mirror the few values they
-   * need into refs that the render keeps current. */
-  const measurementsRef = useRef(measurements);
-  measurementsRef.current = measurements;
-  const editScaleRef = useRef(scale);
-  editScaleRef.current = scale;
-  const zoomRef = useRef(zoom);
-  zoomRef.current = zoom;
-  const currentPageRef = useRef(currentPage);
-  currentPageRef.current = currentPage;
-  const hiddenGroupsRef = useRef(hiddenGroups);
-  hiddenGroupsRef.current = hiddenGroups;
-  const selectedMeasurementIdRef = useRef(selectedMeasurementId);
-  selectedMeasurementIdRef.current = selectedMeasurementId;
-
-  /** Convert a pointer event to PDF user units. Mirrors the create-path
-   *  inversion exactly: divide by `zoom` only, never by `dpr` (the overlay
-   *  CSS box is already `viewport.width / dpr`). */
-  const pointerToPdf = useCallback((e: { clientX: number; clientY: number }): Point | null => {
-    const rect = overlayRef.current?.getBoundingClientRect();
-    if (!rect) return null;
-    const z = zoomRef.current || 1;
-    return { x: (e.clientX - rect.left) / z, y: (e.clientY - rect.top) / z };
-  }, []);
-
-  /** Measurements visible on the current page (z-order = draw order), used
-   *  for select-mode hit-testing. Last drawn is on top, so we scan in
-   *  reverse for the topmost hit. Excludes hidden groups + AI suggestions
-   *  (those have their own accept/reject affordances). */
-  const editableOnPage = useCallback((): Measurement[] => {
-    const page = currentPageRef.current;
-    const hidden = hiddenGroupsRef.current;
-    return measurementsRef.current.filter(
-      (m) =>
-        m.page === page &&
-        !m.suggested &&
-        !hidden.has(m.group) &&
-        !(isAnnotationType(m.type) && hidden.has('__annotations__')),
-    );
-  }, []);
-
-  /** Apply a committed geometry edit to a measurement: recompute its value
-   *  + label from the new points and push an undo frame. */
-  const commitGeometryEdit = useCallback(
-    (id: string, original: Measurement, nextPoints: Point[]) => {
-      setMeasurements((prev) => {
-        let nextSnapshot: Measurement | null = null;
-        const updated = prev.map((m) => {
-          if (m.id !== id) return m;
-          const patch = recomputeMeasurement(m, nextPoints, editScaleRef.current);
-          const next: Measurement = {
-            ...m,
-            points: nextPoints,
-            value: patch.value,
-            label: patch.label,
-            unit: patch.unit ?? m.unit,
-            ...(patch.area !== undefined ? { area: patch.area } : {}),
-            ...(patch.width !== undefined ? { width: patch.width } : {}),
-            ...(patch.height !== undefined ? { height: patch.height } : {}),
-          };
-          nextSnapshot = next;
-          return next;
-        });
-        if (nextSnapshot) {
-          pushUndo({
-            kind: 'edit_geometry',
-            measurementId: id,
-            previousMeasurement: { ...original, points: [...original.points] },
-            nextMeasurement: { ...(nextSnapshot as Measurement), points: [...nextPoints] },
-          });
-        }
-        return updated;
-      });
-    },
-    [pushUndo],
-  );
-
-  /** End any active drag, committing or aborting. */
-  const finishDrag = useCallback(
-    (commit: boolean) => {
-      const drag = dragRef.current;
-      dragRef.current = null;
-      setDragPreview(null);
-      if (!drag) return;
-      const live = measurementsRef.current.find((m) => m.id === drag.measurementId);
-      if (!live) return;
-      if (commit && drag.moved) {
-        // The committed geometry is the last dragged points (state only
-        // holds the pre-drag copy mid-drag), recomputed server-side on PATCH.
-        commitGeometryEdit(drag.measurementId, drag.original, drag.lastPoints);
-      } else if (!commit) {
-        // Abort: restore the pre-drag geometry, no undo frame.
-        setMeasurements((prev) =>
-          prev.map((m) =>
-            m.id === drag.measurementId
-              ? { ...drag.original, points: [...drag.original.points] }
-              : m,
-          ),
-        );
-      }
-    },
-    [commitGeometryEdit],
-  );
-
-  /** Mouse-down on the overlay in select mode: hit-test, select, and arm a
-   *  drag. The vertex / edge-midpoint / body matrix follows the #194
-   *  design. */
-  const handleCanvasMouseDown = useCallback(
-    (e: React.MouseEvent<HTMLCanvasElement>) => {
-      if (activeTool !== 'select' || e.button !== 0) return;
-      const pt = pointerToPdf(e);
-      if (!pt) return;
-      const z = zoomRef.current || 1;
-      const onPage = editableOnPage();
-      const selId = selectedMeasurementIdRef.current;
-
-      // Prefer the already-selected measurement so its handles win even when
-      // another shape overlaps; otherwise scan top-to-bottom (reverse z).
-      const ordered: Measurement[] = [];
-      const sel = onPage.find((m) => m.id === selId);
-      if (sel) ordered.push(sel);
-      for (let i = onPage.length - 1; i >= 0; i--) {
-        const m = onPage[i]!;
-        if (m.id !== selId) ordered.push(m);
-      }
-
-      for (const m of ordered) {
-        const isSel = m.id === selId;
-        const hit: HitResult | null = hitTest(pt, m, z, isSel);
-        if (!hit) continue;
-
-        if (m.id !== selId) setSelectedMeasurementId(m.id);
-
-        if (hit.kind === 'vertex') {
-          activeVertexRef.current = { measurementId: m.id, index: hit.index };
-          dragRef.current = {
-            mode: 'vertex',
-            measurementId: m.id,
-            original: { ...m, points: [...m.points] },
-            origPoints: [...m.points],
-            vertexIndex: hit.index,
-            startPt: pt,
-            moved: false,
-            lastPoints: [...m.points],
-          };
-        } else if (hit.kind === 'edge' && supportsVariableVertices(m.type)) {
-          // Insert a vertex at the segment midpoint and immediately drag it.
-          const grown = insertVertexAt(m.points, hit.index);
-          const newIndex = hit.index + 1;
-          activeVertexRef.current = { measurementId: m.id, index: newIndex };
-          dragRef.current = {
-            mode: 'vertex',
-            measurementId: m.id,
-            original: { ...m, points: [...m.points] },
-            origPoints: grown,
-            vertexIndex: newIndex,
-            startPt: pt,
-            moved: true, // adding a vertex is itself an edit worth committing
-            lastPoints: grown,
-          };
-          // Reflect the inserted vertex immediately so the drag has a handle.
-          setMeasurements((prev) =>
-            prev.map((x) => (x.id === m.id ? { ...x, points: grown } : x)),
-          );
-        } else {
-          // body / interior -> translate the whole shape.
-          activeVertexRef.current = null;
-          dragRef.current = {
-            mode: 'shape',
-            measurementId: m.id,
-            original: { ...m, points: [...m.points] },
-            origPoints: [...m.points],
-            vertexIndex: -1,
-            startPt: pt,
-            moved: false,
-            lastPoints: [...m.points],
-          };
-        }
-        e.preventDefault();
-        return;
-      }
-
-      // Clicked empty space: deselect + clear any active vertex.
-      activeVertexRef.current = null;
-      if (selId) setSelectedMeasurementId(null);
-    },
-    [activeTool, pointerToPdf, editableOnPage],
-  );
-
-  /** Mouse-move while an in-canvas edit drag is active. Updates the live
-   *  preview only (no setMeasurements, no network) until mouseup. */
-  const handleEditDragMove = useCallback(
-    (e: { clientX: number; clientY: number }) => {
-      const drag = dragRef.current;
-      if (!drag) return;
-      const cur = pointerToPdf(e);
-      if (!cur) return;
-      let next: Point[];
-      if (drag.mode === 'vertex') {
-        next = drag.origPoints.map((p, i) => (i === drag.vertexIndex ? cur : p));
-      } else {
-        next = translatePoints(drag.origPoints, cur.x - drag.startPt.x, cur.y - drag.startPt.y);
-      }
-      drag.moved = true;
-      drag.lastPoints = next;
-      const m = measurementsRef.current.find((x) => x.id === drag.measurementId);
-      const patch = m
-        ? recomputeMeasurement(m, next, editScaleRef.current)
-        : { value: 0, label: '', selfIntersecting: false };
-      setDragPreview({
-        measurementId: drag.measurementId,
-        points: next,
-        label: patch.label,
-        selfIntersecting: Boolean(patch.selfIntersecting),
-      });
-    },
-    [pointerToPdf],
-  );
-
   /* ── Mouse move for rectangle/highlight drag preview ──────────────── */
 
   const handleCanvasMouseMove = useCallback(
     (e: React.MouseEvent<HTMLCanvasElement>) => {
-      if (dragRef.current) {
-        handleEditDragMove(e);
-        return;
-      }
-      if ((activeTool === 'rectangle' || activeTool === 'highlight' || activeTool === 'rectarea') && rectStartPoint) {
+      if ((activeTool === 'rectangle' || activeTool === 'highlight') && rectStartPoint) {
         const rect = overlayRef.current?.getBoundingClientRect();
         if (!rect) return;
         const x = (e.clientX - rect.left) / zoom;
@@ -1946,30 +1486,8 @@ export default function TakeoffViewerModule({
         setIsDraggingRect(true);
       }
     },
-    [activeTool, rectStartPoint, zoom, handleEditDragMove],
+    [activeTool, rectStartPoint, zoom],
   );
-
-  const handleCanvasMouseUp = useCallback(() => {
-    if (dragRef.current) finishDrag(true);
-  }, [finishDrag]);
-
-  /* ── Window listeners so a drag that leaves the canvas still commits ──
-   * Without these, releasing the mouse outside the overlay (common at the
-   * edges of a large drawing) would leave the shape stuck in preview. */
-  useEffect(() => {
-    const onMove = (e: MouseEvent) => {
-      if (dragRef.current) handleEditDragMove(e);
-    };
-    const onUp = () => {
-      if (dragRef.current) finishDrag(true);
-    };
-    window.addEventListener('mousemove', onMove);
-    window.addEventListener('mouseup', onUp);
-    return () => {
-      window.removeEventListener('mousemove', onMove);
-      window.removeEventListener('mouseup', onUp);
-    };
-  }, [handleEditDragMove, finishDrag]);
 
   /* ── Confirm text annotation ──────────────────────────────────────── */
 
@@ -2440,266 +1958,6 @@ export default function TakeoffViewerModule({
     setSelectedMeasurementId((cur) => (cur === id ? null : cur));
   }, [pushUndo]);
 
-  /* ── Recognize: offline AI vector detection (issue #194) ───────────── */
-
-  const [recognizeBusy, setRecognizeBusy] = useState(false);
-
-  /** Number of unconfirmed AI suggestions currently on the canvas. */
-  const suggestionCount = useMemo(
-    () => measurements.filter((m) => m.suggested).length,
-    [measurements],
-  );
-
-  /** Scan the current page's vector layer and drop suggested measurements.
-   *  Suggestions are flagged (never persisted) until the user accepts them. */
-  const handleRecognize = useCallback(async () => {
-    if (recognizeBusy) return;
-    // The server reads the stored PDF off disk, so it needs the document's
-    // id, which the deep-link download URL carries.
-    const docId = initialPdfUrl?.match(/\/documents\/([^/?#]+)\/(?:download|recognize)/)?.[1];
-    if (!docId) {
-      addToast({
-        type: 'info',
-        title: t('takeoff_viewer.recognize_needs_upload_title', { defaultValue: 'Recognition needs an uploaded drawing' }),
-        message: t('takeoff_viewer.recognize_needs_upload_msg', {
-          defaultValue: 'Upload this PDF to the project first, then open it from the documents list to recognize measurements.',
-        }),
-      });
-      return;
-    }
-    setRecognizeBusy(true);
-    try {
-      const result = await takeoffApi.recognize(docId, currentPage, scale.pixelsPerUnit);
-      const cands = result.candidates ?? [];
-      if (cands.length === 0) {
-        addToast({
-          type: 'info',
-          title: t('takeoff_viewer.recognize_none_title', { defaultValue: 'No measurements detected' }),
-          message:
-            result.notes === 'no_vector_layer'
-              ? t('takeoff_viewer.recognize_no_vectors', { defaultValue: 'This page has no vector layer (it may be scanned). Try the AI text analysis on the Documents tab instead.' })
-              : t('takeoff_viewer.recognize_none_msg', { defaultValue: 'Nothing clear enough to suggest on this page.' }),
-        });
-        return;
-      }
-      const suggestions: Measurement[] = cands.map((c, i) => {
-        const mType: Measurement['type'] = c.type === 'distance' ? 'distance' : c.type === 'count' ? 'count' : 'area';
-        const unit = c.type === 'area' ? `${scale.unitLabel}²` : c.type === 'distance' ? scale.unitLabel : 'pcs';
-        const value = c.type === 'count' ? (c.count ?? c.points.length) : (c.value ?? 0);
-        const labelText =
-          c.type === 'count'
-            ? String(c.count ?? c.points.length)
-            : c.value != null
-              ? formatMeasurement(c.value, unit)
-              : t('takeoff_viewer.recognize_uncalibrated', { defaultValue: 'calibrate for value' });
-        return {
-          id: `sug_${Date.now()}_${i}`,
-          type: mType,
-          points: c.points.map((p) => ({ x: p.x, y: p.y })),
-          value,
-          unit,
-          label: labelText,
-          annotation: nextAnnotation(mType),
-          page: currentPage,
-          group: activeGroup,
-          suggested: true,
-          confidence: c.confidence,
-        };
-      });
-      setMeasurements((prev) => [...prev, ...suggestions]);
-      addToast({
-        type: 'success',
-        title: t('takeoff_viewer.recognize_added_title', { defaultValue: '{{n}} suggestions added', n: suggestions.length }),
-        message: t('takeoff_viewer.recognize_added_msg', { defaultValue: 'Review them on the drawing, then accept or dismiss each.' }),
-      });
-    } catch (err) {
-      addToast({
-        type: 'error',
-        title: t('takeoff_viewer.recognize_failed', { defaultValue: 'Recognition failed' }),
-        message: err instanceof Error ? err.message : '',
-      });
-    } finally {
-      setRecognizeBusy(false);
-    }
-  }, [recognizeBusy, initialPdfUrl, currentPage, scale, activeGroup, nextAnnotation, addToast, t]);
-
-  /* ── Read plan with AI: vision-LLM plan reading (issue #194) ────────────
-   * The opt-in, bring-your-own-key, cost-capped complement to the offline
-   * Recognize tool. It can read room names, dimension strings and a scale that
-   * OpenCV structurally cannot. Every result is a SUGGESTION with a confidence;
-   * nothing is applied until the user accepts it (same provisional-overlay
-   * flow as offline Recognize), and the server recomputes the billed number. */
-
-  const [planReadBusy, setPlanReadBusy] = useState(false);
-  /** Null until /plan-read/meta resolves; false hides the action when no
-   *  vision-capable AI key is configured (graceful degradation). */
-  const [planReadVision, setPlanReadVision] = useState<{ available: boolean; reason: string | null } | null>(
-    null,
-  );
-
-  // Probe vision availability once on mount so the action can hide / disable
-  // cleanly when no key is configured. Never throws to the user.
-  useEffect(() => {
-    let cancelled = false;
-    void (async () => {
-      try {
-        const meta = await takeoffApi.planRead.meta();
-        if (!cancelled && meta) {
-          setPlanReadVision({ available: meta.vision_available, reason: meta.reason });
-        } else if (!cancelled) {
-          setPlanReadVision({ available: false, reason: null });
-        }
-      } catch {
-        if (!cancelled) setPlanReadVision({ available: false, reason: null });
-      }
-    })();
-    return () => {
-      cancelled = true;
-    };
-  }, []);
-
-  /** Read the current page with a vision model: start a run, poll it to
-   *  completion, then drop its proposals as provisional suggestions the user
-   *  reviews and accepts (human-confirmed). Never auto-applies. */
-  const handleReadWithAi = useCallback(async () => {
-    if (planReadBusy) return;
-    const docId = initialPdfUrl?.match(/\/documents\/([^/?#]+)\/(?:download|recognize)/)?.[1];
-    const projectId = selectedProjectId || activeProjectId || '';
-    if (!docId || !projectId) {
-      addToast({
-        type: 'info',
-        title: t('takeoff_viewer.plan_read.needs_upload_title', {
-          defaultValue: 'AI plan reading needs an uploaded drawing',
-        }),
-        message: t('takeoff_viewer.plan_read.needs_upload_msg', {
-          defaultValue:
-            'Upload this PDF to a project first, then open it from the documents list to read it with AI.',
-        }),
-      });
-      return;
-    }
-    setPlanReadBusy(true);
-    try {
-      const run = await takeoffApi.planRead.start({
-        project_id: projectId,
-        document_id: docId,
-        page: currentPage,
-        mode: 'rooms',
-        scale_pixels_per_unit: scale.pixelsPerUnit > 0 ? scale.pixelsPerUnit : null,
-      });
-      // Poll the FSM to a terminal state (review / applied / failed). The run
-      // is in-process and fast for one page; cap the wait so the UI never hangs.
-      let current = run;
-      const deadline = Date.now() + 130_000;
-      while (!['review', 'applied', 'failed', 'cancelled'].includes(current.status)) {
-        if (Date.now() > deadline) break;
-        await new Promise((r) => setTimeout(r, 1500));
-        current = await takeoffApi.planRead.getRun(run.id);
-      }
-      if (current.status === 'failed') {
-        addToast({
-          type: 'error',
-          title: t('takeoff_viewer.plan_read.failed', { defaultValue: 'AI plan reading failed' }),
-          message: current.failure_reason
-            ? t(`takeoff_viewer.plan_read.reason_${current.failure_reason}`, {
-                defaultValue: current.failure_reason,
-              })
-            : '',
-        });
-        return;
-      }
-      const proposals = await takeoffApi.planRead.proposals(run.id);
-      if (proposals.length === 0) {
-        addToast({
-          type: 'info',
-          title: t('takeoff_viewer.plan_read.none_title', { defaultValue: 'No rooms detected' }),
-          message: t('takeoff_viewer.plan_read.none_msg', {
-            defaultValue: 'The model did not find anything clear enough to suggest on this page.',
-          }),
-        });
-        return;
-      }
-      const suggestions: Measurement[] = proposals.map((p, i) => {
-        const mType: Measurement['type'] = p.type === 'count' ? 'count' : 'area';
-        const unit = p.type === 'count' ? 'pcs' : `${scale.unitLabel}²`;
-        const value =
-          p.type === 'count'
-            ? (p.count_value ?? p.points.length)
-            : (typeof p.measurement_value === 'number' ? p.measurement_value : 0);
-        const labelText =
-          p.type === 'count'
-            ? String(p.count_value ?? p.points.length)
-            : p.measurement_value != null
-              ? formatMeasurement(Number(p.measurement_value), unit)
-              : t('takeoff_viewer.recognize_uncalibrated', { defaultValue: 'calibrate for value' });
-        return {
-          id: `ai_${run.id}_${i}`,
-          type: mType,
-          points: p.points.map((pt) => ({ x: pt.x, y: pt.y })),
-          value: Number(value) || 0,
-          unit,
-          label: labelText,
-          annotation: p.annotation || nextAnnotation(mType),
-          page: currentPage,
-          group: activeGroup,
-          suggested: true,
-          confidence: p.confidence ?? undefined,
-        };
-      });
-      setMeasurements((prev) => [...prev, ...suggestions]);
-      addToast({
-        type: 'success',
-        title: t('takeoff_viewer.plan_read.added_title', {
-          defaultValue: '{{n}} AI suggestions added',
-          n: suggestions.length,
-        }),
-        message: t('takeoff_viewer.plan_read.added_msg', {
-          defaultValue: 'Review them on the drawing, then accept or reject each (AI proposes, you confirm).',
-        }),
-      });
-    } catch (err) {
-      addToast({
-        type: 'error',
-        title: t('takeoff_viewer.plan_read.failed', { defaultValue: 'AI plan reading failed' }),
-        message: err instanceof Error ? err.message : '',
-      });
-    } finally {
-      setPlanReadBusy(false);
-    }
-  }, [
-    planReadBusy,
-    initialPdfUrl,
-    selectedProjectId,
-    activeProjectId,
-    currentPage,
-    scale,
-    activeGroup,
-    nextAnnotation,
-    addToast,
-    t,
-  ]);
-
-  /** Accept one suggestion: clear the flag so it persists on the next sync. */
-  const acceptSuggestion = useCallback((id: string) => {
-    setMeasurements((prev) => prev.map((m) => (m.id === id ? { ...m, suggested: false } : m)));
-  }, []);
-
-  /** Reject one suggestion: drop it (it was never persisted). */
-  const rejectSuggestion = useCallback((id: string) => {
-    setMeasurements((prev) => prev.filter((m) => m.id !== id));
-    setSelectedMeasurementId((cur) => (cur === id ? null : cur));
-  }, []);
-
-  /** Accept every pending suggestion at once. */
-  const acceptAllSuggestions = useCallback(() => {
-    setMeasurements((prev) => prev.map((m) => (m.suggested ? { ...m, suggested: false } : m)));
-  }, []);
-
-  /** Dismiss every pending suggestion at once. */
-  const dismissAllSuggestions = useCallback(() => {
-    setMeasurements((prev) => prev.filter((m) => !m.suggested));
-  }, []);
-
   /* ── Export measurements to BOQ ────────────────────────────────── */
 
   const loadExportBoqs = useCallback(async (projectId: string) => {
@@ -3027,7 +2285,7 @@ export default function TakeoffViewerModule({
       addToast({
         type: 'success',
         title: t('takeoff.linked_created', { defaultValue: 'Position created & linked' }),
-        message: `${ordinal} - ${newQty} ${canonicalUnit}`,
+        message: `${ordinal} — ${newQty} ${canonicalUnit}`,
       });
       setLinkingMeasurementId(null);
     } catch (err) {
@@ -3172,19 +2430,6 @@ export default function TakeoffViewerModule({
         });
         break;
       }
-
-      case 'edit_geometry':
-        // Restore the pre-edit measurement (geometry + derived value/label).
-        // The persistence effect re-PATCHes the restored points so the
-        // server re-derives the billed quantity and stays authoritative.
-        setMeasurements((prev) =>
-          prev.map((m) =>
-            m.id === op.measurementId
-              ? { ...op.previousMeasurement, points: [...op.previousMeasurement.points] }
-              : m,
-          ),
-        );
-        break;
     }
 
     // Push the (possibly-adjusted) forward op onto redo.
@@ -3267,17 +2512,6 @@ export default function TakeoffViewerModule({
         });
         break;
       }
-
-      case 'edit_geometry':
-        // Re-apply the post-edit measurement.
-        setMeasurements((prev) =>
-          prev.map((m) =>
-            m.id === op.measurementId
-              ? { ...op.nextMeasurement, points: [...op.nextMeasurement.points] }
-              : m,
-          ),
-        );
-        break;
     }
 
     // Push the reverse op onto undo so Ctrl+Z works again.
@@ -3320,12 +2554,6 @@ export default function TakeoffViewerModule({
 
       // Esc: cancel any in-progress drawing + deselect any selected measurement
       if (e.key === 'Escape') {
-        // Abort an in-flight in-canvas edit drag first (restore geometry,
-        // no undo frame) - the user is bailing out of a reshape.
-        if (dragRef.current) {
-          finishDrag(false);
-          return;
-        }
         if (calibrationMode || settingScale) {
           // Bail out of two-click pick mode cleanly.
           setCalibrationMode(false);
@@ -3350,34 +2578,16 @@ export default function TakeoffViewerModule({
       if (!shouldHandleShortcut(e.target)) return;
       if (e.ctrlKey || e.metaKey || e.altKey) return;
 
-      // Delete / Backspace. If a specific vertex is active on the selected
-      // measurement and removing it keeps the shape valid, delete just that
-      // vertex and recompute (#194). Otherwise fall through to deleting the
-      // whole measurement, preserving the long-standing "select row, press
-      // Delete" flow.
+      // Delete / Backspace removes the selected measurement.  Users coming
+      // from any other CAD/design tool expect this — without it the only
+      // way to delete is right-click → menu, which feels clunky.
       if ((e.key === 'Delete' || e.key === 'Backspace') && selectedMeasurementId) {
         e.preventDefault();
-        const active = activeVertexRef.current;
-        const target = measurements.find((m) => m.id === selectedMeasurementId);
-        if (
-          target &&
-          active &&
-          active.measurementId === selectedMeasurementId &&
-          supportsVariableVertices(target.type) &&
-          target.points.length > minVertices(target.type) &&
-          active.index < target.points.length
-        ) {
-          const nextPoints = deleteVertexAt(target.points, active.index);
-          commitGeometryEdit(selectedMeasurementId, { ...target, points: [...target.points] }, nextPoints);
-          activeVertexRef.current = null;
-          return;
-        }
         setMeasurements((prev) => {
-          const t2 = prev.find((m) => m.id === selectedMeasurementId);
-          if (t2) pushUndo({ kind: 'delete_measurement', measurement: t2 });
+          const target = prev.find((m) => m.id === selectedMeasurementId);
+          if (target) pushUndo({ kind: 'delete_measurement', measurement: target });
           return prev.filter((m) => m.id !== selectedMeasurementId);
         });
-        activeVertexRef.current = null;
         setSelectedMeasurementId(null);
         return;
       }
@@ -3390,7 +2600,7 @@ export default function TakeoffViewerModule({
     };
     window.addEventListener('keydown', handler);
     return () => window.removeEventListener('keydown', handler);
-  }, [handleUndo, handleRedo, selectTool, activePoints.length, rectStartPoint, showTextInput, showScaleDialog, showVolumeDepthInput, selectedMeasurementId, calibrationMode, settingScale, measurements, finishDrag, commitGeometryEdit, pushUndo]);
+  }, [handleUndo, handleRedo, selectTool, activePoints.length, rectStartPoint, showTextInput, showScaleDialog, showVolumeDepthInput, selectedMeasurementId, calibrationMode, settingScale]);
 
   /* ── Render ──────────────────────────────────────────────────────── */
 
@@ -3402,42 +2612,42 @@ export default function TakeoffViewerModule({
       color: 'bg-blue-50 dark:bg-blue-950/20 border-blue-100 dark:border-blue-800',
       ic: 'text-blue-500',
       title: t('takeoff.landing_feat_click_title', { defaultValue: 'Click-to-measure' }),
-      desc: t('takeoff.landing_feat_click_desc', { defaultValue: 'Distance, area, polyline and count tools - click directly on the PDF to capture quantities.' }),
+      desc: t('takeoff.landing_feat_click_desc', { defaultValue: 'Distance, area, polyline and count tools — click directly on the PDF to capture quantities.' }),
     },
     {
       icon: Scan,
       color: 'bg-emerald-50 dark:bg-emerald-950/20 border-emerald-100 dark:border-emerald-800',
       ic: 'text-emerald-500',
       title: t('takeoff.landing_feat_extract_title', { defaultValue: 'AI text & table extraction' }),
-      desc: t('takeoff.landing_feat_extract_desc', { defaultValue: 'Pull schedules and BOQ tables straight out of the PDF text - each row comes back with a confidence score to review.' }),
+      desc: t('takeoff.landing_feat_extract_desc', { defaultValue: 'Pull schedules and BOQ tables straight out of the PDF text — each row comes back with a confidence score to review.' }),
     },
     {
       icon: Ruler,
       color: 'bg-violet-50 dark:bg-violet-950/20 border-violet-100 dark:border-violet-800',
       ic: 'text-violet-500',
       title: t('takeoff.landing_feat_scale_title', { defaultValue: 'Scale calibration' }),
-      desc: t('takeoff.landing_feat_scale_desc', { defaultValue: 'Two-point calibration or preset scales (1:50, 1:100) - every measurement stays accurate.' }),
+      desc: t('takeoff.landing_feat_scale_desc', { defaultValue: 'Two-point calibration or preset scales (1:50, 1:100) — every measurement stays accurate.' }),
     },
     {
       icon: Layers,
       color: 'bg-orange-50 dark:bg-orange-950/20 border-orange-100 dark:border-orange-800',
       ic: 'text-orange-500',
       title: t('takeoff.landing_feat_units_title', { defaultValue: 'Area · length · count' }),
-      desc: t('takeoff.landing_feat_units_desc', { defaultValue: 'Switch freely between m, m², m³, pcs - grouped by trade with hide/show per layer.' }),
+      desc: t('takeoff.landing_feat_units_desc', { defaultValue: 'Switch freely between m, m², m³, pcs — grouped by trade with hide/show per layer.' }),
     },
     {
       icon: Sparkles,
       color: 'bg-pink-50 dark:bg-pink-950/20 border-pink-100 dark:border-pink-800',
       ic: 'text-pink-500',
       title: t('takeoff.landing_feat_ai_title', { defaultValue: 'AI-assisted quantities' }),
-      desc: t('takeoff.landing_feat_ai_desc', { defaultValue: 'Let the AI extract walls, slabs and rooms from a drawing - you review and confirm before committing.' }),
+      desc: t('takeoff.landing_feat_ai_desc', { defaultValue: 'Let the AI extract walls, slabs and rooms from a drawing — you review and confirm before committing.' }),
     },
     {
       icon: Link2,
       color: 'bg-cyan-50 dark:bg-cyan-950/20 border-cyan-100 dark:border-cyan-800',
       ic: 'text-cyan-500',
       title: t('takeoff.landing_feat_export_title', { defaultValue: 'Export to BOQ' }),
-      desc: t('takeoff.landing_feat_export_desc', { defaultValue: 'Send measurements straight into your Bill of Quantities - with links back to the source drawing.' }),
+      desc: t('takeoff.landing_feat_export_desc', { defaultValue: 'Send measurements straight into your Bill of Quantities — with links back to the source drawing.' }),
     },
   ];
 
@@ -3740,12 +2950,8 @@ export default function TakeoffViewerModule({
         <div className="flex gap-4 min-w-0">
           {/* Left: PDF + Toolbar */}
           <div className="flex-1 min-w-0 space-y-2">
-            {/* Toolbar - two rows so every control is always visible without a
-                horizontal scrollbar. Row 1: page navigation, zoom and the
-                drawing tools; row 2: scale, calibration, legend and the
-                history/file actions. */}
-            <div className="flex flex-col gap-1.5 rounded-lg border border-border bg-surface-primary p-1.5">
-              <div className="flex items-center gap-1 flex-wrap">
+            {/* Toolbar */}
+            <div className="flex items-center gap-1 rounded-lg border border-border bg-surface-primary p-1.5 overflow-x-auto">
               {/* Page nav */}
               <button onClick={prevPage} disabled={currentPage <= 1} className="p-1.5 rounded hover:bg-surface-secondary disabled:opacity-30 transition-colors" aria-label={t('takeoff_viewer.prev_page', { defaultValue: 'Previous page' })}>
                 <ChevronLeft size={16} />
@@ -3806,7 +3012,6 @@ export default function TakeoffViewerModule({
                 { tool: 'distance' as MeasureTool, icon: Minus, label: t('takeoff_viewer.tool_distance', { defaultValue: 'Distance' }) },
                 { tool: 'polyline' as MeasureTool, icon: Route, label: t('takeoff_viewer.tool_polyline', { defaultValue: 'Polyline' }) },
                 { tool: 'area' as MeasureTool, icon: Pentagon, label: t('takeoff_viewer.tool_area', { defaultValue: 'Area' }) },
-                { tool: 'rectarea' as MeasureTool, icon: RectangleHorizontal, label: t('takeoff_viewer.tool_rectarea', { defaultValue: 'Rectangle' }) },
                 { tool: 'volume' as MeasureTool, icon: Box, label: t('takeoff_viewer.tool_volume', { defaultValue: 'Volume' }) },
                 { tool: 'count' as MeasureTool, icon: Hash, label: t('takeoff_viewer.tool_count', { defaultValue: 'Count' }) },
               ] as const).map(({ tool, icon: Icon, label }) => (
@@ -3828,62 +3033,6 @@ export default function TakeoffViewerModule({
                   <span className="hidden sm:inline">{label}</span>
                 </button>
               ))}
-
-              {/* Recognize — offline AI vector detection (issue #194). Not a
-                  draw tool: it scans the page's vector layer and drops
-                  confidence-scored suggestions the user confirms. Sits in the
-                  measure group, styled distinctly so it reads as an action. */}
-              <button
-                onClick={handleRecognize}
-                disabled={recognizeBusy}
-                className="flex items-center gap-1 px-2 py-1.5 rounded text-xs font-medium transition-colors bg-gradient-to-r from-violet-500 to-indigo-500 text-white hover:from-violet-600 hover:to-indigo-600 disabled:opacity-50 disabled:pointer-events-none shadow-sm"
-                title={t('takeoff_viewer.recognize_hint', { defaultValue: 'Scan this page and suggest measurements (AI proposes, you confirm)' })}
-                aria-label={t('takeoff_viewer.recognize', { defaultValue: 'Recognize' })}
-                data-testid="recognize-button"
-              >
-                {recognizeBusy ? <Loader2 size={14} className="animate-spin" /> : <Sparkles size={14} />}
-                <span className="hidden sm:inline">{t('takeoff_viewer.recognize', { defaultValue: 'Recognize' })}</span>
-              </button>
-
-              {/* Read plan with AI — vision-LLM plan reading (issue #194). The
-                  opt-in, BYO-key, cost-capped complement to offline Recognize:
-                  it reads room names and a scale a vision model can see but
-                  OpenCV cannot. Hidden when no vision key is configured so the
-                  feature degrades gracefully (the offline Recognize button is
-                  unaffected). AI proposes, the user confirms. */}
-              {planReadVision?.available && (
-                <button
-                  onClick={handleReadWithAi}
-                  disabled={planReadBusy}
-                  className="flex items-center gap-1 px-2 py-1.5 rounded text-xs font-medium transition-colors bg-gradient-to-r from-fuchsia-500 to-purple-600 text-white hover:from-fuchsia-600 hover:to-purple-700 disabled:opacity-50 disabled:pointer-events-none shadow-sm"
-                  title={t('takeoff_viewer.plan_read.hint', {
-                    defaultValue: 'Read this page with a vision AI: room names and scale (AI proposes, you confirm)',
-                  })}
-                  aria-label={t('takeoff_viewer.plan_read.action', { defaultValue: 'Read plan with AI' })}
-                  data-testid="plan-read-ai-button"
-                >
-                  {planReadBusy ? <Loader2 size={14} className="animate-spin" /> : <Scan size={14} />}
-                  <span className="hidden sm:inline">
-                    {t('takeoff_viewer.plan_read.action', { defaultValue: 'Read plan with AI' })}
-                  </span>
-                </button>
-              )}
-
-              {/* Save PDF — burn the current measurements + markups into a
-                  downloadable PDF (with a summary page). Always-visible
-                  shortcut to the same export as the right panel, so users
-                  don't have to scroll the measurements list to find it. */}
-              <button
-                onClick={handleExportPdf}
-                disabled={isExportingPdf || !pdfDoc}
-                className="flex items-center gap-1 px-2 py-1.5 rounded text-xs font-medium transition-colors bg-emerald-600 text-white hover:bg-emerald-700 disabled:opacity-50 disabled:pointer-events-none shadow-sm"
-                title={t('takeoff_viewer.save_pdf_hint', { defaultValue: 'Save this drawing as a PDF with your measurements and markups' })}
-                aria-label={t('takeoff_viewer.save_pdf', { defaultValue: 'Save PDF' })}
-                data-testid="toolbar-export-pdf-button"
-              >
-                {isExportingPdf ? <Loader2 size={14} className="animate-spin" /> : <Save size={14} />}
-                <span className="hidden sm:inline">{t('takeoff_viewer.save_pdf', { defaultValue: 'Save PDF' })}</span>
-              </button>
 
               {/* Annotation tools divider */}
               <span className="w-px h-5 bg-border mx-1" />
@@ -3913,10 +3062,9 @@ export default function TakeoffViewerModule({
                   <Icon size={14} />
                 </button>
               ))}
-              </div>
 
-              {/* Row 2: scale, calibration, legend, history and file */}
-              <div className="flex items-center gap-1 flex-wrap">
+              <span className="w-px h-5 bg-border mx-1" />
+
               {/* Scale */}
               <button
                 onClick={() => { setCalibrationMode(false); setSettingScale(true); setScalePoints([]); }}
@@ -3951,7 +3099,7 @@ export default function TakeoffViewerModule({
                   onClick={handleStartCalibration}
                   className="flex items-center gap-1 px-1.5 py-1 rounded text-[10px] font-mono whitespace-nowrap shrink-0 bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 hover:bg-purple-200 dark:hover:bg-purple-900/50 transition-colors border border-purple-300/50 dark:border-purple-700/50"
                   title={t('takeoff_viewer.calibrated_tooltip', {
-                    defaultValue: 'Calibrated · {{ratio}}{{atLen}} - click to recalibrate',
+                    defaultValue: 'Calibrated · {{ratio}}{{atLen}} — click to recalibrate',
                     ratio: formatScaleRatio(scale),
                     atLen: lastCalibration
                       ? ` @ ${lastCalibration.realLength} ${lastCalibration.unit}`
@@ -3973,7 +3121,7 @@ export default function TakeoffViewerModule({
                 <button
                   onClick={handleStartCalibration}
                   className="flex items-center gap-1 px-1.5 py-1 rounded text-[10px] font-mono whitespace-nowrap shrink-0 bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300 hover:bg-amber-200 dark:hover:bg-amber-900/50 transition-colors border border-amber-300/50 dark:border-amber-700/50"
-                  title={t('takeoff_viewer.uncalibrated_hint', { defaultValue: 'Drawing is not calibrated - measurements may be inaccurate. Click to calibrate.' })}
+                  title={t('takeoff_viewer.uncalibrated_hint', { defaultValue: 'Drawing is not calibrated — measurements may be inaccurate. Click to calibrate.' })}
                   data-testid="uncalibrated-badge"
                 >
                   <AlertTriangle size={11} className="text-amber-500 shrink-0" />
@@ -4033,7 +3181,6 @@ export default function TakeoffViewerModule({
                 <Upload size={14} />
                 <input type="file" accept="application/pdf" onChange={handleFileUpload} className="hidden" />
               </label>
-              </div>
             </div>
 
             {/* Canvas — the PDF render surface is a genuinely-needed internal
@@ -4041,26 +3188,24 @@ export default function TakeoffViewerModule({
                 The cap must match the height actually left over after the
                 page chrome the parent column does NOT subtract: header (52)
                 + main pt-6/pb-4 (40) + takeoff tabs bar (~56) + module
-                spacing + toolbar (~80, two rows) + bottom Documents
-                filmstrip (~175). The old `100vh - 280px` under-reserved by
-                ~80px, so the canvas + right sidebar pushed the workspace past
-                the fixed-height column and forced a second scrollbar. */}
+                spacing + toolbar (~44) + bottom Documents filmstrip (~175).
+                The old `100vh - 280px` under-reserved by ~80px, so the
+                canvas + right sidebar pushed the workspace past the
+                fixed-height column and forced a second scrollbar. */}
             <div
               ref={containerRef}
               className="relative rounded-lg border border-border overflow-auto bg-gray-100 dark:bg-gray-900"
-              style={{ maxHeight: 'calc(100vh - 396px)', maxWidth: '100%' }}
+              style={{ maxHeight: 'calc(100vh - 360px)', maxWidth: '100%' }}
             >
               <canvas ref={canvasRef} className="block" />
               <canvas
                 ref={overlayRef}
                 className="absolute top-0 left-0"
-                style={{ cursor: activeTool === 'select' ? (dragPreview ? 'grabbing' : 'default') : 'crosshair' }}
+                style={{ cursor: activeTool === 'select' ? 'default' : 'crosshair' }}
                 onClick={handleCanvasClick}
                 onDoubleClick={handleCanvasDblClick}
                 onContextMenu={handleCanvasContextMenu}
-                onMouseDown={handleCanvasMouseDown}
                 onMouseMove={handleCanvasMouseMove}
-                onMouseUp={handleCanvasMouseUp}
                 onTouchStart={handleTouchStart}
                 onTouchMove={handleTouchMove}
                 onTouchEnd={handleTouchEnd}
@@ -4077,35 +3222,6 @@ export default function TakeoffViewerModule({
                     : (scalePoints.length === 0
                         ? t('takeoff_viewer.scale_click_first', { defaultValue: 'Click first point of known dimension' })
                         : t('takeoff_viewer.scale_click_second', { defaultValue: 'Click second point' }))}
-                </div>
-              )}
-              {/* AI suggestions review bar (#194) — appears when Recognize has
-                  dropped unconfirmed proposals. Accept-all clears the flags so
-                  they persist; dismiss-all drops them. Per-item accept/reject
-                  lives in the measurement list below. */}
-              {suggestionCount > 0 && (
-                <div
-                  className="absolute top-2 left-1/2 -translate-x-1/2 z-10 flex items-center gap-2 rounded-full border border-violet-300/60 bg-white/95 dark:bg-gray-800/95 px-3 py-1.5 shadow-lg backdrop-blur"
-                  data-testid="suggestions-bar"
-                >
-                  <Sparkles size={14} className="text-violet-500 shrink-0" />
-                  <span className="text-xs font-medium text-content-primary whitespace-nowrap">
-                    {t('takeoff_viewer.suggestions_pending', { defaultValue: '{{n}} AI suggestions', n: suggestionCount })}
-                  </span>
-                  <button
-                    onClick={acceptAllSuggestions}
-                    className="rounded-full bg-emerald-500 px-2.5 py-1 text-[11px] font-semibold text-white hover:bg-emerald-600 transition-colors"
-                    data-testid="accept-all-suggestions"
-                  >
-                    {t('takeoff_viewer.accept_all', { defaultValue: 'Accept all' })}
-                  </button>
-                  <button
-                    onClick={dismissAllSuggestions}
-                    className="rounded-full bg-surface-secondary px-2.5 py-1 text-[11px] font-semibold text-content-secondary hover:bg-surface-tertiary transition-colors"
-                    data-testid="dismiss-all-suggestions"
-                  >
-                    {t('takeoff_viewer.dismiss_all', { defaultValue: 'Dismiss all' })}
-                  </button>
                 </div>
               )}
               {/* Active-tool hint banner — shows what the current tool expects.
@@ -4612,7 +3728,7 @@ export default function TakeoffViewerModule({
                     {totalOtherPages > 0
                       ? t('takeoff_viewer.no_measurements_this_page', {
                           defaultValue:
-                            'No measurements on page {{page}}. {{count}} measurement(s) on other pages - open the Ledger tab to see them all.',
+                            'No measurements on page {{page}}. {{count}} measurement(s) on other pages — open the Ledger tab to see them all.',
                           page: currentPage,
                           count: totalOtherPages,
                         })
@@ -4712,15 +3828,6 @@ export default function TakeoffViewerModule({
                                   <span className="text-2xs text-content-tertiary capitalize truncate shrink">
                                     {m.label}
                                   </span>
-                                  {m.suggested && (
-                                    <span
-                                      className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-violet-100 text-violet-700 dark:bg-violet-900/40 dark:text-violet-300 text-[9px] font-semibold shrink-0"
-                                      title={t('takeoff_viewer.suggested_hint', { defaultValue: 'AI suggestion - accept to keep it' })}
-                                    >
-                                      <Sparkles size={8} />
-                                      {typeof m.confidence === 'number' ? `${Math.round(m.confidence * 100)}%` : t('takeoff_viewer.suggested', { defaultValue: 'AI' })}
-                                    </span>
-                                  )}
                                   {m.linkedPositionOrdinal && (
                                     <button
                                       type="button"
@@ -4734,29 +3841,6 @@ export default function TakeoffViewerModule({
                                   )}
                                 </div>
                                 <div className="flex items-center gap-0.5 shrink-0">
-                                  {/* Accept / reject AI suggestions inline (#194). */}
-                                  {m.suggested && (
-                                    <>
-                                      <button
-                                        onClick={(e) => { e.stopPropagation(); acceptSuggestion(m.id); }}
-                                        className="p-0.5 rounded text-emerald-600 hover:bg-emerald-100 dark:hover:bg-emerald-900/30 transition-colors"
-                                        aria-label={t('takeoff_viewer.accept_suggestion', { defaultValue: 'Accept suggestion' })}
-                                        title={t('takeoff_viewer.accept_suggestion', { defaultValue: 'Accept suggestion' })}
-                                        data-testid="accept-suggestion"
-                                      >
-                                        <Check size={13} />
-                                      </button>
-                                      <button
-                                        onClick={(e) => { e.stopPropagation(); rejectSuggestion(m.id); }}
-                                        className="p-0.5 rounded text-rose-500 hover:bg-rose-100 dark:hover:bg-rose-900/30 transition-colors"
-                                        aria-label={t('takeoff_viewer.reject_suggestion', { defaultValue: 'Reject suggestion' })}
-                                        title={t('takeoff_viewer.reject_suggestion', { defaultValue: 'Reject suggestion' })}
-                                        data-testid="reject-suggestion"
-                                      >
-                                        <X size={13} />
-                                      </button>
-                                    </>
-                                  )}
                                   {/* Link to BOQ button — always visible (the primary
                                       per-measurement action). Linked rows get an emerald
                                       tint; unlinked rows get a rose tint that strengthens
@@ -4797,7 +3881,7 @@ export default function TakeoffViewerModule({
                                   <div className="flex items-center justify-between mb-1.5">
                                     <span className="text-[10px] font-bold uppercase tracking-wider text-rose-700 dark:text-rose-400">
                                       {m.linkedPositionId
-                                        ? t('takeoff_viewer.relink_title', { defaultValue: 'Linked - pick new or unlink' })
+                                        ? t('takeoff_viewer.relink_title', { defaultValue: 'Linked — pick new or unlink' })
                                         : t('takeoff_viewer.link_to_boq_title', { defaultValue: 'Link to BOQ position' })}
                                     </span>
                                     <button
@@ -4856,7 +3940,7 @@ export default function TakeoffViewerModule({
                                       onChange={(e) => handlePickerProjectChange(e.target.value)}
                                       className="text-[10px] rounded border border-border-subtle bg-surface-primary px-1 py-0.5 text-content-primary"
                                     >
-                                      <option value="">{t('takeoff.pick_project', { defaultValue: '- project -' })}</option>
+                                      <option value="">{t('takeoff.pick_project', { defaultValue: '— project —' })}</option>
                                       {linkPickerProjects.map((p) => (
                                         <option key={p.id} value={p.id}>{p.name}</option>
                                       ))}
@@ -4870,7 +3954,7 @@ export default function TakeoffViewerModule({
                                       <option value="">
                                         {linkBoqsLoading
                                           ? t('common.loading', { defaultValue: 'Loading...' })
-                                          : t('takeoff.pick_boq', { defaultValue: '- BOQ -' })}
+                                          : t('takeoff.pick_boq', { defaultValue: '— BOQ —' })}
                                       </option>
                                       {linkPickerBoqs.map((b) => (
                                         <option key={b.id} value={b.id}>{b.name}</option>
@@ -4921,7 +4005,7 @@ export default function TakeoffViewerModule({
                                       </div>
                                     ) : linkBoqPositions.filter((p) => p.unit).length === 0 ? (
                                       <p className="text-[10px] text-content-tertiary py-1">
-                                        {t('takeoff.link_boq_empty', { defaultValue: 'BOQ is empty - switch to "Create new".' })}
+                                        {t('takeoff.link_boq_empty', { defaultValue: 'BOQ is empty — switch to "Create new".' })}
                                       </p>
                                     ) : (
                                       <>

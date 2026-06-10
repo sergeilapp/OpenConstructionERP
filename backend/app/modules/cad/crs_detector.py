@@ -3,35 +3,35 @@
 """‌⁠‍Coordinate Reference System (CRS) auto-detection for CAD/BIM uploads.
 
 A real-world construction file (DWG / DXF / IFC / RVT canonical JSON)
-arrives with coordinates expressed in *some* projected CRS - a UTM zone,
-a national grid, a Gauss-Krüger band - but the CRS itself is rarely
+arrives with coordinates expressed in *some* projected CRS — a UTM zone,
+a national grid, a Gauss-Krüger band — but the CRS itself is rarely
 labelled. This module picks the most likely EPSG code from three
 signals, in priority order:
 
-    1. IFC4 ``IfcProjectedCRS`` header (gold - labelled by the source)
-    2. AutoCAD ``ACAD_PROJECTION_GEODATA`` dictionary (gold - labelled)
+    1. IFC4 ``IfcProjectedCRS`` header (gold — labelled by the source)
+    2. AutoCAD ``ACAD_PROJECTION_GEODATA`` dictionary (gold — labelled)
     3. Bounding-box heuristic against ~80 high-frequency construction
        CRSs, ranked by how tightly the bbox fits each region's window.
 
 Each detector returns a :class:`CRSGuess` with the best match, up to
 three alternates, and a 0-1 confidence score. ``epsg = None`` is a
-legitimate result and means "we could not auto-detect - ask the user".
+legitimate result and means "we could not auto-detect — ask the user".
 
 Public API
 ==========
 
-* :func:`detect_from_bbox` - universal fallback, given just (xmin, ymin,
+* :func:`detect_from_bbox` — universal fallback, given just (xmin, ymin,
   xmax, ymax) and a units string.
-* :func:`detect_from_dwg_header` - read DXF/DWG header via ``ezdxf``.
-* :func:`detect_from_ifc` - regex-grep the IFC STEP header (no
-  IfcOpenShell - see project the architecture guide).
-* :func:`detect_from_canonical` - entry point used by the IFC/RVT
+* :func:`detect_from_dwg_header` — read DXF/DWG header via ``ezdxf``.
+* :func:`detect_from_ifc` — regex-grep the IFC STEP header (no
+  IfcOpenShell — see project the architecture guide).
+* :func:`detect_from_canonical` — entry point used by the IFC/RVT
   pipeline once a canonical JSON dict is in memory.
 
 ``pyproj`` is an *optional* runtime dependency. When available we use
 it to resolve canonical CRS display names so the labels never drift
 from the upstream EPSG registry. When missing the detector falls back
-to the built-in name table - coverage stays identical, only the labels
+to the built-in name table — coverage stays identical, only the labels
 get marginally less verbose.
 """
 
@@ -47,12 +47,12 @@ from pydantic import BaseModel, ConfigDict, Field
 logger = logging.getLogger(__name__)
 
 
-# ── Optional pyproj - purely for name lookup ────────────────────────────
+# ── Optional pyproj — purely for name lookup ────────────────────────────
 try:
     from pyproj import CRS as _PyprojCRS  # type: ignore[import-not-found]
 
     _HAS_PYPROJ = True
-except ImportError:  # pragma: no cover - covered by manual smoke
+except ImportError:  # pragma: no cover — covered by manual smoke
     _PyprojCRS = None  # type: ignore[assignment]
     _HAS_PYPROJ = False
 
@@ -77,7 +77,7 @@ class CRSGuess(BaseModel):
 
     Use ``epsg=None`` for "we could not auto-detect"; the frontend
     surfaces a "Set CRS" affordance in that case. ``alternatives`` is
-    always present and may be empty - never ``None``.
+    always present and may be empty — never ``None``.
     """
 
     model_config = ConfigDict(str_strip_whitespace=True)
@@ -100,40 +100,40 @@ class CRSGuess(BaseModel):
 # ── Region heuristic table ──────────────────────────────────────────────
 #
 # Each entry: (name, epsg, xmin, ymin, xmax, ymax, units).
-# The bbox is the *coordinate-valid window* in that CRS - not the
+# The bbox is the *coordinate-valid window* in that CRS — not the
 # country bbox. We use it to score how likely an incoming model belongs
 # in this CRS. See the internal CRS-detection research notes §1 for sources.
 
 _REGION_TABLE: list[tuple[str, int, float, float, float, float, str]] = [
-    # ── India - UTM 42N..46N. Y window matches Indian latitude band
+    # ── India — UTM 42N..46N. Y window matches Indian latitude band
     # (lat 8°..36° → y ≈ 880_000..3_990_000 in UTM Northern hemisphere).
     ("UTM Zone 42N (WGS 84)", 32642, 166_000, 800_000, 833_000, 4_000_000, "m"),
     ("UTM Zone 43N (WGS 84)", 32643, 166_000, 800_000, 833_000, 4_000_000, "m"),
     ("UTM Zone 44N (WGS 84)", 32644, 166_000, 800_000, 833_000, 4_000_000, "m"),
     ("UTM Zone 45N (WGS 84)", 32645, 166_000, 800_000, 833_000, 4_000_000, "m"),
     ("UTM Zone 46N (WGS 84)", 32646, 166_000, 800_000, 833_000, 4_000_000, "m"),
-    # ── Germany - UTM 32N / 33N (ETRS89) ────────────────────────────────
+    # ── Germany — UTM 32N / 33N (ETRS89) ────────────────────────────────
     ("ETRS89 / UTM zone 32N", 25832, 166_000, 5_200_000, 833_000, 6_100_000, "m"),
     ("ETRS89 / UTM zone 33N", 25833, 166_000, 5_200_000, 833_000, 6_100_000, "m"),
-    # ── Germany - DHDN / Gauss-Krüger zones 2-5 ─────────────────────────
+    # ── Germany — DHDN / Gauss-Krüger zones 2-5 ─────────────────────────
     ("DHDN / 3-Grad GK zone 2", 31466, 2_400_000, 5_200_000, 2_900_000, 6_100_000, "m"),
     ("DHDN / 3-Grad GK zone 3", 31467, 3_300_000, 5_200_000, 3_900_000, 6_100_000, "m"),
     ("DHDN / 3-Grad GK zone 4", 31468, 4_300_000, 5_200_000, 4_900_000, 6_100_000, "m"),
     ("DHDN / 3-Grad GK zone 5", 31469, 5_300_000, 5_200_000, 5_900_000, 6_100_000, "m"),
-    # ── Switzerland - LV95 ──────────────────────────────────────────────
+    # ── Switzerland — LV95 ──────────────────────────────────────────────
     ("CH1903+ / LV95", 2056, 2_480_000, 1_070_000, 2_840_000, 1_300_000, "m"),
-    # ── Austria - MGI / Austria zones ───────────────────────────────────
+    # ── Austria — MGI / Austria zones ───────────────────────────────────
     ("MGI / Austria M28", 31256, -200_000, 5_100_000, 250_000, 5_500_000, "m"),
     ("MGI / Austria M31", 31257, -100_000, 5_100_000, 350_000, 5_500_000, "m"),
     ("MGI / Austria M34", 31258, 0, 5_100_000, 400_000, 5_500_000, "m"),
-    # ── UK - British National Grid + Irish TM75 ─────────────────────────
+    # ── UK — British National Grid + Irish TM75 ─────────────────────────
     ("OSGB36 / British National Grid", 27700, 0, 0, 700_000, 1_300_000, "m"),
     ("TM75 / Irish Grid", 29903, 0, 0, 500_000, 600_000, "m"),
-    # ── France - RGF93 Lambert-93 ───────────────────────────────────────
+    # ── France — RGF93 Lambert-93 ───────────────────────────────────────
     ("RGF93 / Lambert-93", 2154, 100_000, 6_000_000, 1_300_000, 7_200_000, "m"),
-    # ── Netherlands - RD New ────────────────────────────────────────────
+    # ── Netherlands — RD New ────────────────────────────────────────────
     ("Amersfoort / RD New", 28992, -7_000, 289_000, 300_000, 629_000, "m"),
-    # ── US - State Plane (top-10 by population) - wide windows ──────────
+    # ── US — State Plane (top-10 by population) — wide windows ──────────
     ("NAD83 / California zone 1 (ft)", 2225, 5_500_000, 1_300_000, 7_800_000, 2_700_000, "ft"),
     ("NAD83 / California zone 3 (ft)", 2227, 5_500_000, 1_400_000, 7_400_000, 2_400_000, "ft"),
     ("NAD83 / Texas Central (ft)", 2277, 2_500_000, 6_500_000, 5_300_000, 10_500_000, "ft"),
@@ -144,7 +144,7 @@ _REGION_TABLE: list[tuple[str, int, float, float, float, float, str]] = [
     ("NAD83 / Ohio South (ft)", 3735, 1_200_000, 0, 2_400_000, 800_000, "ft"),
     ("NAD83 / Georgia East (ft)", 2239, 500_000, 0, 1_000_000, 1_700_000, "ft"),
     ("NAD83 / Michigan Central (ft)", 2253, 5_000_000, 7_000_000, 9_000_000, 11_500_000, "ft"),
-    # ── US UTM (zones 10N..19N) - y band tied to US lat 24°..49° ────────
+    # ── US UTM (zones 10N..19N) — y band tied to US lat 24°..49° ────────
     # Y window matches the USA latitude band only (2_600_000..5_500_000)
     # so US bboxes don't get confused with Indian UTM at lower y.
     ("UTM Zone 10N (WGS 84)", 32610, 166_000, 3_500_000, 833_000, 5_500_000, "m"),
@@ -157,11 +157,11 @@ _REGION_TABLE: list[tuple[str, int, float, float, float, float, str]] = [
     ("UTM Zone 17N (WGS 84)", 32617, 166_000, 3_500_000, 833_000, 5_500_000, "m"),
     ("UTM Zone 18N (WGS 84)", 32618, 166_000, 3_500_000, 833_000, 5_500_000, "m"),
     ("UTM Zone 19N (WGS 84)", 32619, 166_000, 3_500_000, 833_000, 5_500_000, "m"),
-    # ── UAE / KSA / Iran / Pakistan - UTM 38N..40N (lat 16°..37°) ───────
+    # ── UAE / KSA / Iran / Pakistan — UTM 38N..40N (lat 16°..37°) ───────
     ("UTM Zone 38N (WGS 84)", 32638, 166_000, 1_800_000, 833_000, 4_100_000, "m"),
     ("UTM Zone 39N (WGS 84)", 32639, 166_000, 1_800_000, 833_000, 4_100_000, "m"),
     ("UTM Zone 40N (WGS 84)", 32640, 166_000, 1_800_000, 833_000, 4_100_000, "m"),
-    # ── Japan - JGD2011 plane rectangular CS zones I..XIX ───────────────
+    # ── Japan — JGD2011 plane rectangular CS zones I..XIX ───────────────
     ("JGD2011 / Japan Plane Zone I", 6669, -250_000, -400_000, 250_000, 400_000, "m"),
     ("JGD2011 / Japan Plane Zone II", 6670, -250_000, -400_000, 250_000, 400_000, "m"),
     ("JGD2011 / Japan Plane Zone III", 6671, -250_000, -400_000, 250_000, 400_000, "m"),
@@ -181,7 +181,7 @@ _REGION_TABLE: list[tuple[str, int, float, float, float, float, str]] = [
     ("JGD2011 / Japan Plane Zone XVII", 6685, -250_000, -400_000, 250_000, 400_000, "m"),
     ("JGD2011 / Japan Plane Zone XVIII", 6686, -250_000, -400_000, 250_000, 400_000, "m"),
     ("JGD2011 / Japan Plane Zone XIX", 6687, -250_000, -400_000, 250_000, 400_000, "m"),
-    # ── Brazil - SIRGAS 2000 UTM 18S..25S ───────────────────────────────
+    # ── Brazil — SIRGAS 2000 UTM 18S..25S ───────────────────────────────
     ("SIRGAS 2000 / UTM zone 18S", 31978, 166_000, 6_100_000, 833_000, 10_000_000, "m"),
     ("SIRGAS 2000 / UTM zone 19S", 31979, 166_000, 6_100_000, 833_000, 10_000_000, "m"),
     ("SIRGAS 2000 / UTM zone 20S", 31980, 166_000, 6_100_000, 833_000, 10_000_000, "m"),
@@ -190,7 +190,7 @@ _REGION_TABLE: list[tuple[str, int, float, float, float, float, str]] = [
     ("SIRGAS 2000 / UTM zone 23S", 31983, 166_000, 6_100_000, 833_000, 10_000_000, "m"),
     ("SIRGAS 2000 / UTM zone 24S", 31984, 166_000, 6_100_000, 833_000, 10_000_000, "m"),
     ("SIRGAS 2000 / UTM zone 25S", 31985, 166_000, 6_100_000, 833_000, 10_000_000, "m"),
-    # ── China - CGCS2000 3-degree Gauss-Krüger zones 13..23 ─────────────
+    # ── China — CGCS2000 3-degree Gauss-Krüger zones 13..23 ─────────────
     ("CGCS2000 / 3-degree GK zone 13", 4513, 13_300_000, 1_800_000, 13_700_000, 6_000_000, "m"),
     ("CGCS2000 / 3-degree GK zone 14", 4514, 14_300_000, 1_800_000, 14_700_000, 6_000_000, "m"),
     ("CGCS2000 / 3-degree GK zone 15", 4515, 15_300_000, 1_800_000, 15_700_000, 6_000_000, "m"),
@@ -202,7 +202,7 @@ _REGION_TABLE: list[tuple[str, int, float, float, float, float, str]] = [
     ("CGCS2000 / 3-degree GK zone 21", 4521, 21_300_000, 1_800_000, 21_700_000, 6_000_000, "m"),
     ("CGCS2000 / 3-degree GK zone 22", 4522, 22_300_000, 1_800_000, 22_700_000, 6_000_000, "m"),
     ("CGCS2000 / 3-degree GK zone 23", 4523, 23_300_000, 1_800_000, 23_700_000, 6_000_000, "m"),
-    # ── Levant - Palestine 1923 Grid ────────────────────────────────────
+    # ── Levant — Palestine 1923 Grid ────────────────────────────────────
     ("Palestine 1923 / Palestine Grid", 28191, 100_000, 50_000, 250_000, 350_000, "m"),
 ]
 
@@ -238,7 +238,7 @@ def _score_region(bbox: BBox, region: BBox) -> float:
       regions score marginally higher than huge ones. This is what
       breaks ties between e.g. ``British National Grid`` (huge window)
       and ``Palestine 1923 Grid`` (small window) for a bbox that
-      happens to fit both - the tighter region wins, which matches
+      happens to fit both — the tighter region wins, which matches
       real-world surveyor expectations.
     """
     overlap, a_area, b_area = _bbox_overlap(bbox, region)
@@ -247,7 +247,7 @@ def _score_region(bbox: BBox, region: BBox) -> float:
     overlap_frac = min(1.0, overlap / a_area)
     if overlap_frac < 1.0:
         return overlap_frac
-    # Fully contained - tightness bonus inversely proportional to region
+    # Fully contained — tightness bonus inversely proportional to region
     # size. Bounded to 0.001..0.05 so it only ever breaks ties between
     # otherwise-equal candidates and never overrides a partial-fit
     # candidate that would be a better match.
@@ -280,7 +280,7 @@ def _pyproj_verify(epsg: int, bbox: BBox) -> float | None:
             return 0.0
         # All in range → full bonus.
         return 1.0
-    except Exception:  # noqa: BLE001 - pyproj has many failure modes
+    except Exception:  # noqa: BLE001 — pyproj has many failure modes
         return None
 
 
@@ -300,7 +300,7 @@ def _lookup_name(epsg: int, fallback: str) -> str:
     if _HAS_PYPROJ and _PyprojCRS is not None:
         try:
             return _PyprojCRS.from_epsg(epsg).name  # type: ignore[no-any-return]
-        except Exception:  # noqa: BLE001 - any pyproj error → fallback
+        except Exception:  # noqa: BLE001 — any pyproj error → fallback
             pass
     return fallback
 
@@ -364,7 +364,7 @@ def _normalise_units(u: str | None) -> Units:
 
 
 def detect_from_bbox(bbox: BBox, units: str = "m") -> CRSGuess:
-    """Guess the CRS from a bounding box alone - the universal fallback.
+    """Guess the CRS from a bounding box alone — the universal fallback.
 
     Args:
         bbox: ``(xmin, ymin, xmax, ymax)`` in whatever units the source
@@ -374,7 +374,7 @@ def detect_from_bbox(bbox: BBox, units: str = "m") -> CRSGuess:
             spellings.
 
     Returns:
-        :class:`CRSGuess`. ``epsg=None`` means "could not decide - ask
+        :class:`CRSGuess`. ``epsg=None`` means "could not decide — ask
         the user", which is a *legitimate* result for project-local
         files with arbitrary origins.
     """
@@ -385,7 +385,7 @@ def detect_from_bbox(bbox: BBox, units: str = "m") -> CRSGuess:
 
     xmin, ymin, xmax, ymax = bbox
 
-    # WGS 84 lat-lon - narrow window, distinctive ranges.
+    # WGS 84 lat-lon — narrow window, distinctive ranges.
     if (
         -180.0 <= xmin <= 180.0
         and -180.0 <= xmax <= 180.0
@@ -407,7 +407,7 @@ def detect_from_bbox(bbox: BBox, units: str = "m") -> CRSGuess:
                 alternatives=[],
             )
 
-    # Project-local - small origin, area under ~1 km².
+    # Project-local — small origin, area under ~1 km².
     area = (xmax - xmin) * (ymax - ymin)
     if (
         abs(xmin) < 10_000
@@ -425,12 +425,12 @@ def detect_from_bbox(bbox: BBox, units: str = "m") -> CRSGuess:
         if score > 0:
             # Tighten score: bbox must also be at least 10× larger than
             # noise (small bboxes that happen to land inside a huge UTM
-            # window without really belonging there) - see project-local
+            # window without really belonging there) — see project-local
             # guard above which already filters the worst cases.
             scored.append((score, name, epsg, runits))
 
     if not scored:
-        # No region matched at all - likely project-local with a big
+        # No region matched at all — likely project-local with a big
         # offset, or coordinates we don't cover. Emit unknown.
         return _unknown_guess(bbox, norm_units)
 
@@ -462,7 +462,7 @@ def detect_from_bbox(bbox: BBox, units: str = "m") -> CRSGuess:
     # If pyproj is available, prefer the candidate whose inverse
     # projection lands inside lat/lon bounds. This lets us pick
     # (e.g.) UAE UTM 40N over India UTM 43N when the bbox is at
-    # x≈325k, y≈2.8M - both fit the bbox window but only one
+    # x≈325k, y≈2.8M — both fit the bbox window but only one
     # back-projects to UAE longitudes.
     if _HAS_PYPROJ:
         verified: list[tuple[float, str, int, str, float]] = []
@@ -509,9 +509,9 @@ _INSUNITS_TO_NAME: dict[int, Units] = {
     1: "in",
     2: "ft",
     4: "mm",
-    5: "mm",  # cm - closest accepted Units literal
+    5: "mm",  # cm — closest accepted Units literal
     6: "m",
-    7: "m",  # km - closest accepted Units literal
+    7: "m",  # km — closest accepted Units literal
 }
 
 
@@ -520,23 +520,23 @@ def detect_from_dwg_header(dwg_path: Path) -> CRSGuess:
 
     Tries in order:
 
-    1. ``ACAD_PROJECTION_GEODATA`` dictionary - if present, returns
+    1. ``ACAD_PROJECTION_GEODATA`` dictionary — if present, returns
        ``detection_method="dwg_geodata"`` with confidence 1.0.
     2. ``$EXTMIN/$EXTMAX/$INSUNITS`` → :func:`detect_from_bbox`.
     """
     try:
         import ezdxf  # type: ignore[import-not-found]
-    except ImportError:  # pragma: no cover - ezdxf is a hard dep
-        logger.warning("ezdxf not installed - CRS detection skipped for %s", dwg_path)
+    except ImportError:  # pragma: no cover — ezdxf is a hard dep
+        logger.warning("ezdxf not installed — CRS detection skipped for %s", dwg_path)
         return _unknown_guess()
 
     try:
         doc = ezdxf.readfile(str(dwg_path))
-    except Exception as exc:  # noqa: BLE001 - any ezdxf failure → unknown
+    except Exception as exc:  # noqa: BLE001 — any ezdxf failure → unknown
         logger.debug("ezdxf could not read %s: %s", dwg_path, exc)
         return _unknown_guess()
 
-    # Step 1 - try the geodata dictionary (Civil 3D / AutoCAD 2010+).
+    # Step 1 — try the geodata dictionary (Civil 3D / AutoCAD 2010+).
     epsg = _read_acad_geodata_epsg(doc)
     insunits = int(doc.header.get("$INSUNITS", 0))
     units = _INSUNITS_TO_NAME.get(insunits, "unitless")
@@ -552,7 +552,7 @@ def detect_from_dwg_header(dwg_path: Path) -> CRSGuess:
             alternatives=[],
         )
 
-    # Step 2 - bbox heuristic.
+    # Step 2 — bbox heuristic.
     bbox = _dwg_bbox(doc)
     guess = detect_from_bbox(bbox, units=units)
     return guess
@@ -561,7 +561,7 @@ def detect_from_dwg_header(dwg_path: Path) -> CRSGuess:
 def _dwg_bbox(doc: Any) -> BBox:
     extmin = doc.header.get("$EXTMIN", (0.0, 0.0, 0.0))
     extmax = doc.header.get("$EXTMAX", (0.0, 0.0, 0.0))
-    # ezdxf returns ``Vec3`` - index access works for tuples too.
+    # ezdxf returns ``Vec3`` — index access works for tuples too.
     return (float(extmin[0]), float(extmin[1]), float(extmax[0]), float(extmax[1]))
 
 
@@ -572,7 +572,7 @@ def _read_acad_geodata_epsg(doc: Any) -> int | None:
     """Best-effort scan for an EPSG code in the AutoCAD geodata dict.
 
     AutoCAD writes a ``ACAD_PROJECTION_GEODATA`` dictionary entry that
-    embeds an XML-like CRS definition. We don't fully parse it - we
+    embeds an XML-like CRS definition. We don't fully parse it — we
     grep for the canonical ``EPSG:<digits>`` token, which all
     well-authored geodata blocks include.
     """
@@ -593,12 +593,12 @@ def _read_acad_geodata_epsg(doc: Any) -> int | None:
                 m = _ACAD_EPSG_RE.search(text)
                 if m:
                     return int(m.group(1))
-    except Exception:  # noqa: BLE001 - best-effort
+    except Exception:  # noqa: BLE001 — best-effort
         return None
     return None
 
 
-# ── IFC (no IfcOpenShell - regex over STEP text) ────────────────────────
+# ── IFC (no IfcOpenShell — regex over STEP text) ────────────────────────
 
 
 _IFC_PROJECTED_CRS_RE = re.compile(
@@ -625,7 +625,7 @@ def detect_from_ifc(ifc_path: Path) -> CRSGuess:
     ``unknown`` if neither is present and we can't compute a bbox.
     """
     try:
-        # Read up to ~256 KB - header + first chunk is enough. IFC
+        # Read up to ~256 KB — header + first chunk is enough. IFC
         # files put schema metadata at the top.
         text = ifc_path.read_text(encoding="utf-8", errors="replace")[:262_144]
     except Exception as exc:  # noqa: BLE001
@@ -636,7 +636,7 @@ def detect_from_ifc(ifc_path: Path) -> CRSGuess:
 
 
 def _detect_from_ifc_text(text: str) -> CRSGuess:
-    # Step 1 - IfcProjectedCRS Name field.
+    # Step 1 — IfcProjectedCRS Name field.
     m = _IFC_PROJECTED_CRS_RE.search(text)
     epsg: int | None = None
     descriptive_name: str | None = None
@@ -653,7 +653,7 @@ def _detect_from_ifc_text(text: str) -> CRSGuess:
         if any_epsg:
             epsg = int(any_epsg.group(1))
 
-    # Step 2 - IfcMapConversion → eastings/northings hint for bbox.
+    # Step 2 — IfcMapConversion → eastings/northings hint for bbox.
     mc = _IFC_MAP_CONVERSION_RE.search(text)
     origin: tuple[float, float] | None = None
     if mc:
@@ -703,7 +703,7 @@ def detect_from_canonical(canonical: dict[str, Any]) -> CRSGuess:
     if isinstance(pre, dict) and pre.get("epsg"):
         try:
             return CRSGuess(**pre)
-        except Exception:  # noqa: BLE001 - fall through to recompute
+        except Exception:  # noqa: BLE001 — fall through to recompute
             pass
 
     bbox_field = canonical.get("bounding_box") or (

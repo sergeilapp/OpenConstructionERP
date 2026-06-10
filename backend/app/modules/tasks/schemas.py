@@ -1,4 +1,4 @@
-"""‌⁠‍Tasks Pydantic schemas - request/response models."""
+"""‌⁠‍Tasks Pydantic schemas — request/response models."""
 
 from __future__ import annotations
 
@@ -130,7 +130,7 @@ class TaskResponse(BaseModel):
     created_by: str | None = None
     assigned_to: str | None = Field(
         default=None,
-        description="Alias for responsible_id - the UUID of the assigned user.",
+        description="Alias for responsible_id — the UUID of the assigned user.",
     )
     assigned_to_name: str | None = Field(
         default=None,

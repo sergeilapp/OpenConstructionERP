@@ -9,9 +9,7 @@ import {
   Archive,
   Plus,
   Lock,
-  LockOpen,
   Cloud,
-  CloudDownload,
   Camera,
   Plane,
   Scan,
@@ -20,16 +18,10 @@ import {
   ChevronRight,
   AlertTriangle,
   Trash2,
+  ArrowRight,
+  X,
   Globe2,
   FileDown,
-  Upload,
-  Users,
-  Package,
-  CheckCircle2,
-  Pencil,
-  Wallet,
-  ClipboardList,
-  ExternalLink,
 } from 'lucide-react';
 import {
   Button,
@@ -42,43 +34,30 @@ import {
   WideModalSection,
   WideModalField,
   ConfirmDialog,
-  DismissibleInfo,
 } from '@/shared/ui';
 import { useConfirm } from '@/shared/hooks/useConfirm';
 import { RequiresProject } from '@/shared/auth/RequiresProject';
 import { DateDisplay } from '@/shared/ui/DateDisplay';
-import { PageHeader } from '@/shared/ui/PageHeader';
 import { useToastStore } from '@/stores/useToastStore';
 import { useProjectContextStore } from '@/stores/useProjectContextStore';
-import { apiGet, getErrorMessage } from '@/shared/lib/api';
+import { getErrorMessage } from '@/shared/lib/api';
 import { todayLocalISO, isoDateFromLocal, nowLocalISO } from '@/shared/lib/dates';
 import { projectsApi } from '@/features/projects/api';
 import {
   listDiaries,
   getDiary,
   createDiary,
-  updateDiary,
   closeDiary,
   deleteDiary,
   signDiary,
-  unlockDiary,
-  archiveDiary,
   weatherToday,
-  fetchWeather,
-  createWeather,
   listEntries,
   createEntry,
   deleteEntry,
   listPhotos,
-  createPhoto,
   listDroneSurveys,
-  createDroneSurvey,
   listRealityCaptures,
-  createRealityCapture,
   listArchiveSignatures,
-  diaryCompleteness,
-  diaryWorkforceSummary,
-  exportSclBundle,
   downloadDiaryPdf,
   type DailyDiary,
   type WeatherRecord,
@@ -89,9 +68,6 @@ import {
   type DiaryStatus,
   type SignerRole,
   type EntryType,
-  type CaptureType,
-  type DiaryCompleteness,
-  type SclBundleManifest,
 } from './api';
 
 type Tab = 'diaries' | 'today' | 'archive';
@@ -103,55 +79,6 @@ const STATUS_VARIANT: Record<DiaryStatus, 'neutral' | 'blue' | 'success' | 'warn
   archived: 'neutral',
 };
 
-// Human, English-fallback labels for the diary status enum so badges read
-// e.g. "Open" rather than the raw token "open". Audit ux_clarity fix.
-const STATUS_LABEL_EN: Record<DiaryStatus, string> = {
-  open: 'Open',
-  closed: 'Closed',
-  signed: 'Signed',
-  archived: 'Archived',
-};
-
-// Human, English-fallback labels for the diary entry-type enum so the
-// dropdown and timeline badges read e.g. "Delivery" rather than "delivery".
-const ENTRY_TYPE_LABEL_EN: Record<EntryType, string> = {
-  general: 'General',
-  visitor: 'Visitor',
-  event: 'Event',
-  delivery: 'Delivery',
-  completion: 'Completion',
-  incident_summary: 'Incident summary',
-  inspection_summary: 'Inspection summary',
-  photo_note: 'Photo note',
-};
-
-type TFn = ReturnType<typeof useTranslation>['t'];
-
-function statusLabel(t: TFn, status: DiaryStatus): string {
-  return t(`daily_diary.status.${status}`, {
-    defaultValue: STATUS_LABEL_EN[status] ?? status,
-  });
-}
-
-function entryTypeLabel(t: TFn, type: EntryType): string {
-  return t(`daily_diary.entry_type.${type}`, {
-    defaultValue: ENTRY_TYPE_LABEL_EN[type] ?? type,
-  });
-}
-
-const SIGNER_ROLE_LABEL_EN: Record<SignerRole, string> = {
-  owner: 'Owner',
-  supervisor: 'Site supervisor',
-  inspector: 'Inspector',
-  client: 'Client',
-};
-
-function signerRoleLabel(t: TFn, role: SignerRole): string {
-  return t(`daily_diary.signer_role_label.${role}`, {
-    defaultValue: SIGNER_ROLE_LABEL_EN[role] ?? role,
-  });
-}
-
 const inputCls =
   'h-9 w-full rounded-lg border border-border bg-surface-primary px-3 text-sm focus:outline-none focus:ring-2 focus:ring-oe-blue/30 focus:border-oe-blue';
 
@@ -161,17 +88,6 @@ const inputCls =
 // implementation lives in shared/lib/dates.ts and is shared with field-reports.
 const todayIso = todayLocalISO;
 const isoDate = isoDateFromLocal;
-
-// The latest date a diary may be opened for. The backend allows today plus
-// one day of slack (service.create_diary: now(UTC).date() + 1 day) so a site
-// running ahead of UTC can still open "its" current day. Mirror that rule
-// exactly in the UI so the calendar enables/disables the same cells the API
-// would accept, instead of a stricter "today only" guess.
-function maxDiaryIso(): string {
-  const t = new Date();
-  t.setDate(t.getDate() + 1);
-  return todayLocalISO(t);
-}
 
 function monthBounds(year: number, month: number): { from: string; to: string } {
   // Built from the local calendar fields the grid itself uses, NOT a UTC
@@ -201,6 +117,91 @@ function formatSha(sha: string): string {
   return `${sha.slice(0, 8)}…${sha.slice(-6)}`;
 }
 
+/* ── Workflow intro ──────────────────────────────────────────────────────
+ *
+ * Site teams open this page without always knowing WHY the diary matters
+ * downstream. This banner states the purpose, the daily next-action, and
+ * the legal/audit weight of a signed record — plus one-click jumps to the
+ * modules the diary feeds into (schedule progress, tasks, photo files).
+ * It is dismissible per-session so power users aren't slowed down.
+ */
+function WorkflowIntro() {
+  const { t } = useTranslation();
+  const navigate = useNavigate();
+  const [dismissed, setDismissed] = useState(
+    () => sessionStorage.getItem('oe.dd.introDismissed') === '1',
+  );
+  if (dismissed) return null;
+  const dismiss = () => {
+    sessionStorage.setItem('oe.dd.introDismissed', '1');
+    setDismissed(true);
+  };
+  return (
+    <Card
+      padding="md"
+      className="border-oe-blue/20 bg-oe-blue-subtle/10"
+    >
+      <div className="flex items-start gap-3">
+        <div className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-oe-blue-subtle text-oe-blue-text">
+          <BookOpen size={16} />
+        </div>
+        <div className="min-w-0 flex-1">
+          <p className="text-sm font-semibold text-content-primary">
+            {t('daily_diary.intro_title', {
+              defaultValue: 'One signed record per site day',
+            })}
+          </p>
+          <p className="mt-1 text-xs leading-relaxed text-content-secondary">
+            {t('daily_diary.intro_body', {
+              defaultValue:
+                'Each day, open the diary and log weather, headcount, deliveries and events, attach site photos, then close and sign it. A signed diary is sealed with a sha256 fingerprint — it becomes tamper-evident evidence for delay claims, progress verification and dispute resolution.',
+            })}
+          </p>
+          <div className="mt-3 flex flex-wrap items-center gap-2">
+            <span className="text-2xs font-medium uppercase tracking-wide text-content-tertiary">
+              {t('daily_diary.intro_connects', { defaultValue: 'Feeds into' })}
+            </span>
+            <button
+              type="button"
+              onClick={() => navigate('/schedule')}
+              className="inline-flex items-center gap-1 rounded-full border border-border-light bg-surface-primary px-2.5 py-1 text-xs font-medium text-content-secondary transition-colors hover:border-oe-blue hover:text-oe-blue"
+            >
+              {t('daily_diary.intro_link_schedule', {
+                defaultValue: 'Schedule progress',
+              })}
+              <ArrowRight size={11} />
+            </button>
+            <button
+              type="button"
+              onClick={() => navigate('/tasks')}
+              className="inline-flex items-center gap-1 rounded-full border border-border-light bg-surface-primary px-2.5 py-1 text-xs font-medium text-content-secondary transition-colors hover:border-oe-blue hover:text-oe-blue"
+            >
+              {t('daily_diary.intro_link_tasks', { defaultValue: 'Tasks' })}
+              <ArrowRight size={11} />
+            </button>
+            <button
+              type="button"
+              onClick={() => navigate('/files')}
+              className="inline-flex items-center gap-1 rounded-full border border-border-light bg-surface-primary px-2.5 py-1 text-xs font-medium text-content-secondary transition-colors hover:border-oe-blue hover:text-oe-blue"
+            >
+              {t('daily_diary.intro_link_files', { defaultValue: 'Site photos' })}
+              <ArrowRight size={11} />
+            </button>
+          </div>
+        </div>
+        <button
+          type="button"
+          onClick={dismiss}
+          className="shrink-0 rounded-md p-1 text-content-tertiary transition-colors hover:bg-surface-secondary hover:text-content-primary"
+          aria-label={t('common.dismiss', { defaultValue: 'Dismiss' })}
+        >
+          <X size={14} />
+        </button>
+      </div>
+    </Card>
+  );
+}
+
 /* ── Page ────────────────────────────────────────────────────────────── */
 
 export function DailyDiaryPage() {
@@ -214,39 +215,18 @@ export function DailyDiaryPage() {
   const [month, setMonth] = useState(today.getMonth());
   const [activeDiaryId, setActiveDiaryId] = useState<string>('');
   const [createOpen, setCreateOpen] = useState(false);
-  // Date the create flow should be prefilled with. Set when a user clicks an
-  // empty calendar day so the new diary defaults to THAT day rather than
-  // today; empty string means "use today" (the header / FAB entry points).
-  const [createDate, setCreateDate] = useState<string>('');
   const [signOpen, setSignOpen] = useState(false);
-
-  const openCreate = (date?: string) => {
-    setCreateDate(date ?? '');
-    setCreateOpen(true);
-  };
 
   const projectsQ = useQuery({
     queryKey: ['projects-list-for-diary'],
     queryFn: () => projectsApi.list(),
   });
 
-  // Project selection lives in the global top bar. Follow the active project
-  // from the shared context; only fall back to the first available project
-  // when nothing is selected globally and nothing is picked here yet.
   useEffect(() => {
-    if (activeProjectId) {
-      if (activeProjectId !== projectId) {
-        setProjectId(activeProjectId);
-        setActiveDiaryId('');
-      }
-      return;
-    }
     if (projectId) return;
-    const seed = projectsQ.data?.[0]?.id;
+    const seed = activeProjectId || projectsQ.data?.[0]?.id;
     if (seed) setProjectId(seed);
   }, [activeProjectId, projectsQ.data, projectId]);
-
-  const selectedProjectName = projectsQ.data?.find((p) => p.id === projectId)?.name ?? '';
 
   const bounds = useMemo(() => monthBounds(year, month), [year, month]);
 
@@ -311,89 +291,67 @@ export function DailyDiaryPage() {
     <div className="space-y-5">
       <Breadcrumb
         items={[
-          ...(selectedProjectName
-            ? [{ label: selectedProjectName, to: `/projects/${projectId}` }]
-            : []),
           {
-            label: t('nav.daily_diary', { defaultValue: 'Daily Site Diary' }),
+            label: t('daily_diary.title', { defaultValue: 'Daily Site Diary' }),
           },
         ]}
       />
 
-      <PageHeader
-        srTitle={t('daily_diary.title', { defaultValue: 'Daily Site Diary' })}
-        subtitle={t('daily_diary.subtitle', {
-          defaultValue:
-            'Weather, photos, drone surveys and signed daily records.',
-        })}
-        actions={
-          <>
-            <Button
-              variant="secondary"
-              size="sm"
-              icon={<ClipboardList size={14} />}
-              onClick={() => navigate('/field-reports')}
-              title={t('daily_diary.open_field_report_hint', {
-                defaultValue: 'Open the field-reports register for the daily field report.',
-              })}
-              data-testid="daily-diary-open-field-report"
+      <div className="flex items-start justify-between gap-4 flex-wrap">
+        <div>
+          <h1 className="text-2xl font-semibold text-content-primary">
+            {t('daily_diary.title', { defaultValue: 'Daily Site Diary' })}
+          </h1>
+          <p className="mt-1 text-sm text-content-secondary">
+            {t('daily_diary.subtitle', {
+              defaultValue:
+                'Weather, photos, drone surveys and signed daily records.',
+            })}
+          </p>
+        </div>
+        <div className="flex items-center gap-2">
+          {projectsQ.data && projectsQ.data.length > 0 && (
+            <select
+              value={projectId}
+              onChange={(e) => {
+                setProjectId(e.target.value);
+                setActiveDiaryId('');
+              }}
+              className={clsx(inputCls, 'max-w-xs')}
             >
-              {t('daily_diary.open_field_report', { defaultValue: "Today's field report" })}
-            </Button>
-            {projectId && (
-              <Button
-                variant="secondary"
-                size="sm"
-                icon={<Globe2 size={14} />}
-                onClick={() => navigate(`/projects/${projectId}/geo`)}
-                title={t('geo_hub.view_on_map', { defaultValue: 'View on map' })}
-                data-testid="daily-diary-view-on-map"
-              >
-                {t('geo_hub.view_on_map', { defaultValue: 'View on map' })}
-              </Button>
-            )}
-            <Button
-              variant="primary"
-              size="sm"
-              icon={<Plus size={14} />}
-              onClick={() => openCreate()}
-              disabled={!projectId}
+              {projectsQ.data.map((p) => (
+                <option key={p.id} value={p.id}>
+                  {p.name}
+                </option>
+              ))}
+            </select>
+          )}
+          {projectId && (
+            <button
+              type="button"
+              onClick={() => navigate(`/projects/${projectId}/geo`)}
+              className="inline-flex items-center gap-1.5 rounded-md border border-border-light bg-surface-primary px-2.5 py-1.5 text-xs font-medium text-content-secondary hover:bg-surface-secondary hover:text-oe-blue focus:outline-none focus:ring-2 focus:ring-oe-blue/40 shrink-0"
+              title={t('geo_hub.view_on_map', { defaultValue: 'View on map' })}
+              aria-label={t('geo_hub.view_on_map', { defaultValue: 'View on map' })}
+              data-testid="daily-diary-view-on-map"
             >
-              {t('daily_diary.new_diary', { defaultValue: 'New Diary' })}
-            </Button>
-          </>
-        }
-      />
+              <Globe2 size={13} />
+              {t('geo_hub.view_on_map', { defaultValue: 'View on map' })}
+            </button>
+          )}
+          <Button
+            variant="primary"
+            size="sm"
+            icon={<Plus size={14} />}
+            onClick={() => setCreateOpen(true)}
+            disabled={!projectId}
+          >
+            {t('daily_diary.new_diary', { defaultValue: 'New Diary' })}
+          </Button>
+        </div>
+      </div>
 
-      <DismissibleInfo
-        storageKey="daily-diary"
-        title={t('daily_diary.intro_title', {
-          defaultValue: 'Tamper-proof evidence when claims arrive',
-        })}
-        links={[
-          {
-            label: t('daily_diary.intro_link_schedule', { defaultValue: 'Schedule' }),
-            onClick: () => navigate('/schedule'),
-          },
-          {
-            label: t('daily_diary.intro_link_files', { defaultValue: 'Files' }),
-            onClick: () => navigate('/files'),
-          },
-          {
-            label: t('daily_diary.intro_link_payroll', { defaultValue: 'Payroll' }),
-            onClick: () => navigate('/payroll'),
-          },
-          {
-            label: t('daily_diary.intro_link_field_reports', { defaultValue: 'Field Reports' }),
-            onClick: () => navigate('/field-reports'),
-          },
-        ]}
-      >
-        {t('daily_diary.intro_body', {
-          defaultValue:
-            'Each site day you open the diary, log weather, headcount, deliveries and events, attach photos and drone or reality-capture surveys, then close and sign it. A signed diary is sealed with a sha256 fingerprint so it stands as tamper-evident proof for delay claims and disputes, and it feeds schedule progress and the site photo library.',
-        })}
-      </DismissibleInfo>
+      <WorkflowIntro />
 
       <div className="border-b border-border-light">
         <nav className="flex gap-1 -mb-px">
@@ -451,8 +409,7 @@ export function DailyDiaryPage() {
           ) : (
             <RequiresProject
               emptyHint={t('daily_diary.no_project_desc', {
-                defaultValue:
-                  'Pick a project from the top bar to start logging site diaries.',
+                defaultValue: 'Create a project first to start logging site diaries.',
               })}
             >{null}</RequiresProject>
           )}
@@ -485,7 +442,6 @@ export function DailyDiaryPage() {
               setActiveDiaryId(diary.id);
               setTab('today');
             }}
-            onEmptyDayClick={(iso) => openCreate(iso)}
           />
         )
       ) : tab === 'today' ? (
@@ -511,7 +467,7 @@ export function DailyDiaryPage() {
             projectId={projectId}
             diary={activeDiary}
             loading={activeLoading}
-            onCreate={() => openCreate()}
+            onCreate={() => setCreateOpen(true)}
             onSign={() => setSignOpen(true)}
             onDeleted={() => {
               // After delete, drop the calendar-selected diary so the
@@ -546,14 +502,7 @@ export function DailyDiaryPage() {
       {createOpen && projectId && (
         <CreateDiaryModal
           projectId={projectId}
-          initialDate={createDate || undefined}
           onClose={() => setCreateOpen(false)}
-          onCreated={(diary) => {
-            // Jump straight into the freshly-created day so the user lands on
-            // the editable record they just opened from the calendar.
-            setActiveDiaryId(diary.id);
-            setTab('today');
-          }}
         />
       )}
       {signOpen && activeDiary && (
@@ -568,7 +517,7 @@ export function DailyDiaryPage() {
           primary action without scrolling. ≥44×44 tap target. */}
       <button
         type="button"
-        onClick={() => openCreate()}
+        onClick={() => setCreateOpen(true)}
         disabled={!projectId}
         aria-label={t('daily_diary.new_diary', { defaultValue: 'New Diary' })}
         className="fixed bottom-5 right-5 z-40 inline-flex h-14 w-14 min-h-[44px] min-w-[44px] items-center justify-center rounded-full bg-oe-blue text-white shadow-lg ring-1 ring-black/5 transition-transform hover:scale-105 active:scale-95 disabled:opacity-50 disabled:hover:scale-100 sm:hidden"
@@ -590,7 +539,6 @@ function DiariesCalendar({
   onYearChange,
   onMonthChange,
   onDayClick,
-  onEmptyDayClick,
 }: {
   diaries: DailyDiary[];
   loading: boolean;
@@ -600,20 +548,8 @@ function DiariesCalendar({
   onYearChange: (y: number) => void;
   onMonthChange: (m: number) => void;
   onDayClick: (diary: DailyDiary) => void;
-  /** Open the create flow prefilled with this YYYY-MM-DD (empty, allowed day). */
-  onEmptyDayClick: (iso: string) => void;
 }) {
   const { t } = useTranslation();
-  // Roving-tabindex focus target so arrow keys can walk the grid. Defaults to
-  // today when it's in the visible month, else the first of the month.
-  const initialFocus = useMemo(() => {
-    const ti = todayIso();
-    return ti.startsWith(`${year}-${String(month + 1).padStart(2, '0')}`)
-      ? Number(ti.slice(8, 10))
-      : 1;
-  }, [year, month]);
-  const [focusedDay, setFocusedDay] = useState(initialFocus);
-  useEffect(() => setFocusedDay(initialFocus), [initialFocus]);
 
   const byDate = useMemo(() => {
     const map = new Map<string, DailyDiary>();
@@ -626,7 +562,6 @@ function DiariesCalendar({
   const daysCount = daysInMonth(year, month);
   const firstWeekday = new Date(year, month, 1).getDay(); // 0=Sun
   const offset = (firstWeekday + 6) % 7; // ISO Mon=0
-  const maxIso = maxDiaryIso();
 
   const prevMonth = () => {
     if (month === 0) {
@@ -645,103 +580,29 @@ function DiariesCalendar({
     }
   };
 
-  const activate = (day: number) => {
-    const iso = isoDate(year, month, day);
-    const diary = byDate.get(iso);
-    if (diary) {
-      onDayClick(diary);
-    } else if (iso <= maxIso) {
-      onEmptyDayClick(iso);
-    }
-    // A future empty day is a no-op — the cell carries a tooltip explaining
-    // why it can't be opened (mirrors the backend future-date rejection).
-  };
-
-  // Arrow keys move focus by ±1 / ±7 days within the month; Home/End jump to
-  // the month edges; Enter/Space activate. Focus is moved imperatively to the
-  // newly-focused cell so screen readers and sighted keyboard users track it.
-  const onGridKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
-    let next = focusedDay;
-    switch (e.key) {
-      case 'ArrowRight':
-        next = Math.min(daysCount, focusedDay + 1);
-        break;
-      case 'ArrowLeft':
-        next = Math.max(1, focusedDay - 1);
-        break;
-      case 'ArrowDown':
-        next = Math.min(daysCount, focusedDay + 7);
-        break;
-      case 'ArrowUp':
-        next = Math.max(1, focusedDay - 7);
-        break;
-      case 'Home':
-        next = 1;
-        break;
-      case 'End':
-        next = daysCount;
-        break;
-      case 'Enter':
-      case ' ':
-        e.preventDefault();
-        activate(focusedDay);
-        return;
-      default:
-        return;
-    }
-    e.preventDefault();
-    if (next !== focusedDay) {
-      setFocusedDay(next);
-      const el = document.getElementById(`dd-cell-${isoDate(year, month, next)}`);
-      el?.focus();
-    }
-  };
-
   const weekdays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
   return (
     <Card padding="md">
-      <div className="flex items-center justify-between mb-3">
+      <div className="flex items-center justify-between mb-4">
         <button
           type="button"
           onClick={prevMonth}
-          className="rounded-md p-1.5 hover:bg-surface-secondary focus:outline-none focus:ring-2 focus:ring-oe-blue/40"
+          className="rounded-md p-1.5 hover:bg-surface-secondary"
           aria-label={t('daily_diary.prev_month', { defaultValue: 'Previous month' })}
         >
           <ChevronLeft size={16} />
         </button>
-        <h3 className="text-base font-semibold" aria-live="polite">
-          {fmtMonth(year, month, locale)}
-        </h3>
-        <div className="flex items-center gap-1">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => {
-              const now = new Date();
-              onYearChange(now.getFullYear());
-              onMonthChange(now.getMonth());
-            }}
-          >
-            {t('daily_diary.today', { defaultValue: 'Today' })}
-          </Button>
-          <button
-            type="button"
-            onClick={nextMonth}
-            className="rounded-md p-1.5 hover:bg-surface-secondary focus:outline-none focus:ring-2 focus:ring-oe-blue/40"
-            aria-label={t('daily_diary.next_month', { defaultValue: 'Next month' })}
-          >
-            <ChevronRight size={16} />
-          </button>
-        </div>
+        <h3 className="text-base font-semibold">{fmtMonth(year, month, locale)}</h3>
+        <button
+          type="button"
+          onClick={nextMonth}
+          className="rounded-md p-1.5 hover:bg-surface-secondary"
+          aria-label={t('daily_diary.next_month', { defaultValue: 'Next month' })}
+        >
+          <ChevronRight size={16} />
+        </button>
       </div>
-
-      <p className="mb-3 text-xs text-content-tertiary">
-        {t('daily_diary.calendar_hint', {
-          defaultValue:
-            'Click a day to open its diary, or an empty day to start one. Arrow keys move between days, Enter opens.',
-        })}
-      </p>
 
       {loading ? (
         <SkeletonTable rows={5} columns={7} />
@@ -757,105 +618,39 @@ function DiariesCalendar({
               </div>
             ))}
           </div>
-          <div
-            role="grid"
-            aria-label={fmtMonth(year, month, locale)}
-            className="grid grid-cols-7 gap-1"
-            onKeyDown={onGridKeyDown}
-          >
+          <div className="grid grid-cols-7 gap-1">
             {Array.from({ length: offset }, (_, i) => (
-              <div key={`pad-${i}`} className="h-20" role="presentation" />
+              <div key={`pad-${i}`} className="h-20" />
             ))}
             {Array.from({ length: daysCount }, (_, i) => {
               const day = i + 1;
               const iso = isoDate(year, month, day);
               const diary = byDate.get(iso);
               const isToday = iso === todayIso();
-              const isFuture = !diary && iso > maxIso;
-              const labour = diary?.labour_count ?? 0;
-              const equipment = diary?.equipment_count ?? 0;
-              const cellLabel = diary
-                ? t('daily_diary.cell_open', {
-                    defaultValue: '{{date}} - open diary ({{status}})',
-                    date: iso,
-                    status: statusLabel(t, diary.status),
-                  })
-                : isFuture
-                  ? t('daily_diary.cell_future', {
-                      defaultValue:
-                        '{{date}} - a site diary cannot be opened this far ahead',
-                      date: iso,
-                    })
-                  : t('daily_diary.cell_empty', {
-                      defaultValue: '{{date}} - start a diary',
-                      date: iso,
-                    });
               return (
                 <button
                   key={iso}
-                  id={`dd-cell-${iso}`}
                   type="button"
-                  role="gridcell"
-                  tabIndex={day === focusedDay ? 0 : -1}
-                  onFocus={() => setFocusedDay(day)}
-                  onClick={() => activate(day)}
-                  disabled={isFuture}
-                  aria-label={cellLabel}
-                  title={
-                    isFuture
-                      ? t('daily_diary.cell_future_tooltip', {
-                          defaultValue:
-                            'Future-dated site diaries are not allowed - a diary is a contemporaneous record.',
-                        })
-                      : undefined
-                  }
+                  onClick={() => diary && onDayClick(diary)}
+                  disabled={!diary}
                   className={clsx(
-                    'group relative h-20 rounded-md border p-1.5 text-left transition-colors flex flex-col focus:outline-none focus:ring-2 focus:ring-oe-blue/50',
+                    'h-20 rounded-md border p-1.5 text-left transition-colors flex flex-col',
                     diary
                       ? 'border-border-light bg-surface-elevated hover:border-oe-blue hover:shadow-sm cursor-pointer'
-                      : isFuture
-                        ? 'border-dashed border-border-light/40 bg-transparent text-content-tertiary cursor-not-allowed opacity-60'
-                        : 'border-dashed border-border-light/60 bg-transparent text-content-tertiary hover:border-oe-blue hover:text-oe-blue hover:bg-oe-blue-subtle/10 cursor-pointer',
+                      : 'border-dashed border-border-light/60 bg-transparent text-content-tertiary cursor-default',
                     isToday && 'ring-2 ring-oe-blue/30',
                   )}
                 >
                   <span className="text-xs font-semibold">{day}</span>
-                  {diary ? (
+                  {diary && (
                     <>
                       <Badge variant={STATUS_VARIANT[diary.status]} size="sm" dot>
-                        {statusLabel(t, diary.status)}
+                        {diary.status}
                       </Badge>
-                      <div className="mt-auto flex items-center gap-2 text-2xs text-content-tertiary">
-                        {labour > 0 && (
-                          <span
-                            className="inline-flex items-center gap-0.5"
-                            title={t('daily_diary.labour', { defaultValue: 'Labour' })}
-                          >
-                            <Users size={9} />
-                            {labour}
-                          </span>
-                        )}
-                        {equipment > 0 && (
-                          <span
-                            className="inline-flex items-center gap-0.5"
-                            title={t('daily_diary.equipment', { defaultValue: 'Equipment' })}
-                          >
-                            <Package size={9} />
-                            {equipment}
-                          </span>
-                        )}
-                        {diary.status === 'signed' && (
-                          <Lock size={9} className="ml-auto text-semantic-success" />
-                        )}
-                      </div>
+                      {diary.status === 'signed' && (
+                        <Lock size={10} className="mt-auto text-semantic-success" />
+                      )}
                     </>
-                  ) : (
-                    !isFuture && (
-                      <Plus
-                        size={14}
-                        className="mt-auto self-end text-content-tertiary opacity-0 transition-opacity group-hover:opacity-100"
-                      />
-                    )
                   )}
                 </button>
               );
@@ -885,18 +680,9 @@ function TodayTab({
   onDeleted: () => void;
 }) {
   const { t } = useTranslation();
-  const navigate = useNavigate();
   const qc = useQueryClient();
   const addToast = useToastStore((s) => s.addToast);
   const confirmCtx = useConfirm();
-
-  // Modal toggles for the newly-wired asset/lifecycle actions.
-  const [photoOpen, setPhotoOpen] = useState(false);
-  const [weatherOpen, setWeatherOpen] = useState(false);
-  const [droneOpen, setDroneOpen] = useState(false);
-  const [realityOpen, setRealityOpen] = useState(false);
-  const [sclOpen, setSclOpen] = useState(false);
-  const [editOpen, setEditOpen] = useState(false);
 
   // All asset panels are scoped to the diary's OWN date — not todayIso().
   // A diary opened from the calendar can be any past day; previously the
@@ -904,21 +690,6 @@ function TodayTab({
   // weather/photos beside a header for a different date.
   const diaryDate = diary?.diary_date;
   const diaryId = diary?.id;
-
-  // Project record carries the geocoded address coords used to fetch real
-  // weather from Open-Meteo for the diary's location.
-  const projectQ = useQuery({
-    queryKey: ['daily-diary', 'project', projectId],
-    queryFn: () => projectsApi.get(projectId),
-    enabled: !!projectId,
-  });
-  const projectCoords = useMemo(() => {
-    const addr = projectQ.data?.address;
-    if (addr && addr.lat != null && addr.lng != null) {
-      return { lat: addr.lat, lng: addr.lng };
-    }
-    return null;
-  }, [projectQ.data]);
 
   const weatherQ = useQuery({
     queryKey: ['daily-diary', 'weather', projectId, diaryDate],
@@ -992,121 +763,6 @@ function TodayTab({
     onError: (err) => addToast({ type: 'error', title: getErrorMessage(err) }),
   });
 
-  // Readiness signal shown as a traffic-light chip before signing, and the
-  // workforce roll-up surfaced beside the diary meta — both are headline
-  // backend capabilities that previously had no UI surface.
-  const completenessQ = useQuery({
-    queryKey: ['daily-diary', 'completeness', diaryId],
-    queryFn: () => diaryCompleteness(diaryId as string),
-    enabled: !!diaryId,
-  });
-
-  const workforceQ = useQuery({
-    queryKey: ['daily-diary', 'workforce', diaryId],
-    queryFn: () => diaryWorkforceSummary(diaryId as string),
-    enabled: !!diaryId,
-  });
-
-  const fetchWeatherMut = useMutation({
-    mutationFn: (args: { lat: number; lng: number }) =>
-      fetchWeather({
-        project_id: projectId,
-        target_date: diaryDate as string,
-        lat: args.lat,
-        lng: args.lng,
-        persist: true,
-      }),
-    onSuccess: (res) => {
-      qc.invalidateQueries({ queryKey: ['daily-diary', 'weather'] });
-      qc.invalidateQueries({ queryKey: ['daily-diary', 'completeness'] });
-      addToast({
-        type: res.fetched ? 'success' : 'warning',
-        title: res.fetched
-          ? t('daily_diary.weather_fetched', { defaultValue: 'Weather fetched from Open-Meteo' })
-          : t('daily_diary.weather_unavailable', {
-              defaultValue: 'No weather data available for that date.',
-            }),
-      });
-    },
-    onError: (err) => addToast({ type: 'error', title: getErrorMessage(err) }),
-  });
-
-  const unlockMut = useMutation({
-    mutationFn: (id: string) => unlockDiary(id),
-    onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ['daily-diary'] });
-      addToast({
-        type: 'success',
-        title: t('daily_diary.unlocked', { defaultValue: 'Diary unlocked for amendment' }),
-      });
-    },
-    onError: (err) => addToast({ type: 'error', title: getErrorMessage(err) }),
-    onSettled: () => confirmCtx.setLoading(false),
-  });
-
-  const archiveMut = useMutation({
-    mutationFn: (id: string) => archiveDiary(id),
-    onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ['daily-diary'] });
-      addToast({
-        type: 'success',
-        title: t('daily_diary.archived', { defaultValue: 'Diary archived' }),
-      });
-    },
-    onError: (err) => addToast({ type: 'error', title: getErrorMessage(err) }),
-    onSettled: () => confirmCtx.setLoading(false),
-  });
-
-  const handleFetchWeather = () => {
-    if (!projectCoords) {
-      addToast({
-        type: 'error',
-        title: t('daily_diary.weather_no_coords', {
-          defaultValue:
-            'This project has no map location yet. Set the project address to auto-fetch weather, or add a reading manually.',
-        }),
-      });
-      return;
-    }
-    fetchWeatherMut.mutate(projectCoords);
-  };
-
-  const handleUnlock = async () => {
-    if (!diary) return;
-    const ok = await confirmCtx.confirm({
-      title: t('daily_diary.confirm_unlock_title', {
-        defaultValue: 'Unlock this signed diary?',
-      }),
-      message: t('daily_diary.confirm_unlock_message', {
-        defaultValue:
-          'The original sha256 signature is preserved and continues to point at the pre-edit snapshot, so the integrity break is recorded and traceable. Re-sign after amending.',
-      }),
-      confirmLabel: t('daily_diary.unlock', { defaultValue: 'Unlock' }),
-      variant: 'danger',
-    });
-    if (!ok) return;
-    confirmCtx.setLoading(true);
-    unlockMut.mutate(diary.id);
-  };
-
-  const handleArchive = async () => {
-    if (!diary) return;
-    const ok = await confirmCtx.confirm({
-      title: t('daily_diary.confirm_archive_title', {
-        defaultValue: 'Archive this diary?',
-      }),
-      message: t('daily_diary.confirm_archive_message', {
-        defaultValue:
-          'An archived diary is read-only and can no longer be unlocked or amended. It stays in the signed-record archive.',
-      }),
-      confirmLabel: t('daily_diary.archive', { defaultValue: 'Archive' }),
-      variant: 'danger',
-    });
-    if (!ok) return;
-    confirmCtx.setLoading(true);
-    archiveMut.mutate(diary.id);
-  };
-
   const handleDelete = async () => {
     if (!diary) return;
     const ok = await confirmCtx.confirm({
@@ -1168,16 +824,13 @@ function TodayTab({
             <DateDisplay value={diary.diary_date} />
           </h2>
           <Badge variant={STATUS_VARIANT[diary.status]} dot>
-            {statusLabel(t, diary.status)}
+            {diary.status}
           </Badge>
           {sealed && (
             <span className="inline-flex items-center gap-1.5 rounded-md bg-semantic-success-bg px-2 py-1 text-xs font-medium text-semantic-success">
               <Lock size={12} />
               {t('daily_diary.sealed', { defaultValue: 'Sealed' })}
             </span>
-          )}
-          {!sealed && completenessQ.data && (
-            <CompletenessChip data={completenessQ.data} />
           )}
         </div>
         <div className="flex gap-2">
@@ -1192,62 +845,6 @@ function TodayTab({
           >
             {t('daily_diary.export_pdf', { defaultValue: 'Export PDF' })}
           </Button>
-          <Button
-            variant="ghost"
-            size="sm"
-            icon={<Package size={14} />}
-            onClick={() => setSclOpen(true)}
-            data-testid="daily-diary-scl-bundle"
-            aria-label={t('daily_diary.scl_bundle', {
-              defaultValue: 'SCL evidence bundle',
-            })}
-            title={t('daily_diary.scl_bundle_hint', {
-              defaultValue:
-                'Build a hash-sealed SCL Protocol contemporary-record bundle for a date range (delay-claim evidence).',
-            })}
-          >
-            {t('daily_diary.scl_bundle', { defaultValue: 'SCL bundle' })}
-          </Button>
-          {sealed && diary.status === 'signed' && (
-            <Button
-              variant="secondary"
-              size="sm"
-              icon={<LockOpen size={14} />}
-              onClick={handleUnlock}
-              loading={unlockMut.isPending}
-              data-testid="daily-diary-unlock"
-              aria-label={t('daily_diary.unlock_to_amend', {
-                defaultValue: 'Unlock to amend',
-              })}
-            >
-              {t('daily_diary.unlock_to_amend', { defaultValue: 'Unlock to amend' })}
-            </Button>
-          )}
-          {diary.status === 'signed' && (
-            <Button
-              variant="ghost"
-              size="sm"
-              icon={<Archive size={14} />}
-              onClick={handleArchive}
-              loading={archiveMut.isPending}
-              data-testid="daily-diary-archive"
-              aria-label={t('daily_diary.archive', { defaultValue: 'Archive' })}
-            >
-              {t('daily_diary.archive', { defaultValue: 'Archive' })}
-            </Button>
-          )}
-          {!sealed && (
-            <Button
-              variant="ghost"
-              size="sm"
-              icon={<Pencil size={14} />}
-              onClick={() => setEditOpen(true)}
-              data-testid="daily-diary-edit"
-              aria-label={t('daily_diary.edit_diary', { defaultValue: 'Edit diary' })}
-            >
-              {t('common.edit', { defaultValue: 'Edit' })}
-            </Button>
-          )}
           {diary.status === 'open' && (
             <Button
               variant="secondary"
@@ -1317,37 +914,12 @@ function TodayTab({
       )}
 
       <div className="grid grid-cols-1 gap-4 xl:grid-cols-3">
-        <WeatherCard
-          weather={latestWeather}
-          loading={weatherQ.isLoading}
-          sealed={sealed}
-          fetching={fetchWeatherMut.isPending}
-          onFetch={handleFetchWeather}
-          onAddManual={() => setWeatherOpen(true)}
-        />
+        <WeatherCard weather={latestWeather} loading={weatherQ.isLoading} />
         <Card padding="md" className="xl:col-span-2">
           <div className="flex items-center justify-between mb-3">
             <h3 className="text-sm font-semibold uppercase tracking-wide text-content-secondary">
               {t('daily_diary.diary_meta', { defaultValue: 'Diary' })}
             </h3>
-            <div className="flex items-center gap-2">
-              <span className="inline-flex items-center gap-1 text-xs text-content-tertiary">
-                <Users size={12} />
-                {t('daily_diary.workforce', { defaultValue: 'Workforce' })}
-              </span>
-              <button
-                type="button"
-                onClick={() => navigate('/payroll')}
-                className="inline-flex items-center gap-1 rounded-md border border-border-light bg-surface-primary px-2 py-1 text-2xs font-medium text-oe-blue hover:bg-oe-blue-subtle/10"
-                title={t('daily_diary.workforce_to_payroll_hint', {
-                  defaultValue: 'The headcount you log here flows into the labour roster used by Payroll.',
-                })}
-                data-testid="daily-diary-workforce-payroll"
-              >
-                <Wallet size={11} />
-                {t('daily_diary.view_in_payroll', { defaultValue: 'Payroll' })}
-              </button>
-            </div>
           </div>
           <dl className="grid grid-cols-2 gap-3 text-sm sm:grid-cols-3">
             <div>
@@ -1371,27 +943,6 @@ function TodayTab({
               </dd>
             </div>
           </dl>
-          {workforceQ.data &&
-            Object.keys(workforceQ.data.by_company).length > 0 && (
-              <div className="mt-3 border-t border-border-light pt-3">
-                <p className="mb-1.5 text-xs uppercase tracking-wide text-content-tertiary">
-                  {t('daily_diary.by_company', { defaultValue: 'By company' })}
-                </p>
-                <ul className="flex flex-wrap gap-2">
-                  {Object.entries(workforceQ.data.by_company).map(
-                    ([company, count]) => (
-                      <li
-                        key={company}
-                        className="inline-flex items-center gap-1.5 rounded-full border border-border-light bg-surface-secondary/40 px-2.5 py-1 text-xs"
-                      >
-                        <span className="font-medium">{company}</span>
-                        <span className="text-content-tertiary">{count}</span>
-                      </li>
-                    ),
-                  )}
-                </ul>
-              </div>
-            )}
           {diary.notes && (
             <p className="mt-4 text-sm text-content-secondary whitespace-pre-wrap">
               {diary.notes}
@@ -1400,236 +951,24 @@ function TodayTab({
         </Card>
       </div>
 
-      <EntriesTimeline projectId={projectId} diaryId={diary.id} sealed={sealed} />
+      <EntriesTimeline diaryId={diary.id} sealed={sealed} />
 
-      <PhotoGrid
-        photos={photosQ.data ?? []}
-        loading={photosQ.isLoading}
-        sealed={sealed}
-        onUpload={() => setPhotoOpen(true)}
-      />
+      <PhotoGrid photos={photosQ.data ?? []} loading={photosQ.isLoading} />
 
       <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
-        <DroneSection
-          surveys={droneQ.data ?? []}
-          loading={droneQ.isLoading}
-          sealed={sealed}
-          onAttach={() => setDroneOpen(true)}
-        />
-        <RealitySection
-          captures={realityQ.data ?? []}
-          loading={realityQ.isLoading}
-          sealed={sealed}
-          onAttach={() => setRealityOpen(true)}
-        />
+        <DroneSection surveys={droneQ.data ?? []} loading={droneQ.isLoading} />
+        <RealitySection captures={realityQ.data ?? []} loading={realityQ.isLoading} />
       </div>
-
-      {photoOpen && diaryId && diaryDate && (
-        <PhotoUploadModal
-          projectId={projectId}
-          diaryId={diaryId}
-          diaryDate={diaryDate}
-          onClose={() => setPhotoOpen(false)}
-        />
-      )}
-      {weatherOpen && diaryDate && (
-        <ManualWeatherModal
-          projectId={projectId}
-          diaryDate={diaryDate}
-          onClose={() => setWeatherOpen(false)}
-        />
-      )}
-      {droneOpen && diaryDate && (
-        <DroneSurveyModal
-          projectId={projectId}
-          diaryDate={diaryDate}
-          onClose={() => setDroneOpen(false)}
-        />
-      )}
-      {realityOpen && diaryDate && (
-        <RealityCaptureModal
-          projectId={projectId}
-          diaryDate={diaryDate}
-          onClose={() => setRealityOpen(false)}
-        />
-      )}
-      {sclOpen && (
-        <SclBundleModal
-          projectId={projectId}
-          diaryDate={diaryDate ?? todayIso()}
-          onClose={() => setSclOpen(false)}
-        />
-      )}
-      {editOpen && (
-        <EditDiaryModal diary={diary} onClose={() => setEditOpen(false)} />
-      )}
     </div>
-  );
-}
-
-/* ── Edit diary modal ──────────────────────────────────────────────────────
- *
- * Amend the diary's own fields (labour / equipment headcount, notes) via the
- * real PATCH /diaries/{id} endpoint. The backend rejects edits on
- * signed/archived diaries (409), so this is only surfaced for open/closed
- * records — matching the immutability rule in service.update_diary.
- */
-function EditDiaryModal({
-  diary,
-  onClose,
-}: {
-  diary: DailyDiary;
-  onClose: () => void;
-}) {
-  const { t } = useTranslation();
-  const qc = useQueryClient();
-  const addToast = useToastStore((s) => s.addToast);
-  const [labour, setLabour] = useState(diary.labour_count);
-  const [equipment, setEquipment] = useState(diary.equipment_count);
-  const [notes, setNotes] = useState(diary.notes ?? '');
-  const [busy, setBusy] = useState(false);
-
-  const submit = async () => {
-    setBusy(true);
-    try {
-      await updateDiary(diary.id, {
-        labour_count: labour,
-        equipment_count: equipment,
-        notes,
-      });
-      // Refresh the diary record, its by-id view and the calendar signals.
-      qc.invalidateQueries({ queryKey: ['daily-diary'] });
-      addToast({
-        type: 'success',
-        title: t('daily_diary.updated', { defaultValue: 'Diary updated' }),
-      });
-      onClose();
-    } catch (err) {
-      addToast({ type: 'error', title: getErrorMessage(err) });
-    } finally {
-      setBusy(false);
-    }
-  };
-
-  return (
-    <WideModal
-      open
-      onClose={onClose}
-      busy={busy}
-      size="lg"
-      title={t('daily_diary.edit_diary', { defaultValue: 'Edit diary' })}
-      footer={
-        <>
-          <Button variant="ghost" onClick={onClose} disabled={busy}>
-            {t('common.cancel', { defaultValue: 'Cancel' })}
-          </Button>
-          <Button variant="primary" onClick={submit} loading={busy}>
-            {t('common.save', { defaultValue: 'Save' })}
-          </Button>
-        </>
-      }
-    >
-      <WideModalSection columns={2}>
-        <WideModalField label={t('daily_diary.date', { defaultValue: 'Date' })} span={2}>
-          {/* The diary date is the record's identity and is immutable once
-              opened — shown read-only so the editor is unambiguous. */}
-          <div className="flex h-9 items-center rounded-lg border border-border bg-surface-secondary/40 px-3 text-sm text-content-secondary">
-            <DateDisplay value={diary.diary_date} />
-          </div>
-        </WideModalField>
-        <WideModalField label={t('daily_diary.labour', { defaultValue: 'Labour' })}>
-          <input
-            type="number"
-            min={0}
-            value={labour}
-            onChange={(e) => setLabour(Number(e.target.value) || 0)}
-            className={inputCls}
-          />
-        </WideModalField>
-        <WideModalField label={t('daily_diary.equipment', { defaultValue: 'Equipment' })}>
-          <input
-            type="number"
-            min={0}
-            value={equipment}
-            onChange={(e) => setEquipment(Number(e.target.value) || 0)}
-            className={inputCls}
-          />
-        </WideModalField>
-        <WideModalField label={t('common.notes')} span={2}>
-          <textarea
-            value={notes}
-            onChange={(e) => setNotes(e.target.value)}
-            rows={3}
-            className={clsx(inputCls, 'h-auto py-2')}
-          />
-        </WideModalField>
-      </WideModalSection>
-    </WideModal>
-  );
-}
-
-/* ── Completeness readiness chip ─────────────────────────────────────────
- *
- * Surfaces the backend completeness score (0..1) as a traffic-light chip so
- * a supervisor sees how "ready to sign" a diary is, and which blocks are
- * still missing, before sealing it. Green ≥ 0.8, amber ≥ 0.5, else red.
- */
-function CompletenessChip({ data }: { data: DiaryCompleteness }) {
-  const { t } = useTranslation();
-  const pct = Math.round(Number(data.completeness ?? 0) * 100);
-  const tone =
-    pct >= 80
-      ? 'bg-semantic-success-bg text-semantic-success'
-      : pct >= 50
-        ? 'bg-semantic-warning-bg text-semantic-warning'
-        : 'bg-semantic-error-bg text-semantic-error';
-  const missingLabels = data.missing
-    .map((m) =>
-      t(`daily_diary.completeness_block.${m}`, {
-        defaultValue: m.replace(/_/g, ' '),
-      }),
-    )
-    .join(', ');
-  const title =
-    data.missing.length > 0
-      ? t('daily_diary.completeness_missing', {
-          defaultValue: 'Still missing: {{items}}',
-          items: missingLabels,
-        })
-      : t('daily_diary.completeness_ready', {
-          defaultValue: 'All recommended blocks present - ready to sign.',
-        });
-  return (
-    <span
-      className={clsx(
-        'inline-flex items-center gap-1.5 rounded-md px-2 py-1 text-xs font-medium',
-        tone,
-      )}
-      title={title}
-    >
-      <CheckCircle2 size={12} />
-      {t('daily_diary.completeness_chip', {
-        defaultValue: '{{pct}}% complete',
-        pct,
-      })}
-    </span>
   );
 }
 
 function WeatherCard({
   weather,
   loading,
-  sealed,
-  fetching,
-  onFetch,
-  onAddManual,
 }: {
   weather: WeatherRecord | undefined;
   loading: boolean;
-  sealed: boolean;
-  fetching: boolean;
-  onFetch: () => void;
-  onAddManual: () => void;
 }) {
   const { t } = useTranslation();
   return (
@@ -1639,36 +978,6 @@ function WeatherCard({
         <h3 className="text-sm font-semibold uppercase tracking-wide text-content-secondary">
           {t('daily_diary.weather', { defaultValue: 'Weather' })}
         </h3>
-        {!sealed && (
-          <div className="ml-auto flex items-center gap-1">
-            <Button
-              variant="ghost"
-              size="sm"
-              icon={<CloudDownload size={13} />}
-              onClick={onFetch}
-              loading={fetching}
-              data-testid="daily-diary-fetch-weather"
-              title={t('daily_diary.fetch_weather_hint', {
-                defaultValue:
-                  'Pull the day’s real weather from Open-Meteo for the project location.',
-              })}
-            >
-              {t('daily_diary.fetch_weather', { defaultValue: 'Fetch' })}
-            </Button>
-            <Button
-              variant="ghost"
-              size="sm"
-              icon={<Plus size={13} />}
-              onClick={onAddManual}
-              data-testid="daily-diary-add-weather"
-              title={t('daily_diary.add_weather_hint', {
-                defaultValue: 'Record a weather reading manually.',
-              })}
-            >
-              {t('daily_diary.add_weather', { defaultValue: 'Manual' })}
-            </Button>
-          </div>
-        )}
       </div>
       {loading ? (
         <SkeletonTable rows={3} columns={2} />
@@ -1724,40 +1033,20 @@ function WeatherCard({
   );
 }
 
-// Diary entry types that summarise an upstream record from another module.
-// Picking one of these surfaces a source picker so the entry can deep-link
-// back to the incident / inspection it documents (CONN-49).
-const SOURCE_ENTRY_MODULE: Partial<Record<EntryType, 'safety' | 'inspections'>> = {
-  incident_summary: 'safety',
-  inspection_summary: 'inspections',
-};
-
-interface SourceRecord {
-  id: string;
-  label: string;
-}
-
 function EntriesTimeline({
-  projectId,
   diaryId,
   sealed,
 }: {
-  projectId: string;
   diaryId: string;
   sealed: boolean;
 }) {
   const { t } = useTranslation();
-  const navigate = useNavigate();
   const qc = useQueryClient();
   const addToast = useToastStore((s) => s.addToast);
   const [entryType, setEntryType] = useState<EntryType>('general');
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
-  const [sourceRef, setSourceRef] = useState('');
   const [busy, setBusy] = useState(false);
-
-  // Which upstream module (if any) the chosen entry type links back to.
-  const sourceModule = SOURCE_ENTRY_MODULE[entryType];
 
   // Previously this component only rendered an add-form: created entries
   // were invisible (no list endpoint, no list query). It now reads back
@@ -1767,63 +1056,6 @@ function EntriesTimeline({
     queryFn: () => listEntries(diaryId),
     enabled: !!diaryId,
   });
-
-  // Lightweight pickers: when the entry summarises an incident or an
-  // inspection, fetch the project's records so the user can link the exact
-  // one (stored as source_module + source_ref) instead of pasting a UUID.
-  const incidentsQ = useQuery({
-    queryKey: ['daily-diary', 'src-incidents', projectId],
-    queryFn: async () => {
-      const rows = await apiGet<Record<string, unknown>[]>(
-        `/v1/safety/incidents/?project_id=${encodeURIComponent(projectId)}`,
-      );
-      return rows.map((r) => ({
-        id: String(r.id),
-        label: [r.incident_number, r.description]
-          .filter(Boolean)
-          .map(String)
-          .join(' - ')
-          .slice(0, 80),
-      })) as SourceRecord[];
-    },
-    enabled: !!projectId && sourceModule === 'safety',
-  });
-
-  const inspectionsQ = useQuery({
-    queryKey: ['daily-diary', 'src-inspections', projectId],
-    queryFn: async () => {
-      const rows = await apiGet<Record<string, unknown>[]>(
-        `/v1/inspections/?project_id=${encodeURIComponent(projectId)}`,
-      );
-      return rows.map((r) => ({
-        id: String(r.id),
-        label: [r.inspection_number, r.title]
-          .filter(Boolean)
-          .map(String)
-          .join(' - ')
-          .slice(0, 80),
-      })) as SourceRecord[];
-    },
-    enabled: !!projectId && sourceModule === 'inspections',
-  });
-
-  const sourceOptions: SourceRecord[] =
-    sourceModule === 'safety'
-      ? (incidentsQ.data ?? [])
-      : sourceModule === 'inspections'
-        ? (inspectionsQ.data ?? [])
-        : [];
-
-  // Open the upstream record a source-linked entry was raised from.
-  // Inspections already consume ?highlight (scroll + flash); Safety lands on
-  // the incidents tab today and will consume ?highlight once its batch ships.
-  const openSource = (mod: string, ref: string) => {
-    if (mod === 'inspections') {
-      navigate(`/inspections?highlight=${ref}`);
-    } else if (mod === 'safety' || mod === 'hse') {
-      navigate(`/safety?highlight=${ref}`);
-    }
-  };
 
   const invalidateEntries = () =>
     qc.invalidateQueries({ queryKey: ['daily-diary', 'entries', diaryId] });
@@ -1844,14 +1076,9 @@ function EntriesTimeline({
         entry_time: nowLocalISO(),
         title: title.trim(),
         description: description.trim() || undefined,
-        // Provenance: only sent when the entry summarises an upstream record
-        // and the user picked one. source_ref is a UUID the backend validates.
-        source_module: sourceModule && sourceRef ? sourceModule : undefined,
-        source_ref: sourceModule && sourceRef ? sourceRef : undefined,
       });
       setTitle('');
       setDescription('');
-      setSourceRef('');
       void invalidateEntries();
       addToast({ type: 'success', title: t('daily_diary.entry_created', { defaultValue: 'Entry added' }) });
     } catch (err) {
@@ -1886,12 +1113,7 @@ function EntriesTimeline({
           <div className="grid grid-cols-1 gap-2 sm:grid-cols-4">
             <select
               value={entryType}
-              onChange={(e) => {
-                setEntryType(e.target.value as EntryType);
-                // Clear any previously-picked source when switching types so
-                // we never persist an inspection id under an incident entry.
-                setSourceRef('');
-              }}
+              onChange={(e) => setEntryType(e.target.value as EntryType)}
               className={inputCls}
             >
               {(
@@ -1907,7 +1129,7 @@ function EntriesTimeline({
                 ] as EntryType[]
               ).map((tp) => (
                 <option key={tp} value={tp}>
-                  {entryTypeLabel(t, tp)}
+                  {tp}
                 </option>
               ))}
             </select>
@@ -1936,42 +1158,12 @@ function EntriesTimeline({
             rows={2}
             className={clsx(inputCls, 'h-auto py-2')}
           />
-          {sourceModule && (
-            <div>
-              <label className="mb-1 block text-xs font-medium text-content-secondary">
-                {sourceModule === 'safety'
-                  ? t('daily_diary.link_incident', { defaultValue: 'Link a safety incident (optional)' })
-                  : t('daily_diary.link_inspection', { defaultValue: 'Link a quality inspection (optional)' })}
-              </label>
-              <select
-                value={sourceRef}
-                onChange={(e) => setSourceRef(e.target.value)}
-                className={inputCls}
-                data-testid="daily-diary-entry-source"
-              >
-                <option value="">
-                  {t('daily_diary.link_source_none', { defaultValue: 'No linked record' })}
-                </option>
-                {sourceOptions.map((s) => (
-                  <option key={s.id} value={s.id}>
-                    {s.label}
-                  </option>
-                ))}
-              </select>
-              <p className="mt-1 text-2xs text-content-tertiary">
-                {t('daily_diary.link_source_hint', {
-                  defaultValue:
-                    'Linking the source record lets the diary entry deep-link back to it for an audit trail.',
-                })}
-              </p>
-            </div>
-          )}
         </div>
       )}
 
       {sealed && (
         <p className="text-xs text-content-tertiary mb-3">
-          {t('daily_diary.entries_sealed', { defaultValue: 'Diary is sealed - entries are read-only.' })}
+          {t('daily_diary.entries_sealed', { defaultValue: 'Diary is sealed — entries are read-only.' })}
         </p>
       )}
 
@@ -1992,7 +1184,7 @@ function EntriesTimeline({
                 <div className="min-w-0">
                   <div className="flex items-center gap-2">
                     <Badge variant="neutral" size="sm">
-                      {entryTypeLabel(t, e.entry_type)}
+                      {e.entry_type}
                     </Badge>
                     <span className="font-medium truncate">{e.title || '—'}</span>
                   </div>
@@ -2000,21 +1192,6 @@ function EntriesTimeline({
                     <p className="mt-1 text-xs text-content-secondary whitespace-pre-wrap">
                       {e.description}
                     </p>
-                  )}
-                  {e.source_module && e.source_ref && (
-                    <button
-                      type="button"
-                      onClick={() => openSource(e.source_module as string, e.source_ref as string)}
-                      className="mt-1.5 inline-flex items-center gap-1 rounded-md border border-border-light bg-surface-primary px-2 py-1 text-2xs font-medium text-oe-blue hover:bg-oe-blue-subtle/10"
-                      data-testid="daily-diary-entry-view-source"
-                    >
-                      <ExternalLink size={11} />
-                      {e.source_module === 'inspections'
-                        ? t('daily_diary.view_inspection', { defaultValue: 'View inspection' })
-                        : e.source_module === 'safety' || e.source_module === 'hse'
-                          ? t('daily_diary.view_incident', { defaultValue: 'View incident' })
-                          : t('daily_diary.view_source', { defaultValue: 'View source' })}
-                    </button>
                   )}
                   <p className="mt-1 text-2xs text-content-tertiary">
                     <DateDisplay value={e.entry_time} />
@@ -2043,13 +1220,9 @@ function EntriesTimeline({
 function PhotoGrid({
   photos,
   loading,
-  sealed,
-  onUpload,
 }: {
   photos: DiaryPhoto[];
   loading: boolean;
-  sealed: boolean;
-  onUpload: () => void;
 }) {
   const { t } = useTranslation();
   return (
@@ -2060,17 +1233,6 @@ function PhotoGrid({
           {t('daily_diary.photos', { defaultValue: 'Photos' })}
         </h3>
         <span className="ml-auto text-xs text-content-tertiary">{photos.length}</span>
-        {!sealed && (
-          <Button
-            variant="ghost"
-            size="sm"
-            icon={<Upload size={13} />}
-            onClick={onUpload}
-            data-testid="daily-diary-upload-photo"
-          >
-            {t('daily_diary.upload_photo', { defaultValue: 'Add photo' })}
-          </Button>
-        )}
       </div>
       {loading ? (
         <SkeletonTable rows={2} columns={6} />
@@ -2104,13 +1266,9 @@ function PhotoGrid({
 function DroneSection({
   surveys,
   loading,
-  sealed,
-  onAttach,
 }: {
   surveys: DroneSurvey[];
   loading: boolean;
-  sealed: boolean;
-  onAttach: () => void;
 }) {
   const { t } = useTranslation();
   return (
@@ -2121,17 +1279,6 @@ function DroneSection({
           {t('daily_diary.drone', { defaultValue: 'Drone surveys' })}
         </h3>
         <span className="ml-auto text-xs text-content-tertiary">{surveys.length}</span>
-        {!sealed && (
-          <Button
-            variant="ghost"
-            size="sm"
-            icon={<Plus size={13} />}
-            onClick={onAttach}
-            data-testid="daily-diary-attach-drone"
-          >
-            {t('daily_diary.attach_drone', { defaultValue: 'Attach' })}
-          </Button>
-        )}
       </div>
       {loading ? (
         <SkeletonTable rows={3} columns={3} />
@@ -2167,28 +1314,12 @@ function DroneSection({
   );
 }
 
-const CAPTURE_TYPE_LABEL_EN: Record<CaptureType, string> = {
-  laser_scan: 'Laser scan',
-  photogrammetry: 'Photogrammetry',
-  mobile_scan: 'Mobile scan',
-};
-
-function captureTypeLabel(t: TFn, type: CaptureType): string {
-  return t(`daily_diary.capture_type.${type}`, {
-    defaultValue: CAPTURE_TYPE_LABEL_EN[type] ?? type,
-  });
-}
-
 function RealitySection({
   captures,
   loading,
-  sealed,
-  onAttach,
 }: {
   captures: RealityCapture[];
   loading: boolean;
-  sealed: boolean;
-  onAttach: () => void;
 }) {
   const { t } = useTranslation();
   return (
@@ -2199,17 +1330,6 @@ function RealitySection({
           {t('daily_diary.reality_capture', { defaultValue: 'Reality captures' })}
         </h3>
         <span className="ml-auto text-xs text-content-tertiary">{captures.length}</span>
-        {!sealed && (
-          <Button
-            variant="ghost"
-            size="sm"
-            icon={<Plus size={13} />}
-            onClick={onAttach}
-            data-testid="daily-diary-attach-reality"
-          >
-            {t('daily_diary.attach_reality', { defaultValue: 'Attach' })}
-          </Button>
-        )}
       </div>
       {loading ? (
         <SkeletonTable rows={3} columns={3} />
@@ -2225,9 +1345,7 @@ function RealitySection({
               className="rounded-md border border-border-light bg-surface-secondary/40 p-2 text-sm"
             >
               <div className="flex items-center justify-between">
-                <span className="font-medium">
-                  {captureTypeLabel(t, c.capture_type)}
-                </span>
+                <span className="font-medium">{c.capture_type}</span>
                 <span className="text-xs text-content-tertiary">
                   <DateDisplay value={c.captured_at} />
                 </span>
@@ -2295,7 +1413,7 @@ function ArchiveTab({
                 </td>
                 <td className="px-4 py-2">
                   <Badge variant={STATUS_VARIANT[d.status]} dot>
-                    {statusLabel(t, d.status)}
+                    {d.status}
                   </Badge>
                 </td>
                 <td className="px-4 py-2 text-xs text-content-secondary">
@@ -2321,26 +1439,19 @@ function ArchiveTab({
 
 function CreateDiaryModal({
   projectId,
-  initialDate,
   onClose,
-  onCreated,
 }: {
   projectId: string;
-  /** Prefill the date field (e.g. the empty calendar day that was clicked). */
-  initialDate?: string;
   onClose: () => void;
-  /** Invoked with the created diary so the page can open it for editing. */
-  onCreated?: (diary: DailyDiary) => void;
 }) {
   const { t } = useTranslation();
   const qc = useQueryClient();
   const addToast = useToastStore((s) => s.addToast);
-  const [diaryDate, setDiaryDate] = useState(initialDate || todayIso());
+  const [diaryDate, setDiaryDate] = useState(todayIso());
   const [labour, setLabour] = useState(0);
   const [equipment, setEquipment] = useState(0);
   const [notes, setNotes] = useState('');
   const [busy, setBusy] = useState(false);
-  const maxIso = maxDiaryIso();
 
   const submit = async () => {
     if (!diaryDate) {
@@ -2352,7 +1463,7 @@ function CreateDiaryModal({
       });
       return;
     }
-    if (diaryDate > maxIso) {
+    if (diaryDate > todayIso()) {
       addToast({
         type: 'error',
         title: t('daily_diary.date_future', {
@@ -2363,7 +1474,7 @@ function CreateDiaryModal({
     }
     setBusy(true);
     try {
-      const created = await createDiary({
+      await createDiary({
         project_id: projectId,
         diary_date: diaryDate,
         labour_count: labour,
@@ -2372,7 +1483,6 @@ function CreateDiaryModal({
       });
       qc.invalidateQueries({ queryKey: ['daily-diary'] });
       addToast({ type: 'success', title: t('daily_diary.created', { defaultValue: 'Diary created' }) });
-      onCreated?.(created);
       onClose();
     } catch (err) {
       addToast({ type: 'error', title: getErrorMessage(err) });
@@ -2412,7 +1522,7 @@ function CreateDiaryModal({
           <input
             type="date"
             value={diaryDate}
-            max={maxIso}
+            max={todayIso()}
             onChange={(e) => setDiaryDate(e.target.value)}
             className={inputCls}
           />
@@ -2465,16 +1575,9 @@ function SignDiaryModal({
   const submit = async () => {
     setBusy(true);
     try {
-      const sig = await signDiary(diaryId, { signer_role: role, signer_name: name });
+      await signDiary(diaryId, { signer_role: role, signer_name: name });
       qc.invalidateQueries({ queryKey: ['daily-diary'] });
-      addToast({
-        type: 'success',
-        title: t('daily_diary.sign_ok', { defaultValue: 'Diary signed and sealed' }),
-        message: t('daily_diary.sign_ok_fingerprint', {
-          defaultValue: 'Sealed with fingerprint sha256:{{sha}}',
-          sha: formatSha(sig.content_sha256),
-        }),
-      });
+      addToast({ type: 'success', title: t('daily_diary.sign_ok', { defaultValue: 'Diary signed' }) });
       onClose();
     } catch (err) {
       addToast({ type: 'error', title: getErrorMessage(err) });
@@ -2510,18 +1613,6 @@ function SignDiaryModal({
         </>
       }
     >
-      {/* High-consequence action: state plainly that signing is legally
-          meaningful, closes the diary and seals it, and that any later
-          unlock is a tracked integrity break. */}
-      <div className="mb-3 flex items-start gap-2 rounded-md border border-semantic-warning/30 bg-semantic-warning-bg/30 px-3 py-2 text-xs text-content-secondary">
-        <AlertTriangle size={14} className="mt-0.5 shrink-0 text-semantic-warning" />
-        <span>
-          {t('daily_diary.sign_caution', {
-            defaultValue:
-              'Signing is a legally meaningful act. It closes the diary if still open and seals it as tamper-evident evidence. Unlocking it later to amend is permitted but recorded as a tracked integrity break.',
-          })}
-        </span>
-      </div>
       <WideModalSection columns={1}>
         <WideModalField
           label={t('daily_diary.signer_role', { defaultValue: 'Signer role' })}
@@ -2534,7 +1625,7 @@ function SignDiaryModal({
           >
             {(['owner', 'supervisor', 'inspector', 'client'] as SignerRole[]).map((r) => (
               <option key={r} value={r}>
-                {signerRoleLabel(t, r)}
+                {r}
               </option>
             ))}
           </select>
@@ -2549,638 +1640,6 @@ function SignDiaryModal({
           />
         </WideModalField>
       </WideModalSection>
-    </WideModal>
-  );
-}
-
-/* ── Photo upload modal ──────────────────────────────────────────────────
- *
- * Registers a site photo against the diary. The binary itself lives in
- * object storage; this records its URL + capture metadata (POST
- * /diary-photos/). The URL field accepts an http(s) link or a relative
- * /files path — the same contract the backend schema enforces.
- */
-function PhotoUploadModal({
-  projectId,
-  diaryId,
-  diaryDate,
-  onClose,
-}: {
-  projectId: string;
-  diaryId: string;
-  diaryDate: string;
-  onClose: () => void;
-}) {
-  const { t } = useTranslation();
-  const qc = useQueryClient();
-  const addToast = useToastStore((s) => s.addToast);
-  const [fileUrl, setFileUrl] = useState('');
-  const [locationLabel, setLocationLabel] = useState('');
-  const [description, setDescription] = useState('');
-  const [busy, setBusy] = useState(false);
-
-  const submit = async () => {
-    if (!fileUrl.trim()) {
-      addToast({
-        type: 'error',
-        title: t('daily_diary.photo_url_required', {
-          defaultValue: 'Provide the photo file URL.',
-        }),
-      });
-      return;
-    }
-    setBusy(true);
-    try {
-      await createPhoto({
-        project_id: projectId,
-        diary_id: diaryId,
-        // Capture time anchored to the diary's local calendar day so the
-        // photo lands in this diary's date-scoped panel (not a UTC shift).
-        taken_at: `${diaryDate}T${nowLocalISO().slice(11)}`,
-        file_url: fileUrl.trim(),
-        location_label: locationLabel.trim() || undefined,
-        description: description.trim() || undefined,
-      });
-      qc.invalidateQueries({ queryKey: ['daily-diary', 'photos'] });
-      qc.invalidateQueries({ queryKey: ['daily-diary', 'completeness'] });
-      addToast({
-        type: 'success',
-        title: t('daily_diary.photo_added', { defaultValue: 'Photo added' }),
-      });
-      onClose();
-    } catch (err) {
-      addToast({ type: 'error', title: getErrorMessage(err) });
-    } finally {
-      setBusy(false);
-    }
-  };
-
-  return (
-    <WideModal
-      open
-      onClose={onClose}
-      busy={busy}
-      size="md"
-      title={t('daily_diary.upload_photo_title', { defaultValue: 'Add a site photo' })}
-      footer={
-        <>
-          <Button variant="ghost" onClick={onClose} disabled={busy}>
-            {t('common.cancel', { defaultValue: 'Cancel' })}
-          </Button>
-          <Button variant="primary" onClick={submit} loading={busy} icon={<Upload size={14} />}>
-            {t('daily_diary.upload_photo', { defaultValue: 'Add photo' })}
-          </Button>
-        </>
-      }
-    >
-      <WideModalSection columns={1}>
-        <WideModalField
-          label={t('daily_diary.photo_url', { defaultValue: 'Photo file URL' })}
-          required
-          hint={t('daily_diary.photo_url_hint', {
-            defaultValue:
-              'An http(s) link or a relative /files path to the uploaded image (jpeg, png, heic, webp, tiff).',
-          })}
-        >
-          <input
-            type="text"
-            value={fileUrl}
-            onChange={(e) => setFileUrl(e.target.value)}
-            placeholder="/files/site/2026-06-04/east-elevation.jpg"
-            className={inputCls}
-          />
-        </WideModalField>
-        <WideModalField
-          label={t('daily_diary.photo_location', { defaultValue: 'Location label' })}
-        >
-          <input
-            type="text"
-            value={locationLabel}
-            onChange={(e) => setLocationLabel(e.target.value)}
-            placeholder={t('daily_diary.photo_location_ph', {
-              defaultValue: 'e.g. East elevation, Level 3',
-            })}
-            className={inputCls}
-          />
-        </WideModalField>
-        <WideModalField label={t('common.notes')}>
-          <textarea
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            rows={2}
-            className={clsx(inputCls, 'h-auto py-2')}
-          />
-        </WideModalField>
-      </WideModalSection>
-    </WideModal>
-  );
-}
-
-/* ── Manual weather entry modal ───────────────────────────────────────── */
-function ManualWeatherModal({
-  projectId,
-  diaryDate,
-  onClose,
-}: {
-  projectId: string;
-  diaryDate: string;
-  onClose: () => void;
-}) {
-  const { t } = useTranslation();
-  const qc = useQueryClient();
-  const addToast = useToastStore((s) => s.addToast);
-  const [temperature, setTemperature] = useState('');
-  const [humidity, setHumidity] = useState('');
-  const [wind, setWind] = useState('');
-  const [precip, setPrecip] = useState('');
-  const [conditions, setConditions] = useState('');
-  const [busy, setBusy] = useState(false);
-
-  const submit = async () => {
-    setBusy(true);
-    try {
-      await createWeather({
-        project_id: projectId,
-        // Anchor the reading to the diary's local calendar day.
-        captured_at: `${diaryDate}T${nowLocalISO().slice(11)}`,
-        source: 'manual',
-        temperature_c: temperature.trim() || undefined,
-        humidity_pct: humidity.trim() || undefined,
-        wind_speed_kmh: wind.trim() || undefined,
-        precipitation_mm: precip.trim() || undefined,
-        conditions_text: conditions.trim() || undefined,
-      });
-      qc.invalidateQueries({ queryKey: ['daily-diary', 'weather'] });
-      qc.invalidateQueries({ queryKey: ['daily-diary', 'completeness'] });
-      addToast({
-        type: 'success',
-        title: t('daily_diary.weather_added', { defaultValue: 'Weather recorded' }),
-      });
-      onClose();
-    } catch (err) {
-      addToast({ type: 'error', title: getErrorMessage(err) });
-    } finally {
-      setBusy(false);
-    }
-  };
-
-  return (
-    <WideModal
-      open
-      onClose={onClose}
-      busy={busy}
-      size="md"
-      title={t('daily_diary.add_weather_title', { defaultValue: 'Record weather manually' })}
-      footer={
-        <>
-          <Button variant="ghost" onClick={onClose} disabled={busy}>
-            {t('common.cancel', { defaultValue: 'Cancel' })}
-          </Button>
-          <Button variant="primary" onClick={submit} loading={busy}>
-            {t('common.save', { defaultValue: 'Save' })}
-          </Button>
-        </>
-      }
-    >
-      <WideModalSection columns={2}>
-        <WideModalField label={t('daily_diary.temp', { defaultValue: 'Temperature' })}>
-          <input
-            type="number"
-            step="0.1"
-            value={temperature}
-            onChange={(e) => setTemperature(e.target.value)}
-            placeholder="°C"
-            className={inputCls}
-          />
-        </WideModalField>
-        <WideModalField label={t('daily_diary.humidity', { defaultValue: 'Humidity' })}>
-          <input
-            type="number"
-            min={0}
-            max={100}
-            value={humidity}
-            onChange={(e) => setHumidity(e.target.value)}
-            placeholder="%"
-            className={inputCls}
-          />
-        </WideModalField>
-        <WideModalField label={t('daily_diary.wind', { defaultValue: 'Wind' })}>
-          <input
-            type="number"
-            min={0}
-            step="0.1"
-            value={wind}
-            onChange={(e) => setWind(e.target.value)}
-            placeholder="km/h"
-            className={inputCls}
-          />
-        </WideModalField>
-        <WideModalField label={t('daily_diary.precip', { defaultValue: 'Precipitation' })}>
-          <input
-            type="number"
-            min={0}
-            step="0.1"
-            value={precip}
-            onChange={(e) => setPrecip(e.target.value)}
-            placeholder="mm"
-            className={inputCls}
-          />
-        </WideModalField>
-        <WideModalField label={t('daily_diary.conditions', { defaultValue: 'Conditions' })} span={2}>
-          <input
-            type="text"
-            value={conditions}
-            onChange={(e) => setConditions(e.target.value)}
-            placeholder={t('daily_diary.conditions_ph', {
-              defaultValue: 'e.g. Overcast with light rain',
-            })}
-            className={inputCls}
-          />
-        </WideModalField>
-      </WideModalSection>
-    </WideModal>
-  );
-}
-
-/* ── Drone survey attach modal ────────────────────────────────────────── */
-function DroneSurveyModal({
-  projectId,
-  diaryDate,
-  onClose,
-}: {
-  projectId: string;
-  diaryDate: string;
-  onClose: () => void;
-}) {
-  const { t } = useTranslation();
-  const qc = useQueryClient();
-  const addToast = useToastStore((s) => s.addToast);
-  const [droneModel, setDroneModel] = useState('');
-  const [pilotName, setPilotName] = useState('');
-  const [areaM2, setAreaM2] = useState('');
-  const [orthoUrl, setOrthoUrl] = useState('');
-  const [notes, setNotes] = useState('');
-  const [busy, setBusy] = useState(false);
-
-  const submit = async () => {
-    setBusy(true);
-    try {
-      await createDroneSurvey({
-        project_id: projectId,
-        flown_at: `${diaryDate}T${nowLocalISO().slice(11)}`,
-        drone_model: droneModel.trim() || undefined,
-        pilot_name: pilotName.trim() || undefined,
-        area_m2: areaM2.trim() || undefined,
-        ortho_file_url: orthoUrl.trim() || undefined,
-        notes: notes.trim() || undefined,
-      });
-      qc.invalidateQueries({ queryKey: ['daily-diary', 'drone'] });
-      addToast({
-        type: 'success',
-        title: t('daily_diary.drone_attached', { defaultValue: 'Drone survey attached' }),
-      });
-      onClose();
-    } catch (err) {
-      addToast({ type: 'error', title: getErrorMessage(err) });
-    } finally {
-      setBusy(false);
-    }
-  };
-
-  return (
-    <WideModal
-      open
-      onClose={onClose}
-      busy={busy}
-      size="md"
-      title={t('daily_diary.attach_drone_title', { defaultValue: 'Attach drone survey' })}
-      footer={
-        <>
-          <Button variant="ghost" onClick={onClose} disabled={busy}>
-            {t('common.cancel', { defaultValue: 'Cancel' })}
-          </Button>
-          <Button variant="primary" onClick={submit} loading={busy} icon={<Plane size={14} />}>
-            {t('daily_diary.attach', { defaultValue: 'Attach' })}
-          </Button>
-        </>
-      }
-    >
-      <WideModalSection columns={2}>
-        <WideModalField label={t('daily_diary.drone_model', { defaultValue: 'Drone model' })}>
-          <input
-            type="text"
-            value={droneModel}
-            onChange={(e) => setDroneModel(e.target.value)}
-            placeholder="e.g. DJI Mavic 3 Enterprise"
-            className={inputCls}
-          />
-        </WideModalField>
-        <WideModalField label={t('daily_diary.pilot_name', { defaultValue: 'Pilot' })}>
-          <input
-            type="text"
-            value={pilotName}
-            onChange={(e) => setPilotName(e.target.value)}
-            className={inputCls}
-          />
-        </WideModalField>
-        <WideModalField label={t('daily_diary.area_m2', { defaultValue: 'Covered area (m²)' })}>
-          <input
-            type="number"
-            min={0}
-            step="0.1"
-            value={areaM2}
-            onChange={(e) => setAreaM2(e.target.value)}
-            className={inputCls}
-          />
-        </WideModalField>
-        <WideModalField
-          label={t('daily_diary.ortho_url', { defaultValue: 'Orthophoto URL' })}
-          hint={t('daily_diary.asset_url_hint', {
-            defaultValue: 'http(s) link or a relative /files path (optional).',
-          })}
-        >
-          <input
-            type="text"
-            value={orthoUrl}
-            onChange={(e) => setOrthoUrl(e.target.value)}
-            className={inputCls}
-          />
-        </WideModalField>
-        <WideModalField label={t('common.notes')} span={2}>
-          <textarea
-            value={notes}
-            onChange={(e) => setNotes(e.target.value)}
-            rows={2}
-            className={clsx(inputCls, 'h-auto py-2')}
-          />
-        </WideModalField>
-      </WideModalSection>
-    </WideModal>
-  );
-}
-
-/* ── Reality capture attach modal ─────────────────────────────────────── */
-function RealityCaptureModal({
-  projectId,
-  diaryDate,
-  onClose,
-}: {
-  projectId: string;
-  diaryDate: string;
-  onClose: () => void;
-}) {
-  const { t } = useTranslation();
-  const qc = useQueryClient();
-  const addToast = useToastStore((s) => s.addToast);
-  const [captureType, setCaptureType] = useState<CaptureType>('laser_scan');
-  const [fileUrl, setFileUrl] = useState('');
-  const [pointCount, setPointCount] = useState('');
-  const [notes, setNotes] = useState('');
-  const [busy, setBusy] = useState(false);
-
-  const submit = async () => {
-    if (!fileUrl.trim()) {
-      addToast({
-        type: 'error',
-        title: t('daily_diary.reality_url_required', {
-          defaultValue: 'Provide the dataset file URL.',
-        }),
-      });
-      return;
-    }
-    setBusy(true);
-    try {
-      await createRealityCapture({
-        project_id: projectId,
-        captured_at: `${diaryDate}T${nowLocalISO().slice(11)}`,
-        capture_type: captureType,
-        file_url: fileUrl.trim(),
-        point_count_estimate: pointCount.trim()
-          ? Number(pointCount.trim())
-          : undefined,
-        notes: notes.trim() || undefined,
-      });
-      qc.invalidateQueries({ queryKey: ['daily-diary', 'reality'] });
-      addToast({
-        type: 'success',
-        title: t('daily_diary.reality_attached', { defaultValue: 'Reality capture attached' }),
-      });
-      onClose();
-    } catch (err) {
-      addToast({ type: 'error', title: getErrorMessage(err) });
-    } finally {
-      setBusy(false);
-    }
-  };
-
-  return (
-    <WideModal
-      open
-      onClose={onClose}
-      busy={busy}
-      size="md"
-      title={t('daily_diary.attach_reality_title', { defaultValue: 'Attach reality capture' })}
-      footer={
-        <>
-          <Button variant="ghost" onClick={onClose} disabled={busy}>
-            {t('common.cancel', { defaultValue: 'Cancel' })}
-          </Button>
-          <Button variant="primary" onClick={submit} loading={busy} icon={<Scan size={14} />}>
-            {t('daily_diary.attach', { defaultValue: 'Attach' })}
-          </Button>
-        </>
-      }
-    >
-      <WideModalSection columns={1}>
-        <WideModalField
-          label={t('daily_diary.capture_type_label', { defaultValue: 'Capture type' })}
-          required
-        >
-          <select
-            value={captureType}
-            onChange={(e) => setCaptureType(e.target.value as CaptureType)}
-            className={inputCls}
-          >
-            {(['laser_scan', 'photogrammetry', 'mobile_scan'] as CaptureType[]).map((ct) => (
-              <option key={ct} value={ct}>
-                {captureTypeLabel(t, ct)}
-              </option>
-            ))}
-          </select>
-        </WideModalField>
-        <WideModalField
-          label={t('daily_diary.reality_url', { defaultValue: 'Dataset file URL' })}
-          required
-          hint={t('daily_diary.asset_url_hint', {
-            defaultValue: 'http(s) link or a relative /files path (optional).',
-          })}
-        >
-          <input
-            type="text"
-            value={fileUrl}
-            onChange={(e) => setFileUrl(e.target.value)}
-            placeholder="/files/scans/2026-06-04/level-3.e57"
-            className={inputCls}
-          />
-        </WideModalField>
-        <WideModalField
-          label={t('daily_diary.point_count', { defaultValue: 'Point count estimate' })}
-        >
-          <input
-            type="number"
-            min={0}
-            value={pointCount}
-            onChange={(e) => setPointCount(e.target.value)}
-            className={inputCls}
-          />
-        </WideModalField>
-        <WideModalField label={t('common.notes')}>
-          <textarea
-            value={notes}
-            onChange={(e) => setNotes(e.target.value)}
-            rows={2}
-            className={clsx(inputCls, 'h-auto py-2')}
-          />
-        </WideModalField>
-      </WideModalSection>
-    </WideModal>
-  );
-}
-
-/* ── SCL Protocol evidence-bundle modal ───────────────────────────────────
- *
- * Builds a hash-sealed contemporary-record bundle manifest over a date
- * range and shows the resulting bundle sha256 + per-type counts. This is a
- * headline differentiator (delay-claim evidence) that previously had no UI.
- */
-function SclBundleModal({
-  projectId,
-  diaryDate,
-  onClose,
-}: {
-  projectId: string;
-  diaryDate: string;
-  onClose: () => void;
-}) {
-  const { t } = useTranslation();
-  const addToast = useToastStore((s) => s.addToast);
-  const [dateFrom, setDateFrom] = useState(diaryDate);
-  const [dateTo, setDateTo] = useState(diaryDate);
-  const [busy, setBusy] = useState(false);
-  const [manifest, setManifest] = useState<SclBundleManifest | null>(null);
-
-  const submit = async () => {
-    if (dateFrom > dateTo) {
-      addToast({
-        type: 'error',
-        title: t('daily_diary.scl_range_invalid', {
-          defaultValue: 'The start date must be on or before the end date.',
-        }),
-      });
-      return;
-    }
-    setBusy(true);
-    try {
-      const res = await exportSclBundle({
-        project_id: projectId,
-        date_from: dateFrom,
-        date_to: dateTo,
-      });
-      setManifest(res);
-      addToast({
-        type: 'success',
-        title: t('daily_diary.scl_built', { defaultValue: 'SCL bundle sealed' }),
-      });
-    } catch (err) {
-      addToast({ type: 'error', title: getErrorMessage(err) });
-    } finally {
-      setBusy(false);
-    }
-  };
-
-  return (
-    <WideModal
-      open
-      onClose={onClose}
-      busy={busy}
-      size="md"
-      title={t('daily_diary.scl_bundle_title', {
-        defaultValue: 'SCL Protocol evidence bundle',
-      })}
-      subtitle={t('daily_diary.scl_bundle_subtitle', {
-        defaultValue:
-          'Seal every diary, weather record, photo and drone survey in a date range under one tamper-evident sha256 manifest.',
-      })}
-      footer={
-        <>
-          <Button variant="ghost" onClick={onClose} disabled={busy}>
-            {t('common.close', { defaultValue: 'Close' })}
-          </Button>
-          <Button variant="primary" onClick={submit} loading={busy} icon={<Package size={14} />}>
-            {t('daily_diary.scl_build', { defaultValue: 'Build bundle' })}
-          </Button>
-        </>
-      }
-    >
-      <WideModalSection columns={2}>
-        <WideModalField label={t('daily_diary.scl_from', { defaultValue: 'From' })} required>
-          <input
-            type="date"
-            value={dateFrom}
-            max={dateTo}
-            onChange={(e) => setDateFrom(e.target.value)}
-            className={inputCls}
-          />
-        </WideModalField>
-        <WideModalField label={t('daily_diary.scl_to', { defaultValue: 'To' })} required>
-          <input
-            type="date"
-            value={dateTo}
-            min={dateFrom}
-            onChange={(e) => setDateTo(e.target.value)}
-            className={inputCls}
-          />
-        </WideModalField>
-      </WideModalSection>
-
-      {manifest && (
-        <div className="mt-4 space-y-3">
-          <div className="grid grid-cols-2 gap-3 text-sm sm:grid-cols-4">
-            <div>
-              <dt className="text-xs uppercase tracking-wide text-content-tertiary">
-                {t('daily_diary.tab_diaries', { defaultValue: 'Diaries' })}
-              </dt>
-              <dd className="text-base font-semibold">{manifest.diary_count}</dd>
-            </div>
-            <div>
-              <dt className="text-xs uppercase tracking-wide text-content-tertiary">
-                {t('daily_diary.weather', { defaultValue: 'Weather' })}
-              </dt>
-              <dd className="text-base font-semibold">{manifest.weather_record_count}</dd>
-            </div>
-            <div>
-              <dt className="text-xs uppercase tracking-wide text-content-tertiary">
-                {t('daily_diary.photos', { defaultValue: 'Photos' })}
-              </dt>
-              <dd className="text-base font-semibold">{manifest.photo_count}</dd>
-            </div>
-            <div>
-              <dt className="text-xs uppercase tracking-wide text-content-tertiary">
-                {t('daily_diary.drone', { defaultValue: 'Drone surveys' })}
-              </dt>
-              <dd className="text-base font-semibold">{manifest.drone_survey_count}</dd>
-            </div>
-          </div>
-          <div className="rounded-md border border-semantic-success/30 bg-semantic-success-bg/30 p-3">
-            <p className="text-xs font-semibold text-content-secondary">
-              {t('daily_diary.scl_fingerprint', { defaultValue: 'Bundle fingerprint' })}
-            </p>
-            <p className="mt-1 break-all font-mono text-xs text-content-secondary">
-              sha256: {manifest.bundle_sha256}
-            </p>
-          </div>
-        </div>
-      )}
     </WideModal>
   );
 }

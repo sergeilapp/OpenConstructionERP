@@ -1,7 +1,6 @@
 import { useState, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Copy, Check, X, Link2 } from 'lucide-react';
-import { copyToClipboard } from '@/shared/lib/browser';
 
 interface ShareDialogProps {
   roomName: string;
@@ -17,7 +16,7 @@ export function ShareDialog({ roomName, isOpen, onClose }: ShareDialogProps) {
 
   const handleCopy = useCallback(async () => {
     try {
-      await copyToClipboard(shareUrl);
+      await navigator.clipboard.writeText(shareUrl);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch {
@@ -92,7 +91,7 @@ export function ShareDialog({ roomName, isOpen, onClose }: ShareDialogProps) {
             <strong className="text-content-secondary">
               {t('collab.p2p_note_title', { defaultValue: 'Peer-to-peer sync' })}
             </strong>
-            {' - '}
+            {' — '}
             {t('collab.p2p_note', {
               defaultValue: 'Changes sync directly between browsers via WebRTC. No data is stored on a server. All participants must be online simultaneously.',
             })}

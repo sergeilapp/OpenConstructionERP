@@ -3,7 +3,7 @@
 """‌⁠‍Validation ORM models.
 
 Tables:
-    oe_validation_report - persisted validation reports with results
+    oe_validation_report — persisted validation reports with results
 """
 
 import uuid

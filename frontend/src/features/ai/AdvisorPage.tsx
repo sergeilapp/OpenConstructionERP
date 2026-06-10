@@ -12,12 +12,10 @@ import {
   Calculator,
   MessageSquarePlus,
   Info,
-  Bot,
-  ArrowUpRight,
 } from 'lucide-react';
-import { Breadcrumb, AIDisclaimerBanner, DismissibleInfo, IntroRichText } from '@/shared/ui';
+import { Breadcrumb, AIDisclaimerBanner } from '@/shared/ui';
 import { apiGet, apiPost } from '@/shared/lib/api';
-import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useToastStore } from '@/stores/useToastStore';
 import { useProjectContextStore } from '@/stores/useProjectContextStore';
 import { useLLMRun } from './hooks/useLLMRun';
@@ -45,9 +43,6 @@ interface ChatMessage {
   content: string;
   sources?: CostSource[];
   options?: string[];
-  /** The user question this assistant message answered (for "Use in Quick
-   *  Estimate" - CONN-81). Only set on assistant messages. */
-  query?: string;
   timestamp: number;
 }
 
@@ -195,20 +190,7 @@ function ChatBubble({
   isLast: boolean;
 }) {
   const { t } = useTranslation();
-  const navigate = useNavigate();
   const isUser = msg.role === 'user';
-
-  // Source code -> Cost Database deep link (CONN-81). The advisor's sources
-  // carry the CWICR `code` + raw `region` token (e.g. DE_BERLIN), which is the
-  // exact shape the /costs page consumes. ?region= is honoured today; the ?q=
-  // (code) consumer on CostsPage lands with its own batch.
-  const sourceTo = (s: CostSource): string => {
-    const params = new URLSearchParams();
-    if (s.code) params.set('q', s.code);
-    if (s.region) params.set('region', s.region);
-    const qs = params.toString();
-    return qs ? `/costs?${qs}` : '/costs';
-  };
 
   return (
     <div
@@ -242,51 +224,31 @@ function ChatBubble({
               <Database size={10} />
               {t('ai.advisor_sources', { defaultValue: 'Sources:' })}
             </p>
-            {msg.sources.map((s, j) => {
-              const rateLabel = s.currency
-                ? t('ai.advisor_source_rate', {
-                    defaultValue: '{{rate}} {{currency}}/{{unit}}',
-                    rate: s.rate,
-                    currency: s.currency,
-                    unit: s.unit,
-                  })
-                : t('ai.advisor_source_rate_nocur', {
-                    defaultValue: '{{rate}}/{{unit}}',
-                    rate: s.rate,
-                    unit: s.unit,
-                  });
-              const body = (
-                <>
-                  {s.code}: {s.description.slice(0, 50)}
-                  {s.description.length > 50 ? '…' : ''}{' '}
-                  <span className="font-medium">{rateLabel}</span>
-                </>
-              );
-              // On the user bubble (rare) keep plain text; on the assistant
-              // bubble make the source a deep link into the Cost Database.
-              if (isUser) {
-                return (
-                  <p key={j} className="text-[11px] leading-tight text-white/60">
-                    {body}
-                  </p>
-                );
-              }
-              return (
-                <button
-                  key={j}
-                  type="button"
-                  onClick={() => navigate(sourceTo(s))}
-                  title={t('ai.advisor_source_open', {
-                    defaultValue: 'Open {{code}} in the Cost Database',
-                    code: s.code,
-                  })}
-                  className="block w-full text-left text-[11px] leading-tight text-content-quaternary
-                    rounded px-1 -mx-1 hover:bg-oe-blue/[0.06] hover:text-oe-blue transition-colors"
-                >
-                  {body}
-                </button>
-              );
-            })}
+            {msg.sources.map((s, j) => (
+              <p
+                key={j}
+                className={`text-[11px] leading-tight ${
+                  isUser ? 'text-white/60' : 'text-content-quaternary'
+                }`}
+              >
+                {s.code}: {s.description.slice(0, 50)}
+                {s.description.length > 50 ? '…' : ''}{' '}
+                <span className="font-medium">
+                  {s.currency
+                    ? t('ai.advisor_source_rate', {
+                        defaultValue: '{{rate}} {{currency}}/{{unit}}',
+                        rate: s.rate,
+                        currency: s.currency,
+                        unit: s.unit,
+                      })
+                    : t('ai.advisor_source_rate_nocur', {
+                        defaultValue: '{{rate}}/{{unit}}',
+                        rate: s.rate,
+                        unit: s.unit,
+                      })}
+                </span>
+              </p>
+            ))}
           </div>
         )}
       </div>
@@ -313,27 +275,6 @@ function ChatBubble({
         </div>
       )}
 
-      {/* Turn this answer into an estimate (CONN-81). Carries the answered
-          question to the Quick Estimate text tab. ?tab=text is honoured today;
-          the ?q= prefill consumer on QuickEstimatePage lands with its own
-          batch. */}
-      {!isUser && msg.query && (
-        <div className="mt-2 max-w-[85%] sm:max-w-[75%]">
-          <button
-            type="button"
-            onClick={() =>
-              navigate(`/ai-estimate?tab=text&q=${encodeURIComponent(msg.query!)}`)
-            }
-            className="inline-flex items-center gap-1.5 rounded-full border border-border-light
-              bg-surface-elevated px-3 py-[6px] text-[12px] font-medium text-content-secondary
-              transition-colors hover:border-oe-blue/40 hover:bg-oe-blue/[0.06] hover:text-oe-blue"
-          >
-            <Calculator size={13} />
-            {t('ai.advisor_use_in_estimate', { defaultValue: 'Use in Quick Estimate' })}
-          </button>
-        </div>
-      )}
-
       {/* Timestamp */}
       <p
         className={`mt-[3px] text-[11px] ${
@@ -346,83 +287,15 @@ function ChatBubble({
   );
 }
 
-/* ── AI tools cross-link strip (CONN-82) ─────────────────────────── */
-
-/**
- * The AI surfaces (Agents, Chat, Quick Estimate) are siblings the Advisor
- * never pointed at. This compact strip links to the others (the Advisor itself
- * is dropped) so the empty state reads as one connected toolset. Defined
- * locally to keep the Advisor's lazy chunk free of the heavier AgentsPage
- * module. Plain react-router Links only.
- */
-function AiToolsStrip() {
-  const { t } = useTranslation();
-  const tools = [
-    { to: '/ai-agents', icon: Bot, label: t('nav.ai_agents', { defaultValue: 'AI Agents' }) },
-    { to: '/chat', icon: Sparkles, label: t('nav.erp_chat', { defaultValue: 'AI Chat' }) },
-    {
-      to: '/ai-estimate',
-      icon: Calculator,
-      label: t('nav.ai_estimate', { defaultValue: 'AI Quick Estimate' }),
-    },
-  ];
-  return (
-    <section aria-label={t('ai.cross_strip_label', { defaultValue: 'Other AI tools' })}>
-      <p className="flex items-center gap-1.5 text-2xs font-semibold text-content-tertiary uppercase tracking-wide mb-2">
-        <Sparkles size={11} />
-        {t('ai.cross_strip_title', { defaultValue: 'Other AI tools' })}
-      </p>
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
-        {tools.map((tool) => {
-          const Icon = tool.icon;
-          return (
-            <Link
-              key={tool.to}
-              to={tool.to}
-              className="group flex items-center gap-2 rounded-lg bg-surface-primary border border-border-light px-3 py-2 text-xs text-content-secondary hover:border-oe-blue/40 hover:text-oe-blue transition-colors"
-            >
-              <Icon size={14} className="shrink-0 text-oe-blue/70" />
-              <span className="flex-1 truncate font-medium">{tool.label}</span>
-              <ArrowUpRight size={13} className="shrink-0 text-content-tertiary group-hover:text-oe-blue" />
-            </Link>
-          );
-        })}
-      </div>
-    </section>
-  );
-}
-
 /* ── Main Component ──────────────────────────────────────────────── */
-
-// Region tokens the selector below offers; a ?region deep-link is only honoured
-// when it matches one of these so the <select> always renders a real option.
-const ADVISOR_REGION_OPTIONS = new Set([
-  'DE_BERLIN',
-  'UK_LONDON',
-  'USA_USD',
-  'CA_TORONTO',
-  'FR_PARIS',
-  'ES_BARCELONA',
-  'AE_DUBAI',
-  'SA_RIYADH',
-]);
 
 export function AdvisorPage() {
   const { t } = useTranslation();
-  const navigate = useNavigate();
-  const [searchParams, setSearchParams] = useSearchParams();
-  // Deep-link prefill (e.g. "Benchmark this rate" from the Cost Database,
-  // CONN-81): ?q seeds the question, ?region pre-selects the region. We never
-  // auto-send - the user reviews and submits. Read once for the initial state.
-  const questionFromUrl = searchParams.get('q') ?? '';
-  const regionFromUrl = searchParams.get('region') ?? '';
   const [messages, setMessages] = useState<ChatMessage[]>([]);
-  const [input, setInput] = useState(questionFromUrl);
+  const [input, setInput] = useState('');
   const [aiConfigured, setAiConfigured] = useState<boolean | null>(null); // null = loading
   const [aiProvider, setAiProvider] = useState<string>('');
-  const [region, setRegion] = useState(
-    regionFromUrl && ADVISOR_REGION_OPTIONS.has(regionFromUrl) ? regionFromUrl : '',
-  );
+  const [region, setRegion] = useState('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const activeProjectId = useProjectContextStore((s) => s.activeProjectId);
@@ -469,7 +342,6 @@ export function AdvisorPage() {
           content: cleanText,
           sources: data.sources,
           options: options.length > 0 ? options : undefined,
-          query: data.query,
           timestamp: Date.now(),
         },
       ]);
@@ -521,22 +393,6 @@ export function AdvisorPage() {
         setAiProvider(resolveActiveProvider(s, configured));
       })
       .catch(() => setAiConfigured(false));
-  }, []);
-
-  // The ?q / ?region seeds have been copied into state above; strip them so a
-  // reload does not re-pin the prefill over the user's edits.
-  useEffect(() => {
-    if (!questionFromUrl && !regionFromUrl) return;
-    setSearchParams(
-      (prev) => {
-        const next = new URLSearchParams(prev);
-        next.delete('q');
-        next.delete('region');
-        return next;
-      },
-      { replace: true },
-    );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const scrollToBottom = useCallback(() => {
@@ -594,35 +450,14 @@ export function AdvisorPage() {
   return (
     <div className="w-full animate-fade-in flex flex-col" style={{ height: 'calc(100vh - 80px)' }}>
       <Breadcrumb
-        items={[{ label: t('nav.ai_advisor', 'AI Cost Advisor') }]}
+        items={[
+          { label: t('nav.dashboard', 'Dashboard'), to: '/' },
+          { label: t('nav.ai_advisor', 'AI Cost Advisor') },
+        ]}
         className="mb-3 shrink-0"
       />
 
-      {/* Canonical top block - the module name + icon are shown by the global
-          top app bar. This chat page manages its own header bar below, so we
-          emit only the sr-only h1 here (a full PageHeader row would reserve an
-          empty min-h-9 midline above the chat with no subtitle or actions). */}
-      <h1 className="sr-only">{t('nav.ai_advisor', 'AI Cost Advisor')}</h1>
-
       <AIDisclaimerBanner variant="compact" className="mb-3 shrink-0" />
-
-      <DismissibleInfo
-        storageKey="advisor"
-        className="mb-3 shrink-0"
-        title={t('advisor.intro_title', {
-          defaultValue: 'Ask the price book a plain question',
-        })}
-        more={t('advisor.intro_more', { defaultValue: '' }) ? <IntroRichText text={t('advisor.intro_more')} /> : undefined}
-        links={[
-          { label: t('advisor.intro_link_costs', { defaultValue: 'Cost database' }), onClick: () => navigate('/costs') },
-          { label: t('advisor.intro_link_estimate', { defaultValue: 'Quick Estimate' }), onClick: () => navigate('/ai-estimate') },
-        ]}
-      >
-        {t('advisor.intro_body', {
-          defaultValue:
-            'Ask in plain language what something should cost and the advisor answers from your installed regional cost databases, showing the source rates, units and regions behind each reply. Use it to sanity-check a number before you commit it to an estimate.',
-        })}
-      </DismissibleInfo>
 
       {/* AI not configured warning */}
       {aiConfigured === false && (
@@ -654,10 +489,10 @@ export function AdvisorPage() {
             <Sparkles size={14} />
           </div>
           <div className="min-w-0 flex-1">
-            {/* No visible module-name heading here — the top app bar already
-                shows the module name + icon. We keep the assistant avatar and
-                the contextual scope line, which carry real information. */}
-            <p className="text-[13px] font-medium text-content-primary leading-tight truncate">
+            <h1 className="text-[15px] font-semibold text-content-primary leading-tight">
+              {t('ai.advisor_title', { defaultValue: 'AI Cost Advisor' })}
+            </h1>
+            <p className="text-[11px] text-content-tertiary leading-tight truncate">
               {activeProjectId && activeProjectName
                 ? t('ai.advisor_scoped', {
                     defaultValue: 'Using {{project}} region & currency as default context',
@@ -722,13 +557,13 @@ export function AdvisorPage() {
               <p className="text-xs text-content-tertiary max-w-md mb-4 leading-relaxed">
                 {t('ai.advisor_purpose', {
                   defaultValue:
-                    'Use this as a research companion while estimating: ask about typical rates, material alternatives, regional price differences or methods. Answers draw on the CWICR cost database plus AI knowledge - they inform decisions, they do not replace a priced BOQ.',
+                    'Use this as a research companion while estimating: ask about typical rates, material alternatives, regional price differences or methods. Answers draw on the CWICR cost database plus AI knowledge — they inform decisions, they do not replace a priced BOQ.',
                 })}
               </p>
               <div className="flex flex-wrap justify-center gap-2 mb-4 max-w-md">
                 {[
                   { icon: Database, label: t('ai.advisor_cap_db', { defaultValue: '55K+ cost items (CWICR)' }) },
-                  { icon: Globe, label: t('ai.advisor_cap_regions', { defaultValue: 'Regional cost databases' }) },
+                  { icon: Globe, label: t('ai.advisor_cap_regions', { defaultValue: '48 regional databases' }) },
                   { icon: Sparkles, label: t('ai.advisor_cap_ai', { defaultValue: 'AI-powered answers' }) },
                 ].map((cap, i) => (
                   <span key={i} className="inline-flex items-center gap-1.5 rounded-full bg-surface-secondary px-3 py-1 text-2xs text-content-tertiary">
@@ -784,12 +619,6 @@ export function AdvisorPage() {
                     </span>
                   </Link>
                 </div>
-              </div>
-
-              {/* AI tools cross-link strip (CONN-82) - reach the sibling AI
-                  surfaces (Agents, Chat, Quick Estimate) in one click. */}
-              <div className="w-full max-w-lg mt-4 text-left">
-                <AiToolsStrip />
               </div>
             </div>
           )}

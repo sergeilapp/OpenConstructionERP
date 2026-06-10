@@ -17,11 +17,10 @@ import {
   TrendingUp, Hash, Clock, ShieldCheck, Bookmark, ScatterChart as ScatterIcon, Trash2,
   Box, Ruler, Square, Building2, Palette,
 } from 'lucide-react';
-import { Button, Card, Badge, Breadcrumb, DismissibleInfo, EmptyState } from '@/shared/ui';
+import { Button, Card, Badge, Breadcrumb, EmptyState } from '@/shared/ui';
 import { useToastStore } from '@/stores/useToastStore';
 import { useUploadQueueStore } from '@/stores/useUploadQueueStore';
 import { apiGet, apiPost, ApiError, getErrorMessage, extractErrorMessageFromBody } from '@/shared/lib/api';
-import { uuid } from '@/shared/lib/browser';
 import {
   describeSession,
   valueCounts,
@@ -763,9 +762,9 @@ const PIVOT_VIZ_OPTIONS: {
   title: string;
 }[] = [
   { id: 'table',   icon: Table2,      labelKey: 'explorer.viz_table',   fallback: 'Table',   title: 'Dense grid with in-cell data bars (original view)' },
-  { id: 'heatmap', icon: Hash,        labelKey: 'explorer.viz_heatmap', fallback: 'Heatmap', title: 'Color intensity shows magnitude - great for multi-column comparison' },
-  { id: 'bar',     icon: BarChart3,   labelKey: 'explorer.viz_bar',     fallback: 'Bar',     title: 'Grouped horizontal bars - best for comparing groups' },
-  { id: 'treemap', icon: Layers,      labelKey: 'explorer.viz_treemap', fallback: 'Treemap', title: 'Area proportional to value - best for proportion and share' },
+  { id: 'heatmap', icon: Hash,        labelKey: 'explorer.viz_heatmap', fallback: 'Heatmap', title: 'Color intensity shows magnitude — great for multi-column comparison' },
+  { id: 'bar',     icon: BarChart3,   labelKey: 'explorer.viz_bar',     fallback: 'Bar',     title: 'Grouped horizontal bars — best for comparing groups' },
+  { id: 'treemap', icon: Layers,      labelKey: 'explorer.viz_treemap', fallback: 'Treemap', title: 'Area proportional to value — best for proportion and share' },
   { id: 'matrix',  icon: Columns3,    labelKey: 'explorer.viz_matrix',  fallback: 'Matrix',  title: 'Crosstab: first group-by on rows, second on columns (requires 2 group-by)' },
 ];
 
@@ -779,7 +778,7 @@ function PivotVizSwitcher({ mode, onChange, matrixEnabled }: PivotVizSwitcherPro
       {PIVOT_VIZ_OPTIONS.map(({ id, icon: Icon, labelKey, fallback, title }) => {
         const isActive = mode === id;
         const disabled = id === 'matrix' && !matrixEnabled;
-        const suffix = disabled ? ` - ${fallback === 'Matrix' ? 'pick a second group-by' : ''}` : '';
+        const suffix = disabled ? ` — ${fallback === 'Matrix' ? 'pick a second group-by' : ''}` : '';
         return (
           <button
             key={id}
@@ -1005,7 +1004,7 @@ function PivotTreemap({ groups, groupBy, aggCols, aggFn, onGroupClick }: PivotVi
   if (data.length === 0) {
     return (
       <p className="py-8 text-center text-xs text-content-tertiary">
-        {t('explorer.treemap_all_zero', { defaultValue: 'All values are zero - nothing to show as area.' })}
+        {t('explorer.treemap_all_zero', { defaultValue: 'All values are zero — nothing to show as area.' })}
       </p>
     );
   }
@@ -1473,7 +1472,7 @@ function PivotTab({ sessionId, describe, thresholdRules, setThresholdRules }: Pi
                       (isNum ? `, sum=${formatNumber(col.sum)}` : `, ${col.unique} unique`);
                     const title = allowed
                       ? titleBase
-                      : `${titleBase} - text columns need count / count_unique for ${aggFn.toUpperCase()}`;
+                      : `${titleBase} — text columns need count / count_unique for ${aggFn.toUpperCase()}`;
                     return (
                       <button
                         key={col.name}
@@ -1713,7 +1712,7 @@ function PivotTab({ sessionId, describe, thresholdRules, setThresholdRules }: Pi
                                     rolled == null
                                       ? t('explorer.rollup_not_additive', {
                                           defaultValue:
-                                            'Distinct counts cannot be combined across groups - expand to see per-group values.',
+                                            'Distinct counts cannot be combined across groups — expand to see per-group values.',
                                         })
                                       : undefined
                                   }
@@ -2737,23 +2736,23 @@ function DescribeSummary({
     <div className="space-y-4">
       {/* Data quality summary */}
       <div className="grid grid-cols-3 gap-3">
-        <div className="rounded-xl border border-border-light bg-surface-elevated/90 p-3 shadow-xs transition-shadow duration-normal ease-oe hover:shadow-sm">
+        <Card className="p-3">
           <p className="text-2xs text-content-tertiary uppercase">{t('explorer.data_completeness', { defaultValue: 'Data Completeness' })}</p>
           <p className={`text-lg font-bold tabular-nums ${qualityScore > 50 ? 'text-green-600' : qualityScore > 20 ? 'text-amber-600' : 'text-red-500'}`}>
             {qualityScore.toFixed(1)}%
           </p>
-        </div>
-        <div className="rounded-xl border border-border-light bg-surface-elevated/90 p-3 shadow-xs transition-shadow duration-normal ease-oe hover:shadow-sm">
+        </Card>
+        <Card className="p-3">
           <p className="text-2xs text-content-tertiary uppercase">{t('explorer.useful_columns', { defaultValue: 'Useful Columns' })}</p>
           <p className="text-lg font-bold text-content-primary tabular-nums">
             {describe.columns.filter((c) => c.non_null > describe.total_elements * 0.5).length}
             <span className="text-xs text-content-quaternary font-normal ml-1">/ {describe.total_columns}</span>
           </p>
-        </div>
-        <div className="rounded-xl border border-border-light bg-surface-elevated/90 p-3 shadow-xs transition-shadow duration-normal ease-oe hover:shadow-sm">
+        </Card>
+        <Card className="p-3">
           <p className="text-2xs text-content-tertiary uppercase">{t('explorer.sparse_columns', { defaultValue: 'Sparse (<10%)' })}</p>
           <p className="text-lg font-bold text-amber-600 tabular-nums">{lowCoverageCols}</p>
-        </div>
+        </Card>
       </div>
 
       {/* Column statistics table */}
@@ -2901,7 +2900,7 @@ function CreateBOQFromPivotModal({ open, onClose, groups, groupByColumns, aggCol
         const description = groupByColumns
           .map((col) => group.key[col] || '')
           .filter(Boolean)
-          .join(' - ');
+          .join(' — ');
 
         // Aggregate results are keyed by the bare column name (both the
         // backend endpoint and computeClientPivot write results[col]); the
@@ -3017,7 +3016,7 @@ function CreateBOQFromPivotModal({ open, onClose, groups, groupByColumns, aggCol
             </p>
             <div className="space-y-1">
               {groups.slice(0, 8).map((g, i) => {
-                const desc = groupByColumns.map((col) => g.key[col] || '').filter(Boolean).join(' - ');
+                const desc = groupByColumns.map((col) => g.key[col] || '').filter(Boolean).join(' — ');
                 const qty = g.results[quantityCol] ?? g.count;
                 return (
                   <div key={Object.values(g.key).join('-') || `group-${i}`} className="flex items-center justify-between text-xs">
@@ -3088,7 +3087,7 @@ function UploadConvertZone({
       addToast({ type: 'warning', title: t('explorer.invalid_format', { defaultValue: 'Unsupported file format. Use RVT, IFC, DWG, or DGN.' }) });
       return;
     }
-    const taskId = uuid();
+    const taskId = crypto.randomUUID();
     const sizeMB = file.size / (1024 * 1024);
     const estimatedSec = Math.max(30, (sizeMB / 50) * 60);
 
@@ -3289,7 +3288,7 @@ function SaveDialog({
     staleTime: 5 * 60_000,
   });
 
-  const [name, setName] = useState(filename.replace(/\.[^.]+$/, '') + ' - Analysis');
+  const [name, setName] = useState(filename.replace(/\.[^.]+$/, '') + ' — Analysis');
   const [projectId, setProjectId] = useState(activeProjectId || '');
   const [saving, setSaving] = useState(false);
 
@@ -3566,7 +3565,7 @@ function KpiStrip({ describe }: { describe: DescribeResponse }) {
         return (
           <div
             key={tile.label}
-            className="flex-1 min-w-[120px] flex items-center gap-2.5 rounded-xl border border-border-light bg-surface-elevated/90 px-3 py-1.5 shadow-xs transition-shadow duration-normal ease-oe hover:shadow-sm"
+            className="flex-1 min-w-[120px] flex items-center gap-2.5 rounded-lg border border-border-light/70 bg-surface-primary px-3 py-1.5 shadow-xs"
             title={tile.hint}
           >
             <div className={`shrink-0 w-7 h-7 rounded-md bg-surface-secondary/70 flex items-center justify-center ${tile.accent}`}>
@@ -3823,25 +3822,11 @@ export function CadDataExplorerPage() {
 
     return (
       <div className="flex flex-col -mx-4 sm:-mx-7 -mt-6 -mb-6 border-s border-border-light animate-fade-in" style={{ height: 'calc(100vh - 56px)' }}>
-        <div className="space-y-3 px-6 pt-4 pb-3 border-b border-border-light">
+        <div className="px-6 pt-4 pb-3 border-b border-border-light">
           <Breadcrumb items={[
-            { label: t('nav.cad_bim_explorer', { defaultValue: 'CAD-BIM Explorer' }) },
+            { label: t('nav.dashboard', { defaultValue: 'Dashboard' }), to: '/' },
+            { label: t('explorer.title', { defaultValue: 'CAD-BIM BI Explorer' }) },
           ]} />
-          <DismissibleInfo
-            storageKey="data-explorer"
-            title={t('cad_explorer.intro_title', {
-              defaultValue: 'Interrogate model data like a spreadsheet',
-            })}
-            links={[
-              { label: t('cad_explorer.intro_link_bim', { defaultValue: 'BIM viewer' }), onClick: () => navigate('/bim') },
-              { label: t('cad_explorer.intro_link_quantities', { defaultValue: 'Quantities' }), onClick: () => navigate('/quantities') },
-            ]}
-          >
-            {t('cad_explorer.intro_body', {
-              defaultValue:
-                'Loads the element data extracted from a converted CAD or BIM model and lets you table, pivot, chart and describe it without leaving the browser. Filter and slice the rows, spot missing or out-of-range data, export to CSV, or save a selection back as a BIM model you can open in the 3D viewer.',
-            })}
-          </DismissibleInfo>
         </div>
 
         {/* Soft modern background — calm base gradient, muted blurred
@@ -4210,7 +4195,7 @@ export function CadDataExplorerPage() {
                     })}
                     description={t('explorer.no_data_desc', {
                       defaultValue:
-                        'This model has no extracted data yet - convert a CAD/BIM file (RVT, IFC, DWG) to populate the explorer.',
+                        'This model has no extracted data yet — convert a CAD/BIM file (RVT, IFC, DWG) to populate the explorer.',
                     })}
                   />
                   <UploadConvertZone onSessionReady={handleSessionReady} />
@@ -4250,7 +4235,7 @@ export function CadDataExplorerPage() {
                       <p className="text-xs text-content-tertiary break-words">
                         {classified.status != null
                           ? t('explorer.load_failed_desc_status', {
-                              defaultValue: 'HTTP {{status}} - {{message}}',
+                              defaultValue: 'HTTP {{status}} — {{message}}',
                               status: classified.status,
                               message: classified.message,
                             })

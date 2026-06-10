@@ -4,16 +4,16 @@ Implements the orchestration endpoint described in
 ``docs/country-pack-oneclick/DESIGN.md`` §5. A single admin call installs an
 entire localized workspace for a pack:
 
-    1. apply_pack   - enable the pack's modules, co-brand, persist defaults.
-    2. locale       - surface the pack's default locale (front-end activates it).
-    3. cost_db      - load the relational CWICR cost DB for the pack's regions.
-    4. vector_db    - build the semantic vector DB for those regions.
-    5. demos        - install up to N fully-worked country demo projects.
+    1. apply_pack   — enable the pack's modules, co-brand, persist defaults.
+    2. locale       — surface the pack's default locale (front-end activates it).
+    3. cost_db      — load the relational CWICR cost DB for the pack's regions.
+    4. vector_db    — build the semantic vector DB for those regions.
+    5. demos        — install up to N fully-worked country demo projects.
 
 Every step is **fail-soft**: a step that errors is reported with
 ``status="error"`` (or ``"skipped"`` for graceful degradation such as a missing
 embedding model) and the orchestrator carries on. The call never returns 500
-because one step failed - it always returns the §5 response object so the
+because one step failed — it always returns the §5 response object so the
 front-end checklist can render exactly what happened.
 
 The slug → ``load-cwicr`` db_id resolution follows §5.1 (city-suffix index built
@@ -24,7 +24,6 @@ from __future__ import annotations
 
 import json
 import logging
-import uuid
 from collections.abc import AsyncIterator
 from typing import Any
 
@@ -87,8 +86,8 @@ class FullInstallResponse(BaseModel):
 # exactly. Keys are the slug's last segment (lowercased); values are the
 # canonical ``load-cwicr`` db_id. Kept tiny and explicit so a reader can see
 # every fudge:
-#   * muenchen / munchen - German transliterations of the ``DE_MUNICH`` token.
-#   * gbp - the UK-wide ``cwicr-uk-gbp`` slug has no city; the live UK
+#   * muenchen / munchen — German transliterations of the ``DE_MUNICH`` token.
+#   * gbp — the UK-wide ``cwicr-uk-gbp`` slug has no city; the live UK
 #     catalogue loads under ``GB_LONDON`` (DESIGN §5.1 "known live ids").
 _CITY_TOKEN_ALIASES: dict[str, str] = {
     "muenchen": "DE_MUNICH",
@@ -122,11 +121,11 @@ def _build_city_index() -> dict[str, str]:
 def resolve_cwicr_db_id(slug: str) -> str | None:
     """Resolve a CWICR marketplace slug to a ``load-cwicr`` db_id (§5.1).
 
-    Pack slugs are ``cwicr-<lang>-<city>`` (the lang token is unreliable -
+    Pack slugs are ``cwicr-<lang>-<city>`` (the lang token is unreliable —
     ``eng``/``fra`` both mean Canada), so we match on the slug's **last**
     segment against the city-suffix index, falling back to the explicit alias
     map. Returns ``None`` when the slug resolves to no known live region (e.g.
-    ``cwicr-fra-montreal``, ``cwicr-eng-wellington`` - no CWICR data yet); the
+    ``cwicr-fra-montreal``, ``cwicr-eng-wellington`` — no CWICR data yet); the
     caller reports those in ``detail.skipped``.
     """
     token = (slug or "").strip().lower().rsplit("-", 1)[-1]
@@ -148,7 +147,7 @@ async def _step_apply_pack(
     *,
     confirm_disables: bool = False,
 ) -> StepResult:
-    """Step 1 - apply the pack (modules + branding + defaults), no demo."""
+    """Step 1 — apply the pack (modules + branding + defaults), no demo."""
     from app.core.partner_pack.apply import apply_pack
 
     res = await apply_pack(
@@ -169,7 +168,7 @@ async def _step_apply_pack(
 
 
 def _step_locale(slug: str) -> StepResult:
-    """Step 2 - record the pack's default locale (front-end activates it)."""
+    """Step 2 — record the pack's default locale (front-end activates it)."""
     from app.core.partner_pack.discovery import get_pack_by_slug
 
     m = get_pack_by_slug(slug)
@@ -180,7 +179,7 @@ def _step_locale(slug: str) -> StepResult:
 
 
 async def _step_cost_db(slug: str) -> tuple[StepResult, list[str]]:
-    """Step 3 - load the CWICR cost DB for each resolvable region.
+    """Step 3 — load the CWICR cost DB for each resolvable region.
 
     Returns the step result and the list of db_ids that were actually loaded
     (so step 4 can vectorize exactly those regions). Fail-soft: a per-region
@@ -204,7 +203,7 @@ async def _step_cost_db(slug: str) -> tuple[StepResult, list[str]]:
             skipped.append(region_slug)
             continue
         if db_id in loaded:
-            # Two slugs resolving to the same live id (e.g. both UK slugs) -
+            # Two slugs resolving to the same live id (e.g. both UK slugs) —
             # load once.
             continue
         try:
@@ -216,7 +215,7 @@ async def _step_cost_db(slug: str) -> tuple[StepResult, list[str]]:
             count = int(res.get("total_items") or res.get("imported") or 0)
             items += count
             loaded.append(db_id)
-        except Exception as exc:  # noqa: BLE001 - fail-soft per region
+        except Exception as exc:  # noqa: BLE001 — fail-soft per region
             logger.warning("full-install cost_db: region %s (%s) failed: %s", region_slug, db_id, exc)
             errors.append({"region": region_slug, "db_id": db_id, "error": str(exc)})
 
@@ -238,7 +237,7 @@ async def _step_cost_db(slug: str) -> tuple[StepResult, list[str]]:
 
 
 async def _step_vector_db(loaded_regions: list[str]) -> StepResult:
-    """Step 4 - vectorize each region loaded in step 3 (graceful degradation)."""
+    """Step 4 — vectorize each region loaded in step 3 (graceful degradation)."""
     from fastapi.responses import JSONResponse
 
     from app.database import async_session_factory
@@ -262,7 +261,7 @@ async def _step_vector_db(loaded_regions: list[str]) -> StepResult:
                 res = await vectorize_region(session, region=db_id)
                 await session.commit()
             # ``vectorize_region`` returns a JSONResponse (503) when the vector
-            # backend / embedding model is unavailable - that's acceptable
+            # backend / embedding model is unavailable — that's acceptable
             # degradation, not a hard error.
             if isinstance(res, JSONResponse):
                 reason = "vector backend unavailable"
@@ -272,13 +271,13 @@ async def _step_vector_db(loaded_regions: list[str]) -> StepResult:
                         import json as _json
 
                         reason = _json.loads(body).get("message", reason)
-                    except Exception:  # noqa: BLE001 - best-effort message
+                    except Exception:  # noqa: BLE001 — best-effort message
                         pass
                 degraded.append({"region": db_id, "reason": reason})
                 continue
             vectors += int(res.get("indexed") or 0)
             done.append(db_id)
-        except Exception as exc:  # noqa: BLE001 - fail-soft per region
+        except Exception as exc:  # noqa: BLE001 — fail-soft per region
             logger.warning("full-install vector_db: region %s failed: %s", db_id, exc)
             errors.append({"region": db_id, "error": str(exc)})
 
@@ -315,51 +314,20 @@ def _pack_country(slug: str) -> str | None:
     return (row.get("country") or "").strip() or None
 
 
-def _country_fill(slug: str, ordered: list[str]) -> None:
-    """Append every other ``DEMO_CATALOG`` demo sharing the pack's country.
-
-    Mutates ``ordered`` in place, preserving its existing order and skipping
-    ids already present, so the flagship (or the manifest's explicit picks)
-    always lead and the same-country siblings follow. No-op when the pack has
-    no derivable country.
-    """
-    from app.core.demo_projects import DEMO_CATALOG
-
-    country = _pack_country(slug)
-    if not country:
-        return
-    for row in DEMO_CATALOG:
-        demo_id = row.get("demo_id")
-        if demo_id and demo_id not in ordered and (row.get("country") or "").strip() == country:
-            ordered.append(demo_id)
-
-
-def _demo_install_list(slug: str, demo_count: int, country_fill: bool = True) -> list[str]:
+def _demo_install_list(slug: str, demo_count: int) -> list[str]:
     """Build the ordered, de-duplicated demo install list for the pack.
 
     A pack's manifest may declare an explicit ``demo_template_ids`` list. When
     present, those ids (in order, de-duplicated, filtered to ids that resolve to
-    a loaded ``DemoTemplate``) lead the list - this lets a pack pin exactly the
-    market-appropriate demos it ships. When the manifest under-pins (fewer ids
-    than ``demo_count``), the list is padded with other ``DEMO_CATALOG`` demos
-    sharing the flagship's country so the one-click installer still lands the
-    asserted number of in-market projects (the documented "always land two"
-    guarantee). When the manifest declares none, the flagship
-    (``PACK_DEMO_PROJECT[slug]``) leads and the same country-fill follows. The
-    result is truncated to ``demo_count``.
-
-    Args:
-        slug: The pack slug to build the install list for.
-        demo_count: Maximum number of demos to return.
-        country_fill: When True (default) the list is padded with other demos
-            sharing the flagship's country (whether the manifest pins an
-            explicit list or relies on the flagship). When False, the list is
-            restricted to exactly what the pack pins - the manifest's
-            ``demo_template_ids`` or, if it declares none, only the single
-            ``PACK_DEMO_PROJECT[slug]`` flagship. Use False to seed a pack's own
-            project(s) and nothing else.
+    a loaded ``DemoTemplate``) are used verbatim — this guarantees every pack can
+    pin exactly the market-appropriate demos it ships, even when no second demo
+    shares the flagship's country (e.g. the cross-region modular / renewables
+    packs). When the manifest declares none, fall back to the historical
+    behaviour: flagship (``PACK_DEMO_PROJECT[slug]``) first, then every other
+    ``DEMO_CATALOG`` demo sharing the flagship's ``country``. The result is
+    truncated to ``demo_count``.
     """
-    from app.core.demo_projects import DEMO_TEMPLATES, PACK_DEMO_PROJECT
+    from app.core.demo_projects import DEMO_CATALOG, DEMO_TEMPLATES, PACK_DEMO_PROJECT
     from app.core.partner_pack.discovery import get_pack_by_slug
 
     if demo_count <= 0:
@@ -369,33 +337,30 @@ def _demo_install_list(slug: str, demo_count: int, country_fill: bool = True) ->
     # ids that resolve to a real template so a typo never seeds a phantom demo.
     m = get_pack_by_slug(slug)
     explicit = list(getattr(m, "demo_template_ids", []) or []) if m else []
-    ordered: list[str] = []
-    for demo_id in explicit:
-        if demo_id in DEMO_TEMPLATES and demo_id not in ordered:
-            ordered.append(demo_id)
-
-    if ordered:
-        # Manifest pinned at least one valid id. Honour it verbatim in pack-only
-        # mode; otherwise pad with same-country siblings so an under-pinned
-        # manifest (a single explicit id) still lands ``demo_count`` projects.
-        if country_fill:
-            _country_fill(slug, ordered)
-        return ordered[:demo_count]
+    if explicit:
+        ordered: list[str] = []
+        for demo_id in explicit:
+            if demo_id in DEMO_TEMPLATES and demo_id not in ordered:
+                ordered.append(demo_id)
+        if ordered:
+            return ordered[:demo_count]
 
     flagship = PACK_DEMO_PROJECT.get(slug)
+    country = _pack_country(slug)
 
-    # Pack-only mode: return just the flagship, never the country fill.
-    if not country_fill:
-        return [flagship][:demo_count] if flagship else []
-
+    ordered = []
     if flagship:
         ordered.append(flagship)
-    _country_fill(slug, ordered)
+    if country:
+        for row in DEMO_CATALOG:
+            demo_id = row.get("demo_id")
+            if demo_id and demo_id not in ordered and (row.get("country") or "").strip() == country:
+                ordered.append(demo_id)
     return ordered[:demo_count]
 
 
 async def _step_demos(slug: str, demo_count: int) -> StepResult:
-    """Step 5 - install the pack's country demos (idempotent, fail-soft)."""
+    """Step 5 — install the pack's country demos (idempotent, fail-soft)."""
     from app.core.demo_projects import install_demo_project
     from app.database import async_session_factory
 
@@ -409,41 +374,16 @@ async def _step_demos(slug: str, demo_count: int) -> StepResult:
 
     installed: list[str] = []
     errors: list[dict[str, str]] = []
-    installed_project_ids: list[uuid.UUID] = []
 
     for demo_id in install_ids:
         try:
             async with async_session_factory() as session:
-                demo_res = await install_demo_project(session, demo_id, partner_pack=slug)
+                await install_demo_project(session, demo_id, partner_pack=slug)
                 await session.commit()
             installed.append(demo_id)
-            _pid_raw = demo_res.get("project_id") if isinstance(demo_res, dict) else None
-            if _pid_raw:
-                try:
-                    installed_project_ids.append(
-                        _pid_raw if isinstance(_pid_raw, uuid.UUID) else uuid.UUID(str(_pid_raw))
-                    )
-                except (ValueError, TypeError):
-                    pass
-        except Exception as exc:  # noqa: BLE001 - one bad demo never aborts the rest
+        except Exception as exc:  # noqa: BLE001 — one bad demo never aborts the rest
             logger.warning("full-install demos: demo %s failed: %s", demo_id, exc)
             errors.append({"demo_id": demo_id, "error": str(exc)})
-
-    # Run the rich per-module enrichment (photos, takeoff, clash, carbon, qms,
-    # variations, costmodel, moc, markups, catalog, BIM grouping) over the
-    # freshly installed demo projects. install_demo_project only seeds BOQ /
-    # budget / schedule / tender / BIM model / PDFs, so without this the pack
-    # opens with those modules empty. This is the slow "sample data loads later"
-    # phase and correctly runs as part of the demos step (the background stream
-    # phase in the SSE variant). Fail-soft: an enrichment error never flips the
-    # demos step or aborts the install.
-    if installed_project_ids:
-        try:
-            from app.core.demo_enrichment import enrich_projects
-
-            await enrich_projects(installed_project_ids)
-        except Exception as exc:  # noqa: BLE001 - enrichment never aborts the demos step
-            logger.warning("full-install demos: enrichment failed: %s", exc)
 
     detail: dict[str, Any] = {"installed": installed}
     if errors:
@@ -517,7 +457,7 @@ async def _step_cost_db_detailed(slug: str) -> tuple[StepResult, list[str], int]
             skipped.append(region_slug)
             continue
         if db_id in loaded:
-            # Two slugs resolving to the same live id (e.g. both UK slugs) - load once.
+            # Two slugs resolving to the same live id (e.g. both UK slugs) — load once.
             continue
         try:
             async with async_session_factory() as session:
@@ -527,7 +467,7 @@ async def _step_cost_db_detailed(slug: str) -> tuple[StepResult, list[str], int]
             items += count
             resources += int(res.get("resource_components") or 0)
             loaded.append(db_id)
-        except Exception as exc:  # noqa: BLE001 - fail-soft per region
+        except Exception as exc:  # noqa: BLE001 — fail-soft per region
             logger.warning("full-install cost_db: region %s (%s) failed: %s", region_slug, db_id, exc)
             errors.append({"region": region_slug, "db_id": db_id, "error": str(exc)})
 
@@ -561,10 +501,10 @@ async def full_install_stream(
     """Yield SSE frames driving a live progress bar for a pack activation.
 
     Emits, in order:
-        * ``start``         - ``{slug, steps: [{step, label_key, label}], total}``
-        * ``step_start``    - ``{step, index, total}`` before each step runs
-        * ``step_done``     - ``{step, index, total, status, detail}`` after it
-        * ``done``          - ``{slug, ok, steps: [...full StepResult...]}``
+        * ``start``         — ``{slug, steps: [{step, label_key, label}], total}``
+        * ``step_start``    — ``{step, index, total}`` before each step runs
+        * ``step_done``     — ``{step, index, total, status, detail}`` after it
+        * ``done``          — ``{slug, ok, steps: [...full StepResult...]}``
 
     Every step is fail-soft exactly like :func:`full_install`; a step that errors
     is reported with ``status="error"``/``"skipped"`` and the stream continues,
@@ -641,7 +581,7 @@ async def full_install_stream(
                 result = await _step_demos(slug, req.demo_count)
             else:  # pragma: no cover - defensive; active_steps is closed-set
                 result = StepResult(step=step, status="skipped", detail={})
-        except Exception as exc:  # noqa: BLE001 - per-step fail-soft, never abort the stream
+        except Exception as exc:  # noqa: BLE001 — per-step fail-soft, never abort the stream
             result = _soft(step, exc)
 
         results.append(result)
@@ -699,7 +639,7 @@ async def full_install(
     # 1. apply_pack
     try:
         apply_result = await _step_apply_pack(slug, app, actor)
-    except Exception as exc:  # noqa: BLE001 - top-level fail-soft per DESIGN §5
+    except Exception as exc:  # noqa: BLE001 — top-level fail-soft per DESIGN §5
         apply_result = _soft("apply_pack", exc)
     steps.append(apply_result)
 

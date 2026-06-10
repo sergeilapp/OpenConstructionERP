@@ -1,4 +1,4 @@
-"""‌⁠‍Validation event handlers - vector indexing.
+"""‌⁠‍Validation event handlers — vector indexing.
 
 Subscribes to validation.report.* events and keeps the
 ``oe_validation`` vector collection in sync with the underlying

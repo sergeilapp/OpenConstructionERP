@@ -104,11 +104,6 @@ class _StubSelectionItemRepo(_StubRepo):
         return [r for r in self.rows.values() if r.selection_id == selection_id]
 
 
-class _StubHandoverDocRepo(_StubRepo):
-    async def list_for_handover(self, handover_id: uuid.UUID) -> list[Any]:
-        return [r for r in self.rows.values() if getattr(r, "handover_id", None) == handover_id]
-
-
 class _StubSession:
     """Minimal session — service never touches it directly during these tests."""
 
@@ -128,7 +123,6 @@ def _make_service() -> PropertyDevService:
     service.selections = _StubSelectionRepo()
     service.selection_items = _StubSelectionItemRepo()
     service.handovers = _StubRepo()
-    service.handover_docs = _StubHandoverDocRepo()
     service.snags = _StubRepo()
     service.warranty = _StubRepo()
     return service

@@ -4,21 +4,21 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 
-  <title>v5.2.2 - /dashboard route + W10/W13/SAF-A3 + a11y bundle - OpenConstructionERP</title>
-  <meta name="description" content="OpenConstructionERP v5.2.2 - /dashboard now actually renders DashboardPage instead of being silently unreachable, takeoff PDF renders cancel their in-flight RenderTask on page change, validation banners stop lying about zero-result runs, the project widget grid stops 405-ing on Change Orders summary, six OSHA fields exposed on Safety Incident responses, and an aria-label backfill across five Page.tsx files." />
+  <title>v5.2.2 — /dashboard route + W10/W13/SAF-A3 + a11y bundle — OpenConstructionERP</title>
+  <meta name="description" content="OpenConstructionERP v5.2.2 — /dashboard now actually renders DashboardPage instead of being silently unreachable, takeoff PDF renders cancel their in-flight RenderTask on page change, validation banners stop lying about zero-result runs, the project widget grid stops 405-ing on Change Orders summary, six OSHA fields exposed on Safety Incident responses, and an aria-label backfill across five Page.tsx files." />
   <meta name="robots" content="index,follow" />
   <link rel="canonical" href="https://openconstructionerp.com/news/v5-2-2.html" />
 
   <meta property="og:type" content="article" />
   <meta property="og:site_name" content="OpenConstructionERP" />
   <meta property="og:url" content="https://openconstructionerp.com/news/v5-2-2.html" />
-  <meta property="og:title" content="v5.2.2 - /dashboard route + W10/W13/SAF-A3 + a11y bundle" />
+  <meta property="og:title" content="v5.2.2 — /dashboard route + W10/W13/SAF-A3 + a11y bundle" />
   <meta property="og:description" content="Seven fixes across the dashboard route, takeoff render lifecycle, validation banner, change-order widget, OSHA fields and a11y backfill." />
   <meta property="article:published_time" content="2026-05-27T08:28:00Z" />
   <meta property="article:author" content="Artem Boiko" />
   <meta property="article:tag" content="Release" />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="v5.2.2 - /dashboard route + W10/W13/SAF-A3 + a11y bundle" />
+  <meta name="twitter:title" content="v5.2.2 — /dashboard route + W10/W13/SAF-A3 + a11y bundle" />
   <meta name="twitter:description" content="Seven fixes across the dashboard route, takeoff render lifecycle, validation banner and OSHA fields." />
 
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -37,7 +37,7 @@
   {
     "@context": "https://schema.org",
     "@type": "BlogPosting",
-    "headline": "v5.2.2 - /dashboard route + W10/W13/SAF-A3 + a11y bundle",
+    "headline": "v5.2.2 — /dashboard route + W10/W13/SAF-A3 + a11y bundle",
     "datePublished": "2026-05-27",
     "author": { "@type": "Person", "name": "Artem Boiko" },
     "publisher": { "@type": "Organization", "name": "DataDrivenConstruction", "logo": { "@type": "ImageObject", "url": "https://openconstructionerp.com/favicon.svg" } },
@@ -98,7 +98,7 @@
     .article h3 { font-family: 'Inter Tight', sans-serif; font-weight: 600; font-size: 19px; letter-spacing: -0.01em; margin: 28px 0 10px; color: var(--ink-0); }
     .article a { color: var(--accent); text-decoration: none; border-bottom: 1px solid color-mix(in oklab, var(--accent) 32%, transparent); transition: border-color 0.15s ease; }
     .article a:hover { border-bottom-color: var(--accent); }
-    /* CTA buttons inside .article - outrank .article a {color:var(--accent)} */
+    /* CTA buttons inside .article — outrank .article a {color:var(--accent)} */
     .article .btn, .article .btn:hover { border-bottom: none; }
     .article .btn-primary, .article .btn-primary:hover { color: #fff; }
     .article .btn-ghost { color: var(--ink-0); }
@@ -171,14 +171,14 @@
     <div class="crumbs">
       <a href="/">Home</a><span class="sep">/</span>
       <a href="/news.html">News</a><span class="sep">/</span>
-      <span>v5.2.2 - /dashboard + W10/W13/SAF-A3 + a11y</span>
+      <span>v5.2.2 — /dashboard + W10/W13/SAF-A3 + a11y</span>
     </div>
     <div class="pill-row">
       <span class="chip release">Release</span>
       <span class="pill-meta">2026-05-27</span>
       <span class="pill-meta">~4 min read</span>
     </div>
-    <h1>v5.2.2 - <span class="accent">Seven small fixes</span><br />across dashboard, takeoff and safety.</h1>
+    <h1>v5.2.2 — <span class="accent">Seven small fixes</span><br />across dashboard, takeoff and safety.</h1>
     <p class="lede">
       v5.2.2 is the first bug-fix follow-up to the v5.2.0 international-BOQ wave. The
       <code>/dashboard</code> route now actually renders the dashboard instead of being
@@ -197,7 +197,7 @@
   <div class="narrow">
 
     <p>
-      v5.2.0 was a long-running feature wave - Epic I, four native BOQ formats,
+      v5.2.0 was a long-running feature wave &mdash; Epic I, four native BOQ formats,
       one regional-exchange import surface. v5.2.2 is the opposite: a tightly-scoped
       bug-fix release that closes seven small issues a careful user would hit in their
       first half-hour with the app. Each one is a credibility bug, not a data-loss
@@ -246,7 +246,7 @@
         <h4>Validation banner stops lying about empty runs</h4>
         <p>
           <code>/validation</code> showed a green &ldquo;All passed&rdquo; banner even
-          when the run produced zero results - e.g. a freshly imported project
+          when the run produced zero results &mdash; e.g. a freshly imported project
           before any rules had executed. v5.2.2 gates that banner on
           <code>total &gt; 0</code> so a vacuous-truth zero-rule run no longer reads
           as a successful validation pass.
@@ -261,7 +261,7 @@
         <p>
           <code>ProjectWidgets</code> was calling <code>/v1/changeorders/summary</code>
           without a trailing slash, and FastAPI was matching it as
-          <code>{order_id}=summary</code> - serving an HTTP 405 because no
+          <code>{order_id}=summary</code> &mdash; serving an HTTP 405 because no
           <code>GET</code> handler existed for that synthetic path. Adding the trailing
           slash routes the call to the real <code>summary</code> endpoint, and the
           dashboard tile renders the change-order rollup it was meant to all along.
@@ -304,11 +304,11 @@
 
     <h2>Why this matters</h2>
     <p>
-      None of these are headline features - a v5.2.x patch never is - but
+      None of these are headline features &mdash; a v5.2.x patch never is &mdash; but
       together they remove a noticeable layer of friction. A dashboard route that
       doesn&rsquo;t resolve to the dashboard, a takeoff page that paints stale
       glyphs, a validation banner that congratulates you for doing nothing, a widget
-      that 405s on a missing trailing slash - each is small in isolation, each
+      that 405s on a missing trailing slash &mdash; each is small in isolation, each
       reads as &ldquo;this product is half-finished&rdquo; in aggregate. The
       backend-API fix on <code>safety.IncidentResponse</code> matters
       independently: the SAF-A3 audit fields are part of the regulatory contract on
@@ -324,7 +324,7 @@
     </div>
 
     <p>
-      No Alembic migration in this release - head stays unchanged. The
+      No Alembic migration in this release &mdash; head stays unchanged. The
       <code>safety.IncidentResponse</code> change is additive (the columns already
       exist on the model and DB), so the only consumer-visible difference is six new
       keys appearing on the wire. Frontend ships the route change, the takeoff

@@ -33,8 +33,6 @@ import {
   ExternalLink,
 } from 'lucide-react';
 import { Button, Card, Badge, EmptyState, Breadcrumb, ConfirmDialog, RecoveryCard, SkeletonTable } from '@/shared/ui';
-import { PageHeader } from '@/shared/ui/PageHeader';
-import { DismissibleInfo, IntroRichText } from '@/shared/ui/DismissibleInfo';
 import { useTabKeyboardNav } from '@/shared/hooks/useTabKeyboardNav';
 import { RequiresProject } from '@/shared/auth/RequiresProject';
 import { apiGet } from '@/shared/lib/api';
@@ -634,8 +632,6 @@ function MarkupDetail({
   siblings,
   onNavigate,
   onOpenInDocument,
-  onOpenBoqPosition,
-  onUseAsQuantity,
 }: {
   markup: Markup;
   documentName?: string;
@@ -654,19 +650,6 @@ function MarkupDetail({
    * no ``document_id`` (project-level annotation).
    */
   onOpenInDocument?: (markup: Markup) => void;
-  /**
-   * Jumps to the BOQ that this markup is linked to. Only rendered when
-   * ``linked_boq_position_id`` is set, so the previously-dead "Linked to a
-   * BOQ position" text becomes a live navigation control.
-   */
-  onOpenBoqPosition?: (positionId: string) => void;
-  /**
-   * Sends a measurement markup's value into PDF Takeoff so a clouded
-   * distance / area / count can become a takeoff quantity instead of being
-   * re-keyed by hand (CONN-67). Only rendered for measurement-type markups
-   * that carry a value.
-   */
-  onUseAsQuantity?: (markup: Markup) => void;
 }) {
   const { t } = useTranslation();
   const idx = siblings ? siblings.findIndex((m) => m.id === markup.id) : -1;
@@ -675,52 +658,27 @@ function MarkupDetail({
   const nextId = idx >= 0 && idx < total - 1 ? siblings![idx + 1]!.id : null;
   const showNav = !!siblings && total > 1 && idx >= 0;
 
-  // A measurement markup (distance / area / count) carrying a numeric value
-  // can be pushed straight into PDF Takeoff as a quantity (CONN-67).
-  const canUseAsQuantity =
-    MEASUREMENT_TYPES.includes(markup.type) &&
-    markup.measurement_value != null &&
-    !!onUseAsQuantity;
-
   return (
     <div className="px-6 py-3 bg-surface-secondary/40 border-t border-border-light">
-      {/* Deep-link CTAs — primary actions for the detail row. Sit above the
-          metadata grid so reviewers see them first when expanding a row.
+      {/* Deep-link CTA — primary action for the detail row. Sits above the
+          metadata grid so reviewers see it first when expanding a row.
           Hidden for project-level (no-document) markups since there's
           nothing to navigate to. */}
-      {((markup.document_id && onOpenInDocument) || canUseAsQuantity) && (
-        <div className="mb-3 flex flex-wrap items-center gap-2">
-          {markup.document_id && onOpenInDocument && (
-            <button
-              type="button"
-              onClick={() => onOpenInDocument(markup)}
-              title={t('markups.openInDocumentHint', {
-                defaultValue: 'Jump to this markup on the source document',
-              })}
-              data-testid="markup-open-in-document"
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-oe-blue text-white hover:bg-oe-blue-hover transition-colors shadow-sm"
-            >
-              <FileText size={13} />
-              {t('markups.openInDocument', { defaultValue: 'Open in document' })}
-              <ExternalLink size={11} className="opacity-80" />
-            </button>
-          )}
-          {canUseAsQuantity && (
-            <button
-              type="button"
-              onClick={() => onUseAsQuantity!(markup)}
-              title={t('markups.useAsQuantityHint', {
-                defaultValue:
-                  'Send this measurement into PDF Takeoff as a quantity instead of re-keying it',
-              })}
-              data-testid="markup-use-as-quantity"
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold text-oe-blue bg-oe-blue-subtle border border-oe-blue/30 hover:bg-oe-blue/10 transition-colors"
-            >
-              <Ruler size={13} />
-              {t('markups.useAsQuantity', { defaultValue: 'Use as takeoff quantity' })}
-              <ExternalLink size={11} className="opacity-80" />
-            </button>
-          )}
+      {markup.document_id && onOpenInDocument && (
+        <div className="mb-3">
+          <button
+            type="button"
+            onClick={() => onOpenInDocument(markup)}
+            title={t('markups.openInDocumentHint', {
+              defaultValue: 'Jump to this markup on the source document',
+            })}
+            data-testid="markup-open-in-document"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-oe-blue text-white hover:bg-oe-blue-hover transition-colors shadow-sm"
+          >
+            <FileText size={13} />
+            {t('markups.openInDocument', { defaultValue: 'Open in document' })}
+            <ExternalLink size={11} className="opacity-80" />
+          </button>
         </div>
       )}
       {showNav && (
@@ -816,26 +774,11 @@ function MarkupDetail({
           <p className="text-2xs font-medium text-content-tertiary uppercase tracking-wide mb-0.5">
             {t('markups.linked_boq', { defaultValue: 'Linked BOQ Position' })}
           </p>
-          {markup.linked_boq_position_id ? (
-            <button
-              type="button"
-              onClick={() =>
-                onOpenBoqPosition?.(markup.linked_boq_position_id as string)
-              }
-              data-testid="markup-open-boq-position"
-              title={t('markups.open_linked_boq_hint', {
-                defaultValue: 'Open the linked BOQ position',
-              })}
-              className="inline-flex items-center gap-1.5 px-2 py-1 rounded-lg text-xs font-medium text-oe-blue bg-oe-blue-subtle border border-oe-blue/30 hover:bg-oe-blue/10 transition-colors"
-            >
-              <ExternalLink size={11} />
-              {t('markups.open_linked_boq', { defaultValue: 'Open BOQ position' })}
-            </button>
-          ) : (
-            <p className="text-sm text-content-secondary">
-              {t('markups.not_linked', { defaultValue: 'Not linked' })}
-            </p>
-          )}
+          <p className="text-sm text-content-secondary">
+            {markup.linked_boq_position_id
+              ? t('markups.linked_to_boq', { defaultValue: 'Linked to a BOQ position' })
+              : t('markups.not_linked', { defaultValue: 'Not linked' })}
+          </p>
         </div>
       </div>
       {markup.metadata && Object.keys(markup.metadata).length > 0 && (
@@ -995,8 +938,6 @@ function MarkupTableRow({
   onNavigate,
   userMap,
   onOpenInDocument,
-  onOpenBoqPosition,
-  onUseAsQuantity,
 }: {
   markup: Markup;
   isExpanded: boolean;
@@ -1009,8 +950,6 @@ function MarkupTableRow({
   onNavigate?: (id: string) => void;
   userMap: Map<string, AssigneeUser>;
   onOpenInDocument?: (markup: Markup) => void;
-  onOpenBoqPosition?: (positionId: string) => void;
-  onUseAsQuantity?: (markup: Markup) => void;
 }) {
   const { t } = useTranslation();
   const TypeIcon = TYPE_ICONS[markup.type] ?? PenTool;
@@ -1148,8 +1087,6 @@ function MarkupTableRow({
               siblings={siblings}
               onNavigate={onNavigate}
               onOpenInDocument={onOpenInDocument}
-              onOpenBoqPosition={onOpenBoqPosition}
-              onUseAsQuantity={onUseAsQuantity}
             />
           </td>
         </tr>
@@ -1424,42 +1361,6 @@ export function MarkupsPage() {
     });
   }, [addToast, t]);
 
-  // Deep-link to the BOQ position a markup is linked to. Closes the
-  // loop the "Linked BOQ Position" detail used to only describe in text.
-  const handleOpenBoqPosition = useCallback(
-    (positionId: string) => {
-      navigate(`/boq?positionId=${encodeURIComponent(positionId)}`);
-    },
-    [navigate],
-  );
-
-  // Push a measurement markup into PDF Takeoff as a quantity (CONN-67).
-  // Takeoff matches its document by filename, which is exactly the document
-  // name we already resolve for the row, so we hand it ``docId=<name>`` and
-  // open straight on the Measurements tab. The measured value and unit ride
-  // along as ``mv`` / ``mu`` so the takeoff "Add measurement" form can
-  // pre-fill them (that consumer lands with the takeoff batch); the
-  // navigation itself is already useful without it.
-  const handleUseAsQuantity = useCallback(
-    (markup: Markup) => {
-      const params = new URLSearchParams();
-      params.set('tab', 'measurements');
-      const docName = markup.document_id
-        ? docNameById.get(markup.document_id)
-        : undefined;
-      if (docName) params.set('docId', docName);
-      if (markup.measurement_value != null) {
-        params.set('mv', String(markup.measurement_value));
-      }
-      if (markup.measurement_unit) params.set('mu', markup.measurement_unit);
-      if (markup.label || markup.text) {
-        params.set('mdesc', (markup.label || markup.text) as string);
-      }
-      navigate(`/takeoff?${params.toString()}`);
-    },
-    [navigate, docNameById],
-  );
-
   // Invalidation. Includes the unified feed so hub-scope mutations appear
   // in the "All annotations" tab without a manual reload.
   const invalidateAll = useCallback(() => {
@@ -1551,112 +1452,129 @@ export function MarkupsPage() {
   }, [stamps]);
 
   return (
-    <div className="space-y-5 animate-fade-in">
+    <div className="mx-auto max-w-7xl px-4 py-4 animate-fade-in">
       {/* Breadcrumb */}
       <Breadcrumb
         items={[
-          ...(activeProjectId
-            ? (() => {
-                const name = projects.find((p) => p.id === activeProjectId)?.name;
-                return name ? [{ label: name, to: `/projects/${activeProjectId}` }] : [];
-              })()
-            : []),
-          { label: t('nav.markups', { defaultValue: 'Markups' }) },
+          { label: t('nav.dashboard', { defaultValue: 'Dashboard' }), to: '/' },
+          { label: t('markups.title', { defaultValue: 'Markups & Annotations' }) },
         ]}
       />
 
-      {/* ── Header (canonical top block) ─────────────────────────────────── */}
-      <PageHeader
-        srTitle={t('nav.markups', { defaultValue: 'Markups' })}
-        subtitle={t('markups.subtitle', {
-          defaultValue:
-            'Review annotations - clouds, arrows, stamps and measurements placed on project documents.',
-        })}
-        actions={
-          <>
-            {/* Document selector — a within-project entity picker, stays. */}
-            {projectId && (
-              <select
-                value={filterDocumentId}
-                onChange={(e) => setFilterDocumentId(e.target.value)}
-                className={selectCls + ' max-w-[140px]'}
-                aria-label={t('markups.document', { defaultValue: 'Document' })}
-              >
-                <option value="">
-                  {documents.length > 0
-                    ? t('markups.all_documents', { defaultValue: 'All Docs' })
-                    : t('markups.no_documents', { defaultValue: 'No docs' })}
+      {/* ── Header: single row ───────────────────────────────────────────── */}
+      <div className="mt-3 flex items-center justify-between gap-3 flex-wrap">
+        {/* Left: title */}
+        <h1 className="text-lg font-bold text-content-primary flex items-center gap-2 shrink-0">
+          <PenTool size={20} className="text-oe-blue" />
+          {t('markups.title', { defaultValue: 'Markups & Annotations' })}
+        </h1>
+
+        {/* Right: controls — single row, no wrap */}
+        <div className="flex items-center gap-1.5 shrink-0">
+          {/* Project selector */}
+          {projects.length > 0 && (
+            <select
+              value={projectId}
+              onChange={(e) => {
+                const p = projects.find((pr) => pr.id === e.target.value);
+                if (p) {
+                  useProjectContextStore.getState().setActiveProject(p.id, p.name);
+                }
+              }}
+              className={selectCls + ' max-w-[150px]'}
+            >
+              <option value="" disabled>
+                {t('markups.select_project', { defaultValue: 'Project...' })}
+              </option>
+              {projects.map((p) => (
+                <option key={p.id} value={p.id}>
+                  {p.name}
                 </option>
-                {documents.map((doc) => (
-                  <option key={doc.id} value={doc.id}>
-                    {doc.name}
-                  </option>
-                ))}
-              </select>
-            )}
+              ))}
+            </select>
+          )}
 
-            {/* Compare revisions — opens the PDF overlay / visual-diff view */}
-            {projectId && (
-              <Button
-                variant="secondary"
-                size="sm"
-                onClick={() => {
-                  const params = new URLSearchParams();
-                  if (filterDocumentId) params.set('docA', filterDocumentId);
-                  navigate(`/markups/compare${params.toString() ? `?${params.toString()}` : ''}`);
-                }}
-                className="shrink-0 whitespace-nowrap"
-                title={t('markups.compare_revisions', { defaultValue: 'Compare revisions' })}
-              >
-                <GitCompare size={14} />
-                <span className="hidden lg:inline ml-1">
-                  {t('markups.compare_revisions', { defaultValue: 'Compare' })}
-                </span>
-              </Button>
-            )}
+          {/* Document selector */}
+          {projectId && (
+            <select
+              value={filterDocumentId}
+              onChange={(e) => setFilterDocumentId(e.target.value)}
+              className={selectCls + ' max-w-[140px]'}
+            >
+              <option value="">
+                {documents.length > 0
+                  ? t('markups.all_documents', { defaultValue: 'All Docs' })
+                  : t('markups.no_documents', { defaultValue: 'No docs' })}
+              </option>
+              {documents.map((doc) => (
+                <option key={doc.id} value={doc.id}>
+                  {doc.name}
+                </option>
+              ))}
+            </select>
+          )}
 
-            {/* Open inline PDF annotator — icon-only on small screens */}
-            {documents.length > 0 && (
-              <Button
-                variant="secondary"
-                size="sm"
-                onClick={() => setAnnotateDocId(filterDocumentId || documents[0]?.id || null)}
-                disabled={!projectId || documents.length === 0}
-                className="shrink-0 whitespace-nowrap"
-                title={t('markups.annotate_pdf', { defaultValue: 'Annotate on PDF' })}
-              >
-                <PenTool size={14} />
-                <span className="hidden lg:inline ml-1">{t('markups.annotate_pdf', { defaultValue: 'Annotate' })}</span>
-              </Button>
-            )}
-
-            {/* Add Markup */}
+          {/* Compare revisions — opens the PDF overlay / visual-diff view */}
+          {projectId && (
             <Button
-              variant="primary"
+              variant="secondary"
               size="sm"
-              onClick={() => setShowAddModal(true)}
-              disabled={!projectId}
+              onClick={() => {
+                const params = new URLSearchParams();
+                if (filterDocumentId) params.set('docA', filterDocumentId);
+                navigate(`/markups/compare${params.toString() ? `?${params.toString()}` : ''}`);
+              }}
               className="shrink-0 whitespace-nowrap"
-              title={t('markups.add_markup', { defaultValue: 'Add Markup' })}
+              title={t('markups.compare_revisions', { defaultValue: 'Compare revisions' })}
             >
-              <Plus size={14} />
-              <span className="hidden lg:inline ml-1">{t('markups.add_markup', { defaultValue: 'Add' })}</span>
+              <GitCompare size={14} />
+              <span className="hidden lg:inline ml-1">
+                {t('markups.compare_revisions', { defaultValue: 'Compare' })}
+              </span>
             </Button>
+          )}
 
-            {/* Export — icon only */}
+          {/* Open inline PDF annotator — icon-only on small screens */}
+          {documents.length > 0 && (
             <Button
-              variant="ghost"
+              variant="secondary"
               size="sm"
-              onClick={handleExportCSV}
-              disabled={!projectId}
-              icon={<Download size={14} />}
-              title={t('markups.export', { defaultValue: 'Export' })}
+              onClick={() => setAnnotateDocId(filterDocumentId || documents[0]?.id || null)}
+              disabled={!projectId || documents.length === 0}
+              className="shrink-0 whitespace-nowrap"
+              title={t('markups.annotate_pdf', { defaultValue: 'Annotate on PDF' })}
             >
-              <span className="hidden lg:inline">{t('markups.export', { defaultValue: 'Export' })}</span>
+              <PenTool size={14} />
+              <span className="hidden lg:inline ml-1">{t('markups.annotate_pdf', { defaultValue: 'Annotate' })}</span>
             </Button>
-          </>
-        }
-      />
+          )}
+
+          {/* Add Markup */}
+          <Button
+            variant="primary"
+            size="sm"
+            onClick={() => setShowAddModal(true)}
+            disabled={!projectId}
+            className="shrink-0 whitespace-nowrap"
+            title={t('markups.add_markup', { defaultValue: 'Add Markup' })}
+          >
+            <Plus size={14} />
+            <span className="hidden lg:inline ml-1">{t('markups.add_markup', { defaultValue: 'Add' })}</span>
+          </Button>
+
+          {/* Export — icon only */}
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={handleExportCSV}
+            disabled={!projectId}
+            icon={<Download size={14} />}
+            title={t('markups.export', { defaultValue: 'Export' })}
+          >
+            <span className="hidden lg:inline">{t('markups.export', { defaultValue: 'Export' })}</span>
+          </Button>
+        </div>
+      </div>
 
       {/* Project gate */}
       {!projectId ? (
@@ -1670,34 +1588,22 @@ export function MarkupsPage() {
         </div>
       ) : (
         <>
-          {/* ── Purpose intro (canonical DismissibleInfo) ─────────────────── */}
-          <DismissibleInfo
-            storageKey="markups"
-            title={t('markups.intro_title', {
-              defaultValue: 'Drawing comments that do not get lost',
-            })}
-            more={t('markups.intro_more', { defaultValue: '' }) ? <IntroRichText text={t('markups.intro_more')} /> : undefined}
-            links={[
-              {
-                label: t('markups.compare_revisions', { defaultValue: 'Compare' }),
-                onClick: () => navigate('/markups/compare'),
-              },
-            ]}
-          >
-            {t('markups.intro_body', {
+          {/* ── Purpose intro ─────────────────────────────────────────────── */}
+          <p className="mt-2 text-xs text-content-tertiary max-w-3xl leading-relaxed">
+            {t('markups.page_intro', {
               defaultValue:
-                'Add clouds, arrows, text, stamps and distance, area or count measurements onto project PDFs, assign them to a person and track each one through active, resolved and archived. Open a markup straight on its source drawing in the inline annotator, or push it through an approval route. Export the lot to CSV, and jump to Compare to check two revisions side by side.',
+                'Markups are review annotations — clouds, arrows, stamps and measurements placed on project documents. "All annotations" merges markups from the PDF/DWG takeoff tools and this hub; "Hub only" shows the ones created here. Upload drawings on the Documents page, then annotate them.',
             })}
-          </DismissibleInfo>
+          </p>
 
           {/* ── Stats Bar ──────────────────────────────────────────────────── */}
-          <div>
+          <div className="mt-3">
             <StatsBar summary={summary} />
           </div>
 
           {/* ── Scope Tabs (Unified / Hub only) ───────────────────────────── */}
           <div
-            className="inline-flex items-center rounded-lg border border-border-light bg-surface-primary p-0.5"
+            className="mt-3 inline-flex items-center rounded-lg border border-border-light bg-surface-primary p-0.5"
             role="tablist"
             aria-label={t('markups.scope_tabs', { defaultValue: 'Annotation scope' })}
             onKeyDown={onScopeTabKeyDown}
@@ -1742,7 +1648,7 @@ export function MarkupsPage() {
 
           {/* ── Inline PDF Annotator ──────────────────────────────────────── */}
           {annotateDocId && (
-            <div data-inline-annotator-mount>
+            <div className="mt-3" data-inline-annotator-mount>
               <InlinePdfAnnotator
                 documentId={annotateDocId}
                 documentName={documents.find((d) => d.id === annotateDocId)?.name || 'Document'}
@@ -1763,7 +1669,7 @@ export function MarkupsPage() {
 
           {/* ── Unified Feed (all three sources) ──────────────────────────── */}
           {scopeTab === 'unified' && (
-            <div>
+            <div className="mt-3">
               <UnifiedMarkupsList projectId={projectId} />
             </div>
           )}
@@ -1771,7 +1677,7 @@ export function MarkupsPage() {
           {/* ── Filter / Search / View Toggle (hub-only view) ─────────────── */}
           {scopeTab === 'hub' && (
           <>
-          <div className="flex items-center gap-2 flex-wrap">
+          <div className="mt-3 flex items-center gap-2 flex-wrap">
             {/* Search */}
             <div className="relative flex-1 min-w-[200px] max-w-xs">
               <Search
@@ -1900,7 +1806,7 @@ export function MarkupsPage() {
           )}
 
           {/* ── Main Content ───────────────────────────────────────────────── */}
-          <div>
+          <div className="mt-3">
             {isLoading ? (
               <SkeletonTable rows={6} columns={4} />
             ) : isError ? (
@@ -1997,8 +1903,6 @@ export function MarkupsPage() {
                           onNavigate={goToMarkup}
                           userMap={userMap}
                           onOpenInDocument={handleOpenInDocument}
-                          onOpenBoqPosition={handleOpenBoqPosition}
-                          onUseAsQuantity={handleUseAsQuantity}
                         />
                       ))}
                     </tbody>
@@ -2028,7 +1932,7 @@ export function MarkupsPage() {
 
           {/* ── Stamps (inline badges row) ─────────────────────────────────── */}
           {displayStamps.length > 0 && (
-            <div className="flex items-center gap-2 flex-wrap">
+            <div className="mt-4 flex items-center gap-2 flex-wrap">
               <span className="text-xs font-semibold text-content-tertiary uppercase tracking-wide">
                 {t('markups.stamps', { defaultValue: 'Stamps' })}:
               </span>

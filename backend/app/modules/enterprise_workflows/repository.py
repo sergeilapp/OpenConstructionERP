@@ -1,7 +1,7 @@
 """‌⁠‍Enterprise Workflows data access layer.
 
 All database queries for workflow entities live here.
-No business logic - pure data access.
+No business logic — pure data access.
 """
 
 import uuid

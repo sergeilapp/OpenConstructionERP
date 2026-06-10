@@ -1,5 +1,5 @@
 /**
- * API helpers for the Tendering module — integrated-5D-estimating-suite-style addenda + bid leveling.
+ * API helpers for the Tendering module — RIB iTWO-style addenda + bid leveling.
  *
  * Backed by /api/v1/tendering/ — see backend/app/modules/tendering/router.py
  */
@@ -30,9 +30,8 @@ export interface Addendum {
 export interface BidLevelingSummary {
   bid_id: string;
   company_name: string;
-  /** Money fields ride as Decimal-as-string in JSON (v3 §10). */
-  raw_amount: number | string;
-  leveled_amount: number | string;
+  raw_amount: number;
+  leveled_amount: number;
   matched_lines: number;
   scaled_lines: number;
   imputed_lines: number;
@@ -45,8 +44,7 @@ export interface LevelingMatrixCell {
   raw_total: number;
   leveled_total: number;
   status: '' | 'matched' | 'scaled' | 'imputed';
-  /** Money field - Decimal-as-string in JSON (v3 §10). */
-  unit_rate: number | string;
+  unit_rate: number;
 }
 
 export interface LevelingMatrixRow {

@@ -1,7 +1,7 @@
 """‌⁠‍UK regional pack API routes.
 
 Endpoints:
-    GET /config  - Return the full UK regional configuration
+    GET /config  — Return the full UK regional configuration
 """
 
 import logging

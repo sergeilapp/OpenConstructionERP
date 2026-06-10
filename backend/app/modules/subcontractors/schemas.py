@@ -87,7 +87,7 @@ class SubcontractorCreate(SubcontractorBase):
 class SubcontractorUpdate(BaseModel):
     """Partial update for Subcontractor.
 
-    R5: ``rating_score`` is *deliberately* not editable here - it is the
+    R5: ``rating_score`` is *deliberately* not editable here — it is the
     rolled-up output of :class:`SubcontractorRating` rows and must only
     be written through :meth:`SubcontractorService.update_rating` /
     ``bump_rating_from_event`` (both gated by ``subcontractors.rate``).
@@ -130,7 +130,7 @@ class SubcontractorResponse(BaseModel):
     website: str | None = None
     notes: str | None = None
     is_active: bool = True
-    # ── Wave 4 / T12: construction management platform style prequal + insurance tracking ──
+    # ── Wave 4 / T12: BuildingConnected-style prequal + insurance tracking ──
     prequal_score: int | None = None
     insurance_expiry_date: date | None = None
     insurance_doc_id: UUID | None = None
@@ -148,7 +148,7 @@ class PrequalRequest(BaseModel):
     """Submit a prequalification questionnaire for a subcontractor.
 
     ``questionnaire`` carries the raw Yes/No / multi-choice answers as a
-    plain ``dict[str, Any]`` - the questionnaire shape is intentionally
+    plain ``dict[str, Any]`` — the questionnaire shape is intentionally
     loose so individual GCs can author their own forms without a schema
     migration. If ``score`` is None the service computes it from the
     answers (sum of truthy values / total non-null answers, x 100).
@@ -158,9 +158,6 @@ class PrequalRequest(BaseModel):
 
     questionnaire: dict[str, Any] = Field(default_factory=dict)
     score: int | None = Field(default=None, ge=0, le=100)
-    # When true the service rejects (400) a questionnaire that leaves any
-    # required question unanswered (final submit). Default false saves a draft.
-    require_complete: bool = False
 
     @field_validator("questionnaire")
     @classmethod
@@ -178,43 +175,6 @@ class PrequalRequest(BaseModel):
                     f"questionnaire answer for {key!r} exceeds 4096 chars",
                 )
         return value
-
-
-class PrequalView(BaseModel):
-    """Current prequalification state for a subcontractor (read model).
-
-    Backs ``GET /subcontractors/{id}/prequal`` so the questionnaire UI can
-    seed itself from the prior submission, show the stored score, and surface
-    the answer-key driven evaluation (which required questions are still
-    unanswered) without re-deriving it on the client.
-    """
-
-    model_config = ConfigDict(from_attributes=True)
-
-    subcontractor_id: UUID
-    prequalification_status: str = "pending"
-    prequal_score: int | None = None
-    prequal_questionnaire: dict[str, Any] | None = None
-    prequal_completed_at: datetime | None = None
-    is_blocked: bool = False
-    blocked_reason: str | None = None
-    # Required question keys that are still unanswered against the canonical
-    # questionnaire spec. Empty when the questionnaire is complete (or none has
-    # been submitted yet, in which case ``prequal_questionnaire`` is null).
-    missing_required: list[str] = Field(default_factory=list)
-    # The answer-key score recomputed from the stored answers, so the UI shows
-    # the server-trusted value rather than trusting the persisted ``prequal_score``
-    # (which may have been an explicit caller override).
-    computed_score: int | None = None
-    approval_threshold: int = 70
-
-
-class MonthlyRatingComputeRequest(BaseModel):
-    """Admin trigger to recompute a subcontractor's monthly rating rollup."""
-
-    model_config = ConfigDict(str_strip_whitespace=True)
-
-    period: str = Field(..., pattern=r"^\d{4}-\d{2}$")
 
 
 class BlockRequest(BaseModel):
@@ -437,7 +397,6 @@ class AgreementCreate(BaseModel):
     end_date: date | None = None
     retention_percent: Decimal = Field(default=Decimal("5.0"), ge=0, le=100)
     retention_release_event: str | None = Field(default=None, max_length=120)
-    requires_lien_waiver: bool = False
     notes: str | None = None
 
     @field_validator("currency")
@@ -458,7 +417,6 @@ class AgreementUpdate(BaseModel):
     end_date: date | None = None
     retention_percent: Decimal | None = Field(default=None, ge=0, le=100)
     retention_release_event: str | None = Field(default=None, max_length=120)
-    requires_lien_waiver: bool | None = None
     status: str | None = Field(
         default=None,
         pattern=r"^(draft|active|completed|terminated)$",
@@ -486,7 +444,6 @@ class AgreementResponse(BaseModel):
     end_date: date | None = None
     retention_percent: Decimal = Decimal("5.0")
     retention_release_event: str | None = None
-    requires_lien_waiver: bool = False
     status: str = "draft"
     notes: str | None = None
     created_by: str | None = None
@@ -735,54 +692,6 @@ class PaymentBlockResult(BaseModel):
     reasons: list[str] = Field(default_factory=list)
 
 
-class PaymentReleaseCheck(BaseModel):
-    """Lien-waiver release gate for a single payment application.
-
-    Drives the waiver badge and the disabled state of the approve/pay buttons
-    in the payment-approval UI.
-    """
-
-    payment_application_id: UUID
-    waiver_required: bool
-    blocked: bool
-    reasons: list[str] = Field(default_factory=list)
-
-
-class AwardEligibility(BaseModel):
-    """Whether a subcontractor may be awarded live work (TOP-30 #20).
-
-    Drives the prequalification banner in the subcontractor drawer and the
-    409 raised when an agreement is activated or a payment is claimed for a
-    blocked or rejected/suspended vendor.
-    """
-
-    subcontractor_id: UUID
-    awardable: bool
-    reasons: list[str] = Field(default_factory=list)
-
-
-class VendorEligibility(BaseModel):
-    """Award-eligibility verdict resolved from a CRM contact id (TOP-30 #20).
-
-    Procurement POs reference a vendor by ``vendor_contact_id`` (a CRM
-    ``Contact``), not a subcontractor id. This shape lets the PO-row badge
-    and the create/issue/update gate resolve the prequalification / block
-    status from that contact. ``known`` is false when the contact is not a
-    registered subcontractor - the gate then treats it as an ad-hoc vendor
-    (no block, no warning) rather than an error.
-    """
-
-    contact_id: UUID
-    known: bool = False
-    subcontractor_id: UUID | None = None
-    legal_name: str | None = None
-    awardable: bool = True
-    prequalification_status: str | None = None
-    is_blocked: bool = False
-    rating_score: str | None = None
-    reasons: list[str] = Field(default_factory=list)
-
-
 class CurrencyAmount(BaseModel):
     """One ISO-currency bucket of a money rollup.
 
@@ -825,14 +734,14 @@ class SubcontractorDashboard(BaseModel):
 
 
 class SOVRow(BaseModel):
-    """One row in a Schedule-of-Values rollup - per work-package totals."""
+    """One row in a Schedule-of-Values rollup — per work-package totals."""
 
     work_package_id: UUID
     name: str
     planned_value: Decimal = Decimal("0")
     completion_percent: Decimal = Decimal("0")
     # All claim/cert/approved totals are rolled up across every payment app
-    # tied to this work package - current period + all prior periods.
+    # tied to this work package — current period + all prior periods.
     claimed_to_date: Decimal = Decimal("0")
     certified_to_date: Decimal = Decimal("0")
     approved_to_date: Decimal = Decimal("0")
@@ -878,7 +787,7 @@ class TaxIdValidationResponse(BaseModel):
     standard: str | None = Field(
         default=None,
         description=(
-            "Name of the standard the value was checked against - e.g. "
+            "Name of the standard the value was checked against — e.g. "
             "'EU VAT', 'US EIN', 'GB VRN'. None if no rule is known for the country."
         ),
     )
@@ -891,7 +800,7 @@ class TaxIdValidationResponse(BaseModel):
 # ── Lien waivers / tax forms ─────────────────────────────────────────────
 
 
-# Valid waiver types - restrict at schema level so the magic-byte
+# Valid waiver types — restrict at schema level so the magic-byte
 # endpoint cannot store arbitrary strings (avoids enum-poisoning that
 # could break downstream reporting).
 _VALID_WAIVER_TYPES: frozenset[str] = frozenset(
@@ -900,8 +809,8 @@ _VALID_WAIVER_TYPES: frozenset[str] = frozenset(
         "conditional_final",
         "unconditional_partial",
         "unconditional_final",
-        "w9",  # US - vendor tax form, annual
-        "w8",  # International - vendor tax form, valid 3 years
+        "w9",  # US — vendor tax form, annual
+        "w8",  # International — vendor tax form, valid 3 years
     },
 )
 

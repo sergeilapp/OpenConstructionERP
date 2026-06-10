@@ -1,4 +1,4 @@
-"""‌⁠‍Tendering service - business logic for tender packages and bids.
+"""‌⁠‍Tendering service — business logic for tender packages and bids.
 
 Stateless service layer. Handles:
 - Package CRUD with status workflow
@@ -57,16 +57,10 @@ def _to_decimal(value: object, default: str = "0") -> Decimal:
 def _round2(value: Decimal) -> float:
     """Round a Decimal to 2 dp at the presentation boundary and emit float.
 
-    For the response-schema fields still typed ``float`` (quantities and
-    informational totals); rounding happens only here so all intermediate
-    arithmetic stays in Decimal.
+    The response schemas type these fields as ``float``; rounding happens
+    only here so all intermediate arithmetic stays in Decimal.
     """
     return float(value.quantize(_CENTS, rounding=ROUND_HALF_UP))
-
-
-def _round2_dec(value: Decimal) -> Decimal:
-    """Round a Decimal to 2 dp and keep it Decimal (v3 §10 money fields)."""
-    return value.quantize(_CENTS, rounding=ROUND_HALF_UP)
 
 
 async def _safe_publish(name: str, data: dict, source_module: str = "") -> None:
@@ -193,7 +187,7 @@ class TenderingService:
                 meta[stamp_key] = datetime.now(UTC).isoformat()
                 fields["metadata_"] = {**meta, **fields.get("metadata_", {})}
         elif new_status is not None and new_status == package.status:
-            # No-op status write - drop it so we don't emit a misleading
+            # No-op status write — drop it so we don't emit a misleading
             # "status changed" update event for an unchanged value.
             fields.pop("status")
 
@@ -223,7 +217,7 @@ class TenderingService:
         # Verify package exists
         await self.get_package(package_id)
 
-        # v3 §10 - ``BidLineItem.unit_rate`` is Decimal; dump in JSON
+        # v3 §10 — ``BidLineItem.unit_rate`` is Decimal; dump in JSON
         # mode so the serializer converts it to a string (the JSON DB
         # column can't natively persist a ``Decimal`` object).
         line_items_raw = [item.model_dump(mode="json") for item in data.line_items]
@@ -283,7 +277,7 @@ class TenderingService:
         if "metadata" in fields:
             fields["metadata_"] = fields.pop("metadata")
 
-        # Serialize line_items if present - JSON mode coerces Decimal to
+        # Serialize line_items if present — JSON mode coerces Decimal to
         # string so the persisted JSON value matches the wire contract.
         if "line_items" in fields and fields["line_items"] is not None:
             fields["line_items"] = [
@@ -363,7 +357,7 @@ class TenderingService:
         # single authoritative budget currency (currency is tracked per
         # position payload), so we can only suppress a deviation when the
         # budget currency is actually discoverable. When it is not, we do not
-        # invent one - we simply do not suppress (degrades safely, never
+        # invent one — we simply do not suppress (degrades safely, never
         # emits a *wrong* percentage). Where bidders disagree among
         # themselves, the dominant bid currency is treated as the comparison
         # baseline so a single odd-currency bid cannot poison every row.
@@ -432,7 +426,7 @@ class TenderingService:
                 )
             )
 
-        # Build bid totals - never compute a deviation against the budget for
+        # Build bid totals — never compute a deviation against the budget for
         # a bid quoted in a different currency (mixed-currency comparison is a
         # data error, not a 0% match).
         bid_totals = []
@@ -480,7 +474,7 @@ class TenderingService:
 
         Lifecycle is enforced at the root:
         - the package must be in an awardable state (``collecting`` /
-          ``evaluating``) - you cannot award a ``draft``/``issued`` package;
+          ``evaluating``) — you cannot award a ``draft``/``issued`` package;
         - an already ``awarded``/``closed`` package cannot be re-awarded
           (no double-award);
         - a ``rejected``/disqualified bid cannot win.
@@ -519,7 +513,7 @@ class TenderingService:
         # ── Currency-mismatch guard ────────────────────────────────────────
         # Awarding writes the winning bid's unit_rate values straight into
         # the BOQ positions (which are denominated in the project currency).
-        # If the winning bid - or any of its line items - is quoted in a
+        # If the winning bid — or any of its line items — is quoted in a
         # different currency we would silently overwrite project-currency
         # rates with foreign-currency numbers, corrupting the budget.
         # Block the award and surface every offending entity so the user
@@ -589,17 +583,10 @@ class TenderingService:
             pos = await self.session.get(Position, pos_uuid)
             if pos is None:
                 continue
-            # A bid stores position_id values as free-form JSON; never trust
-            # them to belong to this package's BOQ. Skip any foreign position
-            # so a winning bid can only ever overwrite rates in its own BOQ.
-            if pos.boq_id != package.boq_id:
-                continue
             qty = _to_decimal(pos.quantity)
             new_total = qty * rate
             await self.session.execute(
-                update(Position)
-                .where(Position.id == pos.id, Position.boq_id == package.boq_id)
-                .values(unit_rate=str(rate), total=str(new_total))
+                update(Position).where(Position.id == pos.id).values(unit_rate=str(rate), total=str(new_total))
             )
             updated += 1
 
@@ -611,7 +598,7 @@ class TenderingService:
             meta["awarded_by"] = str(awarded_by)
         meta["awarded_bid_id"] = str(bid_id)
 
-        # Flip statuses - package: awarded, winning bid: accepted,
+        # Flip statuses — package: awarded, winning bid: accepted,
         # every competing bid: rejected (a closed tender has one winner).
         await self.repo.update_package_fields(package_id, status="awarded", metadata_=meta)
         all_bids = await self.repo.list_bids_for_package(package_id)
@@ -739,7 +726,7 @@ class TenderingService:
         reserved for admins (who are cross-tenant by design); an empty list
         means the caller owns no projects and therefore can hold no addendum,
         so we short-circuit to 404 without any scan. The package relationship
-        ``bids`` is *not* eager-loaded here - addendum lookup only reads the
+        ``bids`` is *not* eager-loaded here — addendum lookup only reads the
         package ``metadata_`` JSON, so we avoid the heavy bids fan-out the old
         ``list_packages(limit=10_000)`` path incurred.
         """
@@ -845,7 +832,7 @@ class TenderingService:
 
         # Cross-currency guard. Leveling normalises every bid onto the SAME
         # reference BOQ quantities and emits raw_total / leveled_total numbers
-        # with no per-cell currency tag - so blending bids quoted in different
+        # with no per-cell currency tag — so blending bids quoted in different
         # currencies would silently sum euros with dollars. Scope leveling to
         # the package's reporting currency (mirrors compare_bids'
         # ``_same_currency`` and bid_management.leveling_matrix). Bids quoted in
@@ -857,7 +844,7 @@ class TenderingService:
         # ``package.currency`` read raised AttributeError -> HTTP 500 on both
         # leveling endpoints. The package's reporting currency is the project
         # currency, so derive it from the project exactly as ``apply_winner``
-        # already does. Fall back to "" (unknown) - NEVER hardcode "EUR" - so
+        # already does. Fall back to "" (unknown) — NEVER hardcode "EUR" — so
         # that when the project currency is unknown we degrade safely (the
         # ``_same_currency`` guard then keeps every bid rather than blending a
         # provably-foreign one). ``getattr`` is used defensively in case the
@@ -870,7 +857,7 @@ class TenderingService:
         def _same_currency(bid: TenderBid) -> bool:
             bc = (bid.currency or "").strip().upper()
             # No package currency, or a bid that did not declare one, cannot
-            # be proven mismatched - keep it (degrades safely, never blends a
+            # be proven mismatched — keep it (degrades safely, never blends a
             # *provably* foreign-currency bid).
             return not package_currency or not bc or bc == package_currency
 
@@ -916,7 +903,7 @@ class TenderingService:
                     idx[str(key)] = item
             bid_index[str(bid.id)] = idx
 
-        # Per-bid mean unit rate across the lines the bidder actually quoted -
+        # Per-bid mean unit rate across the lines the bidder actually quoted —
         # used to impute omitted lines so the leveled total covers full scope.
         bid_mean_rate: dict[str, Decimal] = {}
         for bid in bids:
@@ -974,7 +961,7 @@ class TenderingService:
                         raw_total=_round2(raw_total),
                         leveled_total=_round2(leveled_total),
                         status=cell_status,
-                        unit_rate=_round2_dec(unit_rate),
+                        unit_rate=_round2(unit_rate),
                     )
                 )
             rows.append(
@@ -994,8 +981,8 @@ class TenderingService:
             BidLevelingSummary(
                 bid_id=s["bid_id"],
                 company_name=s["company_name"],
-                raw_amount=_round2_dec(s["raw_amount"]),
-                leveled_amount=_round2_dec(s["leveled_amount"]),
+                raw_amount=_round2(s["raw_amount"]),
+                leveled_amount=_round2(s["leveled_amount"]),
                 matched_lines=s["matched_lines"],
                 scaled_lines=s["scaled_lines"],
                 imputed_lines=s["imputed_lines"],
@@ -1063,7 +1050,7 @@ class TenderingService:
             return (value or "").strip().upper()
 
         # Statistical aggregates (spread / outliers) are only meaningful
-        # within a single currency - summing or comparing totals across
+        # within a single currency — summing or comparing totals across
         # currencies produces nonsense. Scope numeric stats to the dominant
         # currency cohort (the currency carried by the most bids).
         ccy_counts: dict[str, int] = {}
@@ -1071,7 +1058,7 @@ class TenderingService:
             ccy_counts[_norm_ccy(b.currency)] = ccy_counts.get(_norm_ccy(b.currency), 0) + 1
         dominant_ccy = max(ccy_counts.items(), key=lambda kv: (kv[1], kv[0]))[0]
 
-        # Vendor rollup - Decimal sums, and a vendor that bid in more than
+        # Vendor rollup — Decimal sums, and a vendor that bid in more than
         # one currency is reported with a blank currency rather than a
         # silently-mixed total.
         vendor_map: dict[str, dict] = {}
@@ -1135,7 +1122,7 @@ class TenderingService:
             sample_size=n,
         )
 
-        # Outliers (IQR rule) - also confined to the dominant-currency cohort.
+        # Outliers (IQR rule) — also confined to the dominant-currency cohort.
         iqr = p75 - p25
         low_bound = p25 - Decimal("1.5") * iqr
         high_bound = p75 + Decimal("1.5") * iqr

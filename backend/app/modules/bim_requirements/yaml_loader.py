@@ -18,8 +18,7 @@ Design goals
 
 Why we built this
 ~~~~~~~~~~~~~~~~~
-A common commercial moat in BIM rule-checking tools is the opacity of
-their proprietary rule files.
+Solibri's commercial moat is the opacity of its ``.csset`` rule files.
 OpenConstructionERP ships its rule packs as plain YAML in the repo so
 they can be code-reviewed, diffed, branched, and shared the same way any
 other source artifact is. That is a feature commercial tools cannot copy
@@ -342,7 +341,7 @@ def load_rule_pack(source: str | Path, *, text: str | None = None) -> RulePack:
             raise RulePackParseError(f"Cannot read rule pack file: {exc}", path=path) from exc
 
     try:
-        raw = yaml.load(text, Loader=_StrictSafeLoader)  # noqa: S506 - strict subclass
+        raw = yaml.load(text, Loader=_StrictSafeLoader)  # noqa: S506 — strict subclass
     except yaml.YAMLError as exc:
         line = None
         if hasattr(exc, "problem_mark") and exc.problem_mark is not None:
@@ -360,7 +359,7 @@ def load_rule_pack(source: str | Path, *, text: str | None = None) -> RulePack:
         return RulePack.model_validate(raw)
     except Exception as exc:  # ValidationError or our raised ValueError
         # We deliberately do not import pydantic's ValidationError as the
-        # only catchable type - Pydantic may also raise built-in ValueError
+        # only catchable type — Pydantic may also raise built-in ValueError
         # via field_validators. Both serialize cleanly via str().
         raise RulePackParseError(str(exc), path=path) from exc
 

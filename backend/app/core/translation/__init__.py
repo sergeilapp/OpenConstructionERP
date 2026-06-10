@@ -1,4 +1,4 @@
-"""‌⁠‍Translation service - element → catalog cross-lingual normalisation.
+"""‌⁠‍Translation service — element → catalog cross-lingual normalisation.
 
 Public entrypoint:
 
@@ -17,7 +17,7 @@ that meets the per-tier confidence threshold (see ``cascade.DEFAULT_THRESHOLDS``
     1. Lookup tables (MUSE bilingual + IATE EU termbase) on disk
     2. Async SQLite cache of past translations
     3. LLM translation via the configured AI provider
-    4. Fallback - return the original text unchanged
+    4. Fallback — return the original text unchanged
 
 Used by the element-to-catalog match feature (see ``app.core.match_service``)
 to translate element descriptions from a source language (e.g. Revit material

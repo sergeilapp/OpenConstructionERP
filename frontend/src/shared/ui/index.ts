@@ -18,12 +18,6 @@ export { Badge } from './Badge';
 
 export { Card, CardHeader, CardContent, CardFooter } from './Card';
 
-export { StatCard } from './StatCard';
-export type { StatCardProps, StatCardTone } from './StatCard';
-
-export { KpiBand } from './KpiBand';
-export type { KpiBandProps, KpiBandItem } from './KpiBand';
-
 export { EmptyState } from './EmptyState';
 export type { EmptyStateProps } from './EmptyState';
 
@@ -58,34 +52,9 @@ export { Toast } from './Toast';
 
 export { ToastContainer } from './ToastContainer';
 
-export { BackgroundInstallBanner } from './BackgroundInstallBanner';
-
 export { CommandPalette } from './CommandPalette';
 
 export { InfoHint } from './InfoHint';
-
-export { DismissibleInfo, IntroRichText } from './DismissibleInfo';
-export type { DismissibleInfoLink } from './DismissibleInfo';
-
-// Guidance primitives (clarity plan, Wave 0) — one shared way to explain
-// AI confidence, AI suggestions, errors, and jargon across every module.
-export { ConfidenceBadge, bandForScore, CONFIDENCE_HIGH_MIN, CONFIDENCE_MEDIUM_MIN } from './ConfidenceBadge';
-export type { ConfidenceBadgeProps, ConfidenceLevel } from './ConfidenceBadge';
-
-export { SuggestionCard } from './SuggestionCard';
-export type { SuggestionCardProps } from './SuggestionCard';
-
-export { ErrorState } from './ErrorState';
-export type { ErrorStateProps } from './ErrorState';
-
-export { GlossaryTerm } from './GlossaryTerm';
-export type { GlossaryTermProps } from './GlossaryTerm';
-
-export { GridHeaderHelp } from './GridHeaderHelp';
-export type { GridHeaderHelpParams } from './GridHeaderHelp';
-
-export { PageHeader } from './PageHeader';
-export type { PageHeaderProps } from './PageHeader';
 
 export { FeedbackDialog } from './FeedbackDialog';
 
@@ -126,7 +95,6 @@ export { ErrorBoundary } from './ErrorBoundary';
 export { NotFoundPage } from './NotFoundPage';
 
 export { CountryFlag } from './CountryFlag';
-export { CountryFlagBackdrop } from './CountryFlagBackdrop';
 
 export { CountryCombobox, CUSTOM_SENTINEL } from './CountryCombobox';
 export type { CountryComboboxProps } from './CountryCombobox';

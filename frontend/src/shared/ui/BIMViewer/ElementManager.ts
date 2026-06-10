@@ -987,15 +987,15 @@ export class ElementManager {
       // it shares the same prefix. The viewer needs COLLADA DAE (which
       // is also XML but with a <COLLADA root) or a GLB binary.
       hint =
-        ' - The file is XML but not COLLADA. This usually means the DDC cad2data converter did not emit 3D geometry for this model (an older converter version, or a source format without geometry - e.g. .ifcXML / gbXML). Try re-running the conversion with the latest DDC cad2data (v0.3+) or upload the source as RVT/IFC/DWG/DGN to trigger geometry export.';
+        ' — The file is XML but not COLLADA. This usually means the DDC cad2data converter did not emit 3D geometry for this model (an older converter version, or a source format without geometry — e.g. .ifcXML / gbXML). Try re-running the conversion with the latest DDC cad2data (v0.3+) or upload the source as RVT/IFC/DWG/DGN to trigger geometry export.';
     } else if (asAscii.startsWith('<!doctype') || asAscii.startsWith('<html')) {
       // HTML — almost always an auth/redirect or error page.
       hint =
-        " - The geometry URL returned an HTML page (likely an auth redirect, a 404, or a proxy/CDN error). Reload the page to refresh credentials; if it persists, check that your session hasn't expired.";
+        " — The geometry URL returned an HTML page (likely an auth redirect, a 404, or a proxy/CDN error). Reload the page to refresh credentials; if it persists, check that your session hasn't expired.";
     } else if (asAscii.startsWith('{')) {
       // JSON — server sent an error envelope instead of binary.
       hint =
-        ' - The geometry URL returned a JSON response, not 3D geometry. Open the browser network panel to see the server message - common causes are expired presigned URLs or a converter still running in the background.';
+        ' — The geometry URL returned a JSON response, not 3D geometry. Open the browser network panel to see the server message — common causes are expired presigned URLs or a converter still running in the background.';
     }
 
     throw new Error(
@@ -1068,7 +1068,7 @@ export class ElementManager {
         // The regex also accepts namespace-prefixed forms such as
         // "<ns0:COLLADA" (produced by Python ET without register_namespace()).
         if (!/<(?:[A-Za-z0-9_-]+:)?COLLADA[\s>]/i.test(text.slice(0, 4096))) {
-          reject(new Error('Not a COLLADA document - <COLLADA> root tag not found in first 4096 chars'));
+          reject(new Error('Not a COLLADA document — <COLLADA> root tag not found in first 4096 chars'));
           return;
         }
 
@@ -1093,7 +1093,7 @@ export class ElementManager {
         // shows the actual cause instead of the cryptic JS message.
         const baseMessage = err instanceof Error ? err.message : String(err);
         const hint = baseMessage.includes("reading 'getAttribute'")
-          ? ' - DAE contains broken cross-references (a node referenced an id that does not exist)'
+          ? ' — DAE contains broken cross-references (a node referenced an id that does not exist)'
           : '';
         const wrapped = new Error(`COLLADA parse: ${baseMessage}${hint}`);
         if (err instanceof Error && err.stack) wrapped.stack = err.stack;
@@ -2246,32 +2246,10 @@ export class ElementManager {
     // This catches meshes that are in the scene graph but may not be
     // the same object reference as meshMap (Three.js ColladaLoader
     // can nest meshes inside intermediate Group nodes).
-    //
-    // Two rules keep this isolate-correct on large Revit/IFC models:
-    //   1. Skip any mesh that carries a `batchHandle`. On big models
-    //      (>= 10k meshes) the geometry is collapsed into BatchedMesh
-    //      instances and the original mesh is parked at `visible = false`
-    //      because the batch draws it now. The meshMap loop above already
-    //      drove the batch instance via setVisibleAt. Re-showing the
-    //      original here would draw the isolated subset twice (z-fighting)
-    //      and was the only place this pass diverged from `isolate()`.
-    //   2. For a non-batched matched mesh, show it only when its element
-    //      passes the predicate; hide everything else (unmatched DAE
-    //      background included) so the selected groups are isolated rather
-    //      than overlaid on the full model.
     if (this.daeGroup) {
       this.daeGroup.traverse((obj) => {
         if (obj instanceof THREE.Mesh) {
-          const ud = obj.userData as {
-            elementId?: string | null;
-            batchHandle?: { batched: THREE.BatchedMesh; instanceId: number };
-          };
-          // Batched original — rendering is owned by the BatchedMesh; leave
-          // the parked original hidden so we never double-draw the subset.
-          if (ud.batchHandle) {
-            obj.visible = false;
-            return;
-          }
+          const ud = obj.userData as { elementId?: string | null };
           if (ud.elementId) {
             obj.visible = visibleIds.has(ud.elementId);
           } else {

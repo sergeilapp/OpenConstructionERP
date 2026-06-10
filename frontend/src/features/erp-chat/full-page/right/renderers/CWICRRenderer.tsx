@@ -1,5 +1,3 @@
-import { unwrapList, toNum } from './normalize';
-
 interface CWICRItem {
   code?: string;
   description?: string;
@@ -11,13 +9,7 @@ interface CWICRItem {
 }
 
 export default function CWICRRenderer({ data }: { data: unknown }) {
-  // Backend `search_cwicr_database` returns `{ items: [...], total, query }`;
-  // `rate` arrives as a string (Decimal serialized). Coerce to number so
-  // the toLocaleString formatting below works.
-  const items = (unwrapList(data, ['items']) as Record<string, unknown>[]).map((it) => ({
-    ...it,
-    rate: toNum(it.rate),
-  })) as CWICRItem[];
+  const items: CWICRItem[] = Array.isArray(data) ? data : [];
 
   if (items.length === 0) {
     return (

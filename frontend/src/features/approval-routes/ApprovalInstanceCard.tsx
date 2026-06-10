@@ -99,14 +99,14 @@ export interface ApprovalInstanceCardProps {
 
 /** View-model for one rung of the ladder: the template step joined with
  *  its decision rows for this instance. */
-export interface LadderStep {
+interface LadderStep {
   step: RouteStep;
   states: StepState[];
   status: LadderStepStatus;
   isCurrent: boolean;
 }
 
-export function buildLadder(
+function buildLadder(
   route: ApprovalRoute | undefined,
   instance: ApprovalInstance,
 ): LadderStep[] {
@@ -477,7 +477,7 @@ export function ApprovalInstanceCard({
 
 /* ── Helpers ────────────────────────────────────────────────────────── */
 
-export function InstanceStatusBadge({ status }: { status: ApprovalInstance['status'] }) {
+function InstanceStatusBadge({ status }: { status: ApprovalInstance['status'] }) {
   const { t } = useTranslation();
   const variant: 'neutral' | 'blue' | 'success' | 'warning' | 'error' =
     status === 'approved'
@@ -497,7 +497,7 @@ export function InstanceStatusBadge({ status }: { status: ApprovalInstance['stat
   );
 }
 
-export interface StepRowProps {
+interface StepRowProps {
   rung: LadderStep;
   index: number;
   total: number;
@@ -508,7 +508,7 @@ export interface StepRowProps {
   deciding: boolean;
 }
 
-export function StepRow({
+function StepRow({
   rung,
   index,
   total,
@@ -593,17 +593,10 @@ export function StepRow({
         {step.sla_hours != null && (
           <>
             {' · '}
-            <span
-              title={t('approvalRoutes.sla_informational_hint', {
-                defaultValue:
-                  'Target turnaround only. Not enforced - no automatic escalation or overdue blocking.',
-              })}
-            >
-              {t('approvalRoutes.sla_target_value', {
-                defaultValue: 'Target SLA {{h}}h',
-                h: step.sla_hours,
-              })}
-            </span>
+            {t('approvalRoutes.sla_hours_value', {
+              defaultValue: 'SLA: {{h}}h',
+              h: step.sla_hours,
+            })}
           </>
         )}
       </p>

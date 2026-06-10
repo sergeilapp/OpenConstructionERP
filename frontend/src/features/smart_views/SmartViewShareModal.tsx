@@ -16,7 +16,6 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link2, Copy, Trash2, RefreshCw } from 'lucide-react';
 import { Button, WideModal } from '@/shared/ui';
-import { copyToClipboard } from '@/shared/lib/browser';
 import { useToastStore } from '@/stores/useToastStore';
 import {
   buildSmartViewShareUrl,
@@ -88,7 +87,7 @@ export function SmartViewShareModal({
   async function handleCopy(): Promise<void> {
     if (!url) return;
     try {
-      await copyToClipboard(url);
+      await navigator.clipboard.writeText(url);
       addToast({
         type: 'success',
         title: t('smartViews.share_copied', {

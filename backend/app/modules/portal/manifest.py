@@ -1,12 +1,12 @@
 # DDC-CWICR-OE: DataDrivenConstruction · OpenConstructionERP
-"""‌⁠‍Client & Partner Portal manifest."""
+"""‌⁠‍Customer & Partner Portal manifest."""
 
 from app.core.module_loader import ModuleManifest
 
 manifest = ModuleManifest(
     name="oe_portal",
     version="0.1.0",
-    display_name="Client & Partner Portal",
+    display_name="Customer & Partner Portal",
     description=(
         "External portal users (clients/investors/consultants/subcontractors/"
         "suppliers/building users) with magic-link auth, RLS, notifications, "

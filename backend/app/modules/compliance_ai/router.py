@@ -1,11 +1,11 @@
-"""‌⁠‍Compliance-AI router - health + NL → DSL verify endpoint.
+"""‌⁠‍Compliance-AI router — health + NL → DSL verify endpoint.
 
 The actual NL-to-DSL conversion lives in :mod:`app.core.validation.dsl.
 nl_builder` so the router stays a thin envelope. Hardening shipped here
 (vs the sibling :mod:`app.modules.compliance` route):
 
 * ``check_ai_rate_limit`` is wired *unconditionally* (the sibling route
-  did not enforce it) - closes the LLM cost-runaway path a scripted
+  did not enforce it) — closes the LLM cost-runaway path a scripted
   client could exploit by toggling ``use_ai=true`` in a tight loop.
 * Auth is required (returns 401 without a JWT) so the cost bucket is
   always attributable to a real user.
@@ -29,7 +29,7 @@ from app.modules.compliance_ai.schemas import (
 )
 from app.modules.compliance_ai.service import verify_nl_rule
 
-# NOTE: no ``prefix=`` here - the module loader mounts this router at
+# NOTE: no ``prefix=`` here — the module loader mounts this router at
 # ``/api/v1/compliance-ai`` automatically (see
 # :func:`app.core.module_loader.ModuleLoader._load_module`). Setting a
 # prefix locally would double-mount as

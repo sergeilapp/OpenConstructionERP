@@ -1,6 +1,6 @@
 import { useState, useCallback, useRef, useMemo, useEffect, useId, lazy, Suspense } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useSearchParams, useNavigate, Link } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import clsx from 'clsx';
 import {
@@ -25,13 +25,9 @@ import {
   Layers,
   Pin,
   PinOff,
-  GitCompare,
-  BrainCircuit,
 } from 'lucide-react';
 
-import { Button, Card, Badge, Input, Skeleton, DismissibleInfo, IntroRichText, Breadcrumb } from '@/shared/ui';
-import { PageHeader } from '@/shared/ui/PageHeader';
-import { PdfCompareDrawer } from './PdfCompareDrawer';
+import { Button, Card, Badge, Input, Skeleton } from '@/shared/ui';
 import { apiGet, apiPost } from '@/shared/lib/api';
 import { formatFileSize } from '@/shared/lib/formatters';
 import { useAuthStore } from '@/stores/useAuthStore';
@@ -39,8 +35,6 @@ import { useToastStore } from '@/stores/useToastStore';
 import { useProjectContextStore } from '@/stores/useProjectContextStore';
 import { takeoffApi, type TakeoffDocumentResponse } from './api';
 import { canonicalizeUnit } from './lib/units';
-import { aiApi } from '@/features/ai/api';
-import { hasLlmKey } from '@/features/ai-estimator/useAiReadiness';
 
 const TakeoffViewerModule = lazy(() => import('@/modules/pdf-takeoff/TakeoffViewerModule'));
 
@@ -353,7 +347,6 @@ function DocumentCard({
   onAddToBOQ,
   onView,
   boqSelected,
-  aiConnected,
 }: {
   doc: UploadedDocument;
   onAnalyze: (id: string) => void;
@@ -365,7 +358,6 @@ function DocumentCard({
   onAddToBOQ: (docId: string) => void;
   onView: (docId: string) => void;
   boqSelected: boolean;
-  aiConnected: boolean;
 }) {
   const { t } = useTranslation();
   const [expanded, setExpanded] = useState(true);
@@ -485,24 +477,6 @@ function DocumentCard({
           {t('takeoff.view', 'View')}
         </Button>
       </div>
-
-      {/* AI-not-connected hint — the Analyze / Extract Tables buttons call an
-          LLM provider, so guide the user to settings when none is connected.
-          Suppressed once an analysis already exists. */}
-      {!aiConnected && !doc.analysis && !hasError && (
-        <p className="mt-2.5 flex flex-wrap items-center gap-1 text-xs text-content-tertiary">
-          <BrainCircuit size={13} className="shrink-0 text-oe-blue" />
-          {t('takeoff.ai_not_connected_hint', {
-            defaultValue: 'Analyze with AI needs an AI provider connected.',
-          })}
-          <Link
-            to="/settings?tab=ai"
-            className="font-semibold text-oe-blue hover:underline"
-          >
-            {t('takeoff.ai_setup.connect_cta', { defaultValue: 'Connect an AI provider' })}
-          </Link>
-        </p>
-      )}
 
       {/* Analysis results */}
       {doc.analysis && (
@@ -1041,111 +1015,11 @@ function TakeoffDocFilmstrip({
 
 type TakeoffTab = 'documents' | 'measurements';
 
-/* ── AI setup notice ───────────────────────────────────────────────────── */
-
-/**
- * Shown at the top of the Documents & AI tab. When no AI provider is
- * connected it explains, in plain language, that AI takeoff needs a provider
- * and links to the AI settings tab where the key is entered. Once a provider
- * is connected it collapses to a slim "ready" confirmation so the working UI
- * is never blocked. The numbered steps stay visible either way so a new user
- * always sees how the feature works.
- */
-function AiTakeoffNotice({ connected }: { connected: boolean }) {
-  const { t } = useTranslation();
-
-  const steps = [
-    t('takeoff.ai_setup.step_connect', {
-      defaultValue: 'Connect an AI provider in settings (use any supported provider and your own API key).',
-    }),
-    t('takeoff.ai_setup.step_upload', {
-      defaultValue: 'Upload a PDF drawing below.',
-    }),
-    t('takeoff.ai_setup.step_review', {
-      defaultValue: 'Review the AI suggestions, confirm the ones you want, and send them to your BOQ.',
-    }),
-  ];
-
-  return (
-    <div
-      data-testid="takeoff-ai-setup-notice"
-      className={clsx(
-        'mb-6 rounded-xl border px-5 py-4',
-        connected
-          ? 'border-emerald-200 bg-emerald-50/60 dark:border-emerald-900/50 dark:bg-emerald-900/15'
-          : 'border-oe-blue/25 bg-oe-blue-subtle/50',
-      )}
-    >
-      <div className="flex items-start gap-3">
-        <div
-          className={clsx(
-            'flex h-9 w-9 shrink-0 items-center justify-center rounded-lg',
-            connected
-              ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-200'
-              : 'bg-oe-blue/10 text-oe-blue',
-          )}
-        >
-          {connected ? <CheckCircle2 size={18} /> : <BrainCircuit size={18} />}
-        </div>
-        <div className="min-w-0 flex-1">
-          <h3 className="text-sm font-semibold text-content-primary">
-            {connected
-              ? t('takeoff.ai_setup.ready_title', { defaultValue: 'AI provider connected' })
-              : t('takeoff.ai_setup.title', { defaultValue: 'Connect an AI provider to use AI takeoff' })}
-          </h3>
-          <p className="mt-0.5 text-xs text-content-tertiary">
-            {connected
-              ? t('takeoff.ai_setup.ready_body', {
-                  defaultValue:
-                    'Upload a PDF below and AI will extract elements with quantities for you to review.',
-                })
-              : t('takeoff.ai_setup.body', {
-                  defaultValue:
-                    'AI takeoff reads your drawings and suggests elements with quantities. It needs an AI provider connected first. You can still measure by hand and use Quick Measurements without it.',
-                })}
-          </p>
-
-          {/* Numbered how-it-works steps */}
-          <ol className="mt-3 space-y-1.5">
-            {steps.map((step, i) => (
-              <li key={i} className="flex items-start gap-2 text-xs text-content-secondary">
-                <span
-                  className={clsx(
-                    'mt-px flex h-4 w-4 shrink-0 items-center justify-center rounded-full text-2xs font-bold',
-                    connected
-                      ? 'bg-emerald-200/70 text-emerald-800 dark:bg-emerald-900/50 dark:text-emerald-200'
-                      : 'bg-oe-blue/15 text-oe-blue',
-                  )}
-                >
-                  {i + 1}
-                </span>
-                <span>{step}</span>
-              </li>
-            ))}
-          </ol>
-
-          {!connected && (
-            <Link
-              to="/settings?tab=ai"
-              data-testid="takeoff-connect-ai"
-              className="mt-3.5 inline-flex items-center gap-1.5 rounded-lg bg-oe-blue px-3.5 py-2 text-xs font-semibold text-content-inverse transition-colors hover:bg-oe-blue/90"
-            >
-              {t('takeoff.ai_setup.connect_cta', { defaultValue: 'Connect an AI provider' })}
-              <ArrowRight size={13} />
-            </Link>
-          )}
-        </div>
-      </div>
-    </div>
-  );
-}
-
 export function TakeoffPage() {
   const { t } = useTranslation();
 
   /* ── Tab state (synced with ?tab= query parameter from sidebar) ──── */
 
-  const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const tabFromUrl = searchParams.get('tab');
   const initialTab: TakeoffTab =
@@ -1173,9 +1047,6 @@ export function TakeoffPage() {
   /** Currently opened document in the Measurements viewer. */
   const [viewerDoc, setViewerDoc] = useState<{ url: string; name: string } | null>(null);
 
-  /** Revision compare drawer (Item 17) — diffs two takeoff PDFs. */
-  const [showCompare, setShowCompare] = useState(false);
-
   /** Set when a deep-link references a measurement so the viewer can
    *  select + scroll-to it after the document and measurement list load. */
   const [initialMeasurementId, setInitialMeasurementId] = useState<string | null>(
@@ -1187,19 +1058,6 @@ export function TakeoffPage() {
    *  drives a friendly empty-state with a "back to /markups" link instead
    *  of a blank viewer. Reset every time the docId param changes. */
   const [deepLinkNotFound, setDeepLinkNotFound] = useState(false);
-
-  /* ── AI provider readiness ─────────────────────────────────────────────
-   * AI takeoff (Analyze with AI / Extract Tables) calls an LLM provider, so
-   * the Documents & AI tab tells the user up front whether one is connected
-   * and links to the AI settings tab when it is not. Errors degrade to
-   * "not connected" so the guidance shows instead of an error. */
-  const aiSettingsQuery = useQuery({
-    queryKey: ['ai-settings'],
-    queryFn: aiApi.getSettings,
-    staleTime: 60_000,
-    retry: false,
-  });
-  const aiConnected = hasLlmKey(aiSettingsQuery.data);
 
   /* ── Handle ?doc= / ?name= deep link from Documents / BOQ link icon ─ */
 
@@ -1931,57 +1789,14 @@ export function TakeoffPage() {
           </g>
         </g>
       </svg>
-      {/* Header zone — full-bleed viewer keeps its own SVG chrome on the root,
-          so the canonical breadcrumb > header > info > tabs block carries its
-          own space-y-5 rhythm here (style guide §1 viewer exception). */}
-      <div className="space-y-5">
-      <Breadcrumb
-        items={[
-          ...(() => {
-            const sel = projects?.find((p) => p.id === selectedProjectId);
-            return sel ? [{ label: sel.name, to: `/projects/${sel.id}` }] : [];
-          })(),
-          { label: t('nav.pdf_measurements', 'PDF Measurements') },
-        ]}
-      />
-      {/* Canonical top block — the module name + icon are shown by the global
-          top app bar, so no visible in-page title. The PageHeader carries a
-          subtitle (what the page does) so the header row is never a blank
-          midline before the info card. */}
-      <PageHeader
-        srTitle={t('nav.pdf_measurements', 'PDF Measurements')}
-        subtitle={t('takeoff.subtitle', {
-          defaultValue:
-            'Measure areas, lengths and counts on PDF drawings and send them to a BOQ',
-        })}
-      />
-
-      <DismissibleInfo
-        storageKey="takeoff"
-        title={t('takeoff.intro_title', { defaultValue: 'Measure straight off the drawing' })}
-        more={
-          t('takeoff.intro_more', { defaultValue: '' })
-            ? <IntroRichText text={t('takeoff.intro_more')} />
-            : undefined
-        }
-        links={[
-          { label: t('nav.boq', { defaultValue: 'Bill of Quantities' }), onClick: () => navigate('/boq') },
-          { label: t('nav.quantities', { defaultValue: 'Quantity Takeoff' }), onClick: () => navigate('/quantities') },
-        ]}
-      >
-        {t('takeoff.intro_body', {
-          defaultValue:
-            'Upload PDF drawings to measure areas, lengths and counts by hand, or let AI extract elements with quantities. Selected measurements flow straight into your BOQ and stay linked to the project cost and schedule.',
-        })}
-      </DismissibleInfo>
+      {/* Header removed — the page title is already in the left sidebar
+          nav, and the subtitle was purely decorative. Saves ~80px of
+          vertical space so the main workspace fits in one viewport. */}
 
       {/* Tabs — Measurements primary (first), AI second. Lower radius
-          for a sharper, more "tool-like" feel; no ring-halo. The Compare
-          button sits to the right so revision-diffing is reachable from
-          either tab without stealing the tablist's full width. */}
-      <div className="flex items-stretch gap-2">
+          for a sharper, more "tool-like" feel; no ring-halo. */}
       <div
-        className="flex flex-1 gap-1 rounded-md border border-border-light/80 bg-surface-secondary/40 p-1"
+        className="mb-3 flex gap-1 rounded-md border border-border-light/80 bg-surface-secondary/40 p-1"
         role="tablist"
         aria-label={t('takeoff.tabs_aria', { defaultValue: 'Takeoff sections' })}
       >
@@ -2039,28 +1854,6 @@ export function TakeoffPage() {
           )}
         </button>
       </div>
-      <button
-        type="button"
-        onClick={() => setShowCompare(true)}
-        disabled={(serverDocuments?.length ?? 0) < 2}
-        data-testid="takeoff-compare-button"
-        title={t('takeoff_compare.compare_revisions', {
-          defaultValue: 'Compare two takeoff PDFs with cost delta',
-        })}
-        className={clsx(
-          'inline-flex items-center gap-1.5 rounded-md border border-border-light/80 px-3 text-sm font-semibold transition-colors',
-          (serverDocuments?.length ?? 0) >= 2
-            ? 'bg-surface-secondary/40 text-content-secondary hover:text-oe-blue hover:bg-surface-primary/60'
-            : 'cursor-not-allowed text-content-quaternary',
-        )}
-      >
-        <GitCompare size={15} strokeWidth={2.1} aria-hidden />
-        <span className="hidden sm:inline">
-          {t('takeoff_compare.compare_short', { defaultValue: 'Compare' })}
-        </span>
-      </button>
-      </div>
-      </div>
 
       {/* Tab content */}
       {activeTab === 'documents' ? (
@@ -2068,14 +1861,7 @@ export function TakeoffPage() {
           role="tabpanel"
           id="takeoff-tabpanel-documents"
           aria-labelledby="takeoff-tab-documents"
-          className="mt-5"
         >
-          {/* AI provider setup notice — explains that AI takeoff needs a
-              provider connected and links to AI settings. Hidden while the
-              settings query is still loading so it doesn't flash the
-              "connect" prompt for users who already have a key. */}
-          {!aiSettingsQuery.isLoading && <AiTakeoffNotice connected={aiConnected} />}
-
           {/* Workflow steps */}
           <div className="mb-6 grid grid-cols-1 sm:grid-cols-4 gap-3">
             {[
@@ -2190,7 +1976,6 @@ export function TakeoffPage() {
                     onAddToBOQ={handleAddToBOQ}
                     onView={handleOpenDocInViewer}
                     boqSelected={hasBoqSelected}
-                    aiConnected={aiConnected}
                   />
                 ))}
               </div>
@@ -2255,7 +2040,7 @@ export function TakeoffPage() {
         // most internal height — 8rem wasted ~1rem that was shrinking the
         // viewer enough to force an internal scrollbar on laptop screens.
         <div
-          className="mt-5 flex flex-col h-[calc(100vh-var(--oe-header-height,52px)-7rem)] min-h-0 overflow-x-hidden"
+          className="flex flex-col h-[calc(100vh-var(--oe-header-height,52px)-7rem)] min-h-0 overflow-x-hidden"
           role="tabpanel"
           id="takeoff-tabpanel-measurements"
           aria-labelledby="takeoff-tab-measurements"
@@ -2332,17 +2117,6 @@ export function TakeoffPage() {
             }}
           />
         </div>
-      )}
-
-      {/* Revision compare with cost delta (Item 17) */}
-      {selectedProjectId && (
-        <PdfCompareDrawer
-          open={showCompare}
-          onClose={() => setShowCompare(false)}
-          projectId={selectedProjectId}
-          documents={serverDocuments ?? []}
-          currentDocumentId={activeDocId}
-        />
       )}
     </div>
   );

@@ -22,7 +22,6 @@ import {
   type MissingnessSortKey,
 } from './api';
 import { useToastStore } from '@/stores/useToastStore';
-import { copyToClipboard } from '@/shared/lib/browser';
 
 interface MissingDataPanelProps {
   sessionId: string;
@@ -229,7 +228,7 @@ export function MissingDataPanel({ sessionId }: MissingDataPanelProps) {
       )
       .join('\n');
     const csv = header + body;
-    void copyToClipboard(csv).then(() => {
+    void navigator.clipboard.writeText(csv).then(() => {
       addToast({
         type: 'success',
         title: t('explorer.missingness_csv_copied', { defaultValue: 'CSV summary copied to clipboard' }),

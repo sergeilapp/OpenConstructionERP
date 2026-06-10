@@ -547,7 +547,7 @@ export async function buildTakeoffPdf(ctx: PdfExportContext): Promise<JsPDF> {
     // Page dimensions in pt (1 pt = 1/72 in). We assume the rendered
     // viewport is already in CSS pixels at renderScale; convert by
     // dividing back to base px and treating 1 base px ≈ 1 pt for
-    // visual fidelity (PDF-takeoff-tool-style 1:1 scaling).
+    // visual fidelity (Bluebeam-style 1:1 scaling).
     const pageWidth = width / renderScale;
     const pageHeight = height / renderScale;
     if (firstPage) {
@@ -755,7 +755,7 @@ export async function buildTakeoffWorkbook(
       const total = subset.reduce((s, m) => s + m.value, 0);
       const unit = subset[0]!.unit;
       const subtotalRow = ws.addRow({
-        group: `${groupName} - Subtotal`,
+        group: `${groupName} — Subtotal`,
         type: t,
         annotation: `Total ${t}`,
         page: '',

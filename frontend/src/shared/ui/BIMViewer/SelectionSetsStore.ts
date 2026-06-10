@@ -24,8 +24,6 @@
  * edits always flow through this module so they bypass the listener.
  */
 
-import { uuid } from '@/shared/lib/browser';
-
 const STORAGE_KEY = 'oe_bim_selection_sets_v1';
 const MAX_SETS_PER_MODEL = 50;
 const MAX_ELEMENT_IDS_PER_SET = 10000;
@@ -33,7 +31,7 @@ const NAME_MAX = 60;
 const NOTE_MAX = 200;
 
 export interface SelectionSet {
-  /** UUID v4 from the secure-context-safe uuid() helper. */
+  /** UUID v4 generated via crypto.randomUUID() (fallback to timestamp+rng). */
   id: string;
   /** Human-readable label. Trimmed; 1 ≤ length ≤ 60. */
   name: string;
@@ -54,7 +52,11 @@ export interface SelectionSet {
 type PersistedShape = Record<string, SelectionSet[]>;
 
 function randomId(): string {
-  return uuid();
+  if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
+    return crypto.randomUUID();
+  }
+  // Cheap fallback for older browsers / jsdom polyfill gaps.
+  return `ss_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 10)}`;
 }
 
 function nowIso(): string {

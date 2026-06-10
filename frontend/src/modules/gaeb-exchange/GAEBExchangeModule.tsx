@@ -1,5 +1,5 @@
 import { useState, useCallback, useRef, useMemo } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import {
@@ -12,10 +12,10 @@ import {
   AlertTriangle,
   Loader2,
   Eye,
+  Info,
   X,
 } from 'lucide-react';
-import { Button, Badge, DismissibleInfo } from '@/shared/ui';
-import { PageHeader } from '@/shared/ui/PageHeader';
+import { Button, Badge } from '@/shared/ui';
 import { apiGet } from '@/shared/lib/api';
 import { useToastStore } from '@/stores/useToastStore';
 import { parseGAEBXML, importGAEBToBOQ, decodeXmlBuffer, type GAEBPosition } from '@/features/boq/gaebImport';
@@ -119,7 +119,6 @@ function ImportPreview({
 
 export default function GAEBExchangeModule() {
   const { t } = useTranslation();
-  const navigate = useNavigate();
   const addToast = useToastStore((s) => s.addToast);
   const queryClient = useQueryClient();
 
@@ -333,39 +332,21 @@ export default function GAEBExchangeModule() {
   // ---------------------------------------------------------------------------
 
   return (
-    <div className="space-y-5 animate-fade-in">
-      <PageHeader
-        srTitle={t('gaeb.title', { defaultValue: 'GAEB XML 3.3 Import / Export' })}
-        subtitle={t('gaeb.subtitle', {
-          defaultValue: 'Exchange BOQ data in GAEB DA XML format (X81 / X83)',
-        })}
-      />
-
-      <DismissibleInfo
-        storageKey="gaeb-exchange"
-        title={t('gaeb.intro_title', {
-          defaultValue: 'Trade tender data the DACH way',
-        })}
-        links={[
-          {
-            label: t('nav.boq', { defaultValue: 'Bill of Quantities' }),
-            onClick: () => navigate('/boq'),
-          },
-          {
-            label: t('nav.validation', { defaultValue: 'Validation' }),
-            onClick: () => navigate('/validation'),
-          },
-          {
-            label: t('nav.tendering', { defaultValue: 'Tendering' }),
-            onClick: () => navigate('/tendering'),
-          },
-        ]}
-      >
-        {t('gaeb.intro_body', {
-          defaultValue:
-            'Import a GAEB DA XML file (X81 priceless LV or X83 priced Angebot) straight into a BOQ, or export your BOQ back out as a tender or bid document in the same format. Imports run through validation on the way in, so your Leistungsverzeichnis arrives structured and checked.',
-        })}
-      </DismissibleInfo>
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="flex items-center gap-3">
+        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-teal-100 dark:bg-teal-900/30">
+          <FileText className="h-5 w-5 text-teal-600 dark:text-teal-400" />
+        </div>
+        <div>
+          <h1 className="text-xl font-bold text-content-primary">
+            {t('gaeb.title', { defaultValue: 'GAEB XML 3.3 Import / Export' })}
+          </h1>
+          <p className="text-sm text-content-tertiary">
+            {t('gaeb.subtitle', { defaultValue: 'Exchange BOQ data in GAEB DA XML format (X81 / X83)' })}
+          </p>
+        </div>
+      </div>
 
       {/* Tabs */}
       <div className="flex gap-1 border-b border-border">
@@ -630,8 +611,8 @@ export default function GAEBExchangeModule() {
                   onChange={(e) => setExportFormat(e.target.value as GAEBExportFormat)}
                   className="w-full rounded-lg border border-border bg-surface-secondary px-3 py-2 text-sm"
                 >
-                  <option value="X83">X83 - {t('gaeb.x83_desc', { defaultValue: 'Bid Submission (with prices)' })}</option>
-                  <option value="X81">X81 - {t('gaeb.x81_desc', { defaultValue: 'Tender Specification (no prices)' })}</option>
+                  <option value="X83">X83 — {t('gaeb.x83_desc', { defaultValue: 'Bid Submission (with prices)' })}</option>
+                  <option value="X81">X81 — {t('gaeb.x81_desc', { defaultValue: 'Tender Specification (no prices)' })}</option>
                 </select>
               </div>
             </div>
@@ -725,6 +706,15 @@ export default function GAEBExchangeModule() {
         </div>
       )}
 
+      {/* Info box */}
+      <div className="flex items-start gap-2 text-xs text-content-quaternary">
+        <Info className="h-4 w-4 mt-0.5 shrink-0" />
+        <p>
+          {t('gaeb.info', {
+            defaultValue: 'GAEB DA XML 3.3 is the standard exchange format for construction BOQs in DACH countries (Germany, Austria, Switzerland). X81 files contain tender specifications without prices. X83 files contain bid submissions with unit prices and totals. Compatible with all major AVA software.',
+          })}
+        </p>
+      </div>
     </div>
   );
 }

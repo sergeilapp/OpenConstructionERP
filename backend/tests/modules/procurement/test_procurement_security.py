@@ -454,7 +454,6 @@ def test_po_status_transitions_table_covers_all_states() -> None:
     """
     expected_states = {
         "draft",
-        "approved",  # TOP-30 #10: budget commits at approval, before issue
         "issued",
         "partially_received",
         "completed",
@@ -502,8 +501,7 @@ async def test_po_update_rejects_unknown_status() -> None:
 
 @pytest.mark.asyncio
 async def test_po_create_rejects_invalid_initial_status() -> None:
-    """A PO must enter the FSM at "draft"; any other initial status must 400
-    so a caller cannot bypass the approval gate (TOP-30 #10)."""
+    """Even at creation time, a non-allowlisted status must 400."""
     svc = _make_service()
     with pytest.raises(HTTPException) as exc_info:
         await svc.create_po(
@@ -511,7 +509,7 @@ async def test_po_create_rejects_invalid_initial_status() -> None:
                 project_id=PROJECT_A,
                 amount_subtotal="0",
                 tax_amount="0",
-                status="approved",  # valid state, but not the legal entry state
+                status="approved",  # not in PO FSM
             ),
             user_id=USER_A,
         )

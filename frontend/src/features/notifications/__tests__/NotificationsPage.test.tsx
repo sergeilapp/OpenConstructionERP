@@ -140,9 +140,8 @@ describe('<NotificationsPage />', () => {
     expect(
       screen.getByRole('heading', { name: /Notifications/i }),
     ).toBeTruthy();
-    // Inbox tab is current by default (the page subtitle also says "inbox",
-    // so query the tab control specifically).
-    expect(screen.getByRole('button', { name: /Inbox/i })).toBeTruthy();
+    // Inbox tab is current by default.
+    expect(screen.getByText(/Inbox/i)).toBeTruthy();
   });
 
   it('swaps in the preferences tab when the user clicks "Preferences"', async () => {

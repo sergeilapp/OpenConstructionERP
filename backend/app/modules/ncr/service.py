@@ -1,4 +1,4 @@
-"""‌⁠‍NCR service - business logic for non-conformance report management."""
+"""‌⁠‍NCR service — business logic for non-conformance report management."""
 
 import logging
 import uuid
@@ -39,8 +39,11 @@ class NCRService:
         user_id: str | None = None,
     ) -> NCR:
         """‌⁠‍Create a new NCR with auto-generated number."""
+        ncr_number = await self.repo.next_ncr_number(data.project_id)
+
         ncr = NCR(
             project_id=data.project_id,
+            ncr_number=ncr_number,
             title=data.title,
             description=data.description,
             ncr_type=data.ncr_type,
@@ -59,9 +62,6 @@ class NCRService:
             metadata_=data.metadata,
         )
         ncr = await self.repo.create(ncr)
-        # The repository assigns ncr_number (with a collision retry) at insert
-        # time, so read the committed value back for logging and notifications.
-        ncr_number = ncr.ncr_number
         logger.info(
             "NCR created: %s (%s/%s) for project %s",
             ncr_number,
@@ -101,8 +101,8 @@ class NCRService:
 
         # Emit event for additional cross-module handlers (analytics,
         # webhooks, smart-notifications, etc.). Detached so the request
-        # session can commit before the wildcard handlers - which open
-        # their own writers via ``async_session_factory()`` - try to run.
+        # session can commit before the wildcard handlers — which open
+        # their own writers via ``async_session_factory()`` — try to run.
         # Awaiting here on SQLite single-writer locking deadlocks the
         # event chain for ~30s before timing out.
         import asyncio
@@ -235,17 +235,6 @@ class NCRService:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail="Cannot close a voided NCR",
-            )
-        # FSM guard: per _NCR_STATUS_TRANSITIONS only 'verification' -> 'closed'
-        # is allowed. Without this an NCR in 'identified', 'under_review' or
-        # 'corrective_action' could skip the mandatory verification step.
-        if "closed" not in _NCR_STATUS_TRANSITIONS.get(ncr.status, set()):
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail=(
-                    f"Cannot close an NCR from status '{ncr.status}'. "
-                    "An NCR must be in 'verification' status before it can be closed."
-                ),
             )
         if not ncr.corrective_action:
             raise HTTPException(

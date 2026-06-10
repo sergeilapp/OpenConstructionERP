@@ -202,13 +202,8 @@ class _StubSession:
         # Stub: in-memory rows already mutate via update_fields, no DB round-trip.
         return None
 
-    async def flush(self) -> None:
-        # convert_vr_to_vo flushes after its atomic status-guard UPDATE.
-        return None
-
     async def execute(self, stmt: Any) -> Any:
-        # rowcount=1 satisfies the concurrent-conversion guard (one row flipped).
-        return SimpleNamespace(scalar_one_or_none=lambda: None, rowcount=1)
+        return SimpleNamespace(scalar_one_or_none=lambda: None)
 
 
 def _make_service() -> VariationsService:

@@ -1,4 +1,4 @@
-"""‌⁠‍Collaboration service - business logic for comments and viewpoints.
+"""‌⁠‍Collaboration service — business logic for comments and viewpoints.
 
 Stateless service layer. Handles:
 - Comment CRUD with threading
@@ -199,7 +199,7 @@ class CollaborationService:
                 detail="Only the author can delete this comment",
             )
         if comment.is_deleted:
-            return  # Already deleted - idempotent
+            return  # Already deleted — idempotent
 
         await self.comment_repo.soft_delete(comment_id)
         logger.info("Comment soft-deleted: %s by %s", comment_id, user_id)

@@ -166,7 +166,7 @@ export async function fetchSimilarItems(
  *  Each route is matched against the actual `App.tsx` route table:
  *
  *    /boq/:boqId?highlight=<position_id>     → BOQEditorPage
- *    /files?file=<doc_id>                    → FileManagerPage
+ *    /documents?id=<doc_id>                  → DocumentsPage
  *    /tasks?id=<task_id>                     → TasksPage
  *    /risks?id=<risk_id>                     → RiskRegisterPage
  *    /bim?element=<element_id>               → BIMPage
@@ -187,11 +187,7 @@ export function hitToHref(hit: UnifiedSearchHit): string {
       return `/boq/${encodeURIComponent(boqId)}?highlight=${encodeURIComponent(hit.id)}`;
     }
     case 'oe_documents':
-      // Documents merged into the unified File Manager (#71): the file
-      // browser pre-selects a file via `?file=<id>`. The old `/documents?id`
-      // form dropped its query through the redirect, so point straight at
-      // the live route and param.
-      return `/files?file=${encodeURIComponent(hit.id)}`;
+      return `/documents?id=${encodeURIComponent(hit.id)}`;
     case 'oe_tasks':
       return `/tasks?id=${encodeURIComponent(hit.id)}`;
     case 'oe_risks':
@@ -200,13 +196,6 @@ export function hitToHref(hit: UnifiedSearchHit): string {
       return `/bim?element=${encodeURIComponent(hit.id)}`;
     case 'oe_requirements':
       return `/bim/rules?id=${encodeURIComponent(hit.id)}`;
-    case 'oe_rfi_rfis':
-      // RFI has a dedicated detail route that self-resolves its project.
-      return `/rfi/${encodeURIComponent(hit.id)}`;
-    case 'oe_submittals_submittals':
-      return `/submittals?id=${encodeURIComponent(hit.id)}`;
-    case 'oe_correspondence_correspondence':
-      return `/correspondence?id=${encodeURIComponent(hit.id)}`;
     case 'oe_validation':
       return `/validation?id=${encodeURIComponent(hit.id)}`;
     case 'oe_chat': {
@@ -238,12 +227,6 @@ export function collectionLabel(collection: string): string {
       return 'BIM';
     case 'oe_requirements':
       return 'Requirements';
-    case 'oe_rfi_rfis':
-      return 'RFI';
-    case 'oe_submittals_submittals':
-      return 'Submittals';
-    case 'oe_correspondence_correspondence':
-      return 'Correspondence';
     case 'oe_validation':
       return 'Validation';
     case 'oe_chat':

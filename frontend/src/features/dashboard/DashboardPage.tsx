@@ -48,8 +48,6 @@ import { DashboardProjectsMap } from './components/DashboardProjectsMap';
 import { ShowAllProjectsCard } from './components/ShowAllProjectsCard';
 import { WeatherSiteWidget } from './components/NewWidgets';
 import { OperationsSnapshotCard } from './components/OperationsSnapshotCard';
-import { LatestSitePhotosCard } from './components/LatestSitePhotosCard';
-import { LabourCostWidget } from './LabourCostWidget';
 import { DateDisplay } from '@/shared/ui/DateDisplay';
 import { DashboardLayoutManager } from './DashboardLayoutManager';
 import { DASHBOARD_WIDGET_IDS } from './widgetRegistry';
@@ -869,7 +867,7 @@ function KpiRibbon({
             key={card.label}
             type={clickable ? 'button' : undefined}
             onClick={clickable ? card.onClick : undefined}
-            className={`group flex w-full items-center gap-3 rounded-xl border border-border-light bg-surface-elevated/90 p-4 text-left shadow-xs transition-shadow duration-normal ease-oe hover:shadow-sm animate-stagger-in ${
+            className={`group flex w-full items-center gap-3 rounded-xl border border-border-light bg-surface-primary p-4 text-left transition-all duration-normal ease-oe hover:border-oe-blue/20 hover:shadow-sm animate-stagger-in ${
               clickable ? 'cursor-pointer focus:outline-none focus:ring-2 focus:ring-oe-blue/30' : ''
             }`}
             style={{ animationDelay: `${80 + i * 50}ms` }}
@@ -960,7 +958,7 @@ function PortfolioOverview({ projects: _projects }: { projects: ProjectSummary[]
 
   return (
     <div
-      className="rounded-xl border border-border-light bg-surface-primary/70 p-4 animate-card-in"
+      className="rounded-xl border border-border-light bg-surface-primary p-4 animate-card-in"
       style={{ animationDelay: '70ms' }}
     >
       <div className="flex items-center gap-2 mb-3">
@@ -976,7 +974,7 @@ function PortfolioOverview({ projects: _projects }: { projects: ProjectSummary[]
         )}
       </div>
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-        <div className="rounded-xl border border-border-light bg-surface-elevated/90 p-3 shadow-xs transition-shadow duration-normal ease-oe hover:shadow-sm">
+        <div className="rounded-lg bg-surface-secondary p-3">
           <div className="text-2xs font-medium uppercase tracking-wider text-content-tertiary">
             {t('dashboard.active_projects', { defaultValue: 'Active Projects' })}
           </div>
@@ -984,7 +982,7 @@ function PortfolioOverview({ projects: _projects }: { projects: ProjectSummary[]
             {analytics.total_projects}
           </div>
         </div>
-        <div className="rounded-xl border border-border-light bg-surface-elevated/90 p-3 shadow-xs transition-shadow duration-normal ease-oe hover:shadow-sm">
+        <div className="rounded-lg bg-surface-secondary p-3">
           <div className="text-2xs font-medium uppercase tracking-wider text-content-tertiary">
             {t('dashboard.total_budget_all', { defaultValue: 'Total Budget' })}
           </div>
@@ -992,7 +990,7 @@ function PortfolioOverview({ projects: _projects }: { projects: ProjectSummary[]
             <MultiCurrencyTotal items={totalBudgetItems} variant="inline" compact />
           </div>
         </div>
-        <div className="rounded-xl border border-border-light bg-surface-elevated/90 p-3 shadow-xs transition-shadow duration-normal ease-oe hover:shadow-sm">
+        <div className="rounded-lg bg-surface-secondary p-3">
           <div className="text-2xs font-medium uppercase tracking-wider text-content-tertiary">
             {t('dashboard.with_budget', { defaultValue: 'With Budget' })}
           </div>
@@ -1000,7 +998,7 @@ function PortfolioOverview({ projects: _projects }: { projects: ProjectSummary[]
             {analytics.projects_with_budget}
           </div>
         </div>
-        <div className={`rounded-xl border border-border-light p-3 shadow-xs transition-shadow duration-normal ease-oe hover:shadow-sm ${hasWarnings ? 'bg-amber-50 dark:bg-amber-900/10' : 'bg-surface-elevated/90'}`}>
+        <div className={`rounded-lg p-3 ${hasWarnings ? 'bg-amber-50 dark:bg-amber-900/10' : 'bg-surface-secondary'}`}>
           <div className="text-2xs font-medium uppercase tracking-wider text-content-tertiary">
             {t('dashboard.budget_warnings', { defaultValue: 'Budget Warnings' })}
           </div>
@@ -1150,7 +1148,7 @@ function TodaySnapshot({ cards }: { cards?: ProjectCardMetrics[] }) {
 
   return (
     <div
-      className="rounded-xl border border-border-light bg-surface-primary/70 p-4 animate-card-in"
+      className="rounded-xl border border-border-light bg-surface-primary p-4 animate-card-in"
       style={{ animationDelay: '80ms' }}
     >
       <div className="flex items-center gap-2 mb-3">
@@ -1174,7 +1172,7 @@ function TodaySnapshot({ cards }: { cards?: ProjectCardMetrics[] }) {
             <button
               key={it.id}
               onClick={() => navigate(it.url)}
-              className="group flex items-center gap-3 rounded-xl border border-border-light bg-surface-elevated/90 px-4 py-3 text-left shadow-xs transition-shadow duration-normal ease-oe hover:shadow-sm focus:outline-none focus:ring-2 focus:ring-oe-blue/30"
+              className="group flex items-center gap-3 rounded-lg border border-border-light bg-surface-primary px-4 py-3 text-left transition-all duration-normal ease-oe hover:border-oe-blue/30 hover:shadow-sm focus:outline-none focus:ring-2 focus:ring-oe-blue/30"
             >
               <span className={`${s.iconColor} shrink-0`}>{it.icon}</span>
               <div className="min-w-0 flex-1">
@@ -1322,7 +1320,7 @@ function NextSteps({
       id: 'try-ai-estimate',
       icon: <Sparkles size={18} strokeWidth={1.75} />,
       title: t('dashboard.next_ai_estimate', { defaultValue: 'Try the AI Quick Estimate' }),
-      description: t('dashboard.next_ai_estimate_desc', { defaultValue: 'Describe a project in plain language and get a draft BOQ in seconds - review, adjust, and ship.' }),
+      description: t('dashboard.next_ai_estimate_desc', { defaultValue: 'Describe a project in plain language and get a draft BOQ in seconds — review, adjust, and ship.' }),
       actionLabel: t('dashboard.next_ai_estimate_action', { defaultValue: 'Open AI Estimate' }),
       url: '/ai-estimate',
     });
@@ -1331,7 +1329,7 @@ function NextSteps({
       id: 'upload-cad',
       icon: <Layers size={18} strokeWidth={1.75} />,
       title: t('dashboard.next_upload_cad', { defaultValue: 'Upload a CAD or BIM model' }),
-      description: t('dashboard.next_upload_cad_desc', { defaultValue: 'Drop a RVT, IFC, DWG or DGN file - the converter extracts quantities and matches elements to cost positions.' }),
+      description: t('dashboard.next_upload_cad_desc', { defaultValue: 'Drop a RVT, IFC, DWG or DGN file — the converter extracts quantities and matches elements to cost positions.' }),
       actionLabel: t('dashboard.next_upload_cad_action', { defaultValue: 'Open BIM' }),
       url: '/bim',
     });
@@ -1597,7 +1595,7 @@ function SystemStatusSummary({
 
 /* ── Quick Upload Card ────────────────────────────────────────────────── */
 
-function QuickUploadCard({ projects }: { projects?: ProjectSummary[] }) {
+function QuickUploadCard() {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
@@ -1607,34 +1605,17 @@ function QuickUploadCard({ projects }: { projects?: ProjectSummary[] }) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [dragOver, setDragOver] = useState(false);
   const [uploading, setUploading] = useState(false);
-  // Inline target picker. Lets the user choose which project the file goes to
-  // without leaving the dashboard. It defaults to the global active project
-  // (oe_active_project) but can be overridden here; the pick is local to this
-  // card and does not change the global active project.
-  const [pickedProjectId, setPickedProjectId] = useState<string>('');
-
-  const selectableProjects = (projects ?? []).filter((p) => p.id && p.name);
-
-  // Seed the picker from the active project, then fall back to the first
-  // project so a file always has a sensible target even when nothing is active.
-  const defaultProjectId =
-    activeProjectId ?? selectableProjects[0]?.id ?? '';
-  const uploadProjectId = pickedProjectId || defaultProjectId || null;
-  const uploadProjectName =
-    selectableProjects.find((p) => p.id === uploadProjectId)?.name ||
-    (uploadProjectId === activeProjectId ? activeProjectName : '') ||
-    '';
 
   const { data: documents } = useQuery({
-    queryKey: ['documents', uploadProjectId],
-    queryFn: () => fetchDocuments(uploadProjectId ?? ''),
-    enabled: !!uploadProjectId,
+    queryKey: ['documents', activeProjectId],
+    queryFn: () => fetchDocuments(activeProjectId ?? ''),
+    enabled: !!activeProjectId,
     staleTime: 30_000,
   });
 
   const handleFiles = useCallback(
     async (files: FileList | File[]) => {
-      if (!uploadProjectId) {
+      if (!activeProjectId) {
         addToast({
           type: 'warning',
           title: t('dashboard.upload_no_project', {
@@ -1658,7 +1639,7 @@ function QuickUploadCard({ projects }: { projects?: ProjectSummary[] }) {
 
       for (const file of validFiles) {
         try {
-          await uploadDocument(uploadProjectId, file, 'other');
+          await uploadDocument(activeProjectId, file, 'other');
           successCount += 1;
         } catch (err) {
           failCount += 1;
@@ -1671,7 +1652,7 @@ function QuickUploadCard({ projects }: { projects?: ProjectSummary[] }) {
       }
 
       setUploading(false);
-      await queryClient.invalidateQueries({ queryKey: ['documents', uploadProjectId] });
+      await queryClient.invalidateQueries({ queryKey: ['documents', activeProjectId] });
       await queryClient.invalidateQueries({ queryKey: ['documents'] });
 
       if (successCount > 0) {
@@ -1690,7 +1671,7 @@ function QuickUploadCard({ projects }: { projects?: ProjectSummary[] }) {
         });
       }
     },
-    [uploadProjectId, addToast, queryClient, t],
+    [activeProjectId, addToast, queryClient, t],
   );
 
   const onDrop = useCallback(
@@ -1715,8 +1696,7 @@ function QuickUploadCard({ projects }: { projects?: ProjectSummary[] }) {
   }, []);
 
   const documentCount = (documents as DocumentItem[] | undefined)?.length ?? 0;
-  const hasProject = !!uploadProjectId;
-  const hasProjects = selectableProjects.length > 0;
+  const hasProject = !!activeProjectId;
 
   return (
     <div className="animate-card-in" style={{ animationDelay: '120ms' }}>
@@ -1762,39 +1742,15 @@ function QuickUploadCard({ projects }: { projects?: ProjectSummary[] }) {
               })}
             </div>
             <p className="mt-0.5 text-xs text-content-tertiary line-clamp-1">
-              {hasProjects
+              {hasProject
                 ? t('dashboard.upload_desc', {
-                    defaultValue: 'Upload to {{project}} - PDF, DWG, IFC, RVT, images.',
-                    project: uploadProjectName || t('dashboard.active_project', { defaultValue: 'active project' }),
+                    defaultValue: 'Upload to {{project}} — PDF, DWG, IFC, RVT, images.',
+                    project: activeProjectName || t('dashboard.active_project', { defaultValue: 'active project' }),
                   })
-                : t('dashboard.upload_need_project', {
-                    defaultValue: 'Create a project first, then upload files here.',
+                : t('dashboard.upload_select_project', {
+                    defaultValue: 'Select an active project to upload files.',
                   })}
             </p>
-            {hasProjects && (
-              <select
-                value={uploadProjectId ?? ''}
-                onChange={(e) => setPickedProjectId(e.target.value)}
-                className="mt-2 h-8 w-full max-w-xs rounded-lg border border-border bg-surface-primary px-2 text-xs text-content-primary focus:outline-none focus:ring-2 focus:ring-oe-blue"
-                aria-label={t('dashboard.upload_pick_project', { defaultValue: 'Pick a project to upload into.' })}
-              >
-                {selectableProjects.map((p) => (
-                  <option key={p.id} value={p.id}>
-                    {p.name}
-                  </option>
-                ))}
-              </select>
-            )}
-            {!hasProjects && (
-              <button
-                type="button"
-                className="mt-2 inline-flex items-center gap-1 text-2xs font-medium text-oe-blue hover:text-oe-blue-text transition-colors"
-                onClick={() => navigate('/projects/new')}
-              >
-                <span>{t('dashboard.upload_create_project', { defaultValue: 'Create a project' })}</span>
-                <ArrowRight size={11} />
-              </button>
-            )}
             <div className="mt-2 flex items-center gap-3 text-2xs text-content-tertiary">
               <button
                 type="button"
@@ -2176,7 +2132,7 @@ function DashboardPageInner() {
 
     bim_coverage: <BIMCoverageCard />,
 
-    quick_upload: <QuickUploadCard projects={projects} />,
+    quick_upload: <QuickUploadCard />,
 
     onboarding: (
       <OnboardingSteps projects={projects} regionStats={regionStats} boqs={allBoqs} vectorCount={vectorCount} />
@@ -2241,8 +2197,6 @@ function DashboardPageInner() {
     //    registry, so the dashboard never renders them inline.
     operations_snapshot: <OperationsSnapshotCard projects={projects} />,
     weather_site: <WeatherSiteWidget projects={projects} />,
-    labour_cost: <LabourCostWidget />,
-    latest_photos: <LatestSitePhotosCard />,
   };
 
   return (
@@ -2324,7 +2278,7 @@ function DashboardPageInner() {
             title={
               lastBoq
                 ? t('dashboard.quick_start_resume_hint', { defaultValue: 'Continue your most recent estimate: {{name}}', name: lastBoq.name })
-                : t('dashboard.quick_start_hint', { defaultValue: 'Jump into an estimate - resumes the latest or starts a new one' })
+                : t('dashboard.quick_start_hint', { defaultValue: 'Jump into an estimate — resumes the latest or starts a new one' })
             }
           >
             {lastBoq
@@ -2439,7 +2393,7 @@ function ProjectsList({ projects }: { projects?: ProjectSummary[] }) {
         <EmptyState
           icon={<FolderPlus size={28} strokeWidth={1.5} />}
           title={t('dashboard.empty.title', {
-            defaultValue: "Welcome - let's start with your first project",
+            defaultValue: "Welcome — let's start with your first project",
           })}
           description={t('dashboard.empty.desc', {
             defaultValue: 'Projects organise your BOQs, schedules, and reports.',
@@ -2612,7 +2566,7 @@ function AnalyticsSection({ projects }: { projects: ProjectSummary[] }) {
       <CardContent>
         {/* Aggregate Stats */}
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-4 mb-6">
-          <div className="rounded-xl border border-border-light bg-surface-elevated/90 p-3 shadow-xs transition-shadow duration-normal ease-oe hover:shadow-sm">
+          <div className="rounded-lg bg-surface-secondary p-3">
             <div className="text-xs font-medium uppercase tracking-wider text-content-tertiary">
               {t('dashboard.total_projects', { defaultValue: 'Total Projects' })}
             </div>
@@ -2620,7 +2574,7 @@ function AnalyticsSection({ projects }: { projects: ProjectSummary[] }) {
               {stats.totalProjects}
             </div>
           </div>
-          <div className="rounded-xl border border-border-light bg-surface-elevated/90 p-3 shadow-xs transition-shadow duration-normal ease-oe hover:shadow-sm">
+          <div className="rounded-lg bg-surface-secondary p-3">
             <div className="text-xs font-medium uppercase tracking-wider text-content-tertiary">
               {t('dashboard.total_boqs', { defaultValue: 'Total BOQs' })}
             </div>
@@ -2628,7 +2582,7 @@ function AnalyticsSection({ projects }: { projects: ProjectSummary[] }) {
               {stats.totalBoqs}
             </div>
           </div>
-          <div className="rounded-xl border border-border-light bg-surface-elevated/90 p-3 shadow-xs transition-shadow duration-normal ease-oe hover:shadow-sm sm:col-span-2">
+          <div className="rounded-lg bg-surface-secondary p-3 sm:col-span-2">
             <div className="flex items-center gap-1.5 text-xs font-medium uppercase tracking-wider text-content-tertiary">
               {t('dashboard.total_value', { defaultValue: 'Total Value' })}
               {stats.multiCurrency && (

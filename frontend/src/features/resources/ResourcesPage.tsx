@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import {
   useQuery,
   useMutation,
@@ -29,6 +29,7 @@ import {
   RefreshCw,
   Flame,
   AlertOctagon,
+  ArrowRight,
   ArrowUpDown,
   ArrowUp,
   ArrowDown,
@@ -39,8 +40,6 @@ import {
   Button,
   Card,
   Badge,
-  DismissibleInfo,
-  IntroRichText,
   EmptyState,
   Breadcrumb,
   SkeletonTable,
@@ -51,7 +50,6 @@ import {
 } from '@/shared/ui';
 import { DateDisplay } from '@/shared/ui/DateDisplay';
 import { MoneyDisplay } from '@/shared/ui/MoneyDisplay';
-import { PageHeader } from '@/shared/ui/PageHeader';
 import { useToastStore } from '@/stores/useToastStore';
 import { getErrorMessage, ApiError } from '@/shared/lib/api';
 import { useProjectContextStore } from '@/stores/useProjectContextStore';
@@ -232,6 +230,88 @@ function endOfWeek(): string {
   return d.toISOString();
 }
 
+/* ─── Workflow intro ───────────────────────────────────────────────────
+ *
+ * Resources is the supply side of crew planning. This banner explains the
+ * propose → confirm → schedule loop and links to where assignments are
+ * consumed: the 4D schedule, tasks, and the equipment fleet (equipment is
+ * also a resource type here, but maintenance lives on its own page).
+ * Dismissible per-session.
+ */
+function WorkflowIntro() {
+  const { t } = useTranslation();
+  const navigate = useNavigate();
+  const [dismissed, setDismissed] = useState(
+    () => sessionStorage.getItem('oe.res.introDismissed') === '1',
+  );
+  if (dismissed) return null;
+  const dismiss = () => {
+    sessionStorage.setItem('oe.res.introDismissed', '1');
+    setDismissed(true);
+  };
+  return (
+    <Card padding="md" className="border-oe-blue/20 bg-oe-blue-subtle/10">
+      <div className="flex items-start gap-3">
+        <div className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-oe-blue-subtle text-oe-blue-text">
+          <Users size={16} />
+        </div>
+        <div className="min-w-0 flex-1">
+          <p className="text-sm font-semibold text-content-primary">
+            {t('resources.intro_title', {
+              defaultValue: 'Plan who works where, and when',
+            })}
+          </p>
+          <p className="mt-1 text-xs leading-relaxed text-content-secondary">
+            {t('resources.intro_body', {
+              defaultValue:
+                'Register people, crews and equipment, then put them to work: a foreman raises a Request for what they need, a dispatcher Fulfils it by matching an available resource, and the resulting Assignment reserves that resource for a date range — with double-booking conflicts flagged automatically. Confirmed assignments are the source of truth for who is on site each day.',
+            })}
+          </p>
+          <div className="mt-3 flex flex-wrap items-center gap-2">
+            <span className="text-2xs font-medium uppercase tracking-wide text-content-tertiary">
+              {t('resources.intro_connects', { defaultValue: 'Connects to' })}
+            </span>
+            <button
+              type="button"
+              onClick={() => navigate('/schedule')}
+              className="inline-flex items-center gap-1 rounded-full border border-border-light bg-surface-primary px-2.5 py-1 text-xs font-medium text-content-secondary transition-colors hover:border-oe-blue hover:text-oe-blue"
+            >
+              {t('resources.intro_link_schedule', { defaultValue: '4D Schedule' })}
+              <ArrowRight size={11} />
+            </button>
+            <button
+              type="button"
+              onClick={() => navigate('/tasks')}
+              className="inline-flex items-center gap-1 rounded-full border border-border-light bg-surface-primary px-2.5 py-1 text-xs font-medium text-content-secondary transition-colors hover:border-oe-blue hover:text-oe-blue"
+            >
+              {t('resources.intro_link_tasks', { defaultValue: 'Tasks' })}
+              <ArrowRight size={11} />
+            </button>
+            <button
+              type="button"
+              onClick={() => navigate('/equipment')}
+              className="inline-flex items-center gap-1 rounded-full border border-border-light bg-surface-primary px-2.5 py-1 text-xs font-medium text-content-secondary transition-colors hover:border-oe-blue hover:text-oe-blue"
+            >
+              {t('resources.intro_link_equipment', {
+                defaultValue: 'Equipment fleet',
+              })}
+              <ArrowRight size={11} />
+            </button>
+          </div>
+        </div>
+        <button
+          type="button"
+          onClick={dismiss}
+          className="shrink-0 rounded-md p-1 text-content-tertiary transition-colors hover:bg-surface-secondary hover:text-content-primary"
+          aria-label={t('common.dismiss', { defaultValue: 'Dismiss' })}
+        >
+          <X size={14} />
+        </button>
+      </div>
+    </Card>
+  );
+}
+
 /* ─── Page ─── */
 
 /* ─── Persisted sort/filter state ─────────────────────────────────────
@@ -301,8 +381,6 @@ function downloadCsv(filename: string, csv: string) {
 
 export function ResourcesPage() {
   const { t } = useTranslation();
-  const navigate = useNavigate();
-  const [searchParams, setSearchParams] = useSearchParams();
   const [tab, setTab] = useState<Tab>('resources');
   const [search, setSearch] = useState('');
   const [typeFilter, setTypeFilter] = useState<ResourceType | ''>('');
@@ -328,19 +406,6 @@ export function ResourcesPage() {
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [bulkDeleteOpen, setBulkDeleteOpen] = useState(false);
   const [selectedId, setSelectedId] = useState<string | null>(null);
-  // Deep link: /resources?resourceId=<id> opens the matching resource drawer
-  // (used by Capacity Planning's clickable resource labels). Consume the param
-  // once so a back/forward or manual close does not re-open the drawer, and
-  // the URL stays clean.
-  useEffect(() => {
-    const rid = searchParams.get('resourceId');
-    if (!rid) return;
-    setSelectedId(rid);
-    const next = new URLSearchParams(searchParams);
-    next.delete('resourceId');
-    setSearchParams(next, { replace: true });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchParams]);
   const [createOpen, setCreateOpen] = useState(false);
   const [proposeOpen, setProposeOpen] = useState(false);
   // Per-row edit / delete state. Lifted up here so the modal / confirm
@@ -541,116 +606,63 @@ export function ResourcesPage() {
   const isLoading = tab === 'resources' && resourcesQ.isLoading;
 
   return (
-    <div className="space-y-5 animate-fade-in">
+    <div className="space-y-5">
       <Breadcrumb
-        items={[
-          ...(activeProjectName
-            ? [{ label: activeProjectName, to: `/projects/${activeProjectId}` }]
-            : []),
-          { label: t('nav.resources', { defaultValue: 'Resources & Crews' }) },
-        ]}
+        items={[{ label: t('resources.title', { defaultValue: 'Resources & Crews' }) }]}
       />
 
-      <PageHeader
-        srTitle={t('resources.title', { defaultValue: 'Resources & Crews' })}
-        subtitle={t('resources.subtitle', {
-          defaultValue:
-            'People, equipment and crew assignments - propose, confirm, resolve conflicts.',
-        })}
-        actions={
-          <>
-            {tab === 'assignments' && (
-              <>
-                <Button
-                  variant="secondary"
-                  size="sm"
-                  icon={<CalendarRange size={14} />}
-                  onClick={() => navigate('/portfolio/capacity')}
-                >
-                  {t('resources.assignments_capacity', {
-                    defaultValue: 'Portfolio capacity',
-                  })}
-                </Button>
-                <Button
-                  variant="primary"
-                  size="sm"
-                  icon={<Plus size={14} />}
-                  onClick={() => setProposeOpen(true)}
-                >
-                  {t('resources.propose', { defaultValue: 'Propose Assignment' })}
-                </Button>
-              </>
-            )}
-            {tab === 'resources' && (
-              <Button
-                variant="primary"
-                size="sm"
-                icon={<Plus size={14} />}
-                onClick={() => setCreateOpen(true)}
-              >
-                {t('resources.new_resource', { defaultValue: 'New Resource' })}
-              </Button>
-            )}
-            {tab === 'requests' && (
-              <Button
-                variant="primary"
-                size="sm"
-                icon={<Plus size={14} />}
-                onClick={() => setNewRequestOpen(true)}
-                disabled={!requestsProjectId}
-                title={
-                  requestsProjectId
-                    ? undefined
-                    : t('resources.requests_pick_project_first', {
-                        defaultValue: 'Select a project below first',
-                      })
-                }
-              >
-                {t('resources.new_request', { defaultValue: 'New Request' })}
-              </Button>
-            )}
-          </>
-        }
-      />
+      <div className="flex items-start justify-between gap-4 flex-wrap">
+        <div>
+          <h1 className="text-2xl font-semibold text-content-primary">
+            {t('resources.title', { defaultValue: 'Resources & Crews' })}
+          </h1>
+          <p className="mt-1 text-sm text-content-secondary">
+            {t('resources.subtitle', {
+              defaultValue:
+                'People, equipment and crew assignments — propose, confirm, resolve conflicts.',
+            })}
+          </p>
+        </div>
+        <div className="flex gap-2">
+          {tab === 'assignments' && (
+            <Button
+              variant="primary"
+              icon={<Plus size={14} />}
+              onClick={() => setProposeOpen(true)}
+            >
+              {t('resources.propose', { defaultValue: 'Propose Assignment' })}
+            </Button>
+          )}
+          {tab === 'resources' && (
+            <Button
+              variant="primary"
+              icon={<Plus size={14} />}
+              onClick={() => setCreateOpen(true)}
+            >
+              {t('resources.new_resource', { defaultValue: 'New Resource' })}
+            </Button>
+          )}
+          {tab === 'requests' && (
+            <Button
+              variant="primary"
+              icon={<Plus size={14} />}
+              onClick={() => setNewRequestOpen(true)}
+              disabled={!requestsProjectId}
+              title={
+                requestsProjectId
+                  ? undefined
+                  : t('resources.requests_pick_project_first', {
+                      defaultValue: 'Select a project below first',
+                    })
+              }
+            >
+              {t('resources.new_request', { defaultValue: 'New Request' })}
+            </Button>
+          )}
+        </div>
+      </div>
 
-      <DismissibleInfo
-        storageKey="resources"
-        title={t('resources.intro_title', {
-          defaultValue: 'Stop double-booking crews and kit',
-        })}
-        more={
-          t('resources.intro_more', { defaultValue: '' })
-            ? <IntroRichText text={t('resources.intro_more')} />
-            : undefined
-        }
-        links={[
-          {
-            label: t('resources.intro_link_capacity', { defaultValue: 'Capacity Planning' }),
-            onClick: () => navigate('/portfolio/capacity'),
-          },
-          {
-            label: t('resources.intro_link_leveling', { defaultValue: 'Resource Leveling' }),
-            onClick: () => navigate('/portfolio/leveling'),
-          },
-          {
-            label: t('resources.intro_link_schedule', { defaultValue: '4D Schedule' }),
-            onClick: () => navigate('/schedule'),
-          },
-          {
-            label: t('resources.intro_link_tasks', { defaultValue: 'Tasks' }),
-            onClick: () => navigate('/tasks'),
-          },
-          {
-            label: t('resources.intro_link_equipment', { defaultValue: 'Equipment' }),
-            onClick: () => navigate('/equipment'),
-          },
-        ]}
-      >
-        {t('resources.intro_body', {
-          defaultValue:
-            'Register people, crews and equipment, then put them to work: a foreman raises a Request, a dispatcher fulfils it by matching an available resource, and the resulting Assignment reserves that resource for a date range with double-booking conflicts flagged automatically. Confirmed assignments are the source of truth for who is on site each day and align with the schedule and tasks.',
-        })}
-      </DismissibleInfo>
+      <WorkflowIntro />
 
       {/* Tabs */}
       <div className="border-b border-border-light">
@@ -1005,7 +1017,7 @@ export function ResourcesPage() {
         })}
         message={t('resources.delete_resource_msg', {
           defaultValue:
-            'This permanently removes the resource. Active assignments referencing it will be blocked - cancel or reassign them first.',
+            'This permanently removes the resource. Active assignments referencing it will be blocked — cancel or reassign them first.',
         })}
         confirmLabel={t('common.delete', { defaultValue: 'Delete' })}
         cancelLabel={t('common.cancel', { defaultValue: 'Cancel' })}
@@ -1025,7 +1037,7 @@ export function ResourcesPage() {
         })}
         message={t('resources.bulk_delete_resources_msg', {
           defaultValue:
-            'This permanently removes {{count}} resources. Any active assignments referencing them will block their delete - those rows stay and a warning will be shown.',
+            'This permanently removes {{count}} resources. Any active assignments referencing them will block their delete — those rows stay and a warning will be shown.',
           count: selectedIds.size,
         })}
         confirmLabel={t('common.delete', { defaultValue: 'Delete' })}
@@ -1291,7 +1303,7 @@ function ResourceTable({
         })}
         description={t('resources.empty_filter_desc', {
           defaultValue:
-            'Adjust the type, status or currency filter - or clear all filters to see everything.',
+            'Adjust the type, status or currency filter — or clear all filters to see everything.',
         })}
         action={{
           label: t('resources.clear_filters', { defaultValue: 'Clear filters' }),
@@ -1862,7 +1874,7 @@ function RequestsTab({
         <p className="mt-3 text-xs text-content-secondary leading-relaxed">
           {t('resources.requests_explainer', {
             defaultValue:
-              'Resource requests are "demand-side" records - foremen and PMs raise them when they need people or equipment on a specific date range. Dispatchers fulfil each request by matching one of your resources to it; that creates an assignment row in the Assignments tab.',
+              'Resource requests are "demand-side" records — foremen and PMs raise them when they need people or equipment on a specific date range. Dispatchers fulfil each request by matching one of your resources to it; that creates an assignment row in the Assignments tab.',
           })}
         </p>
       </Card>
@@ -1879,12 +1891,12 @@ function RequestsTab({
               activeProjectName
                 ? t('resources.requests_pick_project_active', {
                     defaultValue:
-                      'You currently have "{{name}}" active elsewhere - pick it from the dropdown to start.',
+                      'You currently have "{{name}}" active elsewhere — pick it from the dropdown to start.',
                     name: activeProjectName,
                   })
                 : t('resources.requests_pick_project_desc', {
                     defaultValue:
-                      'Requests are project-scoped - choose a project to see the open queue and start fulfilling.',
+                      'Requests are project-scoped — choose a project to see the open queue and start fulfilling.',
                   })
             }
           />
@@ -2860,7 +2872,6 @@ function AssignmentsTab({
   onSelectResource: (id: string) => void;
 }) {
   const { t } = useTranslation();
-  const navigate = useNavigate();
   const qc = useQueryClient();
   const addToast = useToastStore((s) => s.addToast);
   const userRole = useAuthStore((s) => s.userRole);
@@ -3107,7 +3118,7 @@ function AssignmentsTab({
 
             {isLoading ? (
               <div className="p-4">
-                <SkeletonTable rows={6} columns={7} />
+                <SkeletonTable rows={6} columns={6} />
               </div>
             ) : filtered.length === 0 ? (
               <EmptyState
@@ -3147,11 +3158,6 @@ function AssignmentsTab({
                       )}
                       <th className="px-3 py-2 text-left">
                         {t('resources.col_resource', { defaultValue: 'Resource' })}
-                      </th>
-                      <th className="px-3 py-2 text-left">
-                        {t('resources.col_project_task', {
-                          defaultValue: 'Project / Task',
-                        })}
                       </th>
                       <th className="px-3 py-2 text-left">
                         {t('resources.start', { defaultValue: 'Start' })}
@@ -3215,57 +3221,6 @@ function AssignmentsTab({
                               {a.resource_name}
                             </button>
                           </td>
-                          <td className="px-3 py-1.5 text-xs">
-                            <div className="flex flex-col gap-0.5">
-                              {a.project_id ? (
-                                <button
-                                  type="button"
-                                  className="inline-flex w-fit items-center gap-1 text-left text-content-primary hover:text-oe-blue hover:underline"
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    navigate(`/projects/${a.project_id}`);
-                                  }}
-                                  title={t('resources.open_project', {
-                                    defaultValue: 'Open project',
-                                  })}
-                                >
-                                  {a.project_name ||
-                                    t('resources.untitled_project', {
-                                      defaultValue: 'Project',
-                                    })}
-                                </button>
-                              ) : (
-                                <span className="text-content-tertiary">
-                                  {t('resources.no_project', {
-                                    defaultValue: 'Unassigned',
-                                  })}
-                                </span>
-                              )}
-                              {a.task_id && (
-                                <button
-                                  type="button"
-                                  className="inline-flex w-fit items-center gap-1 text-left text-2xs text-content-tertiary hover:text-oe-blue hover:underline"
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    // Emits ?taskId for the Tasks page; the deep-link
-                                    // consumer is owned by the tasks batch and lands
-                                    // separately - until then this opens the Tasks list.
-                                    navigate(
-                                      `/tasks?taskId=${encodeURIComponent(a.task_id as string)}`,
-                                    );
-                                  }}
-                                  title={t('resources.open_task', {
-                                    defaultValue: 'Open task',
-                                  })}
-                                >
-                                  {a.task_name ||
-                                    t('resources.linked_task', {
-                                      defaultValue: 'Linked task',
-                                    })}
-                                </button>
-                              )}
-                            </div>
-                          </td>
                           <td className="px-3 py-1.5 text-xs tabular-nums">
                             <DateDisplay value={a.start_at} />
                           </td>
@@ -3316,7 +3271,7 @@ function AssignmentsTab({
                                 className="text-xs text-content-tertiary"
                                 title={t('resources.readonly_hint', {
                                   defaultValue:
-                                    'Read-only - ask a manager to edit assignments',
+                                    'Read-only — ask a manager to edit assignments',
                                 })}
                               >
                                 —
@@ -3537,7 +3492,7 @@ function EditAssignmentModal({
           <span>
             {t('resources.edit_past_warning', {
               defaultValue:
-                'This assignment is in the past - changes are typically only for record corrections.',
+                'This assignment is in the past — changes are typically only for record corrections.',
             })}
           </span>
         </div>

@@ -1,1 +1,0 @@
-export { MoCPage } from './MoCPage';

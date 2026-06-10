@@ -115,12 +115,10 @@ const RangeIndicator = memo(function RangeIndicator({
   costPerM2,
   range,
   status,
-  currency,
 }: {
   costPerM2: number;
   range: BenchmarkRange;
   status: BenchmarkStatus;
-  currency: string;
 }) {
   const { t } = useTranslation();
   const colors = getStatusColor(status);
@@ -147,13 +145,13 @@ const RangeIndicator = memo(function RangeIndicator({
           className="absolute -translate-x-1/2"
           style={{ left: `${rangeStartPct}%` }}
         >
-          {formatCurrencyValue(range.min, currency)}
+          {formatCurrencyValue(range.min, 'EUR')}
         </span>
         <span
           className="absolute -translate-x-1/2"
           style={{ left: `${rangeEndPct}%` }}
         >
-          {formatCurrencyValue(range.max, currency)}
+          {formatCurrencyValue(range.max, 'EUR')}
         </span>
       </div>
 
@@ -182,15 +180,15 @@ const RangeIndicator = memo(function RangeIndicator({
           style={{ left: `${indicatorPct}%` }}
           title={t('costmodel.benchmark_current_cost', {
             defaultValue: 'Current: {{value}}/m\u00B2',
-            value: formatCurrencyValue(costPerM2, currency),
+            value: formatCurrencyValue(costPerM2, 'EUR'),
           })}
         />
       </div>
 
       {/* Legend below bar */}
       <div className="flex items-center justify-between text-2xs text-content-tertiary">
-        <span>{formatCurrencyValue(displayMin, currency)}</span>
-        <span>{formatCurrencyValue(displayMax, currency)}</span>
+        <span>{formatCurrencyValue(displayMin, 'EUR')}</span>
+        <span>{formatCurrencyValue(displayMax, 'EUR')}</span>
       </div>
     </div>
   );
@@ -312,13 +310,12 @@ export const CostBenchmark = memo(function CostBenchmark({ totalBudget, currency
                 </div>
 
                 {/* Benchmark range */}
-                <div className="rounded-xl border border-border-light bg-surface-elevated/90 p-4 shadow-xs transition-shadow duration-normal ease-oe hover:shadow-sm">
+                <div className="rounded-xl bg-surface-secondary p-4">
                   <div className="text-2xs font-medium uppercase tracking-wider text-content-tertiary mb-1">
                     {t('costmodel.benchmark_range_label', { defaultValue: 'Benchmark Range' })}
                   </div>
                   <div className="text-sm font-semibold tabular-nums text-content-primary">
-                    {formatCurrencyValue(benchmark.range.min, currency)}{' '}
-                    {t('costmodel.benchmark_range_to', { defaultValue: 'to' })}{' '}
+                    {formatCurrencyValue(benchmark.range.min, currency)} &ndash;{' '}
                     {formatCurrencyValue(benchmark.range.max, currency)}
                   </div>
                   <div className="mt-1 text-2xs text-content-tertiary">
@@ -327,7 +324,7 @@ export const CostBenchmark = memo(function CostBenchmark({ totalBudget, currency
                 </div>
 
                 {/* Total budget / area summary */}
-                <div className="rounded-xl border border-border-light bg-surface-elevated/90 p-4 shadow-xs transition-shadow duration-normal ease-oe hover:shadow-sm">
+                <div className="rounded-xl bg-surface-secondary p-4">
                   <div className="text-2xs font-medium uppercase tracking-wider text-content-tertiary mb-1">
                     {t('costmodel.benchmark_total_budget', { defaultValue: 'Total Budget' })}
                   </div>
@@ -348,7 +345,6 @@ export const CostBenchmark = memo(function CostBenchmark({ totalBudget, currency
                 costPerM2={benchmark.costPerM2}
                 range={benchmark.range}
                 status={benchmark.status}
-                currency={currency}
               />
             </div>
           ) : (

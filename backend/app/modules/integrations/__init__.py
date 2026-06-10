@@ -1,8 +1,8 @@
-"""‌⁠‍Integrations module - chat connectors (Teams, Slack, Telegram), webhooks, calendar feeds."""
+"""‌⁠‍Integrations module — chat connectors (Teams, Slack, Telegram), webhooks, calendar feeds."""
 
 
 async def on_startup() -> None:
-    """‌⁠‍Module startup hook - register RBAC permissions.
+    """‌⁠‍Module startup hook — register RBAC permissions.
 
     Invoked by :class:`app.core.module_loader` after the module's models,
     hooks and router are loaded. Registering here (rather than in

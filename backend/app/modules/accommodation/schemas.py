@@ -1,8 +1,8 @@
-"""Accommodation Pydantic schemas - request / response models.
+"""Accommodation Pydantic schemas — request / response models.
 
 Money fields are Decimal. Currency is validated against the ISO 4217
 three-letter alphabetic-code pattern via a Pydantic regex (no remote
-lookup needed for the MVP - the registry of "real" codes lives in
+lookup needed for the MVP — the registry of "real" codes lives in
 ``app.modules.i18n_foundation`` and can be consulted later if a
 stricter check is required).
 """
@@ -16,7 +16,7 @@ from uuid import UUID
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
-# ── Enum patterns (regex, not Literal - adding a new value stays a single
+# ── Enum patterns (regex, not Literal — adding a new value stays a single
 #    line change and never needs a DB migration) ─────────────────────────
 
 _KIND_PATTERN = r"^(worker_camp|rental|hotel)$"
@@ -25,7 +25,7 @@ _BOOKING_STATUS_PATTERN = r"^(reserved|checked_in|checked_out|cancelled)$"
 _BOOKING_SOURCE_PATTERN = r"^(manual|hr_autobook|propdev_import|pms_sync)$"
 _CHARGE_KIND_PATTERN = r"^(base_rent|extra|deposit|refund)$"
 _CHARGE_STATUS_PATTERN = r"^(pending|invoiced|paid|waived)$"
-# ISO 4217 alphabetic code - three uppercase letters. Empty string is
+# ISO 4217 alphabetic code — three uppercase letters. Empty string is
 # explicitly allowed on optional/write paths so the service layer can
 # inherit the parent's currency rather than echoing a hard-coded "EUR".
 _CURRENCY_PATTERN = r"^[A-Z]{3}$|^$"
@@ -98,7 +98,7 @@ class AccommodationResponse(BaseModel):
 
 
 class AccommodationDetailResponse(AccommodationResponse):
-    """Detail shape - adds nested room list + booking summary."""
+    """Detail shape — adds nested room list + booking summary."""
 
     rooms: list[RoomResponse] = Field(default_factory=list)
     active_bookings_count: int = 0
@@ -144,7 +144,7 @@ class RoomUpdate(BaseModel):
 class RoomResponse(BaseModel):
     """Read shape for a room."""
 
-    # See ``AccommodationResponse`` - ``populate_by_name`` keeps the
+    # See ``AccommodationResponse`` — ``populate_by_name`` keeps the
     # ``metadata_`` alias round-trip-safe through response builders.
     model_config = ConfigDict(from_attributes=True, populate_by_name=True)
 
@@ -216,11 +216,11 @@ class BookingResponse(BaseModel):
     """Read shape for a booking.
 
     ``room_label`` is optional and only populated by list endpoints that
-    eagerly resolve the parent room - single-booking GETs leave it
+    eagerly resolve the parent room — single-booking GETs leave it
     ``None`` because the room id is already in scope at the call site.
     """
 
-    # See ``AccommodationResponse`` - ``populate_by_name`` keeps the
+    # See ``AccommodationResponse`` — ``populate_by_name`` keeps the
     # ``metadata_`` alias round-trip-safe through ``_decorate_bookings`` and
     # the booking-detail builder.
     model_config = ConfigDict(from_attributes=True, populate_by_name=True)
@@ -241,7 +241,7 @@ class BookingResponse(BaseModel):
 
 
 class BookingDetailResponse(BookingResponse):
-    """Detail shape - adds nested charges."""
+    """Detail shape — adds nested charges."""
 
     charges: list[ChargeResponse] = Field(default_factory=list)
 
@@ -279,37 +279,10 @@ class ChargeCreate(BaseModel):
         return self
 
 
-class ChargeUpdate(BaseModel):
-    """Partial update for a charge.
-
-    The service layer enforces which fields may change for a given charge
-    status (a ``paid`` charge is locked) and which status transitions are
-    legal; this schema only validates field shapes. ``currency=""`` keeps
-    the existing inherit-on-blank behaviour.
-    """
-
-    model_config = ConfigDict(str_strip_whitespace=True)
-
-    kind: str | None = Field(default=None, pattern=_CHARGE_KIND_PATTERN)
-    description: str | None = None
-    amount: Decimal | None = Field(default=None, ge=0)
-    currency: str | None = Field(default=None, pattern=_CURRENCY_PATTERN)
-    period_start: date | None = None
-    period_end: date | None = None
-    status: str | None = Field(default=None, pattern=_CHARGE_STATUS_PATTERN)
-    metadata: dict[str, Any] | None = None
-
-    @model_validator(mode="after")
-    def _validate_period(self) -> ChargeUpdate:
-        if self.period_start is not None and self.period_end is not None and self.period_end < self.period_start:
-            raise ValueError("period_end must not precede period_start")
-        return self
-
-
 class ChargeResponse(BaseModel):
     """Read shape for a charge."""
 
-    # See ``AccommodationResponse`` - ``populate_by_name`` keeps the
+    # See ``AccommodationResponse`` — ``populate_by_name`` keeps the
     # ``metadata_`` alias round-trip-safe through response builders.
     model_config = ConfigDict(from_attributes=True, populate_by_name=True)
 
@@ -350,7 +323,7 @@ class SuggestFromHRRequest(BaseModel):
 
 
 class SuggestFromHRResponse(BaseModel):
-    """Suggested room - NOT auto-confirmed; UI must POST a real booking."""
+    """Suggested room — NOT auto-confirmed; UI must POST a real booking."""
 
     room_id: UUID
     room_label: str

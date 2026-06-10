@@ -19,12 +19,10 @@ import {
 
 import type { AgentRun, AgentStep, AgentStepRole } from '../api';
 import { toolLabel } from './agentMeta';
-import { ApplyActionButton } from './ApplyActionButton';
 import {
   renderMarkdown,
   SANITIZE_CONFIG,
 } from '@/features/erp-chat/full-page/left/MessageBubble';
-import { copyToClipboard } from '@/shared/lib/browser';
 
 // ── Step role styling ────────────────────────────────────────────────────────
 
@@ -130,14 +128,15 @@ function CopyButton({ text, label }: { text: string; label: string }): JSX.Eleme
   const [copied, setCopied] = useState(false);
 
   const onCopy = () => {
-    void copyToClipboard(text).then((ok) => {
-      if (ok) {
+    void navigator.clipboard?.writeText(text).then(
+      () => {
         setCopied(true);
         window.setTimeout(() => setCopied(false), 1800);
-      } else {
+      },
+      () => {
         /* clipboard blocked — fail silently */
-      }
-    });
+      },
+    );
   };
 
   return (
@@ -289,7 +288,7 @@ function useFailureLabel(run: AgentRun, steps: AgentStep[]): string | null {
   switch (run.failure_reason) {
     case 'no_llm':
       return t('agents.failure.no_llm', {
-        defaultValue: 'AI provider not configured - add an API key in Settings → AI.',
+        defaultValue: 'AI provider not configured — add an API key in Settings → AI.',
       });
     case 'unknown_agent':
       return t('agents.failure.unknown_agent', { defaultValue: 'Unknown agent registered.' });
@@ -391,12 +390,6 @@ export function RunTimeline({ run }: { run: AgentRun }): JSX.Element {
 
       {/* Final output */}
       {run.final_output && <FinalOutput text={run.final_output} />}
-
-      {/* Apply affordances — surfaced when the run produced structured BOQ
-          position proposals (recovered from its steps by the backend). Never
-          auto-applies; the user picks a BOQ and clicks Apply (architecture
-          guide "AI-augmented, human-confirmed"). */}
-      {run.status === 'completed' && <ApplyActionButton runId={run.id} />}
     </div>
   );
 }

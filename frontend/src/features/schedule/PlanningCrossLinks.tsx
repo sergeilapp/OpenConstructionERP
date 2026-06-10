@@ -7,8 +7,6 @@ import {
   ShieldAlert,
   ClipboardList,
   Users,
-  Gauge,
-  Scale,
 } from 'lucide-react';
 
 /**
@@ -30,9 +28,7 @@ export type PlanningRouteKey =
   | 'schedule-advanced'
   | 'tasks'
   | '5d'
-  | 'risks'
-  | 'capacity'
-  | 'leveling';
+  | 'risks';
 
 interface LinkDef {
   key: PlanningRouteKey | 'meetings';
@@ -77,18 +73,6 @@ export function PlanningCrossLinks({ active }: { active: PlanningRouteKey }) {
       label: t('planning.link_risks', { defaultValue: 'Risk Register' }),
     },
     {
-      key: 'capacity',
-      to: '/portfolio/capacity',
-      icon: Gauge,
-      label: t('planning.link_capacity', { defaultValue: 'Capacity Planning' }),
-    },
-    {
-      key: 'leveling',
-      to: '/portfolio/leveling',
-      icon: Scale,
-      label: t('planning.link_leveling', { defaultValue: 'Resource Leveling' }),
-    },
-    {
       key: 'meetings',
       to: '/meetings',
       icon: Users,
@@ -97,11 +81,9 @@ export function PlanningCrossLinks({ active }: { active: PlanningRouteKey }) {
   ];
 
   return (
-    // No own margin (audit fix S4): the page root's space-y-5 provides the
-    // rhythm; a built-in mb-4 doubled the gap under the strip.
     <nav
       aria-label={t('planning.section_nav', { defaultValue: 'Planning & Control modules' })}
-      className="flex flex-wrap items-center gap-1.5"
+      className="mb-4 flex flex-wrap items-center gap-1.5"
     >
       <span className="mr-1 text-2xs font-semibold uppercase tracking-wider text-content-quaternary">
         {t('planning.section_label', { defaultValue: 'Planning & Control' })}
@@ -119,7 +101,7 @@ export function PlanningCrossLinks({ active }: { active: PlanningRouteKey }) {
             className={
               isActive
                 ? 'inline-flex items-center gap-1.5 rounded-full bg-oe-blue px-3 py-1 text-xs font-semibold text-white shadow-sm'
-                : 'inline-flex items-center gap-1.5 rounded-full border border-border-light bg-surface-primary px-3 py-1 text-xs font-medium text-content-secondary transition-colors hover:border-oe-blue/40 hover:bg-oe-blue/10 hover:text-oe-blue-text'
+                : 'inline-flex items-center gap-1.5 rounded-full border border-border-light bg-surface-primary px-3 py-1 text-xs font-medium text-content-secondary transition-colors hover:border-oe-blue/40 hover:bg-oe-blue-subtle/40 hover:text-oe-blue-text'
             }
           >
             <Icon size={13} />

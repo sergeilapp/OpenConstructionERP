@@ -10,7 +10,7 @@
 //   4. Sticky footer with Cancel / Save     (delegates POST vs PUT)
 //
 // Rules are kept in local state and only POST'd / PUT'd on Save — this
-// matches a BIM coordination tool's "edit as draft, commit as one" UX and lets a
+// matches BIMcollab Zoom's "edit as draft, commit as one" UX and lets a
 // user iterate freely without spamming the API.
 
 import { useState, useMemo, useEffect, type ChangeEvent, type DragEvent } from 'react';
@@ -403,7 +403,7 @@ export function SmartViewRuleEditor({
           {rules.length === 0 && (
             <div className="rounded-lg border border-dashed border-border-light bg-surface-secondary/50 px-4 py-6 text-center text-sm text-content-tertiary">
               {t('smartViews.no_rules_yet', {
-                defaultValue: 'No rules yet - add one below.',
+                defaultValue: 'No rules yet — add one below.',
               })}
             </div>
           )}

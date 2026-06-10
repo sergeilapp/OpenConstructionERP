@@ -1,7 +1,6 @@
 // @ts-nocheck
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import BenchmarkModule from './BenchmarkModule';
 import {
   BENCHMARKS,
@@ -10,38 +9,16 @@ import {
   calculatePercentile,
 } from './data/benchmarks';
 
-// Phase 2/3 wiring: the page now lists the tenant's projects and fetches an
-// own-portfolio distribution. Stub both so the unit render stays offline and
-// the picker stays hidden (zero projects) - the page then behaves exactly as
-// the manual-only flow these assertions were written against.
-vi.mock('@/features/projects/api', () => ({
-  projectsApi: { list: vi.fn().mockResolvedValue([]) },
-}));
-vi.mock('./api', () => ({
-  fetchOwnPortfolio: vi.fn().mockResolvedValue(null),
-}));
-
-function renderModule() {
-  const qc = new QueryClient({
-    defaultOptions: { queries: { retry: false, gcTime: 0 } },
-  });
-  return render(
-    <QueryClientProvider client={qc}>
-      <BenchmarkModule />
-    </QueryClientProvider>,
-  );
-}
-
 describe('BenchmarkModule', () => {
   it('should render the page header', () => {
-    renderModule();
+    render(<BenchmarkModule />);
     // Regex tolerates identity-marker ZWJ/ZWNJ trailing the visible text.
     expect(screen.getByText(/Cost Benchmarks/)).toBeInTheDocument();
     expect(screen.getByText(/Compare your estimate/)).toBeInTheDocument();
   });
 
   it('should render all input controls', () => {
-    renderModule();
+    render(<BenchmarkModule />);
     expect(screen.getByText('Building Type')).toBeInTheDocument();
     expect(screen.getByText('Region')).toBeInTheDocument();
     expect(screen.getByText(/Gross Floor Area/)).toBeInTheDocument();
@@ -49,40 +26,40 @@ describe('BenchmarkModule', () => {
   });
 
   it('should show default values', () => {
-    renderModule();
+    render(<BenchmarkModule />);
     expect(screen.getByDisplayValue('5000')).toBeInTheDocument();
     expect(screen.getByDisplayValue('13250000')).toBeInTheDocument();
   });
 
   it('should show cost per m2 result', () => {
-    renderModule();
+    render(<BenchmarkModule />);
     // 13250000 / 5000 = 2650 EUR/m2
     expect(screen.getByText('Your Cost / m2')).toBeInTheDocument();
   });
 
   it('should show percentile position', () => {
-    renderModule();
-    expect(screen.getByText('Percentile vs Industry')).toBeInTheDocument();
+    render(<BenchmarkModule />);
+    expect(screen.getByText('Percentile Position')).toBeInTheDocument();
     // Should show P-something
     const pctEl = screen.getByText(/^P\d+$/);
     expect(pctEl).toBeInTheDocument();
   });
 
   it('should show difference from median', () => {
-    renderModule();
+    render(<BenchmarkModule />);
     expect(screen.getByText('Difference from Median')).toBeInTheDocument();
   });
 
   it('should update when building type changes', () => {
-    renderModule();
+    render(<BenchmarkModule />);
     const btSelect = screen.getAllByRole('combobox')[0];
     fireEvent.change(btSelect, { target: { value: 'hospital' } });
     // Should now show hospital benchmarks
-    expect(screen.getByText(/Hospital, Germany/)).toBeInTheDocument();
+    expect(screen.getByText(/Hospital — Germany/)).toBeInTheDocument();
   });
 
   it('should update when region changes', () => {
-    renderModule();
+    render(<BenchmarkModule />);
     const regionSelect = screen.getAllByRole('combobox')[1];
     fireEvent.change(regionSelect, { target: { value: 'UK' } });
     // Should show UK region in the headings
@@ -91,7 +68,7 @@ describe('BenchmarkModule', () => {
   });
 
   it('should show all building types comparison', () => {
-    renderModule();
+    render(<BenchmarkModule />);
     // The heading includes region, so use partial match
     const headingMatches = screen.getAllByText(/All Building Types/);
     expect(headingMatches.length).toBeGreaterThan(0);
@@ -103,12 +80,12 @@ describe('BenchmarkModule', () => {
   });
 
   it('should show disclaimer', () => {
-    renderModule();
+    render(<BenchmarkModule />);
     expect(screen.getByText(/Benchmark data from BKI/)).toBeInTheDocument();
   });
 
   it('should show benchmark range details (Min, Q1, Median, Q3, Max)', () => {
-    renderModule();
+    render(<BenchmarkModule />);
     expect(screen.getByText('Min')).toBeInTheDocument();
     expect(screen.getByText('Q1 (25th)')).toBeInTheDocument();
     expect(screen.getByText('Median')).toBeInTheDocument();

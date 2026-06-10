@@ -43,14 +43,10 @@ import {
   Plus,
   AlertTriangle,
   Trash2,
-  Pencil,
   MoreHorizontal,
   Users,
   CircleCheck,
   Layers,
-  ExternalLink,
-  Wallet,
-  FileText,
 } from 'lucide-react';
 
 import {
@@ -83,13 +79,9 @@ import {
   deleteAccommodation,
   createBooking,
   createCharge,
-  updateCharge,
-  deleteCharge,
   bootstrapFromPropDev,
   allowedBookingTransitions,
-  allowedChargeTransitions,
   isBookingTerminal,
-  isChargeLocked,
   listAccommodationBookings,
   updateBooking,
   getBooking,
@@ -98,16 +90,9 @@ import {
   type RoomStatus,
   type Booking,
   type BookingStatus,
-  type Charge,
   type ChargeKind,
   type ChargeStatus,
 } from './api';
-import { fetchBIMModels } from '@/features/bim/api';
-import {
-  listDevelopments,
-  listPhases,
-  listBlocks,
-} from '@/features/property-dev/api';
 import { BulkRoomAddModal } from './BulkRoomAddModal';
 import { AccommodationCalendar } from './AccommodationCalendar';
 
@@ -204,11 +189,11 @@ export function AccommodationDetailPage() {
   const blockIds = tabIds('accommodation-detail');
 
   return (
-    <div className="space-y-5 animate-fade-in">
+    <div className="space-y-4">
       <Breadcrumb
         items={[
           {
-            label: t('nav.accommodation', { defaultValue: 'Accommodation' }),
+            label: t('accommodation.title', { defaultValue: 'Accommodation' }),
             to: '/accommodation',
           },
           { label: data.name || t('common.unnamed', { defaultValue: '(unnamed)' }) },
@@ -456,55 +441,6 @@ function HeaderKpi({ icon, label, value, accent }: HeaderKpiProps) {
   );
 }
 
-/* ── Occupant reference ──────────────────────────────────────────────── */
-
-/**
- * Render a booking's occupant. When the booking is tied to a real
- * directory contact (``occupant_contact_id`` present), the name becomes
- * a deep link into the Contacts directory so an operator can open the
- * housed worker's record. Falls back to plain text for free-text
- * occupants (no contact behind the name).
- *
- * The link carries the contact id as a ``?contactId=`` hint - the
- * Contacts page resolves it to open the matching record. The label is
- * always the human name, so the user sees who it is regardless.
- */
-function OccupantRef({
-  contactId,
-  name,
-  className,
-}: {
-  contactId: string | null;
-  name: string | null;
-  className?: string;
-}) {
-  const { t } = useTranslation();
-  const label =
-    name ||
-    t('accommodation.bookings.unnamed_occupant', { defaultValue: '(unnamed)' });
-
-  if (!contactId) {
-    return <span className={className}>{label}</span>;
-  }
-
-  return (
-    <Link
-      to={`/contacts?contactId=${encodeURIComponent(contactId)}`}
-      className={clsx(
-        'inline-flex items-center gap-1 text-oe-blue hover:underline',
-        className,
-      )}
-      title={t('accommodation.bookings.open_contact', {
-        defaultValue: 'Open contact record',
-      })}
-      data-testid="occupant-contact-link"
-    >
-      <span className="truncate">{label}</span>
-      <ExternalLink size={11} aria-hidden="true" className="shrink-0" />
-    </Link>
-  );
-}
-
 /* ── Occupancy sub-tabs ──────────────────────────────────────────────── */
 
 function OccupancySubTabs({
@@ -656,7 +592,7 @@ function RoomsTab({ data }: { data: AccommodationDetail }) {
               onClick={() => setAssignRoom(r)}
               data-testid={`accommodation-room-${r.label}`}
               aria-label={t('accommodation.room.tile_aria', {
-                defaultValue: 'Room {{label}} - {{status}}',
+                defaultValue: 'Room {{label}} — {{status}}',
                 label: r.label,
                 status: t(`accommodation.room.status.${r.status}`, {
                   defaultValue: r.status,
@@ -766,7 +702,7 @@ function AssignOccupantModal({
       open
       onClose={onClose}
       title={t('accommodation.assign.title', {
-        defaultValue: 'Assign occupant - {{label}}',
+        defaultValue: 'Assign occupant — {{label}}',
         label: room.label,
       })}
       size="md"
@@ -796,7 +732,7 @@ function AssignOccupantModal({
           <AlertTriangle className="mr-1.5 inline h-3.5 w-3.5" aria-hidden="true" />
           {t('accommodation.assign.disabled', {
             defaultValue:
-              'Room is {{status}} - change its status before booking.',
+              'Room is {{status}} — change its status before booking.',
             status: room.status,
           })}
         </div>
@@ -906,7 +842,7 @@ function BookingsTab({ data }: { data: AccommodationDetail }) {
           })}
           description={t('accommodation.bookings.no_rooms_desc', {
             defaultValue:
-              'Bookings live on rooms. Add some rooms first - Inventory tab → Add rooms - then come back here.',
+              'Bookings live on rooms. Add some rooms first — Inventory tab → Add rooms — then come back here.',
           })}
         />
       </div>
@@ -1179,10 +1115,10 @@ function BookingsList({
                   {b.room_label ?? '—'}
                 </td>
                 <td className="px-3 py-2">
-                  <OccupantRef
-                    contactId={b.occupant_contact_id}
-                    name={b.occupant_name}
-                  />
+                  {b.occupant_name ||
+                    t('accommodation.bookings.unnamed_occupant', {
+                      defaultValue: '(unnamed)',
+                    })}
                 </td>
                 <td className="px-3 py-2 tabular-nums">{b.check_in}</td>
                 <td className="px-3 py-2 tabular-nums">
@@ -1238,10 +1174,10 @@ function BookingsList({
                     </span>
                   </div>
                   <div className="mt-1 text-sm">
-                    <OccupantRef
-                      contactId={b.occupant_contact_id}
-                      name={b.occupant_name}
-                    />
+                    {b.occupant_name ||
+                      t('accommodation.bookings.unnamed_occupant', {
+                        defaultValue: '(unnamed)',
+                      })}
                   </div>
                   <div className="mt-0.5 text-xs text-content-tertiary tabular-nums">
                     {b.check_in} {'→'} {b.check_out ?? '∞'}
@@ -1278,7 +1214,7 @@ function BookingsList({
           confirm?.target === 'cancelled'
             ? t('accommodation.confirm.cancel_booking_message', {
                 defaultValue:
-                  'Cancelling locks the booking - no further status changes are possible.',
+                  'Cancelling locks the booking — no further status changes are possible.',
               })
             : t('accommodation.confirm.checkout_message', {
                 defaultValue:
@@ -1478,7 +1414,7 @@ function ChargesTab({ data }: { data: AccommodationDetail }) {
           })}
           description={t('accommodation.charges.no_bookings_desc', {
             defaultValue:
-              'Create a booking from the Occupancy tab - charges (base rent, extras, deposits, refunds) appear here once a stay exists.',
+              'Create a booking from the Occupancy tab — charges (base rent, extras, deposits, refunds) appear here once a stay exists.',
           })}
         />
       </div>
@@ -1553,8 +1489,6 @@ function ChargesTab({ data }: { data: AccommodationDetail }) {
                   <div className="text-2xs text-content-tertiary tabular-nums">
                     {b.check_in} {'→'} {b.check_out ?? '∞'}
                   </div>
-                  {/* occupant deep link lives in the panel header to keep
-                      the rail button a single click target */}
                 </button>
               </li>
             );
@@ -1566,7 +1500,6 @@ function ChargesTab({ data }: { data: AccommodationDetail }) {
       {selectedBookingId ? (
         <BookingChargesPanel
           accommodationId={data.id}
-          projectId={data.project_id}
           bookingId={selectedBookingId}
         />
       ) : (
@@ -1589,99 +1522,19 @@ function ChargesTab({ data }: { data: AccommodationDetail }) {
 
 function BookingChargesPanel({
   accommodationId,
-  projectId,
   bookingId,
 }: {
   accommodationId: string;
-  projectId: string;
   bookingId: string;
 }) {
   const { t } = useTranslation();
-  const navigate = useNavigate();
   const [editorOpen, setEditorOpen] = useState(false);
-  const [editCharge, setEditCharge] = useState<Charge | null>(null);
-  const [deleteTarget, setDeleteTarget] = useState<Charge | null>(null);
   const queryClient = useQueryClient();
   const addToast = useToastStore((s) => s.addToast);
-
-  // Finance deep link for this accommodation's project. Charges are not
-  // FK-linked to a specific invoice row on the backend (the charge only
-  // carries a status enum), so we route to the project's Finance invoices
-  // register rather than faking a per-invoice id. From there the operator
-  // raises the invoice (pending charges) or finds the issued one
-  // (invoiced / paid charges).
-  const financeInvoicesPath = projectId
-    ? `/projects/${projectId}/finance?tab=invoices`
-    : '/finance?tab=invoices';
 
   const bookingDetail = useQuery({
     queryKey: ['accommodation', 'booking-detail', bookingId],
     queryFn: () => getBooking(bookingId),
-  });
-
-  // Shared cache invalidation after any charge mutation - refresh both the
-  // booking detail (charge list) and the parent booking lists (which feed
-  // the picker rail).
-  const invalidateCharges = () => {
-    queryClient.invalidateQueries({
-      queryKey: ['accommodation', 'booking-detail', bookingId],
-    });
-    queryClient.invalidateQueries({
-      queryKey: ['accommodation', 'bookings', accommodationId],
-    });
-  };
-
-  // Status transition (mark invoiced / paid / waived) - the backend gates
-  // illegal jumps and locks settled records, so we surface its error.
-  const transitionMutation = useMutation({
-    mutationFn: ({
-      chargeId,
-      target,
-    }: {
-      chargeId: string;
-      target: ChargeStatus;
-    }) => updateCharge(chargeId, { status: target }),
-    onSuccess: (_res, vars) => {
-      invalidateCharges();
-      addToast({
-        type: 'success',
-        title: t(`accommodation.charges.transition_toast.${vars.target}`, {
-          defaultValue: 'Charge updated',
-        }),
-      });
-    },
-    onError: (err) =>
-      addToast({
-        type: 'error',
-        title: t('accommodation.charges.update_failed', {
-          defaultValue: 'Could not update charge',
-        }),
-        message: getErrorMessage(err),
-      }),
-  });
-
-  const deleteMutation = useMutation({
-    mutationFn: (chargeId: string) => deleteCharge(chargeId),
-    onSuccess: () => {
-      invalidateCharges();
-      addToast({
-        type: 'success',
-        title: t('accommodation.charges.deleted_toast', {
-          defaultValue: 'Charge deleted',
-        }),
-      });
-      setDeleteTarget(null);
-    },
-    onError: (err) => {
-      addToast({
-        type: 'error',
-        title: t('accommodation.charges.delete_failed', {
-          defaultValue: 'Could not delete charge',
-        }),
-        message: getErrorMessage(err),
-      });
-      setDeleteTarget(null);
-    },
   });
 
   if (bookingDetail.isLoading) {
@@ -1704,10 +1557,10 @@ function BookingChargesPanel({
       <div className="flex flex-wrap items-center justify-between gap-2 border-b border-border-light p-3">
         <div className="min-w-0">
           <div className="text-sm font-semibold text-content-primary truncate">
-            <OccupantRef
-              contactId={data.occupant_contact_id}
-              name={data.occupant_name}
-            />
+            {data.occupant_name ||
+              t('accommodation.bookings.unnamed_occupant', {
+                defaultValue: '(unnamed)',
+              })}
           </div>
           <div className="text-2xs text-content-tertiary tabular-nums">
             {data.check_in} {'→'} {data.check_out ?? '∞'}
@@ -1766,9 +1619,6 @@ function BookingChargesPanel({
                     defaultValue: 'Status',
                   })}
                 </th>
-                <th className="px-3 py-2 font-medium text-right">
-                  <span className="sr-only">{t('common.actions')}</span>
-                </th>
               </tr>
             </thead>
             <tbody className="divide-y divide-border-light">
@@ -1802,23 +1652,6 @@ function BookingChargesPanel({
                       })}
                     </span>
                   </td>
-                  <td className="px-3 py-2 text-right">
-                    <ChargeRowActions
-                      charge={c}
-                      busy={
-                        transitionMutation.isPending || deleteMutation.isPending
-                      }
-                      onOpenFinance={() => navigate(financeInvoicesPath)}
-                      onTransition={(target) =>
-                        transitionMutation.mutate({
-                          chargeId: c.id,
-                          target,
-                        })
-                      }
-                      onEdit={() => setEditCharge(c)}
-                      onDelete={() => setDeleteTarget(c)}
-                    />
-                  </td>
                 </tr>
               ))}
             </tbody>
@@ -1831,7 +1664,12 @@ function BookingChargesPanel({
           bookingId={bookingId}
           onClose={() => setEditorOpen(false)}
           onCreated={() => {
-            invalidateCharges();
+            queryClient.invalidateQueries({
+              queryKey: ['accommodation', 'booking-detail', bookingId],
+            });
+            queryClient.invalidateQueries({
+              queryKey: ['accommodation', 'bookings', accommodationId],
+            });
             addToast({
               type: 'success',
               title: t('accommodation.charges.created_toast', {
@@ -1842,232 +1680,7 @@ function BookingChargesPanel({
           }}
         />
       )}
-
-      {editCharge && (
-        <EditChargeModal
-          charge={editCharge}
-          onClose={() => setEditCharge(null)}
-          onSaved={() => {
-            invalidateCharges();
-            addToast({
-              type: 'success',
-              title: t('accommodation.charges.updated_toast', {
-                defaultValue: 'Charge updated',
-              }),
-            });
-            setEditCharge(null);
-          }}
-        />
-      )}
-
-      <ConfirmDialog
-        open={!!deleteTarget}
-        onCancel={() => setDeleteTarget(null)}
-        onConfirm={() => {
-          if (deleteTarget) deleteMutation.mutate(deleteTarget.id);
-        }}
-        title={t('accommodation.charges.confirm_delete_title', {
-          defaultValue: 'Delete this charge?',
-        })}
-        message={t('accommodation.charges.confirm_delete_message', {
-          defaultValue:
-            'This permanently removes the charge from the booking. Only pending or invoiced charges can be deleted - settled ones are locked.',
-        })}
-        confirmLabel={t('accommodation.charges.delete', {
-          defaultValue: 'Delete charge',
-        })}
-        variant="danger"
-        loading={deleteMutation.isPending}
-      />
     </Card>
-  );
-}
-
-/**
- * Per-row charge actions: a Finance deep link plus a 3-dot menu driving the
- * charge state machine (mark invoiced / paid / waived), edit and delete.
- * Settled / written-off charges are locked - the menu collapses to a
- * read-only "View in Finance" link mirroring the backend guard.
- */
-function ChargeRowActions({
-  charge,
-  busy,
-  onOpenFinance,
-  onTransition,
-  onEdit,
-  onDelete,
-}: {
-  charge: Charge;
-  busy: boolean;
-  onOpenFinance: () => void;
-  onTransition: (target: ChargeStatus) => void;
-  onEdit: () => void;
-  onDelete: () => void;
-}) {
-  const { t } = useTranslation();
-  const [open, setOpen] = useState(false);
-  const containerRef = useRef<HTMLDivElement>(null);
-  const buttonRef = useRef<HTMLButtonElement>(null);
-
-  useEffect(() => {
-    if (!open) return undefined;
-    const onClick = (e: MouseEvent) => {
-      if (!containerRef.current?.contains(e.target as Node)) setOpen(false);
-    };
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        setOpen(false);
-        buttonRef.current?.focus();
-      }
-    };
-    document.addEventListener('mousedown', onClick);
-    document.addEventListener('keydown', onKey);
-    return () => {
-      document.removeEventListener('mousedown', onClick);
-      document.removeEventListener('keydown', onKey);
-    };
-  }, [open]);
-
-  const locked = isChargeLocked(charge.status);
-  const transitions = allowedChargeTransitions(charge.status);
-
-  // Locked (paid / waived) charges are read-only: surface only the Finance
-  // link so the operator can inspect the settled record.
-  if (locked) {
-    return (
-      <button
-        type="button"
-        onClick={onOpenFinance}
-        data-testid={`charge-view-invoice-${charge.id}`}
-        className="inline-flex items-center gap-1 text-2xs font-medium text-oe-blue hover:underline"
-        title={t('accommodation.charges.view_invoice_hint', {
-          defaultValue: 'Open the Finance invoices register.',
-        })}
-      >
-        <FileText size={11} aria-hidden="true" />
-        {t('accommodation.charges.view_invoice', {
-          defaultValue: 'View in Finance',
-        })}
-      </button>
-    );
-  }
-
-  return (
-    <div
-      ref={containerRef}
-      className="relative inline-flex items-center gap-1.5"
-    >
-      {charge.status === 'pending' ? (
-        <button
-          type="button"
-          onClick={onOpenFinance}
-          data-testid={`charge-invoice-${charge.id}`}
-          className="inline-flex items-center gap-1 rounded-md border border-oe-blue/30 bg-oe-blue/5 px-2 py-1 text-2xs font-medium text-oe-blue hover:bg-oe-blue/10"
-          title={t('accommodation.charges.invoice_hint', {
-            defaultValue: 'Raise this charge as an invoice in Finance.',
-          })}
-        >
-          <Wallet size={11} aria-hidden="true" />
-          {t('accommodation.charges.invoice_in_finance', {
-            defaultValue: 'Invoice in Finance',
-          })}
-        </button>
-      ) : (
-        <button
-          type="button"
-          onClick={onOpenFinance}
-          data-testid={`charge-view-invoice-${charge.id}`}
-          className="inline-flex items-center gap-1 text-2xs font-medium text-oe-blue hover:underline"
-          title={t('accommodation.charges.view_invoice_hint', {
-            defaultValue: 'Open the Finance invoices register.',
-          })}
-        >
-          <FileText size={11} aria-hidden="true" />
-          {t('accommodation.charges.view_invoice', {
-            defaultValue: 'View in Finance',
-          })}
-        </button>
-      )}
-      <button
-        ref={buttonRef}
-        type="button"
-        aria-haspopup="menu"
-        aria-expanded={open}
-        aria-label={t('accommodation.charges.row_menu_aria', {
-          defaultValue: 'Charge actions',
-        })}
-        onClick={() => !busy && setOpen((v) => !v)}
-        disabled={busy}
-        data-testid={`charge-actions-${charge.id}`}
-        className={clsx(
-          'inline-flex h-7 w-7 items-center justify-center rounded-md border border-transparent transition focus:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue',
-          busy
-            ? 'cursor-not-allowed text-content-tertiary opacity-40'
-            : 'text-content-secondary hover:bg-surface-secondary hover:text-content-primary',
-        )}
-      >
-        <MoreHorizontal size={16} aria-hidden="true" />
-      </button>
-      {open && (
-        <div
-          role="menu"
-          className="absolute right-0 top-full z-20 mt-1 min-w-[11rem] rounded-lg border border-border bg-surface-elevated shadow-lg"
-          data-testid={`charge-actions-menu-${charge.id}`}
-        >
-          {transitions.map((target) => (
-            <button
-              key={target}
-              role="menuitem"
-              type="button"
-              onClick={() => {
-                setOpen(false);
-                onTransition(target);
-              }}
-              data-testid={`charge-action-${target}-${charge.id}`}
-              className="block w-full px-3 py-2 text-left text-xs hover:bg-surface-secondary focus:bg-surface-secondary focus:outline-none"
-            >
-              {t(`accommodation.charges.mark.${target}`, {
-                defaultValue:
-                  target === 'invoiced'
-                    ? 'Mark invoiced'
-                    : target === 'paid'
-                      ? 'Mark paid'
-                      : target === 'waived'
-                        ? 'Waive charge'
-                        : target,
-              })}
-            </button>
-          ))}
-          <div className="my-1 border-t border-border-light" />
-          <button
-            role="menuitem"
-            type="button"
-            onClick={() => {
-              setOpen(false);
-              onEdit();
-            }}
-            data-testid={`charge-edit-${charge.id}`}
-            className="flex w-full items-center gap-2 px-3 py-2 text-left text-xs hover:bg-surface-secondary focus:bg-surface-secondary focus:outline-none"
-          >
-            <Pencil size={12} aria-hidden="true" />
-            {t('accommodation.charges.edit', { defaultValue: 'Edit charge' })}
-          </button>
-          <button
-            role="menuitem"
-            type="button"
-            onClick={() => {
-              setOpen(false);
-              onDelete();
-            }}
-            data-testid={`charge-delete-${charge.id}`}
-            className="flex w-full items-center gap-2 px-3 py-2 text-left text-xs text-semantic-error hover:bg-surface-secondary focus:bg-surface-secondary focus:outline-none"
-          >
-            <Trash2 size={12} aria-hidden="true" />
-            {t('accommodation.charges.delete', { defaultValue: 'Delete charge' })}
-          </button>
-        </div>
-      )}
-    </div>
   );
 }
 
@@ -2170,7 +1783,7 @@ function AddChargeModal({
           label={t('accommodation.charges.amount', { defaultValue: 'Amount' })}
           required
           hint={t('accommodation.charges.amount_hint', {
-            defaultValue: 'Decimal - e.g. 199.99. Stays exact through to billing.',
+            defaultValue: 'Decimal — e.g. 199.99. Stays exact through to billing.',
           })}
           error={
             !amountValid
@@ -2248,425 +1861,6 @@ function AddChargeModal({
         </WideModalField>
       </WideModalSection>
     </WideModal>
-  );
-}
-
-/**
- * EditChargeModal - correct an existing charge in place.
- *
- * Mirrors AddChargeModal's fields but pre-fills from the charge and PATCHes
- * via /charges/{id}. Status is not editable here (the row menu drives the
- * lifecycle); editing is blocked entirely once a charge is locked, which
- * the caller already enforces by only opening this on mutable charges.
- * Money stays a string end-to-end - never parseFloat.
- */
-function EditChargeModal({
-  charge,
-  onClose,
-  onSaved,
-}: {
-  charge: Charge;
-  onClose: () => void;
-  onSaved: () => void;
-}) {
-  const { t } = useTranslation();
-  const addToast = useToastStore((s) => s.addToast);
-
-  const [kind, setKind] = useState<ChargeKind>(charge.kind);
-  const [description, setDescription] = useState(charge.description ?? '');
-  /** Decimal as string - never parseFloat. */
-  const [amount, setAmount] = useState(charge.amount);
-  const [currency, setCurrency] = useState(charge.currency ?? '');
-  const [periodStart, setPeriodStart] = useState(charge.period_start ?? '');
-  const [periodEnd, setPeriodEnd] = useState(charge.period_end ?? '');
-
-  const mutation = useMutation({
-    mutationFn: () =>
-      updateCharge(charge.id, {
-        kind,
-        description: description.trim() || null,
-        amount: amount.trim(),
-        // Blank currency re-inherits server-side from room / project.
-        currency: currency.trim(),
-        period_start: periodStart || null,
-        period_end: periodEnd || null,
-      }),
-    onSuccess: () => onSaved(),
-    onError: (err) =>
-      addToast({
-        type: 'error',
-        title: t('accommodation.charges.update_failed', {
-          defaultValue: 'Could not update charge',
-        }),
-        message: getErrorMessage(err),
-      }),
-  });
-
-  const inputCls =
-    'h-10 w-full rounded-lg border border-border bg-surface-primary px-3 text-sm focus:outline-none focus:ring-2 focus:ring-oe-blue/30 focus:border-oe-blue';
-
-  // Same money discipline as AddChargeModal - validate via regex, no float.
-  const amountValid = /^\d+(?:\.\d+)?$/.test(amount.trim());
-
-  return (
-    <WideModal
-      open
-      onClose={onClose}
-      title={t('accommodation.charges.edit_modal_title', {
-        defaultValue: 'Edit charge',
-      })}
-      size="md"
-      busy={mutation.isPending}
-      footer={
-        <>
-          <Button variant="ghost" size="sm" onClick={onClose}>
-            {t('common.cancel')}
-          </Button>
-          <Button
-            variant="primary"
-            size="sm"
-            onClick={() => mutation.mutate()}
-            loading={mutation.isPending}
-            disabled={!amountValid}
-            data-testid="charge-edit-submit"
-          >
-            {t('common.save', { defaultValue: 'Save changes' })}
-          </Button>
-        </>
-      }
-    >
-      <WideModalSection columns={2}>
-        <WideModalField
-          label={t('accommodation.charges.kind', { defaultValue: 'Kind' })}
-          required
-        >
-          <select
-            value={kind}
-            onChange={(e) => setKind(e.target.value as ChargeKind)}
-            className={inputCls}
-            data-testid="charge-edit-kind"
-          >
-            {(['base_rent', 'extra', 'deposit', 'refund'] as const).map((k) => (
-              <option key={k} value={k}>
-                {t(`accommodation.charge.kind.${k}`, { defaultValue: k })}
-              </option>
-            ))}
-          </select>
-        </WideModalField>
-        <WideModalField
-          label={t('accommodation.charges.amount', { defaultValue: 'Amount' })}
-          required
-          hint={t('accommodation.charges.amount_hint', {
-            defaultValue: 'Decimal - e.g. 199.99. Stays exact through to billing.',
-          })}
-          error={
-            !amountValid
-              ? t('accommodation.charges.amount_invalid', {
-                  defaultValue: 'Enter a non-negative decimal.',
-                })
-              : undefined
-          }
-        >
-          <input
-            type="text"
-            inputMode="decimal"
-            value={amount}
-            onChange={(e) => setAmount(e.target.value)}
-            className={inputCls}
-            data-testid="charge-edit-amount"
-          />
-        </WideModalField>
-        <WideModalField
-          label={t('accommodation.charges.currency', {
-            defaultValue: 'Currency (ISO 4217)',
-          })}
-          hint={t('accommodation.charges.currency_hint', {
-            defaultValue: 'Empty → inherit from room / project.',
-          })}
-        >
-          <input
-            type="text"
-            maxLength={3}
-            value={currency}
-            onChange={(e) =>
-              setCurrency(e.target.value.toUpperCase().replace(/[^A-Z]/g, ''))
-            }
-            className={`${inputCls} font-mono uppercase`}
-            data-testid="charge-edit-currency"
-          />
-        </WideModalField>
-        <WideModalField
-          label={t('accommodation.charges.period_start', {
-            defaultValue: 'Period start',
-          })}
-        >
-          <input
-            type="date"
-            value={periodStart}
-            onChange={(e) => setPeriodStart(e.target.value)}
-            className={inputCls}
-          />
-        </WideModalField>
-        <WideModalField
-          label={t('accommodation.charges.period_end', {
-            defaultValue: 'Period end',
-          })}
-        >
-          <input
-            type="date"
-            value={periodEnd}
-            onChange={(e) => setPeriodEnd(e.target.value)}
-            className={inputCls}
-          />
-        </WideModalField>
-        <WideModalField
-          label={t('accommodation.charges.description', {
-            defaultValue: 'Description',
-          })}
-          span={2}
-        >
-          <input
-            type="text"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            className={inputCls}
-            data-testid="charge-edit-description"
-          />
-        </WideModalField>
-      </WideModalSection>
-    </WideModal>
-  );
-}
-
-/* ── Cross-module pickers (replace raw UUID inputs) ──────────────────── */
-
-const PICKER_INPUT_CLS =
-  'h-10 w-full rounded-lg border border-border bg-surface-primary px-3 text-sm focus:outline-none focus:ring-2 focus:ring-oe-blue/30 focus:border-oe-blue';
-
-/**
- * BIM model picker — replaces the raw "Linked BIM model id" text input.
- *
- * Lists the project's BIM models so the operator selects by name instead
- * of pasting a UUID. If the currently-saved id is no longer in the
- * project's model list (deleted / cross-project legacy value), it is
- * preserved as a "kept" option so saving the form does not silently drop
- * it. Falls back to a plain text input when the model list cannot be
- * loaded so the field never becomes unusable.
- */
-function BimModelPicker({
-  projectId,
-  value,
-  onChange,
-}: {
-  projectId: string;
-  value: string;
-  onChange: (next: string) => void;
-}) {
-  const { t } = useTranslation();
-  const modelsQuery = useQuery({
-    queryKey: ['accommodation', 'bim-models', projectId],
-    queryFn: () => fetchBIMModels(projectId),
-    enabled: !!projectId,
-    staleTime: 30_000,
-  });
-
-  if (modelsQuery.isError) {
-    // Degrade gracefully — keep the value editable as text.
-    return (
-      <input
-        type="text"
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        className={`${PICKER_INPUT_CLS} font-mono`}
-        data-testid="accommodation-bim-model-input"
-        placeholder={t('accommodation.field.bim_model_id', {
-          defaultValue: 'Linked BIM model id',
-        })}
-      />
-    );
-  }
-
-  const models = modelsQuery.data?.items ?? [];
-  const known = value && models.some((m) => m.id === value);
-
-  return (
-    <select
-      value={value}
-      onChange={(e) => onChange(e.target.value)}
-      className={PICKER_INPUT_CLS}
-      data-testid="accommodation-bim-model-select"
-      disabled={modelsQuery.isLoading}
-    >
-      <option value="">
-        {modelsQuery.isLoading
-          ? t('common.loading', { defaultValue: 'Loading…' })
-          : t('accommodation.bim_picker.none', {
-              defaultValue: 'No linked model',
-            })}
-      </option>
-      {/* Preserve a previously-saved id that is no longer in the list so
-          the user does not lose it just by opening the form. */}
-      {value && !known && (
-        <option value={value}>
-          {t('accommodation.bim_picker.kept', {
-            defaultValue: 'Current link ({{id}})',
-            id: value.slice(0, 8),
-          })}
-        </option>
-      )}
-      {models.map((m) => (
-        <option key={m.id} value={m.id}>
-          {m.name || m.filename || m.id.slice(0, 8)}
-        </option>
-      ))}
-    </select>
-  );
-}
-
-/**
- * PropDev block picker — replaces the raw "PropDev block UUID" input.
- *
- * A block lives under a phase, which lives under a development, so the
- * picker cascades Development → Phase → Block. On mount it seeds the
- * cascade from the currently-saved block id where possible (best effort:
- * we can only resolve the parents by walking the lists). Selecting a
- * block reports its id up; clearing the development clears the block.
- *
- * Falls back to a plain text input if developments cannot be loaded.
- */
-function PropDevBlockPicker({
-  value,
-  onChange,
-}: {
-  value: string;
-  onChange: (next: string) => void;
-}) {
-  const { t } = useTranslation();
-  const [devId, setDevId] = useState('');
-  const [phaseId, setPhaseId] = useState('');
-
-  const developmentsQuery = useQuery({
-    queryKey: ['accommodation', 'propdev-developments'],
-    queryFn: () => listDevelopments({ limit: 100 }),
-    staleTime: 30_000,
-  });
-  const phasesQuery = useQuery({
-    queryKey: ['accommodation', 'propdev-phases', devId],
-    queryFn: () => listPhases(devId),
-    enabled: !!devId,
-  });
-  const blocksQuery = useQuery({
-    queryKey: ['accommodation', 'propdev-blocks', phaseId],
-    queryFn: () => listBlocks(phaseId),
-    enabled: !!phaseId,
-  });
-
-  if (developmentsQuery.isError) {
-    return (
-      <input
-        type="text"
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        className={`${PICKER_INPUT_CLS} font-mono`}
-        data-testid="accommodation-block-input"
-        placeholder={t('accommodation.bootstrap.block_id', {
-          defaultValue: 'PropDev block UUID',
-        })}
-      />
-    );
-  }
-
-  const developments = developmentsQuery.data ?? [];
-  const phases = phasesQuery.data ?? [];
-  const blocks = blocksQuery.data ?? [];
-
-  return (
-    <div className="space-y-2" data-testid="accommodation-block-picker">
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
-        <select
-          value={devId}
-          onChange={(e) => {
-            setDevId(e.target.value);
-            setPhaseId('');
-            onChange('');
-          }}
-          className={PICKER_INPUT_CLS}
-          data-testid="accommodation-block-dev-select"
-          disabled={developmentsQuery.isLoading}
-          aria-label={t('propdev.developments', {
-            defaultValue: 'Developments',
-          })}
-        >
-          <option value="">
-            {t('accommodation.block_picker.pick_development', {
-              defaultValue: 'Development…',
-            })}
-          </option>
-          {developments.map((d) => (
-            <option key={d.id} value={d.id}>
-              {d.code} - {d.name}
-            </option>
-          ))}
-        </select>
-        <select
-          value={phaseId}
-          onChange={(e) => {
-            setPhaseId(e.target.value);
-            onChange('');
-          }}
-          className={PICKER_INPUT_CLS}
-          data-testid="accommodation-block-phase-select"
-          disabled={!devId || phasesQuery.isLoading}
-          aria-label={t('propdev.phases', { defaultValue: 'Phases' })}
-        >
-          <option value="">
-            {t('accommodation.block_picker.pick_phase', {
-              defaultValue: 'Phase…',
-            })}
-          </option>
-          {phases.map((p) => (
-            <option key={p.id} value={p.id}>
-              {p.code} - {p.name}
-            </option>
-          ))}
-        </select>
-        <select
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
-          className={PICKER_INPUT_CLS}
-          data-testid="accommodation-block-block-select"
-          disabled={!phaseId || blocksQuery.isLoading}
-          aria-label={t('propdev.blocks', { defaultValue: 'Blocks' })}
-        >
-          <option value="">
-            {t('accommodation.block_picker.pick_block', {
-              defaultValue: 'Block…',
-            })}
-          </option>
-          {value && !blocks.some((b) => b.id === value) && (
-            <option value={value}>
-              {t('accommodation.block_picker.kept', {
-                defaultValue: 'Current block ({{id}})',
-                id: value.slice(0, 8),
-              })}
-            </option>
-          )}
-          {blocks.map((b) => (
-            <option key={b.id} value={b.id}>
-              {b.code} - {b.name}
-            </option>
-          ))}
-        </select>
-      </div>
-      {value && (
-        <p className="text-2xs text-content-tertiary">
-          {t('accommodation.block_picker.selected', {
-            defaultValue: 'Selected block: {{id}}',
-            id: value,
-          })}
-        </p>
-      )}
-    </div>
   );
 }
 
@@ -2788,7 +1982,7 @@ function SettingsTab({
             <p className="mt-0.5 text-xs text-content-tertiary">
               {t('accommodation.settings.general_hint', {
                 defaultValue:
-                  'Core metadata - name, address and links to the BIM model / Geo Hub coordinates that power the right-rail shortcuts.',
+                  'Core metadata — name, address and links to the BIM model / Geo Hub coordinates that power the right-rail shortcuts.',
               })}
             </p>
           </div>
@@ -2837,20 +2031,17 @@ function SettingsTab({
                 placeholder="-180 to 180"
               />
             </label>
-            <div className="text-xs font-medium text-content-primary sm:col-span-2">
-              <label htmlFor="accommodation-bim-model" className="block">
-                {t('accommodation.field.bim_model', {
-                  defaultValue: 'Linked BIM model',
-                })}
-              </label>
-              <div className="mt-1" id="accommodation-bim-model">
-                <BimModelPicker
-                  projectId={data.project_id}
-                  value={bimModelId}
-                  onChange={setBimModelId}
-                />
-              </div>
-            </div>
+            <label className="text-xs font-medium text-content-primary sm:col-span-2">
+              {t('accommodation.field.bim_model_id', {
+                defaultValue: 'Linked BIM model id',
+              })}
+              <input
+                type="text"
+                value={bimModelId}
+                onChange={(e) => setBimModelId(e.target.value)}
+                className={`${inputCls} mt-1 font-mono`}
+              />
+            </label>
             <label className="text-xs font-medium text-content-primary sm:col-span-2">
               {t('accommodation.field.notes', { defaultValue: 'Notes' })}
               <textarea
@@ -2890,27 +2081,29 @@ function SettingsTab({
               })}
             </p>
           </div>
-          <div className="space-y-2">
-            <div className="text-xs font-medium text-content-primary">
-              {t('accommodation.bootstrap.block_label', {
-                defaultValue: 'PropDev block',
+          <div className="flex flex-wrap items-end gap-2">
+            <label className="text-xs font-medium text-content-primary flex-1 min-w-[20rem]">
+              {t('accommodation.bootstrap.block_id', {
+                defaultValue: 'PropDev block UUID',
               })}
-              <div className="mt-1">
-                <PropDevBlockPicker value={blockId} onChange={setBlockId} />
-              </div>
-            </div>
-            <div className="flex justify-end">
-              <Button
-                variant="secondary"
-                size="sm"
-                onClick={() => bootstrapMutation.mutate()}
-                loading={bootstrapMutation.isPending}
-                disabled={!blockId.trim()}
-                data-testid="accommodation-bootstrap-run"
-              >
-                {t('accommodation.bootstrap.run', { defaultValue: 'Bootstrap' })}
-              </Button>
-            </div>
+              <input
+                type="text"
+                value={blockId}
+                onChange={(e) => setBlockId(e.target.value)}
+                className={`${inputCls} mt-1 font-mono`}
+                data-testid="accommodation-bootstrap-block-id"
+              />
+            </label>
+            <Button
+              variant="secondary"
+              size="sm"
+              onClick={() => bootstrapMutation.mutate()}
+              loading={bootstrapMutation.isPending}
+              disabled={!blockId.trim()}
+              data-testid="accommodation-bootstrap-run"
+            >
+              {t('accommodation.bootstrap.run', { defaultValue: 'Bootstrap' })}
+            </Button>
           </div>
         </div>
       </Card>

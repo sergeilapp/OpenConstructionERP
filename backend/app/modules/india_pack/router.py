@@ -1,7 +1,7 @@
 """‌⁠‍India regional pack API routes.
 
 Endpoints:
-    GET /config  - Return the full India regional configuration
+    GET /config  — Return the full India regional configuration
 """
 
 import logging

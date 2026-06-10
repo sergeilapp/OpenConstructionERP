@@ -1,6 +1,6 @@
 # DDC-CWICR-OE: DataDrivenConstruction · OpenConstructionERP
 # Copyright (c) 2026 Artem Boiko / DataDrivenConstruction
-"""Approval Routes Pydantic schemas - request/response models."""
+"""Approval Routes Pydantic schemas — request/response models."""
 
 from __future__ import annotations
 
@@ -21,7 +21,6 @@ TargetKindLiteral = Literal[
     "variation",
     "invoice",
     "purchase_order",
-    "qms_hold_point",
 ]
 StepModeLiteral = Literal["all", "any", "majority"]
 InstanceStatusLiteral = Literal["pending", "approved", "rejected", "cancelled"]
@@ -40,10 +39,6 @@ class StepCreate(BaseModel):
     approver_role: str | None = Field(default=None, max_length=64)
     approver_user_id: UUID | None = None
     mode: StepModeLiteral = "all"
-    # Eligible-approver population for a role-based all / majority step.
-    # NULL means the author did not declare a quorum; see the advance logic
-    # in service._maybe_advance for the fallback.
-    required_approver_count: int | None = Field(default=None, ge=1, le=100)
     sla_hours: int | None = Field(default=None, ge=1, le=720)
 
     @model_validator(mode="after")
@@ -66,7 +61,6 @@ class StepResponse(BaseModel):
     approver_role: str | None
     approver_user_id: UUID | None
     mode: str
-    required_approver_count: int | None
     sla_hours: int | None
 
 

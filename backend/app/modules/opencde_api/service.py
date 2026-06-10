@@ -1,4 +1,4 @@
-"""‌⁠‍OpenCDE service - maps internal data to BuildingSMART BCF 3.0 format.
+"""‌⁠‍OpenCDE service — maps internal data to BuildingSMART BCF 3.0 format.
 
 This service bridges our internal project/collaboration models to the
 BCF API 3.0 specification. It reads from our existing tables and
@@ -143,7 +143,6 @@ class OpenCDEService:
         project_id: uuid.UUID,
         topic_guid: uuid.UUID,
         data: BCFTopicUpdate,
-        modifier_id: uuid.UUID,
     ) -> BCFTopic:
         """Update a BCF topic."""
         comment = await self.session.get(Comment, topic_guid)
@@ -175,11 +174,6 @@ class OpenCDEService:
             meta["bcf_labels"] = data.labels
         if data.description is not None:
             meta["bcf_description"] = data.description
-        # Record who actually performed this update so modified_author reflects
-        # the modifier, not the original creation author. The Comment model has
-        # no dedicated modifier column, so we stash it in BCF metadata (same
-        # convention as the other bcf_* fields above).
-        meta["bcf_modified_author"] = str(modifier_id)
         comment.metadata_ = meta
 
         await self.session.flush()
@@ -337,9 +331,7 @@ class OpenCDEService:
             creation_date=comment.created_at,
             creation_author=str(comment.author_id),
             modified_date=comment.updated_at,
-            # The modifier is recorded in metadata on update; fall back to the
-            # creation author for topics that have never been modified.
-            modified_author=meta.get("bcf_modified_author") or str(comment.author_id),
+            modified_author=str(comment.author_id),
             assigned_to=meta.get("bcf_assigned_to", ""),
             labels=meta.get("bcf_labels", []),
         )

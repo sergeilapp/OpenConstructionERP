@@ -52,7 +52,6 @@ def _fake_position(total: str, *, cad_ids: list[str] | None = None) -> SimpleNam
     """
     return SimpleNamespace(
         id=uuid.uuid4(),
-        boq_id=uuid.uuid4(),  # owning BOQ - surfaced for the editor deep-link
         ordinal="01.01",
         description="Concrete wall, 240mm",
         total=total,  # canonical: STRING money on the ORM
@@ -125,12 +124,6 @@ def test_compute_impact_is_decimal_accurate_on_thirds():
     assert payload["total_estimate"] == _money_round(expected_total)
     assert payload["confidence"] == "high"
     assert payload["currency"] == "EUR"
-    # CONN-27: every affected position carries its owning BOQ id so the UI
-    # can deep-link to ``/boq/{boq_id}?highlight={position_id}``.
-    assert len(payload["affected_positions"]) == 3
-    for ap, src in zip(payload["affected_positions"], affected, strict=True):
-        assert ap["boq_id"] == src.boq_id
-        assert ap["position_id"] == src.id
 
 
 def test_compute_impact_no_boq_overlap_yields_labour_only_medium():
@@ -245,7 +238,7 @@ def test_rollup_returns_exact_decimal_no_accumulated_rounding(monkeypatch):
 
     import asyncio
 
-    result = asyncio.run(svc.rollup_for_project(project.id, status_filter="open"))
+    result = asyncio.get_event_loop().run_until_complete(svc.rollup_for_project(project.id, status_filter="open"))
     assert result is not None
     # Exact sum: 3 × 0.005 = 0.015 → ROUND_HALF_UP → 0.02.
     # If we summed the rounded floats instead we'd get 0.01 + 0.01 + 0.01
@@ -276,7 +269,7 @@ def test_rollup_empty_project_uses_project_currency_not_eur_hardcode():
     svc._load_project = types.MethodType(_fake_load_project, svc)  # type: ignore[method-assign]
     svc._open_clashes_for_project = types.MethodType(_fake_open, svc)  # type: ignore[method-assign]
 
-    result = asyncio.run(svc.rollup_for_project(project.id, status_filter="open"))
+    result = asyncio.get_event_loop().run_until_complete(svc.rollup_for_project(project.id, status_filter="open"))
     assert result is not None
     assert result["currency"] == ""
     assert result["total_open_impact"] == 0.0

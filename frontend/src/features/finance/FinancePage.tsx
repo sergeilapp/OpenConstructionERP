@@ -1,6 +1,6 @@
 import { useState, useMemo, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useParams, useNavigate, useSearchParams, Link } from 'react-router-dom';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { normalizeListResponse } from '@/shared/lib/apiHelpers';
 import {
@@ -26,7 +26,6 @@ import {
   Receipt,
   PiggyBank,
   Pencil,
-  Plug,
 } from 'lucide-react';
 import clsx from 'clsx';
 import {
@@ -35,15 +34,12 @@ import {
   Badge,
   EmptyState,
   Breadcrumb,
-  DismissibleInfo,
-  IntroRichText,
   RecoveryCard,
   SkeletonTable,
   ConfirmDialog,
   TabBar,
   tabIds,
 } from '@/shared/ui';
-import { PageHeader } from '@/shared/ui/PageHeader';
 import { RequiresProject } from '@/shared/auth/RequiresProject';
 import {
   WideModal,
@@ -59,7 +55,6 @@ import { ContactSearchInput } from '@/shared/ui/ContactSearchInput';
 import { useToastStore } from '@/stores/useToastStore';
 import { useProjectContextStore } from '@/stores/useProjectContextStore';
 import { useAuthStore } from '@/stores/useAuthStore';
-import { ConnectorsTab } from './ConnectorsTab';
 
 /* ── Types ─────────────────────────────────────────────────────────────── */
 
@@ -92,10 +87,6 @@ interface InvoiceLineItem {
   amount: string;
   wbs_id: string | null;
   cost_category: string | null;
-  // Gap B link to a costmodel.CostLine (already serialized on
-  // InvoiceLineItemResponse). When present the line can deep-link to the
-  // 5D cost spine row it posts actuals onto.
-  cost_line_id: string | null;
 }
 
 interface Invoice {
@@ -110,10 +101,6 @@ interface Invoice {
   currency: string;
   status: string;
   description: string;
-  // Gap E: the certified progress claim this receivable was raised from
-  // (serialized on InvoiceResponse). When set the invoice deep-links back
-  // to that claim. NULL on every non-claim invoice.
-  source_claim_id?: string | null;
   line_items?: InvoiceLineItem[];
   // Raw wire fields from InvoiceResponse — the API uses these names
   // (invoice_date / currency_code / amount_total / amount_subtotal /
@@ -206,7 +193,7 @@ interface EVMData {
 
 /* ── Constants ────────────────────────────────────────────────────────── */
 
-type FinanceTab = 'budgets' | 'invoices' | 'payments' | 'evm' | 'connectors';
+type FinanceTab = 'budgets' | 'invoices' | 'payments' | 'evm';
 type InvoiceSubTab = 'payable' | 'receivable';
 
 /** Common currency shortlist for the create/edit selects. NOT a default —
@@ -427,10 +414,7 @@ function FinanceSummaryCards({ projectId }: { projectId: string }) {
     <div className="space-y-4">
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
         {cards.map((card) => (
-          <div
-            key={card.label}
-            className="relative overflow-hidden rounded-xl border border-border-light bg-surface-elevated/90 shadow-xs transition-shadow duration-normal ease-oe hover:shadow-sm"
-          >
+          <Card key={card.label} padding="none" className="relative overflow-hidden">
             <div className={`absolute top-0 left-0 right-0 h-1 ${card.accent}`} />
             <div className="p-4 pt-3">
               <div className="flex items-center justify-between mb-2">
@@ -445,7 +429,7 @@ function FinanceSummaryCards({ projectId }: { projectId: string }) {
                 <MoneyDisplay amount={card.value} currency={currency} />
               </div>
             </div>
-          </div>
+          </Card>
         ))}
       </div>
 
@@ -491,8 +475,8 @@ function FinanceSummaryCards({ projectId }: { projectId: string }) {
                     )}
                   >
                     {warningLevel === 'critical'
-                      ? t('finance.budget_critical', { defaultValue: 'Over 95% - critical' })
-                      : t('finance.budget_caution', { defaultValue: 'Over 80% - watch' })}
+                      ? t('finance.budget_critical', { defaultValue: 'Over 95% — critical' })
+                      : t('finance.budget_caution', { defaultValue: 'Over 80% — watch' })}
                   </span>
                 )}
               </span>
@@ -542,35 +526,115 @@ function FinanceModuleLinks({ projectId: _projectId }: { projectId: string }) {
   );
 }
 
+/* ── Workflow Guide ───────────────────────────────────────────────────── */
+
+function FinanceWorkflowGuide() {
+  const { t } = useTranslation();
+  const [open, setOpen] = useState(() => {
+    try { return localStorage.getItem('oe_finance_guide_closed') !== '1'; } catch { return true; }
+  });
+
+  const dismiss = () => {
+    setOpen(false);
+    try { localStorage.setItem('oe_finance_guide_closed', '1'); } catch { /* */ }
+  };
+
+  if (!open) {
+    return (
+      <button
+        onClick={() => setOpen(true)}
+        className="mb-2 inline-flex items-center gap-1.5 text-xs text-content-tertiary hover:text-oe-blue transition-colors"
+      >
+        <Lightbulb size={12} />
+        {t('finance.show_guide', { defaultValue: 'Show: How it works' })}
+      </button>
+    );
+  }
+
+  const steps = [
+    {
+      num: '1',
+      icon: <Wallet size={16} />,
+      title: t('finance.guide_step1_title', { defaultValue: 'Create budget lines' }),
+      desc: t('finance.guide_step1_desc', {
+        defaultValue: 'Lock your BOQ estimate → budget lines are created automatically from sections. Or add them manually per WBS category.',
+      }),
+    },
+    {
+      num: '2',
+      icon: <FileText size={16} />,
+      title: t('finance.guide_step2_title', { defaultValue: 'Track invoices' }),
+      desc: t('finance.guide_step2_desc', {
+        defaultValue: 'Create payable invoices (from subcontractors) or receivable invoices (to clients). Attach line items and link to WBS.',
+      }),
+    },
+    {
+      num: '3',
+      icon: <CreditCard size={16} />,
+      title: t('finance.guide_step3_title', { defaultValue: 'Record payments' }),
+      desc: t('finance.guide_step3_desc', {
+        defaultValue: 'Mark invoices as paid — payment records are created automatically. Track amounts, methods, and references.',
+      }),
+    },
+    {
+      num: '4',
+      icon: <BarChart3 size={16} />,
+      title: t('finance.guide_step4_title', { defaultValue: 'Monitor with EVM' }),
+      desc: t('finance.guide_step4_desc', {
+        defaultValue: 'Create periodic snapshots to track Earned Value metrics: SPI, CPI, EAC, VAC. See if you\'re on time and within budget.',
+      }),
+    },
+  ];
+
+  return (
+    <div className="mb-4 rounded-xl border border-oe-blue/15 bg-gradient-to-r from-oe-blue/[0.03] to-violet-500/[0.03] p-4 animate-card-in">
+      <div className="flex items-center justify-between mb-3">
+        <div className="flex items-center gap-2">
+          <Lightbulb size={14} className="text-oe-blue" />
+          <span className="text-xs font-semibold text-content-primary">
+            {t('finance.how_it_works', { defaultValue: 'How it works' })}
+          </span>
+        </div>
+        <button
+          onClick={dismiss}
+          className="rounded p-0.5 text-content-quaternary hover:text-content-secondary transition-colors"
+          aria-label={t('common.dismiss', { defaultValue: 'Dismiss' })}
+        >
+          <X size={14} />
+        </button>
+      </div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+        {steps.map((s) => (
+          <div key={s.num} className="flex items-start gap-2.5">
+            <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-oe-blue text-white text-2xs font-bold">
+              {s.num}
+            </div>
+            <div className="min-w-0">
+              <div className="flex items-center gap-1.5 text-xs font-semibold text-content-primary">
+                <span className="text-oe-blue">{s.icon}</span>
+                {s.title}
+              </div>
+              <p className="mt-0.5 text-2xs leading-relaxed text-content-tertiary">
+                {s.desc}
+              </p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 /* ── Main Page ────────────────────────────────────────────────────────── */
 
 export function FinancePage() {
   const { t } = useTranslation();
-  const navigate = useNavigate();
   const { projectId: routeProjectId } = useParams<{ projectId?: string }>();
   const activeProjectId = useProjectContextStore((s) => s.activeProjectId);
   const projectId = routeProjectId || activeProjectId || '';
   const projectName = useProjectContextStore((s) => s.activeProjectName);
-  const [searchParams, setSearchParams] = useSearchParams();
 
   const [activeTab, setActiveTab] = useState<FinanceTab>('budgets');
-
-  // Honour a ?tab= deep link once on mount so the Reporting Finance dashboard
-  // (and any other caller) can drill straight into a specific Finance section.
-  // The param is consumed and cleared with replace so a refresh / share keeps
-  // the user wherever they navigated to next (CONN-74 consumer).
-  const VALID_TABS: readonly FinanceTab[] = ['budgets', 'invoices', 'payments', 'evm', 'connectors'];
-  useEffect(() => {
-    const requested = searchParams.get('tab');
-    if (requested && VALID_TABS.includes(requested as FinanceTab)) {
-      setActiveTab(requested as FinanceTab);
-      const next = new URLSearchParams(searchParams);
-      next.delete('tab');
-      setSearchParams(next, { replace: true });
-    }
-    // Run once on mount; the param is cleared immediately after it is read.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   const tabs: { key: FinanceTab; label: string; icon: React.ReactNode }[] = [
     {
@@ -593,72 +657,59 @@ export function FinancePage() {
       label: t('finance.evm_dashboard', { defaultValue: 'EVM Dashboard' }),
       icon: <BarChart3 size={15} />,
     },
-    {
-      key: 'connectors',
-      label: t('finance.connectors.tab', { defaultValue: 'Connectors' }),
-      icon: <Plug size={15} />,
-    },
   ];
 
   return (
-    <div className="space-y-5 animate-fade-in">
+    <div className="w-full animate-fade-in">
       <Breadcrumb
         items={[
+          { label: t('nav.dashboard', 'Dashboard'), to: '/' },
           ...(projectName
             ? [{ label: projectName, to: `/projects/${projectId}` }]
             : []),
           { label: t('finance.title', { defaultValue: 'Finance' }) },
         ]}
+        className="mb-4"
       />
 
       {/* Header + Module Links */}
-      <PageHeader
-        srTitle={t('finance.title', { defaultValue: 'Finance' })}
-        subtitle={t('finance.subtitle', {
-          defaultValue:
-            'Budgets, invoices, payments, and earned value management',
-        })}
-        actions={projectId ? <FinanceModuleLinks projectId={projectId} /> : undefined}
-      />
+      <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+        <div>
+          <h1 className="text-2xl font-bold text-content-primary">
+            {t('finance.title', { defaultValue: 'Finance' })}
+          </h1>
+          <p className="mt-1 text-sm text-content-secondary">
+            {t('finance.subtitle', {
+              defaultValue:
+                'Budgets, invoices, payments, and earned value management',
+            })}
+          </p>
+        </div>
+        {projectId && <FinanceModuleLinks projectId={projectId} />}
+      </div>
 
-      {/* Canonical module intro — pain-named, copy from MODULE_INTRO_COPY.
-          Replaces the bespoke gradient "How it works" workflow guide. */}
-      <DismissibleInfo
-        storageKey="finance"
-        title={t('finance.intro_title', {
-          defaultValue: 'See where the money actually went',
-        })}
-        more={
-          t('finance.intro_more', { defaultValue: '' })
-            ? <IntroRichText text={t('finance.intro_more')} />
-            : undefined
-        }
-        links={[
-          { label: t('nav.boq', { defaultValue: 'BOQ' }), onClick: () => navigate('/boq') },
-          { label: t('nav.5d', { defaultValue: '5D Cost Model' }), onClick: () => navigate('/5d') },
-          {
-            label: t('nav.procurement', { defaultValue: 'Procurement' }),
-            onClick: () => navigate('/procurement'),
-          },
-        ]}
-      >
-        {t('finance.intro_body', {
-          defaultValue:
-            'Set budget lines against your WBS, then track invoices and payments as they land so committed, actual and forecast sit next to the original budget with the variance called out. The earned value dashboard turns that into cost and schedule performance, and budgets can pull straight from the BOQ estimate and 5D cost model.',
-        })}
-      </DismissibleInfo>
+      {/* How it works — collapsible workflow guide */}
+      <FinanceWorkflowGuide />
 
-      {/* No-project case is handled by the RequiresProject empty state below;
-          the single global project selector is the one source of truth, so
-          there is no duplicate amber banner here (audit: finance-top). */}
+      {/* No-project warning */}
+      {!projectId && (
+        <div className="mb-6 rounded-lg border border-amber-200 bg-amber-50 p-4 text-sm text-amber-800 dark:border-amber-800 dark:bg-amber-950/30 dark:text-amber-300">
+          {t('common.select_project_hint', { defaultValue: 'Select a project from the header to get started.' })}
+        </div>
+      )}
 
       {/* Summary Cards */}
-      {projectId && <FinanceSummaryCards projectId={projectId} />}
+      {projectId && (
+        <div className="mb-6">
+          <FinanceSummaryCards projectId={projectId} />
+        </div>
+      )}
 
       {/* Tab Bar */}
       <TabBar<FinanceTab>
         ariaLabel={t('finance.tabs_aria', { defaultValue: 'Finance sections' })}
         idPrefix="finance"
+        className="mb-6"
         tabs={tabs.map((tab) => ({ id: tab.key, label: tab.label, icon: tab.icon }))}
         activeId={activeTab}
         onChange={setActiveTab}
@@ -690,7 +741,6 @@ export function FinancePage() {
               onGoToBudgets={() => setActiveTab('budgets')}
             />
           )}
-          {projectId && activeTab === 'connectors' && <ConnectorsTab projectId={projectId} />}
         </div>
       </RequiresProject>
     </div>
@@ -1979,20 +2029,6 @@ function InvoicesTab({ projectId }: { projectId: string }) {
                       </td>
                       <td className="px-4 py-3 text-content-secondary">
                         <div>{inv.counterparty_name}</div>
-                        {/* Gap E: a receivable raised from a certified progress
-                            claim deep-links straight back to that claim, instead
-                            of leaving the link as a dead figure (CONN-75). */}
-                        {inv.source_claim_id && (
-                          <Link
-                            to={`/projects/${projectId}/contracts/claims/${inv.source_claim_id}`}
-                            className="inline-flex items-center gap-0.5 text-2xs text-oe-blue hover:underline mt-0.5"
-                            title={t('finance.view_source_claim', { defaultValue: 'View source progress claim' })}
-                            onClick={(e) => e.stopPropagation()}
-                          >
-                            <ExternalLink size={10} />
-                            <span>{t('finance.from_claim', { defaultValue: 'From claim' })}</span>
-                          </Link>
-                        )}
                         {inv.line_items && inv.line_items.length > 0 && inv.line_items.some((li) => li.cost_category || li.wbs_id) && (
                           <div className="flex items-center gap-1 text-2xs text-content-tertiary mt-0.5">
                             <span>
@@ -2014,25 +2050,6 @@ function InvoicesTab({ projectId }: { projectId: string }) {
                             </Link>
                           </div>
                         )}
-                        {/* Gap B: when a line item is linked to a 5D cost-spine
-                            line, link to that cost model so the posted actual is
-                            traceable to its budget row. The /5d consumer of
-                            ?lineId lands separately (CONN-38). */}
-                        {(() => {
-                          const costLineId = inv.line_items?.find((li) => li.cost_line_id)?.cost_line_id;
-                          if (!costLineId) return null;
-                          return (
-                            <Link
-                              to={`/5d?lineId=${costLineId}`}
-                              className="inline-flex items-center gap-0.5 text-2xs text-oe-blue hover:underline mt-0.5"
-                              title={t('finance.view_cost_line', { defaultValue: 'View linked cost line in 5D' })}
-                              onClick={(e) => e.stopPropagation()}
-                            >
-                              <ExternalLink size={10} />
-                              <span>{t('finance.cost_line', { defaultValue: 'Cost line' })}</span>
-                            </Link>
-                          );
-                        })()}
                         {inv.description && (!inv.line_items || !inv.line_items.some((li) => li.cost_category || li.wbs_id)) && (
                           <div className="text-2xs text-content-quaternary mt-0.5 truncate max-w-[200px]">
                             {inv.description}
@@ -2731,7 +2748,7 @@ function EVMTab({
                 })
               : t('finance.no_evm_no_budget_desc', {
                   defaultValue:
-                    'EVM is computed from your project budget and paid invoices. Add budget lines first - then create a snapshot to track schedule and cost performance.',
+                    'EVM is computed from your project budget and paid invoices. Add budget lines first — then create a snapshot to track schedule and cost performance.',
                 })
           }
           action={

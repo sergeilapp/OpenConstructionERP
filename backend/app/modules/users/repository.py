@@ -1,7 +1,7 @@
 """‌⁠‍User data access layer.
 
 All database queries for users and API keys live here.
-No business logic - pure data access.
+No business logic — pure data access.
 """
 
 import uuid
@@ -11,13 +11,6 @@ from sqlalchemy import select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.modules.users.models import APIKey, User
-
-# E-mail of the bootstrap workspace owner created by the desktop first-run
-# flow (POST /auth/desktop-bootstrap). Excluded from "real user" checks so the
-# presence of the local owner never flips ``fresh_install`` to False: a desktop
-# install that has only auto-provisioned its own owner is still "fresh" from
-# the point of view of real, registered users.
-LOCAL_DESKTOP_OWNER_EMAIL = "owner@openestimate.local"
 
 
 class UserRepository:
@@ -92,7 +85,7 @@ class UserRepository:
         """Return True if at least one *real* active admin user exists.
 
         Used by the registration bootstrap: if no real admin is present in
-        the DB (fresh install - only seed/demo accounts), the next person
+        the DB (fresh install — only seed/demo accounts), the next person
         to register via the public API is promoted to admin. Once a real
         admin is on record, subsequent self-registered users default to
         the configured viewer role.
@@ -100,7 +93,7 @@ class UserRepository:
         The seeded demo account ``demo@openconstructionerp.com`` is intentionally
         excluded: a fresh ``pip install openconstructionerp`` ships with
         that admin already in the DB, and counting it would dead-lock the
-        bootstrap path - every self-registered user would be created
+        bootstrap path — every self-registered user would be created
         dormant in admin-approve mode with no real admin around to flip
         them active. Excluding it lets the first registrant claim admin
         like the bootstrap was always meant to.
@@ -112,42 +105,6 @@ class UserRepository:
             .limit(1)
         )
         return (await self.session.execute(stmt)).scalar_one_or_none() is not None
-
-    async def has_real_active_user(self) -> bool:
-        """Return True if a *real* active user exists (the inverse of fresh).
-
-        "Real" deliberately excludes two populations:
-
-        * the seeded demo accounts (``*@openconstructionerp.com``) shipped on a
-          fresh ``pip install`` / hosted demo, and
-        * the desktop bootstrap owner (``owner@openestimate.local``) that the
-          first-run flow auto-provisions.
-
-        So a brand-new install - whether empty or carrying only demo seeds and
-        an auto-created local owner - reports no real user, which is what the
-        ``first-run`` endpoint surfaces as ``fresh_install=True``. Once a human
-        registers (the bootstrap admin) this returns True and the desktop
-        auto-login guard refuses to silently mint a new owner.
-        """
-        stmt = (
-            select(User.id)
-            .where(User.is_active.is_(True))
-            .where(~User.email.ilike("%@openconstructionerp.com"))
-            .where(User.email != LOCAL_DESKTOP_OWNER_EMAIL)
-            .limit(1)
-        )
-        return (await self.session.execute(stmt)).scalar_one_or_none() is not None
-
-    async def get_local_desktop_owner(self) -> User | None:
-        """Return the desktop bootstrap owner row, or None if it doesn't exist.
-
-        Looks the row up by its fixed e-mail (``owner@openestimate.local``).
-        The caller is responsible for verifying the ``local_desktop`` metadata
-        flag before trusting it as a bootstrap owner - a row at this e-mail
-        without the flag is treated as a non-owner so a manually created
-        account at that address can never be auto-logged-in.
-        """
-        return await self.get_by_email(LOCAL_DESKTOP_OWNER_EMAIL)
 
 
 class APIKeyRepository:
@@ -161,19 +118,8 @@ class APIKeyRepository:
         return await self.session.get(APIKey, key_id)
 
     async def get_by_hash(self, key_hash: str) -> APIKey | None:
-        """Get API key by its hash (for authentication).
-
-        Rejects keys that are inactive or past their ``expires_at``. A NULL
-        ``expires_at`` means the key never expires.
-        """
-        from datetime import datetime
-
-        now = datetime.now(UTC)
-        stmt = select(APIKey).where(
-            APIKey.key_hash == key_hash,
-            APIKey.is_active.is_(True),
-            (APIKey.expires_at.is_(None)) | (APIKey.expires_at > now),
-        )
+        """Get API key by its hash (for authentication)."""
+        stmt = select(APIKey).where(APIKey.key_hash == key_hash, APIKey.is_active.is_(True))
         result = await self.session.execute(stmt)
         return result.scalar_one_or_none()
 
@@ -195,9 +141,8 @@ class APIKeyRepository:
         await self.session.execute(stmt)
 
     async def update_last_used(self, key_id: uuid.UUID) -> None:
-        """Update the last_used_at timestamp and persist it."""
+        """Update the last_used_at timestamp."""
         from datetime import datetime
 
         stmt = update(APIKey).where(APIKey.id == key_id).values(last_used_at=datetime.now(UTC))
         await self.session.execute(stmt)
-        await self.session.commit()

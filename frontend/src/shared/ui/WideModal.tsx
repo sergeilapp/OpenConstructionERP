@@ -276,8 +276,7 @@ export function WideModalSection({
 // callers do not re-implement the same JSX in every modal.
 
 export interface WideModalFieldProps {
-  /** Field label. Omit for label-less fields such as inline info/hint rows. */
-  label?: string;
+  label: string;
   /** Visible "*" + aria-required on the label. */
   required?: boolean;
   /** Lighter helper text below the input. */
@@ -332,19 +331,17 @@ export function WideModalField({
 
   return (
     <div className={clsx('flex flex-col', SPAN_CLASSES[span], className)}>
-      {label && (
-        <label
-          htmlFor={htmlFor}
-          className="text-xs font-medium text-content-primary mb-1.5 flex items-center gap-1"
-        >
-          {label}
-          {required && (
-            <span aria-hidden="true" className="text-semantic-error">
-              *
-            </span>
-          )}
-        </label>
-      )}
+      <label
+        htmlFor={htmlFor}
+        className="text-xs font-medium text-content-primary mb-1.5 flex items-center gap-1"
+      >
+        {label}
+        {required && (
+          <span aria-hidden="true" className="text-semantic-error">
+            *
+          </span>
+        )}
+      </label>
       {enhancedChildren}
       {error ? (
         <p className="mt-1 text-xs text-semantic-error">{error}</p>

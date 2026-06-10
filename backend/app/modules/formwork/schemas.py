@@ -1,4 +1,4 @@
-"""Formwork Pydantic schemas - request / response models.
+"""Formwork Pydantic schemas — request / response models.
 
 Money fields use ``Decimal`` on input and ``str`` on output to match the
 project's v3 §10 "Decimal as string" contract. Returning a float would
@@ -104,7 +104,7 @@ class FormworkAssignmentCreate(BaseModel):
     """Create a new formwork assignment.
 
     ``computed_unit_cost`` and ``computed_total`` are derived server-side
-    from ``unit_rate`` × waste × reuse_count - they are NOT accepted in
+    from ``unit_rate`` × waste × reuse_count — they are NOT accepted in
     the request body even if the client sends them (they would be a lie
     until they go through the service-layer recomputation).
     """
@@ -174,22 +174,6 @@ class FormworkScheduleLineCreate(BaseModel):
     pour_date: date | None = None
     level_label: str = Field(default="", max_length=120)
     area_m2: Decimal = Field(default=Decimal("0"), ge=0)
-    notes: str | None = None
-
-
-class FormworkScheduleLineUpdate(BaseModel):
-    """Partial update for a pour-cycle schedule line.
-
-    ``project_id`` and ``assignment_id`` are immutable (a line cannot be
-    moved to a different parent), so they are deliberately absent here.
-    """
-
-    model_config = ConfigDict(str_strip_whitespace=True)
-
-    pour_no: int | None = Field(default=None, ge=1, le=10_000)
-    pour_date: date | None = None
-    level_label: str | None = Field(default=None, max_length=120)
-    area_m2: Decimal | None = Field(default=None, ge=0)
     notes: str | None = None
 
 

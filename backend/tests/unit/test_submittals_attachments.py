@@ -27,10 +27,10 @@ import logging
 import uuid
 from typing import AsyncIterator
 
-import httpx
 import pytest
 import pytest_asyncio
 from fastapi import FastAPI
+from fastapi.testclient import TestClient
 
 from app.dependencies import (
     get_current_user_id,
@@ -156,14 +156,13 @@ class TestAttachmentUpload:
         await db_session.commit()
 
         app = _build_app(db_session, caller_id=owner)
-        transport = httpx.ASGITransport(app=app)
+        client = TestClient(app)
 
         pdf_body = b"%PDF-1.7\n%\xe2\xe3\xcf\xd3\n...rest of file..."
-        async with httpx.AsyncClient(transport=transport, base_url="http://test") as client:
-            resp = await client.post(
-                f"/v1/submittals/{sub.id}/attachments/upload/",
-                files={"file": ("drawing.pdf", pdf_body, "application/pdf")},
-            )
+        resp = client.post(
+            f"/v1/submittals/{sub.id}/attachments/upload/",
+            files={"file": ("drawing.pdf", pdf_body, "application/pdf")},
+        )
         assert resp.status_code == 201, resp.text
         payload = resp.json()
         assert payload["label"] == "drawing.pdf"
@@ -189,16 +188,15 @@ class TestAttachmentUpload:
         await db_session.commit()
 
         app = _build_app(db_session, caller_id=owner)
-        transport = httpx.ASGITransport(app=app)
+        client = TestClient(app)
 
         # ``.pdf`` extension + ``application/pdf`` Content-Type, but the
         # body is HTML — magic-byte gate rejects (xml not in allow-list).
         fake_pdf = b"<html><script>alert('xss')</script></html>"
-        async with httpx.AsyncClient(transport=transport, base_url="http://test") as client:
-            resp = await client.post(
-                f"/v1/submittals/{sub.id}/attachments/upload/",
-                files={"file": ("evil.pdf", fake_pdf, "application/pdf")},
-            )
+        resp = client.post(
+            f"/v1/submittals/{sub.id}/attachments/upload/",
+            files={"file": ("evil.pdf", fake_pdf, "application/pdf")},
+        )
         assert resp.status_code == 415, resp.text
         # And nothing landed on disk.
         d = tmp_path / "attachments"
@@ -224,13 +222,12 @@ class TestAttachmentUpload:
         )
         await db_session.commit()
         app = _build_app(db_session, caller_id=owner)
-        transport = httpx.ASGITransport(app=app)
+        client = TestClient(app)
         mz_body = b"MZ\x90\x00\x03\x00\x00\x00\x04\x00\x00\x00\xff\xff\x00\x00"
-        async with httpx.AsyncClient(transport=transport, base_url="http://test") as client:
-            resp = await client.post(
-                f"/v1/submittals/{sub.id}/attachments/upload/",
-                files={"file": ("invoice.pdf", mz_body, "application/pdf")},
-            )
+        resp = client.post(
+            f"/v1/submittals/{sub.id}/attachments/upload/",
+            files={"file": ("invoice.pdf", mz_body, "application/pdf")},
+        )
         assert resp.status_code == 415, resp.text
 
     @pytest.mark.asyncio
@@ -252,12 +249,11 @@ class TestAttachmentUpload:
         )
         await db_session.commit()
         app = _build_app(db_session, caller_id=owner)
-        transport = httpx.ASGITransport(app=app)
-        async with httpx.AsyncClient(transport=transport, base_url="http://test") as client:
-            resp = await client.post(
-                f"/v1/submittals/{sub.id}/attachments/upload/",
-                files={"file": ("empty.pdf", b"", "application/pdf")},
-            )
+        client = TestClient(app)
+        resp = client.post(
+            f"/v1/submittals/{sub.id}/attachments/upload/",
+            files={"file": ("empty.pdf", b"", "application/pdf")},
+        )
         assert resp.status_code == 400, resp.text
 
     @pytest.mark.asyncio
@@ -282,14 +278,13 @@ class TestAttachmentUpload:
         )
         await db_session.commit()
         app = _build_app(db_session, caller_id=owner)
-        transport = httpx.ASGITransport(app=app)
+        client = TestClient(app)
         # Real PDF magic so the size check (not the magic check) trips.
         big_pdf = b"%PDF-1.7\n" + b"A" * 200
-        async with httpx.AsyncClient(transport=transport, base_url="http://test") as client:
-            resp = await client.post(
-                f"/v1/submittals/{sub.id}/attachments/upload/",
-                files={"file": ("big.pdf", big_pdf, "application/pdf")},
-            )
+        resp = client.post(
+            f"/v1/submittals/{sub.id}/attachments/upload/",
+            files={"file": ("big.pdf", big_pdf, "application/pdf")},
+        )
         assert resp.status_code == 413, resp.text
 
     @pytest.mark.asyncio
@@ -314,13 +309,12 @@ class TestAttachmentUpload:
         sub.status = "closed"
         await db_session.commit()
         app = _build_app(db_session, caller_id=owner)
-        transport = httpx.ASGITransport(app=app)
+        client = TestClient(app)
         pdf_body = b"%PDF-1.7\n%\xe2\xe3\xcf\xd3\n"
-        async with httpx.AsyncClient(transport=transport, base_url="http://test") as client:
-            resp = await client.post(
-                f"/v1/submittals/{sub.id}/attachments/upload/",
-                files={"file": ("late.pdf", pdf_body, "application/pdf")},
-            )
+        resp = client.post(
+            f"/v1/submittals/{sub.id}/attachments/upload/",
+            files={"file": ("late.pdf", pdf_body, "application/pdf")},
+        )
         assert resp.status_code == 400, resp.text
         assert "closed" in resp.text.lower()
 
@@ -480,9 +474,8 @@ class TestProjectScopeIDOR:
 
         # Caller is the attacker, role=editor so admin-bypass doesn't kick.
         app = _build_app(db_session, caller_id=str(attacker_id), role="editor")
-        transport = httpx.ASGITransport(app=app)
-        async with httpx.AsyncClient(transport=transport, base_url="http://test") as client:
-            resp = await client.get(f"/v1/submittals/{victim_sub.id}")
+        client = TestClient(app)
+        resp = client.get(f"/v1/submittals/{victim_sub.id}")
         assert resp.status_code == 404, resp.text
         assert "Confidential" not in resp.text
 

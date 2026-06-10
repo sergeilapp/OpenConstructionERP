@@ -46,26 +46,15 @@ class _FakeScalarResult:
 class _FakeExecuteResult:
     """Mimics the subset of the SQLAlchemy Result API we rely on."""
 
-    def __init__(
-        self,
-        rows: list[Any] | None = None,
-        all_rows: list[Any] | None = None,
-        scalar: Any = None,
-    ) -> None:
+    def __init__(self, rows: list[Any] | None = None, all_rows: list[Any] | None = None) -> None:
         self._rows = rows or []
         self._all_rows = all_rows if all_rows is not None else rows or []
-        self._scalar = scalar
 
     def scalars(self) -> _FakeScalarResult:
         return _FakeScalarResult(self._rows)
 
     def all(self) -> list[Any]:
         return list(self._all_rows)
-
-    def scalar_one_or_none(self) -> Any:
-        # Single-scalar lookups (e.g. the project-currency read in
-        # get_labor_cost_by_phase). Defaults to None -> service falls back.
-        return self._scalar
 
 
 def _make_position(
@@ -90,9 +79,6 @@ def _make_position(
         unit_rate=str(unit_rate),
         total=str(total),
         classification=classification or {},
-        # Mirror the real Position model: the cost-rollup path reads
-        # ``pos.metadata_`` (currency / resources) when bucketing totals.
-        metadata_={},
         sort_order=sort_order,
     )
 
@@ -373,16 +359,8 @@ async def test_labor_cost_by_phase_groups_by_wbs_prefix() -> None:
         ),
     ]
 
-    # Execute order: project-currency scalar, then activities; a third call
-    # (position totals) only happens when activities link BOQ positions.
-    session = SimpleNamespace(
-        execute=AsyncMock(
-            side_effect=[
-                _FakeExecuteResult(scalar="EUR"),
-                _FakeExecuteResult(rows=activities),
-            ]
-        )
-    )
+    # First execute call returns activities; second (if any) returns position totals
+    session = SimpleNamespace(execute=AsyncMock(side_effect=[_FakeExecuteResult(rows=activities)]))
     service.session = session
 
     resp = await service.get_labor_cost_by_phase(PROJECT_ID)

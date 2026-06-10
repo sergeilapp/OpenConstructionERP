@@ -9,13 +9,13 @@ import {
   Search,
   FileText,
   Wallet,
+  Contact,
   Plus,
   X,
   Loader2,
   Trash2,
   Pencil,
   Send,
-  CheckCircle2,
 } from 'lucide-react';
 import {
   Button,
@@ -25,11 +25,9 @@ import {
   Breadcrumb,
   RecoveryCard,
   SkeletonTable,
-  DismissibleInfo,
-  IntroRichText,
+  InfoHint,
 } from '@/shared/ui';
 import { RequiresProject } from '@/shared/auth/RequiresProject';
-import { PageHeader } from '@/shared/ui/PageHeader';
 import { MoneyDisplay } from '@/shared/ui/MoneyDisplay';
 import { DateDisplay } from '@/shared/ui/DateDisplay';
 import { ContactSearchInput } from '@/shared/ui/ContactSearchInput';
@@ -39,8 +37,6 @@ import { useProjectContextStore } from '@/stores/useProjectContextStore';
 import { useAuthStore } from '@/stores/useAuthStore';
 import { getPOMatchStatus, type POLineMatchTag } from './api';
 import { SupplierScorecardModal } from './SupplierScorecardModal';
-import { VendorPrequalBadge } from './VendorPrequalBadge';
-import { RetainagePanel, RetainageBadge } from './RetainagePanel';
 import { POStatusPipeline } from './POStatusPipeline';
 import { DeliveryCountdownBadge } from './DeliveryCountdownBadge';
 
@@ -51,7 +47,6 @@ interface PurchaseOrder {
   project_id: string;
   po_number: string;
   vendor_name: string;
-  vendor_contact_id?: string | null;
   issue_date: string;
   delivery_date: string | null;
   // Money bug fix: the list endpoint (POResponse in backend/.../schemas.py)
@@ -64,13 +59,6 @@ interface PurchaseOrder {
   status: string;
   description: string;
   line_items_count: number;
-  // ── Retainage (Gap F) ──────────────────────────────────────────────────
-  // retention_percent / retain_on_receipt are persisted; retainage_amount /
-  // retainage_held are computed by the backend. All Decimal-as-string.
-  retention_percent?: string;
-  retain_on_receipt?: boolean;
-  retainage_amount?: string;
-  retainage_held?: string;
   created_at: string;
   updated_at: string;
 }
@@ -197,66 +185,60 @@ export function ProcurementPage() {
   ];
 
   return (
-    <div className="space-y-5 animate-fade-in">
+    <div className="w-full animate-fade-in">
       <Breadcrumb
         items={[
+          { label: t('nav.dashboard', 'Dashboard'), to: '/' },
           ...(projectName
             ? [{ label: projectName, to: `/projects/${projectId}` }]
             : []),
           { label: t('procurement.title', { defaultValue: 'Procurement' }) },
         ]}
+        className="mb-4"
       />
 
-      {/* Header — the module name + icon live in the global top bar; the
-          page renders only its subtitle. Project selection is global too. */}
-      <PageHeader
-        subtitle={t('procurement.subtitle', {
-          defaultValue: 'Purchase orders and goods receipts',
-        })}
-      />
+      {/* Header */}
+      <div className="mb-6">
+        <h1 className="text-2xl font-bold text-content-primary">
+          {t('procurement.title', { defaultValue: 'Procurement' })}
+        </h1>
+        <p className="mt-1 text-sm text-content-secondary">
+          {t('procurement.subtitle', {
+            defaultValue: 'Purchase orders and goods receipts',
+          })}
+        </p>
+      </div>
 
-      {/* Canonical info block — where procurement sits in the money flow,
-          with cross-module pills for the routes its results flow to. */}
-      <DismissibleInfo
-        storageKey="procurement"
-        title={t('procurement.intro_title', {
-          defaultValue: 'See committed spend before the invoice lands',
-        })}
-        more={
-          t('procurement.intro_more', { defaultValue: '' })
-            ? <IntroRichText text={t('procurement.intro_more')} />
-            : undefined
-        }
-        links={[
-          {
-            label: t('nav.finance', { defaultValue: 'Finance' }),
-            onClick: () => navigate('/finance'),
-          },
-          {
-            label: t('nav.supplier_catalogs', { defaultValue: 'Supplier Catalogs' }),
-            onClick: () => navigate('/supplier-catalogs'),
-          },
-          {
-            label: t('nav.contacts', { defaultValue: 'Contacts' }),
-            onClick: () => navigate('/contacts'),
-          },
-        ]}
-      >
-        {t('procurement.intro_body', {
+      {/* Workflow explanation — where procurement sits in the money flow */}
+      <InfoHint
+        className="mb-4"
+        text={t('procurement.workflow_desc', {
           defaultValue:
-            'Raise a purchase order to commit budget with a vendor, record a goods receipt when the delivery arrives, then create an invoice from the PO to push the amount into Finance as a payable. PO totals roll up into the project budget as committed and become actual once the invoice is paid.',
+            'A Purchase Order commits budget with a vendor. When goods arrive you record a Goods Receipt; then "Create Invoice from PO" pushes the committed amount into Finance as a payable. PO totals roll up into the project budget as Committed, and into Actual once the invoice is paid.',
         })}
-      </DismissibleInfo>
+      />
+
+      {/* Cross-module links */}
+      <div className="flex flex-wrap gap-1.5 mb-4">
+        <Button variant="ghost" size="sm" className="text-xs" onClick={() => navigate('/finance')}>
+          <Wallet size={13} className="me-1" />
+          {t('procurement.link_finance', { defaultValue: 'Finance' })}
+        </Button>
+        <Button variant="ghost" size="sm" className="text-xs" onClick={() => navigate('/contacts')}>
+          <Contact size={13} className="me-1" />
+          {t('procurement.link_contacts', { defaultValue: 'Contacts' })}
+        </Button>
+      </div>
 
       {/* No-project warning */}
       {!projectId && (
-        <div className="rounded-lg border border-amber-200 bg-amber-50 p-4 text-sm text-amber-800 dark:border-amber-800 dark:bg-amber-950/30 dark:text-amber-300">
+        <div className="mb-6 rounded-lg border border-amber-200 bg-amber-50 p-4 text-sm text-amber-800 dark:border-amber-800 dark:bg-amber-950/30 dark:text-amber-300">
           {t('common.select_project_hint', { defaultValue: 'Select a project from the header to get started.' })}
         </div>
       )}
 
       {/* Tab Bar */}
-      <div className="flex items-center gap-1 border-b border-border-light">
+      <div className="flex items-center gap-1 mb-6 border-b border-border-light">
         {tabs.map((tab) => (
           <button
             key={tab.key}
@@ -318,8 +300,6 @@ function PurchaseOrdersTab({ projectId }: { projectId: string }) {
   const [scorecardOpen, setScorecardOpen] = useState<
     { contactId: string; name?: string | null } | null
   >(null);
-  // Retainage panel (Gap F) — opened from a PO row's "Retainage" action.
-  const [retainagePO, setRetainagePO] = useState<PurchaseOrder | null>(null);
 
   // Resolve the project's currency from the finance dashboard so new POs
   // default to it instead of a hardcoded EUR (task #217). Empty string when
@@ -425,23 +405,6 @@ function PurchaseOrdersTab({ projectId }: { projectId: string }) {
 
   const canSubmitPO = poForm.items.some((li) => li.description.trim().length > 0);
 
-  // Surface the non-blocking vendor-prequalification warnings the PO
-  // create/update gate returns (TOP-30 #20). A hard-blocked vendor never
-  // reaches here — the backend raises 409 and the error toast fires instead.
-  const warnIfVendorFlagged = (warnings?: string[]) => {
-    if (!warnings || warnings.length === 0) return;
-    addToast({
-      type: 'warning',
-      title: t('procurement.vendor_not_prequalified_warning_title', {
-        defaultValue: 'Vendor not prequalified',
-      }),
-      message: t('procurement.vendor_not_prequalified_warning', {
-        defaultValue:
-          'This vendor is not prequalified. The purchase order was saved, but review the vendor before issuing it.',
-      }),
-    });
-  };
-
   const validatePO = (): boolean => {
     const e: Record<string, string> = {};
     const hasAnyItem = poForm.items.some((li) => li.description.trim());
@@ -452,7 +415,7 @@ function PurchaseOrdersTab({ projectId }: { projectId: string }) {
 
   const createPOMut = useMutation({
     mutationFn: (data: typeof poForm) =>
-      apiPost<{ vendor_warnings?: string[] }>('/v1/procurement/', {
+      apiPost('/v1/procurement/', {
         project_id: projectId,
         vendor_contact_id: data.vendor_contact_id || undefined,
         po_type: data.po_type,
@@ -476,11 +439,10 @@ function PurchaseOrdersTab({ projectId }: { projectId: string }) {
             sort_order: idx,
           })),
       }),
-    onSuccess: (res) => {
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['procurement-po', projectId] });
       closeModal();
       addToast({ type: 'success', title: t('procurement.po_created', { defaultValue: 'Purchase order created' }) });
-      warnIfVendorFlagged(res?.vendor_warnings);
     },
     onError: (e: Error) =>
       addToast({ type: 'error', title: t('common.error', { defaultValue: 'Error' }), message: e.message }),
@@ -494,7 +456,7 @@ function PurchaseOrdersTab({ projectId }: { projectId: string }) {
      no delete control is offered (a 405 button would be worse UX). */
   const editPOMut = useMutation({
     mutationFn: ({ id, data }: { id: string; data: typeof poForm }) =>
-      apiPatch<{ vendor_warnings?: string[] }>(`/v1/procurement/${id}`, {
+      apiPatch(`/v1/procurement/${id}`, {
         vendor_contact_id: data.vendor_contact_id || undefined,
         po_type: data.po_type,
         delivery_date: data.delivery_date || undefined,
@@ -515,11 +477,10 @@ function PurchaseOrdersTab({ projectId }: { projectId: string }) {
             sort_order: idx,
           })),
       }),
-    onSuccess: (res) => {
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['procurement-po', projectId] });
       closeModal();
       addToast({ type: 'success', title: t('procurement.po_updated', { defaultValue: 'Purchase order updated' }) });
-      warnIfVendorFlagged(res?.vendor_warnings);
     },
     onError: (e: Error) =>
       addToast({ type: 'error', title: t('common.error', { defaultValue: 'Error' }), message: e.message }),
@@ -561,41 +522,9 @@ function PurchaseOrdersTab({ projectId }: { projectId: string }) {
       addToast({ type: 'error', title: t('common.error', { defaultValue: 'Error' }), message: e.message }),
   });
 
-  /* ── PO approve ──
-     Transitions a draft PO to `approved`. This is the commitment moment
-     (TOP-30 #10): the backend publishes procurement.po.approved, which
-     finance turns into a live ProjectBudget.committed increase. A PO must
-     be approved before it can be issued, so the budget reflects authorised
-     spend the instant it is approved, not when paperwork is sent. We refresh
-     the PO list (status pipeline + Approve→Issue button swap) and the finance
-     dashboard so the committed figure updates without a manual reload. */
-  const approvePOMut = useMutation({
-    mutationFn: (poId: string) =>
-      apiPost(`/v1/procurement/${poId}/approve/`, {}),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['procurement-po', projectId] });
-      queryClient.invalidateQueries({ queryKey: ['finance', 'dashboard', projectId] });
-      addToast({
-        type: 'success',
-        title: t('procurement.po_approved_toast', {
-          defaultValue: 'Purchase order approved',
-        }),
-        message: t('procurement.po_approved_committed', {
-          defaultValue: 'Budget committed. You can now issue it to the vendor.',
-        }),
-      });
-    },
-    onError: (e: Error) =>
-      addToast({
-        type: 'error',
-        title: t('common.error', { defaultValue: 'Error' }),
-        message: e.message,
-      }),
-  });
-
   /* ── PO issue ──
-     Transitions an approved PO to `issued`. The backend enforces the FSM
-     (only approved→issued; see _PO_STATUS_TRANSITIONS in service.py) and
+     Transitions a draft PO to `issued`. The backend enforces the FSM
+     (only draft→issued; see _PO_STATUS_TRANSITIONS in service.py) and
      audit-logs the transition. After success we re-run the PO list query
      so the status pipeline and Issue/Invoice button visibility update
      in place. */
@@ -1066,31 +995,25 @@ function PurchaseOrdersTab({ projectId }: { projectId: string }) {
                   {po.po_number}
                 </td>
                 <td className="px-4 py-3 text-content-secondary">
-                  <div className="flex flex-wrap items-center gap-1.5">
-                    {po.vendor_contact_id ? (
-                      <button
-                        type="button"
-                        onClick={() =>
-                          setScorecardOpen({
-                            contactId: po.vendor_contact_id as string,
-                            name: po.vendor_name,
-                          })
-                        }
-                        className="text-left text-oe-blue hover:underline focus:underline focus:outline-none"
-                        title={t('procurement.open_scorecard', {
-                          defaultValue: 'Open supplier scorecard',
-                        })}
-                      >
-                        {po.vendor_name}
-                      </button>
-                    ) : (
-                      po.vendor_name
-                    )}
-                    <VendorPrequalBadge
-                      contactId={po.vendor_contact_id}
-                      hideWhenEligible
-                    />
-                  </div>
+                  {po.vendor_contact_id ? (
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setScorecardOpen({
+                          contactId: po.vendor_contact_id as string,
+                          name: po.vendor_name,
+                        })
+                      }
+                      className="text-left text-oe-blue hover:underline focus:underline focus:outline-none"
+                      title={t('procurement.open_scorecard', {
+                        defaultValue: 'Open supplier scorecard',
+                      })}
+                    >
+                      {po.vendor_name}
+                    </button>
+                  ) : (
+                    po.vendor_name
+                  )}
                 </td>
                 <td className="px-4 py-3 text-content-secondary">
                   <DateDisplay value={po.issue_date} />
@@ -1134,8 +1057,6 @@ function PurchaseOrdersTab({ projectId }: { projectId: string }) {
                         progression (draft → issued → partial → completed).
                         Mirrors backend _PO_STATUS_TRANSITIONS in service.py. */}
                     <POStatusPipeline status={po.status} />
-                    {/* Amber retainage chip (Gap F) — only when retention > 0. */}
-                    <RetainageBadge percent={po.retention_percent} />
                   </div>
                 </td>
                 <td className="px-4 py-3 text-right">
@@ -1155,34 +1076,10 @@ function PurchaseOrdersTab({ projectId }: { projectId: string }) {
                         <Pencil size={14} />
                       )}
                     </Button>
-                    {/* Commitment gate (TOP-30 #10): a draft PO must be
-                        approved before it can be issued. Approval is what
-                        commits budget in finance, so draft rows show Approve
-                        and only approved rows show Issue — matching the
-                        backend FSM (draft→approved→issued). The chip stays
-                        tappable at 44x32 when the row stacks on phones. */}
+                    {/* Mobile-friendly Issue button — only shown while the PO
+                        is in draft (matches backend FSM allowlist). On phones
+                        the row stacks; the Issue chip stays tappable at 44x32. */}
                     {po.status === 'draft' && (
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => approvePOMut.mutate(po.id)}
-                        disabled={approvePOMut.isPending}
-                        title={t('procurement.action_approve', {
-                          defaultValue: 'Approve PO (commits budget)',
-                        })}
-                        aria-label={t('procurement.action_approve', {
-                          defaultValue: 'Approve PO (commits budget)',
-                        })}
-                      >
-                        {approvePOMut.isPending && approvePOMut.variables === po.id ? (
-                          <Loader2 size={14} className="animate-spin mr-1" />
-                        ) : (
-                          <CheckCircle2 size={14} className="mr-1" />
-                        )}
-                        {t('procurement.action_approve_short', { defaultValue: 'Approve' })}
-                      </Button>
-                    )}
-                    {po.status === 'approved' && (
                       <Button
                         variant="ghost"
                         size="sm"
@@ -1228,22 +1125,6 @@ function PurchaseOrdersTab({ projectId }: { projectId: string }) {
                         </Button>
                       );
                     })()}
-                    {/* Retainage (Gap F): only meaningful when the PO carries
-                        retention. Opens the release panel; the release form
-                        inside is MANAGER-gated server-side and UI-side. */}
-                    {Number(po.retention_percent ?? '0') > 0 && (
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => setRetainagePO(po)}
-                        title={t('procurement.open_retainage', {
-                          defaultValue: 'Manage retainage',
-                        })}
-                      >
-                        <Wallet size={14} className="mr-1" />
-                        {t('procurement.retainage_short', { defaultValue: 'Retainage' })}
-                      </Button>
-                    )}
                   </div>
                   )}
                 </td>
@@ -1265,21 +1146,6 @@ function PurchaseOrdersTab({ projectId }: { projectId: string }) {
         contactId={scorecardOpen.contactId}
         contactName={scorecardOpen.name ?? undefined}
         projectId={projectId}
-      />
-    )}
-
-    {/* Retainage panel (Gap F) — release withheld retention + audit log */}
-    {retainagePO && (
-      <RetainagePanel
-        open
-        onClose={() => setRetainagePO(null)}
-        poId={retainagePO.id}
-        poNumber={retainagePO.po_number}
-        currency={retainagePO.currency_code}
-        retainageAmount={retainagePO.retainage_amount ?? '0'}
-        retainageHeld={retainagePO.retainage_held ?? '0'}
-        retentionPercent={retainagePO.retention_percent ?? '0'}
-        canRelease={isManager}
       />
     )}
     </>
@@ -1383,7 +1249,7 @@ function GoodsReceiptsTab({
         })}
         description={t('procurement.no_gr_desc', {
           defaultValue:
-            'Goods receipts record deliveries against a purchase order. They are created when a PO delivery is logged - start by creating or issuing a purchase order.',
+            'Goods receipts record deliveries against a purchase order. They are created when a PO delivery is logged — start by creating or issuing a purchase order.',
         })}
         action={{
           label: t('procurement.view_purchase_orders', {

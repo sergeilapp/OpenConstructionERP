@@ -1,6 +1,6 @@
-import { useState, useMemo, useEffect, useRef } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import {
   useQuery,
   useMutation,
@@ -53,13 +53,11 @@ import {
   Badge,
   EmptyState,
   Breadcrumb,
-  DismissibleInfo,
   SkeletonTable,
   SideDrawer,
   ConfirmDialog,
   ModuleHelpButton,
 } from '@/shared/ui';
-import { PageHeader } from '@/shared/ui/PageHeader';
 import {
   WideModal,
   WideModalSection,
@@ -69,16 +67,16 @@ import { MoneyDisplay } from '@/shared/ui/MoneyDisplay';
 import { DateDisplay } from '@/shared/ui/DateDisplay';
 import { useConfirm } from '@/shared/hooks/useConfirm';
 import { useTabKeyboardNav } from '@/shared/hooks/useTabKeyboardNav';
+import { PipelineBanner } from './PipelineBanner';
 import { useToastStore } from '@/stores/useToastStore';
 import { usePreferencesStore } from '@/stores/usePreferencesStore';
 import { useAuthStore } from '@/stores/useAuthStore';
 import { useProjectContextStore } from '@/stores/useProjectContextStore';
-import { getErrorMessage, ApiError } from '@/shared/lib/api';
+import { getErrorMessage } from '@/shared/lib/api';
 import { EditBuyerModal } from './EditBuyerModal';
 import { BuyerAccessLinkPanel } from '@/features/buyer-portal/BuyerAccessLinkPanel';
 import { DocumentPreviewModal } from './DocumentPreviewModal';
 import { SnagsBlock } from './SnagsBlock';
-import { HandoverDocumentsSection } from './HandoverDocumentsSection';
 import type { PropDevDocType } from './api';
 import {
   listDevelopments,
@@ -111,7 +109,6 @@ import {
   updateWarrantyClaim,
   downloadWarrantyClaimPdf,
   listLeads,
-  getLead,
   createLead,
   updateLead,
   deleteLead,
@@ -288,16 +285,6 @@ export function PropertyDevPage() {
   // on a pre-narrowed Warranty view ("Open warranty (3)" → 3 rows).
   const [warrantyStatusPreset, setWarrantyStatusPreset] = useState<string>('');
 
-  // Deep link from Contacts (and elsewhere): /property-dev?tab=leads&leadId=…
-  // or ?tab=buyers&buyerId=…. We honour ?tab= to switch the active tab, and
-  // a leadId/buyerId to open the matching detail drawer. The param set is
-  // read once on mount and cleared with replace so a refresh / share keeps
-  // the user wherever they navigated next. Leads are not development-scoped,
-  // so a leadId resolves directly; buyers resolve against the auto-selected
-  // development's loaded list (best effort).
-  const [searchParams, setSearchParams] = useSearchParams();
-  const deepLinkConsumedRef = useRef(false);
-
   const developmentsQ = useQuery({
     queryKey: ['propdev', 'developments'],
     queryFn: () => listDevelopments({ limit: 100 }),
@@ -310,41 +297,6 @@ export function PropertyDevPage() {
       if (first) setSelectedDevId(first.id);
     }
   }, [developments, selectedDevId]);
-
-  useEffect(() => {
-    if (deepLinkConsumedRef.current) return;
-    const requestedTab = searchParams.get('tab');
-    const leadId = searchParams.get('leadId');
-    const buyerId = searchParams.get('buyerId');
-    if (!requestedTab && !leadId && !buyerId) return;
-    deepLinkConsumedRef.current = true;
-
-    if (leadId) {
-      setTab('leads');
-      setActiveLeadId(leadId);
-    } else if (buyerId) {
-      setTab('buyers');
-      setActiveBuyerId(buyerId);
-    } else if (
-      requestedTab &&
-      (PROPDEV_TAB_IDS as readonly string[]).includes(requestedTab)
-    ) {
-      setTab(requestedTab as Tab);
-    }
-
-    setSearchParams(
-      (prev) => {
-        const next = new URLSearchParams(prev);
-        next.delete('tab');
-        next.delete('leadId');
-        next.delete('buyerId');
-        return next;
-      },
-      { replace: true },
-    );
-    // Read once on mount; cleared immediately after.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   const plotsQ = useQuery({
     queryKey: ['propdev', 'plots', selectedDevId],
@@ -441,21 +393,41 @@ export function PropertyDevPage() {
         : null;
 
   return (
-    <div className="space-y-5 animate-fade-in">
+    <div className="space-y-5">
       <Breadcrumb
         items={[
           { label: t('propdev.title', { defaultValue: 'Property Development' }) },
         ]}
       />
 
-      <PageHeader
-        srTitle={t('propdev.title', { defaultValue: 'Property Development' })}
-        subtitle={t('propdev.subtitle', {
-          defaultValue:
-            'Developments, plots, buyer journeys, handovers and warranty claims.',
-        })}
-        actions={
-          <>
+      <div className="flex items-start justify-between gap-4 flex-wrap">
+        <div>
+          <div className="flex items-center gap-2">
+            <h1 className="text-2xl font-semibold text-content-primary">
+              {t('propdev.title', { defaultValue: 'Property Development' })}
+            </h1>
+            {/* Per-module Tour CTA — launches the PropDev guided tour. */}
+            <ModuleHelpButton tourId="propdev" />
+          </div>
+          <p className="mt-1 text-sm text-content-secondary">
+            {t('propdev.subtitle', {
+              defaultValue:
+                'Developments, plots, buyer journeys, handovers and warranty claims.',
+            })}
+          </p>
+        </div>
+        <div className="flex items-center gap-2">
+          <Button
+            variant="ghost"
+            icon={<LayoutDashboard size={14} />}
+            onClick={() => navigate('/property-dev/dashboards')}
+            aria-label={t('propdev.open_dashboards', {
+              defaultValue: 'Open analytics dashboards',
+            })}
+            data-testid="propdev-tour-dashboards-button"
+          >
+            {t('propdev.dashboards_short', { defaultValue: 'Dashboards' })}
+          </Button>
           <Button
             variant="primary"
             icon={<Plus size={14} />}
@@ -528,49 +500,31 @@ export function PropertyDevPage() {
                                   ? t('propdev.new_escrow_account', { defaultValue: 'New Escrow Account' })
                                   : t('propdev.new_development', { defaultValue: 'New Development' })}
           </Button>
-          <Button
-            variant="ghost"
-            icon={<LayoutDashboard size={14} />}
-            onClick={() => navigate('/property-dev/dashboards')}
-            aria-label={t('propdev.open_dashboards', {
-              defaultValue: 'Open analytics dashboards',
-            })}
-            data-testid="propdev-tour-dashboards-button"
-          >
-            {t('propdev.dashboards_short', { defaultValue: 'Dashboards' })}
-          </Button>
-          {/* Per-module Tour CTA — launches the PropDev guided tour. */}
-          <ModuleHelpButton tourId="propdev" />
-          </>
-        }
-      />
+        </div>
+      </div>
 
       <div data-testid="propdev-tour-pipeline">
-        <DismissibleInfo
-          storageKey="property-dev"
-          title={t('propdev.intro_title', {
-            defaultValue: 'Take a buyer from first enquiry to handover',
-          })}
-          links={[
-            {
-              label: t('nav.contracts', { defaultValue: 'Contracts' }),
-              onClick: () => navigate('/contracts'),
-            },
-            {
-              label: t('finance.title', { defaultValue: 'Finance' }),
-              onClick: () => navigate('/finance'),
-            },
-            {
-              label: t('nav.accommodation', { defaultValue: 'Accommodation' }),
-              onClick: () => navigate('/accommodation'),
-            },
-          ]}
-        >
-          {t('propdev.intro_body', {
-            defaultValue:
-              'Lay out a development of plots and house types, then move buyers from lead to reservation to contract to handover and service warranty claims afterwards. Signed contract values flow into Finance, so the sales pipeline and the project books stay in step.',
-          })}
-        </DismissibleInfo>
+      <PipelineBanner
+        intro={t('propdev.pipeline_intro', {
+          defaultValue:
+            'Residential sales pipeline: lay out a development of plots and house types, take buyers from lead → reservation → contract → handover, then service warranty claims. Contract values feed Finance.',
+        })}
+        steps={[
+          {
+            label: t('propdev.step_dev', { defaultValue: 'Development' }),
+            current: true,
+          },
+          { label: t('propdev.step_buyers', { defaultValue: 'Buyers' }) },
+          {
+            label: t('propdev.step_contracts', { defaultValue: 'Contracts' }),
+            to: '/contracts',
+          },
+          {
+            label: t('propdev.step_finance', { defaultValue: 'Finance' }),
+            to: '/finance',
+          },
+        ]}
+      />
       </div>
 
       {/* Tabs — all 16 icon buttons in a single wrap row. Group boundaries
@@ -651,7 +605,7 @@ export function PropertyDevPage() {
                           aria-controls={`propdev-panel-${tabItem.id}`}
                           id={`propdev-tab-${tabItem.id}`}
                           tabIndex={active ? 0 : -1}
-                          title={`${tabItem.label} - ${tabItem.tip}`}
+                          title={`${tabItem.label} — ${tabItem.tip}`}
                           onClick={() => {
                             setTab(tabItem.id);
                             setSearch('');
@@ -1619,19 +1573,7 @@ function LeadDetailDrawer({
     return ['admin', 'superuser', 'owner', 'manager'].includes(normalized);
   }, [userRole]);
 
-  const leadFromList = leads.find((l) => l.id === leadId);
-  // Deep links (e.g. /property-dev?tab=leads&leadId=… from a Contact's
-  // linked-records list) may target a lead that is filtered out of the
-  // currently-loaded development-scoped list. Fall back to a by-id fetch so
-  // the drawer still opens on the exact record. Leads are not strictly
-  // development-bound, so this is safe.
-  const leadFetch = useQuery({
-    queryKey: ['propdev', 'lead', leadId],
-    queryFn: () => getLead(leadId),
-    enabled: !leadFromList && !!leadId,
-    retry: false,
-  });
-  const lead = leadFromList ?? leadFetch.data;
+  const lead = leads.find((l) => l.id === leadId);
   const [form, setForm] = useState<{
     full_name: string;
     email: string;
@@ -1851,7 +1793,7 @@ function LeadDetailDrawer({
               }
               title={t('propdev.lead_score_hint', {
                 defaultValue:
-                  'Your qualification confidence - 0 = cold, 50 = warm, 100 = hot. Drives the Leads list sort order.',
+                  'Your qualification confidence — 0 = cold, 50 = warm, 100 = hot. Drives the Leads list sort order.',
               })}
             />
             <span className="mt-0.5 text-2xs text-content-tertiary">
@@ -1998,7 +1940,7 @@ function LinkedContactCard({
               })}
             </span>
             <Link
-              to={`/contacts?contactId=${encodeURIComponent(contactId)}`}
+              to="/contacts"
               className="ml-auto inline-flex items-center gap-1 text-xs text-oe-blue hover:underline"
             >
               {t('propdev.open_in_contacts', {
@@ -2268,7 +2210,7 @@ function ConvertLeadModal({
               <span>
                 {t('propdev.create_buyer_shadow', {
                   defaultValue:
-                    'Also materialise a Buyer row (recommended - downstream modules need it).',
+                    'Also materialise a Buyer row (recommended — downstream modules need it).',
                 })}
               </span>
             </label>
@@ -3922,7 +3864,7 @@ function PaymentScheduleTab({
               onClick={() => setGenerateForSpa(spasWithoutSchedule[0] ?? null)}
               title={t('propdev.generate_schedule_for_spa_help', {
                 defaultValue:
-                  '{{n}} SPA(s) have no payment schedule yet - generate one',
+                  '{{n}} SPA(s) have no payment schedule yet — generate one',
                 n: spasWithoutSchedule.length,
               })}
             >
@@ -4163,7 +4105,7 @@ function HandoversTab({ plots, buyers }: { plots: Plot[]; buyers: Buyer[] }) {
           })}
           description={t('propdev.empty_handovers_no_plots_desc', {
             defaultValue:
-              'Create plots first (under the Plots tab) - handovers are scheduled per plot once a buyer is assigned.',
+              'Create plots first (under the Plots tab) — handovers are scheduled per plot once a buyer is assigned.',
           })}
         />
       </Card>
@@ -4375,16 +4317,17 @@ function HandoverPlotRow({ plot, buyer }: { plot: Plot; buyer: Buyer | undefined
           </Button>
         </div>
       )}
-      {/* Per-handover blocks: the digital closeout package (item #25 —
-          warranty / manuals / key receipt + ZIP export) sits above the
-          snags block. Snags drive the snag → warranty promote flow on
-          completed handovers; on scheduled handovers we still allow
-          adding both so site engineers can prepare ahead of completion. */}
+      {/* Snags block — one per handover. Buyer is implicit (the plot's
+          buyer). Drives the snag → warranty promote flow on completed
+          handovers; on scheduled handovers we still allow adding snags
+          so site engineers can log defects ahead of completion. */}
       {handovers.map((h: Handover) => (
-        <div key={`handover-blocks-${h.id}`}>
-          <HandoverDocumentsSection handover={h} />
-          <SnagsBlock handover={h} buyer={buyer} plotId={plot.id} />
-        </div>
+        <SnagsBlock
+          key={`snags-${h.id}`}
+          handover={h}
+          buyer={buyer}
+          plotId={plot.id}
+        />
       ))}
       {scheduleOpen && (
         <WideModal
@@ -4507,31 +4450,7 @@ function CompleteHandoverModal({
       qc.invalidateQueries({ queryKey: ['propdev', 'buyers'] });
       onClose();
     },
-    onError: (err) => {
-      // The closeout gate (item #25) blocks completion with a 409 when a
-      // required handover document is still undelivered. Surface the
-      // missing-doc list so the user knows exactly what to deliver first.
-      if (err instanceof ApiError && err.status === 409) {
-        const detail = (err.body as { detail?: { missing_required?: string[] } })
-          ?.detail;
-        const missing = detail?.missing_required ?? [];
-        addToast({
-          type: 'error',
-          title: t('propdev.handover_blocked_docs', {
-            defaultValue: 'Required documents missing',
-          }),
-          message:
-            missing.length > 0
-              ? t('propdev.handover_blocked_docs_list', {
-                  defaultValue: 'Deliver these first: {{docs}}',
-                  docs: missing.join(', '),
-                })
-              : getErrorMessage(err),
-        });
-        return;
-      }
-      addToast({ type: 'error', title: getErrorMessage(err) });
-    },
+    onError: (err) => addToast({ type: 'error', title: getErrorMessage(err) }),
   });
   const canSubmit =
     !!form.completed_at && form.customer_signature_ref.trim().length > 0;
@@ -4777,7 +4696,7 @@ function WarrantyTab({
           })}
           description={t('propdev.warranty.pick_dev_desc', {
             defaultValue:
-              'Warranty claims are listed per development - pick one from the Developments tab to see its open claims.',
+              'Warranty claims are listed per development — pick one from the Developments tab to see its open claims.',
           })}
         />
       </Card>
@@ -6053,14 +5972,8 @@ function BuyerDetailDrawer({
                 </li>
               )}
               <li>
-                {/* Scope the Finance jump to this buyer (and plot when set)
-                    so the target can land on the buyer's invoices/payments
-                    once it consumes the params. The query is harmless to a
-                    target that ignores it - it still opens Finance. */}
                 <Link
-                  to={`/finance?buyer=${encodeURIComponent(buyer.id)}${
-                    plot ? `&plot=${encodeURIComponent(plot.id)}` : ''
-                  }`}
+                  to="/finance"
                   className="group flex items-center justify-between gap-2 rounded-lg border border-border-light bg-surface-primary px-3 py-2 text-xs hover:border-oe-blue hover:bg-surface-secondary focus:outline-none focus:ring-2 focus:ring-oe-blue/40"
                 >
                   <span className="flex items-center gap-2">
@@ -6081,12 +5994,8 @@ function BuyerDetailDrawer({
                 </Link>
               </li>
               <li>
-                {/* Carry plot + buyer so Contracts can pre-filter to this
-                    sale once it reads the params. */}
                 <Link
-                  to={`/contracts?buyer=${encodeURIComponent(buyer.id)}${
-                    plot ? `&plot=${encodeURIComponent(plot.id)}` : ''
-                  }`}
+                  to="/contracts"
                   className="group flex items-center justify-between gap-2 rounded-lg border border-border-light bg-surface-primary px-3 py-2 text-xs hover:border-oe-blue hover:bg-surface-secondary focus:outline-none focus:ring-2 focus:ring-oe-blue/40"
                 >
                   <span className="flex items-center gap-2">
@@ -6107,16 +6016,8 @@ function BuyerDetailDrawer({
                 </Link>
               </li>
               <li>
-                {/* When the buyer is bridged to a Contacts record, the most
-                    useful "open in CRM" target is that exact contact card.
-                    The Contacts page already consumes ?contactId (scroll +
-                    flash). Fall back to the CRM landing if unbridged. */}
                 <Link
-                  to={
-                    buyer.contact_id
-                      ? `/contacts?contactId=${encodeURIComponent(buyer.contact_id)}`
-                      : '/crm'
-                  }
+                  to="/crm"
                   className="group flex items-center justify-between gap-2 rounded-lg border border-border-light bg-surface-primary px-3 py-2 text-xs hover:border-oe-blue hover:bg-surface-secondary focus:outline-none focus:ring-2 focus:ring-oe-blue/40"
                 >
                   <span className="flex items-center gap-2">
@@ -6125,13 +6026,9 @@ function BuyerDetailDrawer({
                       className="text-content-tertiary group-hover:text-oe-blue"
                     />
                     <span>
-                      {buyer.contact_id
-                        ? t('propdev.view_contact', {
-                            defaultValue: 'Open buyer contact',
-                          })
-                        : t('propdev.view_crm', {
-                            defaultValue: 'Open in CRM',
-                          })}
+                      {t('propdev.view_crm', {
+                        defaultValue: 'Open in CRM',
+                      })}
                     </span>
                   </span>
                   <ArrowRight
@@ -6839,7 +6736,7 @@ function CreateModal({
             label={t('propdev.lead_score', { defaultValue: 'Score (0-100)' })}
             hint={t('propdev.lead_score_hint', {
               defaultValue:
-                'Your qualification confidence - 0 = cold, 50 = warm, 100 = hot. Drives the Leads list sort order.',
+                'Your qualification confidence — 0 = cold, 50 = warm, 100 = hot. Drives the Leads list sort order.',
             })}
           >
             <input
@@ -7620,7 +7517,7 @@ function PlotFormBody({
           </span>
           <span className="font-medium text-content-primary">
             {activeDevelopment
-              ? `${activeDevelopment.code}${activeDevelopment.name ? ` - ${activeDevelopment.name}` : ''}`
+              ? `${activeDevelopment.code}${activeDevelopment.name ? ` — ${activeDevelopment.name}` : ''}`
               : t('propdev.unknown_development', { defaultValue: 'Selected development' })}
           </span>
         </div>

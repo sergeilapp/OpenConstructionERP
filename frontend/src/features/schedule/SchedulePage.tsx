@@ -1,7 +1,7 @@
 import { useState, useMemo, useCallback, useRef, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import {
   Calendar,
   CalendarDays,
@@ -24,10 +24,8 @@ import {
   GitBranch,
   TrendingUp,
   Layers,
-  Table2,
 } from 'lucide-react';
-import { Button, Card, Badge, Input, SkeletonTable, Breadcrumb, DismissibleInfo, IntroRichText, GanttChart as SVGGanttChart, ViewInBIMButton, ConfirmDialog } from '@/shared/ui';
-import { PageHeader } from '@/shared/ui/PageHeader';
+import { Button, Card, Badge, Input, InfoHint, SkeletonTable, Breadcrumb, GanttChart as SVGGanttChart, ViewInBIMButton, ConfirmDialog } from '@/shared/ui';
 import { useConfirm } from '@/shared/hooks/useConfirm';
 import type { GanttActivity as SVGGanttActivity, GanttViewMode } from '@/shared/ui';
 import { apiGet } from '@/shared/lib/api';
@@ -392,7 +390,6 @@ function GanttChart({
   zoomLevel?: ZoomLevel;
 }) {
   const { t } = useTranslation();
-  const navigate = useNavigate();
   const ganttBodyRef = useRef<HTMLDivElement>(null);
   const ganttScrollRef = useRef<HTMLDivElement>(null);
   // Debounced progress updates
@@ -732,29 +729,6 @@ function GanttChart({
                       iconSize={9}
                       className="inline-flex items-center gap-0.5 px-1 py-0.5 rounded text-[9px] font-semibold bg-amber-50 dark:bg-amber-950/40 text-amber-700 border border-amber-200 dark:border-amber-900/60 hover:bg-amber-100 dark:hover:bg-amber-900/40 transition-colors"
                     />
-                    {/* CONN-33: the activity already carries the BOQ positions
-                        it was generated from; turn that data island into a
-                        deep link. BOQListPage resolves the owning BOQ from a
-                        single positionId and redirects to its editor with the
-                        per-position ?highlight convention. */}
-                    {(activity.boq_position_ids?.length ?? 0) > 0 && (
-                      <button
-                        type="button"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          const pid = activity.boq_position_ids[0];
-                          if (pid) navigate(`/boq?positionId=${encodeURIComponent(pid)}`);
-                        }}
-                        title={t('schedule.view_in_boq', {
-                          defaultValue: 'View in BOQ ({{count}} position(s))',
-                          count: activity.boq_position_ids.length,
-                        })}
-                        className="inline-flex items-center gap-0.5 px-1 py-0.5 rounded text-[9px] font-semibold bg-oe-blue-subtle text-oe-blue-text border border-oe-blue/30 hover:bg-oe-blue/10 transition-colors"
-                      >
-                        <Table2 size={9} className="shrink-0" />
-                        {t('schedule.view_in_boq_short', { defaultValue: 'BOQ' })}
-                      </button>
-                    )}
                   </div>
                 </div>
                 {/* Progress slider */}
@@ -1020,16 +994,10 @@ function ScheduleDetail({
   schedule,
   projectId,
   onBack,
-  generateBoqId,
-  onConsumeGenerateBoq,
 }: {
   schedule: Schedule;
   projectId: string;
   onBack: () => void;
-  /** CONN-34: BOQ id to pre-load into Generate-from-BOQ (deep link). */
-  generateBoqId?: string | null;
-  /** Called once the generate modal has consumed the deep-link BOQ id. */
-  onConsumeGenerateBoq?: () => void;
 }) {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
@@ -1098,20 +1066,6 @@ function ScheduleDetail({
     staleTime: 300_000,
   });
   const hasBIMModels = (bimModelsData?.items?.length ?? 0) > 0;
-
-  // CONN-34: when reached via the BOQ "Build schedule from this BOQ" deep
-  // link, open the Generate-from-BOQ modal and pre-select that BOQ. Setting
-  // selectedBOQId before the BOQ list loads is safe: the modal simply
-  // highlights the matching card once the list arrives. The param is cleared
-  // on the parent so a refresh or back-navigation doesn't re-open the modal.
-  const generateDeepLinkRef = useRef(false);
-  useEffect(() => {
-    if (!generateBoqId || generateDeepLinkRef.current) return;
-    generateDeepLinkRef.current = true;
-    setSelectedBOQId(generateBoqId);
-    setShowGenerateBOQ(true);
-    onConsumeGenerateBoq?.();
-  }, [generateBoqId, onConsumeGenerateBoq]);
 
   // CPM state
   const [cpmResult, setCpmResult] = useState<CriticalPathResponse | null>(null);
@@ -1858,15 +1812,9 @@ function ScheduleDetail({
 function ProjectSchedules({
   project,
   onBack,
-  generateBoqId,
-  onConsumeGenerateBoq,
 }: {
   project: Project;
   onBack: () => void;
-  /** CONN-34: BOQ id to pre-load into Generate-from-BOQ (deep link). */
-  generateBoqId?: string | null;
-  /** Called once the generate flow has consumed the deep-link BOQ id. */
-  onConsumeGenerateBoq?: () => void;
 }) {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
@@ -1885,31 +1833,6 @@ function ProjectSchedules({
     queryFn: () => scheduleApi.listSchedules(project.id),
   });
 
-  // CONN-34: when arriving via the BOQ "Build schedule from this BOQ" deep
-  // link, drill straight to a schedule so the Generate-from-BOQ modal (which
-  // lives in ScheduleDetail) can open with the BOQ pre-selected. If at least
-  // one schedule exists, open the first; if none exist, open the Create modal
-  // so the user makes one first — the param survives so generation continues
-  // once the schedule is created and selected.
-  const generateHandledRef = useRef(false);
-  useEffect(() => {
-    if (!generateBoqId || generateHandledRef.current) return;
-    if (selectedSchedule) return;
-    if (!schedules) return; // wait for the list to load
-    generateHandledRef.current = true;
-    if (schedules.length > 0) {
-      setSelectedSchedule(schedules[0]!);
-    } else {
-      setShowCreate(true);
-      addToast({
-        type: 'info',
-        title: t('schedule.create_before_generate', {
-          defaultValue: 'Create a schedule first, then it generates from your BOQ.',
-        }),
-      });
-    }
-  }, [generateBoqId, schedules, selectedSchedule, addToast, t]);
-
   const createSchedule = useMutation({
     mutationFn: (data: CreateScheduleForm) =>
       scheduleApi.createSchedule({
@@ -1919,14 +1842,11 @@ function ProjectSchedules({
         start_date: data.start_date || undefined,
         end_date: data.end_date || undefined,
       }),
-    onSuccess: (created) => {
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['schedules', project.id] });
       setShowCreate(false);
       setForm({ name: '', description: '', start_date: '', end_date: '' });
       addToast({ type: 'success', title: t('toasts.schedule_created', { defaultValue: 'Schedule created' }) });
-      // Continue the CONN-34 deep-link flow: drop into the freshly created
-      // schedule so Generate-from-BOQ opens with the deep-link BOQ chosen.
-      if (generateBoqId) setSelectedSchedule(created);
     },
     onError: (error: Error) => {
       addToast({ type: 'error', title: t('toasts.error', { defaultValue: 'Error' }), message: error.message });
@@ -1940,8 +1860,6 @@ function ProjectSchedules({
         schedule={selectedSchedule}
         projectId={project.id}
         onBack={() => setSelectedSchedule(null)}
-        generateBoqId={generateBoqId}
-        onConsumeGenerateBoq={onConsumeGenerateBoq}
       />
     );
   }
@@ -2158,49 +2076,12 @@ export function SchedulePage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { activeProjectId, setActiveProject } = useProjectContextStore();
-  const [searchParams, setSearchParams] = useSearchParams();
 
   const { data: projects, isLoading } = useQuery({
     queryKey: ['projects'],
     queryFn: () => apiGet<Project[]>('/v1/projects/'),
     staleTime: 5 * 60_000,
   });
-
-  // CONN-34: deep link from a BOQ — /schedule?project_id=&generateBoqId=.
-  // Pre-select the project so we drill straight into its schedules, and carry
-  // the BOQ id down to ScheduleDetail which pre-opens Generate-from-BOQ with
-  // that BOQ chosen. Consume project_id once projects resolve, then drop it so
-  // a later project switch isn't fought by the URL. generateBoqId is cleared
-  // by ScheduleDetail once the modal has opened.
-  const generateBoqId = searchParams.get('generateBoqId');
-  const projectIdParam = searchParams.get('project_id');
-  useEffect(() => {
-    if (!projectIdParam || !projects) return;
-    const target = projects.find((p) => p.id === projectIdParam);
-    if (target && activeProjectId !== projectIdParam) {
-      setActiveProject(target.id, target.name);
-    }
-    // Drop project_id but keep generateBoqId for the detail view to consume.
-    setSearchParams(
-      (prev) => {
-        const next = new URLSearchParams(prev);
-        next.delete('project_id');
-        return next;
-      },
-      { replace: true },
-    );
-  }, [projectIdParam, projects, activeProjectId, setActiveProject, setSearchParams]);
-
-  const clearGenerateBoqParam = useCallback(() => {
-    setSearchParams(
-      (prev) => {
-        const next = new URLSearchParams(prev);
-        next.delete('generateBoqId');
-        return next;
-      },
-      { replace: true },
-    );
-  }, [setSearchParams]);
 
   const selectedProject = useMemo(
     () => projects?.find((p) => p.id === activeProjectId) ?? null,
@@ -2210,17 +2091,16 @@ export function SchedulePage() {
   // Project schedule detail view
   if (selectedProject) {
     return (
-      <div className="space-y-5 animate-fade-in">
+      <div className="w-full animate-fade-in">
         <Breadcrumb items={[
-          { label: selectedProject.name, to: `/projects/${selectedProject.id}` },
-          { label: t('schedule.title', '4D Schedule') },
-        ]} />
+          { label: t('nav.dashboard', 'Dashboard'), to: '/' },
+          { label: t('schedule.title', '4D Schedule'), to: '/schedule' },
+          { label: selectedProject.name },
+        ]} className="mb-4" />
 
         <ProjectSchedules
           project={selectedProject}
           onBack={() => useProjectContextStore.getState().clearProject()}
-          generateBoqId={generateBoqId}
-          onConsumeGenerateBoq={clearGenerateBoqParam}
         />
       </div>
     );
@@ -2228,43 +2108,29 @@ export function SchedulePage() {
 
   // Project list view
   return (
-    <div className="space-y-5 animate-fade-in">
+    <div className="w-full animate-fade-in">
       <Breadcrumb items={[
+        { label: t('nav.dashboard', 'Dashboard'), to: '/' },
         { label: t('schedule.title', '4D Schedule') },
-      ]} />
+      ]} className="mb-4" />
 
-      <PageHeader
-        srTitle={t('schedule.title', '4D Schedule')}
-        subtitle={t(
-          'schedule.subtitle',
-          'Plan the build timeline as a Gantt with dependencies and the critical path.',
-        )}
-      />
-
-      <DismissibleInfo
-        storageKey="schedule"
-        title={t('schedule.intro_title', {
-          defaultValue: 'Build the plan straight from the estimate',
-        })}
-        more={
-          t('schedule.intro_more', { defaultValue: '' })
-            ? <IntroRichText text={t('schedule.intro_more')} />
-            : undefined
-        }
-        links={[
-          { label: t('schedule.intro_link_boq', { defaultValue: 'Open BOQ' }), onClick: () => navigate('/boq') },
-          { label: t('schedule.intro_link_bim', { defaultValue: 'BIM viewer' }), onClick: () => navigate('/bim') },
-          { label: t('schedule.intro_link_advanced', { defaultValue: 'Last Planner' }), onClick: () => navigate('/schedule-advanced') },
-        ]}
-      >
-        {t('schedule.intro_body', {
-          defaultValue:
-            'Create a schedule, add activities by hand or generate them from a BOQ, and view the timeline as a Gantt with dependencies and the critical path. Run CPM to find the longest path and the float, and link activities to BIM elements to drive a 4D sequence on the model.',
-        })}
-      </DismissibleInfo>
+      <div className="mb-6">
+        <h1 className="text-2xl font-bold text-content-primary">
+          {t('schedule.title', '4D Schedule')}
+        </h1>
+        <p className="mt-1 text-sm text-content-secondary">
+          {t(
+            'schedule.subtitle',
+            'Select a project to view and manage its construction schedule',
+          )}
+        </p>
+      </div>
 
       {/* Cross-module navigation — connects the planning value chain */}
       <PlanningCrossLinks active="schedule" />
+
+      {/* 4D explanation */}
+      <InfoHint className="mb-6" text={t('schedule.what_is_4d', { defaultValue: '4D scheduling links your BOQ positions to a project timeline. Create activities, set dependencies, and visualize progress on a Gantt chart. The critical path analysis highlights activities that directly affect the project end date. Activity types: Task = work item, Milestone = checkpoint with zero duration, Summary = grouping header. Once activities have progress, the 5D Cost Model derives SPI/CPI earned-value metrics, and schedule risk feeds the Risk Register.' })} />
 
       {isLoading ? (
         <SkeletonTable rows={3} columns={3} />

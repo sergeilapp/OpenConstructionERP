@@ -108,7 +108,6 @@ export interface VariationOrder {
   signed_by: string | null;
   status: VOStatus;
   reference_change_order_id: string | null;
-  affected_contract_id: string | null;
   implementation_started_at: string | null;
   implementation_completed_at: string | null;
   metadata: Record<string, unknown>;

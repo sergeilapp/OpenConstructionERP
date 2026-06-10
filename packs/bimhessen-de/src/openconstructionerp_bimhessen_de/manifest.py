@@ -47,7 +47,6 @@ MANIFEST = PartnerPackManifest(
     ],
     default_modules=[],
     hidden_modules=[],
-    demo_template_ids=["residential-berlin"],
     branding=PartnerBranding(
         primary_color="#0C9CB7",  # BIM-Cluster Hessen teal
         accent_color="#7A7A7A",  # BIM-Cluster Hessen grey

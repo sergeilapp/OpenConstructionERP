@@ -13,12 +13,10 @@ import { useTranslation } from 'react-i18next';
 import { useQueryClient } from '@tanstack/react-query';
 import { UploadCloud, X, FileUp } from 'lucide-react';
 import clsx from 'clsx';
-import { uuid } from '@/shared/lib/browser';
 import { useToastStore } from '@/stores/useToastStore';
 import { useAuthStore } from '@/stores/useAuthStore';
 import { useUploadQueueStore } from '@/stores/useUploadQueueStore';
 import { fileManagerKeys } from '../hooks';
-import { uploadResumable, RESUMABLE_THRESHOLD_BYTES } from '../resumableUpload';
 import type { FileKind } from '../types';
 
 interface UploadDialogProps {
@@ -92,7 +90,7 @@ export function UploadDialog({
       setUploading(true);
 
       for (const file of validFiles) {
-        const taskId = uuid();
+        const taskId = crypto.randomUUID();
         addQueueTask({
           id: taskId,
           type: 'file_upload',
@@ -105,53 +103,6 @@ export function UploadDialog({
         // Fire-and-forget — same pattern as DocumentsPage so progress
         // shows up in the global FloatingQueuePanel.
         (async () => {
-          const markDone = () => {
-            updateQueueTask(taskId, {
-              status: 'completed',
-              progress: 100,
-              message: t('files.uploaded', { defaultValue: 'Uploaded' }),
-              completedAt: Date.now(),
-            });
-            queryClient.invalidateQueries({ queryKey: [fileManagerKeys.tree, projectId] });
-            queryClient.invalidateQueries({ queryKey: [fileManagerKeys.list, projectId] });
-          };
-          const markError = (detail: string) => {
-            updateQueueTask(taskId, {
-              status: 'error',
-              error: detail,
-              completedAt: Date.now(),
-            });
-          };
-
-          // Large files take the resumable, chunked path: real progress and
-          // automatic per-chunk retry so a flaky connection no longer
-          // restarts the whole transfer from zero. Small files keep the
-          // simpler single-shot multipart upload below.
-          if (file.size >= RESUMABLE_THRESHOLD_BYTES) {
-            try {
-              updateQueueTask(taskId, {
-                message: t('files.uploading_chunked', {
-                  defaultValue: 'Uploading large file…',
-                }),
-              });
-              await uploadResumable(file, {
-                projectId,
-                category: cat,
-                onProgress: (percent) => updateQueueTask(taskId, { progress: percent }),
-              });
-              markDone();
-            } catch (err) {
-              markError(
-                err instanceof Error
-                  ? err.message
-                  : t('files.upload_resume_failed', {
-                      defaultValue: 'Upload interrupted. Try again to resume.',
-                    }),
-              );
-            }
-            return;
-          }
-
           try {
             const formData = new FormData();
             formData.append('file', file);
@@ -184,12 +135,27 @@ export function UploadDialog({
               } catch {
                 /* ignore — keep filename */
               }
-              markError(detail);
+              updateQueueTask(taskId, {
+                status: 'error',
+                error: detail,
+                completedAt: Date.now(),
+              });
             } else {
-              markDone();
+              updateQueueTask(taskId, {
+                status: 'completed',
+                progress: 100,
+                message: t('files.uploaded', { defaultValue: 'Uploaded' }),
+                completedAt: Date.now(),
+              });
+              queryClient.invalidateQueries({ queryKey: [fileManagerKeys.tree, projectId] });
+              queryClient.invalidateQueries({ queryKey: [fileManagerKeys.list, projectId] });
             }
           } catch (err) {
-            markError(err instanceof Error ? err.message : 'Upload failed');
+            updateQueueTask(taskId, {
+              status: 'error',
+              error: err instanceof Error ? err.message : 'Upload failed',
+              completedAt: Date.now(),
+            });
           }
         })();
       }
@@ -309,7 +275,7 @@ export function UploadDialog({
             </p>
             <p className="mt-1 text-xs text-content-tertiary">
               {t('files.upload_hint', {
-                defaultValue: 'PDF, images, Excel, DWG, IFC - any file type',
+                defaultValue: 'PDF, images, Excel, DWG, IFC — any file type',
               })}
             </p>
             <button

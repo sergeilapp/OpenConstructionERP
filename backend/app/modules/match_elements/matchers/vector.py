@@ -1,12 +1,12 @@
 # DDC-CWICR-OE: DataDrivenConstruction · OpenConstructionERP
 # Copyright (c) 2026 Artem Boiko / DataDrivenConstruction
-"""‌⁠‍Vector matcher - wraps the existing ``match_service`` ranker.
+"""‌⁠‍Vector matcher — wraps the existing ``match_service`` ranker.
 
 The match-elements service calls this when the user clicks "Run vector
 match" on a group. The underlying ranker handles translation cascade,
 LanceDB embedding lookup, classification boosts and unit boosts.
 
-The ``use_reranker`` knob is OFF here - that's the LLM tier, gated to
+The ``use_reranker`` knob is OFF here — that's the LLM tier, gated to
 Phase A.5+ behind an explicit toggle so we don't burn tokens on bulk
 runs.
 """
@@ -32,7 +32,7 @@ class VectorMatcher:
         *,
         envelope: ElementEnvelope,
         project_id: uuid.UUID,
-        catalogue_id: uuid.UUID | None = None,  # noqa: ARG002 - reserved
+        catalogue_id: uuid.UUID | None = None,  # noqa: ARG002 — reserved
         top_k: int = 10,
     ) -> list[MatchCandidate]:
         response = await match_envelope(

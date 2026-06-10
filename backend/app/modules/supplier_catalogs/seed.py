@@ -10,7 +10,6 @@ import logging
 import uuid
 from decimal import Decimal
 
-from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.modules.supplier_catalogs.models import (
@@ -45,17 +44,6 @@ async def seed_supplier_catalogs(
     """
     project_id = project_id or uuid.uuid4()
     counts: dict[str, int] = {}
-
-    # Idempotency guard. This seed inserts vendors with fixed codes
-    # (V001..V005) plus other fixed-key rows, and vendor.code is unique. On a
-    # second boot the blind insert hit that constraint, raised an
-    # IntegrityError that aborted the seed transaction, and slowed startup. If
-    # the marker vendor V001 is already present the demo set has been seeded,
-    # so skip silently (mirrors the marker-check pattern used by other seeds).
-    existing = await session.scalar(select(Vendor.id).where(Vendor.code == "V001"))
-    if existing is not None:
-        logger.info("supplier_catalogs seed skipped: marker vendor V001 already present")
-        return {"skipped": 1}
 
     # --- 5 vendors ---
     vendor_specs = [
@@ -198,10 +186,6 @@ async def seed_supplier_catalogs(
         ("closed", 3),
     ]
     pos: list[PurchaseOrder] = []
-    # Track each PO's first line locally; the GR loop below needs it, and
-    # reading ``po.lines`` (a lazy relationship) under async SQLAlchemy raises
-    # MissingGreenlet because the load is not awaited.
-    po_first_line: dict[uuid.UUID, POLine] = {}
     for idx, (st, vi) in enumerate(po_specs):
         po = PurchaseOrder(
             number=f"PO-S{idx + 1:04d}",
@@ -227,7 +211,6 @@ async def seed_supplier_catalogs(
         )
         session.add(line)
         await session.flush()
-        po_first_line[po.id] = line
         pos.append(po)
     counts["pos"] = len(pos)
 
@@ -245,9 +228,8 @@ async def seed_supplier_catalogs(
         )
         session.add(gr)
         await session.flush()
-        # Pick the first line of this PO (tracked locally above; ``po.lines``
-        # would lazy-load and raise MissingGreenlet under async).
-        line = po_first_line.get(target_po.id)
+        # Pick the first line of this PO
+        line = target_po.lines[0] if target_po.lines else None
         if line is None:
             continue
         session.add(

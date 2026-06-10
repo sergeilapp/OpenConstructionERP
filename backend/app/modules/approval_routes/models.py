@@ -10,13 +10,13 @@ Tables
 
 ``oe_approval_routes_step``
     Ordered step inside a route. Either ``approver_role`` OR
-    ``approver_user_id`` is set - not both - and the service validates
+    ``approver_user_id`` is set — not both — and the service validates
     this. ``mode`` describes aggregation when the role expands to
     several users.
 
 ``oe_approval_routes_instance``
     A running workflow for a concrete target row. Polymorphic via
-    ``(target_kind, target_id)`` - the engine never FKs into a specific
+    ``(target_kind, target_id)`` — the engine never FKs into a specific
     module's table.
 
 ``oe_approval_routes_step_state``
@@ -44,7 +44,7 @@ from sqlalchemy.orm import Mapped, mapped_column
 
 from app.database import GUID, Base
 
-# Canonical target kinds - open-ended ``String(64)`` in the DB so new
+# Canonical target kinds — open-ended ``String(64)`` in the DB so new
 # kinds don't need a migration; this tuple is the validated whitelist
 # surfaced to API consumers.
 TARGET_KINDS: tuple[str, ...] = (
@@ -56,12 +56,6 @@ TARGET_KINDS: tuple[str, ...] = (
     "variation",
     "invoice",
     "purchase_order",
-    # QMS hold / witness point disposition. A failed or conditional
-    # inspection on a hold point fans out ``qms.inspection.approval_requested``;
-    # when the project has a route configured for this kind, the QMS module's
-    # subscriber starts an instance against the inspection so the gate cannot
-    # release without a formal disposition approval (item 12).
-    "qms_hold_point",
 )
 
 # Aggregation mode at a single step when the approver_role expands to
@@ -101,7 +95,7 @@ class Route(Base):
         default=None,
     )
 
-    def __repr__(self) -> str:  # pragma: no cover - debug only
+    def __repr__(self) -> str:  # pragma: no cover — debug only
         return f"<Route {self.name!r} kind={self.target_kind} active={self.is_active}>"
 
 
@@ -129,12 +123,6 @@ class Step(Base):
         default="all",
         server_default="all",
     )
-    # Eligible-approver population for a role-based ``all`` / ``majority``
-    # step. The engine cannot expand a role to its members, so when the
-    # route author needs a true quorum they persist the expected count
-    # here and the advance logic evaluates against it. NULL means the
-    # author did not declare a quorum.
-    required_approver_count: Mapped[int | None] = mapped_column(Integer, nullable=True)
     sla_hours: Mapped[int | None] = mapped_column(Integer, nullable=True)
 
     def __repr__(self) -> str:  # pragma: no cover

@@ -1,10 +1,10 @@
 """‌⁠‍Document Management ORM models.
 
 Tables:
-    oe_documents_document - uploaded project documents with metadata
-    oe_documents_photo    - project photo gallery with EXIF/GPS metadata
-    oe_documents_sheet    - individual drawing sheets extracted from multi-page PDFs
-    oe_documents_bim_link - links between Documents and BIM elements
+    oe_documents_document — uploaded project documents with metadata
+    oe_documents_photo    — project photo gallery with EXIF/GPS metadata
+    oe_documents_sheet    — individual drawing sheets extracted from multi-page PDFs
+    oe_documents_bim_link — links between Documents and BIM elements
 """
 
 from __future__ import annotations

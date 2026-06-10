@@ -1,4 +1,4 @@
-"""‌⁠‍Inspections service - business logic for quality inspection management."""
+"""‌⁠‍Inspections service — business logic for quality inspection management."""
 
 import logging
 import uuid
@@ -75,12 +75,15 @@ class InspectionService:
 
         Validates checklist_data structure before persisting.
         """
+        inspection_number = await self.repo.next_inspection_number(data.project_id)
+
         checklist = [entry.model_dump() for entry in data.checklist_data]
         if checklist:
             _validate_checklist_structure(checklist)
 
         inspection = QualityInspection(
             project_id=data.project_id,
+            inspection_number=inspection_number,
             inspection_type=data.inspection_type,
             title=data.title,
             description=data.description,
@@ -95,9 +98,6 @@ class InspectionService:
             metadata_=data.metadata,
         )
         inspection = await self.repo.create(inspection)
-        # The repository assigns inspection_number (with a collision retry) at
-        # insert time, so read the committed value back for logging.
-        inspection_number = inspection.inspection_number
         logger.info(
             "Inspection created: %s (%s) for project %s",
             inspection_number,
@@ -142,12 +142,7 @@ class InspectionService:
         """Update inspection fields."""
         inspection = await self.get_inspection(inspection_id)
 
-        # ``completed`` is terminal (see _INSPECTION_STATUS_TRANSITIONS) so it
-        # stays locked. ``failed`` is NOT terminal: the FSM allows
-        # failed → scheduled for re-inspection, so edits must be permitted and
-        # the transition validator below enforces that only valid status
-        # changes go through.
-        if inspection.status == "completed":
+        if inspection.status in ("completed", "failed"):
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail=f"Cannot edit an inspection with status '{inspection.status}'",
@@ -215,7 +210,7 @@ class InspectionService:
         # FSM gate: ``complete`` is the scheduled → in_progress → completed
         # capstone transition. We accept it from ``in_progress`` (normal
         # path) and from ``scheduled`` (one-step shortcut for short
-        # inspections - auto-walks through in_progress). Anything else
+        # inspections — auto-walks through in_progress). Anything else
         # (completed / cancelled / failed) is a 400.
         if inspection.status == "completed":
             raise HTTPException(
@@ -231,7 +226,7 @@ class InspectionService:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail=(
-                    "Inspection is in 'failed' state - reschedule it first "
+                    "Inspection is in 'failed' state — reschedule it first "
                     "(failed → scheduled) before completing again."
                 ),
             )

@@ -199,9 +199,7 @@ afterEach(() => {
 /* ── Tests ─────────────────────────────────────────────────────── */
 
 describe('<ApprovalInstanceCard />', () => {
-  // 60s budget: the FIRST test in this file pays the one-time dynamic-import
-  // transform cost, which exceeds 15s when full-suite workers saturate the CPU.
-  it('renders the running instance ladder with approve/reject for active assignee', { timeout: 60000 }, async () => {
+  it('renders the running instance ladder with approve/reject for active assignee', { timeout: 15000 }, async () => {
     setupApiGet({ instances: [runningInstance], route });
     const ApprovalInstanceCard = await importCard();
     const qc = makeClient();

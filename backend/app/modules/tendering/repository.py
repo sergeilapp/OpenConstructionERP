@@ -1,7 +1,7 @@
 """‌⁠‍Tendering data access layer.
 
 All database queries for tender packages and bids live here.
-No business logic - pure data access.
+No business logic — pure data access.
 """
 
 import uuid

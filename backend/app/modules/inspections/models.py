@@ -1,12 +1,12 @@
 """‌⁠‍Inspections ORM models.
 
 Tables:
-    oe_inspections_inspection - quality inspections with checklists and pass/fail results
+    oe_inspections_inspection — quality inspections with checklists and pass/fail results
 """
 
 import uuid
 
-from sqlalchemy import JSON, Float, ForeignKey, Index, String, Text, UniqueConstraint
+from sqlalchemy import JSON, ForeignKey, Index, String, Text
 from sqlalchemy.orm import Mapped, mapped_column
 
 from app.database import GUID, Base
@@ -21,14 +21,6 @@ class QualityInspection(Base):
             "ix_oe_inspections_inspection_project_type",
             "project_id",
             "inspection_type",
-        ),
-        # Per-project uniqueness of the human-facing INS-NNN number. COUNT+1
-        # numbering races under concurrent creates; this constraint forces a
-        # retry instead of a duplicate.
-        UniqueConstraint(
-            "project_id",
-            "inspection_number",
-            name="uq_oe_inspections_inspection_project_number",
         ),
     )
 
@@ -58,14 +50,6 @@ class QualityInspection(Base):
     )
 
     created_by: Mapped[str | None] = mapped_column(String(36), nullable=True)
-
-    # ── Geo binding (cross-module) ────────────────────────────────────────
-    # Capture-time WGS84 pin so an inspection raised in the field renders on the
-    # project's Geo Hub map. Mirrors punchlist ``geo_lat``/``geo_lon`` exactly.
-    # Nullable + no server_default - absent means "no map pin", not "(0, 0)".
-    geo_lat: Mapped[float | None] = mapped_column(Float, nullable=True)
-    geo_lon: Mapped[float | None] = mapped_column(Float, nullable=True)
-
     metadata_: Mapped[dict] = mapped_column(  # type: ignore[assignment]
         "metadata",
         JSON,

@@ -1,7 +1,7 @@
 """‌⁠‍Punch List ORM models.
 
 Tables:
-    oe_punchlist_item - punch list items tracking construction deficiencies
+    oe_punchlist_item — punch list items tracking construction deficiencies
 """
 
 import uuid
@@ -60,7 +60,7 @@ class PunchItem(Base):
         server_default="[]",
     )
 
-    # ── Rework cost (Decimal as string - never Float) ─────────────────────
+    # ── Rework cost (Decimal as string — never Float) ─────────────────────
     # Stored as VARCHAR so there is no floating-point rounding on money values.
     # Service layer validates it as a Decimal string before persisting.
     rework_cost: Mapped[str | None] = mapped_column(String(40), nullable=True)

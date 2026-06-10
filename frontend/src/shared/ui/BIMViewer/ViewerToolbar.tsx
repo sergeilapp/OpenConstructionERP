@@ -1,5 +1,5 @@
 /**
- * ViewerToolbar — floating overlay surfacing the three BIM-coordination-tool-style
+ * ViewerToolbar — floating overlay surfacing the three BIMcollab-style
  * tools added by this slice: Section Box, Walk mode, Measure.
  *
  * Only one tool is active at a time (mutual exclusion is enforced at the
@@ -20,7 +20,6 @@ import { Crop, Move3d, Ruler, RotateCcw, Copy, X } from 'lucide-react';
 import type { SectionBox } from './SectionBox';
 import type { WalkMode } from './WalkMode';
 import type { MeasureTool, Measurement } from './MeasureTool';
-import { copyToClipboard } from '@/shared/lib/browser';
 
 export type ActiveViewerTool = 'section' | 'walk' | 'measure' | null;
 
@@ -185,7 +184,14 @@ export function ViewerToolbar({
       lastMeasurement.distance >= 1
         ? `${lastMeasurement.distance.toFixed(3)} m`
         : `${(lastMeasurement.distance * 1000).toFixed(0)} mm`;
-    await copyToClipboard(value);
+    try {
+      if (typeof navigator !== 'undefined' && navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(value);
+      }
+    } catch {
+      // Clipboard may be denied (insecure context / permission). Silently
+      // fall through — the value stays visible in the panel.
+    }
     setCopiedFlash(true);
     window.setTimeout(() => setCopiedFlash(false), 1200);
   }, [lastMeasurement]);

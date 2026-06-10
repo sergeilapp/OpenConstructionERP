@@ -29,8 +29,6 @@ import {
   Sparkles,
 } from 'lucide-react';
 
-import { copyToClipboard } from '@/shared/lib/browser';
-
 import { fetchEmbedderStatus, type EmbedderStatus } from './api';
 
 function CopyableCommand({ command }: { command: string }) {
@@ -45,7 +43,7 @@ function CopyableCommand({ command }: { command: string }) {
 
   const onCopy = async () => {
     try {
-      await copyToClipboard(command);
+      await navigator.clipboard.writeText(command);
       setCopied(true);
     } catch {
       // Fallback: select-and-prompt; clipboard may be blocked under
@@ -198,7 +196,7 @@ function MissingState({ status }: { status: EmbedderStatus }) {
           <p className="mt-2 text-[12.5px] text-amber-900/90 dark:text-amber-100/90 leading-relaxed">
             {t(
               'match_elements.embedder_required_body',
-              'OpenConstructionERP uses BGE-M3 - a free, open-source multilingual encoder by BAAI. It runs entirely on your machine. No API key. No cloud calls. Install once with one command:',
+              'OpenConstructionERP uses BGE-M3 — a free, open-source multilingual encoder by BAAI. It runs entirely on your machine. No API key. No cloud calls. Install once with one command:',
             )}
           </p>
         </div>

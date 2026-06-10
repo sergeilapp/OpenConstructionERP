@@ -31,20 +31,16 @@ import {
   TrendingUp,
   Trash2,
 } from 'lucide-react';
-import { Button, Card, Badge, EmptyState, SkeletonTable, CountryFlag, CountryFlagBackdrop, Breadcrumb, ConfirmDialog, DismissibleInfo, IntroRichText } from '@/shared/ui';
-import { PageHeader } from '@/shared/ui/PageHeader';
+import { Button, Card, Badge, EmptyState, InfoHint, SkeletonTable, CountryFlag, Breadcrumb, ConfirmDialog } from '@/shared/ui';
 import { useConfirm } from '@/shared/hooks/useConfirm';
 import { apiGet, apiPost, apiDelete, triggerDownload, extractErrorMessageFromBody } from '@/shared/lib/api';
 import { getIntlLocale } from '@/shared/lib/formatters';
-import { copyToClipboard } from '@/shared/lib/browser';
 import { useToastStore } from '@/stores/useToastStore';
 import { useProjectContextStore } from '@/stores/useProjectContextStore';
 import { useCostDatabaseStore, REGION_MAP } from '@/stores/useCostDatabaseStore';
 import { useAuthStore } from '@/stores/useAuthStore';
 import type { CostItemMetadata, CertaintyBadge as CertaintyBadgeData } from './api';
-import { buildBoqPositionDraft, type FullCostItem } from './addToBoqHelpers';
-import { fetchUsageCounts } from './api';
-import { UsageBadge } from './UsageBadge';
+import { CertaintyBadge } from './CertaintyBadge';
 import { EscalationCalculator } from './EscalationCalculator';
 import { RegionalAdjustPanel } from './RegionalAdjustPanel';
 import { CostCategoryTree } from '@/features/boq/CostCategoryTree';
@@ -475,13 +471,9 @@ export function CostsPage() {
   // user-driven changes after that.
   const [searchParams, setSearchParams] = useSearchParams();
   const regionFromUrl = searchParams.get('region') ?? '';
-  // ?q=<text> deep-link from the AI Advisor source-code links (CONN-81) -
-  // pre-fills the search box with the CWICR code so the user lands on that
-  // item. Read once on mount and then stripped, like ?region.
-  const queryFromUrl = searchParams.get('q') ?? '';
 
-  const [query, setQuery] = useState(queryFromUrl);
-  const [debouncedQuery, setDebouncedQuery] = useState(queryFromUrl);
+  const [query, setQuery] = useState('');
+  const [debouncedQuery, setDebouncedQuery] = useState('');
   const [unit, setUnit] = useState('');
   const [source, setSource] = useState('');
   const [category, setCategory] = useState('');
@@ -509,25 +501,15 @@ export function CostsPage() {
   const [recentItems, setRecentItems] = useState<RecentItem[]>(() => loadRecent());
   const [specialTab, setSpecialTab] = useState<'' | 'favourites' | 'recent'>('');
 
-  // One-shot: if mounted with ``?region=X`` and/or ``?q=text``, apply them
-  // (push the region to the global store so the tab strip highlights it; the
-  // query is already seeded into state above), then strip the params so a
-  // reload doesn't keep forcing the filter back over user changes.
+  // One-shot: if mounted with ``?region=X``, push it to the global store
+  // so the tab strip highlights it, then strip the param so a reload
+  // doesn't keep forcing the filter back over user changes.
   useEffect(() => {
-    if (!regionFromUrl && !queryFromUrl) return;
-    if (regionFromUrl) {
-      setActiveRegion(regionFromUrl);
-      setRegion(regionFromUrl);
-    }
-    setSearchParams(
-      (prev) => {
-        const next = new URLSearchParams(prev);
-        next.delete('region');
-        next.delete('q');
-        return next;
-      },
-      { replace: true },
-    );
+    if (!regionFromUrl) return;
+    setActiveRegion(regionFromUrl);
+    setRegion(regionFromUrl);
+    searchParams.delete('region');
+    setSearchParams(searchParams, { replace: true });
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -728,18 +710,6 @@ export function CostsPage() {
     return m;
   }, [certaintyList]);
 
-  // Batch-fetch how many estimate (BOQ) positions each visible item is used
-  // in. One grouped request per page (same key strategy as the certainty
-  // batch). The "used in N estimates" badge reads this; adding a position
-  // invalidates the ['costs','usage'] key so the badge flips immediately.
-  const { data: usageCounts } = useQuery<Record<string, number>>({
-    queryKey: ['costs', 'usage', 'batch', certaintyKey],
-    queryFn: () => fetchUsageCounts(visibleIds),
-    enabled: visibleIds.length > 0,
-    staleTime: 30_000,
-    retry: 1,
-  });
-
   // Active filter count & clear all
   const activeFilterCount = [query, unit, source, category].filter(Boolean).length + (region ? 1 : 0) + (specialTab ? 1 : 0);
 
@@ -789,43 +759,13 @@ export function CostsPage() {
 
   const handleCopyRate = useCallback(async (item: CostItem) => {
     try {
-      await copyToClipboard(String(item.rate));
+      await navigator.clipboard.writeText(String(item.rate));
       setCopiedId(item.id);
       setTimeout(() => setCopiedId(null), 2000);
     } catch {
       // Clipboard API unavailable -- silently ignore.
     }
   }, []);
-
-  // Current region info for subtitle
-  const regionInfo = region ? REGION_MAP[region] : null;
-  // Fallback currency for rows whose own `currency` is empty — derived
-  // from the active region's catalogue. Empty when "All regions" + no
-  // per-row currency, in which case the bare formatted number is shown.
-  const regionCurrency = regionInfo?.currency ?? '';
-
-  // CONN-83 — "Benchmark this rate": deep-link the row's rate into the AI
-  // Cost Advisor as a ready-to-send question, plus the active region so the
-  // advisor scopes its answer to the same catalogue. The advisor consumes
-  // the ?q= prefill separately (its own batch); until then the user lands on
-  // a scoped advisor with the question one click away.
-  const handleBenchmark = useCallback(
-    (item: CostItem) => {
-      const rowCurrency = (item.currency || regionCurrency || '').trim().toUpperCase();
-      const rateLabel = rowCurrency
-        ? `${item.rate} ${rowCurrency}/${item.unit}`
-        : `${item.rate}/${item.unit}`;
-      const question = t('costs.benchmark_question', {
-        defaultValue: 'Is {{rate}} a typical rate for "{{description}}"? How does it compare across regions?',
-        rate: rateLabel,
-        description: item.description,
-      });
-      const params = new URLSearchParams({ q: question });
-      if (region) params.set('region', region);
-      navigate(`/advisor?${params.toString()}`);
-    },
-    [navigate, region, regionCurrency, t],
-  );
 
   // handleLoadMore for future pagination: () => setOffset(prev => prev + PAGE_SIZE)
 
@@ -869,6 +809,13 @@ export function CostsPage() {
       maximumFractionDigits: 2,
     }).format(n);
 
+  // Current region info for subtitle
+  const regionInfo = region ? REGION_MAP[region] : null;
+  // Fallback currency for rows whose own `currency` is empty — derived
+  // from the active region's catalogue. Empty when "All regions" + no
+  // per-row currency, in which case the bare formatted number is shown.
+  const regionCurrency = regionInfo?.currency ?? '';
+
   // Currency-aware money formatter. Catalogues mix EUR / AED / SAR / USD,
   // so a bare number is ambiguous — always render the ISO code. Falls
   // back to the plain number formatter only when no currency is known at
@@ -904,132 +851,103 @@ export function CostsPage() {
   };
 
   return (
-    <div className="relative space-y-5 animate-fade-in">
-      {/* Faint watermark of the active cost-database country (founder ask):
-          pick the German base and the page carries the German flag at ~5%. */}
-      <CountryFlagBackdrop code={activeRegion} />
-      <Breadcrumb items={[{ label: t('costs.title') }]} />
+    <div className="w-full animate-fade-in">
+      <Breadcrumb items={[
+        { label: t('nav.dashboard', 'Dashboard'), to: '/' },
+        { label: t('costs.title', 'Cost Database') },
+      ]} className="mb-4" />
 
-      {/* Canonical top block — module name + icon live in the global top app
-          bar. The page renders only its (contextual) subtitle on the left and
-          the page actions on the right. */}
-      <PageHeader
-        srTitle={t('costs.title')}
-        subtitle={
-          regionInfo
-            ? (() => {
-                // While the search request is in-flight, prefer the catalog
-                // count from the tab badge over the still-zero `total` to
-                // avoid the misleading "0 items" flash.
-                const tabCount =
-                  regionStats?.find((r) => r.region === activeRegion)?.count ?? null;
-                const display =
-                  total > 0
-                    ? total
-                    : isFetching && tabCount != null
-                      ? tabCount
-                      : 0;
-                return `${regionInfo.name}, ${display.toLocaleString()} ${t('costs.items', 'items')}`;
-              })()
-            : total > 0
-              ? `${total.toLocaleString()} ${t('costs.results_found', 'results found')}`
-              : t('costs.search_hint', 'Search cost items by description or code')
-        }
-        actions={
-          <>
-            {total > 0 && (
-              <Button
-                variant="secondary"
-                size="sm"
-                icon={
-                  exportMutation.isPending ? (
-                    <Loader2 size={14} className="animate-spin" />
-                  ) : (
-                    <Download size={14} />
-                  )
-                }
-                onClick={() => exportMutation.mutate()}
-                disabled={exportMutation.isPending}
-              >
-                {t('costs.export', { defaultValue: 'Export' })}
-              </Button>
-            )}
+      {/* Header */}
+      <div className="mb-5 flex items-start justify-between">
+        <div>
+          <h1 className="text-2xl font-bold text-content-primary">{t('costs.title')}</h1>
+          <span className="mt-1 text-sm text-content-secondary inline-flex items-center gap-0.5 flex-wrap">
+            <span>
+              {regionInfo
+                ? (() => {
+                    // While the search request is in-flight, prefer the
+                    // catalog count from the tab badge over the still-zero
+                    // `total` to avoid the misleading "0 items" flash.
+                    const tabCount =
+                      regionStats?.find((r) => r.region === activeRegion)?.count ?? null;
+                    const display =
+                      total > 0
+                        ? total
+                        : isFetching && tabCount != null
+                          ? tabCount
+                          : 0;
+                    return `${regionInfo.name} — ${display.toLocaleString()} ${t('costs.items', 'items')}`;
+                  })()
+                : total > 0
+                  ? `${total.toLocaleString()} ${t('costs.results_found', 'results found')}`
+                  : t('costs.search_hint', 'Search cost items by description or code')}
+            </span>
+            <InfoHint inline text={t('costs.what_is_cost_db', { defaultValue: 'Unit rates and composite prices for materials, labor, and equipment. Import regional databases (CWICR, BKI, RSMeans) from Modules or add custom rates. Toggle AI Semantic Search for natural-language queries.' })} />
+          </span>
+        </div>
+        <div className="flex items-center gap-2">
+          {total > 0 && (
             <Button
               variant="secondary"
               size="sm"
-              icon={<TrendingUp size={14} />}
-              onClick={() => setShowEscalation((p) => !p)}
-              className={showEscalation ? 'border-amber-300 text-amber-600 bg-amber-50 dark:bg-amber-900/20' : ''}
-            >
-              {t('costs.escalation', { defaultValue: 'Escalation' })}
-            </Button>
-            <Button
-              variant="secondary"
-              size="sm"
-              icon={<Layers size={14} />}
-              onClick={() => setShowRegionalAdjust((p) => !p)}
-              className={showRegionalAdjust ? 'border-oe-blue/40 text-oe-blue-text bg-oe-blue-subtle/20' : ''}
-            >
-              {t('costs.regional_adjust.toggle', { defaultValue: 'Regional Adjust' })}
-            </Button>
-            <Button
-              variant="secondary"
-              size="sm"
-              icon={<Plus size={14} />}
-              onClick={() => setShowCreateItem(true)}
-            >
-              {t('costs.add_item', { defaultValue: 'Add Item' })}
-            </Button>
-            {/* CONN-83 — outbound AI affordance. Send the user to the Cost
-                Advisor to sanity-check rates in plain language. Carries the
-                active region as ?region= so the advisor opens scoped to the
-                same catalogue the user is browsing. */}
-            <Button
-              variant="secondary"
-              size="sm"
-              icon={<Sparkles size={14} />}
-              onClick={() =>
-                navigate(region ? `/advisor?region=${region}` : '/advisor')
+              icon={
+                exportMutation.isPending ? (
+                  <Loader2 size={14} className="animate-spin" />
+                ) : (
+                  <Download size={14} />
+                )
               }
+              onClick={() => exportMutation.mutate()}
+              disabled={exportMutation.isPending}
             >
-              {t('costs.ask_cost_advisor', { defaultValue: 'Ask the Cost Advisor' })}
+              {t('costs.export', { defaultValue: 'Export' })}
             </Button>
-            <Button
-              variant="primary"
-              size="sm"
-              icon={<Upload size={14} />}
-              onClick={() => navigate('/costs/import')}
-            >
-              {t('costs.import_database', { defaultValue: 'Import' })}
-            </Button>
-          </>
-        }
-      />
-
-      <DismissibleInfo
-        storageKey="costs"
-        title={t('costs.intro_title', { defaultValue: 'One source of truth for unit rates' })}
-        more={t('costs.intro_more', { defaultValue: '' }) ? <IntroRichText text={t('costs.intro_more')} /> : undefined}
-        links={[
-          { label: t('nav.costs_import', { defaultValue: 'Import Cost Database' }), onClick: () => navigate('/costs/import') },
-          { label: t('nav.catalog', { defaultValue: 'Resource Catalog' }), onClick: () => navigate('/catalog') },
-          { label: t('nav.boq', { defaultValue: 'Bill of Quantities' }), onClick: () => navigate('/boq') },
-        ]}
-      >
-        {t('costs.intro_body', {
-          defaultValue:
-            'Browse and maintain unit and composite rates for materials, labour and equipment across regional catalogues like CWICR, BKI and RSMeans, or add your own. Each rate carries its currency and classification, so items you pull into a BOQ flow straight into the cost and schedule rollup.',
-        })}
-      </DismissibleInfo>
+          )}
+          <Button
+            variant="secondary"
+            size="sm"
+            icon={<TrendingUp size={14} />}
+            onClick={() => setShowEscalation((p) => !p)}
+            className={showEscalation ? 'border-amber-300 text-amber-600 bg-amber-50 dark:bg-amber-900/20' : ''}
+          >
+            {t('costs.escalation', { defaultValue: 'Escalation' })}
+          </Button>
+          <Button
+            variant="secondary"
+            size="sm"
+            icon={<Layers size={14} />}
+            onClick={() => setShowRegionalAdjust((p) => !p)}
+            className={showRegionalAdjust ? 'border-oe-blue/40 text-oe-blue-text bg-oe-blue-subtle/20' : ''}
+          >
+            {t('costs.regional_adjust.toggle', { defaultValue: 'Regional Adjust' })}
+          </Button>
+          <Button
+            variant="secondary"
+            size="sm"
+            icon={<Plus size={14} />}
+            onClick={() => setShowCreateItem(true)}
+          >
+            {t('costs.add_item', { defaultValue: 'Add Item' })}
+          </Button>
+          <Button
+            variant="primary"
+            size="sm"
+            icon={<Upload size={14} />}
+            onClick={() => navigate('/costs/import')}
+          >
+            {t('costs.import_database', { defaultValue: 'Import' })}
+          </Button>
+        </div>
+      </div>
 
       {/* Escalation Calculator (collapsible) */}
       {showEscalation && (
-        <EscalationCalculator className="animate-fade-in" />
+        <EscalationCalculator className="mb-5 animate-fade-in" />
       )}
 
       {/* Regional Adjust panel (collapsible, v3.12.0) */}
       {showRegionalAdjust && (
-        <RegionalAdjustPanel className="animate-fade-in" />
+        <RegionalAdjustPanel className="mb-5 animate-fade-in" />
       )}
 
       {/* Region Tabs */}
@@ -1332,12 +1250,10 @@ export function CostsPage() {
                         isSelected={selectedIds.has(item.id)}
                         isFavourite={favourites.has(item.id)}
                         band={certaintyById.get(item.id) ?? null}
-                        usageCount={usageCounts?.[item.id] ?? 0}
                         regionCurrency={regionCurrency}
                         onSelect={() => toggleSelect(item.id)}
                         onToggle={() => setExpandedId(isExpanded ? null : item.id)}
                         onCopy={() => handleCopyRate(item)}
-                        onBenchmark={() => handleBenchmark(item)}
                         onToggleFavourite={() => toggleFavourite(item.id)}
                         onDelete={(id) => deleteMutation.mutate(id)}
                         fmt={fmt}
@@ -1454,12 +1370,10 @@ export function CostsPage() {
               icon={<Copy size={14} />}
               onClick={() => {
                 const text = selectedItems.map((i) => `${i.code}\t${i.description}\t${i.unit}\t${i.rate}`).join('\n');
-                copyToClipboard(text).then((ok) => {
-                  if (ok) {
-                    addToast({ type: 'success', title: t('common.copied', { defaultValue: 'Copied' }), message: t('costs.items_copied', { defaultValue: '{{count}} items copied to clipboard', count: selectedIds.size }) });
-                  } else {
-                    addToast({ type: 'error', title: t('common.copy_failed', { defaultValue: 'Copy failed' }), message: 'Clipboard access denied' });
-                  }
+                navigator.clipboard.writeText(text).then(() => {
+                  addToast({ type: 'success', title: t('common.copied', { defaultValue: 'Copied' }), message: t('costs.items_copied', { defaultValue: '{{count}} items copied to clipboard', count: selectedIds.size }) });
+                }).catch((err) => {
+                  addToast({ type: 'error', title: t('common.copy_failed', { defaultValue: 'Copy failed' }), message: err?.message || 'Clipboard access denied' });
                 });
               }}
             >
@@ -1483,11 +1397,6 @@ export function CostsPage() {
           onSuccess={() => {
             // Track all added items as recently used
             selectedItems.forEach((si) => trackRecentUsage(si));
-            // Refetch the usage indicator so the "used in N estimates" badge
-            // flips immediately for the items just added (and the certainty
-            // frequency reflects the new ledger rows).
-            queryClient.invalidateQueries({ queryKey: ['costs', 'usage'] });
-            queryClient.invalidateQueries({ queryKey: ['costs', 'certainty'] });
             setShowAddToBOQ(false);
             setSelectedIds(new Set());
           }}
@@ -1625,61 +1534,78 @@ function AddToBOQModal({
         const itemCurrency =
           (item.currency || REGION_MAP[item.region ?? '']?.currency || '').trim().toUpperCase();
 
-        // The /costs list runs in ``?lite=1`` mode, so ``item`` carries
-        // ``components: []`` and a trimmed ``metadata_`` (no ``variants``).
-        // Fetch the FULL cost item so the position inherits ALL resources +
-        // the variant catalog — same "fetch full before apply" pattern the
-        // BOQ "From Database" modal and the match-elements apply flow use.
-        // On a transient fetch failure we fall back to the lite row so the
-        // add still succeeds (degraded fidelity) rather than aborting.
-        let full: FullCostItem;
-        try {
-          full = await apiGet<FullCostItem>(`/v1/costs/${item.id}`);
-        } catch {
-          full = {
-            id: item.id,
-            code: item.code,
-            description: item.description,
-            unit: item.unit,
-            rate: item.rate,
-            currency: item.currency,
-            region: item.region,
-            classification: item.classification ?? {},
-            components: [],
-            metadata_: item.metadata_ ?? {},
-            source: item.source,
-          };
+        // Build rich metadata with cost breakdown + components.
+        // ``metadata.currency`` is the AUTHORITATIVE key the BOQ FX rollup
+        // reads (see ``_position_currency`` in boq/service.py) — set it so a
+        // foreign-currency catalogue rate converts to the project base via
+        // fx_rates instead of being summed as base. ``cost_item_currency``
+        // is kept as the provenance mirror the apply path also stamps.
+        const meta: Record<string, unknown> = {
+          cost_item_id: item.id,
+          cost_item_code: item.code,
+          cost_item_region: item.region,
+          ...(itemCurrency ? { currency: itemCurrency, cost_item_currency: itemCurrency } : {}),
+          ...item.metadata_,
+        };
+
+        // Include resource breakdown for BOQ Grid display
+        // BOQ Grid reads from metadata.resources: Array<{name, code, type, unit, quantity, unit_rate, total, currency}>
+        if (item.components && item.components.length > 0) {
+          // Full component data available — use it directly
+          meta.resources = item.components.map((c) => ({
+            name: c.name,
+            code: c.code,
+            type: c.type,
+            unit: c.unit,
+            quantity: c.quantity,
+            unit_rate: c.unit_rate,
+            total: c.cost,
+            currency: itemCurrency,
+          }));
+          meta.resource_count = item.components.length;
+        } else if (item.metadata_) {
+          // No components stored — synthesize from metadata cost summary
+          const synth: Array<{ name: string; code: string; type: string; unit: string; quantity: number; unit_rate: number; total: number; currency: string }> = [];
+          const m = item.metadata_;
+          if (m.labor_cost && m.labor_cost > 0) {
+            synth.push({ name: t('costs.component_labor', { defaultValue: 'Labor' }), code: '', type: 'labor', unit: item.unit, quantity: 1, unit_rate: m.labor_cost, total: m.labor_cost, currency: itemCurrency });
+          }
+          if (m.material_cost && m.material_cost > 0) {
+            synth.push({ name: t('costs.component_material', { defaultValue: 'Material' }), code: '', type: 'material', unit: item.unit, quantity: 1, unit_rate: m.material_cost, total: m.material_cost, currency: itemCurrency });
+          }
+          if (m.equipment_cost && m.equipment_cost > 0) {
+            synth.push({ name: t('costs.component_equipment', { defaultValue: 'Equipment' }), code: '', type: 'equipment', unit: item.unit, quantity: 1, unit_rate: m.equipment_cost, total: m.equipment_cost, currency: itemCurrency });
+          }
+          if (synth.length > 0) {
+            meta.resources = synth;
+            meta.resource_count = synth.length;
+          }
         }
 
-        // Build the full-fidelity metadata + unit_rate from the complete
-        // cost item: every component becomes a ``metadata.resources[]``
-        // entry, variant-bearing resources auto-default to the mean rate and
-        // carry their ``available_variants`` for later re-pick, and a
-        // top-level abstract-resource variant set is appended as one resource
-        // line. ``metadata.currency`` is the AUTHORITATIVE key the BOQ FX
-        // rollup reads (see ``_position_currency`` in boq/service.py).
-        const { unitRate, metadata } = buildBoqPositionDraft(full, itemCurrency, {
-          labor: t('costs.component_labor', { defaultValue: 'Labor' }),
-          material: t('costs.component_material', { defaultValue: 'Material' }),
-          equipment: t('costs.component_equipment', { defaultValue: 'Equipment' }),
-        });
+        // Cost breakdown summary
+        if (meta.resources) {
+          const byType: Record<string, number> = {};
+          for (const r of meta.resources as Array<{ type: string; total: number }>) {
+            byType[r.type] = (byType[r.type] ?? 0) + r.total;
+          }
+          meta.cost_breakdown = byType;
+        }
 
-        // ``cost_item_id`` is sent as a top-level PositionCreate field so the
-        // backend validates the reference and runs unit/currency compat
-        // stamping; the variant snapshots are frozen server-side from
-        // ``metadata.variant_default`` / per-resource markers.
+        // The catalogue currency rides on ``metadata.currency`` (set above) —
+        // that's the key the BOQ FX rollup reads, so a foreign-currency rate
+        // converts to the project base via fx_rates instead of being summed
+        // as base. PositionCreate has no top-level currency field.
         await apiPost(`/v1/boq/boqs/${boqId}/positions/`, {
           boq_id: boqId,
           ordinal,
-          description: full.description,
-          unit: full.unit,
+          description: item.description,
+          unit: item.unit,
           quantity: 1,
-          unit_rate: unitRate,
-          classification: full.classification || {},
+          unit_rate: item.rate,
+          classification: item.classification || {},
           parent_id: sectionId || undefined,
-          cost_item_id: item.id,
           source: 'cost_database',
-          metadata,
+          metadata: meta,
         });
         nextOrdinal++;
       }
@@ -2102,7 +2028,7 @@ function CreateAssemblyFromCostsModal({
               <div className="mt-2 rounded-lg border border-amber-300/60 bg-amber-50 px-3 py-2 text-xs text-amber-800 dark:border-amber-500/40 dark:bg-amber-900/20 dark:text-amber-200">
                 {t('costs.assembly_mixed_currency_warning', {
                   defaultValue:
-                    'Assemblies must be single-currency. The selected items span {{count}} currencies ({{list}}) - pick items that share one currency to continue.',
+                    'Assemblies must be single-currency. The selected items span {{count}} currencies ({{list}}) — pick items that share one currency to continue.',
                   count: distinctCurrencies.length,
                   list: distinctCurrencies.join(', '),
                 })}
@@ -2534,12 +2460,10 @@ function CostItemRow({
   isSelected,
   isFavourite,
   band,
-  usageCount,
   regionCurrency,
   onSelect,
   onToggle,
   onCopy,
-  onBenchmark,
   onToggleFavourite,
   onDelete,
   fmt,
@@ -2554,17 +2478,11 @@ function CostItemRow({
   isFavourite: boolean;
   /** Pre-resolved certainty band from the page-level batch fetch. */
   band: CertaintyBadgeData | null;
-  /** How many estimate (BOQ) positions this item is used in (page-level
-   *  batch fetch). 0 = not yet used. */
-  usageCount: number;
   /** Active region's currency — fallback when the row's own is empty. */
   regionCurrency: string;
   onSelect: () => void;
   onToggle: () => void;
   onCopy: () => void;
-  /** CONN-83 — open the AI Cost Advisor pre-loaded with a benchmark question
-   *  about this row's rate. */
-  onBenchmark: () => void;
   onToggleFavourite: () => void;
   onDelete?: (id: string) => void;
   fmt: (n: number) => string;
@@ -2683,7 +2601,7 @@ function CostItemRow({
         </td>
         <td className="px-4 py-3 text-right font-semibold text-content-primary tabular-nums">
           <div className="inline-flex items-center gap-1.5">
-            <UsageBadge count={usageCount} band={band} />
+            <CertaintyBadge costItemId={item.id} band={band} />
             <span title={rowCurrency || undefined}>{money(item.rate)}</span>
             {hasVariants && variantStats && (
               <Badge
@@ -2732,14 +2650,6 @@ function CostItemRow({
               ) : (
                 <Copy size={13} />
               )}
-            </button>
-            {/* CONN-83 — Benchmark this rate against the AI Cost Advisor. */}
-            <button
-              onClick={(e) => { e.stopPropagation(); onBenchmark(); }}
-              title={t('costs.benchmark_rate', { defaultValue: 'Benchmark this rate with the AI Cost Advisor' })}
-              className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-content-tertiary transition-all hover:bg-violet-500/10 hover:text-violet-500"
-            >
-              <Sparkles size={13} />
             </button>
             {item.source === 'custom' && (
               <button

@@ -63,7 +63,6 @@ export default [
       'e2e-match/**/*.{mjs,cjs,js}',
       'e2e/**/*.{mjs,cjs,js}',
       'scripts/**/*.{mjs,cjs,js}',
-      'qa-tests/**/*.{mjs,cjs,js}',
     ],
     languageOptions: {
       ecmaVersion: 2022,

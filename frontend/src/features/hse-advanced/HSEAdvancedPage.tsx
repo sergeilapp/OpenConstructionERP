@@ -1,6 +1,6 @@
 import { useState, useMemo, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery, useQueries, useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   AlertTriangle,
@@ -17,16 +17,6 @@ import {
   Clock,
   CheckCircle2,
   Download,
-  CheckCircle,
-  PlayCircle,
-  PauseCircle,
-  XCircle,
-  Send,
-  Archive,
-  ArrowUpCircle,
-  ListChecks,
-  Trash2,
-  ExternalLink,
 } from 'lucide-react';
 import {
   Button,
@@ -36,11 +26,9 @@ import {
   Breadcrumb,
   RecoveryCard,
   SkeletonTable,
-  IntroRichText,
 } from '@/shared/ui';
 import { RequiresProject } from '@/shared/auth/RequiresProject';
 import { DateDisplay } from '@/shared/ui/DateDisplay';
-import { PageHeader } from '@/shared/ui/PageHeader';
 import { SectionIntro } from '@/features/validation';
 import { normalizeListResponse } from '@/shared/lib/apiHelpers';
 import { getErrorMessage } from '@/shared/lib/api';
@@ -67,27 +55,6 @@ import {
   downloadOsha300Csv,
   fetchCorrectiveActions,
   transitionCorrectiveAction,
-  submitJSA,
-  approveJSA,
-  activateJSA,
-  archiveJSA,
-  approvePermit,
-  activatePermit,
-  suspendPermit,
-  closePermit,
-  cancelPermit,
-  updatePermitPrerequisites,
-  fetchAuditFindings,
-  createAuditFinding,
-  deleteAuditFinding,
-  completeAudit,
-  completeCAPA,
-  escalateCAPA,
-  cancelCAPA,
-  setCAPAFiveWhys,
-  verifyCAPAEffectiveness,
-  fetchSafetyIncidents,
-  type SafetyIncidentOption,
   type IncidentInvestigation,
   type JobSafetyAnalysis,
   type PermitToWork,
@@ -100,12 +67,6 @@ import {
   type CATargetStatus,
   type CorrectiveActionRow,
   type HSEKpi,
-  type AuditFinding,
-  type AuditFindingCategory,
-  type AuditFindingSeverity,
-  type RootCauseCategory,
-  type FiveWhyStep,
-  type PermitPrerequisites,
 } from './api';
 
 const HSE_TAB_IDS = [
@@ -142,226 +103,6 @@ const inputCls =
 const textareaCls =
   'w-full rounded-lg border border-border bg-surface-primary px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-oe-blue/30 focus:border-oe-blue resize-none';
 
-/* ── Shared safety-incident picker ──────────────────────────────────────
- * Replaces the raw-UUID field on the investigation / CAPA-source flows with a
- * real dropdown of the project's safety incidents (the Safety module is the
- * system of record). The selected id becomes the investigation's incident_ref
- * or the CAPA's source_ref, so the new record links back to what raised it.
- */
-function useSafetyIncidents(projectId: string, enabled = true) {
-  return useQuery({
-    queryKey: ['hse-safety-incidents', projectId],
-    queryFn: () => fetchSafetyIncidents(projectId),
-    select: (d) => normalizeListResponse<SafetyIncidentOption>(d),
-    enabled: enabled && !!projectId,
-    staleTime: 30_000,
-  });
-}
-
-/** Human-readable one-line label for a safety incident option. */
-function incidentOptionLabel(it: SafetyIncidentOption): string {
-  const head = it.incident_number || it.id.slice(0, 8);
-  const type = (it.incident_type || '').replace(/_/g, ' ');
-  const date = it.incident_date ? ` · ${it.incident_date}` : '';
-  return `${head}${type ? ` · ${type}` : ''}${date}`;
-}
-
-function SafetyIncidentPicker({
-  projectId,
-  value,
-  onChange,
-  required,
-  emptyHint,
-}: {
-  projectId: string;
-  value: string;
-  onChange: (id: string) => void;
-  required?: boolean;
-  emptyHint?: string;
-}) {
-  const { t } = useTranslation();
-  const { data, isLoading, isError } = useSafetyIncidents(projectId);
-  const incidents = data ?? [];
-
-  if (isError) {
-    // Fall back to a free-text id field so the flow never dead-ends if the
-    // Safety endpoint is unavailable.
-    return (
-      <input
-        className={inputCls}
-        value={value}
-        placeholder={t('hse_advanced.incident_ref_placeholder', {
-          defaultValue: 'UUID of the linked safety incident',
-        })}
-        onChange={(e) => onChange(e.target.value)}
-      />
-    );
-  }
-
-  if (!isLoading && incidents.length === 0) {
-    return (
-      <p className="text-sm text-content-tertiary">
-        {emptyHint ??
-          t('hse_advanced.no_incidents_to_link', {
-            defaultValue:
-              'No safety incidents recorded for this project yet. Report one in the Safety module first.',
-          })}
-      </p>
-    );
-  }
-
-  return (
-    <select
-      className={inputCls}
-      value={value}
-      disabled={isLoading}
-      onChange={(e) => onChange(e.target.value)}
-    >
-      <option value="">
-        {required
-          ? t('hse_advanced.select_incident_required', {
-              defaultValue: 'Select an incident…',
-            })
-          : t('hse_advanced.select_incident_none', { defaultValue: 'No linked incident' })}
-      </option>
-      {incidents.map((it) => (
-        <option key={it.id} value={it.id}>
-          {incidentOptionLabel(it)}
-        </option>
-      ))}
-    </select>
-  );
-}
-
-/* CAPA source types that point at a concrete record we can pick + deep-link.
- * "observation" has no first-class register here, so it carries no source_ref. */
-const CAPA_SOURCE_TYPES = ['observation', 'audit', 'incident', 'jsa', 'permit'] as const;
-
-/** Route a CAPA source (type + ref) to the page that owns it. */
-function capaSourceLink(sourceType: string, sourceRef: string): string | null {
-  if (!sourceRef) return null;
-  switch (sourceType) {
-    case 'incident':
-      return '/safety?tab=incidents';
-    case 'jsa':
-      return '/hse-advanced?tab=jsa';
-    case 'permit':
-      return '/hse-advanced?tab=permits';
-    case 'audit':
-      return '/hse-advanced?tab=audits';
-    default:
-      return null;
-  }
-}
-
-/**
- * Dependent source-ref picker: for incident/jsa/permit/audit it shows the
- * matching project register so the CAPA links back to a real record instead of
- * a pasted UUID. "observation" needs no ref.
- */
-function CapaSourceRefPicker({
-  projectId,
-  sourceType,
-  value,
-  onChange,
-}: {
-  projectId: string;
-  sourceType: string;
-  value: string;
-  onChange: (id: string) => void;
-}) {
-  const { t } = useTranslation();
-
-  // Each source type fetches its own register; only the active one is enabled
-  // so we never over-fetch. Hooks stay unconditional (rule-of-hooks safe).
-  const jsaQ = useQuery({
-    queryKey: ['hse-jsas', projectId],
-    queryFn: () => fetchJSAs(projectId),
-    select: (d) => normalizeListResponse<JobSafetyAnalysis>(d),
-    enabled: sourceType === 'jsa' && !!projectId,
-    staleTime: 30_000,
-  });
-  const permitQ = useQuery({
-    queryKey: ['hse-permits', projectId],
-    queryFn: () => fetchPermits(projectId),
-    select: (d) => normalizeListResponse<PermitToWork>(d),
-    enabled: sourceType === 'permit' && !!projectId,
-    staleTime: 30_000,
-  });
-  const auditQ = useQuery({
-    queryKey: ['hse-audits', projectId],
-    queryFn: () => fetchAudits(projectId),
-    select: (d) => normalizeListResponse<SafetyAudit>(d),
-    enabled: sourceType === 'audit' && !!projectId,
-    staleTime: 30_000,
-  });
-
-  if (sourceType === 'observation') {
-    return (
-      <p className="text-xs text-content-tertiary">
-        {t('hse_advanced.capa_no_source_ref', {
-          defaultValue: 'Observations are recorded in the Safety module - no record to link here.',
-        })}
-      </p>
-    );
-  }
-
-  if (sourceType === 'incident') {
-    return (
-      <SafetyIncidentPicker
-        projectId={projectId}
-        value={value}
-        onChange={onChange}
-        emptyHint={t('hse_advanced.no_incidents_to_link', {
-          defaultValue:
-            'No safety incidents recorded for this project yet. Report one in the Safety module first.',
-        })}
-      />
-    );
-  }
-
-  const options: { id: string; label: string }[] =
-    sourceType === 'jsa'
-      ? (jsaQ.data ?? []).map((j) => ({
-          id: j.id,
-          label: j.task_description.slice(0, 60) || j.id.slice(0, 8),
-        }))
-      : sourceType === 'permit'
-        ? (permitQ.data ?? []).map((p) => ({
-            id: p.id,
-            label: `${p.permit_number || p.id.slice(0, 8)} · ${p.permit_type.replace(/_/g, ' ')}`,
-          }))
-        : (auditQ.data ?? []).map((a) => ({
-            id: a.id,
-            label: `${a.audit_type.replace(/_/g, ' ')} · ${a.conducted_at.slice(0, 10)}`,
-          }));
-
-  const isLoading = jsaQ.isLoading || permitQ.isLoading || auditQ.isLoading;
-
-  if (!isLoading && options.length === 0) {
-    return (
-      <p className="text-xs text-content-tertiary">
-        {t('hse_advanced.capa_no_source_records', {
-          defaultValue: 'No matching records for this source type yet.',
-        })}
-      </p>
-    );
-  }
-
-  return (
-    <select className={inputCls} value={value} disabled={isLoading} onChange={(e) => onChange(e.target.value)}>
-      <option value="">
-        {t('hse_advanced.capa_select_source', { defaultValue: 'No linked record' })}
-      </option>
-      {options.map((o) => (
-        <option key={o.id} value={o.id}>
-          {o.label}
-        </option>
-      ))}
-    </select>
-  );
-}
-
 /* ── Main Page ─────────────────────────────────────────────────────────── */
 
 export function HSEAdvancedPage() {
@@ -372,35 +113,7 @@ export function HSEAdvancedPage() {
   const projectName = useProjectContextStore((s) => s.activeProjectName);
   const projectId = routeProjectId || activeProjectId || '';
 
-  // Deep-link support: Safety's "Investigate" row action lands here with
-  // ?tab=incidents&action=investigate&incident_id=<id> so the investigation
-  // modal opens pre-filled. The tab param also lets any sibling jump straight
-  // to a section. We read it once on mount, sync the tab, then strip the
-  // params (replace) so a refresh / back-nav does not re-trigger the action.
-  const [searchParams, setSearchParams] = useSearchParams();
-  const tabParam = searchParams.get('tab');
-  const initialTab: HSETab = HSE_TAB_IDS.includes(tabParam as HSETab)
-    ? (tabParam as HSETab)
-    : 'incidents';
-
-  const [tab, setTab] = useState<HSETab>(initialTab);
-  const [incidentDeepLink, setIncidentDeepLink] = useState<string | null>(() =>
-    searchParams.get('action') === 'investigate'
-      ? searchParams.get('incident_id') ?? ''
-      : null,
-  );
-
-  useEffect(() => {
-    if (!searchParams.get('action') && !searchParams.get('tab')) return;
-    const next = new URLSearchParams(searchParams);
-    next.delete('tab');
-    next.delete('action');
-    next.delete('incident_id');
-    setSearchParams(next, { replace: true });
-    // Run once after mount — the captured initial state above drives behaviour.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
+  const [tab, setTab] = useState<HSETab>('incidents');
   const onTabKeyDown = useTabKeyboardNav<HSETab>({
     ids: HSE_TAB_IDS,
     activeId: tab,
@@ -447,46 +160,46 @@ export function HSEAdvancedPage() {
   ];
 
   return (
-    <div className="space-y-5 animate-fade-in">
+    <div className="w-full animate-fade-in">
       <Breadcrumb
         items={[
+          { label: t('nav.dashboard', { defaultValue: 'Dashboard' }), to: '/' },
           ...(projectName ? [{ label: projectName, to: `/projects/${projectId}` }] : []),
-          { label: t('nav.hse_advanced', { defaultValue: 'HSE Advanced' }) },
+          { label: t('hse_advanced.title', { defaultValue: 'HSE Advanced' }) },
         ]}
+        className="mb-4"
       />
 
-      <PageHeader
-        srTitle={t('hse_advanced.title', { defaultValue: 'HSE Advanced' })}
-        subtitle={t('hse_advanced.subtitle', {
-          defaultValue:
-            'Investigate incidents, run JSAs, manage permits, deliver toolbox talks, issue PPE, audit the site and close CAPAs.',
-        })}
-        actions={projectId && <Osha300Download projectId={projectId} />}
-      />
+      <div className="mb-6 flex items-start justify-between gap-4 flex-wrap">
+        <div>
+          <h1 className="text-2xl font-bold text-content-primary">
+            {t('hse_advanced.title', { defaultValue: 'HSE Advanced' })}
+          </h1>
+          <p className="mt-1 text-sm text-content-secondary">
+            {t('hse_advanced.subtitle', {
+              defaultValue:
+                'Investigate incidents, run JSAs, manage permits, deliver toolbox talks, issue PPE, audit the site and close CAPAs.',
+            })}
+          </p>
+        </div>
+        {projectId && <Osha300Download projectId={projectId} />}
+      </div>
 
       <SectionIntro
         storageKey="hse_advanced"
         title={t('hse_advanced.intro_title', {
-          defaultValue: 'Close out every safety finding, not just log it',
+          defaultValue: 'Beyond basic incident logging',
         })}
-        more={
-          <IntroRichText
-            text={t('hse_advanced.intro_more', {
-              defaultValue:
-                'Logging a safety incident is the easy part. The hard part, and the part regulators and clients actually check, is showing that every finding was investigated, that high-risk tasks were planned before they started, that permits were properly issued, and that corrective actions were closed and stayed closed. This is the formal HSE workspace that carries a finding from "something happened" all the way to "fixed and verified", with the paper trail that an audit or an insurance claim needs.\n\n**You put in:**\n- Incident investigations opened from a Safety incident, using 5-Whys, fishbone, timeline or SWOT\n- Job Safety Analyses (JSA) that break a task into steps, name the hazards and list the controls\n- Permits to work (hot work, confined space and the like) with their prerequisites and work window\n- Toolbox talks, PPE issue records, site safety audits with findings, and corrective/preventive actions\n\n**You get out:**\n- A KPI strip across the top: open investigations, overdue CAPAs, active permits and days since the last lost-time incident\n- JSAs and permits driven through real approval states, so nothing goes active without the right sign-off\n- A CAPA register that tracks every action to completion and flags anything overdue\n- An OSHA 300 incident log you can export to CSV for the required five-year retention\n\n**How it works day to day:**\n1. When a Safety incident needs more than a log entry, open an investigation and work the root cause.\n2. Before high-risk work starts, raise a JSA and walk it from draft through review and approval to active.\n3. Issue the permit to work, confirm its prerequisites, and suspend or close it as conditions change.\n4. Record toolbox talks and PPE issues, and run audits that generate findings.\n5. Turn findings into CAPAs, assign and verify them, and watch the KPI strip drive the overdue count to zero.\n\nThis page is the formal counterpart to the day-to-day Safety module: incidents and observations are captured there, and the serious ones are escalated here for investigation and corrective action. The days-since-LTI figure is computed from the same safety data, so both views stay in agreement.',
-            })}
-          />
-        }
         links={[
           {
-            label: t('hse_advanced.intro_link_safety', { defaultValue: 'Safety' }),
+            label: t('hse_advanced.intro_link_safety', { defaultValue: 'Safety (incidents)' }),
             onClick: () => navigate('/safety'),
           },
         ]}
       >
         {t('hse_advanced.intro_body', {
           defaultValue:
-            'This is the formal side of site safety: open a 5-Whys investigation off a Safety incident, run Job Safety Analyses and permits-to-work through their approval states, record toolbox talks and PPE issues, audit the site, and track corrective and preventive actions to close-out. Findings feed the KPI strip (open investigations, overdue CAPAs, active permits, days since LTI) and export to an OSHA 300 log.',
+            'HSE Advanced handles the formal side of site safety: 5-Whys incident investigations, Job Safety Analyses, permits-to-work, toolbox talks, PPE issue tracking, safety audits and CAPA (corrective/preventive action) close-out. For quick incident and observation logging use the Safety page; escalate here when an event needs root-cause analysis and tracked corrective actions.',
         })}
       </SectionIntro>
 
@@ -499,7 +212,7 @@ export function HSEAdvancedPage() {
         })}
       >
         <div
-          className="flex items-center gap-1 mb-5 border-b border-border-light overflow-x-auto"
+          className="flex items-center gap-1 mb-6 border-b border-border-light overflow-x-auto"
           role="tablist"
           aria-label={t('hse_advanced.tabs_aria', {
             defaultValue: 'HSE advanced sections',
@@ -535,13 +248,7 @@ export function HSEAdvancedPage() {
           id={`hse-panel-${tab}`}
           aria-labelledby={`hse-tab-${tab}`}
         >
-          {tab === 'incidents' && (
-            <IncidentsTab
-              projectId={projectId}
-              initialInvestigateIncidentId={incidentDeepLink}
-              onConsumeDeepLink={() => setIncidentDeepLink(null)}
-            />
-          )}
+          {tab === 'incidents' && <IncidentsTab projectId={projectId} />}
           {tab === 'jsa' && <JSATab projectId={projectId} />}
           {tab === 'permits' && <PermitsTab projectId={projectId} />}
           {tab === 'toolbox' && <ToolboxTab projectId={projectId} />}
@@ -630,7 +337,7 @@ function FilterChips<T extends string>({
 /**
  * Renders the year selector + download button that triggers an OSHA 300
  * incident-log CSV export. Surfaces high in the page header so it is one
- * click away from any tab — matches construction management and EHS platform placement.
+ * click away from any tab — matches Procore / Sphera placement.
  */
 function Osha300Download({ projectId }: { projectId: string }) {
   const { t } = useTranslation();
@@ -817,7 +524,7 @@ function HSEKpiStrip({ projectId }: { projectId: string }) {
 
   return (
     <div
-      className="grid grid-cols-2 md:grid-cols-4 gap-3"
+      className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6"
       data-testid="hse-kpi-strip"
       aria-label={t('hse_advanced.kpi_aria', { defaultValue: 'HSE key indicators' })}
     >
@@ -896,7 +603,7 @@ function KpiCard({
         <span className="text-xs font-medium opacity-80">{label}</span>
         <span className="opacity-70">{icon}</span>
       </div>
-      <div className="mt-1 text-lg font-semibold tabular-nums">{value}</div>
+      <div className="mt-1 text-2xl font-bold tabular-nums">{value}</div>
     </div>
   );
 }
@@ -960,17 +667,7 @@ function ModalShell({
 
 /* ── Incidents Tab ───────────────────────────────────────────────────── */
 
-function IncidentsTab({
-  projectId,
-  initialInvestigateIncidentId,
-  onConsumeDeepLink,
-}: {
-  projectId: string;
-  /** When set (from a Safety "Investigate" deep-link), open the create modal
-   *  pre-filled with this incident id. null means no deep-link. */
-  initialInvestigateIncidentId?: string | null;
-  onConsumeDeepLink?: () => void;
-}) {
+function IncidentsTab({ projectId }: { projectId: string }) {
   const { t } = useTranslation();
   const qc = useQueryClient();
   const addToast = useToastStore((s) => s.addToast);
@@ -985,16 +682,6 @@ function IncidentsTab({
     method: '5_whys' as IncidentInvestigation['method'],
     findings: '',
   });
-
-  // Honour a one-shot deep link from Safety: open the modal pre-filled, then
-  // tell the parent to drop the captured id so it fires only once.
-  useEffect(() => {
-    if (initialInvestigateIncidentId == null) return;
-    setForm((f) => ({ ...f, incident_ref: initialInvestigateIncidentId }));
-    setShowCreate(true);
-    onConsumeDeepLink?.();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [initialInvestigateIncidentId]);
 
   const { data, isLoading, isError, error, refetch } = useQuery({
     queryKey: ['hse-investigations', projectId],
@@ -1180,14 +867,16 @@ function IncidentsTab({
         >
           <div>
             <label className="block text-sm font-medium text-content-primary mb-1.5">
-              {t('hse_advanced.incident_ref', { defaultValue: 'Linked safety incident' })}{' '}
+              {t('hse_advanced.incident_ref', { defaultValue: 'Incident reference (ID)' })}{' '}
               <span className="text-semantic-error">*</span>
             </label>
-            <SafetyIncidentPicker
-              projectId={projectId}
+            <input
+              className={inputCls}
               value={form.incident_ref}
-              required
-              onChange={(id) => setForm((f) => ({ ...f, incident_ref: id }))}
+              placeholder={t('hse_advanced.incident_ref_placeholder', {
+                defaultValue: 'UUID of the linked safety incident',
+              })}
+              onChange={(e) => setForm((f) => ({ ...f, incident_ref: e.target.value }))}
             />
           </div>
           <div>
@@ -1261,7 +950,7 @@ function IncidentDetailDrawer({
 
   return (
     <ModalShell
-      title={`${t('hse_advanced.investigation', { defaultValue: 'Investigation' })} - ${item.incident_ref}`}
+      title={`${t('hse_advanced.investigation', { defaultValue: 'Investigation' })} — ${item.incident_ref}`}
       onClose={onClose}
       size="max-w-3xl"
       footer={
@@ -1368,7 +1057,6 @@ function JSATab({ projectId }: { projectId: string }) {
   const addToast = useToastStore((s) => s.addToast);
   const [search, setSearch] = useState('');
   const [showCreate, setShowCreate] = useState(false);
-  const [detail, setDetail] = useState<JobSafetyAnalysis | null>(null);
   // JSACreate requires project_id + task_description + work_date.
   const [form, setForm] = useState({
     task_description: '',
@@ -1483,11 +1171,7 @@ function JSATab({ projectId }: { projectId: string }) {
                 </tr>
               ) : (
                 filtered.map((it) => (
-                  <tr
-                    key={it.id}
-                    className="border-b border-border-light hover:bg-surface-secondary/30 cursor-pointer transition-colors"
-                    onClick={() => setDetail(it)}
-                  >
+                  <tr key={it.id} className="border-b border-border-light hover:bg-surface-secondary/30">
                     <td className="px-4 py-3 text-content-primary max-w-[24rem] truncate">
                       {it.task_description}
                     </td>
@@ -1570,238 +1254,7 @@ function JSATab({ projectId }: { projectId: string }) {
           </div>
         </ModalShell>
       )}
-
-      {detail && (
-        <JSADetailDrawer
-          item={detail}
-          projectId={projectId}
-          onClose={() => setDetail(null)}
-        />
-      )}
     </>
-  );
-}
-
-/* ── JSA Detail Drawer (lifecycle FSM) ───────────────────────────────── */
-
-// JSA FSM (service.py allowed_jsa_transitions):
-// draft → under_review (submit) → approved (approve) → active (activate) → archived.
-type JSAAction = 'submit' | 'approve' | 'activate' | 'archive';
-
-function jsaActionsFor(status: string): JSAAction[] {
-  switch (status) {
-    case 'draft':
-      return ['submit', 'archive'];
-    case 'under_review':
-      return ['approve', 'archive'];
-    case 'approved':
-      return ['activate', 'archive'];
-    case 'active':
-      return ['archive'];
-    default:
-      return [];
-  }
-}
-
-function JSADetailDrawer({
-  item,
-  projectId,
-  onClose,
-}: {
-  item: JobSafetyAnalysis;
-  projectId: string;
-  onClose: () => void;
-}) {
-  const { t } = useTranslation();
-  const qc = useQueryClient();
-  const addToast = useToastStore((s) => s.addToast);
-
-  const actionMut = useMutation({
-    mutationFn: (action: JSAAction) => {
-      switch (action) {
-        case 'submit':
-          return submitJSA(item.id);
-        case 'approve':
-          return approveJSA(item.id);
-        case 'activate':
-          return activateJSA(item.id);
-        case 'archive':
-          return archiveJSA(item.id);
-      }
-    },
-    onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ['hse-jsas', projectId] });
-      addToast({
-        type: 'success',
-        title: t('hse_advanced.jsa_advanced', { defaultValue: 'JSA updated' }),
-      });
-      onClose();
-    },
-    onError: (e) =>
-      addToast({
-        type: 'error',
-        title: t('hse_advanced.jsa_advance_failed', { defaultValue: 'Could not update JSA' }),
-        message: getErrorMessage(e),
-      }),
-  });
-
-  const actions = jsaActionsFor(item.status);
-  const actionMeta: Record<
-    JSAAction,
-    { label: string; icon: React.ReactNode; variant: 'primary' | 'secondary' | 'ghost' }
-  > = {
-    submit: {
-      label: t('hse_advanced.jsa_submit', { defaultValue: 'Submit for review' }),
-      icon: <Send size={14} />,
-      variant: 'primary',
-    },
-    approve: {
-      label: t('hse_advanced.jsa_approve', { defaultValue: 'Approve' }),
-      icon: <CheckCircle size={14} />,
-      variant: 'primary',
-    },
-    activate: {
-      label: t('hse_advanced.jsa_activate', { defaultValue: 'Activate' }),
-      icon: <PlayCircle size={14} />,
-      variant: 'primary',
-    },
-    archive: {
-      label: t('hse_advanced.jsa_archive', { defaultValue: 'Archive' }),
-      icon: <Archive size={14} />,
-      variant: 'ghost',
-    },
-  };
-
-  return (
-    <ModalShell
-      title={`${t('hse_advanced.jsa', { defaultValue: 'JSA' })} - ${item.task_description.slice(0, 60)}`}
-      onClose={onClose}
-      size="max-w-3xl"
-      footer={
-        <div className="flex flex-1 items-center justify-between gap-3 flex-wrap">
-          <span className="text-xs text-content-tertiary">
-            {actions.length === 0
-              ? t('hse_advanced.jsa_terminal', {
-                  defaultValue: 'This JSA is archived - no further actions.',
-                })
-              : t('hse_advanced.jsa_fsm_hint', {
-                  defaultValue: 'Lifecycle: draft → review → approved → active → archived.',
-                })}
-          </span>
-          <div className="flex items-center gap-2 flex-wrap">
-            {actions.map((a) => (
-              <Button
-                key={a}
-                variant={actionMeta[a].variant}
-                size="sm"
-                icon={actionMeta[a].icon}
-                disabled={actionMut.isPending}
-                onClick={() => actionMut.mutate(a)}
-              >
-                {actionMeta[a].label}
-              </Button>
-            ))}
-            <Button variant="ghost" size="sm" onClick={onClose}>
-              {t('common.close', { defaultValue: 'Close' })}
-            </Button>
-          </div>
-        </div>
-      }
-    >
-      <div className="grid grid-cols-2 gap-3 text-sm">
-        <div>
-          <div className="text-xs text-content-tertiary uppercase">
-            {t('common.status', { defaultValue: 'Status' })}
-          </div>
-          <Badge
-            variant={item.status === 'approved' || item.status === 'active' ? 'success' : 'blue'}
-            size="sm"
-          >
-            {t(`hse_advanced.jsa_status_${item.status}`, {
-              defaultValue: item.status.replace(/_/g, ' '),
-            })}
-          </Badge>
-        </div>
-        <div>
-          <div className="text-xs text-content-tertiary uppercase">
-            {t('hse_advanced.risk_score', { defaultValue: 'Risk score' })}
-          </div>
-          <div className="text-content-primary font-semibold tabular-nums">{item.risk_score}</div>
-        </div>
-        <div>
-          <div className="text-xs text-content-tertiary uppercase">
-            {t('hse_advanced.work_date', { defaultValue: 'Work date' })}
-          </div>
-          <div className="text-content-secondary">
-            <DateDisplay value={item.work_date} />
-          </div>
-        </div>
-        <div>
-          <div className="text-xs text-content-tertiary uppercase">
-            {t('hse_advanced.location', { defaultValue: 'Location' })}
-          </div>
-          <div className="text-content-secondary">{item.location ?? '—'}</div>
-        </div>
-      </div>
-
-      <div>
-        <div className="text-xs font-semibold uppercase tracking-wider text-content-tertiary mb-1">
-          {t('hse_advanced.task_description', { defaultValue: 'Task' })}
-        </div>
-        <p className="text-sm text-content-secondary whitespace-pre-wrap">
-          {item.task_description}
-        </p>
-      </div>
-
-      <div>
-        <div className="text-xs font-semibold uppercase tracking-wider text-content-tertiary mb-1">
-          {t('hse_advanced.hazards', { defaultValue: 'Hazards & controls' })}
-        </div>
-        {item.hazards && item.hazards.length > 0 ? (
-          <ul className="text-sm space-y-1.5">
-            {item.hazards.map((h, i) => (
-              <li
-                key={i}
-                className="rounded-md border border-border-light bg-surface-secondary/40 px-3 py-2"
-              >
-                <div className="text-content-primary">
-                  {h.step ? `${h.step}: ` : ''}
-                  {h.hazard ?? '—'}
-                </div>
-                {h.controls && (
-                  <div className="text-xs text-content-tertiary mt-0.5">
-                    {t('hse_advanced.controls', { defaultValue: 'Controls' })}: {h.controls}
-                  </div>
-                )}
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <p className="text-sm text-content-tertiary">
-            {t('hse_advanced.no_hazards', { defaultValue: 'No hazards recorded yet.' })}
-          </p>
-        )}
-      </div>
-
-      <div>
-        <div className="text-xs font-semibold uppercase tracking-wider text-content-tertiary mb-1">
-          {t('hse_advanced.required_ppe', { defaultValue: 'Required PPE' })}
-        </div>
-        {item.required_ppe && item.required_ppe.length > 0 ? (
-          <div className="flex flex-wrap gap-1.5">
-            {item.required_ppe.map((p, i) => (
-              <Badge key={i} variant="neutral" size="sm">
-                {p.replace(/_/g, ' ')}
-              </Badge>
-            ))}
-          </div>
-        ) : (
-          <p className="text-sm text-content-tertiary">
-            {t('hse_advanced.no_ppe_listed', { defaultValue: 'None listed.' })}
-          </p>
-        )}
-      </div>
-    </ModalShell>
   );
 }
 
@@ -1814,7 +1267,7 @@ function PermitsTab({ projectId }: { projectId: string }) {
   const [search, setSearch] = useState('');
   const [showCreate, setShowCreate] = useState(false);
   const [detail, setDetail] = useState<PermitToWork | null>(null);
-  const [filter, setFilter] = useState<'all' | 'requested' | 'active' | 'expired'>('all');
+  const [filter, setFilter] = useState<'all' | 'active' | 'expired'>('active');
   // Default work window: start now, end in 8h — supervisors adjust before issue.
   const nowLocal = new Date().toISOString().slice(0, 16);
   const [form, setForm] = useState({
@@ -1867,11 +1320,10 @@ function PermitsTab({ projectId }: { projectId: string }) {
   });
 
   const counts = useMemo(() => {
-    const c = { all: data?.length ?? 0, requested: 0, active: 0, expired: 0 };
+    const c = { all: data?.length ?? 0, active: 0, expired: 0 };
     if (!data) return c;
     for (const p of data) {
-      if (p.status === 'requested') c.requested++;
-      else if (p.status === 'active') c.active++;
+      if (p.status === 'active') c.active++;
       else if (p.status === 'expired') c.expired++;
     }
     return c;
@@ -1880,8 +1332,7 @@ function PermitsTab({ projectId }: { projectId: string }) {
   const filtered = useMemo(() => {
     if (!data) return [];
     let rows = data;
-    if (filter === 'requested') rows = rows.filter((p) => p.status === 'requested');
-    else if (filter === 'active') rows = rows.filter((p) => p.status === 'active');
+    if (filter === 'active') rows = rows.filter((p) => p.status === 'active');
     else if (filter === 'expired') rows = rows.filter((p) => p.status === 'expired');
     if (!search) return rows;
     const q = search.toLowerCase();
@@ -1920,20 +1371,10 @@ function PermitsTab({ projectId }: { projectId: string }) {
   return (
     <>
       <div className="mb-4">
-        <FilterChips<'all' | 'requested' | 'active' | 'expired'>
+        <FilterChips<'all' | 'active' | 'expired'>
           value={filter}
           onChange={setFilter}
           options={[
-            {
-              value: 'all',
-              label: t('hse_advanced.filter_all', { defaultValue: 'All' }),
-              count: counts.all,
-            },
-            {
-              value: 'requested',
-              label: t('hse_advanced.filter_requested', { defaultValue: 'Requested' }),
-              count: counts.requested,
-            },
             {
               value: 'active',
               label: t('hse_advanced.filter_active', { defaultValue: 'Active' }),
@@ -1943,6 +1384,11 @@ function PermitsTab({ projectId }: { projectId: string }) {
               value: 'expired',
               label: t('hse_advanced.filter_expired', { defaultValue: 'Expired' }),
               count: counts.expired,
+            },
+            {
+              value: 'all',
+              label: t('hse_advanced.filter_all', { defaultValue: 'All' }),
+              count: counts.all,
             },
           ]}
         />
@@ -2151,166 +1597,27 @@ function PermitsTab({ projectId }: { projectId: string }) {
         </ModalShell>
       )}
 
-      {detail && (
-        <PermitDetailDrawer
-          item={detail}
-          projectId={projectId}
-          onClose={() => setDetail(null)}
-        />
-      )}
+      {detail && <PermitDetailDrawer item={detail} onClose={() => setDetail(null)} />}
     </>
   );
 }
 
 /* ── Permit Detail Drawer ────────────────────────────────────────────── */
 
-// Permit FSM (service.py allowed_permit_transitions):
-// requested → approved → active → suspended/closed/cancelled; suspended → active.
-type PermitAction = 'approve' | 'activate' | 'suspend' | 'close' | 'cancel';
-
-function permitActionsFor(status: PermitStatus): PermitAction[] {
-  switch (status) {
-    case 'requested':
-      return ['approve', 'cancel'];
-    case 'approved':
-      return ['activate', 'cancel'];
-    case 'active':
-      return ['suspend', 'close', 'cancel'];
-    case 'suspended':
-      return ['activate', 'close', 'cancel'];
-    default:
-      return [];
-  }
-}
-
-function PermitDetailDrawer({
-  item,
-  projectId,
-  onClose,
-}: {
-  item: PermitToWork;
-  projectId: string;
-  onClose: () => void;
-}) {
+function PermitDetailDrawer({ item, onClose }: { item: PermitToWork; onClose: () => void }) {
   const { t } = useTranslation();
-  const qc = useQueryClient();
-  const addToast = useToastStore((s) => s.addToast);
-  const [closing, setClosing] = useState(false);
-  const [closureNotes, setClosureNotes] = useState('');
   // Countdown is driven off the permit's work_end window (no expiry field).
   const days = daysUntil(item.work_end);
 
-  const invalidate = () =>
-    qc.invalidateQueries({ queryKey: ['hse-permits', projectId] });
-
-  const actionMut = useMutation({
-    mutationFn: (action: PermitAction) => {
-      switch (action) {
-        case 'approve':
-          return approvePermit(item.id);
-        case 'activate':
-          return activatePermit(item.id);
-        case 'suspend':
-          return suspendPermit(item.id);
-        case 'close':
-          return closePermit(item.id, {
-            closure_checklist_passed: true,
-            closure_notes: closureNotes.trim(),
-          });
-        case 'cancel':
-          return cancelPermit(item.id);
-      }
-    },
-    onSuccess: () => {
-      invalidate();
-      addToast({
-        type: 'success',
-        title: t('hse_advanced.permit_advanced', { defaultValue: 'Permit updated' }),
-      });
-      onClose();
-    },
-    onError: (e) =>
-      addToast({
-        type: 'error',
-        title: t('hse_advanced.permit_advance_failed', {
-          defaultValue: 'Could not update permit',
-        }),
-        message: getErrorMessage(e),
-      }),
-  });
-
-  const actions = permitActionsFor(item.status);
-  const actionMeta: Record<
-    PermitAction,
-    { label: string; icon: React.ReactNode; variant: 'primary' | 'secondary' | 'ghost' }
-  > = {
-    approve: {
-      label: t('hse_advanced.permit_approve', { defaultValue: 'Approve' }),
-      icon: <CheckCircle size={14} />,
-      variant: 'primary',
-    },
-    activate: {
-      label: t('hse_advanced.permit_activate', { defaultValue: 'Activate' }),
-      icon: <PlayCircle size={14} />,
-      variant: 'primary',
-    },
-    suspend: {
-      label: t('hse_advanced.permit_suspend', { defaultValue: 'Suspend' }),
-      icon: <PauseCircle size={14} />,
-      variant: 'secondary',
-    },
-    close: {
-      label: t('hse_advanced.permit_close', { defaultValue: 'Close' }),
-      icon: <CheckCircle2 size={14} />,
-      variant: 'secondary',
-    },
-    cancel: {
-      label: t('hse_advanced.permit_cancel', { defaultValue: 'Cancel permit' }),
-      icon: <XCircle size={14} />,
-      variant: 'ghost',
-    },
-  };
-
   return (
     <ModalShell
-      title={`${item.permit_number} - ${item.permit_type.replace(/_/g, ' ')}`}
+      title={`${item.permit_number} — ${item.permit_type.replace(/_/g, ' ')}`}
       onClose={onClose}
       size="max-w-2xl"
       footer={
-        <div className="flex flex-1 items-center justify-between gap-3 flex-wrap">
-          <span className="text-xs text-content-tertiary">
-            {actions.length === 0
-              ? t('hse_advanced.permit_terminal', {
-                  defaultValue: 'No further actions for this permit.',
-                })
-              : t('hse_advanced.permit_fsm_hint', {
-                  defaultValue: 'Approve, then activate when prerequisites are met.',
-                })}
-          </span>
-          <div className="flex items-center gap-2 flex-wrap">
-            {actions.map((a) => (
-              <Button
-                key={a}
-                variant={actionMeta[a].variant}
-                size="sm"
-                icon={actionMeta[a].icon}
-                disabled={actionMut.isPending}
-                onClick={() => {
-                  if (a === 'close') {
-                    setClosing(true);
-                  } else {
-                    actionMut.mutate(a);
-                  }
-                }}
-              >
-                {actionMeta[a].label}
-              </Button>
-            ))}
-            <Button variant="ghost" size="sm" onClick={onClose}>
-              {t('common.close', { defaultValue: 'Close' })}
-            </Button>
-          </div>
-        </div>
+        <Button variant="ghost" onClick={onClose}>
+          {t('common.close', { defaultValue: 'Close' })}
+        </Button>
       }
     >
       <div className="grid grid-cols-2 gap-3 text-sm">
@@ -2358,11 +1665,7 @@ function PermitDetailDrawer({
         </div>
       </div>
 
-      <PermitPrereqChecklist
-        item={item}
-        projectId={projectId}
-        editable={item.status === 'requested' || item.status === 'approved'}
-      />
+      <PermitPrereqChecklist item={item} />
 
       <div>
         <div className="text-xs font-semibold uppercase tracking-wider text-content-tertiary mb-1">
@@ -2399,50 +1702,6 @@ function PermitDetailDrawer({
           </span>
         </div>
       </div>
-
-      {closing && (
-        <ModalShell
-          title={t('hse_advanced.permit_close_title', { defaultValue: 'Close permit' })}
-          onClose={() => setClosing(false)}
-          size="max-w-lg"
-          footer={
-            <>
-              <Button variant="ghost" onClick={() => setClosing(false)}>
-                {t('common.cancel', { defaultValue: 'Cancel' })}
-              </Button>
-              <Button
-                variant="primary"
-                icon={<CheckCircle2 size={14} />}
-                disabled={actionMut.isPending}
-                onClick={() => actionMut.mutate('close')}
-              >
-                {t('hse_advanced.permit_close', { defaultValue: 'Close' })}
-              </Button>
-            </>
-          }
-        >
-          <p className="text-sm text-content-secondary">
-            {t('hse_advanced.permit_close_help', {
-              defaultValue:
-                'Closing confirms the work is complete and the area was made safe. The closure is recorded in the audit trail.',
-            })}
-          </p>
-          <div>
-            <label className="block text-sm font-medium text-content-primary mb-1.5">
-              {t('hse_advanced.closure_notes', { defaultValue: 'Closure notes' })}
-            </label>
-            <textarea
-              rows={3}
-              className={textareaCls}
-              value={closureNotes}
-              onChange={(e) => setClosureNotes(e.target.value)}
-              placeholder={t('hse_advanced.closure_notes_placeholder', {
-                defaultValue: 'Area cleared, fire watch stood down, tools removed…',
-              })}
-            />
-          </div>
-        </ModalShell>
-      )}
     </ModalShell>
   );
 }
@@ -2452,92 +1711,54 @@ function PermitDetailDrawer({
  *
  * The backend stores 5 booleans (jsa_approved, supervisor_present,
  * fire_watch_assigned, extinguisher_present, atmospheric_test_passed)
- * that gate the requested → active FSM transition.
+ * that gate the requested → active FSM transition. The legacy UI
+ * showed only the post-issue signatures, leaving the actual permit-issue
+ * gate invisible to the supervisor reading the record.
  *
- * While the permit is still requested or approved the supervisor can tick
- * the gates off here (PATCH /permits/{id}/prerequisites). Once the permit is
- * active/closed the list is read-only and doubles as the historical
- * "everything was checked" record so the audit trail is preserved.
+ * We render the list read-only here (mutating a checklist live would
+ * change the audit trail underneath an active permit). When the permit
+ * isn't yet active the section is still shown so reviewers can see what
+ * still needs to be ticked off; once active or closed it doubles as the
+ * historical "everything was checked" record.
  */
-const PERMIT_PREREQ_FIELDS: {
-  key: string;
-  field: keyof PermitPrerequisites;
-  prop: keyof PermitToWork;
-  labelKey: string;
-  labelDefault: string;
-}[] = [
-  {
-    key: 'jsa',
-    field: 'prereq_jsa_approved',
-    prop: 'prereq_jsa_approved',
-    labelKey: 'hse_advanced.prereq_jsa',
-    labelDefault: 'JSA approved',
-  },
-  {
-    key: 'supervisor',
-    field: 'prereq_supervisor_present',
-    prop: 'prereq_supervisor_present',
-    labelKey: 'hse_advanced.prereq_supervisor',
-    labelDefault: 'Supervisor present',
-  },
-  {
-    key: 'fire_watch',
-    field: 'prereq_fire_watch_assigned',
-    prop: 'prereq_fire_watch_assigned',
-    labelKey: 'hse_advanced.prereq_fire_watch',
-    labelDefault: 'Fire watch assigned',
-  },
-  {
-    key: 'extinguisher',
-    field: 'prereq_extinguisher_present',
-    prop: 'prereq_extinguisher_present',
-    labelKey: 'hse_advanced.prereq_extinguisher',
-    labelDefault: 'Extinguisher on hand',
-  },
-  {
-    key: 'atmospheric',
-    field: 'prereq_atmospheric_test_passed',
-    prop: 'prereq_atmospheric_test_passed',
-    labelKey: 'hse_advanced.prereq_atmospheric',
-    labelDefault: 'Atmospheric test passed',
-  },
-];
-
-function PermitPrereqChecklist({
-  item,
-  projectId,
-  editable,
-}: {
-  item: PermitToWork;
-  projectId: string;
-  editable: boolean;
-}) {
+function PermitPrereqChecklist({ item }: { item: PermitToWork }) {
   const { t } = useTranslation();
-  const qc = useQueryClient();
-  const addToast = useToastStore((s) => s.addToast);
-
-  const patchMut = useMutation({
-    mutationFn: (body: PermitPrerequisites) => updatePermitPrerequisites(item.id, body),
-    onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ['hse-permits', projectId] });
+  const items: { key: string; label: string; checked: boolean }[] = [
+    {
+      key: 'jsa',
+      label: t('hse_advanced.prereq_jsa', { defaultValue: 'JSA approved' }),
+      checked: item.prereq_jsa_approved === true,
     },
-    onError: (e) =>
-      addToast({
-        type: 'error',
-        title: t('hse_advanced.prereq_update_failed', {
-          defaultValue: 'Could not update prerequisite',
-        }),
-        message: getErrorMessage(e),
+    {
+      key: 'supervisor',
+      label: t('hse_advanced.prereq_supervisor', {
+        defaultValue: 'Supervisor present',
       }),
-  });
-
-  const items = PERMIT_PREREQ_FIELDS.map((f) => ({
-    ...f,
-    label: t(f.labelKey, { defaultValue: f.labelDefault }),
-    checked: item[f.prop] === true,
-  }));
+      checked: item.prereq_supervisor_present === true,
+    },
+    {
+      key: 'fire_watch',
+      label: t('hse_advanced.prereq_fire_watch', {
+        defaultValue: 'Fire watch assigned',
+      }),
+      checked: item.prereq_fire_watch_assigned === true,
+    },
+    {
+      key: 'extinguisher',
+      label: t('hse_advanced.prereq_extinguisher', {
+        defaultValue: 'Extinguisher on hand',
+      }),
+      checked: item.prereq_extinguisher_present === true,
+    },
+    {
+      key: 'atmospheric',
+      label: t('hse_advanced.prereq_atmospheric', {
+        defaultValue: 'Atmospheric test passed',
+      }),
+      checked: item.prereq_atmospheric_test_passed === true,
+    },
+  ];
   const passed = items.filter((i) => i.checked).length;
-
   return (
     <div data-testid="permit-prereq-checklist">
       <div className="flex items-center justify-between text-xs font-semibold uppercase tracking-wider text-content-tertiary mb-1">
@@ -2550,57 +1771,29 @@ function PermitPrereqChecklist({
           {passed}/{items.length}
         </span>
       </div>
-      {editable && (
-        <p className="text-2xs text-content-tertiary mb-1.5">
-          {t('hse_advanced.prereq_editable_hint', {
-            defaultValue: 'Tick each gate as it is verified - all must pass before activation.',
-          })}
-        </p>
-      )}
       <ul className="text-sm space-y-1">
-        {items.map((row) =>
-          editable ? (
-            <li key={row.key} data-testid={`permit-prereq-${row.key}`}>
-              <label className="flex items-center gap-2 cursor-pointer">
-                <input
-                  type="checkbox"
-                  className="h-4 w-4 rounded border-border text-oe-blue focus:ring-oe-blue/30"
-                  checked={row.checked}
-                  disabled={patchMut.isPending}
-                  onChange={(e) =>
-                    patchMut.mutate({ [row.field]: e.target.checked } as PermitPrerequisites)
-                  }
-                />
-                <span
-                  className={row.checked ? 'text-content-secondary' : 'text-content-tertiary'}
-                >
-                  {row.label}
-                </span>
-              </label>
-            </li>
-          ) : (
-            <li
-              key={row.key}
-              className="flex items-center gap-2"
-              data-testid={`permit-prereq-${row.key}`}
+        {items.map((row) => (
+          <li
+            key={row.key}
+            className="flex items-center gap-2"
+            data-testid={`permit-prereq-${row.key}`}
+          >
+            <CheckCircle2
+              size={14}
+              className={
+                row.checked ? 'text-semantic-success' : 'text-content-tertiary opacity-40'
+              }
+              aria-hidden
+            />
+            <span
+              className={
+                row.checked ? 'text-content-secondary' : 'text-content-tertiary line-through'
+              }
             >
-              <CheckCircle2
-                size={14}
-                className={
-                  row.checked ? 'text-semantic-success' : 'text-content-tertiary opacity-40'
-                }
-                aria-hidden
-              />
-              <span
-                className={
-                  row.checked ? 'text-content-secondary' : 'text-content-tertiary line-through'
-                }
-              >
-                {row.label}
-              </span>
-            </li>
-          ),
-        )}
+              {row.label}
+            </span>
+          </li>
+        ))}
       </ul>
     </div>
   );
@@ -2929,7 +2122,7 @@ function PPETab({ projectId }: { projectId: string }) {
         title={t('hse_advanced.no_ppe', { defaultValue: 'No PPE issued yet' })}
         description={t('hse_advanced.no_ppe_desc', {
           defaultValue:
-            'Log PPE issued to workers - hard hats, harnesses, respirators, hearing protection. Tracks expiry, return-by dates and inventory.',
+            'Log PPE issued to workers — hard hats, harnesses, respirators, hearing protection. Tracks expiry, return-by dates and inventory.',
         })}
         action={{
           label: t('hse_advanced.new_ppe', { defaultValue: 'Issue PPE' }),
@@ -3162,7 +2355,7 @@ function PPEDetailDrawer({ item, onClose }: { item: PPEIssue; onClose: () => voi
   return (
     <ModalShell
       title={`${item.ppe_type.replace(/_/g, ' ')}${
-        item.recipient_name ? ` - ${item.recipient_name}` : ''
+        item.recipient_name ? ` — ${item.recipient_name}` : ''
       }`}
       onClose={onClose}
       size="max-w-xl"
@@ -3240,7 +2433,7 @@ function PPEDetailDrawer({ item, onClose }: { item: PPEIssue; onClose: () => voi
           >
             <DateDisplay value={item.valid_until} />
             {expiryDays !== null &&
-              ` - ${
+              ` — ${
                 expiryDays < 0
                   ? t('hse_advanced.expired_days_ago', {
                       defaultValue: '{{n}}d ago',
@@ -3263,7 +2456,6 @@ function AuditsTab({ projectId }: { projectId: string }) {
   const addToast = useToastStore((s) => s.addToast);
   const [search, setSearch] = useState('');
   const [showCreate, setShowCreate] = useState(false);
-  const [detail, setDetail] = useState<SafetyAudit | null>(null);
   // AuditCreate requires project_id + audit_type + conducted_at.
   const [form, setForm] = useState({
     audit_type: 'internal',
@@ -3392,11 +2584,7 @@ function AuditsTab({ projectId }: { projectId: string }) {
                       ? Math.round((total / max) * 100)
                       : null;
                   return (
-                    <tr
-                      key={it.id}
-                      className="border-b border-border-light hover:bg-surface-secondary/30 cursor-pointer transition-colors"
-                      onClick={() => setDetail(it)}
-                    >
+                    <tr key={it.id} className="border-b border-border-light hover:bg-surface-secondary/30">
                       <td className="px-4 py-3 text-content-primary">
                         {t(`hse_advanced.audit_type_${it.audit_type}`, {
                           defaultValue: it.audit_type.replace(/_/g, ' '),
@@ -3498,416 +2686,7 @@ function AuditsTab({ projectId }: { projectId: string }) {
           </div>
         </ModalShell>
       )}
-
-      {detail && (
-        <AuditDetailDrawer
-          item={detail}
-          projectId={projectId}
-          onClose={() => setDetail(null)}
-        />
-      )}
     </>
-  );
-}
-
-/* ── Audit Detail Drawer (findings + complete) ───────────────────────── */
-
-const FINDING_SEVERITY_COLORS: Record<AuditFindingSeverity, BadgeVariant> = {
-  low: 'neutral',
-  med: 'warning',
-  high: 'warning',
-  critical: 'error',
-};
-
-function AuditDetailDrawer({
-  item,
-  projectId,
-  onClose,
-}: {
-  item: SafetyAudit;
-  projectId: string;
-  onClose: () => void;
-}) {
-  const { t } = useTranslation();
-  const qc = useQueryClient();
-  const addToast = useToastStore((s) => s.addToast);
-  const [showAddFinding, setShowAddFinding] = useState(false);
-  // When set, opens the shared Create CAPA dialog seeded from this finding,
-  // with the source locked to the originating audit (source_type=audit,
-  // source_ref=audit.id). The finding description becomes the CAPA title.
-  const [capaFromFinding, setCapaFromFinding] = useState<AuditFinding | null>(null);
-  const [findingForm, setFindingForm] = useState<{
-    item_description: string;
-    category: AuditFindingCategory;
-    severity: AuditFindingSeverity;
-    is_passed: boolean;
-  }>({
-    item_description: '',
-    category: 'other',
-    severity: 'low',
-    is_passed: true,
-  });
-
-  const isCompleted = item.status === 'completed';
-
-  const findingsQ = useQuery({
-    queryKey: ['hse-audit-findings', item.id],
-    queryFn: () => fetchAuditFindings(item.id),
-    select: (d) => normalizeListResponse<AuditFinding>(d),
-  });
-
-  const invalidate = () => {
-    qc.invalidateQueries({ queryKey: ['hse-audit-findings', item.id] });
-    qc.invalidateQueries({ queryKey: ['hse-audits', projectId] });
-  };
-
-  const addFindingMut = useMutation({
-    mutationFn: () =>
-      createAuditFinding(item.id, {
-        item_description: findingForm.item_description.trim(),
-        category: findingForm.category,
-        severity: findingForm.severity,
-        is_passed: findingForm.is_passed,
-      }),
-    onSuccess: () => {
-      invalidate();
-      setShowAddFinding(false);
-      setFindingForm({
-        item_description: '',
-        category: 'other',
-        severity: 'low',
-        is_passed: true,
-      });
-      addToast({
-        type: 'success',
-        title: t('hse_advanced.finding_added', { defaultValue: 'Finding recorded' }),
-      });
-    },
-    onError: (e) =>
-      addToast({
-        type: 'error',
-        title: t('hse_advanced.finding_failed', { defaultValue: 'Could not record finding' }),
-        message: getErrorMessage(e),
-      }),
-  });
-
-  const deleteFindingMut = useMutation({
-    mutationFn: (findingId: string) => deleteAuditFinding(findingId),
-    onSuccess: () => invalidate(),
-    onError: (e) =>
-      addToast({
-        type: 'error',
-        title: t('hse_advanced.finding_delete_failed', {
-          defaultValue: 'Could not delete finding',
-        }),
-        message: getErrorMessage(e),
-      }),
-  });
-
-  const completeMut = useMutation({
-    mutationFn: () => completeAudit(item.id),
-    onSuccess: () => {
-      invalidate();
-      addToast({
-        type: 'success',
-        title: t('hse_advanced.audit_completed', { defaultValue: 'Audit completed' }),
-      });
-      onClose();
-    },
-    onError: (e) =>
-      addToast({
-        type: 'error',
-        title: t('hse_advanced.audit_complete_failed', {
-          defaultValue: 'Could not complete audit',
-        }),
-        message: getErrorMessage(e),
-      }),
-  });
-
-  const findings = findingsQ.data ?? [];
-  const total = item.score_total == null ? null : Number(item.score_total);
-  const max = item.max_score == null ? null : Number(item.max_score);
-  const pct = total !== null && max !== null && max > 0 ? Math.round((total / max) * 100) : null;
-
-  const categories: AuditFindingCategory[] = [
-    'PPE',
-    'permit',
-    'housekeeping',
-    'electrical',
-    'fire',
-    'environmental',
-    'other',
-  ];
-  const severities: AuditFindingSeverity[] = ['low', 'med', 'high', 'critical'];
-
-  return (
-    <ModalShell
-      title={`${t(`hse_advanced.audit_type_${item.audit_type}`, {
-        defaultValue: item.audit_type.replace(/_/g, ' '),
-      })} - ${t('hse_advanced.tab_audits', { defaultValue: 'Audit' })}`}
-      onClose={onClose}
-      size="max-w-3xl"
-      footer={
-        <div className="flex flex-1 items-center justify-between gap-3 flex-wrap">
-          <span className="text-xs text-content-tertiary">
-            {isCompleted
-              ? t('hse_advanced.audit_done_hint', {
-                  defaultValue: 'Audit completed - score is locked from the recorded findings.',
-                })
-              : t('hse_advanced.audit_open_hint', {
-                  defaultValue: 'Record each finding, then complete the audit to lock the score.',
-                })}
-          </span>
-          <div className="flex items-center gap-2 flex-wrap">
-            {!isCompleted && (
-              <Button
-                variant="primary"
-                size="sm"
-                icon={<CheckCircle size={14} />}
-                disabled={completeMut.isPending}
-                onClick={() => completeMut.mutate()}
-              >
-                {t('hse_advanced.complete_audit', { defaultValue: 'Complete audit' })}
-              </Button>
-            )}
-            <Button variant="ghost" size="sm" onClick={onClose}>
-              {t('common.close', { defaultValue: 'Close' })}
-            </Button>
-          </div>
-        </div>
-      }
-    >
-      <div className="grid grid-cols-3 gap-3 text-sm">
-        <div>
-          <div className="text-xs text-content-tertiary uppercase">
-            {t('common.status', { defaultValue: 'Status' })}
-          </div>
-          <Badge variant={isCompleted ? 'success' : 'blue'} size="sm">
-            {t(`hse_advanced.audit_status_${item.status}`, {
-              defaultValue: item.status.replace(/_/g, ' '),
-            })}
-          </Badge>
-        </div>
-        <div>
-          <div className="text-xs text-content-tertiary uppercase">
-            {t('hse_advanced.conducted_at', { defaultValue: 'Conducted' })}
-          </div>
-          <div className="text-content-secondary">
-            <DateDisplay value={item.conducted_at} />
-          </div>
-        </div>
-        <div>
-          <div className="text-xs text-content-tertiary uppercase">
-            {t('hse_advanced.score', { defaultValue: 'Score' })}
-          </div>
-          <div className="text-content-primary font-semibold tabular-nums">
-            {pct === null ? '—' : `${pct}%`}
-          </div>
-        </div>
-      </div>
-
-      {item.summary && (
-        <div>
-          <div className="text-xs font-semibold uppercase tracking-wider text-content-tertiary mb-1">
-            {t('hse_advanced.summary', { defaultValue: 'Summary' })}
-          </div>
-          <p className="text-sm text-content-secondary whitespace-pre-wrap">{item.summary}</p>
-        </div>
-      )}
-
-      <div>
-        <div className="flex items-center justify-between mb-2">
-          <div className="text-xs font-semibold uppercase tracking-wider text-content-tertiary">
-            {t('hse_advanced.findings', { defaultValue: 'Findings' })}
-          </div>
-          {!isCompleted && (
-            <Button
-              variant="secondary"
-              size="sm"
-              icon={<Plus size={14} />}
-              onClick={() => setShowAddFinding(true)}
-            >
-              {t('hse_advanced.add_finding', { defaultValue: 'Add finding' })}
-            </Button>
-          )}
-        </div>
-        {findingsQ.isLoading ? (
-          <SkeletonTable rows={3} columns={3} />
-        ) : findings.length === 0 ? (
-          <p className="text-sm text-content-tertiary py-4 text-center">
-            {t('hse_advanced.no_findings_yet', {
-              defaultValue: 'No findings recorded. Add findings to score this audit.',
-            })}
-          </p>
-        ) : (
-          <ul className="space-y-1.5">
-            {findings.map((f) => (
-              <li
-                key={f.id}
-                className="flex items-start gap-2 rounded-md border border-border-light bg-surface-secondary/40 px-3 py-2"
-              >
-                {f.is_passed ? (
-                  <CheckCircle2 size={15} className="text-semantic-success mt-0.5 shrink-0" />
-                ) : (
-                  <XCircle size={15} className="text-semantic-error mt-0.5 shrink-0" />
-                )}
-                <div className="flex-1 min-w-0">
-                  <div className="text-sm text-content-primary">{f.item_description}</div>
-                  <div className="flex items-center gap-1.5 mt-1 flex-wrap">
-                    <Badge variant="neutral" size="sm">
-                      {t(`hse_advanced.finding_cat_${f.category}`, {
-                        defaultValue: f.category,
-                      })}
-                    </Badge>
-                    <Badge variant={FINDING_SEVERITY_COLORS[f.severity]} size="sm">
-                      {t(`hse_advanced.finding_sev_${f.severity}`, { defaultValue: f.severity })}
-                    </Badge>
-                    {f.corrective_action_ref ? (
-                      <Badge variant="success" size="sm">
-                        {t('hse_advanced.finding_has_capa', { defaultValue: 'CAPA raised' })}
-                      </Badge>
-                    ) : (
-                      <button
-                        type="button"
-                        onClick={() => setCapaFromFinding(f)}
-                        className="inline-flex items-center gap-1 text-xs text-oe-blue-text hover:underline"
-                      >
-                        <Wrench size={12} />
-                        {t('hse_advanced.create_capa_from_finding', {
-                          defaultValue: 'Create CAPA',
-                        })}
-                      </button>
-                    )}
-                  </div>
-                </div>
-                {!isCompleted && (
-                  <button
-                    type="button"
-                    aria-label={t('common.delete', { defaultValue: 'Delete' })}
-                    disabled={deleteFindingMut.isPending}
-                    onClick={() => deleteFindingMut.mutate(f.id)}
-                    className="text-content-tertiary hover:text-semantic-error transition-colors shrink-0"
-                  >
-                    <Trash2 size={14} />
-                  </button>
-                )}
-              </li>
-            ))}
-          </ul>
-        )}
-      </div>
-
-      {capaFromFinding && (
-        <CreateCAPADialog
-          projectId={projectId}
-          lockSource
-          initial={{
-            source_type: 'audit',
-            source_ref: item.id,
-            title: capaFromFinding.item_description.slice(0, 200),
-            description: t('hse_advanced.capa_from_finding_desc', {
-              defaultValue: 'Corrective action for audit finding: {{finding}}',
-              finding: capaFromFinding.item_description,
-            }),
-          }}
-          onClose={() => setCapaFromFinding(null)}
-        />
-      )}
-
-      {showAddFinding && (
-        <ModalShell
-          title={t('hse_advanced.add_finding', { defaultValue: 'Add finding' })}
-          onClose={() => setShowAddFinding(false)}
-          size="max-w-lg"
-          footer={
-            <>
-              <Button variant="ghost" onClick={() => setShowAddFinding(false)}>
-                {t('common.cancel', { defaultValue: 'Cancel' })}
-              </Button>
-              <Button
-                variant="primary"
-                disabled={!findingForm.item_description.trim() || addFindingMut.isPending}
-                onClick={() => addFindingMut.mutate()}
-              >
-                {t('common.add', { defaultValue: 'Add' })}
-              </Button>
-            </>
-          }
-        >
-          <div>
-            <label className="block text-sm font-medium text-content-primary mb-1.5">
-              {t('hse_advanced.finding_description', { defaultValue: 'Finding' })}{' '}
-              <span className="text-semantic-error">*</span>
-            </label>
-            <textarea
-              rows={3}
-              className={textareaCls}
-              value={findingForm.item_description}
-              onChange={(e) =>
-                setFindingForm((f) => ({ ...f, item_description: e.target.value }))
-              }
-            />
-          </div>
-          <div className="grid grid-cols-2 gap-3">
-            <div>
-              <label className="block text-sm font-medium text-content-primary mb-1.5">
-                {t('hse_advanced.finding_category', { defaultValue: 'Category' })}
-              </label>
-              <select
-                className={inputCls}
-                value={findingForm.category}
-                onChange={(e) =>
-                  setFindingForm((f) => ({
-                    ...f,
-                    category: e.target.value as AuditFindingCategory,
-                  }))
-                }
-              >
-                {categories.map((c) => (
-                  <option key={c} value={c}>
-                    {t(`hse_advanced.finding_cat_${c}`, { defaultValue: c })}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-content-primary mb-1.5">
-                {t('hse_advanced.finding_severity', { defaultValue: 'Severity' })}
-              </label>
-              <select
-                className={inputCls}
-                value={findingForm.severity}
-                onChange={(e) =>
-                  setFindingForm((f) => ({
-                    ...f,
-                    severity: e.target.value as AuditFindingSeverity,
-                  }))
-                }
-              >
-                {severities.map((s) => (
-                  <option key={s} value={s}>
-                    {t(`hse_advanced.finding_sev_${s}`, { defaultValue: s })}
-                  </option>
-                ))}
-              </select>
-            </div>
-          </div>
-          <label className="flex items-center gap-2 cursor-pointer text-sm">
-            <input
-              type="checkbox"
-              className="h-4 w-4 rounded border-border text-oe-blue focus:ring-oe-blue/30"
-              checked={findingForm.is_passed}
-              onChange={(e) => setFindingForm((f) => ({ ...f, is_passed: e.target.checked }))}
-            />
-            <span className="text-content-secondary">
-              {t('hse_advanced.finding_passed', {
-                defaultValue: 'Item passed (uncheck for a failed / non-conforming item)',
-              })}
-            </span>
-          </label>
-        </ModalShell>
-      )}
-    </ModalShell>
   );
 }
 
@@ -3957,15 +2736,54 @@ function CAPATab({ projectId }: { projectId: string }) {
 
 function CAPALegacyTab({ projectId }: { projectId: string }) {
   const { t } = useTranslation();
+  const qc = useQueryClient();
+  const addToast = useToastStore((s) => s.addToast);
   const [search, setSearch] = useState('');
   const [showCreate, setShowCreate] = useState(false);
-  const [detail, setDetail] = useState<CorrectiveAction | null>(null);
   const [filter, setFilter] = useState<'all' | 'open' | 'closed'>('open');
+  // CAPACreate requires project_id + source_type + title + target_date.
+  const [form, setForm] = useState({
+    source_type: 'observation',
+    title: '',
+    description: '',
+    target_date: new Date().toISOString().slice(0, 10),
+  });
 
   const { data, isLoading, isError, error, refetch } = useQuery({
     queryKey: ['hse-capa', projectId],
     queryFn: () => fetchCAPAs(projectId),
     select: (d) => normalizeListResponse<CorrectiveAction>(d),
+  });
+
+  const createMut = useMutation({
+    mutationFn: () =>
+      createCAPA({
+        project_id: projectId,
+        source_type: form.source_type,
+        title: form.title,
+        description: form.description || undefined,
+        target_date: form.target_date,
+      }),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['hse-capa', projectId] });
+      setShowCreate(false);
+      setForm({
+        source_type: 'observation',
+        title: '',
+        description: '',
+        target_date: new Date().toISOString().slice(0, 10),
+      });
+      addToast({
+        type: 'success',
+        title: t('hse_advanced.capa_created', { defaultValue: 'CAPA created' }),
+      });
+    },
+    onError: (e) =>
+      addToast({
+        type: 'error',
+        title: t('hse_advanced.capa_failed', { defaultValue: 'Failed to create CAPA' }),
+        message: getErrorMessage(e),
+      }),
   });
 
   // CAPA status enum: open | in_progress | completed | overdue | cancelled.
@@ -4008,7 +2826,7 @@ function CAPALegacyTab({ projectId }: { projectId: string }) {
         title={t('hse_advanced.no_capa', { defaultValue: 'No corrective actions yet' })}
         description={t('hse_advanced.no_capa_desc', {
           defaultValue:
-            'Corrective and Preventive Actions track what was done to fix an issue and prevent recurrence. They link back to a safety incident, JSA, permit, audit or observation.',
+            'Corrective and Preventive Actions track what was done to fix an issue and prevent recurrence. They link back to incidents, audits or NCRs.',
         })}
         action={{
           label: t('hse_advanced.new_capa', { defaultValue: 'New CAPA' }),
@@ -4091,8 +2909,7 @@ function CAPALegacyTab({ projectId }: { projectId: string }) {
                   return (
                     <tr
                       key={it.id}
-                      className="border-b border-border-light hover:bg-surface-secondary/30 cursor-pointer transition-colors"
-                      onClick={() => setDetail(it)}
+                      className="border-b border-border-light hover:bg-surface-secondary/30"
                     >
                       <td className="px-4 py-3 text-content-secondary text-xs">
                         {t(`hse_advanced.source_type_${it.source_type}`, {
@@ -4143,709 +2960,85 @@ function CAPALegacyTab({ projectId }: { projectId: string }) {
       </Card>
 
       {showCreate && (
-        <CreateCAPADialog projectId={projectId} onClose={() => setShowCreate(false)} />
-      )}
-
-      {detail && (
-        <CAPADetailDrawer
-          item={detail}
-          projectId={projectId}
-          onClose={() => setDetail(null)}
-        />
-      )}
-    </>
-  );
-}
-
-/* ── Create CAPA dialog (shared) ─────────────────────────────────────────
- * Used by the CAPA tab's "New CAPA" button (full source picker) and by the
- * audit "Create CAPA" finding shortcut (source locked to the originating
- * audit). Centralising the create form means source_ref wiring lives in one
- * place. The backend source_type enum is incident|jsa|permit|audit|observation;
- * source_ref is the optional UUID of that record.
- */
-function CreateCAPADialog({
-  projectId,
-  initial,
-  lockSource = false,
-  onClose,
-  onCreated,
-}: {
-  projectId: string;
-  initial?: {
-    source_type?: string;
-    source_ref?: string;
-    title?: string;
-    description?: string;
-  };
-  /** When true the source_type/source_ref come pre-set and are not editable
-   *  (e.g. opened from an audit finding). */
-  lockSource?: boolean;
-  onClose: () => void;
-  onCreated?: () => void;
-}) {
-  const { t } = useTranslation();
-  const qc = useQueryClient();
-  const addToast = useToastStore((s) => s.addToast);
-
-  const [form, setForm] = useState({
-    source_type: initial?.source_type ?? 'observation',
-    source_ref: initial?.source_ref ?? '',
-    title: initial?.title ?? '',
-    description: initial?.description ?? '',
-    target_date: new Date().toISOString().slice(0, 10),
-  });
-
-  const createMut = useMutation({
-    mutationFn: () =>
-      createCAPA({
-        project_id: projectId,
-        source_type: form.source_type,
-        // "observation" carries no ref; everything else passes the picked id
-        // (or undefined when the user left it blank).
-        source_ref:
-          form.source_type === 'observation' || !form.source_ref ? undefined : form.source_ref,
-        title: form.title,
-        description: form.description || undefined,
-        target_date: form.target_date,
-      }),
-    onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ['hse-capa', projectId] });
-      addToast({
-        type: 'success',
-        title: t('hse_advanced.capa_created', { defaultValue: 'CAPA created' }),
-      });
-      onCreated?.();
-      onClose();
-    },
-    onError: (e) =>
-      addToast({
-        type: 'error',
-        title: t('hse_advanced.capa_failed', { defaultValue: 'Failed to create CAPA' }),
-        message: getErrorMessage(e),
-      }),
-  });
-
-  return (
-    <ModalShell
-      title={t('hse_advanced.new_capa', { defaultValue: 'New CAPA' })}
-      onClose={onClose}
-      footer={
-        <>
-          <Button variant="ghost" onClick={onClose}>
-            {t('common.cancel', { defaultValue: 'Cancel' })}
-          </Button>
-          <Button
-            variant="primary"
-            disabled={!form.title.trim() || !form.description.trim() || createMut.isPending}
-            onClick={() => createMut.mutate()}
-          >
-            {t('common.create', { defaultValue: 'Create' })}
-          </Button>
-        </>
-      }
-    >
-      <div>
-        <label className="block text-sm font-medium text-content-primary mb-1.5">
-          {t('common.title', { defaultValue: 'Title' })}{' '}
-          <span className="text-semantic-error">*</span>
-        </label>
-        <input
-          className={inputCls}
-          value={form.title}
-          onChange={(e) => setForm((f) => ({ ...f, title: e.target.value }))}
-        />
-      </div>
-      <div>
-        <label className="block text-sm font-medium text-content-primary mb-1.5">
-          {t('common.description', { defaultValue: 'Description' })}{' '}
-          <span className="text-semantic-error">*</span>
-        </label>
-        <textarea
-          rows={3}
-          className={textareaCls}
-          value={form.description}
-          onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))}
-        />
-      </div>
-      <div className="grid grid-cols-2 gap-3">
-        <div>
-          <label className="block text-sm font-medium text-content-primary mb-1.5">
-            {t('hse_advanced.source_type', { defaultValue: 'Source' })}
-          </label>
-          <select
-            className={inputCls}
-            value={form.source_type}
-            disabled={lockSource}
-            onChange={(e) =>
-              // Switching source type clears any previously picked ref.
-              setForm((f) => ({ ...f, source_type: e.target.value, source_ref: '' }))
-            }
-          >
-            {/* source_type must match the backend enum
-                ^(incident|jsa|permit|audit|observation)$. */}
-            {CAPA_SOURCE_TYPES.map((s) => (
-              <option key={s} value={s}>
-                {t(`hse_advanced.source_type_${s}`, {
-                  defaultValue: s.charAt(0).toUpperCase() + s.slice(1),
-                })}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-content-primary mb-1.5">
-            {t('hse_advanced.target_date', { defaultValue: 'Target date' })}
-          </label>
-          <input
-            type="date"
-            className={inputCls}
-            value={form.target_date}
-            onChange={(e) => setForm((f) => ({ ...f, target_date: e.target.value }))}
-          />
-        </div>
-      </div>
-      <div>
-        <label className="block text-sm font-medium text-content-primary mb-1.5">
-          {t('hse_advanced.source_record', { defaultValue: 'Linked source record' })}
-        </label>
-        {lockSource ? (
-          <p className="text-sm text-content-secondary">
-            {t('hse_advanced.capa_source_locked', {
-              defaultValue: 'Linked to the originating audit.',
-            })}
-          </p>
-        ) : (
-          <CapaSourceRefPicker
-            projectId={projectId}
-            sourceType={form.source_type}
-            value={form.source_ref}
-            onChange={(id) => setForm((f) => ({ ...f, source_ref: id }))}
-          />
-        )}
-      </div>
-    </ModalShell>
-  );
-}
-
-/* ── CAPA Detail Drawer (lifecycle + 5-Whys + effectiveness) ─────────── */
-
-const ROOT_CAUSE_CATEGORIES: RootCauseCategory[] = [
-  'manpower',
-  'method',
-  'material',
-  'machine',
-  'environment',
-  'management',
-  'other',
-];
-
-function CAPADetailDrawer({
-  item,
-  projectId,
-  onClose,
-}: {
-  item: CorrectiveAction;
-  projectId: string;
-  onClose: () => void;
-}) {
-  const { t } = useTranslation();
-  const navigate = useNavigate();
-  const qc = useQueryClient();
-  const addToast = useToastStore((s) => s.addToast);
-
-  // Sub-modals: complete (verification notes), 5-whys editor, effectiveness.
-  const [completing, setCompleting] = useState(false);
-  const [verificationNotes, setVerificationNotes] = useState('');
-  const [editingWhys, setEditingWhys] = useState(false);
-  const [verifyingEff, setVerifyingEff] = useState(false);
-
-  const [whys, setWhys] = useState<FiveWhyStep[]>(() =>
-    (item.five_whys ?? []).map((w) => ({
-      why: String((w as Record<string, unknown>).why ?? ''),
-      answer: String((w as Record<string, unknown>).answer ?? ''),
-    })),
-  );
-  const [rootCause, setRootCause] = useState<RootCauseCategory | ''>(
-    (item.root_cause_category as RootCauseCategory | undefined) ?? '',
-  );
-  const [effForm, setEffForm] = useState({ effective: true, notes: '' });
-
-  const invalidate = () => qc.invalidateQueries({ queryKey: ['hse-capa', projectId] });
-  const isClosed = item.status === 'completed' || item.status === 'cancelled';
-
-  const completeMut = useMutation({
-    mutationFn: () => completeCAPA(item.id, verificationNotes.trim()),
-    onSuccess: () => {
-      invalidate();
-      addToast({
-        type: 'success',
-        title: t('hse_advanced.capa_completed', { defaultValue: 'CAPA completed' }),
-      });
-      onClose();
-    },
-    onError: (e) =>
-      addToast({
-        type: 'error',
-        title: t('hse_advanced.capa_action_failed', { defaultValue: 'Could not update CAPA' }),
-        message: getErrorMessage(e),
-      }),
-  });
-
-  const escalateMut = useMutation({
-    mutationFn: () => escalateCAPA(item.id),
-    onSuccess: () => {
-      invalidate();
-      addToast({
-        type: 'success',
-        title: t('hse_advanced.capa_escalated', { defaultValue: 'CAPA escalated' }),
-      });
-      onClose();
-    },
-    onError: (e) =>
-      addToast({
-        type: 'error',
-        title: t('hse_advanced.capa_action_failed', { defaultValue: 'Could not update CAPA' }),
-        message: getErrorMessage(e),
-      }),
-  });
-
-  const cancelMut = useMutation({
-    mutationFn: () => cancelCAPA(item.id),
-    onSuccess: () => {
-      invalidate();
-      addToast({
-        type: 'success',
-        title: t('hse_advanced.capa_cancelled', { defaultValue: 'CAPA cancelled' }),
-      });
-      onClose();
-    },
-    onError: (e) =>
-      addToast({
-        type: 'error',
-        title: t('hse_advanced.capa_action_failed', { defaultValue: 'Could not update CAPA' }),
-        message: getErrorMessage(e),
-      }),
-  });
-
-  const whysMut = useMutation({
-    mutationFn: () =>
-      setCAPAFiveWhys(item.id, {
-        steps: whys.filter((w) => w.why.trim() && w.answer.trim()),
-        root_cause_category: rootCause || null,
-      }),
-    onSuccess: () => {
-      invalidate();
-      setEditingWhys(false);
-      addToast({
-        type: 'success',
-        title: t('hse_advanced.whys_saved', { defaultValue: '5-Whys saved' }),
-      });
-    },
-    onError: (e) =>
-      addToast({
-        type: 'error',
-        title: t('hse_advanced.whys_failed', { defaultValue: 'Could not save 5-Whys' }),
-        message: getErrorMessage(e),
-      }),
-  });
-
-  const effMut = useMutation({
-    mutationFn: () =>
-      verifyCAPAEffectiveness(item.id, {
-        effective: effForm.effective,
-        notes: effForm.notes.trim(),
-      }),
-    onSuccess: () => {
-      invalidate();
-      setVerifyingEff(false);
-      addToast({
-        type: 'success',
-        title: t('hse_advanced.effectiveness_saved', {
-          defaultValue: 'Effectiveness verified',
-        }),
-      });
-      onClose();
-    },
-    onError: (e) =>
-      addToast({
-        type: 'error',
-        title: t('hse_advanced.effectiveness_failed', {
-          defaultValue: 'Could not verify effectiveness',
-        }),
-        message: getErrorMessage(e),
-      }),
-  });
-
-  return (
-    <ModalShell
-      title={`${t('hse_advanced.tab_capa', { defaultValue: 'CAPA' })} - ${item.title.slice(0, 60)}`}
-      onClose={onClose}
-      size="max-w-3xl"
-      footer={
-        <div className="flex flex-1 items-center justify-end gap-2 flex-wrap">
-          {!isClosed && (
-            <>
-              <Button
-                variant="secondary"
-                size="sm"
-                icon={<ArrowUpCircle size={14} />}
-                disabled={escalateMut.isPending}
-                onClick={() => escalateMut.mutate()}
-              >
-                {t('hse_advanced.capa_escalate', { defaultValue: 'Escalate' })}
-              </Button>
-              <Button
-                variant="ghost"
-                size="sm"
-                icon={<XCircle size={14} />}
-                disabled={cancelMut.isPending}
-                onClick={() => cancelMut.mutate()}
-              >
-                {t('hse_advanced.capa_cancel', { defaultValue: 'Cancel CAPA' })}
-              </Button>
-              <Button
-                variant="primary"
-                size="sm"
-                icon={<CheckCircle size={14} />}
-                onClick={() => setCompleting(true)}
-              >
-                {t('hse_advanced.capa_complete', { defaultValue: 'Complete' })}
-              </Button>
-            </>
-          )}
-          {item.status === 'completed' && (
-            <Button
-              variant="secondary"
-              size="sm"
-              icon={<ListChecks size={14} />}
-              onClick={() => setVerifyingEff(true)}
-            >
-              {t('hse_advanced.verify_effectiveness', {
-                defaultValue: 'Verify effectiveness',
-              })}
-            </Button>
-          )}
-          <Button variant="ghost" size="sm" onClick={onClose}>
-            {t('common.close', { defaultValue: 'Close' })}
-          </Button>
-        </div>
-      }
-    >
-      <div className="grid grid-cols-2 gap-3 text-sm">
-        <div>
-          <div className="text-xs text-content-tertiary uppercase">
-            {t('common.status', { defaultValue: 'Status' })}
-          </div>
-          <Badge variant={CAPA_STATUS_COLORS[item.status] ?? 'neutral'} size="sm">
-            {t(`hse_advanced.capa_status_${item.status}`, {
-              defaultValue: item.status.replace(/_/g, ' '),
-            })}
-          </Badge>
-        </div>
-        <div>
-          <div className="text-xs text-content-tertiary uppercase">
-            {t('hse_advanced.target_date', { defaultValue: 'Target' })}
-          </div>
-          <div className="text-content-secondary">
-            {item.target_date ? <DateDisplay value={item.target_date} /> : '—'}
-          </div>
-        </div>
-        <div>
-          <div className="text-xs text-content-tertiary uppercase">
-            {t('hse_advanced.source_type', { defaultValue: 'Source' })}
-          </div>
-          <div className="text-content-secondary flex items-center gap-2 flex-wrap">
-            <span>
-              {t(`hse_advanced.source_type_${item.source_type}`, {
-                defaultValue: item.source_type.replace(/_/g, ' '),
-              })}
-            </span>
-            {item.source_ref && capaSourceLink(item.source_type, item.source_ref) && (
-              <button
-                type="button"
-                onClick={() => {
-                  const to = capaSourceLink(item.source_type, item.source_ref!);
-                  if (to) navigate(to);
-                }}
-                className="inline-flex items-center gap-1 text-xs text-oe-blue-text hover:underline"
-              >
-                <ExternalLink size={12} />
-                {t('hse_advanced.view_source', { defaultValue: 'View source' })}
-              </button>
-            )}
-          </div>
-        </div>
-        <div>
-          <div className="text-xs text-content-tertiary uppercase">
-            {t('hse_advanced.root_cause', { defaultValue: 'Root cause' })}
-          </div>
-          <div className="text-content-secondary">
-            {item.root_cause_category
-              ? t(`hse_advanced.root_cause_${item.root_cause_category}`, {
-                  defaultValue: item.root_cause_category,
-                })
-              : '—'}
-          </div>
-        </div>
-      </div>
-
-      {item.description && (
-        <div>
-          <div className="text-xs font-semibold uppercase tracking-wider text-content-tertiary mb-1">
-            {t('common.description', { defaultValue: 'Description' })}
-          </div>
-          <p className="text-sm text-content-secondary whitespace-pre-wrap">
-            {item.description}
-          </p>
-        </div>
-      )}
-
-      {/* 5-Whys root-cause chain */}
-      <div>
-        <div className="flex items-center justify-between mb-1">
-          <div className="text-xs font-semibold uppercase tracking-wider text-content-tertiary">
-            {t('hse_advanced.five_whys', { defaultValue: '5-Whys root cause' })}
-          </div>
-          {!isClosed && (
-            <Button variant="ghost" size="sm" onClick={() => setEditingWhys(true)}>
-              {t('hse_advanced.edit_whys', { defaultValue: 'Edit 5-Whys' })}
-            </Button>
-          )}
-        </div>
-        {item.five_whys && item.five_whys.length > 0 ? (
-          <ol className="text-sm space-y-1 list-decimal list-inside">
-            {item.five_whys.map((w, i) => {
-              const rec = w as Record<string, unknown>;
-              return (
-                <li key={i} className="text-content-secondary">
-                  <span className="text-content-primary">{String(rec.why ?? '')}</span>
-                  {' → '}
-                  {String(rec.answer ?? '')}
-                </li>
-              );
-            })}
-          </ol>
-        ) : (
-          <p className="text-sm text-content-tertiary">
-            {t('hse_advanced.no_whys', { defaultValue: 'No root-cause chain recorded yet.' })}
-          </p>
-        )}
-      </div>
-
-      {item.verification_notes && (
-        <div>
-          <div className="text-xs font-semibold uppercase tracking-wider text-content-tertiary mb-1">
-            {t('hse_advanced.verification_notes', { defaultValue: 'Verification notes' })}
-          </div>
-          <p className="text-sm text-content-secondary whitespace-pre-wrap">
-            {item.verification_notes}
-          </p>
-        </div>
-      )}
-
-      {item.effectiveness_verified_at && (
-        <div className="rounded-lg bg-semantic-success/5 border border-semantic-success/30 p-3 text-sm text-semantic-success flex items-center gap-2">
-          <ListChecks size={15} />
-          {t('hse_advanced.effectiveness_done', {
-            defaultValue: 'Effectiveness verified',
-          })}{' '}
-          (<DateDisplay value={item.effectiveness_verified_at} />)
-        </div>
-      )}
-
-      {/* Complete (verification notes) sub-modal */}
-      {completing && (
         <ModalShell
-          title={t('hse_advanced.capa_complete', { defaultValue: 'Complete CAPA' })}
-          onClose={() => setCompleting(false)}
-          size="max-w-lg"
+          title={t('hse_advanced.new_capa', { defaultValue: 'New CAPA' })}
+          onClose={() => setShowCreate(false)}
           footer={
             <>
-              <Button variant="ghost" onClick={() => setCompleting(false)}>
+              <Button variant="ghost" onClick={() => setShowCreate(false)}>
                 {t('common.cancel', { defaultValue: 'Cancel' })}
               </Button>
               <Button
                 variant="primary"
-                icon={<CheckCircle size={14} />}
-                disabled={completeMut.isPending}
-                onClick={() => completeMut.mutate()}
+                disabled={!form.title.trim() || !form.description.trim() || createMut.isPending}
+                onClick={() => createMut.mutate()}
               >
-                {t('hse_advanced.capa_complete', { defaultValue: 'Complete' })}
+                {t('common.create', { defaultValue: 'Create' })}
               </Button>
             </>
           }
         >
-          <p className="text-sm text-content-secondary">
-            {t('hse_advanced.capa_complete_help', {
-              defaultValue:
-                'Record what was done to close this action. Notes become part of the CAPA audit trail.',
-            })}
-          </p>
           <div>
             <label className="block text-sm font-medium text-content-primary mb-1.5">
-              {t('hse_advanced.verification_notes', { defaultValue: 'Verification notes' })}
+              {t('common.title', { defaultValue: 'Title' })}{' '}
+              <span className="text-semantic-error">*</span>
             </label>
-            <textarea
-              rows={4}
-              className={textareaCls}
-              value={verificationNotes}
-              onChange={(e) => setVerificationNotes(e.target.value)}
-            />
-          </div>
-        </ModalShell>
-      )}
-
-      {/* 5-Whys editor sub-modal */}
-      {editingWhys && (
-        <ModalShell
-          title={t('hse_advanced.five_whys', { defaultValue: '5-Whys root cause' })}
-          onClose={() => setEditingWhys(false)}
-          size="max-w-2xl"
-          footer={
-            <>
-              <Button variant="ghost" onClick={() => setEditingWhys(false)}>
-                {t('common.cancel', { defaultValue: 'Cancel' })}
-              </Button>
-              <Button
-                variant="primary"
-                disabled={whysMut.isPending}
-                onClick={() => whysMut.mutate()}
-              >
-                {t('common.save', { defaultValue: 'Save' })}
-              </Button>
-            </>
-          }
-        >
-          <p className="text-sm text-content-secondary">
-            {t('hse_advanced.five_whys_help', {
-              defaultValue:
-                'Ask "why" repeatedly to reach the true root cause. Each row is a why and its answer.',
-            })}
-          </p>
-          <div className="space-y-2">
-            {whys.map((w, i) => (
-              <div key={i} className="grid grid-cols-[1fr,1fr,auto] gap-2 items-start">
-                <input
-                  className={inputCls}
-                  placeholder={t('hse_advanced.why_n', { defaultValue: 'Why #{{n}}?', n: i + 1 })}
-                  value={w.why}
-                  onChange={(e) =>
-                    setWhys((arr) =>
-                      arr.map((row, j) => (j === i ? { ...row, why: e.target.value } : row)),
-                    )
-                  }
-                />
-                <input
-                  className={inputCls}
-                  placeholder={t('hse_advanced.because', { defaultValue: 'Because…' })}
-                  value={w.answer}
-                  onChange={(e) =>
-                    setWhys((arr) =>
-                      arr.map((row, j) =>
-                        j === i ? { ...row, answer: e.target.value } : row,
-                      ),
-                    )
-                  }
-                />
-                <button
-                  type="button"
-                  aria-label={t('common.delete', { defaultValue: 'Delete' })}
-                  onClick={() => setWhys((arr) => arr.filter((_, j) => j !== i))}
-                  className="h-10 px-2 text-content-tertiary hover:text-semantic-error"
-                >
-                  <Trash2 size={15} />
-                </button>
-              </div>
-            ))}
-          </div>
-          <Button
-            variant="ghost"
-            size="sm"
-            icon={<Plus size={14} />}
-            onClick={() => setWhys((arr) => [...arr, { why: '', answer: '' }])}
-          >
-            {t('hse_advanced.add_why', { defaultValue: 'Add why' })}
-          </Button>
-          <div>
-            <label className="block text-sm font-medium text-content-primary mb-1.5">
-              {t('hse_advanced.root_cause_category', { defaultValue: 'Root-cause category' })}
-            </label>
-            <select
-              className={inputCls}
-              value={rootCause}
-              onChange={(e) => setRootCause(e.target.value as RootCauseCategory | '')}
-            >
-              <option value="">
-                {t('hse_advanced.root_cause_none', { defaultValue: 'Not categorised' })}
-              </option>
-              {ROOT_CAUSE_CATEGORIES.map((c) => (
-                <option key={c} value={c}>
-                  {t(`hse_advanced.root_cause_${c}`, { defaultValue: c })}
-                </option>
-              ))}
-            </select>
-          </div>
-        </ModalShell>
-      )}
-
-      {/* Effectiveness verification sub-modal (ISO 9001 §10.2.1) */}
-      {verifyingEff && (
-        <ModalShell
-          title={t('hse_advanced.verify_effectiveness', {
-            defaultValue: 'Verify effectiveness',
-          })}
-          onClose={() => setVerifyingEff(false)}
-          size="max-w-lg"
-          footer={
-            <>
-              <Button variant="ghost" onClick={() => setVerifyingEff(false)}>
-                {t('common.cancel', { defaultValue: 'Cancel' })}
-              </Button>
-              <Button
-                variant="primary"
-                icon={<ListChecks size={14} />}
-                disabled={effMut.isPending}
-                onClick={() => effMut.mutate()}
-              >
-                {t('common.save', { defaultValue: 'Save' })}
-              </Button>
-            </>
-          }
-        >
-          <p className="text-sm text-content-secondary">
-            {t('hse_advanced.effectiveness_help', {
-              defaultValue:
-                'Confirm the corrective action actually prevented recurrence (ISO 9001 §10.2.1 follow-up).',
-            })}
-          </p>
-          <label className="flex items-center gap-2 cursor-pointer text-sm">
             <input
-              type="checkbox"
-              className="h-4 w-4 rounded border-border text-oe-blue focus:ring-oe-blue/30"
-              checked={effForm.effective}
-              onChange={(e) => setEffForm((f) => ({ ...f, effective: e.target.checked }))}
+              className={inputCls}
+              value={form.title}
+              onChange={(e) => setForm((f) => ({ ...f, title: e.target.value }))}
             />
-            <span className="text-content-secondary">
-              {t('hse_advanced.was_effective', {
-                defaultValue: 'The action was effective (uncheck if it was not)',
-              })}
-            </span>
-          </label>
+          </div>
           <div>
             <label className="block text-sm font-medium text-content-primary mb-1.5">
-              {t('common.notes', { defaultValue: 'Notes' })}
+              {t('common.description', { defaultValue: 'Description' })}{' '}
+              <span className="text-semantic-error">*</span>
             </label>
             <textarea
               rows={3}
               className={textareaCls}
-              value={effForm.notes}
-              onChange={(e) => setEffForm((f) => ({ ...f, notes: e.target.value }))}
+              value={form.description}
+              onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))}
             />
+          </div>
+          {/* api-HIGH fix: the backend CAPACreate has no assigned_to/due_date —
+              the form state only carries source_type + target_date, so the two
+              stray inputs (which referenced non-existent form fields) are
+              replaced by the real source_type select + target_date picker. */}
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className="block text-sm font-medium text-content-primary mb-1.5">
+                {t('hse_advanced.source_type', { defaultValue: 'Source' })}
+              </label>
+              <select
+                className={inputCls}
+                value={form.source_type}
+                onChange={(e) => setForm((f) => ({ ...f, source_type: e.target.value }))}
+              >
+                {['observation', 'audit', 'incident', 'inspection'].map((s) => (
+                  <option key={s} value={s}>
+                    {t(`hse_advanced.source_type_${s}`, {
+                      defaultValue: s.charAt(0).toUpperCase() + s.slice(1),
+                    })}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-content-primary mb-1.5">
+                {t('hse_advanced.target_date', { defaultValue: 'Target date' })}
+              </label>
+              <input
+                type="date"
+                className={inputCls}
+                value={form.target_date}
+                onChange={(e) => setForm((f) => ({ ...f, target_date: e.target.value }))}
+              />
+            </div>
           </div>
         </ModalShell>
       )}
-    </ModalShell>
+    </>
   );
 }
 
@@ -4882,12 +3075,7 @@ const FSM_BADGE: Record<CATargetStatus, BadgeVariant> = {
 function CorrectiveActionsFSMTab({ projectId }: { projectId: string }) {
   const { t } = useTranslation();
   const qc = useQueryClient();
-  const navigate = useNavigate();
   const addToast = useToastStore((s) => s.addToast);
-  // When advancing to 'verified' we capture verification notes first so the
-  // audit trail (verified_at/verified_by + verification_notes) is complete.
-  const [verifyTarget, setVerifyTarget] = useState<CorrectiveActionRow | null>(null);
-  const [verifyNotes, setVerifyNotes] = useState('');
 
   const { data, isLoading, isError, error, refetch } = useQuery({
     queryKey: ['hse-corrective-actions', projectId],
@@ -4903,8 +3091,6 @@ function CorrectiveActionsFSMTab({ projectId }: { projectId: string }) {
       }),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['hse-corrective-actions', projectId] });
-      setVerifyTarget(null);
-      setVerifyNotes('');
       addToast({
         type: 'success',
         title: t('hse.advanced.ca_transition_ok', {
@@ -4921,16 +3107,6 @@ function CorrectiveActionsFSMTab({ projectId }: { projectId: string }) {
         message: getErrorMessage(e),
       }),
   });
-
-  // Advancing to 'verified' opens the notes modal; every other step is direct.
-  const advance = (row: CorrectiveActionRow, to: CATargetStatus) => {
-    if (to === 'verified') {
-      setVerifyNotes('');
-      setVerifyTarget(row);
-    } else {
-      transitionMut.mutate({ caId: row.id, to });
-    }
-  };
 
   if (isLoading) return <SkeletonTable rows={4} columns={5} />;
   if (isError) {
@@ -4949,18 +3125,13 @@ function CorrectiveActionsFSMTab({ projectId }: { projectId: string }) {
         })}
         description={t('hse.advanced.no_corrective_actions_desc', {
           defaultValue:
-            'Slim corrective actions are opened off a safety incident and walk a strict pending → in_progress → verified → closed lifecycle. Open an incident in the Safety module and assign a corrective action to populate this list.',
+            'Slim corrective actions are opened off an incident and walk a strict pending → in_progress → verified → closed lifecycle. They appear here once an incident has at least one CA assigned.',
         })}
-        action={{
-          label: t('hse.advanced.go_to_safety', { defaultValue: 'Go to Safety incidents' }),
-          onClick: () => navigate('/safety'),
-        }}
       />
     );
   }
 
   return (
-    <>
     <Card padding="none">
       <div className="overflow-x-auto">
         <table className="w-full text-sm">
@@ -5016,7 +3187,7 @@ function CorrectiveActionsFSMTab({ projectId }: { projectId: string }) {
                         onChange={(e) => {
                           const to = e.target.value as CATargetStatus;
                           if (!to) return;
-                          advance(row, to);
+                          transitionMut.mutate({ caId: row.id, to });
                         }}
                         className="h-8 rounded-md border border-border bg-surface-primary px-2 text-xs focus:outline-none focus:ring-2 focus:ring-oe-blue/30 focus:border-oe-blue"
                       >
@@ -5040,56 +3211,5 @@ function CorrectiveActionsFSMTab({ projectId }: { projectId: string }) {
         </table>
       </div>
     </Card>
-
-    {verifyTarget && (
-      <ModalShell
-        title={t('hse.advanced.ca_verify_title', { defaultValue: 'Verify corrective action' })}
-        onClose={() => setVerifyTarget(null)}
-        size="max-w-lg"
-        footer={
-          <>
-            <Button variant="ghost" onClick={() => setVerifyTarget(null)}>
-              {t('common.cancel', { defaultValue: 'Cancel' })}
-            </Button>
-            <Button
-              variant="primary"
-              icon={<CheckCircle size={14} />}
-              disabled={transitionMut.isPending}
-              onClick={() =>
-                transitionMut.mutate({
-                  caId: verifyTarget.id,
-                  to: 'verified',
-                  notes: verifyNotes.trim() || undefined,
-                })
-              }
-            >
-              {t('hse.advanced.ca_status_verified', { defaultValue: 'Verified' })}
-            </Button>
-          </>
-        }
-      >
-        <p className="text-sm text-content-secondary">
-          {t('hse.advanced.ca_verify_help', {
-            defaultValue:
-              'Verifying records that you checked the action was carried out. Add a short note describing what you confirmed.',
-          })}
-        </p>
-        <div>
-          <label className="block text-sm font-medium text-content-primary mb-1.5">
-            {t('hse_advanced.verification_notes', { defaultValue: 'Verification notes' })}
-          </label>
-          <textarea
-            rows={3}
-            className={textareaCls}
-            value={verifyNotes}
-            onChange={(e) => setVerifyNotes(e.target.value)}
-            placeholder={t('hse.advanced.ca_verify_placeholder', {
-              defaultValue: 'Checked on site, photos attached, sign-off received…',
-            })}
-          />
-        </div>
-      </ModalShell>
-    )}
-    </>
   );
 }

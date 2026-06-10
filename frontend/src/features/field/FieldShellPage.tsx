@@ -1,54 +1,34 @@
 /**
- * Field-worker mobile shell.
+ * Field-worker mobile shell — DESIGN-STAGE SKELETON.
  *
  * Implements the bottom-nav + thumb-zone layout described in
- * `docs/architecture/FIELD_WORKER_MOBILE_DESIGN.md` §6. The `/field` route in
- * `App.tsx` lazy-loads this chunk.
+ * `docs/architecture/FIELD_WORKER_MOBILE_DESIGN.md` §6. This file is a
+ * structural placeholder so the `/field` route in `App.tsx` lazy-loads
+ * a real chunk; the four tabs render `null` until the pilot endpoints
+ * land.
  *
  * What lives HERE:
  *   - Full-viewport shell with no sidebar / no desktop AppLayout
- *   - Bottom-nav with 4 fixed tabs (Today / Capture / Crew / Profile)
- *   - 56 px sticky header with current project name + offline/sync badge
+ *   - Bottom-nav with 4 fixed tabs (My Today / Capture / Crew / Profile)
+ *   - 56 px sticky header with current project name + help button
  *   - Safe-area-aware padding via `env(safe-area-inset-*)`
- *   - Today / Capture / Crew tab bodies wired to the field-diary API; writes
- *     captured through the shared offline mutation queue (no second queue).
  *
- * What lives ELSEWHERE:
+ * What lives ELSEWHERE / not yet:
  *   - PIN-redemption screen at `/field/{token}` → separate `FieldAuthPage`
- *     (persists the session into sessionStorage; this shell reads it).
+ *     (TODO Day 3, design doc §9)
+ *   - Today / Capture / Crew tab bodies → separate per-tab files once the
+ *     `/api/v1/field/*` endpoints exist (TODO Day 2, design doc §9)
+ *   - Offline write queue helper `submitFieldMutation` → already has its
+ *     substrate at `frontend/src/shared/lib/offlineStore.ts`, wiring
+ *     deferred to pilot.
  *
  * Touch-target rule: every interactive element on this shell stays at
- * ≥48×48 px (WCAG 2.2 SC 2.5.8 AAA + Apple HIG + Material 3).
+ * ≥48×48 px (WCAG 2.2 SC 2.5.8 AAA + Apple HIG + Material 3). Validated
+ * by the QA crawler skill's axe-core integration.
  */
 
-import { useCallback, useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { useState } from 'react';
 import { Clock, Camera, Users, User } from 'lucide-react';
-import { registerFieldServiceWorker } from '@/shared/lib/offline';
-import { useFieldSync } from './useFieldSync';
-import { OfflineStatusBadge } from './OfflineStatusBadge';
-import { readFieldSession } from './fieldApi';
-import { TodayTab, CaptureTab, CrewTab } from './FieldTabs';
-
-/**
- * Auth headers for replayed field writes. The field session token + PIN are
- * stored in sessionStorage by the (future) PIN-redemption screen
- * (`FieldAuthPage`); reading them here keeps this offline slice self-contained
- * and free of a cross-lane store dependency. Returns an empty object when no
- * session is present, so the queue still drains harmlessly in that state.
- */
-function fieldAuthHeaders(): Record<string, string> {
-  try {
-    const token = sessionStorage.getItem('oe_field_session_token');
-    const pin = sessionStorage.getItem('oe_field_session_pin');
-    const headers: Record<string, string> = {};
-    if (token) headers['Authorization'] = `Bearer ${token}`;
-    if (pin) headers['X-Field-PIN'] = pin;
-    return headers;
-  } catch {
-    return {};
-  }
-}
 
 type FieldTab = 'today' | 'capture' | 'crew' | 'profile';
 
@@ -66,19 +46,7 @@ const TABS: readonly FieldTabDef[] = [
 ] as const;
 
 export function FieldShellPage() {
-  const { t } = useTranslation();
   const [tab, setTab] = useState<FieldTab>('today');
-  const session = readFieldSession();
-
-  // Stable headers provider so the queue sender is constructed once.
-  const getHeaders = useCallback(() => fieldAuthHeaders(), []);
-  const { online, pending, syncing, syncNow, enqueue } = useFieldSync(getHeaders);
-
-  // Register the scoped field service worker so the shell + last-viewed data
-  // load offline. Best-effort: a failure does not affect the IndexedDB queue.
-  useEffect(() => {
-    void registerFieldServiceWorker();
-  }, []);
 
   return (
     <div
@@ -90,51 +58,25 @@ export function FieldShellPage() {
         paddingTop: 'env(safe-area-inset-top)',
       }}
     >
-      {/* Sticky 56 px header — project name placeholder + offline/sync badge. */}
-      <header className="sticky top-0 z-10 flex h-14 items-center justify-between gap-2 border-b border-slate-200 bg-white px-4">
-        <span className="min-w-0 truncate text-base font-semibold text-slate-900">
-          {session
-            ? t('field.header', { defaultValue: 'Field time' })
-            : t('field.header_no_session', { defaultValue: 'Field - sign in' })}
+      {/* Sticky 56 px header — project name placeholder. */}
+      <header className="sticky top-0 z-10 flex h-14 items-center justify-between border-b border-slate-200 bg-white px-4">
+        <span className="truncate text-base font-semibold text-slate-900">
+          {/* TODO pilot: surface caller.active_project.name */}
+          Field — Project pending
         </span>
-        <div className="flex shrink-0 items-center gap-2">
-          <OfflineStatusBadge
-            online={online}
-            pending={pending}
-            syncing={syncing}
-            onSyncNow={() => {
-              void syncNow();
-            }}
-          />
-          <button
-            type="button"
-            aria-label="Help"
-            className="flex h-11 w-11 items-center justify-center rounded-full text-slate-500 hover:bg-slate-100"
-          >
-            ?
-          </button>
-        </div>
+        <button
+          type="button"
+          aria-label="Help"
+          className="flex h-11 w-11 items-center justify-center rounded-full text-slate-500 hover:bg-slate-100"
+        >
+          ?
+        </button>
       </header>
 
-      {/* Tab body. */}
-      <main className="flex flex-1 flex-col items-stretch overflow-y-auto">
-        {tab === 'today' && <TodayTab session={session} />}
-        {tab === 'capture' && <CaptureTab session={session} enqueue={enqueue} />}
-        {tab === 'crew' && <CrewTab session={session} enqueue={enqueue} />}
-        {tab === 'profile' && (
-          <div className="flex flex-1 flex-col items-center justify-center gap-2 px-4 py-8 text-center">
-            <p className="text-sm text-slate-500">
-              {session
-                ? t('field.profile_signed_in', { defaultValue: 'Signed in as a field worker.' })
-                : t('field.no_session', { defaultValue: 'Open the link from your SMS to start.' })}
-            </p>
-            <p className="text-xs text-slate-400">
-              {online
-                ? t('field.sync_online', { defaultValue: 'Online - changes sync automatically.' })
-                : t('field.sync_offline', { defaultValue: 'Offline - changes are saved and will sync.' })}
-            </p>
-          </div>
-        )}
+      {/* Tab body — empty until pilot endpoints land. */}
+      <main className="flex flex-1 flex-col items-center justify-center px-4 py-8 text-center text-slate-400">
+        {/* TODO Day 2/3 — render per-tab content. See design doc §8. */}
+        Tab "{tab}" — coming in pilot
       </main>
 
       {/* Bottom nav — fixed 64 px, 4 tabs. */}

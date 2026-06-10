@@ -1,5 +1,4 @@
-import { useState, useMemo, useEffect, useRef } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import {
@@ -13,8 +12,7 @@ import {
   ChevronDown,
   ChevronUp,
 } from 'lucide-react';
-import { Breadcrumb, Card, CardHeader, CardContent, Button, EmptyState, Skeleton, DismissibleInfo, IntroRichText } from '@/shared/ui';
-import { PageHeader } from '@/shared/ui/PageHeader';
+import { Card, CardHeader, CardContent, Button, EmptyState, Skeleton } from '@/shared/ui';
 import { apiGet } from '@/shared/lib/api';
 import { useToastStore } from '@/stores/useToastStore';
 import {
@@ -151,25 +149,13 @@ function EPDSelect({
 
 export function SustainabilityPage() {
   const { t } = useTranslation();
-  const navigate = useNavigate();
   const qc = useQueryClient();
   const addToast = useToastStore((s) => s.addToast);
-  const [searchParams, setSearchParams] = useSearchParams();
-  // Deep-link preselect (e.g. from the BOQ toolbar "Carbon footprint" action:
-  // /sustainability?project_id=&boq_id=). Read once on mount so the user lands
-  // on their BOQ instead of an empty selector.
-  const [selectedProjectId, setSelectedProjectId] = useState(
-    () => searchParams.get('project_id') ?? '',
-  );
-  const [selectedBoqId, setSelectedBoqId] = useState(
-    () => searchParams.get('boq_id') ?? '',
-  );
+  const [selectedProjectId, setSelectedProjectId] = useState('');
+  const [selectedBoqId, setSelectedBoqId] = useState('');
   const [areaM2, setAreaM2] = useState(2000);
   const [calculated, setCalculated] = useState(false);
   const [showAllPositions, setShowAllPositions] = useState(false);
-  // Guards the one-shot auto-calculate so a user who later changes the
-  // selectors isn't force-recalculated against the original deep-link.
-  const autoCalcDone = useRef(false);
 
   // Projects & BOQs
   const { data: projects, isLoading: projectsLoading } = useQuery({
@@ -189,40 +175,6 @@ export function SustainabilityPage() {
     queryFn: () => fetchSustainability(selectedBoqId, areaM2),
     enabled: false,
   });
-
-  // When the page is opened deep-linked with project_id + boq_id, run the
-  // analysis automatically once the BOQ list confirms the BOQ exists. After
-  // it fires we strip the params and never auto-run again, so manual changes
-  // to the selectors behave normally.
-  useEffect(() => {
-    if (autoCalcDone.current) return;
-    if (!selectedProjectId || !selectedBoqId) return;
-    // Wait until the project's BOQs have loaded; only auto-calculate when the
-    // linked BOQ is genuinely present (avoids a request for a stale id).
-    if (boqsLoading) return;
-    const exists = (boqs ?? []).some((b) => b.id === selectedBoqId);
-    if (!exists) {
-      autoCalcDone.current = true;
-      if (searchParams.has('project_id') || searchParams.has('boq_id')) {
-        setSearchParams({}, { replace: true });
-      }
-      return;
-    }
-    autoCalcDone.current = true;
-    setCalculated(true);
-    refetch();
-    if (searchParams.has('project_id') || searchParams.has('boq_id')) {
-      setSearchParams({}, { replace: true });
-    }
-  }, [
-    selectedProjectId,
-    selectedBoqId,
-    boqs,
-    boqsLoading,
-    refetch,
-    searchParams,
-    setSearchParams,
-  ]);
 
   // EPD materials for dropdown
   const { data: epdData } = useQuery({
@@ -335,42 +287,27 @@ export function SustainabilityPage() {
     }
   }
 
-  const selectedProject = projects?.find((p) => p.id === selectedProjectId);
-
   return (
-    <div className="space-y-5 animate-fade-in">
-      <Breadcrumb
-        items={[
-          ...(selectedProject
-            ? [{ label: selectedProject.name, to: `/projects/${selectedProject.id}` }]
-            : []),
-          { label: t('nav.sustainability', { defaultValue: 'Sustainability' }) },
-        ]}
-      />
-      <PageHeader
-        srTitle={t('nav.sustainability', { defaultValue: 'Sustainability' })}
-        subtitle={t('sustainability.subtitle', 'Embodied carbon analysis based on EPD data (EN 15804, A1-A3)')}
-      />
-
-      <DismissibleInfo
-        storageKey="sustainability"
-        title={t('sustainability.intro_title', {
-          defaultValue: "Read a BOQ's carbon footprint position by position",
-        })}
-        more={t('sustainability.intro_more', { defaultValue: '' }) ? <IntroRichText text={t('sustainability.intro_more')} /> : undefined}
-        links={[
-          { label: t('sustainability.intro_link_carbon', { defaultValue: 'Carbon & ESG' }), onClick: () => navigate('/carbon') },
-          { label: t('sustainability.intro_link_boq', { defaultValue: 'Open BOQ' }), onClick: () => navigate('/boq') },
-        ]}
-      >
-        {t('sustainability.intro_body', {
-          defaultValue:
-            'Select a project and BOQ, enrich it with EPD material factors, then calculate to see total CO2, a per-square-metre benchmark and a breakdown by material category down to each position. Export the CO2 report as PDF or CSV. This is the per-BOQ view; the Carbon module holds full inventories, scopes, targets and standards reporting.',
-        })}
-      </DismissibleInfo>
+    <div className="w-full animate-fade-in">
+      {/* Header */}
+      <div className="mb-6">
+        <div className="flex items-center gap-3 mb-2">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">
+            <Leaf size={20} strokeWidth={1.75} />
+          </div>
+          <div>
+            <h1 className="text-2xl font-bold text-content-primary">
+              {t('sustainability.title', 'Sustainability / CO2 Analysis')}
+            </h1>
+            <p className="text-sm text-content-secondary">
+              {t('sustainability.subtitle', 'Embodied carbon analysis based on EPD data (EN 15804, A1-A3)')}
+            </p>
+          </div>
+        </div>
+      </div>
 
       {/* Selectors */}
-      <Card>
+      <Card className="mb-6">
         <CardContent>
           <div className="flex flex-wrap items-end gap-4">
             <div className="flex-1 min-w-[200px]">
@@ -428,7 +365,7 @@ export function SustainabilityPage() {
 
       {/* Loading */}
       {sustainLoading && (
-        <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-3 mb-6">
           <Skeleton height={160} className="w-full" rounded="lg" />
           <Skeleton height={160} className="w-full" rounded="lg" />
           <Skeleton height={160} className="w-full" rounded="lg" />

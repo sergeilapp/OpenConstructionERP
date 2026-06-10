@@ -86,7 +86,7 @@ export interface ClashHistoryEntry {
   after: string | null;
 }
 
-/** Which interference an engine pass reports — the BIM-coordination-tool-style
+/** Which interference an engine pass reports — the Navisworks-style
  *  "Type" rule selector. `both` is the back-compatible default. */
 export type ClashType = 'hard' | 'clearance' | 'both';
 
@@ -202,7 +202,7 @@ export type ClashGroupBy =
   | 'ifc_entity'
   | `property:${string}`;
 
-/** One side of a BIM-coordination-tool-style selection-set clash. A "set" is the
+/** One side of a Navisworks-style selection-set clash. A "set" is the
  *  union of the chosen disciplines / element types / categories / IFC
  *  entities + arbitrary element-property values — every chip (from
  *  whichever grouping parameter) widens it. */
@@ -277,7 +277,7 @@ export interface ClashRunCreateBody {
   name?: string;
   description?: string | null;
   model_ids: string[];
-  /** BIM-coordination-tool-style "Type": hard interpenetration only, clearance
+  /** Navisworks-style "Type": hard interpenetration only, clearance
    *  (proximity) only, or both. Defaults to `both` server-side. */
   clash_type?: ClashType;
   /** Federated noise filter — only report cross-model pairs. No effect
@@ -303,55 +303,6 @@ export interface ClashCluster {
   size: number;
   dominant_disciplines: string[];
   storey: number | null;
-}
-
-/** Where a clash group can be turned into a tracked work item. */
-export type ClashActionTarget = 'punchlist' | 'task';
-
-/** AI-augmented draft for turning a clash cluster into a work item. The
- *  engine proposes; the coordinator reviews + confirms (AI proposes, human
- *  confirms). `confidence` (0..1) is advisory only - the UI shows it as a
- *  chip and never auto-applies a weak guess. */
-export interface ClashGroupActionProposal {
-  cluster_id: number;
-  target: ClashActionTarget;
-  title: string;
-  description: string;
-  priority: 'low' | 'medium' | 'high' | 'critical';
-  suggested_assignee: string | null;
-  member_count: number;
-  dominant_disciplines: string[];
-  storey: number | null;
-  max_severity: ClashSeverity | null;
-  confidence: number;
-  /** True when this group already produced a linked work item; the UI then
-   *  disables the confirm button and points at the existing one. */
-  already_linked: boolean;
-  existing_action_id: string | null;
-  existing_action_target: ClashActionTarget | null;
-}
-
-/** Coordinator's confirmation body. Every field is optional and overrides
- *  the matching value from the proposal. */
-export interface ClashGroupActionBody {
-  target: ClashActionTarget;
-  title?: string;
-  description?: string;
-  priority?: 'low' | 'medium' | 'high' | 'critical';
-  assigned_to?: string | null;
-  due_date?: string | null;
-  advance_status?: boolean;
-}
-
-/** Result of creating a work item from a clash cluster. `created` is false
- *  (idempotent no-op) when the group already had a linked item. */
-export interface ClashGroupActionResult {
-  created: boolean;
-  action_id: string;
-  action_target: ClashActionTarget;
-  cluster_id: number;
-  results_linked: number;
-  results_advanced: number;
 }
 
 /** Wave A4 — one per-discipline-pair tolerance override on a run. */
@@ -380,91 +331,6 @@ export interface ClashDisciplinePairStat {
   count: number;
   open_count: number;
   open_share: number;
-}
-
-/** Item #23 — a reusable clash-run configuration template, scoped to a
- *  project. Snapshots every engine parameter a coordinator tunes (minus
- *  the model selection) so the same coordination policy can be relaunched
- *  with one click. `name` is unique per project. */
-export interface ClashProfile {
-  id: string;
-  project_id: string;
-  name: string;
-  description?: string | null;
-  clash_type: ClashType;
-  ignore_same_model: boolean;
-  tolerance_m: number;
-  clearance_m: number;
-  mode: string;
-  discipline_filter: string[][] | null;
-  set_a?: ClashSelectionSet | null;
-  set_b?: ClashSelectionSet | null;
-  rules: ClashRule[];
-  spatial_grid_mm: number;
-  created_by: string;
-  created_at: string;
-  updated_at: string;
-}
-
-/** Body for POST /projects/{pid}/profiles (save a config as a profile). */
-export interface ClashProfileCreateBody {
-  name: string;
-  description?: string | null;
-  clash_type?: ClashType;
-  ignore_same_model?: boolean;
-  tolerance_m?: number;
-  clearance_m?: number;
-  mode?: string;
-  discipline_filter?: string[][] | null;
-  set_a?: ClashSelectionSet | null;
-  set_b?: ClashSelectionSet | null;
-  rules?: ClashRule[];
-  spatial_grid_mm?: number;
-}
-
-/** Body for PATCH /profiles/{id} — every field optional (partial update). */
-export type ClashProfileUpdateBody = Partial<ClashProfileCreateBody>;
-
-/** Body for POST /profiles/{id}/apply (launch a run from the profile). */
-export interface ClashProfileApplyBody {
-  model_ids: string[];
-  name?: string;
-  carry_forward?: boolean;
-}
-
-/** Item #23 — the grouping axis the run summary can be broken down by. */
-export type ClashGroupingDimension =
-  | 'discipline_pair'
-  | 'level'
-  | 'level_discipline'
-  | 'discipline_system';
-
-/** One labelled bucket in a 1-D grouping (e.g. clashes per level). */
-export interface ClashGroupCount {
-  key: string;
-  count: number;
-  open_count: number;
-}
-
-/** A discipline×discipline matrix scoped to a single storey level. */
-export interface ClashLevelDisciplineGroup {
-  level: number;
-  cells: ClashMatrixCell[];
-}
-
-/** Item #23 — multi-dimensional grouping of a run's clashes. Exactly one
- *  payload is populated for the requested `dimension`. */
-export interface ClashGroupedSummary {
-  dimension: ClashGroupingDimension;
-  disciplines: string[];
-  matrix: ClashMatrixCell[];
-  levels: ClashGroupCount[];
-  level_disciplines: ClashLevelDisciplineGroup[];
-  systems: string[];
-  system_matrix: ClashMatrixCell[];
-  /** Whether any clash resolved a building system — lets the UI hide the
-   *  `discipline_system` option when there is nothing to show. */
-  has_system_data: boolean;
 }
 
 /** Wave A4 — KPI dashboard projection returned by GET /runs/{id}/kpi. */
@@ -789,33 +655,6 @@ export const clashApi = {
       `/v1/clash/projects/${projectId}/runs/${runId}/clusters`,
     ),
 
-  /** AI-augmented draft for turning a clash cluster into a work item.
-   *  The coordinator reviews + confirms via `createClusterAction`. */
-  clusterActionProposal: (
-    projectId: string,
-    runId: string,
-    clusterId: number,
-    target: ClashActionTarget = 'punchlist',
-  ) => {
-    const q = new URLSearchParams({ target });
-    return apiGet<ClashGroupActionProposal>(
-      `/v1/clash/projects/${projectId}/runs/${runId}/clusters/${clusterId}/action-proposal?${q.toString()}`,
-    );
-  },
-
-  /** Create one punch item / task from a clash cluster, with link-back.
-   *  Idempotent: a group with an existing item returns `created=false`. */
-  createClusterAction: (
-    projectId: string,
-    runId: string,
-    clusterId: number,
-    body: ClashGroupActionBody,
-  ) =>
-    apiPost<ClashGroupActionResult, ClashGroupActionBody>(
-      `/v1/clash/projects/${projectId}/runs/${runId}/clusters/${clusterId}/action`,
-      body,
-    ),
-
   /** Wave A4 — engine-mined rule proposals from the run's FP history.
    *  Empty when no discipline pair has crossed the suggestion threshold. */
   listRuleSuggestions: (projectId: string, runId: string) =>
@@ -852,62 +691,4 @@ export const clashApi = {
   /** Wave A4 — aggregate dashboard payload for the KPI tab. */
   kpi: (projectId: string, runId: string) =>
     apiGet<ClashKpi>(`/v1/clash/projects/${projectId}/runs/${runId}/kpi`),
-
-  // ── Item #23 — persistent clash profiles ──────────────────────────
-
-  /** The project's reusable clash-run profile library (newest first). */
-  listProfiles: (projectId: string) =>
-    apiGet<ClashProfile[]>(`/v1/clash/projects/${projectId}/profiles`),
-
-  /** One profile by id (404 if not in this project). */
-  getProfile: (projectId: string, profileId: string) =>
-    apiGet<ClashProfile>(
-      `/v1/clash/projects/${projectId}/profiles/${profileId}`,
-    ),
-
-  /** Save a run configuration as a named profile (409 on a dup name). */
-  createProfile: (projectId: string, body: ClashProfileCreateBody) =>
-    apiPost<ClashProfile, ClashProfileCreateBody>(
-      `/v1/clash/projects/${projectId}/profiles`,
-      body,
-    ),
-
-  /** Patch a profile in place (only supplied fields change). */
-  updateProfile: (
-    projectId: string,
-    profileId: string,
-    body: ClashProfileUpdateBody,
-  ) =>
-    apiPatch<ClashProfile>(
-      `/v1/clash/projects/${projectId}/profiles/${profileId}`,
-      body,
-    ),
-
-  /** Delete a profile from the library. */
-  deleteProfile: (projectId: string, profileId: string) =>
-    apiDelete(`/v1/clash/projects/${projectId}/profiles/${profileId}`),
-
-  /** Launch + execute a fresh clash run using the profile as a template.
-   *  Returns the completed run (same shape as createRun). */
-  applyProfile: (
-    projectId: string,
-    profileId: string,
-    body: ClashProfileApplyBody,
-  ) =>
-    apiPost<ClashRun, ClashProfileApplyBody>(
-      `/v1/clash/projects/${projectId}/profiles/${profileId}/apply`,
-      body,
-    ),
-
-  /** Item #23 — multi-dimensional grouping of a run's clashes. */
-  groupedSummary: (
-    projectId: string,
-    runId: string,
-    dimension: ClashGroupingDimension = 'discipline_pair',
-  ) => {
-    const q = new URLSearchParams({ dimension });
-    return apiGet<ClashGroupedSummary>(
-      `/v1/clash/projects/${projectId}/runs/${runId}/summary?${q.toString()}`,
-    );
-  },
 };

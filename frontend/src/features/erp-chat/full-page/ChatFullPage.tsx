@@ -31,19 +31,13 @@ export default function ChatFullPage() {
   const {
     messages,
     isStreaming,
-    sessionId,
     suggestions,
     dataPanelEntries,
     activePanelIndex,
     aiConfigured,
-    sessions,
-    sessionsLoading,
-    loadingSessionId,
     sendMessage,
     clearChat,
     setActivePanelIndex,
-    loadSession,
-    removeSession,
   } = useChatFullPage();
 
   // Mirror the site-wide theme so /chat respects light/dark preference.
@@ -105,12 +99,6 @@ export default function ChatFullPage() {
               onSend={sendMessage}
               onClear={clearChat}
               aiConfigured={aiConfigured}
-              sessions={sessions}
-              sessionsLoading={sessionsLoading}
-              loadingSessionId={loadingSessionId}
-              activeSessionId={sessionId}
-              onLoadSession={(id) => void loadSession(id)}
-              onDeleteSession={(id) => void removeSession(id)}
             />
           </Panel>
 

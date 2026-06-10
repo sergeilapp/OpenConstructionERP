@@ -42,7 +42,6 @@ import {
   Button, Card, CardHeader, CardContent, Badge, Skeleton, EmptyState, Breadcrumb,
   ProjectMap, ProjectWeather,
 } from '@/shared/ui';
-import { DismissibleInfo } from '@/shared/ui/DismissibleInfo';
 import { ProjectLayoutManager } from './ProjectLayoutManager';
 import { useProjectDetailLayoutStore } from '@/stores/useProjectDetailLayoutStore';
 import {
@@ -325,7 +324,7 @@ function computeProjectHealth(
     nextStep = {
       label: t('projects.health_action_add_positions', { defaultValue: 'Add positions' }),
       description: t('projects.health_next_add_positions', {
-        defaultValue: 'Open the BOQ editor and add your first positions - manually, from Excel, or with AI.',
+        defaultValue: 'Open the BOQ editor and add your first positions — manually, from Excel, or with AI.',
       }),
       to: `/boq/${largestBoq.id}`,
       variant: 'primary',
@@ -369,7 +368,7 @@ function computeProjectHealth(
     nextStep = {
       label: t('projects.health_action_export', { defaultValue: 'Export & report' }),
       description: t('projects.health_next_export', {
-        defaultValue: 'Project is ready. Export to GAEB, Excel, or PDF - or distribute as a tender package.',
+        defaultValue: 'Project is ready. Export to GAEB, Excel, or PDF — or distribute as a tender package.',
       }),
       to: '/reports',
       variant: 'success',
@@ -409,7 +408,7 @@ function ProjectPhaseRibbon({ phase }: { phase: string | null }) {
   // Unknown phase — show single chip instead of a fake stepper.
   if (activeIdx < 0) {
     return (
-      <div className="flex items-center gap-2 rounded-lg border border-border-light bg-surface-secondary px-3 py-2 text-xs">
+      <div className="mb-4 flex items-center gap-2 rounded-lg border border-border-light bg-surface-secondary px-3 py-2 text-xs">
         <span className="font-medium uppercase tracking-wider text-content-tertiary">
           {t('projects.phase_label', { defaultValue: 'Phase' })}
         </span>
@@ -419,7 +418,7 @@ function ProjectPhaseRibbon({ phase }: { phase: string | null }) {
   }
 
   return (
-    <div className="rounded-lg border border-border-light bg-surface-secondary px-4 py-3">
+    <div className="mb-4 rounded-lg border border-border-light bg-surface-secondary px-4 py-3">
       <div className="flex items-center gap-1.5 overflow-x-auto">
         {PHASE_STEPS.map((step, idx) => {
           const isActive = idx === activeIdx;
@@ -535,7 +534,7 @@ function ProjectLocationPanel({ project }: { project: Project }) {
   return (
     <div
       className={clsx(
-        'grid gap-3 items-stretch',
+        'mb-4 grid gap-3 items-stretch',
         mapEnabled && weatherEnabled
           ? 'grid-cols-1 lg:grid-cols-[3fr_2fr]'
           : 'grid-cols-1',
@@ -695,7 +694,7 @@ function SummaryCard({
   };
 
   return (
-    <div className="flex-1 min-w-[180px] rounded-xl border border-border-light bg-surface-elevated/90 p-4 shadow-xs transition-shadow duration-normal ease-oe hover:shadow-sm">
+    <Card padding="sm" className="flex-1 min-w-[180px]">
       <div className="flex items-center justify-between gap-3">
         <div className="min-w-0">
           <p className="text-2xs font-medium text-content-tertiary uppercase tracking-wide truncate">
@@ -714,7 +713,7 @@ function SummaryCard({
           {icon}
         </div>
       </div>
-    </div>
+    </Card>
   );
 }
 
@@ -1382,7 +1381,7 @@ export function ProjectDetailPage() {
   // ── Loading state ──────────────────────────────────────────────────────
   if (projectLoading) {
     return (
-      <div className="space-y-5 animate-fade-in">
+      <div className="w-full space-y-6 animate-fade-in">
         <Skeleton height={20} width={120} />
         <Skeleton height={80} className="w-full" />
         <div className="grid grid-cols-4 gap-4">
@@ -1413,7 +1412,7 @@ export function ProjectDetailPage() {
                 })
               : t('projects.network_error_desc', {
                   defaultValue:
-                    'The server is not responding right now. This does not mean the project is deleted - try again in a moment.',
+                    'The server is not responding right now. This does not mean the project is deleted — try again in a moment.',
                 })
           }
           action={
@@ -1434,7 +1433,7 @@ export function ProjectDetailPage() {
           title={t('projects.not_found', { defaultValue: 'Project not found' })}
           description={t('projects.not_found_desc', {
             defaultValue:
-              'The project you are looking for does not exist or has been deleted. Stale bookmarks have been cleared - pick an active project below.',
+              'The project you are looking for does not exist or has been deleted. Stale bookmarks have been cleared — pick an active project below.',
           })}
           action={
             <Button variant="primary" onClick={() => navigate('/projects')}>
@@ -1452,9 +1451,9 @@ export function ProjectDetailPage() {
   const currency = project.currency || undefined;
 
   return (
-    <div className="space-y-5 animate-fade-in">
+    <div className="w-full animate-fade-in">
       {/* Breadcrumb + Customize toggle */}
-      <div className="flex items-start justify-between gap-3">
+      <div className="mb-4 flex items-start justify-between gap-3">
         <Breadcrumb
           items={[
             { label: t('projects.title', 'Projects'), to: '/projects' },
@@ -1478,31 +1477,9 @@ export function ProjectDetailPage() {
         </Button>
       </div>
 
-      <DismissibleInfo
-        storageKey="project-detail"
-        title={t('projects.detail_intro_title', {
-          defaultValue: 'Every part of one project in reach',
-        })}
-        links={[
-          {
-            label: t('project.settings.title', { defaultValue: 'Project Settings' }),
-            onClick: () => navigate(`/projects/${project.id}/settings`),
-          },
-          {
-            label: t('nav.boq', { defaultValue: 'BOQ' }),
-            onClick: () => navigate(`/projects/${project.id}/boq`),
-          },
-        ]}
-      >
-        {t('projects.detail_intro_body', {
-          defaultValue:
-            'This is the project hub: its BOQs, 4D schedule, 5D budget, tendering and key stats sit on one page so you do not hunt through the sidebar to find where the work lives. Jump straight into a cost work-product or open Project Settings to change region, currency or active modules. Edits to BOQs and costs roll up into the totals shown across Analytics and Reporting.',
-        })}
-      </DismissibleInfo>
-
       {/* ─── Customize panel (collapsible) — mirrors Dashboard pattern ─── */}
       {customizing && (
-        <Card className="animate-card-in border-oe-blue/30">
+        <Card className="mb-4 animate-card-in border-oe-blue/30">
           <CardHeader
             title={t('project.layout.title', { defaultValue: 'Customize project page' })}
             subtitle={t('project.layout.subtitle', {
@@ -1526,7 +1503,7 @@ export function ProjectDetailPage() {
       {(!isWidgetHidden('project-info') || !isWidgetHidden('health-bar')) && (
       <div
         className={clsx(
-          'grid gap-3 items-stretch',
+          'mb-4 grid gap-3 items-stretch',
           !isWidgetHidden('project-info') && !isWidgetHidden('health-bar')
             ? 'grid-cols-1 lg:grid-cols-[3fr_2fr]'
             : 'grid-cols-1',
@@ -1781,12 +1758,12 @@ export function ProjectDetailPage() {
       {!isWidgetHidden('team') && (
       <>
       {/* ── Team Strip ──────────────────────────────────────────────────── */}
-      {/* Horizontal avatar row positioned above the tab bar (see modern
-          project collaboration tools). Only the owner / admin sees the manage controls — for
+      {/* Horizontal avatar row positioned above the tab bar (see Linear /
+          Asana). Only the owner / admin sees the manage controls — for
           other authenticated users the strip is read-only. The owner
           check below leans on the JWT ``sub`` claim because the auth
           store doesn't keep ``userId`` separately yet. */}
-      <div data-testid="team-strip-host">
+      <div className="mb-3" data-testid="team-strip-host">
         <TeamStrip
           projectId={projectId!}
           canManage={(() => {
@@ -1814,7 +1791,7 @@ export function ProjectDetailPage() {
 
       {!isWidgetHidden('summary-cards') && (
       /* ── Summary Cards ───────────────────────────────────────────────── */
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-4">
         {(() => {
           const areaMatch = project.description?.match(/(\d[\d.,]*)\s*m[²2]/i);
           const area = areaMatch ? parseFloat((areaMatch[1] ?? '0').replace(',', '')) : null;
@@ -1856,7 +1833,7 @@ export function ProjectDetailPage() {
       )}
 
       {/* ── Tab Bar ──────────────────────────────────────────────────────── */}
-      <div className="flex items-center gap-1 border-b border-border-light">
+      <div className="flex items-center gap-1 mb-4 border-b border-border-light">
         {([
           { key: 'dashboard' as ProjectTab, label: t('projects.dashboard', { defaultValue: 'Dashboard' }), icon: <LayoutDashboard size={15} /> },
           { key: 'overview' as ProjectTab, label: t('projects.overview'), icon: <Table2 size={15} /> },
@@ -1907,8 +1884,10 @@ export function ProjectDetailPage() {
               {/* KPI Cards Row */}
               <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
                 {/* Budget consumed */}
-                <div
-                  className="relative overflow-hidden cursor-pointer rounded-xl border border-border-light bg-surface-elevated/90 p-4 shadow-xs transition-shadow duration-normal ease-oe hover:shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue/40"
+                <Card
+                  padding="md"
+                  hoverable
+                  className="relative overflow-hidden cursor-pointer"
                   role="button"
                   tabIndex={0}
                   aria-label={t('projects.dash_budget_consumed', { defaultValue: 'Budget Consumed' })}
@@ -1953,11 +1932,13 @@ export function ProjectDetailPage() {
                       }}
                     />
                   </div>
-                </div>
+                </Card>
 
                 {/* Schedule progress */}
-                <div
-                  className="cursor-pointer rounded-xl border border-border-light bg-surface-elevated/90 p-4 shadow-xs transition-shadow duration-normal ease-oe hover:shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue/40"
+                <Card
+                  padding="md"
+                  hoverable
+                  className="cursor-pointer"
                   role="button"
                   tabIndex={0}
                   aria-label={t('projects.dash_schedule_progress', { defaultValue: 'Schedule Progress' })}
@@ -1986,11 +1967,13 @@ export function ProjectDetailPage() {
                       <CalendarClock size={20} strokeWidth={1.75} />
                     </div>
                   </div>
-                </div>
+                </Card>
 
                 {/* Quality score */}
-                <div
-                  className="cursor-pointer rounded-xl border border-border-light bg-surface-elevated/90 p-4 shadow-xs transition-shadow duration-normal ease-oe hover:shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue/40"
+                <Card
+                  padding="md"
+                  hoverable
+                  className="cursor-pointer"
                   role="button"
                   tabIndex={0}
                   aria-label={t('projects.dash_quality', { defaultValue: 'Quality Score' })}
@@ -2021,11 +2004,13 @@ export function ProjectDetailPage() {
                       <ShieldCheck size={20} strokeWidth={1.75} />
                     </div>
                   </div>
-                </div>
+                </Card>
 
                 {/* Open items count */}
-                <div
-                  className="cursor-pointer rounded-xl border border-border-light bg-surface-elevated/90 p-4 shadow-xs transition-shadow duration-normal ease-oe hover:shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue/40"
+                <Card
+                  padding="md"
+                  hoverable
+                  className="cursor-pointer"
                   role="button"
                   tabIndex={0}
                   aria-label={t('projects.dash_open_items', { defaultValue: 'Open Items' })}
@@ -2052,7 +2037,7 @@ export function ProjectDetailPage() {
                       <ClipboardList size={20} strokeWidth={1.75} />
                     </div>
                   </div>
-                </div>
+                </Card>
               </div>
 
               {/* Budget section — horizontal stacked bar */}

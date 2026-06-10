@@ -2,21 +2,21 @@
 """‌⁠‍Customer & Partner Portal ORM models.
 
 Tables:
-    oe_portal_user                   - external portal accounts (clients,
+    oe_portal_user                   — external portal accounts (clients,
                                        investors, consultants, subcontractors,
                                        suppliers, building users). Distinct
-                                       from ``oe_users_user`` - these accounts
+                                       from ``oe_users_user`` — these accounts
                                        NEVER receive internal-system access.
-    oe_portal_access_rule            - per-resource RLS grants
+    oe_portal_access_rule            — per-resource RLS grants
                                        (project / contract / document / ticket /
                                        subcontract / payment_application / po /
                                        bid_package / ...).
-    oe_portal_session                - active session tokens (stored as
+    oe_portal_session                — active session tokens (stored as
                                        sha256 hex only, never plaintext).
-    oe_portal_magic_link             - one-time magic links for login /
+    oe_portal_magic_link             — one-time magic links for login /
                                        document_signature / payment_submission.
-    oe_portal_notification           - in-portal feed entry.
-    oe_portal_document_access_log    - append-only audit log of
+    oe_portal_notification           — in-portal feed entry.
+    oe_portal_document_access_log    — append-only audit log of
                                        document view/download/sign events.
 """
 
@@ -33,7 +33,7 @@ from app.database import GUID, Base
 
 
 class PortalUser(Base):
-    """‌⁠‍An external portal account - client / investor / consultant / sub / etc."""
+    """‌⁠‍An external portal account — client / investor / consultant / sub / etc."""
 
     __tablename__ = "oe_portal_user"
 
@@ -105,7 +105,7 @@ class PortalUser(Base):
         server_default="1",
     )
 
-    def __repr__(self) -> str:  # pragma: no cover - debug only
+    def __repr__(self) -> str:  # pragma: no cover — debug only
         return f"<PortalUser {self.email} ({self.portal_role}/{self.status})>"
 
 
@@ -132,7 +132,7 @@ class PortalAccessRule(Base):
         DateTime(timezone=True),
         nullable=True,
     )
-    # FK kept loose - granted_by may be from internal users, foreign-key not
+    # FK kept loose — granted_by may be from internal users, foreign-key not
     # strictly enforced to keep this module installable without a circular
     # dependency on users.
     granted_by: Mapped[str | None] = mapped_column(String(36), nullable=True)
@@ -201,9 +201,9 @@ class PortalMagicLink(Base):
     """One-time magic link (sha256-hashed token).
 
     Purposes:
-        - login                - open a portal session
-        - document_signature   - open a one-shot signature view
-        - payment_submission   - open a one-shot payment-app submission flow
+        - login                — open a portal session
+        - document_signature   — open a one-shot signature view
+        - payment_submission   — open a one-shot payment-app submission flow
     """
 
     __tablename__ = "oe_portal_magic_link"

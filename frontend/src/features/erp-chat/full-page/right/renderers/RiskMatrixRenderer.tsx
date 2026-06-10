@@ -1,7 +1,3 @@
-import { unwrapList, toNum } from './normalize';
-import { riskPath } from './deepLink';
-import DeepLinkBar, { useOpenLabels } from './DeepLinkBar';
-
 interface RiskItem {
   probability?: number;
   impact?: number;
@@ -18,16 +14,7 @@ function riskZone(prob: number, impact: number): string {
 }
 
 export default function RiskMatrixRenderer({ data }: { data: unknown }) {
-  const labels = useOpenLabels();
-  // Backend `get_risk_register` returns `{ risks: [...], total, summary }`.
-  // Risk rows carry `title` (not `name`) and `impact_severity` (not `impact`).
-  // Map them onto the matrix's expected fields.
-  const risks = (unwrapList(data, ['risks']) as Record<string, unknown>[]).map((r) => ({
-    id: (r.id as string) ?? (r.code as string),
-    name: (r.title as string) ?? (r.name as string) ?? (r.code as string),
-    probability: toNum(r.probability),
-    impact: toNum(r.impact) ?? toNum(r.impact_severity),
-  })) as RiskItem[];
+  const risks: RiskItem[] = Array.isArray(data) ? data : [];
 
   if (risks.length === 0) {
     return (
@@ -165,7 +152,6 @@ export default function RiskMatrixRenderer({ data }: { data: unknown }) {
       >
         {risks.length} total risks
       </div>
-      <DeepLinkBar to={riskPath()} label={labels.risk} />
     </div>
   );
 }

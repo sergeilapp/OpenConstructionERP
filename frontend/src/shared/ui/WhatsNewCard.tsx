@@ -36,12 +36,12 @@ import {
   Sparkles,
   X,
   ArrowRight,
-  Clock,
-  Gauge,
-  ShieldCheck,
-  FileText,
-  Bot,
-  Camera,
+  Home,
+  Map,
+  Box,
+  List,
+  Wrench,
+  CheckCircle,
   type LucideIcon,
 } from 'lucide-react';
 import { APP_VERSION } from '@/shared/lib/version';
@@ -83,158 +83,215 @@ interface Section {
   bullets: { key: string; default: string }[];
 }
 
-/* ── v6.10.0 release content ────────────────────────────────────────────
-   Six chips for the v6.10 wave: field time & payroll, project controls,
-   compliance gates, owner billing, the agent builder and jobsite photo
-   intelligence. Bullets surface only when the chip is expanded. */
-const SECTIONS_V6100: Section[] = [
+/* ── v4.5.0 release content ─────────────────────────────────────────────
+   Same content as the original 6-section grid, repackaged for the compact
+   chip-row layout. Bullets surface only when the chip is expanded. */
+const SECTIONS_V450: Section[] = [
   {
-    id: 'field',
-    icon: Clock,
-    titleKey: 'whatsnew.v6100.field.title',
-    titleDefault: 'Field time and payroll',
-    chipKey: 'whatsnew.v6100.field.chip',
-    chipDefault: 'Field time',
+    id: 'propdev',
+    icon: Home,
+    titleKey: 'whatsnew.v450.propdev.title',
+    titleDefault: 'Property Development reborn',
+    chipKey: 'whatsnew.v450.propdev.chip',
+    chipDefault: 'PropDev',
     bullets: [
       {
-        key: 'whatsnew.v6100.field.b1',
-        default:
-          'Crews log time on the jobsite from the field app, online or offline.',
+        key: 'whatsnew.v450.propdev.b1',
+        default: 'Buyers get full CRUD via clicks — no more raw JSON forms.',
       },
       {
-        key: 'whatsnew.v6100.field.b2',
+        key: 'whatsnew.v450.propdev.b2',
         default:
-          'Approved timesheets flow straight into payroll runs with rates and allowances.',
+          'New Leads sub-tab with an FSM funnel and Convert Lead → Reservation modal.',
       },
       {
-        key: 'whatsnew.v6100.field.b3',
+        key: 'whatsnew.v450.propdev.b3',
         default:
-          'A subcontractor payment portal lets trades submit and track their payments.',
+          'Phases, Blocks, Brokers, Price Matrix and Escrow now each have proper UI tabs.',
+      },
+      {
+        key: 'whatsnew.v450.propdev.b4',
+        default:
+          'Snags get a per-handover collapsible block with photo upload and warranty promote.',
+      },
+      {
+        key: 'whatsnew.v450.propdev.b5',
+        default:
+          '3-row grouped tab layout: Master data, Sales lifecycle, Operations.',
       },
     ],
   },
   {
-    id: 'controls',
-    icon: Gauge,
-    titleKey: 'whatsnew.v6100.controls.title',
-    titleDefault: 'Project controls dashboard',
-    chipKey: 'whatsnew.v6100.controls.chip',
-    chipDefault: 'Controls',
+    id: 'geo',
+    icon: Map,
+    titleKey: 'whatsnew.v450.geo.title',
+    titleDefault: 'Geo Hub with live HUD',
+    chipKey: 'whatsnew.v450.geo.chip',
+    chipDefault: 'Geo Hub',
     bullets: [
       {
-        key: 'whatsnew.v6100.controls.b1',
+        key: 'whatsnew.v450.geo.b1',
         default:
-          'One dashboard ties cost, schedule and earned-value signals together.',
+          'Live cursor lat/lon and camera altitude streamed from Cesium events.',
       },
       {
-        key: 'whatsnew.v6100.controls.b2',
-        default:
-          'Takt planning lays out repetitive work as zones moving on a steady beat.',
+        key: 'whatsnew.v450.geo.b2',
+        default: 'Compass rose rotates with the camera heading.',
       },
       {
-        key: 'whatsnew.v6100.controls.b3',
+        key: 'whatsnew.v450.geo.b3',
         default:
-          'An equipment maintenance forecast flags upcoming service before it bites.',
+          'HSE incidents, Punchlist items and Diary photos rendered as 3D pins on the globe.',
+      },
+      {
+        key: 'whatsnew.v450.geo.b4',
+        default:
+          'New anchored-projects endpoint powers the Global mode and the mode-based filter (Global / Project / Development).',
+      },
+      {
+        key: 'whatsnew.v450.geo.b5',
+        default:
+          '"View on map" deeplinks from BIM Hub and PropDev focus the right model or development.',
       },
     ],
   },
   {
-    id: 'compliance',
-    icon: ShieldCheck,
-    titleKey: 'whatsnew.v6100.compliance.title',
-    titleDefault: 'Compliance gates and ITP hold points',
-    chipKey: 'whatsnew.v6100.compliance.chip',
-    chipDefault: 'Gates',
+    id: 'bim',
+    icon: Box,
+    titleKey: 'whatsnew.v450.bim.title',
+    titleDefault: 'BIM 3D viewer upgrades',
+    chipKey: 'whatsnew.v450.bim.chip',
+    chipDefault: 'BIM viewer',
     bullets: [
       {
-        key: 'whatsnew.v6100.compliance.b1',
+        key: 'whatsnew.v450.bim.b1',
         default:
-          'Compliance gates block a step until its required checks pass.',
+          'Walk mode actually works — PointerLockControls with WASD, E/Q for vertical, Shift to sprint.',
       },
       {
-        key: 'whatsnew.v6100.compliance.b2',
+        key: 'whatsnew.v450.bim.b2',
         default:
-          'ITP hold points stop work until an inspection is signed off.',
+          'Top-screen hint appears while the pointer is locked so users know how to exit.',
       },
       {
-        key: 'whatsnew.v6100.compliance.b3',
+        key: 'whatsnew.v450.bim.b3',
         default:
-          'Every gate links back to the document or inspection that cleared it.',
+          'Section Box ships with face-handle drag and a Reset button.',
+      },
+      {
+        key: 'whatsnew.v450.bim.b4',
+        default:
+          'Measure tool finishes on right-click, copies to clipboard and shows an on-screen hint.',
+      },
+      {
+        key: 'whatsnew.v450.bim.b5',
+        default:
+          'Toolbar relocated next to the ViewCube (bottom-left); the Models filmstrip collapses to a slim chevron tab.',
       },
     ],
   },
   {
-    id: 'owner',
-    icon: FileText,
-    titleKey: 'whatsnew.v6100.owner.title',
-    titleDefault: 'Owner billing and progress reports',
-    chipKey: 'whatsnew.v6100.owner.chip',
-    chipDefault: 'Owner billing',
+    id: 'housetypes',
+    icon: List,
+    titleKey: 'whatsnew.v450.housetypes.title',
+    titleDefault: 'House Type Catalogue',
+    chipKey: 'whatsnew.v450.housetypes.chip',
+    chipDefault: 'House types',
     bullets: [
       {
-        key: 'whatsnew.v6100.owner.b1',
+        key: 'whatsnew.v450.housetypes.b1',
         default:
-          'AIA G702 and G703 owner billing for US, Canada and Australia.',
+          '48 country presets seeded out of the box (DE, US, UK, RU, TR, FR, ES, IT, PL, JP, CN, SA…).',
       },
       {
-        key: 'whatsnew.v6100.owner.b2',
+        key: 'whatsnew.v450.housetypes.b2',
         default:
-          'Retention, stored materials and prior payments roll up automatically.',
+          'Inline "+ Add custom type" while creating a plot — no settings detour.',
       },
       {
-        key: 'whatsnew.v6100.owner.b3',
+        key: 'whatsnew.v450.housetypes.b3',
         default:
-          'Client progress reports share status and photos with the owner.',
+          'Dedicated Settings page at /property-dev/settings/house-types with country filter.',
+      },
+      {
+        key: 'whatsnew.v450.housetypes.b4',
+        default:
+          '★ Preset badge distinguishes seeded rows from user-defined types.',
+      },
+      {
+        key: 'whatsnew.v450.housetypes.b5',
+        default:
+          'Custom rows are fully editable and deletable; presets stay protected.',
       },
     ],
   },
   {
-    id: 'agents',
-    icon: Bot,
-    titleKey: 'whatsnew.v6100.agents.title',
-    titleDefault: 'No-code agent builder',
-    chipKey: 'whatsnew.v6100.agents.chip',
-    chipDefault: 'Agents',
+    id: 'installer',
+    icon: Wrench,
+    titleKey: 'whatsnew.v450.installer.title',
+    titleDefault: 'Installer reliability',
+    chipKey: 'whatsnew.v450.installer.chip',
+    chipDefault: 'Installer',
     bullets: [
       {
-        key: 'whatsnew.v6100.agents.b1',
+        key: 'whatsnew.v450.installer.b1',
         default:
-          'Build agents from triggers and actions without writing code.',
+          'Fresh-DB alembic install runs on any blank Postgres or SQLite (env.py shortcut + v3112 bootstrap migration).',
       },
       {
-        key: 'whatsnew.v6100.agents.b2',
+        key: 'whatsnew.v450.installer.b2',
         default:
-          'Triggers fire on events like a new RFI, an overdue task or a failed check.',
+          'Bug-report menu filters benign network noise: Failed to fetch, NetworkError, AbortError, 502/503/504.',
       },
       {
-        key: 'whatsnew.v6100.agents.b3',
+        key: 'whatsnew.v450.installer.b3',
         default:
-          'Suggestions stay human-confirmed, so nothing acts on your behalf unasked.',
+          'Real defects still surface — only the transient-network class is suppressed.',
+      },
+      {
+        key: 'whatsnew.v450.installer.b4',
+        default:
+          'No manual stamping or schema fixups needed on first boot.',
       },
     ],
   },
   {
-    id: 'photos',
-    icon: Camera,
-    titleKey: 'whatsnew.v6100.photos.title',
-    titleDefault: 'Jobsite photo intelligence',
-    chipKey: 'whatsnew.v6100.photos.chip',
-    chipDefault: 'Photos',
+    id: 'fixes',
+    icon: CheckCircle,
+    titleKey: 'whatsnew.v450.fixes.title',
+    titleDefault: '20+ correctness fixes',
+    chipKey: 'whatsnew.v450.fixes.chip',
+    chipDefault: 'Fixes',
     bullets: [
       {
-        key: 'whatsnew.v6100.photos.b1',
+        key: 'whatsnew.v450.fixes.b1',
         default:
-          'Jobsite photos are read for context and tagged to the right location.',
+          'IDOR closures on RFI, Daily Diary, Meetings, Change Orders, Inspections, Schedule, Resources, Assemblies, Takeoff and DWG Takeoff.',
       },
       {
-        key: 'whatsnew.v6100.photos.b2',
+        key: 'whatsnew.v450.fixes.b2',
         default:
-          'Findings link photos to inspections, punch items and the daily diary.',
+          'Decimal-exact money rollups across Change Orders and the cost model.',
       },
       {
-        key: 'whatsnew.v6100.photos.b3',
+        key: 'whatsnew.v450.fixes.b3',
         default:
-          'Every suggestion is yours to confirm before it lands on a record.',
+          'FSM gates: RFI respond/reopen, inspections complete, contracts draft-only progress claims, snag transitions.',
+      },
+      {
+        key: 'whatsnew.v450.fixes.b4',
+        default:
+          'Conditional-UPDATE race safety in change-order approval; polygon coords clamped in Takeoff.',
+      },
+      {
+        key: 'whatsnew.v450.fixes.b5',
+        default:
+          'server_default added to every NOT NULL alembic column so fresh installs never trip.',
+      },
+      {
+        key: 'whatsnew.v450.fixes.b6',
+        default:
+          'Magic-byte gates on file uploads: Daily Diary EXIF, fieldreports import and Snag photos.',
       },
     ],
   },
@@ -296,24 +353,14 @@ export function WhatsNewCard({ forceShow = false, versionOverride }: WhatsNewCar
   }, [forceShow, version]);
 
   // Close the chip popover when clicking outside the card.
-  //
-  // The expanded chip's detail popover is rendered through a portal to
-  // document.body (see ChipWithPopover), so it lives OUTSIDE containerRef.
-  // A naive `!root.contains(target)` check therefore treats clicks inside
-  // the popover as "outside" and closes it on mousedown — which unmounts
-  // the popover before an inner control (e.g. the "Read more" link) can
-  // fire its onClick. Guard against that by also ignoring events that
-  // originate inside any portaled chip popover. True outside clicks still
-  // close the popover with the same mousedown semantics.
   useEffect(() => {
     if (mode !== 'card' || !openChipId) return undefined;
     const onClick = (ev: MouseEvent) => {
       const root = containerRef.current;
       if (!root) return;
-      const target = ev.target as HTMLElement | null;
-      if (root.contains(target)) return;
-      if (target?.closest('[id^="whatsnew-chip-"][id$="-popover"]')) return;
-      setOpenChipId(null);
+      if (!root.contains(ev.target as Node)) {
+        setOpenChipId(null);
+      }
     };
     document.addEventListener('mousedown', onClick);
     return () => document.removeEventListener('mousedown', onClick);
@@ -360,7 +407,7 @@ export function WhatsNewCard({ forceShow = false, versionOverride }: WhatsNewCar
     navigate('/about#changelog');
   }, [navigate, handleDismiss]);
 
-  const sections = useMemo(() => SECTIONS_V6100, []);
+  const sections = useMemo(() => SECTIONS_V450, []);
 
   if (mode === null) return null;
 

@@ -1,23 +1,23 @@
 """‌⁠‍Finance API routes.
 
 Endpoints:
-    GET    /                    - List invoices with filters
-    POST   /                    - Create invoice (auth required)
-    GET    /invoices/export      - Export invoices as Excel
-    GET    /invoices/{id}/br-pdf - Brazilian-styled invoice PDF (RPS layout)
-    GET    /payments             - List payments
-    POST   /payments             - Create payment (auth required)
-    GET    /budgets              - List budgets
-    POST   /budgets              - Create budget (auth required)
-    PATCH  /budgets/{id}         - Update budget (auth required)
-    POST   /budgets/import/file  - Import budgets from Excel/CSV (auth required)
-    GET    /budgets/export       - Export budgets as Excel
-    GET    /evm                  - List EVM snapshots
-    POST   /evm/snapshot         - Create EVM snapshot (auth required)
-    GET    /{id}                - Get single invoice
-    PATCH  /{id}                - Update invoice (auth required)
-    POST   /{id}/approve        - Approve invoice (auth required)
-    POST   /{id}/pay            - Mark invoice as paid (auth required)
+    GET    /                    — List invoices with filters
+    POST   /                    — Create invoice (auth required)
+    GET    /invoices/export      — Export invoices as Excel
+    GET    /invoices/{id}/br-pdf — Brazilian-styled invoice PDF (RPS layout)
+    GET    /payments             — List payments
+    POST   /payments             — Create payment (auth required)
+    GET    /budgets              — List budgets
+    POST   /budgets              — Create budget (auth required)
+    PATCH  /budgets/{id}         — Update budget (auth required)
+    POST   /budgets/import/file  — Import budgets from Excel/CSV (auth required)
+    GET    /budgets/export       — Export budgets as Excel
+    GET    /evm                  — List EVM snapshots
+    POST   /evm/snapshot         — Create EVM snapshot (auth required)
+    GET    /{id}                — Get single invoice
+    PATCH  /{id}                — Update invoice (auth required)
+    POST   /{id}/approve        — Approve invoice (auth required)
+    POST   /{id}/pay            — Mark invoice as paid (auth required)
 
 NOTE: Fixed-path routes (/payments, /budgets, /evm, /invoices/export) are
 registered BEFORE the parametric /{invoice_id} route so that FastAPI does not
@@ -31,7 +31,7 @@ import uuid
 from collections.abc import Iterable
 from typing import Any
 
-from fastapi import APIRouter, Depends, File, HTTPException, Query, Response, UploadFile, status
+from fastapi import APIRouter, Depends, File, HTTPException, Query, UploadFile, status
 from fastapi.responses import StreamingResponse
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -47,26 +47,12 @@ from app.core.rate_limiter import approval_limiter
 from app.core.upload_guards import reject_if_xlsx_bomb
 from app.dependencies import CurrentUserId, RequirePermission, SessionDep
 from app.modules.contacts.models import Contact
-from app.modules.finance.connector_schemas import (
-    ConnectorConfigCreate,
-    ConnectorConfigListResponse,
-    ConnectorConfigResponse,
-    ConnectorConfigUpdate,
-    ConnectorTypeInfo,
-    SyncLogListResponse,
-    SyncLogResponse,
-    SyncTriggerRequest,
-    ValidateResponse,
-)
-from app.modules.finance.connector_service import ConnectorService
-from app.modules.finance.connectors.registry import connector_registry
 from app.modules.finance.models import EVMSnapshot, Invoice, Payment, ProjectBudget
 from app.modules.finance.schemas import (
     BudgetCreate,
     BudgetListResponse,
     BudgetResponse,
     BudgetUpdate,
-    ClaimInvoiceRequest,
     EVMListResponse,
     EVMSnapshotCreate,
     EVMSnapshotResponse,
@@ -77,7 +63,6 @@ from app.modules.finance.schemas import (
     PaymentCreate,
     PaymentListResponse,
     PaymentResponse,
-    RecordClaimPaymentRequest,
 )
 from app.modules.finance.service import FinanceService
 
@@ -126,7 +111,7 @@ async def _require_project_access(
 ) -> None:
     """Verify the current user owns (or is admin on) the referenced project.
 
-    Central choke-point for project-scoped finance endpoints - must be called
+    Central choke-point for project-scoped finance endpoints — must be called
     before reading or writing invoices/budgets/payments/EVM snapshots that
     belong to a specific project. Mirrors the pattern used by
     ``erp_chat.tools._require_project_access`` and the shared
@@ -134,7 +119,7 @@ async def _require_project_access(
 
     R7 hardening (2026-05-24): cross-tenant fetches now answer **404**
     rather than 403. A 403 leaks the existence of project UUIDs the
-    caller is not allowed to see - the global R7 standard (and the
+    caller is not allowed to see — the global R7 standard (and the
     shared ``verify_project_access`` helper) returns 404 on both
     "missing" and "access denied". Bringing finance in line closes the
     enumeration sidechannel for project IDs.
@@ -169,11 +154,11 @@ async def _require_project_access(
             user = await user_repo.get_by_id(user_id)
             if user is not None and getattr(user, "role", "") == "admin":
                 return
-        except Exception:  # noqa: BLE001 - best-effort admin check
+        except Exception:  # noqa: BLE001 — best-effort admin check
             pass
 
         if str(getattr(project, "owner_id", "")) != str(user_id):
-            # R7: 404 not 403 - never confirm a project UUID exists
+            # R7: 404 not 403 — never confirm a project UUID exists
             # for callers that don't own it. Mirrors the response shape
             # of the "project missing" branch above.
             raise HTTPException(
@@ -184,7 +169,7 @@ async def _require_project_access(
         raise
     except Exception as exc:  # noqa: BLE001
         logger.warning("Finance project access check failed for %s: %s", project_id, exc)
-        # Generic auth failure stays as 404 too - anything else would
+        # Generic auth failure stays as 404 too — anything else would
         # again let the caller distinguish "exists but I lack access"
         # from "doesn't exist".
         raise HTTPException(
@@ -332,7 +317,7 @@ async def create_invoice(
     "/invoices/",
     response_model=InvoiceListResponse,
     summary="List invoices (alias of GET /)",
-    description="Alias of ``GET /api/v1/finance/`` - returns the same paginated "
+    description="Alias of ``GET /api/v1/finance/`` — returns the same paginated "
     "list. Provided so that clients hitting ``/api/v1/finance/invoices`` get a "
     "sensible 200 instead of a UUID-parse 422.",
 )
@@ -458,13 +443,13 @@ async def export_invoices(
     )
 
 
-# ── Brazilian-styled invoice PDF (Tier-1 - pre-NF-e bridge) ─────────────────
+# ── Brazilian-styled invoice PDF (Tier-1 — pre-NF-e bridge) ─────────────────
 #
 # Path lives under ``/invoices/{invoice_id}/br-pdf/`` so FastAPI's static
 # prefix ``/invoices/`` wins over the bare ``/{invoice_id}`` parametric
 # route. See ``br_invoice_pdf.py`` for the rendering logic and the
 # disclaimer text explaining why this PDF is NOT a fiscal document
-# (NF-e / NFS-e SEFAZ integration is Tier-2 - see
+# (NF-e / NFS-e SEFAZ integration is Tier-2 — see
 # ``__brazil_tier2_followups.md``).
 
 
@@ -475,7 +460,7 @@ async def export_invoices(
         "Render the invoice as a one-page PDF in the Brazilian RPS "
         "(Recibo Provisório de Serviços) layout, with CNPJ / IE / Razão "
         "Social / código de serviço / retenções fields. NOT a fiscal "
-        "document - for full NF-e / NFS-e SEFAZ output see Tier-2 roadmap."
+        "document — for full NF-e / NFS-e SEFAZ output see Tier-2 roadmap."
     ),
     response_description="application/pdf stream",
 )
@@ -492,7 +477,7 @@ async def export_invoice_br_pdf(
     invoice = await _require_invoice_access(session, invoice_id, user_id)
     fresh = await service.get_invoice(invoice_id)
 
-    # Project context (best-effort - never block the PDF on project lookup)
+    # Project context (best-effort — never block the PDF on project lookup)
     project_dict: dict[str, Any] = {}
     try:
         from app.modules.projects.repository import ProjectRepository
@@ -503,7 +488,7 @@ async def export_invoice_br_pdf(
                 "name": getattr(proj, "name", "") or "",
                 "code": getattr(proj, "code", "") or "",
             }
-    except Exception:  # noqa: BLE001 - header is decorative
+    except Exception:  # noqa: BLE001 — header is decorative
         logger.debug("BR invoice PDF: project lookup failed", exc_info=True)
 
     invoice_dict: dict[str, Any] = {
@@ -536,7 +521,7 @@ async def export_invoice_br_pdf(
     )
 
     # Sanitise invoice_number before embedding in a quoted Content-Disposition
-    # header.  invoice_number is a user-controlled DB value - it can contain
+    # header.  invoice_number is a user-controlled DB value — it can contain
     # characters that would break the RFC 6266 quoted-string or inject
     # additional headers (CRLF injection).  Strip every character that is not
     # ASCII printable, remove double-quotes (which terminate the quoted-string
@@ -583,7 +568,7 @@ async def list_payments(
 ) -> PaymentListResponse:
     """List payments scoped to a single invoice or project.
 
-    Either ``invoice_id`` or ``project_id`` MUST be supplied - an unscoped
+    Either ``invoice_id`` or ``project_id`` MUST be supplied — an unscoped
     call would return payments across every tenant. Access to the referenced
     invoice/project is verified before any rows are read.
     """
@@ -629,7 +614,7 @@ async def list_payments(
     status_code=201,
     summary="Create payment",
     description="Record a payment against an invoice. Updates the invoice's paid amount. "
-    "MANAGER-only - recording a payment is a binding ledger entry, not a CRUD edit.",
+    "MANAGER-only — recording a payment is a binding ledger entry, not a CRUD edit.",
 )
 async def create_payment(
     data: PaymentCreate,
@@ -642,104 +627,11 @@ async def create_payment(
 
     R7 (2026-05-24): pinned to ``finance.record_payment`` (MANAGER+).
     Recording a payment row is a financial commitment that affects the
-    invoice's paid/outstanding state and downstream budget actuals - it
+    invoice's paid/outstanding state and downstream budget actuals — it
     cannot remain an EDITOR-level action.
     """
     await _require_invoice_access(session, data.invoice_id, user_id)
     payment = await service.create_payment(data, actor_id=str(user_id) if user_id else None)
-    return PaymentResponse.model_validate(payment)
-
-
-# ── Gap E: certified claim → receivable invoice (MUST be before /{id}) ───────
-
-
-@router.post(
-    "/invoices/from-claim/",
-    response_model=InvoiceResponse,
-    summary="Create receivable invoice from a certified claim",
-    description="Auto-create (or return the existing) accounts-receivable invoice for a "
-    "certified progress claim. Idempotent on claim_id: a second call returns the same "
-    "invoice with 200 rather than writing a duplicate. The claim must be in 'certified' "
-    "status (400 otherwise). MANAGER-only - it books revenue against the client.",
-)
-async def create_invoice_from_claim(
-    data: ClaimInvoiceRequest,
-    user_id: CurrentUserId,
-    session: SessionDep,
-    response: Response,
-    _perm: None = Depends(RequirePermission("finance.invoice_from_claim")),
-    service: FinanceService = Depends(_get_service),
-) -> InvoiceResponse:
-    """Create or return the receivable invoice for a certified claim.
-
-    Returns 201 when a new invoice is created, 200 when an existing one is
-    returned (idempotent retry). The 200/201 distinction is set on the
-    response after the service resolves whether the invoice already existed.
-    """
-    pre_existing = await service.get_receivable_for_claim(data.claim_id)
-    invoice = await service.create_receivable_from_claim(
-        data.claim_id,
-        actor_id=str(user_id) if user_id else None,
-    )
-    # Authorise against the resolved project (the claim's contract project).
-    await _require_project_access(session, invoice.project_id, user_id)
-    response.status_code = status.HTTP_200_OK if pre_existing is not None else status.HTTP_201_CREATED
-    names = await _fetch_counterparty_names(session, [invoice.contact_id])
-    return _invoice_to_response(invoice, names)
-
-
-@router.get(
-    "/claims/{claim_id}/receivable-invoice/",
-    response_model=InvoiceResponse,
-    summary="Get the receivable invoice raised from a claim",
-    description="Convenience lookup: return the accounts-receivable invoice that was "
-    "auto-created from the given certified progress claim. 404 when none exists yet.",
-)
-async def get_receivable_for_claim(
-    claim_id: uuid.UUID,
-    user_id: CurrentUserId,
-    session: SessionDep,
-    _perm: None = Depends(RequirePermission("finance.read")),
-    service: FinanceService = Depends(_get_service),
-) -> InvoiceResponse:
-    """Look up the receivable invoice for a claim."""
-    invoice = await service.get_receivable_for_claim(claim_id)
-    if invoice is None:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="No receivable invoice exists for this claim",
-        )
-    await _require_project_access(session, invoice.project_id, user_id)
-    names = await _fetch_counterparty_names(session, [invoice.contact_id])
-    return _invoice_to_response(invoice, names)
-
-
-@router.post(
-    "/invoices/{invoice_id}/record-payment/",
-    response_model=PaymentResponse,
-    status_code=201,
-    summary="Record a payment with retainage withholding",
-    description="Record a payment against an invoice, holding back retainage. When "
-    "withholding_amount is omitted it is derived from the invoice retention_amount; when "
-    "amount is omitted the invoice net (total - retention) is paid. Idempotent on "
-    "idempotency_key. The cash leg (not the withheld retainage) is posted to the cost "
-    "spine. MANAGER-only - a payment is a binding ledger entry.",
-)
-async def record_payment_with_withholding(
-    invoice_id: uuid.UUID,
-    data: RecordClaimPaymentRequest,
-    user_id: CurrentUserId,
-    session: SessionDep,
-    _perm: None = Depends(RequirePermission("finance.record_payment")),
-    service: FinanceService = Depends(_get_service),
-) -> PaymentResponse:
-    """Record a withholding payment against an invoice."""
-    await _require_invoice_access(session, invoice_id, user_id)
-    payment = await service.record_payment_with_withholding(
-        invoice_id,
-        data,
-        actor_id=str(user_id) if user_id else None,
-    )
     return PaymentResponse.model_validate(payment)
 
 
@@ -987,14 +879,14 @@ async def import_budgets_file(
         )
 
     # R7 (2026-05-24): magic-byte gate. The filename-extension check above
-    # is necessary but trivially bypassable - an attacker who renames a
+    # is necessary but trivially bypassable — an attacker who renames a
     # PE/ELF/script to ``payload.xlsx`` would pass the extension test and
     # land in the parser. ``require_signature`` rejects anything that
     # isn't a ZIP-container (xlsx/xls OLE) or plain-text/CSV (which has
     # no signature and surfaces as ``None``).
     #
     # CSV genuinely has no magic bytes so it returns ``None`` from
-    # ``detect`` - only require the signature check for the spreadsheet
+    # ``detect`` — only require the signature check for the spreadsheet
     # branches; plain CSV falls through to the parser as-is.
     fname_low = filename
     if fname_low.endswith((".xlsx", ".xls")):
@@ -1166,7 +1058,7 @@ async def export_budgets(
         ws.cell(row=row_idx, column=2, value=b.category or "")
         # BUG-069: use Decimal (not float) so large construction-budget values
         # (e.g. 123456789.99) don't suffer IEEE-754 rounding when Excel reads
-        # them back - openpyxl stores Decimal natively as a NUMERIC cell.
+        # them back — openpyxl stores Decimal natively as a NUMERIC cell.
         from decimal import Decimal as _Dec
         from decimal import InvalidOperation as _IOp
 
@@ -1298,230 +1190,6 @@ async def finance_dashboard(
     return await service.get_dashboard(project_id=project_id)
 
 
-# ── ERP / accounting connectors (TOP-30 #4) ─────────────────────────────────
-# Fixed-path block: declared BEFORE the parametric /{invoice_id} route so the
-# /connectors/... segments are never parsed as an invoice UUID. Within the
-# block, the literal /connectors/types/ and /connectors/logs/{log_id}/ routes
-# come before /connectors/{config_id}/ for the same reason.
-
-
-def _get_connector_service(session: SessionDep) -> ConnectorService:
-    return ConnectorService(session)
-
-
-@router.get(
-    "/connectors/types/",
-    response_model=list[ConnectorTypeInfo],
-    summary="List available connector types",
-    description="Catalogue of registered ERP / accounting connector types and their config fields.",
-)
-async def list_connector_types(
-    _perm: None = Depends(RequirePermission("finance.connector.read")),
-) -> list[ConnectorTypeInfo]:
-    """Return the connector-type catalogue for the UI form builder."""
-    return [ConnectorTypeInfo(**entry) for entry in connector_registry.list_types()]
-
-
-@router.get(
-    "/connectors/",
-    response_model=ConnectorConfigListResponse,
-    summary="List connectors",
-    description="List configured connectors, optionally scoped to a project (also includes global connectors).",
-)
-async def list_connectors(
-    session: SessionDep,
-    user_id: CurrentUserId = None,  # type: ignore[assignment]
-    project_id: uuid.UUID | None = Query(default=None),
-    _perm: None = Depends(RequirePermission("finance.connector.read")),
-    service: ConnectorService = Depends(_get_connector_service),
-) -> ConnectorConfigListResponse:
-    """List connector configs for a project."""
-    await _require_project_access(session, project_id, user_id)
-    items = await service.list_configs(project_id=project_id)
-    return ConnectorConfigListResponse(
-        items=[ConnectorConfigResponse.from_model(c) for c in items],
-        total=len(items),
-    )
-
-
-@router.post(
-    "/connectors/",
-    response_model=ConnectorConfigResponse,
-    status_code=status.HTTP_201_CREATED,
-    summary="Create connector",
-    description="Create a connector config. Credentials are encrypted at rest and never returned. MANAGER-only.",
-)
-async def create_connector(
-    data: ConnectorConfigCreate,
-    user_id: CurrentUserId,
-    session: SessionDep,
-    _perm: None = Depends(RequirePermission("finance.connector.manage")),
-    service: ConnectorService = Depends(_get_connector_service),
-) -> ConnectorConfigResponse:
-    """Create a connector configuration."""
-    await _require_project_access(session, data.project_id, user_id)
-    config = await service.create_config(data, actor_id=str(user_id) if user_id else None)
-    return ConnectorConfigResponse.from_model(config)
-
-
-@router.get(
-    "/connectors/logs/{log_id}/",
-    response_model=SyncLogResponse,
-    summary="Get a sync-log entry",
-    description="Retrieve a single connector sync-log entry by id.",
-)
-async def get_connector_log(
-    log_id: uuid.UUID,
-    session: SessionDep,
-    user_id: CurrentUserId = None,  # type: ignore[assignment]
-    _perm: None = Depends(RequirePermission("finance.connector.read")),
-    service: ConnectorService = Depends(_get_connector_service),
-) -> SyncLogResponse:
-    """Get a single sync-log entry."""
-    log = await service.get_log(log_id)
-    if log is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Sync log not found")
-    await _require_project_access(session, log.project_id, user_id)
-    return SyncLogResponse.from_model(log)
-
-
-@router.get(
-    "/connectors/{config_id}/",
-    response_model=ConnectorConfigResponse,
-    summary="Get connector",
-    description="Retrieve a single connector config by id.",
-)
-async def get_connector(
-    config_id: uuid.UUID,
-    session: SessionDep,
-    user_id: CurrentUserId = None,  # type: ignore[assignment]
-    _perm: None = Depends(RequirePermission("finance.connector.read")),
-    service: ConnectorService = Depends(_get_connector_service),
-) -> ConnectorConfigResponse:
-    """Get a single connector config."""
-    config = await service.get_config_or_404(config_id)
-    await _require_project_access(session, config.project_id, user_id)
-    return ConnectorConfigResponse.from_model(config)
-
-
-@router.patch(
-    "/connectors/{config_id}/",
-    response_model=ConnectorConfigResponse,
-    summary="Update connector",
-    description="Update a connector config. An absent or null credentials field leaves the stored secret unchanged. MANAGER-only.",
-)
-async def update_connector(
-    config_id: uuid.UUID,
-    data: ConnectorConfigUpdate,
-    user_id: CurrentUserId,
-    session: SessionDep,
-    _perm: None = Depends(RequirePermission("finance.connector.manage")),
-    service: ConnectorService = Depends(_get_connector_service),
-) -> ConnectorConfigResponse:
-    """Update a connector configuration."""
-    config = await service.get_config_or_404(config_id)
-    await _require_project_access(session, config.project_id, user_id)
-    config = await service.update_config(config_id, data)
-    return ConnectorConfigResponse.from_model(config)
-
-
-@router.delete(
-    "/connectors/{config_id}/",
-    status_code=status.HTTP_204_NO_CONTENT,
-    summary="Delete connector",
-    description="Delete a connector config and its sync history. MANAGER-only.",
-)
-async def delete_connector(
-    config_id: uuid.UUID,
-    user_id: CurrentUserId,
-    session: SessionDep,
-    _perm: None = Depends(RequirePermission("finance.connector.manage")),
-    service: ConnectorService = Depends(_get_connector_service),
-) -> None:
-    """Delete a connector configuration."""
-    config = await service.get_config_or_404(config_id)
-    await _require_project_access(session, config.project_id, user_id)
-    await service.delete_config(config_id)
-
-
-@router.post(
-    "/connectors/{config_id}/validate/",
-    response_model=ValidateResponse,
-    summary="Validate connector config",
-    description="Run the connector's config validation and return any problems. No side effects.",
-)
-async def validate_connector(
-    config_id: uuid.UUID,
-    session: SessionDep,
-    user_id: CurrentUserId = None,  # type: ignore[assignment]
-    _perm: None = Depends(RequirePermission("finance.connector.read")),
-    service: ConnectorService = Depends(_get_connector_service),
-) -> ValidateResponse:
-    """Validate a connector config without running a sync."""
-    config = await service.get_config_or_404(config_id)
-    await _require_project_access(session, config.project_id, user_id)
-    problems = await service.validate_config(config_id)
-    return ValidateResponse(ok=not problems, problems=problems)
-
-
-@router.post(
-    "/connectors/{config_id}/sync/",
-    response_model=SyncLogResponse,
-    summary="Run a connector sync",
-    description="Run a push and/or pull. dry_run=true previews with no side effects. "
-    "A live run (dry_run=false) mutates external files and may write ledger rows. MANAGER-only.",
-)
-async def sync_connector(
-    config_id: uuid.UUID,
-    body: SyncTriggerRequest,
-    user_id: CurrentUserId,
-    session: SessionDep,
-    _perm: None = Depends(RequirePermission("finance.connector.sync")),
-    service: ConnectorService = Depends(_get_connector_service),
-) -> SyncLogResponse:
-    """Trigger a connector sync (manual)."""
-    config = await service.get_config_or_404(config_id)
-    await _require_project_access(session, config.project_id, user_id)
-    # Rate-limit live syncs the same way as approve/pay; dry runs are cheap.
-    if not body.dry_run:
-        allowed, _ = approval_limiter.is_allowed(str(user_id))
-        if not allowed:
-            raise HTTPException(
-                status_code=status.HTTP_429_TOO_MANY_REQUESTS,
-                detail="Too many sync requests in a short time. Please wait a moment.",
-            )
-    log = await service.run_sync(
-        config_id,
-        direction=body.direction,
-        dry_run=body.dry_run,
-        actor_id=str(user_id) if user_id else None,
-        trigger="manual",
-    )
-    return SyncLogResponse.from_model(log)
-
-
-@router.get(
-    "/connectors/{config_id}/logs/",
-    response_model=SyncLogListResponse,
-    summary="List sync history",
-    description="List sync-log entries for a connector, newest first.",
-)
-async def list_connector_logs(
-    config_id: uuid.UUID,
-    session: SessionDep,
-    user_id: CurrentUserId = None,  # type: ignore[assignment]
-    offset: int = Query(default=0, ge=0),
-    limit: int = Query(default=50, ge=1, le=200),
-    _perm: None = Depends(RequirePermission("finance.connector.read")),
-    service: ConnectorService = Depends(_get_connector_service),
-) -> SyncLogListResponse:
-    """List a connector's sync history."""
-    config = await service.get_config_or_404(config_id)
-    await _require_project_access(session, config.project_id, user_id)
-    items, total = await service.list_logs(config_id=config_id, limit=limit, offset=offset)
-    return SyncLogListResponse(items=[SyncLogResponse.from_model(x) for x in items], total=total)
-
-
 # ── Invoice by ID (parametric routes LAST) ──────────────────────────────────
 
 
@@ -1572,7 +1240,7 @@ async def update_invoice(
     summary="Approve invoice",
     description="Transition an invoice to 'sent' (legacy alias 'approved') status. "
     "Only invoices in 'draft' or 'pending' status can be approved. "
-    "MANAGER-only - invoice approval is the financial-commitment gate.",
+    "MANAGER-only — invoice approval is the financial-commitment gate.",
 )
 async def approve_invoice(
     invoice_id: uuid.UUID,
@@ -1604,7 +1272,7 @@ async def approve_invoice(
     response_model=InvoiceResponse,
     summary="Mark invoice as paid",
     description="Transition an invoice to 'paid' status. Records the payment date. "
-    "MANAGER-only - marking an invoice paid is a binding ledger action. "
+    "MANAGER-only — marking an invoice paid is a binding ledger action. "
     "Idempotent: a second call against an already-paid invoice returns 400, "
     "not a duplicate ledger write.",
 )
@@ -1620,7 +1288,7 @@ async def pay_invoice(
     R7 (2026-05-24): pinned to ``finance.pay`` (MANAGER+). The FSM
     allowlist (``_INVOICE_STATUS_TRANSITIONS``) ensures a second click
     against an already-paid invoice cannot re-trigger budget-actual
-    recompute - it 400s on the disallowed ``paid -> paid`` transition
+    recompute — it 400s on the disallowed ``paid -> paid`` transition
     (idempotency by allowlist).
     """
     allowed, _ = approval_limiter.is_allowed(str(user_id))
