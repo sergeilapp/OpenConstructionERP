@@ -347,3 +347,174 @@ class LinkToBoqRequest(BaseModel):
             "existing callers backward-compatible."
         ),
     )
+
+
+# ── Vision-LLM plan reading (issue #194) ────────────────────────────────────
+#
+# The vision-LLM path is an ADDITIONAL, higher-quality suggestion source that
+# sits alongside the offline OpenCV "Recognize" tool, never replacing it. Every
+# model output is a SUGGESTION carrying a real confidence; nothing is applied to
+# the takeoff or the BOQ without an explicit human accept (CLAUDE.md rule 7).
+#
+# Takeoff-local confidence band thresholds, mirroring the canonical values in
+# ``ai_estimator/service.py`` (0.78 / 0.62). Exposed through ``/plan-read/meta``
+# so the UI never hardcodes them.
+TAKEOFF_CONFIDENCE_HIGH_THRESHOLD = 0.78
+TAKEOFF_CONFIDENCE_MEDIUM_THRESHOLD = 0.62
+# The largest polygon the model may return for a single room. Bounds the
+# shoelace loop and the JSON payload. Aligned with the prompt's "4 to 60".
+MAX_PLAN_POLYGON_VERTICES = 60
+# The largest count cluster the model may return for a single symbol class.
+MAX_PLAN_SYMBOL_CENTERS = 400
+
+
+class NormPoint(BaseModel):
+    """A single normalized [0, 1] image/page coordinate (top-left origin).
+
+    Reuses the :class:`PointSchema` NaN/Inf guard but bounds both axes to
+    ``[0, 1]`` because the vision model is told to emit normalized coordinates.
+    An out-of-range or non-finite value is rejected so a malformed model output
+    can never map to an off-page PDF point or a NaN area.
+    """
+
+    x: float = Field(..., ge=0.0, le=1.0)
+    y: float = Field(..., ge=0.0, le=1.0)
+
+    @field_validator("x", "y")
+    @classmethod
+    def _reject_nan_inf(cls, v: float) -> float:
+        if math.isnan(v) or math.isinf(v):
+            raise ValueError("coordinate must be a finite real number")
+        return v
+
+
+class PlanScale(BaseModel):
+    """A scale candidate read from the drawing by the vision model.
+
+    The model returns two normalized endpoints it claims span a known real
+    distance, the real value, the unit, and which evidence it used. The server
+    derives ``ratio_px_per_unit`` from the endpoints and validates it against
+    the plausibility belt before this is ever offered to the user; the model's
+    own ratio is never trusted.
+    """
+
+    value: float | None = Field(default=None, gt=0)
+    unit: Literal["m", "mm", "ft", "in"] | None = None
+    source: Literal["dimension_string", "scale_bar", "inferred"] | None = None
+    confidence: float = Field(..., ge=0.0, le=1.0)
+    ref_pixels: tuple[NormPoint, NormPoint] | None = None
+    ref_real_value: float | None = Field(default=None, gt=0)
+    ref_unit: Literal["m", "mm", "ft", "in"] | None = None
+
+
+class PlanRoom(BaseModel):
+    """One enclosed room traced by the vision model as a normalized polygon."""
+
+    name: str = Field(default="", max_length=200)
+    polygon: list[NormPoint] = Field(..., min_length=3, max_length=MAX_PLAN_POLYGON_VERTICES)
+    confidence: float = Field(..., ge=0.0, le=1.0)
+
+
+class PlanSymbol(BaseModel):
+    """A class of repeated symbols clustered into one count proposal."""
+
+    element_class: str = Field(default="", max_length=80)
+    centers: list[NormPoint] = Field(..., min_length=1, max_length=MAX_PLAN_SYMBOL_CENTERS)
+    confidence: float = Field(..., ge=0.0, le=1.0)
+
+
+class PlanReadResult(BaseModel):
+    """The validated structured output of one vision plan-read call."""
+
+    page: int = Field(..., ge=1)
+    scale: PlanScale | None = None
+    rooms: list[PlanRoom] = Field(default_factory=list)
+    symbols: list[PlanSymbol] = Field(default_factory=list)
+    image_dpi: int = 0
+    page_width_pt: float = 0.0
+    page_height_pt: float = 0.0
+    model_used: str = ""
+    provider: str = ""
+    tokens_used: int = 0
+    cost_usd_estimate: float = 0.0
+    notes: str | None = None
+
+
+class PlanReadRequest(BaseModel):
+    """Request to start a vision-LLM plan-read run for one page."""
+
+    model_config = ConfigDict(str_strip_whitespace=True)
+
+    project_id: UUID
+    document_id: str = Field(..., min_length=1, max_length=255)
+    page: int = Field(default=1, ge=1)
+    scale_pixels_per_unit: float | None = Field(default=None, gt=0)
+    mode: Literal["scale", "rooms", "symbols", "full"] = "rooms"
+    do_cost_match: bool = False
+
+
+class AiTakeoffRunResponse(BaseModel):
+    """Pollable state of one vision plan-read run."""
+
+    model_config = ConfigDict(from_attributes=True, populate_by_name=True)
+
+    id: UUID
+    status: str
+    project_id: UUID
+    document_id: str | None = None
+    page: int = 1
+    mode: str = "rooms"
+    provider: str | None = None
+    model_used: str | None = None
+    total_tokens: int = 0
+    cost_usd_estimate: float = 0.0
+    duration_ms: int = 0
+    proposal_count: int = 0
+    accepted_count: int = 0
+    validation_report: dict[str, Any] | None = None
+    failure_reason: str | None = None
+    created_at: datetime | None = None
+
+
+class PlanReadAcceptRequest(BaseModel):
+    """Confirm a subset of a run's proposals into billed measurements.
+
+    Either an explicit ``measurement_ids`` selection or a ``min_confidence``
+    threshold (bulk-confirm-by-threshold) selects what to accept. A proposal
+    carrying a self-intersection ERROR verdict is always blocked (redraw first);
+    low confidence is a warning, not a block.
+    """
+
+    measurement_ids: list[str] | None = Field(default=None, max_length=2000)
+    min_confidence: float | None = Field(default=None, ge=0.0, le=1.0)
+
+
+class PlanReadAcceptResponse(BaseModel):
+    """Outcome of a plan-read accept call."""
+
+    confirmed: int = 0
+    skipped: int = 0
+    blocked: int = 0
+    measurement_ids: list[str] = Field(default_factory=list)
+
+
+class PlanReadMetaResponse(BaseModel):
+    """Thresholds, capabilities, and caps for the plan-read UI.
+
+    The UI never hardcodes thresholds or limits; it reads them here (same
+    pattern as ``/ai-estimator/meta``). ``vision_available`` lets the takeoff
+    viewer hide / disable the "Read plan with AI" action when no vision-capable
+    key is configured, so the feature degrades gracefully.
+    """
+
+    confidence_high_threshold: float = TAKEOFF_CONFIDENCE_HIGH_THRESHOLD
+    confidence_medium_threshold: float = TAKEOFF_CONFIDENCE_MEDIUM_THRESHOLD
+    vision_providers: list[str] = Field(default_factory=list)
+    max_polygon_vertices: int = MAX_PLAN_POLYGON_VERTICES
+    max_cost_usd: float = 0.0
+    rolling_spend_usd: float = 0.0
+    modes: list[str] = Field(default_factory=lambda: ["scale", "rooms", "symbols", "full"])
+    vision_available: bool = False
+    provider: str | None = None
+    model_used: str | None = None
+    reason: str | None = None

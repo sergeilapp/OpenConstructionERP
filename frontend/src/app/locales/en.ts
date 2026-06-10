@@ -13061,6 +13061,22 @@ const resource = {
     "tasks.type_information": "Info",
     "tasks.type_task": "Task",
     "tasks.type_topic": "Topic",
+    "takeoff_viewer.plan_read.action": "Read plan with AI",
+    "takeoff_viewer.plan_read.hint": "Read this page with a vision AI: room names and scale (AI proposes, you confirm)",
+    "takeoff_viewer.plan_read.needs_upload_title": "AI plan reading needs an uploaded drawing",
+    "takeoff_viewer.plan_read.needs_upload_msg": "Upload this PDF to a project first, then open it from the documents list to read it with AI.",
+    "takeoff_viewer.plan_read.none_title": "No rooms detected",
+    "takeoff_viewer.plan_read.none_msg": "The model did not find anything clear enough to suggest on this page.",
+    "takeoff_viewer.plan_read.added_title": "{{n}} AI suggestions added",
+    "takeoff_viewer.plan_read.added_msg": "Review them on the drawing, then accept or reject each (AI proposes, you confirm).",
+    "takeoff_viewer.plan_read.failed": "AI plan reading failed",
+    "takeoff_viewer.plan_read.reason_cost_cap": "This run would exceed your AI spend cap. Raise the cap or wait for the window to roll over.",
+    "takeoff_viewer.plan_read.reason_rate_limited": "The AI provider rate-limited the request. Please wait a moment and try again.",
+    "takeoff_viewer.plan_read.reason_provider_error": "The AI provider returned an error. Check your API key and model in Settings.",
+    "takeoff_viewer.plan_read.reason_provider_unavailable": "The AI provider is temporarily unavailable. Please try again.",
+    "takeoff_viewer.plan_read.reason_pymupdf_missing": "Vision plan reading needs the optional cv extra (PyMuPDF). Install it to enable rasterization.",
+    "takeoff_viewer.plan_read.reason_pdf_not_on_disk": "The stored PDF for this document is no longer on disk. Re-upload it to read with AI.",
+    "takeoff_viewer.plan_read.reason_rasterize_failed": "This page could not be rendered to an image. The PDF may be corrupt or password-protected."
   }
 } as { translation: Record<string, string> };
 
