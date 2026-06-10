@@ -1,8 +1,8 @@
 [
   {
-    "code": "TCG-V4-ASM-STORMWATER-FRENCH-DRAIN-DRAFT",
-    "name": "TCG v4 Stormwater French Drain Draft Assembly",
-    "description": "Review-only assembly grouping stormwater delivery, placement, and filtration scope.",
+    "code": "TCG-V5-ASM-STORMWATER-INFILTRATION-PIT-SF",
+    "name": "TCG v5 Stormwater Infiltration Pit Delivered-Material Review Assembly",
+    "description": "Review-only assembly superseding the v4 French drain draft. Uses delivered-load pricing for quarry material rows and unitizes the scope by source job area.",
     "unit": "LS",
     "category": "Stormwater",
     "classification": {
@@ -12,7 +12,7 @@
       "department": "Utilities",
       "section": "French Drain"
     },
-    "total_rate": 93877.17,
+    "total_rate": 69640.0,
     "currency": "USD",
     "bid_factor": 1.0,
     "regional_factors": {},
@@ -24,62 +24,52 @@
     ],
     "components": [
       {
-        "cost_item_code": "TCG-DELIVER-57-STONE-FD",
-        "description": "Deliver #57 stone for French drain",
+        "cost_item_code": "TCG-INSTALL-STORMWATER-INFILTRATION-PIT-SF",
+        "description": "Install stormwater infiltration pit/French drain delivered-material scope",
         "factor": 1.0,
-        "quantity": 863.8,
-        "unit": "t",
-        "unit_cost": 79.57,
+        "quantity": 8326.0,
+        "unit": "SF",
+        "unit_cost": 8.3642,
         "resource_type": null,
-        "total": 68732.57,
+        "total": 69640.0,
         "metadata": {
-          "component_source": "cost_item"
-        }
-      },
-      {
-        "cost_item_code": "TCG-DELIVER-SAND-FD",
-        "description": "Deliver sand for French drain",
-        "factor": 1.0,
-        "quantity": 78.0,
-        "unit": "CY",
-        "unit_cost": 63.2,
-        "resource_type": null,
-        "total": 4929.6,
-        "metadata": {
-          "component_source": "cost_item"
-        }
-      },
-      {
-        "cost_item_code": "TCG-PLACE-AGGREGATE-FD",
-        "description": "Place aggregate layers for French drain",
-        "factor": 1.0,
-        "quantity": 1.0,
-        "unit": "LS",
-        "unit_cost": 12015.0,
-        "resource_type": null,
-        "total": 12015.0,
-        "metadata": {
-          "component_source": "cost_item"
-        }
-      },
-      {
-        "cost_item_code": "TCG-STORMWATER-DRAINAGE-FILTRATION-SCOPE",
-        "description": "Stormwater filtration support scope",
-        "factor": 1.0,
-        "quantity": 1.0,
-        "unit": "LS",
-        "unit_cost": 8200.0,
-        "resource_type": null,
-        "total": 8200.0,
-        "metadata": {
-          "component_source": "cost_item"
+          "component_source": "cost_item",
+          "quantity_basis": "8326 SF persisted source job area"
         }
       }
     ],
     "metadata": {
       "source": "bedrock_tcg_model_job_extract_v4_review",
       "region": "BEDROCK-TCG-V4-REVIEW",
-      "review_only": true
+      "review_only": true,
+      "supersedes": "TCG-V4-ASM-STORMWATER-FRENCH-DRAIN-DRAFT",
+      "draft_interpretation": "truck_cost_per_load values are delivered material load prices unless Bedrock confirms hauling-only",
+      "known_subtotal_before_unresolved_scope": 69640.0,
+      "review_flags": [
+        "TCG-MAT-R1",
+        "TCG-FD-R1",
+        "TCG-FD-R2",
+        "TCG-FD-R3",
+        "TCG-FD-R4",
+        "TCG-FD-R5"
+      ],
+      "base_scope_includes": [
+        "excavate infiltration pit",
+        "excess excavated material offhaul/disposal",
+        "delivered coarse sand",
+        "delivered #57 stone",
+        "geotextile fabric",
+        "observation wells",
+        "equipment rental",
+        "working labor"
+      ],
+      "not_base_scope_pending_review": [
+        "#8 stone top course due to $4500 credit",
+        "existing construction entrance stone removal/offhaul quantity and rate",
+        "conditional check dams",
+        "rock excavation T&M allowance",
+        "ambiguous driving labor/equipment pending confirmation as Bedrock crew mobilization or spoil-haul support"
+      ]
     }
   },
   {

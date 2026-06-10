@@ -1,10 +1,10 @@
 # TCG Model Job Extract v4 Review Validation Report
 
-Status: review-only package imported into OCERP for app inspection.
+Status: review-only package revised and validated for OCERP app inspection. The database still has the prior v4 import counts until `--cleanup` is run again.
 
 ## Import Result
 
-Imported with:
+Previously imported with:
 
 ```bash
 cd /home/sergei/dev/bedrock-siteworks/OCERP/backend
@@ -13,14 +13,14 @@ uv run python ../scripts/import_tcg_package.py \
   --cleanup
 ```
 
-Result:
+Revised package validation result:
 
 | Record Type | Imported |
 |---|---:|
-| Catalog resources | 36 |
-| CostItems | 15 |
+| Catalog resources | 37 |
+| CostItems | 12 |
 | Assemblies | 5 |
-| Assembly components | 13 |
+| Assembly components | 10 |
 
 Package namespace:
 
@@ -34,7 +34,7 @@ Package namespace:
 
 | Scope | Included As |
 |---|---|
-| Stormwater / French drain | 4 CostItems + `TCG-V4-ASM-STORMWATER-FRENCH-DRAIN-DRAFT` |
+| Stormwater / French drain | `TCG-INSTALL-STORMWATER-INFILTRATION-PIT-SF` + `TCG-V5-ASM-STORMWATER-INFILTRATION-PIT-SF` |
 | Utility trenching / conduit | 1 LS CostItem |
 | Concrete curb / paving / asphalt repair | Split CostItems + `TCG-V4-ASM-CONCRETE-CURB-PAVING-DRAFT` |
 | Crawlspace/footer drainage | Delivered stone + LS scope + `TCG-V4-ASM-CRAWLSPACE-FOOTER-DRAINAGE-DRAFT` |
@@ -49,9 +49,24 @@ Package namespace:
 - `TCG-P7-R6`: sand rate is a draft derivation.
 - `TCG-P7-R7`: job 38447 uses `$125/hr` adhoc labor.
 - `TCG-RS-R1`: demo/disposal candidate assembly mismatch, `$14,650` versus `$17,450` equipment addons.
+- `TCG-MAT-R1`: `truck_cost_per_load` is interpreted as delivered material load price, not hauling-only. Bedrock should confirm.
+- `TCG-FD-R1`: #8 stone appears in scope, but job addition says credit to remove #8 stone `$4,500`; base inclusion unresolved.
+- `TCG-FD-R2`: existing construction entrance stone removal/offhaul quantity and rate not independently isolated.
+- `TCG-FD-R3`: excavation/offhaul row `43 LOAD @ $245` likely belongs to infiltration pit excess material, but exact semantics need confirmation.
+- `TCG-FD-R4`: fabric quantity `12 ROLL` may or may not cover all fabric layers/wraps described in scope.
+- `TCG-FD-R5`: check dams are conditional and should be optional, not base scope.
+
+## French Drain Delivered-Material Reassessment
+
+`TCG-V5-ASM-STORMWATER-INFILTRATION-PIT-SF` supersedes the prior French drain assembly because the old shape combined proxy material rates with `truck_cost_per_load` values. For job `38396`, the package now treats `38 LOAD @ $945` as delivered #57 stone and `4 LOAD @ $745` as delivered coarse sand.
+
+Known revised subtotal before unresolved #8/top-course/removal/check-dam treatment and ambiguous driving treatment is `$69,640` against source job price `$76,421.25`, leaving `$6,781.25` for reconciliation against unresolved credits/additions, markup, export/version differences, non-base allowances, and any confirmed Bedrock crew mobilization or spoil-haul support.
+
+The prior `7 HR @ $95` driving labor and `168 MI` driving equipment evidence is excluded from the French drain base model because delivered material load pricing should already include supplier delivery. Carry it as a review item unless Bedrock confirms it is not supplier delivery.
 
 ## Validation
 
 - JSON schema/reference validation passed via `import_tcg_package.py --validate-only`.
-- Dry-run passed before import and showed no existing records for the v4 source/region.
-- Assembly codes use a `TCG-V4-ASM-*` namespace to avoid collisions with the prior review slice.
+- Validate-only passed after the French drain reassessment.
+- Dry-run passed and showed existing prior v4 records in the database: 36 catalog resources, 15 CostItems, 5 assemblies, and 13 assembly components. A cleanup import would replace them with the revised package counts above.
+- The French drain assembly now uses a `TCG-V5-ASM-*` code to make the reassessment explicit; unrelated assemblies keep their `TCG-V4-ASM-*` namespace.

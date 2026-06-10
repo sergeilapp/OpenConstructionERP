@@ -123,9 +123,9 @@
   },
   {
     "resource_code": "TCG-RES-HAUL-57-STONE-FD-LOAD",
-    "name": "TCG Haul #57 Stone for French Drain",
-    "resource_type": "equipment",
-    "category": "Hauling",
+    "name": "TCG Delivered #57 Stone Load for French Drain",
+    "resource_type": "material",
+    "category": "Aggregate",
     "unit": "LOAD",
     "base_price": 945.0,
     "min_price": 0,
@@ -138,14 +138,17 @@
     },
     "metadata": {
       "review_only": true,
-      "source_evidence": "SitePreparationMaterial 3016"
+      "source_evidence": "SitePreparationMaterial 3016",
+      "raw_source_field": "truck_cost_per_load",
+      "draft_interpretation": "delivered_material_load_price",
+      "review_flag": "TCG-MAT-R1"
     }
   },
   {
     "resource_code": "TCG-RES-HAUL-SAND-FD-LOAD",
-    "name": "TCG Haul Sand for French Drain",
-    "resource_type": "equipment",
-    "category": "Hauling",
+    "name": "TCG Delivered Coarse Sand Load for French Drain",
+    "resource_type": "material",
+    "category": "Aggregate",
     "unit": "LOAD",
     "base_price": 745.0,
     "min_price": 0,
@@ -158,7 +161,10 @@
     },
     "metadata": {
       "review_only": true,
-      "source_evidence": "SitePreparationMaterial 3015"
+      "source_evidence": "SitePreparationMaterial 3015",
+      "raw_source_field": "truck_cost_per_load",
+      "draft_interpretation": "delivered_material_load_price",
+      "review_flag": "TCG-MAT-R1"
     }
   },
   {
@@ -241,6 +247,29 @@
       "review_only": true,
       "review_flag": "TCG-P7-R3",
       "source_evidence": "job 38254 fill hauling"
+    }
+  },
+  {
+    "resource_code": "TCG-RES-OFFHAUL-EXCAVATED-MATERIAL-FD-LOAD",
+    "name": "TCG Excavated Material Offhaul/Disposal Load for French Drain",
+    "resource_type": "equipment",
+    "category": "Hauling",
+    "unit": "LOAD",
+    "base_price": 245.0,
+    "min_price": 0,
+    "max_price": 0,
+    "currency": "USD",
+    "source": "bedrock_tcg_model_job_extract_v4_review",
+    "region": "BEDROCK-TCG-V4-REVIEW",
+    "specifications": {
+      "masterformat": "33 00 00"
+    },
+    "metadata": {
+      "review_only": true,
+      "source_evidence": "job 38396 fill/offhaul row: 860 CY, 43 LOAD @ $245/load",
+      "raw_source_field": "truck_cost_per_load",
+      "draft_interpretation": "excavated_material_offhaul_disposal_load_price",
+      "review_flag": "TCG-FD-R3"
     }
   },
   {

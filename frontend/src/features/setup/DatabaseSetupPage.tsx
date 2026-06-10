@@ -75,6 +75,7 @@ const CWICR_DATABASES: CWICRDatabase[] = [
   { id: 'MX_MEXICOCITY', name: 'Mexico', city: 'Mexico City', lang: 'Espanol', currency: 'MXN', flagId: 'mx' },
   { id: 'ZA_JOHANNESBURG', name: 'South Africa', city: 'Johannesburg', lang: 'English', currency: 'ZAR', flagId: 'za' },
   { id: 'NG_LAGOS', name: 'Nigeria', city: 'Lagos', lang: 'English', currency: 'NGN', flagId: 'ng' },
+  { id: 'BEDROCK-TCG-V4-FD-TEST', name: 'Bedrock TCG French Drain Test', city: 'Brentwood', lang: 'English', currency: 'USD', flagId: 'us' },
 ];
 
 // ── Demo project definitions ────────────────────────────────────────────────

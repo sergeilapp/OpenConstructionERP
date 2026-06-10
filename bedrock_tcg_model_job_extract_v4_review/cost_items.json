@@ -1,10 +1,10 @@
 [
   {
-    "code": "TCG-DELIVER-57-STONE-FD",
-    "description": "Deliver #57 stone for French drain",
+    "code": "TCG-INSTALL-STORMWATER-INFILTRATION-PIT-SF",
+    "description": "Install stormwater infiltration pit/French drain delivered-material review item",
     "descriptions": {},
-    "unit": "t",
-    "rate": 79.57,
+    "unit": "SF",
+    "rate": 8.3642,
     "currency": "USD",
     "source": "bedrock_tcg_model_job_extract_v4_review",
     "region": "BEDROCK-TCG-V4-REVIEW",
@@ -16,166 +16,59 @@
       "section": "French Drain"
     },
     "components": [
-      {
-        "code": "TCG-RES-57-STONE-TON",
-        "resource_code": "TCG-RES-57-STONE-TON",
-        "name": "#57 stone material",
-        "type": "material",
-        "resource_type": "material",
-        "quantity": 1.0,
-        "unit_rate": 38.0,
-        "cost": 38.0,
-        "unit": "t"
-      },
       {
         "code": "TCG-RES-HAUL-57-STONE-FD-LOAD",
         "resource_code": "TCG-RES-HAUL-57-STONE-FD-LOAD",
-        "name": "#57 stone bundled hauling",
-        "type": "equipment",
-        "resource_type": "equipment",
-        "quantity": 0.04399,
-        "unit_rate": 945.0,
-        "cost": 41.57,
-        "unit": "LOAD"
-      }
-    ],
-    "tags": [
-      "tcg_v4_review",
-      "review_only",
-      "deliver"
-    ],
-    "metadata": {
-      "review_only": true,
-      "source_job_id": 38396
-    }
-  },
-  {
-    "code": "TCG-DELIVER-SAND-FD",
-    "description": "Deliver sand for French drain",
-    "descriptions": {},
-    "unit": "CY",
-    "rate": 63.2,
-    "currency": "USD",
-    "source": "bedrock_tcg_model_job_extract_v4_review",
-    "region": "BEDROCK-TCG-V4-REVIEW",
-    "classification": {
-      "masterformat": "33 00 00",
-      "collection": "Stormwater",
-      "category": "Sitework",
-      "department": "Utilities",
-      "section": "French Drain"
-    },
-    "components": [
-      {
-        "code": "TCG-RES-SAND-CY",
-        "resource_code": "TCG-RES-SAND-CY",
-        "name": "Sand material",
+        "name": "Delivered #57 stone load",
         "type": "material",
         "resource_type": "material",
-        "quantity": 1.0,
-        "unit_rate": 25.0,
-        "cost": 25.0,
-        "unit": "CY"
+        "quantity": 0.004564,
+        "unit_rate": 945.0,
+        "cost": 4.313,
+        "unit": "LOAD"
       },
       {
         "code": "TCG-RES-HAUL-SAND-FD-LOAD",
         "resource_code": "TCG-RES-HAUL-SAND-FD-LOAD",
-        "name": "Sand bundled hauling",
+        "name": "Delivered coarse sand load",
+        "type": "material",
+        "resource_type": "material",
+        "quantity": 0.00048,
+        "unit_rate": 745.0,
+        "cost": 0.3574,
+        "unit": "LOAD"
+      },
+      {
+        "code": "TCG-RES-OFFHAUL-EXCAVATED-MATERIAL-FD-LOAD",
+        "resource_code": "TCG-RES-OFFHAUL-EXCAVATED-MATERIAL-FD-LOAD",
+        "name": "Excavated material offhaul/disposal load",
         "type": "equipment",
         "resource_type": "equipment",
-        "quantity": 0.05128,
-        "unit_rate": 745.0,
-        "cost": 38.2,
+        "quantity": 0.005164,
+        "unit_rate": 245.0,
+        "cost": 1.2654,
         "unit": "LOAD"
-      }
-    ],
-    "tags": [
-      "tcg_v4_review",
-      "review_only",
-      "deliver"
-    ],
-    "metadata": {
-      "review_only": true,
-      "source_job_id": 38396
-    }
-  },
-  {
-    "code": "TCG-PLACE-AGGREGATE-FD",
-    "description": "Place aggregate layers for French drain",
-    "descriptions": {},
-    "unit": "LS",
-    "rate": 12015.0,
-    "currency": "USD",
-    "source": "bedrock_tcg_model_job_extract_v4_review",
-    "region": "BEDROCK-TCG-V4-REVIEW",
-    "classification": {
-      "masterformat": "33 00 00",
-      "collection": "Stormwater",
-      "category": "Sitework",
-      "department": "Utilities",
-      "section": "French Drain"
-    },
-    "components": [
-      {
-        "code": "TCG-RES-LABOR-SITE-PREP-135HR",
-        "resource_code": "TCG-RES-LABOR-SITE-PREP-135HR",
-        "name": "Aggregate placement labor",
-        "type": "labor",
-        "resource_type": "labor",
-        "quantity": 89.0,
-        "unit_rate": 135.0,
-        "cost": 12015.0,
-        "unit": "HR"
-      }
-    ],
-    "tags": [
-      "tcg_v4_review",
-      "review_only",
-      "place"
-    ],
-    "metadata": {
-      "review_only": true,
-      "source_job_id": 38396,
-      "allocation_note": "Draft split from 109 HR pool"
-    }
-  },
-  {
-    "code": "TCG-STORMWATER-DRAINAGE-FILTRATION-SCOPE",
-    "description": "Stormwater filtration fabric, observation pipe, equipment, and specialty labor",
-    "descriptions": {},
-    "unit": "LS",
-    "rate": 8200.0,
-    "currency": "USD",
-    "source": "bedrock_tcg_model_job_extract_v4_review",
-    "region": "BEDROCK-TCG-V4-REVIEW",
-    "classification": {
-      "masterformat": "33 00 00",
-      "collection": "Stormwater",
-      "category": "Sitework",
-      "department": "Utilities",
-      "section": "French Drain"
-    },
-    "components": [
+      },
       {
         "code": "TCG-RES-FABRIC-ROLL",
         "resource_code": "TCG-RES-FABRIC-ROLL",
         "name": "Geotextile fabric",
         "type": "material",
         "resource_type": "material",
-        "quantity": 12.0,
+        "quantity": 0.001441,
         "unit_rate": 200.0,
-        "cost": 2400.0,
+        "cost": 0.2882,
         "unit": "ROLL"
       },
       {
         "code": "TCG-RES-OBS-WELL-PIPE-LS",
         "resource_code": "TCG-RES-OBS-WELL-PIPE-LS",
-        "name": "Pipe for observation wells",
+        "name": "Observation wells pipe allowance",
         "type": "material",
         "resource_type": "material",
-        "quantity": 1.0,
+        "quantity": 0.00012,
         "unit_rate": 1100.0,
-        "cost": 1100.0,
+        "cost": 0.1321,
         "unit": "LS"
       },
       {
@@ -184,31 +77,68 @@
         "name": "Stormwater equipment rental",
         "type": "equipment",
         "resource_type": "equipment",
-        "quantity": 1.0,
+        "quantity": 0.00012,
         "unit_rate": 2000.0,
-        "cost": 2000.0,
+        "cost": 0.2402,
         "unit": "LS"
       },
       {
         "code": "TCG-RES-LABOR-SITE-PREP-135HR",
         "resource_code": "TCG-RES-LABOR-SITE-PREP-135HR",
-        "name": "Stormwater specialty labor",
+        "name": "Infiltration pit labor pool",
         "type": "labor",
         "resource_type": "labor",
-        "quantity": 20.0,
+        "quantity": 0.013091,
         "unit_rate": 135.0,
-        "cost": 2700.0,
+        "cost": 1.7678,
         "unit": "HR"
       }
     ],
     "tags": [
       "tcg_v4_review",
+      "tcg_delivered_material_reassessment",
       "review_only",
-      "scope"
+      "unitized",
+      "stormwater",
+      "french_drain"
     ],
     "metadata": {
       "review_only": true,
-      "source_job_id": 38396
+      "source_job_id": 38396,
+      "parent_quantity_basis": "8326 SF persisted source job area",
+      "draft_interpretation": "truck_cost_per_load values are delivered material load prices unless Bedrock confirms hauling-only",
+      "known_subtotal_before_unresolved_scope": 69640.0,
+      "source_job_price": 76421.25,
+      "reconciliation_delta_before_unresolved_scope": 6781.25,
+      "review_flags": [
+        "TCG-MAT-R1",
+        "TCG-FD-R1",
+        "TCG-FD-R2",
+        "TCG-FD-R3",
+        "TCG-FD-R4",
+        "TCG-FD-R5"
+      ],
+      "unresolved_scope_notes": [
+        "#8 stone appears in scope, but job addition says credit to remove #8 stone $4500; base inclusion unresolved.",
+        "Existing construction entrance stone removal/offhaul is in scope text but quantity and rate are not independently isolated.",
+        "43 LOAD @ $245 likely belongs to infiltration pit excess excavated material offhaul; exact semantics need confirmation.",
+        "Fabric 12 ROLL may or may not cover all fabric layers/wraps described in scope.",
+        "Check dams are conditional and should be optional, not base scope.",
+        "Rock excavation/removal remains T&M at $450/hr NTE $49000 allowance/exclusion note, not base cost."
+      ],
+      "excluded_ambiguous_driving_costs": [
+        "7 HR @ $95/hr = $665 driving labor removed from base pending confirmation that it is not supplier delivery included in delivered material load pricing.",
+        "168 MI @ $4.375/mi = $735 driving equipment removed from base pending confirmation that it is not supplier delivery included in delivered material load pricing."
+      ],
+      "geometry_metadata": {
+        "area_sf": 8326,
+        "excavation_cy": 860,
+        "sand_cy": 78,
+        "stone_57_tons": 863.8,
+        "delivered_sand_loads": 4,
+        "delivered_57_stone_loads": 38,
+        "offhaul_loads": 43
+      }
     }
   },
   {
