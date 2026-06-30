@@ -3,7 +3,6 @@ import { Routes, Route, Navigate, Outlet, useLocation, useParams } from 'react-r
 import { AppLayout } from './layout';
 import { DashboardPage } from '@/features/dashboard';
 import { LoginPage, RegisterPage, ForgotPasswordPage } from '@/features/auth';
-import { ProjectsPage, CreateProjectPage, ProjectDetailPage, ProjectSettingsPage } from '@/features/projects';
 // Import the lightweight BOQ pages from their source modules directly,
 // NOT via the `@/features/boq` barrel.  The barrel re-exports
 // `BOQEditorPage`, which statically pulls `BOQGrid` → `ag-grid-react` +
@@ -53,6 +52,18 @@ const CadDataExplorerPage = lazy(() =>
 );
 const PointCloudPage = lazy(() =>
   import('@/features/pointcloud/PointCloudPage').then((m) => ({ default: m.PointCloudPage }))
+);
+const ProjectsPage = lazy(() =>
+  import('@/features/projects/ProjectsPage').then((m) => ({ default: m.ProjectsPage }))
+);
+const CreateProjectPage = lazy(() =>
+  import('@/features/projects/CreateProjectPage').then((m) => ({ default: m.CreateProjectPage }))
+);
+const ProjectDetailPage = lazy(() =>
+  import('@/features/projects/ProjectDetailPage').then((m) => ({ default: m.ProjectDetailPage }))
+);
+const ProjectSettingsPage = lazy(() =>
+  import('@/features/projects/ProjectSettingsPage').then((m) => ({ default: m.ProjectSettingsPage }))
 );
 const MatchElementsPage = lazy(() =>
   import('@/features/match-elements/MatchElementsPage').then((m) => ({ default: m.MatchElementsPage }))

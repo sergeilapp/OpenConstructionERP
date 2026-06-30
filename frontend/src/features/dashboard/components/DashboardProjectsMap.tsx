@@ -77,39 +77,6 @@ function readCache(q: string): { lat: number; lng: number } | null {
   }
 }
 
-function writeCache(q: string, lat: number, lng: number) {
-  try {
-    localStorage.setItem(
-      CACHE_PREFIX + q.toLowerCase().trim(),
-      JSON.stringify({ lat, lng, at: Date.now() } as CacheEntry),
-    );
-  } catch {
-    /* quota full */
-  }
-}
-
-async function geocodeOne(query: string, signal: AbortSignal): Promise<{ lat: number; lng: number } | null> {
-  const cached = readCache(query);
-  if (cached) return cached;
-  const url =
-    'https://nominatim.openstreetmap.org/search?format=json&limit=1&q=' +
-    encodeURIComponent(query);
-  try {
-    const res = await fetch(url, { signal, headers: { Accept: 'application/json' } });
-    if (!res.ok) return null;
-    const rows = (await res.json()) as Array<{ lat: string; lon: string }>;
-    const first = rows[0];
-    if (!first) return null;
-    const lat = parseFloat(first.lat);
-    const lng = parseFloat(first.lon);
-    if (!Number.isFinite(lat) || !Number.isFinite(lng)) return null;
-    writeCache(query, lat, lng);
-    return { lat, lng };
-  } catch {
-    return null;
-  }
-}
-
 // Region → broad lat/lng fallback so projects without an address still
 // land on the right continent. Keys cover both single-country labels
 // ("germany") and the higher-level region groupings the project model
@@ -205,11 +172,12 @@ export function DashboardProjectsMap({ projects, className, heightClass: heightC
   }, []);
 
   useEffect(() => {
-    const controller = new AbortController();
     const out: ResolvedMarker[] = [];
 
-    // Seed with explicit lat/lng + cached geocodes + region-fallback so
-    // the map populates instantly — slow Nominatim queries fill in over time.
+    // Seed with explicit lat/lng + cached geocodes + region-fallback only.
+    // Do not live-geocode on dashboard mount: that makes every dashboard load
+    // wait on external Nominatim requests and can trigger repeated aborted
+    // fetches under React dev StrictMode.
     for (const p of projects) {
       if (Number.isFinite(p.lat) && Number.isFinite(p.lng)) {
         out.push({
@@ -233,32 +201,6 @@ export function DashboardProjectsMap({ projects, className, heightClass: heightC
       }
     }
     setResolved(out);
-
-    // Rate-limit Nominatim to ~1 req/sec to stay polite.
-    (async () => {
-      for (const p of projects) {
-        if (controller.signal.aborted) return;
-        if (Number.isFinite(p.lat) && Number.isFinite(p.lng)) continue;
-        const q = buildGeocodeQuery(p.address, p.city, p.country);
-        if (!q) continue;
-        const cached = readCache(q);
-        if (cached) continue;
-        const coords = await geocodeOne(q, controller.signal);
-        if (controller.signal.aborted) return;
-        if (!coords) continue;
-        setResolved((prev) => {
-          const idx = prev.findIndex((m) => m.id === p.id);
-          if (idx === -1) return [...prev, { id: p.id, name: p.name, region: p.region, ...coords }];
-          const next = prev.slice();
-          const existing = next[idx]!;
-          next[idx] = { ...existing, lat: coords.lat, lng: coords.lng };
-          return next;
-        });
-        await new Promise((r) => setTimeout(r, 1000));
-      }
-    })();
-
-    return () => controller.abort();
   }, [projects]);
 
   const initialView = useMemo(() => {

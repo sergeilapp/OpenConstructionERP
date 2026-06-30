@@ -54,7 +54,7 @@ async function runRuntimeUpgrade(version?: string): Promise<UpgradeResult> {
 
 const CURRENT_VERSION = APP_VERSION;
 const CHECK_INTERVAL_MS = 60 * 60 * 1000;       // 1 hour between polls
-const FIRST_CHECK_DELAY_MS = 2_000;             // first check ~2s after mount
+const FIRST_CHECK_DELAY_MS = import.meta.env.DEV ? 30_000 : 2_000;
 const CACHE_TTL_MS = 60 * 60 * 1000;            // 1 hour
 const CACHE_KEY = 'oe_update_cache_v1';
 // Dismiss now lives in sessionStorage — every fresh app open shows the
@@ -842,4 +842,3 @@ function UpdateFullModal({
     document.body,
   );
 }
-

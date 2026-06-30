@@ -1331,16 +1331,14 @@ function ProjectSwitcher() {
   const ref = useRef<HTMLDivElement>(null);
   const searchRef = useRef<HTMLInputElement>(null);
 
-  // Pre-fetch so the dropdown renders an instant list when the user opens
-  // it (no race between open → fetch → render that used to flash
-  // "No projects yet" for half a second).
+  // Load the switcher list only when the dropdown opens. Eagerly fetching up
+  // to 500 projects from the always-mounted header made every page load pay
+  // for project-switcher data even when the user never opened it.
   const { data: projects, isLoading, isError, isFetching, refetch } = useQuery({
     queryKey: ['projects-switcher'],
     queryFn: () => apiGet<Array<{ id: string; name: string }>>('/v1/projects/?limit=500'),
     staleTime: 60_000,
-    // Enabled as soon as the component mounts — the Header is always on
-    // screen after login, so the list is warm by the time the user clicks.
-    enabled: true,
+    enabled: open,
   });
 
   const MAX_VISIBLE = 20;

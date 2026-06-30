@@ -14,6 +14,7 @@
  */
 import { Suspense, lazy } from 'react';
 import type { LatLng } from './ProjectMap';
+import { ProjectMapCard } from './ProjectMapCard';
 
 const ProjectMapImpl = lazy(() =>
   import('./ProjectMap').then((m) => ({ default: m.ProjectMap })),
@@ -32,6 +33,10 @@ interface ProjectMapProps {
 }
 
 export function ProjectMap(props: ProjectMapProps) {
+  if (props.variant === 'card') {
+    return <ProjectMapCard {...props} />;
+  }
+
   return (
     <Suspense
       fallback={

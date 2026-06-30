@@ -18,7 +18,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { Camera, ArrowRight, Image as ImageIcon } from 'lucide-react';
 import { apiGet } from '@/shared/lib/api';
-import { Card, Button, AuthImage } from '@/shared/ui';
+import { Card, Button } from '@/shared/ui';
 import { DateDisplay } from '@/shared/ui/DateDisplay';
 import { useProjectContextStore } from '@/stores/useProjectContextStore';
 
@@ -136,23 +136,13 @@ export function LatestSitePhotosCard() {
                 className="group relative block aspect-[3/2] w-full overflow-hidden rounded-xl border border-border-light bg-surface-secondary text-left shadow-xs transition-all duration-normal ease-oe hover:shadow-sm focus:outline-none focus:ring-2 focus:ring-oe-blue/40 animate-stagger-in"
                 style={{ animationDelay: `${180 + index * 40}ms` }}
               >
-                <AuthImage
-                  src={photo.file_url}
-                  alt={photo.caption || photo.project_name}
-                  className="h-full w-full object-cover transition-transform duration-slow ease-oe group-hover:scale-[1.04]"
-                  placeholder={
-                    <div className="h-full w-full animate-pulse bg-surface-secondary" />
-                  }
-                  fallback={
-                    <div className="flex h-full w-full items-center justify-center bg-surface-secondary text-content-quaternary">
-                      <ImageIcon size={22} strokeWidth={1.5} />
-                    </div>
-                  }
-                />
+                <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-surface-secondary to-surface-primary text-content-quaternary transition-colors group-hover:text-oe-blue">
+                  <ImageIcon size={22} strokeWidth={1.5} />
+                </div>
                 {/* Bottom gradient carrying the project name + relative date. */}
                 <div className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/75 via-black/35 to-transparent px-2.5 pb-2 pt-6">
                   <div className="truncate text-xs font-semibold text-white">
-                    {photo.project_name}
+                    {photo.caption || photo.project_name}
                   </div>
                   <DateDisplay
                     value={photo.taken_at || photo.created_at}

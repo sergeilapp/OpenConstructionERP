@@ -1,4 +1,4 @@
-import { Fragment, useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
+import { Fragment, lazy, useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
@@ -41,6 +41,7 @@ import {
   ChevronDown,
   ChevronUp,
   MapPin,
+  Map as MapIcon,
 } from 'lucide-react';
 import { Card, CardHeader, CardContent, Button, Badge, Skeleton, ActivityFeed as CrossModuleActivityFeed, EmptyState, ModuleHelpButton, ModuleGuideButton, PartnerLogoBadge } from '@/shared/ui';
 import { dashboardGuide } from './dashboardGuide';
@@ -52,8 +53,7 @@ import { FinanceSummaryCard } from './FinanceSummaryCard';
 import { EstimateResourceCard } from './EstimateResourceCard';
 import { InboxPanel } from '@/features/inbox';
 import { CompactProjectCard } from './components/CompactProjectCard';
-import { DashboardProjectsMap, type ProjectPin } from './components/DashboardProjectsMap';
-import { DashboardSitesPanel } from './components/DashboardSitesPanel';
+import type { ProjectPin } from './components/DashboardProjectsMap';
 import { WeatherSiteWidget } from './components/NewWidgets';
 import { OperationsSnapshotCard } from './components/OperationsSnapshotCard';
 import { LatestSitePhotosCard } from './components/LatestSitePhotosCard';
@@ -75,6 +75,13 @@ import {
   DashboardRollupProvider,
   useDashboardRollupContext,
 } from './context/DashboardRollupContext';
+
+const DashboardProjectsMap = lazy(() =>
+  import('./components/DashboardProjectsMap').then((m) => ({ default: m.DashboardProjectsMap })),
+);
+const DashboardSitesPanel = lazy(() =>
+  import('./components/DashboardSitesPanel').then((m) => ({ default: m.DashboardSitesPanel })),
+);
 
 /* ── Helpers ──────────────────────────────────────────────────────────── */
 
@@ -1917,6 +1924,7 @@ function DashboardPageInner() {
 
   const [showAllActivity, setShowAllActivity] = useState(false);
   const [customizing, setCustomizing] = useState(false);
+  const [showProjectMap, setShowProjectMap] = useState(false);
 
   // Single rollup-context read - every widget on this page shares this one
   // fetch via the provider mounted above. Replaces the per-project fan-out
@@ -2276,23 +2284,48 @@ function DashboardPageInner() {
     map:
       projects && projects.length > 0 ? (
         <div className="animate-card-in" style={{ animationDelay: '220ms' }}>
-          <div className="rounded-xl border border-border-light bg-surface-primary/70 p-3.5">
-            <div className="mb-2.5 flex items-center gap-2">
-              <MapPin size={16} className="text-oe-blue" />
-              <h3 className="text-sm font-semibold text-content-primary">
-                {t('dashboard.map_section_title', {
-                  defaultValue: 'Project locations & weather',
-                })}
-              </h3>
+          {showProjectMap ? (
+            <div className="rounded-xl border border-border-light bg-surface-primary/70 p-3.5">
+              <div className="mb-2.5 flex items-center gap-2">
+                <MapPin size={16} className="text-oe-blue" />
+                <h3 className="text-sm font-semibold text-content-primary">
+                  {t('dashboard.map_section_title', {
+                    defaultValue: 'Project locations & weather',
+                  })}
+                </h3>
+              </div>
+              {/* Map (left) and sites list (right) share one fixed-height row on
+                  desktop so the two columns always line up; both children fill it
+                  (map via h-full, panel via its own h-full + internal scroll). */}
+              <div className="grid grid-cols-1 gap-3 lg:h-[19rem] lg:grid-cols-[1.5fr_1fr]">
+                <DashboardProjectsMap className="lg:h-full" projects={mapPins} />
+                <DashboardSitesPanel projects={mapPins} />
+              </div>
             </div>
-            {/* Map (left) and sites list (right) share one fixed-height row on
-                desktop so the two columns always line up; both children fill it
-                (map via h-full, panel via its own h-full + internal scroll). */}
-            <div className="grid grid-cols-1 gap-3 lg:h-[19rem] lg:grid-cols-[1.5fr_1fr]">
-              <DashboardProjectsMap className="lg:h-full" projects={mapPins} />
-              <DashboardSitesPanel projects={mapPins} />
-            </div>
-          </div>
+          ) : (
+            <Card>
+              <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-oe-blue-subtle text-oe-blue">
+                    <MapIcon size={20} strokeWidth={1.75} />
+                  </div>
+                  <div>
+                    <h3 className="text-sm font-semibold text-content-primary">
+                      {t('dashboard.projects_map_title', { defaultValue: 'Project map' })}
+                    </h3>
+                    <p className="text-xs text-content-tertiary">
+                      {t('dashboard.projects_map_deferred', {
+                        defaultValue: 'Map tiles and site weather load only when you open the map, keeping dashboard startup fast.',
+                      })}
+                    </p>
+                  </div>
+                </div>
+                <Button variant="secondary" size="sm" onClick={() => setShowProjectMap(true)}>
+                  {t('dashboard.projects_map_load', { defaultValue: 'Load map' })}
+                </Button>
+              </div>
+            </Card>
+          )}
         </div>
       ) : null,
 
