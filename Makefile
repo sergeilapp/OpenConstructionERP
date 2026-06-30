@@ -4,6 +4,8 @@
 BACKEND_DIR = backend
 FRONTEND_DIR = frontend
 DOCKER_COMPOSE = docker compose
+VENV_DIR ?= .venv
+PYTHON ?= $(VENV_DIR)/bin/python
 
 # ─── Help ───────────────────────────────────────────────────────────────────
 help: ## Show this help
@@ -29,7 +31,7 @@ stop: ## Stop all services
 	$(DOCKER_COMPOSE) --profile ai down
 
 dev-backend: infra ## Start backend dev server
-	cd $(BACKEND_DIR) && uvicorn app.main:create_app --factory --reload --port 8000
+	$(PYTHON) -m uvicorn app.main:create_app --factory --reload --port 8000 --app-dir $(BACKEND_DIR)
 
 dev-frontend: ## Start frontend dev server
 	cd $(FRONTEND_DIR) && npm run dev
@@ -130,7 +132,9 @@ module-test: ## Test specific module (usage: make module-test NAME=oe_boq)
 # ─── Setup (first time) ──────────────────────────────────────────────────
 setup: ## First-time setup: install backend + frontend dependencies
 	@echo "Installing backend dependencies..."
-	cd $(BACKEND_DIR) && pip install -e .[server]
+	python -m venv $(VENV_DIR)
+	$(PYTHON) -m pip install --upgrade pip
+	$(PYTHON) -m pip install -e ./$(BACKEND_DIR)[server]
 	@echo ""
 	@echo "Installing frontend dependencies..."
 	cd $(FRONTEND_DIR) && npm install

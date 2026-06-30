@@ -20,7 +20,14 @@ sleep 1
 
 # Activate venv and start backend
 echo "[2/3] Starting Backend (uvicorn)..."
-source venv/bin/activate
+if [ -f .venv/bin/activate ]; then
+    source .venv/bin/activate
+elif [ -f venv/bin/activate ]; then
+    source venv/bin/activate
+else
+    echo "  No Python virtualenv found. Run: python -m venv .venv && .venv/bin/python -m pip install -e './backend[server]'"
+    exit 1
+fi
 cd backend
 nohup uvicorn app.main:create_app --factory --reload --port 8000 > /tmp/ocerp-backend.log 2>&1 &
 BACKEND_PID=$!

@@ -269,6 +269,26 @@ class _FakeRunRepo:
         return self.spend
 
 
+class _ExpiringRun(SimpleNamespace):
+    """Raise when code touches ORM-like fields after the repo expires them."""
+
+    _expired = False
+
+    def __getattribute__(self, name: str) -> Any:
+        expired = object.__getattribute__(self, "_expired") if name != "_expired" else False
+        if expired and name in {"id", "project_id", "document_id", "page", "mode", "scale_pixels_per_unit"}:
+            raise RuntimeError(f"expired ORM attribute accessed: {name}")
+        return super().__getattribute__(name)
+
+
+class _ExpiringRunRepo(_FakeRunRepo):
+    async def update_fields(self, run_id: uuid.UUID, **fields: object) -> None:
+        await super().update_fields(run_id, **fields)
+        run = self.runs.get(run_id)
+        if fields.get("status") == "rasterizing":
+            object.__setattr__(run, "_expired", True)
+
+
 class _FakeMeasurementRepo:
     def __init__(self) -> None:
         self.created: list[Any] = []
@@ -336,6 +356,11 @@ def _run_row(**kw: Any) -> Any:
     return SimpleNamespace(**base)
 
 
+def _expiring_run_row(**kw: Any) -> Any:
+    run = _run_row(**kw)
+    return _ExpiringRun(**run.__dict__)
+
+
 def _patch_provider(monkeypatch, *, vision: bool = True, model: str = "claude-sonnet-4-6") -> None:
     """Force the service's provider resolution to a known vision provider."""
 
@@ -399,6 +424,27 @@ async def test_run_reaches_review_with_proposals(monkeypatch, tmp_path) -> None:
     assert all(m.review_status == "proposed" for m in meas_repo.created)
     assert all(m.source == "ai_plan_read" for m in meas_repo.created)
     assert all(m.confidence is not None for m in meas_repo.created)
+
+
+@pytest.mark.asyncio
+async def test_run_snapshots_fields_before_status_update_expires_row(monkeypatch, tmp_path) -> None:
+    """Background runs do not touch expired async ORM attributes after update_fields."""
+    _patch_rasterize(monkeypatch)
+    _patch_call_ai(monkeypatch, _good_response())
+
+    doc = SimpleNamespace(file_path=str(tmp_path / "x.pdf"), pages=3)
+    (tmp_path / "x.pdf").write_bytes(b"%PDF-1.4 stub")
+    run_repo = _ExpiringRunRepo()
+    meas_repo = _FakeMeasurementRepo()
+    svc = _make_service(run_repo=run_repo, meas_repo=meas_repo, doc_repo=_FakeDocRepo(doc))
+    _patch_provider(monkeypatch)
+
+    run = _expiring_run_row()
+    run_repo.runs[run.id] = run
+    await svc._run_plan_read(run.id, user_id=str(run.user_id))
+
+    assert run.__dict__["status"] == "review"
+    assert len(meas_repo.created) == 2
 
 
 @pytest.mark.asyncio
