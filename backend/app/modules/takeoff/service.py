@@ -2711,6 +2711,11 @@ class TakeoffService:
         if run is None:
             logger.warning("plan_read run %s vanished before execution", run_id)
             return
+        run_project_id = run.project_id
+        run_document_id = run.document_id
+        run_page = run.page
+        run_mode = run.mode
+        run_scale_pixels_per_unit = run.scale_pixels_per_unit
 
         provider, api_key, model_override, effective_model = await self._resolve_plan_read_provider(user_id)
         start = _time.monotonic()
@@ -2718,14 +2723,14 @@ class TakeoffService:
 
         # ── rasterize ──────────────────────────────────────────────────────
         try:
-            doc = await self.repo.get_by_id(uuid.UUID(run.document_id))
+            doc = await self.repo.get_by_id(uuid.UUID(run_document_id))
             if doc is None:
                 await self._fail_plan_read(run_id, "document_missing", start)
                 return
             # Read-only back-compat resolution (see recognize path): find the
             # PDF across every platform-owned data root before falling back to
             # the persisted path, so a redeployed volume still resolves.
-            file_path = _find_existing_takeoff_pdf(run.document_id)
+            file_path = _find_existing_takeoff_pdf(run_document_id)
             if file_path is None and doc.file_path:
                 candidate = Path(doc.file_path)
                 if candidate.exists():
@@ -2734,7 +2739,7 @@ class TakeoffService:
                 await self._fail_plan_read(run_id, "pdf_not_on_disk", start)
                 return
             content = file_path.read_bytes()
-            png, media_type, dpi, page_w_pt, page_h_pt = _pr.rasterize_page(content, run.page)
+            png, media_type, dpi, page_w_pt, page_h_pt = _pr.rasterize_page(content, run_page)
         except ImportError:
             await self._fail_plan_read(run_id, "pymupdf_missing", start)
             return
@@ -2749,9 +2754,9 @@ class TakeoffService:
         # heavier room / symbol blocks are added only when the mode asks for
         # them, so the cheapest mode is the cheapest call.
         instructions: list[str] = [PLAN_READ_SCALE_INSTRUCTION]
-        if run.mode in ("rooms", "full"):
+        if run_mode in ("rooms", "full"):
             instructions.append(PLAN_READ_ROOMS_INSTRUCTION)
-        if run.mode in ("symbols", "full"):
+        if run_mode in ("symbols", "full"):
             instructions.append(PLAN_READ_SYMBOLS_INSTRUCTION)
         # A free-form discipline hint would be fenced via fence_user_content
         # before reaching the model (the image itself cannot be fenced). v1
@@ -2790,17 +2795,20 @@ class TakeoffService:
         parsed = extract_json(raw_response)
         result, dropped = _pr.parse_plan_read_response(
             parsed,
-            page=run.page,
+            page=run_page,
             page_width_pt=page_w_pt,
             page_height_pt=page_h_pt,
         )
 
-        scale_ratio = run.scale_pixels_per_unit
+        scale_ratio = run_scale_pixels_per_unit
         if result.scale is not None and scale_ratio is None:
             scale_ratio = _pr.scale_ratio_from_plan_scale(result.scale, page_w_pt, page_h_pt)
 
         proposals = self._build_plan_read_proposals(
-            run=run,
+            run_id=run_id,
+            project_id=run_project_id,
+            document_id=run_document_id,
+            page=run_page,
             result=result,
             page_w_pt=page_w_pt,
             page_h_pt=page_h_pt,
@@ -2835,7 +2843,10 @@ class TakeoffService:
     def _build_plan_read_proposals(
         self,
         *,
-        run: AiTakeoffRun,
+        run_id: uuid.UUID,
+        project_id: uuid.UUID,
+        document_id: str,
+        page: int,
         result: Any,
         page_w_pt: float,
         page_h_pt: float,
@@ -2858,7 +2869,7 @@ class TakeoffService:
         )
 
         out: list[TakeoffMeasurement] = []
-        run_meta_base = {"ai_takeoff_run_id": str(run.id), "page_width_pt": page_w_pt, "page_height_pt": page_h_pt}
+        run_meta_base = {"ai_takeoff_run_id": str(run_id), "page_width_pt": page_w_pt, "page_height_pt": page_h_pt}
 
         for room in result.rooms:
             pdf_points = _pr.norm_polygon_to_pdf_points(room.polygon, page_w_pt, page_h_pt)
@@ -2880,9 +2891,9 @@ class TakeoffService:
             }
             out.append(
                 TakeoffMeasurement(
-                    project_id=run.project_id,
-                    document_id=run.document_id,
-                    page=run.page,
+                    project_id=project_id,
+                    document_id=document_id,
+                    page=page,
                     type="area",
                     group_name="AI plan read",
                     group_color="#8B5CF6",
@@ -2903,9 +2914,9 @@ class TakeoffService:
             centers = _pr.norm_polygon_to_pdf_points(symbol.centers, page_w_pt, page_h_pt)
             out.append(
                 TakeoffMeasurement(
-                    project_id=run.project_id,
-                    document_id=run.document_id,
-                    page=run.page,
+                    project_id=project_id,
+                    document_id=document_id,
+                    page=page,
                     type="count",
                     group_name="AI plan read",
                     group_color="#8B5CF6",
