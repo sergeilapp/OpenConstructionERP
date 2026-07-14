@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [10.10.0] - 2026-07-14
+
+This release adds the first Bedrock calculator-assisted estimating workflow to BOQ editing. The new Truck / Hauling calculator previews single, dual and tri-axle truck options, estimates load counts, truck cost, driver labor, fuel and material cost, and applies the chosen option directly into an OCERP bill position with transparent resource components.
+
+The calculator keeps familiar Bedrock hauling defaults while writing OCERP-native BOQ data. Applied parent lines now use the entered calculator quantity and unit, resource quantities are normalized per parent unit where possible, and load-based material pricing can derive full-truck material quantities when haul-per-load pricing is left blank.
+
+This release also includes TCG import review packages, a safer default takeoff upload cap, and the backend lockfile needed for reproducible CI and release builds.
+
 ## [10.9.0] - 2026-07-10
 
 This release turns site issue management into one connected workflow, from a defect spotted on a drawing or in the 3D model through to its documented closure, and it deepens another wave of delivery modules.
