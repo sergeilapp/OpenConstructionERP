@@ -123,11 +123,7 @@ def _truck_cost(
             return None
         return (total_hours * option.cost_per_hour).quantize(_MONEY, rounding=ROUND_HALF_UP)
     if data.billing_type == "mile":
-        if (
-            option.cost_per_mile is None
-            or option.miles_per_gallon is None
-            or data.fuel_cost_per_gallon is None
-        ):
+        if option.cost_per_mile is None or option.miles_per_gallon is None or data.fuel_cost_per_gallon is None:
             return None
         fuel_total = (data.fuel_cost_per_gallon / option.miles_per_gallon) * distance
         maintenance_total = option.cost_per_mile * distance

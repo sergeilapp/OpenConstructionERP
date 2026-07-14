@@ -66,7 +66,9 @@ class BedrockCalculatorService:
                 "status": "applied",
             },
             warnings=preview.warnings + selected.warnings,
-            skipped_candidates=[option.truck_type for option in preview.options if option.truck_type != selected.truck_type],
+            skipped_candidates=[
+                option.truck_type for option in preview.options if option.truck_type != selected.truck_type
+            ],
         )
 
     def _build_truck_hauling_position(
@@ -119,7 +121,11 @@ def _resources_for_selected_option(
     material_cost = Decimal(selected.material_cost or "0")
     if request.material_unit_cost is not None:
         material_quantity = request.material_quantity
-        if request.billing_type == "load" and request.truck_cost_per_load is None and selected.truck_capacity is not None:
+        if (
+            request.billing_type == "load"
+            and request.truck_cost_per_load is None
+            and selected.truck_capacity is not None
+        ):
             material_quantity = Decimal(selected.truck_capacity) * Decimal(selected.loads)
         material_quantity_per_parent = material_quantity / parent_quantity
         resources.append(
@@ -152,7 +158,11 @@ def _resources_for_selected_option(
             resource_rate = request.truck_cost_per_load or Decimal("0")
         elif request.billing_type == "mile":
             distance_per_parent = _decimal_from_preview(selected.round_trip_distance_miles) / parent_quantity
-            if truck_option is not None and truck_option.miles_per_gallon is not None and request.fuel_cost_per_gallon is not None:
+            if (
+                truck_option is not None
+                and truck_option.miles_per_gallon is not None
+                and request.fuel_cost_per_gallon is not None
+            ):
                 fuel_rate = request.fuel_cost_per_gallon / truck_option.miles_per_gallon
                 resources.append(
                     {
