@@ -6,8 +6,8 @@ Covers bullet 7 of the R7 hardening sweep:
   * Large PDFs (>50 pages or >100 MB) must not OOM the worker.
   * The ``OE_TAKEOFF_MAX_UPLOAD_MB`` env var is the primary gate.
   * When the limit is set, uploads above the cap return 413.
-  * The default (no env var) does NOT cap uploads — memory safety
-    comes from streaming I/O upstream, not a hard byte cap.
+  * The default (no env var) caps uploads at 200 MB so the worker does not
+    disappear mid-request and leave the browser with "Failed to fetch".
   * The per-page text extraction budget is bounded so a 5000-page PDF
     with 100 KB of text per page doesn't construct a 500 MB string
     in a single join — we assert the full_text is not absurdly large.
@@ -168,9 +168,9 @@ class TestTextExtractionBudget:
         monkeypatch.setenv("OE_TAKEOFF_MAX_UPLOAD_MB", "0")
         assert _max_upload_bytes() == 0
 
-    def test_cap_absent_means_unlimited(self, monkeypatch) -> None:
+    def test_cap_absent_uses_safe_default(self, monkeypatch) -> None:
         monkeypatch.delenv("OE_TAKEOFF_MAX_UPLOAD_MB", raising=False)
-        assert _max_upload_bytes() == 0
+        assert _max_upload_bytes() == 200 * 1024 * 1024
 
 
 # ---------------------------------------------------------------------------

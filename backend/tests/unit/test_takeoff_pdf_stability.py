@@ -102,20 +102,20 @@ class TestIsEncryptedPdf:
 
 
 class TestUploadCaps:
-    def test_default_is_unlimited(self, monkeypatch):
-        """No env var set → 0 (unlimited) per product default 2026-05-13."""
+    def test_default_is_safe_200mb(self, monkeypatch):
+        """No env var set -> 200 MB default cap."""
         monkeypatch.delenv("OE_TAKEOFF_MAX_UPLOAD_MB", raising=False)
-        assert _max_upload_bytes() == 0
+        assert _max_upload_bytes() == 200 * 1024 * 1024
 
     def test_zero_env_is_unlimited(self, monkeypatch):
         """Explicit OE_TAKEOFF_MAX_UPLOAD_MB=0 → 0 (unlimited)."""
         monkeypatch.setenv("OE_TAKEOFF_MAX_UPLOAD_MB", "0")
         assert _max_upload_bytes() == 0
 
-    def test_negative_env_is_unlimited(self, monkeypatch):
-        """Negative env value treated as unlimited (defensive)."""
+    def test_negative_env_uses_default(self, monkeypatch):
+        """Negative env value treated as default (defensive)."""
         monkeypatch.setenv("OE_TAKEOFF_MAX_UPLOAD_MB", "-5")
-        assert _max_upload_bytes() == 0
+        assert _max_upload_bytes() == 200 * 1024 * 1024
 
     def test_env_override(self, monkeypatch):
         """Operator-configured cap returns bytes for that many MB."""
@@ -123,9 +123,9 @@ class TestUploadCaps:
         assert _max_upload_bytes() == 50 * 1024 * 1024
 
     def test_garbage_env_falls_back_to_default(self, monkeypatch):
-        """Unparseable env value falls back to unlimited."""
+        """Unparseable env value falls back to the safe default."""
         monkeypatch.setenv("OE_TAKEOFF_MAX_UPLOAD_MB", "not-a-number")
-        assert _max_upload_bytes() == 0
+        assert _max_upload_bytes() == 200 * 1024 * 1024
 
 
 class TestOcrTuning:
@@ -317,15 +317,13 @@ class TestUploadDocumentGates:
         assert "OE_TAKEOFF_MAX_UPLOAD_MB" in detail
 
     @pytest.mark.asyncio
-    async def test_oversize_upload_accepted_when_unlimited(self, monkeypatch):
-        """Product default: no env → no 413 even for huge payloads.
+    async def test_oversize_upload_accepted_when_explicitly_unlimited(self, monkeypatch):
+        """Explicit OE_TAKEOFF_MAX_UPLOAD_MB=0 disables the default cap.
 
-        The upload gate must not be the place that rejects large files;
-        memory safety comes from streaming chunked I/O upstream, not from
-        a fixed cap. We only verify the *gate* passes — downstream
-        parser failure is irrelevant for this regression test.
+        We only verify the *gate* passes — downstream parser failure is
+        irrelevant for this regression test.
         """
-        monkeypatch.delenv("OE_TAKEOFF_MAX_UPLOAD_MB", raising=False)
+        monkeypatch.setenv("OE_TAKEOFF_MAX_UPLOAD_MB", "0")
         svc = _make_service()
         # 2 MB payload; in production this could be 5 GB — the gate
         # logic itself is O(1), so size is immaterial to the assertion.

@@ -138,10 +138,7 @@ const UNIT_OPTIONS: UnitOption[] = [
   'sq',
 ];
 
-// No upload size cap — kept Number.POSITIVE_INFINITY as a sentinel so
-// the existing filter expressions still type-check while allowing any
-// payload through. Per product policy.
-const MAX_FILE_SIZE_BYTES = Number.POSITIVE_INFINITY;
+const MAX_FILE_SIZE_BYTES = 200 * 1024 * 1024;
 
 /* ── Helpers ───────────────────────────────────────────────────────────── */
 
@@ -250,8 +247,7 @@ function DropZone({
 
       const files = Array.from(e.dataTransfer.files).filter(
         (f) =>
-          (f.type === 'application/pdf' || f.name.toLowerCase().endsWith('.pdf')) &&
-          f.size <= MAX_FILE_SIZE_BYTES,
+          f.type === 'application/pdf' || f.name.toLowerCase().endsWith('.pdf'),
       );
       if (files.length > 0) {
         onFilesSelected(files);
@@ -270,8 +266,7 @@ function DropZone({
     (e: React.ChangeEvent<HTMLInputElement>) => {
       const files = Array.from(e.target.files || []).filter(
         (f) =>
-          (f.type === 'application/pdf' || f.name.toLowerCase().endsWith('.pdf')) &&
-          f.size <= MAX_FILE_SIZE_BYTES,
+          f.type === 'application/pdf' || f.name.toLowerCase().endsWith('.pdf'),
       );
       if (files.length > 0) {
         onFilesSelected(files);
@@ -1484,11 +1479,22 @@ export function TakeoffPage() {
       const uploadUrl = selectedProjectId
         ? `/api/v1/takeoff/documents/upload/?project_id=${encodeURIComponent(selectedProjectId)}`
         : `/api/v1/takeoff/documents/upload/`;
-      const response = await fetch(uploadUrl, {
-        method: 'POST',
-        headers,
-        body: formData,
-      });
+      let response: Response;
+      try {
+        response = await fetch(uploadUrl, {
+          method: 'POST',
+          headers,
+          body: formData,
+        });
+      } catch (err) {
+        const message = err instanceof Error ? err.message : '';
+        if (/failed to fetch/i.test(message)) {
+          throw new Error(
+            'Upload connection failed. Check that the backend is running; if the PDF is very large, reduce the file or raise OE_TAKEOFF_MAX_UPLOAD_MB on the server.',
+          );
+        }
+        throw err;
+      }
 
       if (!response.ok) {
         // Surface the server's structured error message (FastAPI returns
@@ -1643,6 +1649,15 @@ export function TakeoffPage() {
       // Clear any previous upload error toast so stale errors don't linger on retry
       setUploadErrorToast(null);
       for (const file of files) {
+        if (file.size > MAX_FILE_SIZE_BYTES) {
+          const msg = t('takeoff.upload_too_large', {
+            defaultValue: 'PDF is too large ({{actual}}). The takeoff upload limit is {{limit}}.',
+            actual: formatFileSize(file.size),
+            limit: formatFileSize(MAX_FILE_SIZE_BYTES),
+          });
+          setUploadErrorToast(msg);
+          continue;
+        }
         // Create an optimistic local entry immediately
         const tempId = `temp-${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
         const localDoc: UploadedDocument = {
@@ -1705,7 +1720,7 @@ export function TakeoffPage() {
         });
       }
     },
-    [uploadMutation, refetchServerDocuments],
+    [uploadMutation, refetchServerDocuments, t],
   );
 
   const handleRemoveDocument = useCallback(
@@ -2405,8 +2420,7 @@ export function TakeoffPage() {
             onChange={(e) => {
               const files = Array.from(e.target.files || []).filter(
                 (f) =>
-                  (f.type === 'application/pdf' || f.name.toLowerCase().endsWith('.pdf')) &&
-                  f.size <= MAX_FILE_SIZE_BYTES,
+                  f.type === 'application/pdf' || f.name.toLowerCase().endsWith('.pdf'),
               );
               if (files.length > 0) handleFilesSelected(files);
               if (filmstripUploadRef.current) filmstripUploadRef.current.value = '';

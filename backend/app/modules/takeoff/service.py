@@ -78,20 +78,21 @@ def _is_encrypted_pdf(content: bytes) -> bool:
 def _max_upload_bytes() -> int:
     """Effective per-upload byte cap from ``OE_TAKEOFF_MAX_UPLOAD_MB``.
 
-    Returns 0 ("unlimited") when the env var is missing, empty,
-    unparseable, zero, or negative - matches the product policy
-    (v2.9.12) of NOT capping uploads by default. Operators on
-    constrained deployments can opt in via the env var.
+    Defaults to 200 MB so a large local PDF cannot make the worker disappear
+    mid-request and surface as the browser's opaque "Failed to fetch". Operators
+    can still set ``OE_TAKEOFF_MAX_UPLOAD_MB=0`` for unlimited uploads.
     """
     raw = os.environ.get("OE_TAKEOFF_MAX_UPLOAD_MB", "").strip()
     if not raw:
-        return 0
+        return 200 * 1024 * 1024
     try:
         mb = int(raw)
     except (ValueError, TypeError):
+        return 200 * 1024 * 1024
+    if mb == 0:
         return 0
-    if mb <= 0:
-        return 0
+    if mb < 0:
+        return 200 * 1024 * 1024
     return mb * 1024 * 1024
 
 
