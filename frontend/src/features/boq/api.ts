@@ -64,6 +64,87 @@ export interface Position {
   metadata_?: Record<string, unknown>;
 }
 
+export type BedrockTruckBillingType = 'hour' | 'mile' | 'load';
+export type BedrockTruckQuantityUnit = 'CY' | 'ton' | 'load';
+
+export interface BedrockReviewFlag {
+  code: string;
+  severity: 'info' | 'warning' | 'error';
+  message: string;
+  requires_resolution: boolean;
+}
+
+export interface BedrockTruckOptionInput {
+  kind: string;
+  volume_capacity?: number | string | null;
+  weight_capacity?: number | string | null;
+  cost_per_hour?: number | string | null;
+  cost_per_mile?: number | string | null;
+  miles_per_gallon?: number | string | null;
+}
+
+export interface BedrockTruckPreviewRequest {
+  material_quantity: number | string;
+  quantity_unit: BedrockTruckQuantityUnit;
+  material_name?: string;
+  material_unit_cost?: number | string | null;
+  quarry_distance: number | string;
+  billing_type: BedrockTruckBillingType;
+  truck_options: BedrockTruckOptionInput[];
+  truck_cost_per_load?: number | string | null;
+  truck_cost_classification?: 'haul_only' | 'delivered_material' | 'subcontracted_hauling' | 'unknown';
+  fuel_cost_per_gallon?: number | string | null;
+  speed_mph?: number | string;
+  time_at_quarry_minutes?: number | string;
+  time_at_job_site_minutes?: number | string;
+  driving_labor_rate?: number | string | null;
+  driving_laborer_count?: number | string;
+}
+
+export interface BedrockTruckOptionPreview {
+  truck_type: string;
+  truck_capacity: string | null;
+  truck_capacity_unit: string | null;
+  loads: number;
+  round_trip_distance_miles: string;
+  total_hours: string;
+  truck_cost: string | null;
+  driving_labor_cost: string | null;
+  material_cost: string | null;
+  total_cost: string | null;
+  unit_cost: string | null;
+  billing_type: BedrockTruckBillingType;
+  cost_method: string;
+  warnings: BedrockReviewFlag[];
+  review_flags: BedrockReviewFlag[];
+  formula_trace: Array<{ name: string; formula: string; value: string | number | null }>;
+}
+
+export interface BedrockTruckPreviewResponse {
+  calculator_type: 'truck_hauling';
+  calculator_version: string;
+  normalized_inputs: Record<string, string | number>;
+  options: BedrockTruckOptionPreview[];
+  review_flags: BedrockReviewFlag[];
+  warnings: BedrockReviewFlag[];
+}
+
+export interface BedrockTruckApplyRequest {
+  boq_id: string;
+  preview: BedrockTruckPreviewRequest;
+  selected_truck_type: string;
+  ordinal?: string | null;
+  description?: string | null;
+}
+
+export interface BedrockTruckApplyResponse {
+  position_ids: string[];
+  calculator_run: Record<string, unknown>;
+  warnings: BedrockReviewFlag[];
+  skipped_candidates: string[];
+  validation_status: 'applied';
+}
+
 /**
  * Stamped onto `metadata.link_propagation` by the backend AFTER a master
  * definition edit (Issue #127). `propagated_to` counts the linked instances
@@ -1394,6 +1475,16 @@ export const boqApi = {
   getPosition: (posId: string) => apiGet<Position>(`/v1/boq/positions/${posId}`),
   addPosition: (data: CreatePositionData) =>
     apiPost<Position>(`/v1/boq/boqs/${data.boq_id}/positions/`, data),
+  previewBedrockTruckHauling: (data: BedrockTruckPreviewRequest) =>
+    apiPost<BedrockTruckPreviewResponse, BedrockTruckPreviewRequest>(
+      '/v1/bedrock-calculators/truck-hauling/preview/',
+      data,
+    ),
+  applyBedrockTruckHauling: (data: BedrockTruckApplyRequest) =>
+    apiPost<BedrockTruckApplyResponse, BedrockTruckApplyRequest>(
+      '/v1/bedrock-calculators/truck-hauling/apply/',
+      data,
+    ),
   updatePosition: (posId: string, data: UpdatePositionData) =>
     apiPatch<Position>(`/v1/boq/positions/${posId}`, data),
 

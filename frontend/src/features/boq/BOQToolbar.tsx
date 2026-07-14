@@ -51,6 +51,7 @@ import {
   ChevronDown,
   Keyboard,
   Leaf,
+  Truck,
   WrapText,
   PieChart,
   FoldVertical,
@@ -72,6 +73,7 @@ export interface BOQToolbarProps {
   onAddSection: () => void;
   onOpenCostDb: () => void;
   onOpenAssembly: () => void;
+  onOpenBedrockTruck?: () => void;
   // Import
   onImportClick: () => void;
   isImporting: boolean;
@@ -167,6 +169,7 @@ export function BOQToolbar({
   onAddSection,
   onOpenCostDb,
   onOpenAssembly,
+  onOpenBedrockTruck,
   onImportClick,
   isImporting,
   importInputRef,
@@ -303,6 +306,17 @@ export function BOQToolbar({
             >
               <span className="hidden xl:inline">{t('boq.from_assembly', { defaultValue: 'From Assembly' })}</span>
             </Button>
+            {onOpenBedrockTruck && (
+              <Button
+                variant="secondary"
+                size="sm"
+                icon={<Truck size={15} />}
+                onClick={onOpenBedrockTruck}
+                title={t('boq.bedrock_truck_calculator', { defaultValue: 'Bedrock Truck Calculator' })}
+              >
+                <span className="hidden xl:inline">{t('boq.bedrock_truck_short', { defaultValue: 'Bedrock Truck' })}</span>
+              </Button>
+            )}
           </div>
 
           <div className="w-px h-6 bg-border-light hidden sm:block" />

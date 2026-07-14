@@ -31,6 +31,9 @@ import {
   type CostAutocompleteItem,
   type CopilotAction,
   type CopilotResource,
+  type BedrockTruckApplyResponse,
+  type BedrockTruckPreviewRequest,
+  type BedrockTruckPreviewResponse,
   DEFAULT_MAX_NESTING_DEPTH,
 } from './api';
 import { resourceSplitMoneyTotals, nextResourceSplitMode, type ResourceSplitMode } from './grid/columnDefs';
@@ -101,6 +104,7 @@ import { BOQVariablesDialog } from './BOQVariablesDialog';
 import { CostPerAreaBenchmark } from './CostPerAreaBenchmark';
 import { RenumberDialog } from './RenumberDialog';
 import { LinkedPositionsModal } from './LinkedPositionsModal';
+import { BedrockTruckCalculatorPanel } from './BedrockTruckCalculatorPanel';
 
 /* ── Re-exports for tests ────────────────────────────────────────────── */
 
@@ -1164,6 +1168,7 @@ export function BOQEditorPage() {
   const [aiCopilotPositionId, setAiCopilotPositionId] = useState<string | null>(null);
   const [costDbModalOpen, setCostDbModalOpen] = useState(false);
   const [assemblyModalOpen, setAssemblyModalOpen] = useState(false);
+  const [bedrockTruckOpen, setBedrockTruckOpen] = useState(false);
   const [excelPasteOpen, setExcelPasteOpen] = useState(false);
   const [customColumnsOpen, setCustomColumnsOpen] = useState(false);
   const [variablesOpen, setVariablesOpen] = useState(false);
@@ -1190,6 +1195,44 @@ export function BOQEditorPage() {
     document.addEventListener('openCostDbModal', handler);
     return () => document.removeEventListener('openCostDbModal', handler);
   }, []);
+
+  const previewBedrockTruck = useCallback(
+    (data: BedrockTruckPreviewRequest): Promise<BedrockTruckPreviewResponse> =>
+      boqApi.previewBedrockTruckHauling(data),
+    [],
+  );
+
+  const applyBedrockTruck = useCallback(
+    async ({ request, selectedTruckType }: { request: BedrockTruckPreviewRequest; selectedTruckType: string }): Promise<BedrockTruckApplyResponse> => {
+      if (!boqId) throw new Error('BOQ is not loaded');
+      const response = await boqApi.applyBedrockTruckHauling({
+        boq_id: boqId,
+        preview: request,
+        selected_truck_type: selectedTruckType,
+      });
+      invalidateAll();
+      const firstPositionId = response.position_ids[0];
+      if (firstPositionId) {
+        setNewPositionId(firstPositionId);
+        setSearchParams((params) => {
+          const next = new URLSearchParams(params);
+          next.set('highlight', firstPositionId);
+          return next;
+        });
+        setTimeout(() => setNewPositionId(null), 3000);
+      }
+      addToast({
+        type: 'success',
+        title: t('boq.bedrock_truck_applied', { defaultValue: 'Bedrock truck line applied' }),
+        message: t('boq.bedrock_truck_applied_msg', {
+          defaultValue: 'Created {{count}} BOQ position from the selected truck option.',
+          count: response.position_ids.length,
+        }),
+      });
+      return response;
+    },
+    [addToast, boqId, invalidateAll, setSearchParams, t],
+  );
 
   // Idle-time prefetch for the cost-DB modal aggregates. The modal calls
   // /v1/costs/regions/ and /v1/costs/category-tree/ on open; both are
@@ -4687,6 +4730,7 @@ export function BOQEditorPage() {
           onAddSection={handleAddSection}
           onOpenCostDb={() => setCostDbModalOpen(true)}
           onOpenAssembly={() => setAssemblyModalOpen(true)}
+          onOpenBedrockTruck={() => setBedrockTruckOpen((open) => !open)}
           onImportClick={() => importInputRef.current?.click()}
           isImporting={isImporting}
           importInputRef={importInputRef}
@@ -4752,6 +4796,15 @@ export function BOQEditorPage() {
           } : null}
         />
       </div>
+
+      {bedrockTruckOpen && boqId && (
+        <BedrockTruckCalculatorPanel
+          boqId={boqId}
+          preview={previewBedrockTruck}
+          apply={applyBedrockTruck}
+          onClose={() => setBedrockTruckOpen(false)}
+        />
+      )}
 
       {/* ── Tips panel (collapsed by default, compact) ──────────────── */}
       {tips.length > 0 && !hasPositions && (
