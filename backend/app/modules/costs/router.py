@@ -203,6 +203,15 @@ _REGION_CURRENCY_LEGACY: dict[str, str] = {
     "VN_NATIONAL": "VND",
     "ID_NATIONAL": "IDR",
     "GR_NATIONAL": "EUR",
+    # BedRock partner/import catalogues are curated USD datasets whose region
+    # ids predate the CWICR ``XX_CITY`` convention and intentionally use the
+    # package namespace as stored in imported rows.
+    "BEDROCK-REVIEW": "USD",
+    "BEDROCK-MAIN": "USD",
+    "BEDROCK-TCG-REVIEW": "USD",
+    "BEDROCK-TCG-V4-REVIEW": "USD",
+    "BEDROCK-TCG-EXTRACT-2": "USD",
+    "BEDROCK-TCG-V4-FD-TEST": "USD",
     # NOTE: ``PT_SAOPAULO`` is intentionally NOT registered - it was a
     # mislabeled tag (São Paulo is Brazil; canonical key is ``BR_SAOPAULO``,
     # supplied by the v3 registry). A stray ``PT_SAOPAULO`` row should hit
@@ -231,7 +240,7 @@ _REGION_FORMAT_RE = _re.compile(r"^[A-Z]{2,3}_[A-Z0-9]+$")
 
 def _is_valid_region_format(region: str) -> bool:
     """Return True when ``region`` looks like a canonical CWICR region tag."""
-    return bool(_REGION_FORMAT_RE.match(region))
+    return bool(_REGION_FORMAT_RE.match(region)) or region in _REGION_CURRENCY
 
 
 def _resolve_currency(

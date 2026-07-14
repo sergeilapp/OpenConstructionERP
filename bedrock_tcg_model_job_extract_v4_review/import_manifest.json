@@ -6,7 +6,7 @@
   "source": "bedrock_tcg_model_job_extract_v4_review",
   "region": "BEDROCK-TCG-V4-REVIEW",
   "review_only": true,
-  "import_instructions": "Review-only package for OCERP app inspection. Run scripts/import_tcg_package.py with --dry-run first, then --cleanup to re-import.",
+  "import_instructions": "Review-only package for OCERP app inspection. Run scripts/import_tcg_package.py from OCERP/backend with --validate-only, --dry-run, then --cleanup to re-import.",
   "provenance": {
     "contact_id": 24929,
     "model_job_group_id": "tcg_24929_model_job",
@@ -27,10 +27,10 @@
     ]
   },
   "summary": {
-    "catalog_resources": 37,
-    "cost_items": 12,
+    "catalog_resources": 45,
+    "cost_items": 17,
     "assemblies": 5,
-    "scope": "Reviewed TCG v4 CostItems and assemblies for app proof-of-concept review, with French drain superseded by delivered-material reassessment"
+    "scope": "Reviewed TCG v4 CostItems and assemblies for app proof-of-concept review, with French drain superseded by delivered-material reassessment and BedRock truck travel resources/cost items added from observed travel data"
   },
   "carried_review_flags": [
     "TCG-P7-R2",

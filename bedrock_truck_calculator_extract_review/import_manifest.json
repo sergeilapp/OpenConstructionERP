@@ -1,0 +1,26 @@
+{
+  "manifest_version": "1.0",
+  "generated_at": "2026-07-13T00:00:00",
+  "package_name": "Bedrock Truck Calculator Extract Review",
+  "package_path": "OCERP/bedrock_truck_calculator_extract_review/",
+  "source": "bedrock_truck_calculator_extract_review",
+  "region": "BEDROCK-REVIEW",
+  "review_only": true,
+  "import_instructions": "Review-only standalone truck calculator package. Run scripts/import_tcg_package.py from OCERP/backend with --validate-only, --dry-run, then --cleanup for an idempotent import.",
+  "provenance": {
+    "source_docs": [
+      "OCERP/docs/TCG-Project/Truck_Cost_Calculator_Spec.md",
+      "OCERP/bedrock_tcg_model_job_extract_v4_review/README.md",
+      "OCERP/bedrock_tcg_model_job_extract_v4_review/validation_report.md"
+    ],
+    "extracted_from_package": "OCERP/bedrock_tcg_model_job_extract_v4_review/",
+    "extraction_note": "Truck calculator resources and CostItems were originally added to the TCG v4 review package; this package separates them under Bedrock truck-specific codes."
+  },
+  "summary": {
+    "catalog_resources": 9,
+    "cost_items": 3,
+    "assemblies": 0,
+    "scope": "Standalone review package for Bedrock truck operating, maintenance, fuel, driving labor, truck capacity metadata, and observed local round-trip CostItems."
+  },
+  "carried_review_flags": []
+}

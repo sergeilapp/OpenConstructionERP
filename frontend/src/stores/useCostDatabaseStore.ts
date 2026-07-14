@@ -69,6 +69,7 @@ export const REGION_MAP: Record<string, RegionInfo> = {
   VN_NATIONAL: { label: 'Vietnam (VND)', name: 'Vietnam (Dinh Muc)', flag: 'vn', currency: 'VND' },
   ID_NATIONAL: { label: 'Indonesia (IDR)', name: 'Indonesia (AHSP)', flag: 'id', currency: 'IDR' },
   GR_NATIONAL: { label: 'Greece (EUR)', name: 'Greece (GGDE)', flag: 'gr', currency: 'EUR' },
+  'BEDROCK-REVIEW': { label: 'Bedrock Review (USD)', name: 'Bedrock Review', flag: 'us', currency: 'USD' },
   'BEDROCK-MAIN': { label: 'Bedrock Siteworks (USD)', name: 'Bedrock Siteworks', flag: 'us', currency: 'USD' },
   'BEDROCK-TCG-REVIEW': { label: 'Bedrock TCG Review (USD)', name: 'TCG Review', flag: 'us', currency: 'USD' },
   'BEDROCK-TCG-V4-REVIEW': { label: 'Bedrock TCG V4 Review (USD)', name: 'TCG V4 Review', flag: 'us', currency: 'USD' },

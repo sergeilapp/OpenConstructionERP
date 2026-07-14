@@ -65,6 +65,14 @@ _REGION_CURRENCY_LEGACY: dict[str, str] = {
     "VN_NATIONAL": "VND",
     "ID_NATIONAL": "IDR",
     "GR_NATIONAL": "EUR",
+    # BedRock partner/import catalogues are curated USD datasets whose region
+    # ids predate the CWICR ``XX_CITY`` convention and intentionally use the
+    # package namespace as stored in imported rows.
+    "BEDROCK-MAIN": "USD",
+    "BEDROCK-TCG-REVIEW": "USD",
+    "BEDROCK-TCG-V4-REVIEW": "USD",
+    "BEDROCK-TCG-EXTRACT-2": "USD",
+    "BEDROCK-TCG-V4-FD-TEST": "USD",
     # NOTE: ``PT_SAOPAULO`` is intentionally NOT registered - it was a
     # mislabeled tag (São Paulo is Brazil; canonical key is ``BR_SAOPAULO``,
     # supplied by the v3 registry). A stray ``PT_SAOPAULO`` row should hit the
@@ -284,7 +292,7 @@ class CostItemResponse(BaseModel):
         """
         if (not self.currency or not self.currency.strip()) and self.region:
             normalized = self.region.strip().upper()
-            if not _REGION_FORMAT_RE.match(normalized):
+            if not _REGION_FORMAT_RE.match(normalized) and normalized not in _REGION_CURRENCY_FALLBACK:
                 logger.warning(
                     "Cost row uses non-canonical region tag %r (expected ``XX_CITY``); currency falls back to EUR.",
                     normalized,

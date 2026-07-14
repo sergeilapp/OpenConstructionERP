@@ -844,7 +844,8 @@
     "metadata": {
       "review_only": true,
       "source_job_id": 38254,
-      "equipment_rate_missing": true
+      "equipment_rate_missing": true,
+      "single_component_exception_reason": "Review-only labor placement scope; equipment rate is explicitly missing pending review"
     }
   },
   {
@@ -886,6 +887,241 @@
       "review_only": true,
       "source_job_id": 38254,
       "single_component_exception_reason": "Review-only placeholder pending labor/equipment split"
+    }
+  },
+  {
+    "code": "TCG-TRUCK-OPERATING-LOCAL-MI",
+    "description": "BedRock truck operating cost - local mileage split into fuel and maintenance",
+    "descriptions": {},
+    "unit": "MI",
+    "rate": 4.375,
+    "currency": "USD",
+    "source": "bedrock_tcg_model_job_extract_v4_review",
+    "region": "BEDROCK-TCG-V4-REVIEW",
+    "classification": {
+      "masterformat": "01 50 00",
+      "collection": "General Requirements",
+      "category": "Mobilization",
+      "department": "Logistics",
+      "section": "Truck Travel"
+    },
+    "components": [
+      {
+        "code": "TCG-RES-TRUCK-FUEL-LOCAL-MI",
+        "resource_code": "TCG-RES-TRUCK-FUEL-LOCAL-MI",
+        "name": "Truck fuel - local mileage",
+        "type": "equipment",
+        "resource_type": "equipment",
+        "quantity": 1.0,
+        "unit_rate": 1.375,
+        "cost": 1.375,
+        "unit": "MI"
+      },
+      {
+        "code": "TCG-RES-TRUCK-MAINT-LOCAL-MI",
+        "resource_code": "TCG-RES-TRUCK-MAINT-LOCAL-MI",
+        "name": "Truck maintenance - local mileage",
+        "type": "equipment",
+        "resource_type": "equipment",
+        "quantity": 1.0,
+        "unit_rate": 3.0,
+        "cost": 3.0,
+        "unit": "MI"
+      }
+    ],
+    "tags": ["tcg_v4_review", "review_only", "truck", "travel", "componentized"],
+    "metadata": {
+      "review_only": true,
+      "source_doc": "docs/TCG-Project/Truck_Cost_Calculator_Spec.md",
+      "observed_examples_used": [1, 3, 4],
+      "excluded_examples": [2],
+      "excluded_reason": "Example 2 has anomalous $6.00/mi maintenance and was intentionally ignored for this default.",
+      "formula_basis": "fuel_per_mile + maintenance_per_mile"
+    }
+  },
+  {
+    "code": "TCG-TRUCK-OPERATING-LONG-MI",
+    "description": "BedRock truck operating cost - longer-distance mileage split into fuel and maintenance",
+    "descriptions": {},
+    "unit": "MI",
+    "rate": 4.875,
+    "currency": "USD",
+    "source": "bedrock_tcg_model_job_extract_v4_review",
+    "region": "BEDROCK-TCG-V4-REVIEW",
+    "classification": {
+      "masterformat": "01 50 00",
+      "collection": "General Requirements",
+      "category": "Mobilization",
+      "department": "Logistics",
+      "section": "Truck Travel"
+    },
+    "components": [
+      {
+        "code": "TCG-RES-TRUCK-FUEL-LONG-MI",
+        "resource_code": "TCG-RES-TRUCK-FUEL-LONG-MI",
+        "name": "Truck fuel - long-distance mileage",
+        "type": "equipment",
+        "resource_type": "equipment",
+        "quantity": 1.0,
+        "unit_rate": 1.625,
+        "cost": 1.625,
+        "unit": "MI"
+      },
+      {
+        "code": "TCG-RES-TRUCK-MAINT-LONG-MI",
+        "resource_code": "TCG-RES-TRUCK-MAINT-LONG-MI",
+        "name": "Truck maintenance - long-distance mileage",
+        "type": "equipment",
+        "resource_type": "equipment",
+        "quantity": 1.0,
+        "unit_rate": 3.25,
+        "cost": 3.25,
+        "unit": "MI"
+      }
+    ],
+    "tags": ["tcg_v4_review", "review_only", "truck", "travel", "componentized"],
+    "metadata": {
+      "review_only": true,
+      "source_doc": "docs/TCG-Project/Truck_Cost_Calculator_Spec.md",
+      "observed_examples_used": [5, 6, 7],
+      "formula_basis": "fuel_per_mile + maintenance_per_mile"
+    }
+  },
+  {
+    "code": "TCG-TRUCK-DRIVING-LABOR-LOCAL-HR",
+    "description": "BedRock truck driving labor - local/default observed rate",
+    "descriptions": {},
+    "unit": "HR",
+    "rate": 95.0,
+    "currency": "USD",
+    "source": "bedrock_tcg_model_job_extract_v4_review",
+    "region": "BEDROCK-TCG-V4-REVIEW",
+    "classification": {
+      "masterformat": "01 50 00",
+      "collection": "General Requirements",
+      "category": "Mobilization",
+      "department": "Logistics",
+      "section": "Truck Travel"
+    },
+    "components": [
+      {
+        "code": "TCG-RES-DRIVING-LABOR-95HR",
+        "resource_code": "TCG-RES-DRIVING-LABOR-95HR",
+        "name": "Driving labor",
+        "type": "labor",
+        "resource_type": "labor",
+        "quantity": 1.0,
+        "unit_rate": 95.0,
+        "cost": 95.0,
+        "unit": "HR"
+      }
+    ],
+    "tags": ["tcg_v4_review", "review_only", "truck", "travel", "labor"],
+    "metadata": {
+      "review_only": true,
+      "observed_examples_used": [1, 2, 3, 4],
+      "rate_basis": "Driving labor dollars divided by total man-hours",
+      "single_component_exception_reason": "Useful unit conversion from observed driving labor dollars to hourly labor rate"
+    }
+  },
+  {
+    "code": "TCG-TRUCK-DRIVING-LABOR-LONG-HR",
+    "description": "BedRock truck driving labor - longer-distance observed rate",
+    "descriptions": {},
+    "unit": "HR",
+    "rate": 85.0,
+    "currency": "USD",
+    "source": "bedrock_tcg_model_job_extract_v4_review",
+    "region": "BEDROCK-TCG-V4-REVIEW",
+    "classification": {
+      "masterformat": "01 50 00",
+      "collection": "General Requirements",
+      "category": "Mobilization",
+      "department": "Logistics",
+      "section": "Truck Travel"
+    },
+    "components": [
+      {
+        "code": "TCG-RES-DRIVING-LABOR-85HR",
+        "resource_code": "TCG-RES-DRIVING-LABOR-85HR",
+        "name": "Driving labor - long distance observed rate",
+        "type": "labor",
+        "resource_type": "labor",
+        "quantity": 1.0,
+        "unit_rate": 85.0,
+        "cost": 85.0,
+        "unit": "HR"
+      }
+    ],
+    "tags": ["tcg_v4_review", "review_only", "truck", "travel", "labor"],
+    "metadata": {
+      "review_only": true,
+      "observed_examples_used": [5, 6, 7],
+      "rate_basis": "Driving labor dollars divided by total man-hours",
+      "single_component_exception_reason": "Useful unit conversion from observed longer-distance driving labor dollars to hourly labor rate"
+    }
+  },
+  {
+    "code": "TCG-TRUCK-LOCAL-84MI-ROUNDTRIP-2MAN",
+    "description": "BedRock observed local truck round trip - 84 miles with two-man driving crew",
+    "descriptions": {},
+    "unit": "ROUNDTRIP",
+    "rate": 700.0,
+    "currency": "USD",
+    "source": "bedrock_tcg_model_job_extract_v4_review",
+    "region": "BEDROCK-TCG-V4-REVIEW",
+    "classification": {
+      "masterformat": "01 50 00",
+      "collection": "General Requirements",
+      "category": "Mobilization",
+      "department": "Logistics",
+      "section": "Truck Travel"
+    },
+    "components": [
+      {
+        "code": "TCG-RES-TRUCK-FUEL-LOCAL-MI",
+        "resource_code": "TCG-RES-TRUCK-FUEL-LOCAL-MI",
+        "name": "Truck fuel - 84 miles",
+        "type": "equipment",
+        "resource_type": "equipment",
+        "quantity": 84.0,
+        "unit_rate": 1.375,
+        "cost": 115.5,
+        "unit": "MI"
+      },
+      {
+        "code": "TCG-RES-TRUCK-MAINT-LOCAL-MI",
+        "resource_code": "TCG-RES-TRUCK-MAINT-LOCAL-MI",
+        "name": "Truck maintenance - 84 miles",
+        "type": "equipment",
+        "resource_type": "equipment",
+        "quantity": 84.0,
+        "unit_rate": 3.0,
+        "cost": 252.0,
+        "unit": "MI"
+      },
+      {
+        "code": "TCG-RES-DRIVING-LABOR-95HR",
+        "resource_code": "TCG-RES-DRIVING-LABOR-95HR",
+        "name": "Driving labor - 2 men x 1.75 hours",
+        "type": "labor",
+        "resource_type": "labor",
+        "quantity": 3.5,
+        "unit_rate": 95.0,
+        "cost": 332.5,
+        "unit": "HR"
+      }
+    ],
+    "tags": ["tcg_v4_review", "review_only", "truck", "travel", "roundtrip"],
+    "metadata": {
+      "review_only": true,
+      "source_doc": "docs/TCG-Project/Truck_Cost_Calculator_Spec.md",
+      "observed_examples_used": [1, 3, 4],
+      "round_trip_distance_miles": 84,
+      "drive_hours_per_round_trip": 1.75,
+      "implied_average_speed_mph": 48,
+      "crew_size": 2,
+      "formula_basis": "round_trip_miles * (fuel_per_mile + maintenance_per_mile) + crew_size * drive_hours * labor_rate"
     }
   }
 ]

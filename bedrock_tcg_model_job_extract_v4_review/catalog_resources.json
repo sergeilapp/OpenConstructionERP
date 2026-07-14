@@ -60,6 +60,180 @@
     }
   },
   {
+    "resource_code": "TCG-RES-DRIVING-LABOR-85HR",
+    "name": "TCG Driving Labor - Long Distance Observed Rate",
+    "resource_type": "labor",
+    "category": "Labor",
+    "unit": "HR",
+    "base_price": 85.0,
+    "min_price": 0,
+    "max_price": 0,
+    "currency": "USD",
+    "source": "bedrock_tcg_model_job_extract_v4_review",
+    "region": "BEDROCK-TCG-V4-REVIEW",
+    "specifications": {
+      "masterformat": "01 50 00"
+    },
+    "metadata": {
+      "review_only": true,
+      "source_evidence": "Observed TCG travel examples 5-7",
+      "rate_basis": "Driving labor dollars divided by total man-hours"
+    }
+  },
+  {
+    "resource_code": "TCG-RES-TRUCK-FUEL-LOCAL-MI",
+    "name": "TCG Truck Fuel - Local Mileage",
+    "resource_type": "equipment",
+    "category": "Driving",
+    "unit": "MI",
+    "base_price": 1.375,
+    "min_price": 0,
+    "max_price": 0,
+    "currency": "USD",
+    "source": "bedrock_tcg_model_job_extract_v4_review",
+    "region": "BEDROCK-TCG-V4-REVIEW",
+    "specifications": {
+      "masterformat": "01 50 00"
+    },
+    "metadata": {
+      "review_only": true,
+      "source_evidence": "Observed 84-mile round-trip travel examples excluding anomalous maintenance data point",
+      "rate_basis": "Truck gas cost divided by round-trip miles"
+    }
+  },
+  {
+    "resource_code": "TCG-RES-TRUCK-FUEL-LONG-MI",
+    "name": "TCG Truck Fuel - Long Distance Mileage",
+    "resource_type": "equipment",
+    "category": "Driving",
+    "unit": "MI",
+    "base_price": 1.625,
+    "min_price": 0,
+    "max_price": 0,
+    "currency": "USD",
+    "source": "bedrock_tcg_model_job_extract_v4_review",
+    "region": "BEDROCK-TCG-V4-REVIEW",
+    "specifications": {
+      "masterformat": "01 50 00"
+    },
+    "metadata": {
+      "review_only": true,
+      "source_evidence": "Observed 126-190 mile round-trip travel examples",
+      "rate_basis": "Truck gas cost divided by round-trip miles"
+    }
+  },
+  {
+    "resource_code": "TCG-RES-TRUCK-MAINT-LOCAL-MI",
+    "name": "TCG Truck Maintenance - Local Mileage",
+    "resource_type": "equipment",
+    "category": "Driving",
+    "unit": "MI",
+    "base_price": 3.0,
+    "min_price": 0,
+    "max_price": 0,
+    "currency": "USD",
+    "source": "bedrock_tcg_model_job_extract_v4_review",
+    "region": "BEDROCK-TCG-V4-REVIEW",
+    "specifications": {
+      "masterformat": "01 50 00"
+    },
+    "metadata": {
+      "review_only": true,
+      "source_evidence": "Observed 84-mile round-trip travel examples excluding anomalous $6.00/mi maintenance data point",
+      "rate_basis": "Truck maintenance cost divided by round-trip miles"
+    }
+  },
+  {
+    "resource_code": "TCG-RES-TRUCK-MAINT-LONG-MI",
+    "name": "TCG Truck Maintenance - Long Distance Mileage",
+    "resource_type": "equipment",
+    "category": "Driving",
+    "unit": "MI",
+    "base_price": 3.25,
+    "min_price": 0,
+    "max_price": 0,
+    "currency": "USD",
+    "source": "bedrock_tcg_model_job_extract_v4_review",
+    "region": "BEDROCK-TCG-V4-REVIEW",
+    "specifications": {
+      "masterformat": "01 50 00"
+    },
+    "metadata": {
+      "review_only": true,
+      "source_evidence": "Observed 126-190 mile round-trip travel examples",
+      "rate_basis": "Truck maintenance cost divided by round-trip miles"
+    }
+  },
+  {
+    "resource_code": "TCG-RES-DUMP-TRUCK-SINGLE-AXLE",
+    "name": "TCG Dump Truck - Single Axle",
+    "resource_type": "equipment",
+    "category": "Hauling",
+    "unit": "LOAD",
+    "base_price": 0,
+    "min_price": 0,
+    "max_price": 0,
+    "currency": "USD",
+    "source": "bedrock_tcg_model_job_extract_v4_review",
+    "region": "BEDROCK-TCG-V4-REVIEW",
+    "specifications": {
+      "masterformat": "31 00 00",
+      "volume_capacity_cy": 3,
+      "capacity_source": "Truck_Cost_Calculator_Spec.md"
+    },
+    "metadata": {
+      "review_only": true,
+      "rate_pending": true,
+      "use_case": "Truck option metadata for manual selection and future calculator automation"
+    }
+  },
+  {
+    "resource_code": "TCG-RES-DUMP-TRUCK-DUAL-AXLE",
+    "name": "TCG Dump Truck - Dual Axle",
+    "resource_type": "equipment",
+    "category": "Hauling",
+    "unit": "LOAD",
+    "base_price": 0,
+    "min_price": 0,
+    "max_price": 0,
+    "currency": "USD",
+    "source": "bedrock_tcg_model_job_extract_v4_review",
+    "region": "BEDROCK-TCG-V4-REVIEW",
+    "specifications": {
+      "masterformat": "31 00 00",
+      "volume_capacity_cy": 13,
+      "capacity_source": "Truck_Cost_Calculator_Spec.md"
+    },
+    "metadata": {
+      "review_only": true,
+      "rate_pending": true,
+      "use_case": "Truck option metadata for manual selection and future calculator automation"
+    }
+  },
+  {
+    "resource_code": "TCG-RES-DUMP-TRUCK-TRI-AXLE",
+    "name": "TCG Dump Truck - Tri Axle",
+    "resource_type": "equipment",
+    "category": "Hauling",
+    "unit": "LOAD",
+    "base_price": 395.0,
+    "min_price": 0,
+    "max_price": 0,
+    "currency": "USD",
+    "source": "bedrock_tcg_model_job_extract_v4_review",
+    "region": "BEDROCK-TCG-V4-REVIEW",
+    "specifications": {
+      "masterformat": "31 00 00",
+      "volume_capacity_cy": 20,
+      "capacity_source": "Truck_Cost_Calculator_Spec.md"
+    },
+    "metadata": {
+      "review_only": true,
+      "source_evidence": "Truck_Cost_Calculator_Spec.md worked example and TCG fill hauling review item",
+      "rate_basis": "Observed/draft fill hauling per load"
+    }
+  },
+  {
     "resource_code": "TCG-RES-57-STONE-TON",
     "name": "TCG #57 Stone Material",
     "resource_type": "material",

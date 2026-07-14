@@ -168,6 +168,16 @@ REGION_MAP: dict[str, str] = {
     "GR_NATIONAL": "EL___DDC_CWICR",
     "VN_NATIONAL": "VI___DDC_CWICR",
     "ID_NATIONAL": "ID___DDC_CWICR",
+    # BedRock partner/import resource catalogues. These are loaded from import
+    # packages rather than GitHub CSVs, but registering the ids keeps resource
+    # catalog selectors and marketplace/status surfaces from treating them as
+    # unknown regions.
+    "BEDROCK-REVIEW": "US___DDC_CWICR",
+    "BEDROCK-MAIN": "US___DDC_CWICR",
+    "BEDROCK-TCG-REVIEW": "US___DDC_CWICR",
+    "BEDROCK-TCG-V4-REVIEW": "US___DDC_CWICR",
+    "BEDROCK-TCG-EXTRACT-2": "US___DDC_CWICR",
+    "BEDROCK-TCG-V4-FD-TEST": "US___DDC_CWICR",
 }
 
 _GITHUB_BASE = "https://raw.githubusercontent.com/datadrivenconstruction/OpenConstructionEstimate-DDC-CWICR/main"

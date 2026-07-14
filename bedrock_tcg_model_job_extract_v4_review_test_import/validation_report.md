@@ -17,8 +17,8 @@ Revised package validation result:
 
 | Record Type | Imported |
 |---|---:|
-| Catalog resources | 37 |
-| CostItems | 12 |
+| Catalog resources | 45 |
+| CostItems | 17 |
 | Assemblies | 5 |
 | Assembly components | 10 |
 
@@ -40,6 +40,7 @@ Package namespace:
 | Crawlspace/footer drainage | Delivered stone + LS scope + `TCG-V4-ASM-CRAWLSPACE-FOOTER-DRAINAGE-DRAFT` |
 | Site prep / erosion / demo-disposal | Delivered drain stone + erosion scope + demo/disposal scope + `TCG-V4-ASM-SITE-PREP-DEMO-EROSION-DRAFT` |
 | Fill placement review | Delivered fill review + placement review + `TCG-V4-ASM-FILL-PLACEMENT-REVIEW` |
+| BedRock truck travel | Atomic fuel/maintenance/labor resources + local, long-distance, and 84-mile round-trip CostItems |
 
 ## Carried Review Flags
 
@@ -64,9 +65,16 @@ Known revised subtotal before unresolved #8/top-course/removal/check-dam treatme
 
 The prior `7 HR @ $95` driving labor and `168 MI` driving equipment evidence is excluded from the French drain base model because delivered material load pricing should already include supplier delivery. Carry it as a review item unless Bedrock confirms it is not supplier delivery.
 
+## BedRock Truck Travel Additions
+
+Added standalone, reusable truck resources and CostItems without adding calculator code. The package now carries local mileage at `$4.375/mi` split into `$1.375/mi` fuel and `$3.00/mi` maintenance, and longer-distance mileage at `$4.875/mi` split into `$1.625/mi` fuel and `$3.25/mi` maintenance. Driving labor is available at `$95/hr` local/default and `$85/hr` longer-distance observed rate. A reusable observed local round-trip item models `84 MI + 2 men x 1.75 HR = $700/roundtrip`.
+
+The anomalous example with `$6.00/mi` maintenance is intentionally excluded from the default truck maintenance basis.
+
 ## Validation
 
-- JSON schema/reference validation passed via `import_tcg_package.py --validate-only`.
+- JSON syntax validation passed after truck travel additions.
+- JSON schema/reference validation previously passed via `import_tcg_package.py --validate-only`; `OCERP/scripts/import_tcg_package.py` has since been restored in this checkout.
 - Validate-only passed after the French drain reassessment.
 - Dry-run passed and showed existing prior v4 records in the database: 36 catalog resources, 15 CostItems, 5 assemblies, and 13 assembly components. A cleanup import would replace them with the revised package counts above.
 - The French drain assembly now uses a `TCG-V5-ASM-*` code to make the reassessment explicit; unrelated assemblies keep their `TCG-V4-ASM-*` namespace.

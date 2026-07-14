@@ -27,10 +27,10 @@
     ]
   },
   "summary": {
-    "catalog_resources": 37,
-    "cost_items": 12,
+    "catalog_resources": 45,
+    "cost_items": 17,
     "assemblies": 5,
-    "scope": "Reviewed TCG v4 CostItems and assemblies for app proof-of-concept review, with French drain superseded by delivered-material reassessment"
+    "scope": "Reviewed TCG v4 CostItems and assemblies for app proof-of-concept review, with French drain superseded by delivered-material reassessment and BedRock truck travel resources/cost items added from observed travel data"
   },
   "carried_review_flags": [
     "TCG-P7-R2",
