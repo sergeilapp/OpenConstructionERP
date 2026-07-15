@@ -121,15 +121,17 @@ class FieldTimesheetLine(Base):
         index=True,
     )
     # Labour: a person / crew from the resources module.
+    # No ORM-level FK: production installs can have resources/equipment/
+    # variations IDs created by older migrations with UUID while create_all()
+    # models still use GUID/VARCHAR for other tables. Emitting those external
+    # FKs during startup can abort deploys; Alembic may add them where valid.
     resource_id: Mapped[uuid.UUID | None] = mapped_column(
         GUID(),
-        ForeignKey("oe_resources_resource.id", ondelete="SET NULL"),
         nullable=True,
     )
     # Plant: a machine from the equipment module.
     equipment_id: Mapped[uuid.UUID | None] = mapped_column(
         GUID(),
-        ForeignKey("oe_equipment_equipment.id", ondelete="SET NULL"),
         nullable=True,
     )
     hours: Mapped[Decimal] = mapped_column(
@@ -144,7 +146,6 @@ class FieldTimesheetLine(Base):
     # The variation this daywork was performed under (issued variation order).
     variation_id: Mapped[uuid.UUID | None] = mapped_column(
         GUID(),
-        ForeignKey("oe_variations_order.id", ondelete="SET NULL"),
         nullable=True,
     )
     # Soft link to the oe_variations_daywork_sheet row minted on approval for a

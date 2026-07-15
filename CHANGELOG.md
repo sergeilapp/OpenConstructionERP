@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [10.10.1] - 2026-07-15
+
+This hotfix prevents PostgreSQL startup from failing when a production database has mixed legacy UUID and VARCHAR identifiers. Field Time line-level links to resources, equipment and variations no longer emit external ORM foreign keys during `create_all()`, avoiding the `oe_field_time_line.resource_id` to `oe_resources_resource.id` type mismatch seen when deploying `10.10.0` while preserving the application-level line data and indexes.
+
 ## [10.10.0] - 2026-07-14
 
 This release adds the first Bedrock calculator-assisted estimating workflow to BOQ editing. The new Truck / Hauling calculator previews single, dual and tri-axle truck options, estimates load counts, truck cost, driver labor, fuel and material cost, and applies the chosen option directly into an OCERP bill position with transparent resource components.
